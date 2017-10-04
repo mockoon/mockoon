@@ -26,3 +26,4 @@ If you want to know what will be coming in the next releases you ou can check th
 
 New releases will also be announced on my personal [Twitter account @255kb](https://twitter.com/255kb).
 
+<iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://app.mailjet.com/widget/iframe/2B6T/4gj" width="100%" height="224"></iframe>
