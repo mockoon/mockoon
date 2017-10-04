@@ -24,6 +24,4 @@ All feedback is welcomed. But please follow these simple guidelines before submi
 
 If you want to know what will be coming in the next releases you ou can check the [milestones](https://github.com/255kb/mockoon/milestones) or directly check the features requests [here](https://github.com/255kb/mockoon/labels/feature).
 
-New releases will also be announced on my personal [Twitter account @255kb](https://twitter.com/255kb).
-
-<iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://app.mailjet.com/widget/iframe/2B6T/4gj" width="100%" height="224"></iframe>
+New releases will be announced on my personal [Twitter account @255kb](https://twitter.com/255kb) and through the newsletter to which you can subscribe on the [website](https://mockoon.com/#download).
