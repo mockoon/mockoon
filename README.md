@@ -25,7 +25,7 @@ All feedback is welcomed. But please follow these simple guidelines before submi
 
 ## Documentation
 
-I started to write a small documentation that you will find in the [Wiki](https://github.com/255kb/mockoon/wiki) section of this repository. Feel free to contribute or ask for new topics to be explained.
+I started to write a small documentation that you will find in the [Wiki](https://github.com/255kb/mockoon/wiki) section of this repository. Feel free to contribute or ask for new topics to be covered.
 
 ## More to come
 
