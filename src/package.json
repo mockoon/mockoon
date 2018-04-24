@@ -1,0 +1,33 @@
+{
+  "name": "mockoon",
+  "description": "Mock servers in seconds",
+  "version": "0.4.0",
+  "author": {
+    "name": "Guillaume Monnet",
+    "email": "hi@255kb.com",
+    "url": "https://255kb.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/255kb/mockoon.git"
+  },
+  "bugs": {
+    "url": "https://github.com/255kb/mockoon/issues"
+  },
+  "homepage": "https://mockoon.com",
+  "main": "electron-main.js",
+  "dependencies": {
+    "brace": "0.11.1",
+    "electron-is-dev": "0.3.0",
+    "electron-json-storage": "4.0.2",
+    "electron-window-state": "4.1.1",
+    "express": "4.16.1",
+    "http-proxy-middleware": "0.17.4",
+    "firebase": "4.10.0",
+    "killable": "1.0.0",
+    "dummy-json": "2.0.0",
+    "mime-types": "2.1.18",
+    "semver": "5.5.0",
+    "uuid": "3.2.1"
+  }
+}

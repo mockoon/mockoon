@@ -1,0 +1,14 @@
+{
+  "win32": {
+    "version": "0.4.0",
+    "file": "https://releases.mockoon.com/mockoon.setup.0.4.0.exe"
+  },
+  "darwin": {
+    "version": "0.4.0",
+    "file": "https://releases.mockoon.com/mockoon.setup.0.4.0.dmg"
+  },
+  "linux": {
+    "version": "0.4.0",
+    "file": "https://releases.mockoon.com/mockoon-0.4.0-x86_64.AppImage"
+  }
+}

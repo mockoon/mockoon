@@ -1,0 +1,362 @@
+<app-context-menu (itemClicked)="navigationContextMenuItemClicked($event)"></app-context-menu>
+
+<app-welcome-modal></app-welcome-modal>
+<app-settings-modal (closed)="handleSettingsModalClosed()"></app-settings-modal>
+
+<div class="container-fluid">
+  <div id="page" class="d-flex flex-column">
+    <!-- First row: logo / env name +start / env port + prefix -->
+    <div class="header">
+      <div class="row">
+        <div class="col-2">
+          <div class="logo"></div>
+        </div>
+
+        <div class="col-2">
+          <div *ngIf="!currentEnvironment" class="input-group">
+            <span class="input-group-prepend">
+              <button class="btn btn-link text-muted" type="button">
+                <i class="material-icons">play_arrow</i>
+              </button>
+            </span>
+            <input type="text" class="form-control" placeholder="No environment" disabled>
+          </div>
+          <div *ngIf="currentEnvironment">
+            <div class="input-group">
+              <span class="input-group-prepend">
+                <button class="btn btn-link" type="button" [ngClass]="{'text-success': !currentEnvironment.environment.running && !currentEnvironment.environment.needRestart, 'text-danger': currentEnvironment.environment.running && !currentEnvironment.environment.needRestart, 'text-warning': currentEnvironment.environment.running && currentEnvironment.environment.needRestart}" (click)="toggleEnvironment(currentEnvironment.environment)">
+                  <i class="material-icons" *ngIf="currentEnvironment.environment.running && currentEnvironment.environment.needRestart" ngbTooltip="Restart server">refresh</i>
+                  <i class="material-icons" *ngIf="currentEnvironment.environment.running && !currentEnvironment.environment.needRestart" ngbTooltip="Stop server">stop</i>
+                  <i class="material-icons" *ngIf="!currentEnvironment.environment.running" ngbTooltip="Start server">play_arrow</i>
+                </button>
+              </span>
+              <input type="text" class="form-control" name="environment.name" [(ngModel)]="currentEnvironment.environment.name" (ngModelChange)="environmentUpdated('name')">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div *ngIf="currentEnvironment">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">localhost:</span>
+              </div>
+              <input type="text" class="form-control col-2" [OnlyNumber]="{min: 0, max: 65535}" placeholder="port" name="environment.port"
+                [(ngModel)]="currentEnvironment.environment.port" (ngModelChange)="environmentUpdated('port')">
+              <div class="iput-group-prepend">
+                <span class="input-group-text text-warning" *ngIf="currentEnvironment.environment.duplicates.length" ngbTooltip="Port is shared with another environment"><i class="material-icons">warning</i></span>
+              </div>
+              <div class="iput-group-prepend">
+                <span class="input-group-text">/</span>
+              </div>
+              <input type="text" class="form-control" placeholder="prefix" ValidPath name="environment.endpointPrefix" [(ngModel)]="currentEnvironment.environment.endpointPrefix"
+                (ngModelChange)="environmentUpdated('endointPrefix')" ngbTooltip="Environment routes prefix">
+              <div class="iput-group-prepend">
+                <span class="input-group-text"><i class="material-icons">access_time</i></span>
+              </div>
+              <input type="text" class="form-control col-2" ngbTooltip="Global environment latency applied to all routes (ms)" [OnlyNumber]="{min: 0, max: Infinity}" name="environment.latency"
+                [(ngModel)]="currentEnvironment.environment.latency" (ngModelChange)="environmentUpdated('envLatency')">
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <ng-container *ngIf="currentEnvironment">
+            <div class="btn btn-link btn-icon float-right" [ngClass]="{'active': currentTab === 'ENV_SETTINGS'}" (click)="setCurrentTab('ENV_SETTINGS')">
+              <i class="material-icons">settings</i> Environment settings
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div id="content">
+      <div class="toast-container">
+        <div *ngFor="let alert of alerts; index as alertIndex" class="toast" [ngClass]="'toast-' + alert.type" (click)="removeAlert(alert.id)">{{alert.message}}</div>
+      </div>
+
+      <div id="content-inner" class="row">
+        <!-- Environments menu -->
+        <div class="col-2 menu-columns d-flex flex-column">
+          <div><!-- container needed for flexboxes -->
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link text-primary" (click)="addEnvironment()">
+                  <i class="material-icons">add_circle</i> Add environment
+                </a>
+              </li>
+            </ul>
+          </div>
+          <ul class="nav flex-column menu-list" #environmentsMenu *ngIf="environments">
+            <li class="nav-item" *ngFor="let environment of environments; let environmentIndex = index">
+              <a class="nav-link position-relative" [ngClass]="{'active': currentEnvironment && currentEnvironment.index === environmentIndex}" (click)="selectEnvironment(environmentIndex, $event)" (contextmenu)="navigationContextMenu('environment', environmentIndex, $event)">
+                <div class="ellipsis">
+                  <span class="text-warning" ngbTooltip="Port is shared with another environment" placement="right"><i *ngIf="environment.duplicates.length" class="material-icons">warning</i></span>
+                  {{environment.name}}
+                </div>
+                <div class="menu-subtitle ellipsis">
+                  localhost:{{environment.port}}/{{environment.endpointPrefix}}
+                </div>
+                <div *ngIf="environment.running" class="server-icons server-icons-status" [ngClass]="{'running': !environment.needRestart, 'need-restart': environment.needRestart}">
+                  <i class="material-icons" [ngbTooltip]="(environment.needRestart) ? 'Server needs to be restarted' : 'Server is running'">lens</i>
+                </div>
+                <div *ngIf="environment.proxyMode" class="server-icons server-icons-proxy-mode">
+                  <i class="material-icons" ngbTooltip="Proxy mode enabled">security</i>
+                </div>
+                <div *ngIf="environment.https" class="server-icons server-icons-https">
+                  <i class="material-icons" ngbTooltip="HTTPS enabled">https</i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Routes menu -->
+        <div class="col-2 menu-columns d-flex flex-column">
+          <div><!-- container needed for flexboxes -->
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link text-primary" (click)="addRoute()">
+                  <i class="material-icons">add_circle</i> Add route
+                </a>
+              </li>
+            </ul>
+          </div>
+          <ul class="nav flex-column menu-list" #routesMenu *ngIf="currentEnvironment">
+            <li class="nav-item" *ngFor="let route of currentEnvironment.environment.routes; let routeIndex = index">
+              <a class="nav-link" [ngClass]="{'active': currentRoute && currentRoute.index === routeIndex}" (click)="selectRoute(routeIndex)" (contextmenu)="navigationContextMenu('route', routeIndex, $event)">
+                <div class="ellipsis">
+                  <span class="text-warning" ngbTooltip="Route is duplicated"><i *ngIf="route.duplicates.length" class="material-icons">warning</i></span>
+                  <span class="badge badge-default http-method-{{route.method}} float-right">{{route.method | uppercase}}</span>
+                  /{{route.endpoint}}
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Navigation tabs -->
+        <div class="col d-flex flex-column main-content">
+          <div *ngIf="currentTab !== 'ENV_SETTINGS'">
+            <div class="row">
+              <div class="col">
+                <ul class="nav nav-tabs d-flex">
+                  <li class="nav-item" *ngIf="currentRoute">
+                    <a class="nav-link" [ngClass]="{'active': currentTab === 'RESPONSE'}" (click)="setCurrentTab('RESPONSE')">Response & Body</a>
+                  </li>
+                  <li class="nav-item" *ngIf="currentRoute">
+                    <a class="nav-link" [ngClass]="{'active': currentTab === 'HEADERS'}" (click)="setCurrentTab('HEADERS')">Headers</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- environment settings title and back button -->
+          <div *ngIf="currentTab === 'ENV_SETTINGS'">
+            <div class="row">
+              <div class="col">
+                <button type="button" class="btn btn-link btn-icon pl-2" (click)="setCurrentTab('RESPONSE')">
+                  <i class="material-icons">arrow_back</i> Back
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- OPTIONS tab -->
+          <div [hidden]="currentTab !== 'RESPONSE'" class="tab-content mt-3 pr-2 ml-2 mb-2 h-100">
+            <div class="row h-100">
+              <div class="col d-flex flex-column">
+                <!-- Method + endpoint + warning + delete -->
+                <div class="row">
+                  <div class="col">
+                    <div class="form-row" *ngIf="currentRoute">
+                      <div class="input-group">
+                        <select class="custom-select col-lg-2" name="route.method" [(ngModel)]="currentRoute.route.method" (ngModelChange)="environmentUpdated('method')">
+                        <option *ngFor="let method of methods" [value]="method" [selected]="currentRoute.route.method === method">{{method | uppercase}}</option>
+                      </select>
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">/</span>
+                        </div>
+                        <input type="text" class="form-control col-lg-6" placeholder="endpoint" ValidPath name="route.endpoint" [(ngModel)]="currentRoute.route.endpoint"
+                          (ngModelChange)="environmentUpdated('endpoint')">
+                        <div class="input-group-prepend">
+                          <span *ngIf="currentEnvironment.environment.running && currentRoute.route.method === 'get'" class="input-group-text text-primary" ngbTooltip="Open route in browser" (click)="openRouteInBrowser()"><i class="material-icons">open_in_new</i></span>
+                        </div>
+                        <div class="input-group-prepend">
+                          <span *ngIf="currentRoute.route.duplicates.length" class="input-group-text text-warning" ngbTooltip="Route is duplicated"><i class="material-icons">warning</i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- status code + latency -->
+                <div class="row mt-3">
+                  <!-- route status code -->
+                  <div class="col-auto">
+                    <div class="form-row" *ngIf="currentRoute">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Status code</span>
+                        </div>
+                        <select class="custom-select col-lg-4" name="route.statusCode" [(ngModel)]="currentRoute.route.statusCode" (ngModelChange)="environmentUpdated('statusCode')">
+                        <option *ngFor="let statusCode of statusCodes" [value]="statusCode" [selected]="currentRoute.route.statusCode === statusCode">{{statusCode}} - {{statusCodesExplanation[statusCode]}}</option>
+                      </select>
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="material-icons">access_time</i></span>
+                        </div>
+                        <input type="text" class="form-control col-lg-4" ngbTooltip="Route specific latency (ms)" [OnlyNumber]="{min: 0, max: Infinity}" name="route.latency"
+                          [(ngModel)]="currentRoute.route.latency" (ngModelChange)="environmentUpdated('routeLatency')">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <div class="title-separator has-icon">
+                      <div class="title-separator-icon text-secondary"><i class="material-icons">insert_drive_file</i></div>
+                      <div class="title-separator-text"><div>File </div><div>Selecting a file will automatically serve its content with the detected Content-Type</div></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- body: file -->
+                <div class="row mt-2">
+                  <div class="col">
+                    <div class="form-row" *ngIf="currentRoute">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <button class="btn btn-link" (click)="browseFiles()"><i class="material-icons">find_in_page</i></button>
+                        </div>
+                        <input type="text" class="form-control col-lg-4" [value]="currentRoute.route.file && currentRoute.route.file.filename" readonly>
+                        <div class="input-group-prepend">
+                          <small *ngIf="currentRoute && currentRoute.route.file" class="input-group-text text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}}</small>
+                        </div>
+                        <div class="input-group-prepend">
+                          <span *ngIf="currentRoute.route.file" class="input-group-text text-danger" (click)="deleteFile()" ngbTooltip="Remove file serving">
+                            <i class="material-icons">clear</i>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- body: custom content -->
+                <div class="row transition flex-fill" *ngIf="currentRoute" [ngClass]="{'dimmed': currentRoute.route.file}">
+                  <div class="col d-flex flex-column">
+                    <div class="title-separator has-icon">
+                      <div class="title-separator-icon text-secondary"><i class="material-icons">subject</i></div>
+                      <div class="title-separator-text"><div>Body </div><div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div></div>
+                    </div>
+                    <div class="form-row">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Content-Type</span>
+                        </div>
+                        <select class="custom-select col-lg-4" name="route.contentType" [(ngModel)]="currentRoute.route.contentType" (ngModelChange)="environmentUpdated('contentType')">
+                        <option *ngFor="let contentType of contentTypes" [value]="contentType" [selected]="currentRoute.route.contentType === contentType">{{contentType}}</option>
+                      </select>
+                      <div *ngIf="currentRoute.route.contentType === 'application/json'" class="input-group-prepend">
+                        <span class="input-group-text text-muted" (click)="deleteFile()">
+                          Supports templating. <span (click)="openJSONWikiLink()" class="pl-2 btn btn-link text-primary cp">More info</span>
+                        </span>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="mt-3 flex-fill">
+                      <ace-editor class="h-100" [options]="editorConfig.options" [mode]="editorConfig.mode" [theme]="editorConfig.theme"
+                        [(text)]="currentRoute.route.body" (textChanged)="environmentUpdated('body')"></ace-editor>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HEADERS tab -->
+          <div [hidden]="currentTab !== 'HEADERS'" class="tab-content tab-content-headers h-100 mt-3 pr-2 ml-2 mb-2" #headersTabContent>
+            <ng-container *ngIf="currentRoute">
+              <div class="row custom-header" *ngFor="let customHeader of currentRoute.route.customHeaders; index as customHeaderIndex">
+                <div class="col">
+                  <!-- Custom headers -->
+                  <div class="input-group" style="position: relative;">
+                    <input type="text" class="form-control col-5" placeholder="header" name="route.customHeader{{customHeaderIndex}}.key" [(ngModel)]="currentRoute.route.customHeaders[customHeaderIndex].key" (ngModelChange)="environmentUpdated('routeCustomHeader')" [autocomplete]="headerNamesList">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">:</span>
+                    </div>
+                    <input type="text" class="form-control col-5" placeholder="value" name="route.customHeader{{customHeaderIndex}}.value" [(ngModel)]="currentRoute.route.customHeaders[customHeaderIndex].value"
+                      (ngModelChange)="environmentUpdated('routeCustomHeader')">
+                    <div class="input-group-prepend">
+                      <span *ngIf="customHeaderIndex !== (currentRoute.route.customHeaders.length - 1)" class="input-group-text text-danger" (click)="removeCustomHeader(customHeader.uuid)"><i class="material-icons">clear</i></span>
+                    </div>
+                    <div class="input-group-prepend">
+                      <span *ngIf="customHeaderIndex === (currentRoute.route.customHeaders.length - 1)" class="input-group-text text-success" (click)="addCustomHeader()"><i class="material-icons">add_box</i></span>
+                    </div>
+                    <div class="input-group-prepend">
+                      <span class="input-group-text text-warning" *ngIf="testCustomHeader(currentRoute.route.customHeaders[customHeaderIndex].key)" ngbTooltip="Header key contains prohibited characters and won\'t be used" placement="left"><i class="material-icons">warning</i></span>
+                    </div>
+                    <!-- Display empty warning if: one is empty, OR for last line if one is filled and other is empty -->
+                    <div class="input-group-prepend">
+                      <span class="input-group-text text-warning" *ngIf="(customHeaderIndex === (currentRoute.route.customHeaders.length - 1) && ((currentRoute.route.customHeaders[customHeaderIndex].key && !currentRoute.route.customHeaders[customHeaderIndex].value) || (!currentRoute.route.customHeaders[customHeaderIndex].key && currentRoute.route.customHeaders[customHeaderIndex].value))) || (customHeaderIndex < (currentRoute.route.customHeaders.length - 1) && (!currentRoute.route.customHeaders[customHeaderIndex].value || !currentRoute.route.customHeaders[customHeaderIndex].key))" ngbTooltip="Headers with empty value are ignored" placement="left"><i class="material-icons">warning</i></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- ENVIRONMENT SETTINGS tab -->
+          <div [hidden]="currentTab !== 'ENV_SETTINGS'" class="tab-content h-100 mt-3 pr-2 ml-2 mb-2">
+            <ng-container *ngIf="currentEnvironment">
+              <div class="row">
+                <div class="col">
+                  <div class="title-separator is-first has-icon">
+                    <div class="title-separator-icon text-primary"><i class="material-icons">security</i></div>
+                    <div class="title-separator-text"><div>Proxy mode </div><div>All non defined routes will be forwarded to the specified URL</div></div>
+                  </div>
+                  <div class="form-inline pl-4">
+                    <div class="custom-control custom-checkbox mr-4">
+                      <input type="checkbox" class="custom-control-input" id="proxyMode" name="proxyMode" [(ngModel)]="currentEnvironment.environment.proxyMode" (ngModelChange)="environmentUpdated('environmentProxyMode')">
+                      <label class="custom-control-label" for="proxyMode">Enable</label>
+                    </div>
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="URL" name="proxyHost" [(ngModel)]="currentEnvironment.environment.proxyHost" (ngModelChange)="environmentUpdated('environmentProxyMode')">
+                      <div class="input-group-append">
+                        <span class="input-group-text text-warning" *ngIf="currentEnvironment.environment.proxyMode && currentEnvironment.environment.proxyHost && !isValidURL(currentEnvironment.environment.proxyHost)" ngbTooltip="The address must be a valid URL"><i class="material-icons">warning</i></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="title-separator has-icon">
+                    <div class="title-separator-icon text-warning"><i class="material-icons">https</i></div>
+                    <div class="title-separator-text"><div>HTTPS </div></div>
+                  </div>
+                  <div class="form-inline pl-4">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="HTTPS" name="HTTPS" [(ngModel)]="currentEnvironment.environment.https" (ngModelChange)="environmentUpdated('environmentHTTPS')">
+                      <label class="custom-control-label" for="HTTPS">Enable</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="row">
+        <div class="col pl-0 pr-0">
+          <div class="footer-item with-border-right" *ngIf="updateAvailable">
+            <button class="btn btn-xs btn-success" (click)="applyUpdate()"><i class="material-icons material-icons-xs">update</i> New version available, click to {{(platform === 'win32') ? 'apply' : 'download'}}</button>
+          </div>
+          <div class="footer-item float-right with-border-left" (click)="openFeedbackLink()"><i class="material-icons">feedback</i> Send feedback</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
