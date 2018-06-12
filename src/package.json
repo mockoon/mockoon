@@ -19,10 +19,10 @@
   "dependencies": {
     "brace": "0.11.1",
     "electron-is-dev": "0.3.0",
-    "electron-json-storage": "4.0.2",
+    "electron-json-storage": "4.1.0",
     "electron-window-state": "4.1.1",
-    "express": "4.16.1",
-    "http-proxy-middleware": "0.17.4",
+    "express": "4.16.3",
+    "http-proxy-middleware": "0.18.0",
     "firebase": "4.10.0",
     "killable": "1.0.0",
     "dummy-json": "2.0.0",

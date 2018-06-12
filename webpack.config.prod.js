@@ -130,6 +130,7 @@ module.exports = {
     "crypto": "require('crypto')",
     "events": "require('events')",
     "express": "require('express')",
+    "http-proxy-middleware": "require('http-proxy-middleware')",
     "handlebars": "require('handlebars')",
     "fs": "require('fs')",
     "http": "require('http')",
