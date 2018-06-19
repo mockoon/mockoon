@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
+import { Errors } from 'app/enums/errors.enum';
+import { DummyJSONHelpers } from 'app/libs/dummy-helpers.lib';
+import { AlertService } from 'app/services/alert.service';
+import { pemFiles } from 'app/ssl';
+import { EnvironmentType } from 'app/types/environment.type';
+import { RouteType } from 'app/types/route.type';
+import * as DummyJSON from 'dummy-json';
 import * as express from 'express';
-import * as https from 'https';
-import * as http from 'http';
 import * as fs from 'fs';
+import * as http from 'http';
+import * as proxy from 'http-proxy-middleware';
+import * as https from 'https';
+import * as killable from 'killable';
+import * as mime from 'mime-types';
 import * as path from 'path';
 import { URL } from 'url';
-import { EnvironmentType } from 'app/types/environment.type';
-import { Subject } from 'rxjs/Subject';
-import { ServerStateEventType } from 'app/types/server.type';
-import * as killable from 'killable';
-import { RouteType } from 'app/types/route.type';
-import { AlertService } from 'app/services/alert.service';
-import * as proxy from 'http-proxy-middleware';
-import * as mime from 'mime-types';
-import { pemFiles } from 'app/ssl';
-import { DummyJSONHelpers } from 'app/libs/dummy-helpers.lib';
-import * as DummyJSON from 'dummy-json';
-import { Errors } from 'app/enums/errors.enum';
 
 const httpsConfig = {
   key: pemFiles.key,
