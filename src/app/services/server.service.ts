@@ -23,7 +23,6 @@ const httpsConfig = {
   cert: pemFiles.cert
 };
 
-
 @Injectable()
 export class ServerService {
 

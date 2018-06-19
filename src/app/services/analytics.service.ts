@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Config } from 'app/config';
-import { EnvironmentsService } from 'app/services/environments.service';
 import { AuthService } from 'app/services/auth.service';
-import { SettingsType, SettingsService } from 'app/services/settings.service';
+import { EnvironmentsService } from 'app/services/environments.service';
+import { SettingsService, SettingsType } from 'app/services/settings.service';
 
 /**
  * Reference: https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide

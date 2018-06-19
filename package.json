@@ -80,7 +80,7 @@
     "electron-json-storage": "4.1.0",
     "electron-window-state": "4.1.1",
     "express": "4.16.3",
-    "firebase": "4.10.0",
+    "firebase": "5.0.4",
     "http-proxy-middleware": "0.18.0",
     "killable": "1.0.0",
     "lodash": "4.17.10",

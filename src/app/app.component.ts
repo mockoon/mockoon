@@ -1,28 +1,28 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { EnvironmentsService } from 'app/services/environments.service';
-import { ServerService } from 'app/services/server.service';
-import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
-import { RouteType, methods, contentTypes, headerNames, statusCodes, statusCodesExplanation } from 'app/types/route.type';
-import * as path from 'path';
-import { remote, shell, ipcRenderer } from 'electron';
-import { AlertService, Alert } from 'app/services/alert.service';
-import { UpdateService } from 'app/services/update.service';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ContextMenuItemPayload } from 'app/components/context-menu.component';
+import { Config } from 'app/config';
+import { Errors } from 'app/enums/errors.enum.js';
+import { Alert, AlertService } from 'app/services/alert.service';
 import { AnalyticsService } from 'app/services/analytics.service';
 import { AuthService } from 'app/services/auth.service';
-import { Config } from 'app/config';
-import * as mimeTypes from 'mime-types';
-import * as uuid from 'uuid/v1';
+import { EnvironmentsService } from 'app/services/environments.service';
+import { ContextMenuEventType, EventsService } from 'app/services/events.service';
+import { ServerService } from 'app/services/server.service';
+import { UpdateService } from 'app/services/update.service';
+import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
+import { contentTypes, headerNames, methods, RouteType, statusCodes, statusCodesExplanation } from 'app/types/route.type';
 import 'brace/index';
 import 'brace/mode/css';
-import 'brace/mode/json.js';
 import 'brace/mode/html.js';
-import 'brace/mode/xml.js';
+import 'brace/mode/json.js';
 import 'brace/mode/text.js';
+import 'brace/mode/xml.js';
+import { ipcRenderer, remote, shell } from 'electron';
+import * as mimeTypes from 'mime-types';
+import * as path from 'path';
+import * as uuid from 'uuid/v1';
 import '../assets/custom_theme.js';
-import { EventsService, ContextMenuEventType } from 'app/services/events.service';
-import { ContextMenuItemPayload } from 'app/components/context-menu.component';
-import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import { Errors } from 'app/enums/errors.enum.js';
 const platform = require('os').platform();
 
 @Component({
@@ -72,8 +72,8 @@ export class AppComponent implements OnInit {
     private config: NgbTooltipConfig
   ) {
     // tooltip config
-    config.container = 'body';
-    config.placement = 'bottom';
+    this.config.container = 'body';
+    this.config.placement = 'bottom';
 
     // set listeners on main process messages
     ipcRenderer.on('keydown', (event, data) => {
