@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import * as jsonStorage from 'electron-json-storage';
-import { Subject } from 'rxjs/Subject';
-import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
-import { RouteType } from 'app/types/route.type';
-import { ServerStateEventType } from 'app/types/server.type';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/debounceTime';
-import * as uuid from 'uuid/v1';
-import * as storage from 'electron-json-storage';
+import { Migrations } from 'app/libs/migrations.lib';
 import { ServerService } from 'app/services/server.service';
+import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
+import { CustomHeaderType, RouteType } from 'app/types/route.type';
+import * as storage from 'electron-json-storage';
 import { cloneDeep } from 'lodash';
+import 'rxjs/add/operator/debounceTime';
+import { Subject } from 'rxjs/Subject';
+import * as uuid from 'uuid/v1';
 
 
 @Injectable()
@@ -46,7 +44,6 @@ export class EnvironmentsService {
   private routeSchema: RouteType = {
     method: 'get',
     endpoint: '',
-    contentType: 'text/plain',
     body: 'Environment is running.',
     latency: 0,
     statusCode: '200',
@@ -54,6 +51,8 @@ export class EnvironmentsService {
     file: null,
     duplicates: []
   };
+
+  private customHeadersSchema: CustomHeaderType = { uuid: '', key: 'Content-Type', value: 'text/plain' };
 
   private storageKey = 'environments';
 
@@ -101,7 +100,7 @@ export class EnvironmentsService {
    * @param callback - callback to execute after adding the env
    */
   public addEnvironment(callback: Function): number {
-    const newRoute = Object.assign({}, this.routeSchema, { customHeaders: [{ uuid: uuid(), key: '', value: '' }] });
+    const newRoute = Object.assign({}, this.routeSchema, { customHeaders: [Object.assign({}, this.customHeadersSchema, { uuid: uuid() })] });
     const newEnvironment = Object.assign(
       {},
       this.environmentSchema,
@@ -130,7 +129,7 @@ export class EnvironmentsService {
    * @param environment - environment to which add a route
    */
   public addRoute(environment: EnvironmentType, callback: Function): number {
-    const newRoute = Object.assign({}, this.routeSchema, { customHeaders: [{ uuid: uuid(), key: '', value: '' }] });
+    const newRoute = Object.assign({}, this.routeSchema, { customHeaders: [Object.assign({}, this.customHeadersSchema, { uuid: uuid() })] });
     const newRouteIndex = environment.routes.push(newRoute) - 1;
     this.routesTotal += 1;
 
@@ -184,19 +183,18 @@ export class EnvironmentsService {
    */
   private buildDefaultEnvironment(): EnvironmentType {
     const defaultEnvironment: EnvironmentType = Object.assign({}, this.environmentSchema);
-    defaultEnvironment.uuid = '08ea9700-52cb-11e7-82da-8b8f3964b24c'; // random uuid
+    defaultEnvironment.uuid = uuid(); // random uuid
     defaultEnvironment.name = 'Example';
     this.routesTotal = 2;
     defaultEnvironment.routes.push(Object.assign(
-      {}, this.routeSchema, { customHeaders: [{ uuid: uuid(), key: '', value: '' }] },
-      { endpoint: 'answer', contentType: 'text/plain', body: '42' }
+      {}, this.routeSchema, { customHeaders: [{ uuid: uuid(), key: 'Content-Type', value: 'text/plain' }] },
+      { endpoint: 'answer', body: '42' }
     ));
     defaultEnvironment.routes.push(Object.assign(
-      {}, this.routeSchema, { customHeaders: [{ uuid: uuid(), key: '', value: '' }] },
+      {}, this.routeSchema, { customHeaders: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }] },
       {
         method: 'post',
         endpoint: 'dolphins',
-        contentType: 'application/json',
         body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}'
       }
     ));
@@ -286,24 +284,17 @@ export class EnvironmentsService {
   }
 
   /**
-   * igrate data after loading if needed.
+   * Migrate data after loading if needed.
    * This cumulate all versions migration
    *
    * @param environments - environments to migrate
    */
   private migrateData(environments: EnvironmentsType) {
-    environments.forEach((environment) => {
-      // proxy settings
-      if (!environment.proxyMode) {
-        environment.proxyMode = false;
-      }
-      if (!environment.proxyHost) {
-        environment.proxyHost = '';
-      }
-      if (!environment.https) {
-        environment.https = false;
-      }
+    Migrations.forEach(migration => {
+      environments.forEach(environment => migration(environment));
     });
+
+    console.log(environments)
 
     return environments;
   }

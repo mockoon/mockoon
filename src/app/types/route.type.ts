@@ -7,18 +7,6 @@ export const methods = [
   'head'
 ];
 
-export const contentTypes = [
-  'text/plain',
-  'text/html',
-  'application/json',
-  'application/xml',
-  'multipart/form-data',
-  'application/xhtml+xml',
-  'application/x-www-form-urlencoded',
-  'text/csv',
-  'text/css'
-];
-
 export const statusCodes = [
   100,
   101,
@@ -228,21 +216,77 @@ export const headerNames = [
   'X-Requested-With'
 ];
 
+// values used to suggest
+export const headerValues = [
+  // content types
+  'text/plain',
+  'text/html',
+  'application/json',
+  'application/xml',
+  'multipart/form-data',
+  'application/xhtml+xml',
+  'application/x-www-form-urlencoded',
+  'text/csv',
+  'text/css',
+  'application/javascript',
+  'application/x-www-form-urlencoded',
+  'application/zip',
+  'application/pdf',
+  'application/sql',
+  'application/graphql',
+  'application/ld+json',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.oasis.opendocument.text',
+  'audio/mpeg',
+  'audio/vorbis',
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+
+  // authorization
+  'Basic ',
+  'Bearer ',
+  'Digest ',
+  'HOBA ',
+  'Mutual ',
+  'AWS4-HMAC-SHA256 ',
+
+  // cache control
+  'max-age=',
+  'max-stale=',
+  'min-fresh=',
+  'no-cache',
+  'no-store',
+  'no-transform',
+  'only-if-cached',
+  'must-revalidate',
+  'no-cache',
+  'no-store',
+  'no-transform',
+  'public',
+  'private',
+  'proxy-revalidate',
+  's-maxage=',
+
+  // charset
+  'US-ASCII',
+  'ISO-8859-1',
+  'UTF-8',
+  'UTF-16BE',
+  'UTF-16LE',
+  'UTF-16'
+];
+
 export type RouteType = {
   method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
   endpoint: string;
-  contentType:
-  'text/html' |
-  'application/json' |
-  'text/plain' |
-  'application/xml' |
-  'text/css' |
-  'text/csv' |
-  'application/xhtml+xml' |
-  'application/x-www-form-urlencoded' |
-  'multipart/form-data';
   statusCode: string;
-  customHeaders: { uuid: '', key: string, value: string }[];
+  customHeaders: CustomHeaderType[];
   body?: string;
   latency: number;
   file?: {
@@ -256,3 +300,5 @@ export type RouteType = {
    */
   duplicates: number[];
 };
+
+export type CustomHeaderType = { uuid: '', key: string, value: string };

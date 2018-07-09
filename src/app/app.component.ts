@@ -11,7 +11,7 @@ import { ContextMenuEventType, EventsService } from 'app/services/events.service
 import { ServerService } from 'app/services/server.service';
 import { UpdateService } from 'app/services/update.service';
 import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
-import { contentTypes, headerNames, methods, RouteType, statusCodes, statusCodesExplanation } from 'app/types/route.type';
+import { headerNames, headerValues, methods, RouteType, statusCodes, statusCodesExplanation } from 'app/types/route.type';
 import 'brace/index';
 import 'brace/mode/css';
 import 'brace/mode/html.js';
@@ -37,7 +37,6 @@ export class AppComponent implements OnInit {
   public currentEnvironment: { environment: EnvironmentType, index: number } = null;
   public currentRoute: { route: RouteType, index: number } = null;
   public methods = methods;
-  public contentTypes = contentTypes;
   public statusCodes = statusCodes;
   public statusCodesExplanation = statusCodesExplanation;
   public saving = false;
@@ -57,6 +56,8 @@ export class AppComponent implements OnInit {
   public updateAvailable = false;
   public platform = platform;
   public headerNamesList = headerNames;
+  public headerValuesList = headerValues;
+  public getCustomHeader = this.serverService.getCustomHeader;
   private settingsModalOpened = false;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
@@ -294,15 +295,14 @@ export class AppComponent implements OnInit {
       fieldUpdated !== 'statusCode' &&
       fieldUpdated !== 'file' &&
       fieldUpdated !== 'routeCustomHeader' &&
-      fieldUpdated !== 'body' &&
-      fieldUpdated !== 'contentType'
+      fieldUpdated !== 'body'
     ) {
       if (this.currentEnvironment.environment.running) {
         this.currentEnvironment.environment.needRestart = this.currentEnvironment.environment.modifiedAt > this.currentEnvironment.environment.startedAt;
       }
     }
 
-    if (fieldUpdated === 'contentType') {
+    if (fieldUpdated === 'routeCustomHeader') {
       this.changeEditorSettings();
     }
 
@@ -473,24 +473,22 @@ export class AppComponent implements OnInit {
     this.analyticsService.collect({ type: 'event', category: 'link', action: 'apply-update' });
   }
 
+  /**
+   * Set editor mode depending on content type
+   */
   private changeEditorSettings() {
-    if (this.currentRoute.route.contentType === 'text/html' || this.currentRoute.route.contentType === 'application/xhtml+xml') {
-      this.editorConfig.mode = 'html';
-    } else if (
-      this.currentRoute.route.contentType === 'text/plain' ||
-      this.currentRoute.route.contentType === 'multipart/form-data' ||
-      this.currentRoute.route.contentType === 'application/x-www-form-urlencoded' ||
-      this.currentRoute.route.contentType === 'text/csv'
-    ) {
-      this.editorConfig.mode = 'text';
-    } else if (this.currentRoute.route.contentType === 'application/json') {
+    const contentType = this.serverService.getCustomHeader(this.currentRoute.route, 'Content-Type');
+
+    if (contentType === 'application/json') {
       this.editorConfig.mode = 'json';
-    } else if (this.currentRoute.route.contentType === 'application/xml') {
+    } else if (contentType === 'text/html' || contentType === 'application/xhtml+xml') {
+      this.editorConfig.mode = 'html';
+    } else if (contentType === 'application/xml') {
       this.editorConfig.mode = 'xml';
-    } else if (this.currentRoute.route.contentType === 'text/css') {
+    } else if (contentType === 'text/css') {
       this.editorConfig.mode = 'css';
     } else {
-      this.editorConfig.mode = 'json';
+      this.editorConfig.mode = 'text';
     }
   }
 

@@ -1,4 +1,4 @@
-import { HostListener, EventEmitter, Output, Renderer2, ElementRef, Directive, Input } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, Input, Output, Renderer2 } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 const autocompleteElementMaxHeight = 135; // from styles.scss

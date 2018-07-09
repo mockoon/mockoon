@@ -142,7 +142,10 @@ export class ServerService {
                 fileContent = fs.readFileSync(route.file.path);
 
                 // Set content type, set content disposition and send Buffer
-                res.set('Content-Type', mime.lookup(route.file.path));
+                if (!this.getCustomHeader(route, 'Content-Type')) {
+                  res.set('Content-Type', mime.lookup(route.file.path));
+                }
+
                 res.set('Content-Disposition', `attachment; filename="${path.basename(route.file.path)}"`);
                 res.send(fileContent);
               } catch (error) {
@@ -154,37 +157,22 @@ export class ServerService {
                 }
               }
             } else {
-              switch (route.contentType) {
-                case 'text/html':
-                case 'text/plain':
-                case 'application/xml':
-                case 'text/css':
-                case 'text/csv':
-                case 'application/xhtml+xml':
-                case 'application/x-www-form-urlencoded':
-                case 'multipart/form-data':
-                  res.set('Content-Type', route.contentType);
-                  res.send(route.body);
-                  break;
-
-                case 'application/json':
-                  res.set('Content-Type', route.contentType);
-                  try {
-                    res.json(JSON.parse(DummyJSON.parse(route.body, { helpers: DummyJSONHelpers(req) })));
-                  } catch (error) {
-                    // if JSON parsing error send plain text error
-                    if (error.message.indexOf('Unexpected token') >= 0 || error.message.indexOf('Parse error') >= 0) {
-                      this.alertService.showAlert('error', Errors.JSON_PARSE);
-                      res.set('Content-Type', 'text/plain');
-                      res.send(Errors.JSON_PARSE);
-                    }
-                    res.end();
+              // detect if content type is json in order to parse
+              if (this.getCustomHeader(route, 'Content-Type') === 'application/json') {
+                try {
+                  res.json(JSON.parse(DummyJSON.parse(route.body, { helpers: DummyJSONHelpers(req) })));
+                } catch (error) {
+                  // if JSON parsing error send plain text error
+                  if (error.message.indexOf('Unexpected token') >= 0 || error.message.indexOf('Parse error') >= 0) {
+                    this.alertService.showAlert('error', Errors.JSON_PARSE);
+                    res.set('Content-Type', 'text/plain');
+                    res.send(Errors.JSON_PARSE);
                   }
-                  break;
-
-                default:
-                  break;
-              };
+                  res.end();
+                }
+              } else {
+                res.send(route.body);
+              }
             }
           }, route.latency);
         });
@@ -233,5 +221,16 @@ export class ServerService {
     } catch (e) {
       return false;
     }
+  }
+
+  /**
+   * Return the content type header value
+   *
+   * @param route
+   */
+  public getCustomHeader(route: RouteType, headerName: string): string {
+    const header = route.customHeaders.find(customHeader => customHeader.key === headerName);
+
+    return (header && header.value) || '';
   }
 }

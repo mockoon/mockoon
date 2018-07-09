@@ -250,21 +250,10 @@
                   <div class="col d-flex flex-column">
                     <div class="title-separator has-icon">
                       <div class="title-separator-icon text-secondary"><i class="material-icons">subject</i></div>
-                      <div class="title-separator-text"><div>Body </div><div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div></div>
-                    </div>
-                    <div class="form-row">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">Content-Type</span>
-                        </div>
-                        <select class="custom-select col-lg-4" name="route.contentType" [(ngModel)]="currentRoute.route.contentType" (ngModelChange)="environmentUpdated('contentType')">
-                        <option *ngFor="let contentType of contentTypes" [value]="contentType" [selected]="currentRoute.route.contentType === contentType">{{contentType}}</option>
-                      </select>
-                      <div *ngIf="currentRoute.route.contentType === 'application/json'" class="input-group-prepend">
-                        <span class="input-group-text text-muted" (click)="deleteFile()">
-                          Supports templating. <span (click)="openJSONWikiLink()" class="pl-2 btn btn-link text-primary cp">More info</span>
-                        </span>
-                      </div>
+                      <div class="title-separator-text">
+                        <div>Body </div>
+                        <div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div>
+                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getCustomHeader(currentRoute.route, 'Content-Type')) ? 'Content-Type ' + getCustomHeader(currentRoute.route, 'Content-Type') : 'No Content-Type is set'}} <ng-container *ngIf="getCustomHeader(currentRoute.route, 'Content-Type') === 'application/json'">Supports templating. <span (click)="openJSONWikiLink()" class="pl-2 btn btn-link text-primary cp">More info</span></ng-container></div>
                       </div>
                     </div>
                     <div class="mt-3 flex-fill">
@@ -284,12 +273,12 @@
                 <div class="col">
                   <!-- Custom headers -->
                   <div class="input-group" style="position: relative;">
-                    <input type="text" class="form-control col-5" placeholder="header" name="route.customHeader{{customHeaderIndex}}.key" [(ngModel)]="currentRoute.route.customHeaders[customHeaderIndex].key" (ngModelChange)="environmentUpdated('routeCustomHeader')" [autocomplete]="headerNamesList">
+                    <input type="text" class="form-control col-5" placeholder="header" name="route.customHeader{{customHeaderIndex}}.key" [(ngModel)]="currentRoute.route.customHeaders[customHeaderIndex].key" (ngModelChange)="environmentUpdated('routeCustomHeader')" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="headerNamesList">
                     <div class="input-group-prepend">
                       <span class="input-group-text">:</span>
                     </div>
                     <input type="text" class="form-control col-5" placeholder="value" name="route.customHeader{{customHeaderIndex}}.value" [(ngModel)]="currentRoute.route.customHeaders[customHeaderIndex].value"
-                      (ngModelChange)="environmentUpdated('routeCustomHeader')">
+                      (ngModelChange)="environmentUpdated('routeCustomHeader')" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="headerValuesList">
                     <div class="input-group-prepend">
                       <span *ngIf="customHeaderIndex !== (currentRoute.route.customHeaders.length - 1)" class="input-group-text text-danger" (click)="removeCustomHeader(customHeader.uuid)"><i class="material-icons">clear</i></span>
                     </div>
