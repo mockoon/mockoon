@@ -41,6 +41,27 @@ export const DummyJSONHelpers = (request) => {
       // remove last item (dummy json options argument)S
       return args.slice(0, args.length - 1);
     },
+    // switch cases
+    switch: (value, options) => {
+      this.switchValue = value;
+      const htmlContent = options.fn(this);
+      return htmlContent;
+    },
+    // case helper for switch
+    case: (value, options) => {
+      // check switch value to simulate break
+      if (this.switchValue && value === this.switchValue) {
+        delete this.switchValue;
+        return options.fn(this);
+      }
+    },
+    // default helper for switch
+    default: (options) => {
+      // if there is still a switch value show default content
+      if (this.switchValue) {
+        delete this.switchValue;
+        return options.fn(this);
+      }
     }
   }
 };
