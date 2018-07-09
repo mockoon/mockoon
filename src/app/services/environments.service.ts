@@ -294,8 +294,6 @@ export class EnvironmentsService {
       environments.forEach(environment => migration(environment));
     });
 
-    console.log(environments)
-
     return environments;
   }
 

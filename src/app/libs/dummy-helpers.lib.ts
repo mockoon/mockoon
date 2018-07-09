@@ -1,3 +1,6 @@
+import * as DummyJSON from 'dummy-json';
+import random from 'lodash/random';
+
 export const DummyJSONHelpers = (request) => {
   return {
     // use params from url /:param1/:param2
@@ -23,6 +26,11 @@ export const DummyJSONHelpers = (request) => {
     // use request method
     method: () => {
       return request.method;
+    },
+    // return one random item
+    oneOf: (itemList: string[]) => {
+      return DummyJSON.utils.randomArrayItem(itemList);
+    },
     }
   }
 };
