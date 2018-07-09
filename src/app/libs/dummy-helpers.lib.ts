@@ -31,6 +31,16 @@ export const DummyJSONHelpers = (request) => {
     oneOf: (itemList: string[]) => {
       return DummyJSON.utils.randomArrayItem(itemList);
     },
+    // return some random item
+    someOf: (itemList: string[], min: number, max: number) => {
+      const shuffledList = itemList.sort(() => .5 - Math.random());
+      return shuffledList.slice(0, random(min, max));
+    },
+    // create an array
+    array: (...args: any[]) => {
+      // remove last item (dummy json options argument)S
+      return args.slice(0, args.length - 1);
+    },
     }
   }
 };
