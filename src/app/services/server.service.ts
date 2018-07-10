@@ -51,8 +51,8 @@ export class ServerService {
 
     // apply latency, cors, routes and proxy to express server
     this.setEnvironmentLatency(server, environment);
-    this.setCors(server);
     this.setRoutes(server, environment);
+    this.setCors(server, environment);
     this.enableProxy(server, environment);
 
     // handle server errors
@@ -92,22 +92,22 @@ export class ServerService {
   }
 
   /**
-   * Always answer with status 200 to CORS pre flight OPTIONS requests
-   * @param server
+   * Always answer with status 200 to CORS pre flight OPTIONS requests if option activated.
+   * /!\ Must be called after the routes creation otherwise it will intercept all user defined OPTIONS routes.
+   *
+   * @param server - express instance
+   * @param environment - environment to be started
    */
-  private setCors(server: any) {
-    // always respond 200 for OPTIONS requests
-    server.use(function (req, res, next) {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With');
+  private setCors(server: any, environment: EnvironmentType) {
+    if (environment.cors) {
+      server.options('/*', function (req, res) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With');
 
-      if (req.method === 'OPTIONS') {
         res.send(200);
-      } else {
-        next();
-      }
-    });
+      });
+    }
   }
 
   /**

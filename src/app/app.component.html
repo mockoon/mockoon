@@ -25,7 +25,7 @@
             <div class="input-group">
               <span class="input-group-prepend">
                 <button class="btn btn-link" type="button" [ngClass]="{'text-success': !currentEnvironment.environment.running && !currentEnvironment.environment.needRestart, 'text-danger': currentEnvironment.environment.running && !currentEnvironment.environment.needRestart, 'text-warning': currentEnvironment.environment.running && currentEnvironment.environment.needRestart}" (click)="toggleEnvironment(currentEnvironment.environment)">
-                  <i class="material-icons" *ngIf="currentEnvironment.environment.running && currentEnvironment.environment.needRestart" ngbTooltip="Restart server">refresh</i>
+                  <i class="material-icons" *ngIf="currentEnvironment.environment.running && currentEnvironment.environment.needRestart" ngbTooltip="Server needs restart">refresh</i>
                   <i class="material-icons" *ngIf="currentEnvironment.environment.running && !currentEnvironment.environment.needRestart" ngbTooltip="Stop server">stop</i>
                   <i class="material-icons" *ngIf="!currentEnvironment.environment.running" ngbTooltip="Start server">play_arrow</i>
                 </button>
@@ -89,7 +89,7 @@
           </div>
           <ul class="nav flex-column menu-list" #environmentsMenu *ngIf="environments" [dragula]="'environmentsContainer'" [dragulaModel]='environments'>
             <li class="nav-item" *ngFor="let environment of environments; let environmentIndex = index">
-              <a class="nav-link position-relative" [ngClass]="{'active': currentEnvironment && currentEnvironment.index === environmentIndex}" (click)="selectEnvironment(environmentIndex, $event)" (contextmenu)="navigationContextMenu('environment', environmentIndex, $event)">
+              <a class="nav-link position-relative" [ngClass]="{'active': currentEnvironment && currentEnvironment.index === environmentIndex, 'running': environment.running && !environment.needRestart, 'need-restart': environment.needRestart}" (click)="selectEnvironment(environmentIndex, $event)" (contextmenu)="navigationContextMenu('environment', environmentIndex, $event)">
                 <div class="ellipsis">
                   <span class="text-warning" ngbTooltip="Port is shared with another environment" placement="right"><i *ngIf="environment.duplicates.length" class="material-icons">warning</i></span>
                   {{environment.name}}
@@ -97,14 +97,14 @@
                 <div class="menu-subtitle ellipsis">
                   localhost:{{environment.port}}/{{environment.endpointPrefix}}
                 </div>
-                <div *ngIf="environment.running" class="server-icons server-icons-status" [ngClass]="{'running': !environment.needRestart, 'need-restart': environment.needRestart}">
-                  <i class="material-icons" [ngbTooltip]="(environment.needRestart) ? 'Server needs to be restarted' : 'Server is running'">lens</i>
-                </div>
                 <div *ngIf="environment.proxyMode" class="server-icons server-icons-proxy-mode">
                   <i class="material-icons" ngbTooltip="Proxy mode enabled">security</i>
                 </div>
                 <div *ngIf="environment.https" class="server-icons server-icons-https">
                   <i class="material-icons" ngbTooltip="HTTPS enabled">https</i>
+                </div>
+                <div *ngIf="environment.cors" class="server-icons server-icons-cors">
+                  <i class="material-icons" ngbTooltip="CORS enabled">shuffle</i>
                 </div>
               </a>
             </li>
@@ -253,7 +253,7 @@
                       <div class="title-separator-text">
                         <div>Body </div>
                         <div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div>
-                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getCustomHeader(currentRoute.route, 'Content-Type')) ? 'Content-Type ' + getCustomHeader(currentRoute.route, 'Content-Type') : 'No Content-Type is set'}} <ng-container *ngIf="getCustomHeader(currentRoute.route, 'Content-Type') === 'application/json'">Supports templating. <span (click)="openJSONWikiLink()" class="pl-2 btn btn-link text-primary cp">More info</span></ng-container></div>
+                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getCustomHeader(currentRoute.route, 'Content-Type')) ? 'Content-Type ' + getCustomHeader(currentRoute.route, 'Content-Type') : 'No Content-Type is set'}} <ng-container *ngIf="getCustomHeader(currentRoute.route, 'Content-Type') === 'application/json'"> - Supports templating<span (click)="openWikiLink('json')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></ng-container></div>
                       </div>
                     </div>
                     <div class="mt-3 flex-fill">
@@ -319,6 +319,7 @@
                       </div>
                     </div>
                   </div>
+
                   <div class="title-separator has-icon">
                     <div class="title-separator-icon text-warning"><i class="material-icons">https</i></div>
                     <div class="title-separator-text"><div>HTTPS </div></div>
@@ -327,6 +328,17 @@
                     <div class="custom-control custom-checkbox">
                       <input type="checkbox" class="custom-control-input" id="HTTPS" name="HTTPS" [(ngModel)]="currentEnvironment.environment.https" (ngModelChange)="environmentUpdated('environmentHTTPS')">
                       <label class="custom-control-label" for="HTTPS">Enable</label>
+                    </div>
+                  </div>
+
+                  <div class="title-separator has-icon">
+                    <div class="title-separator-icon text-info"><i class="material-icons">shuffle</i></div>
+                    <div class="title-separator-text"><div>CORS </div><div>Automatically handle OPTIONS requests<span (click)="openWikiLink('cors')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></div></div>
+                  </div>
+                  <div class="form-inline pl-4">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="CORS" name="CORS" [(ngModel)]="currentEnvironment.environment.cors" (ngModelChange)="environmentUpdated('environmentCORS')">
+                      <label class="custom-control-label" for="CORS">Enable</label>
                     </div>
                   </div>
                 </div>

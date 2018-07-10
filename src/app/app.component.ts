@@ -484,8 +484,8 @@ export class AppComponent implements OnInit {
     this.analyticsService.collect({ type: 'event', category: 'link', action: 'feedback' });
   }
 
-  public openJSONWikiLink() {
-    shell.openExternal(Config.wikiJSONLink);
+  public openWikiLink(linkName: string) {
+    shell.openExternal(Config.wikiLinks[linkName]);
 
     this.analyticsService.collect({ type: 'event', category: 'link', action: 'wiki' });
   }

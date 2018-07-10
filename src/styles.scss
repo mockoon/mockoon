@@ -29,6 +29,18 @@
     box-shadow: inset 2px 0 0 0 $blue;
     background-color: $component-active-bg;
   }
+  .nav-link.running {
+    box-shadow: inset -3px 0 0 0 $green;
+  }
+  .nav-link.active.running {
+    box-shadow: inset 2px 0 0 0 $blue, inset -3px 0 0 0 $green;
+  }
+  .nav-link.need-restart {
+    box-shadow: inset -3px 0 0 0 $orange;
+  }
+  .nav-link.active.need-restart {
+    box-shadow: inset 2px 0 0 0 $blue, inset -3px 0 0 0 $orange;
+  }
   // adjust nav badge position
   .nav-link .badge {
     margin-left: 0.5rem;
@@ -249,7 +261,7 @@ select, input, .btn {
 }
 
 // http methods badges
-$http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $red), ('head', $purple), ('patch', $teal);
+$http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $red), ('head', $purple), ('patch', $teal), ('options', $dark-blue);
 @each $method in $http-methods {
   .http-method-#{nth($method, 1)} {
     background-color: #{nth($method, 2)};
@@ -367,28 +379,22 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
     font-size: 13px;
   }
 
-  &-status {
-    right: 5px;
-    top: -6px;
-
-    &.running {
-      color: $green;
-    }
-    &.need-restart {
-      color: $orange;
-    }
-  }
-
   &-proxy-mode {
-    right: 5px;
-    top: 10px;
+    right: 10px;
+    top: -6px;
     color: $blue;
   }
 
   &-https {
-    right: 5px;
-    top: 28px;
+    right: 10px;
+    top: 10px;
     color: $yellow;
+  }
+
+  &-cors {
+    right: 10px;
+    top: 28px;
+    color: $cyan;
   }
 }
 

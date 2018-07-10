@@ -21,7 +21,7 @@ All feedback is welcomed. But please follow these simple guidelines before submi
 
 - search the [opened issues](https://github.com/255kb/mockoon/issues) before opening any issue
 - try to give maximum details in order to reproduce the bug (providing the mock data you used could be useful)
-- purpose of Mockoon is to be simple, fast, easy to use, so keep in mind that most features **may not be implemented**! On purpose.
+- purpose of Mockoon is to be simple, fast, easy to use, so keep in mind that some features **may not be implemented**! On purpose.
 
 ## Documentation
 

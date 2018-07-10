@@ -4,7 +4,8 @@ export const methods = [
   'put',
   'patch',
   'delete',
-  'head'
+  'head',
+  'options'
 ];
 
 export const statusCodes = [

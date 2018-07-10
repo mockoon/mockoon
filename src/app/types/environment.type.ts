@@ -15,6 +15,7 @@ export type EnvironmentType = {
   proxyMode: boolean;
   proxyHost: string;
   https: boolean;
+  cors: boolean;
 
   /**
    * Store duplicates environment indexes, use .length to assess if there is any duplicate

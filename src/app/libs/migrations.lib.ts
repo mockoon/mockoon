@@ -18,6 +18,10 @@ export const Migrations: Function[] = [
 
   // v0.5.0beta
   (environment: EnvironmentType) => {
+    if (!environment.cors) {
+      environment.cors = true;
+    }
+
     environment.routes.forEach(route => {
       // add uuid
       if (!route.uuid) {
