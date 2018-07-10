@@ -20,6 +20,7 @@ import 'brace/mode/text.js';
 import 'brace/mode/xml.js';
 import { ipcRenderer, remote, shell } from 'electron';
 import * as mimeTypes from 'mime-types';
+import { DragulaService } from 'ng2-dragula';
 import * as path from 'path';
 import * as uuid from 'uuid/v1';
 import '../assets/custom_theme.js';
@@ -70,7 +71,8 @@ export class AppComponent implements OnInit {
     private analyticsService: AnalyticsService,
     private authService: AuthService,
     private eventsService: EventsService,
-    private config: NgbTooltipConfig
+    private config: NgbTooltipConfig,
+    private dragulaService: DragulaService
   ) {
     // tooltip config
     this.config.container = 'body';
@@ -147,6 +149,8 @@ export class AppComponent implements OnInit {
     this.updateService.updateAvailable.subscribe(() => {
       this.updateAvailable = true;
     });
+
+    this.initDragMonitoring();
   }
 
   /**
@@ -187,6 +191,25 @@ export class AppComponent implements OnInit {
     }
   }
 
+  /**
+   * Trigger env/route re-selection when draging active route/env
+   */
+  public initDragMonitoring() {
+    // on drop reselect if we moved a selected env/route
+    this.dragulaService.drop.subscribe((value) => {
+      if (value[0] === 'environmentsContainer') {
+        const environmentIndex = this.environmentsService.findEnvironmentIndex(this.currentEnvironment.environment.uuid);
+        console.log(environmentIndex)
+        this.selectEnvironment(environmentIndex);
+      } else if (value[0] === 'routesContainer') {
+        const routeIndex = this.environmentsService.findRouteIndex(this.currentEnvironment.environment, this.currentRoute.route.uuid);
+        console.log(routeIndex)
+        this.selectRoute(routeIndex);
+      }
+
+      this.environmentUpdated('reorder', true);
+    });
+  }
   /**
    * Toggle environment running state (start/stop)
    *

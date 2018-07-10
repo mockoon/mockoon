@@ -19,6 +19,7 @@ import { ServerService } from 'app/services/server.service';
 import { SettingsService } from 'app/services/settings.service';
 import { UpdateService } from 'app/services/update.service';
 import { AceEditorModule } from 'ng2-ace-editor';
+import { DragulaModule } from 'ng2-dragula';
 import 'reflect-metadata';
 import 'zone.js';
 import { AppComponent } from './app.component';
@@ -34,22 +35,23 @@ import { AppComponent } from './app.component';
     SettingsModalComponent
   ],
   imports: [
-    BrowserModule,
+    AceEditorModule,
     BrowserAnimationsModule,
+    BrowserModule,
+    DragulaModule,
     FormsModule,
     HttpModule,
-    AceEditorModule,
     NgbModule.forRoot()
   ],
   providers: [
-    EnvironmentsService,
-    ServerService,
     AlertService,
-    UpdateService,
     AnalyticsService,
     AuthService,
+    EnvironmentsService,
     EventsService,
-    SettingsService
+    ServerService,
+    SettingsService,
+    UpdateService
   ],
   bootstrap: [AppComponent]
 })

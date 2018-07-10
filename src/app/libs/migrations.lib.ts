@@ -19,6 +19,11 @@ export const Migrations: Function[] = [
   // v0.5.0beta
   (environment: EnvironmentType) => {
     environment.routes.forEach(route => {
+      // add uuid
+      if (!route.uuid) {
+        route.uuid = uuid();
+      }
+
       // find content type header
       const ContentTypeHeader = route.customHeaders.find(customHeader => customHeader.key === 'Content-Type');
 

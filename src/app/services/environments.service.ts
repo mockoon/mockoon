@@ -42,6 +42,7 @@ export class EnvironmentsService {
   };
 
   private routeSchema: RouteType = {
+    uuid: '',
     method: 'get',
     endpoint: '',
     body: 'Environment is running.',
@@ -187,11 +188,11 @@ export class EnvironmentsService {
     defaultEnvironment.name = 'Example';
     this.routesTotal = 2;
     defaultEnvironment.routes.push(Object.assign(
-      {}, this.routeSchema, { customHeaders: [{ uuid: uuid(), key: 'Content-Type', value: 'text/plain' }] },
+      {}, this.routeSchema, { uuid: uuid(), customHeaders: [{ uuid: uuid(), key: 'Content-Type', value: 'text/plain' }] },
       { endpoint: 'answer', body: '42' }
     ));
     defaultEnvironment.routes.push(Object.assign(
-      {}, this.routeSchema, { customHeaders: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }] },
+      {}, this.routeSchema, { uuid: uuid(), customHeaders: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }] },
       {
         method: 'post',
         endpoint: 'dolphins',
@@ -338,12 +339,20 @@ export class EnvironmentsService {
    */
   public duplicateRoute(environment: EnvironmentType, routeIndex: number, callback: Function): number {
     // copy the route, reset duplicates (use cloneDeep to avoid headers pass by reference)
-    const newRoute = Object.assign({}, cloneDeep(environment.routes[routeIndex]), { duplicates: [] });
+    const newRoute = Object.assign({}, cloneDeep(environment.routes[routeIndex]), { uuid: uuid(), duplicates: [] });
     const newRouteIndex = environment.routes.push(newRoute) - 1;
     this.routesTotal += 1;
 
     this.environmentUpdateEvents.next({ environment, callback });
 
     return newRouteIndex;
+  }
+
+  public findEnvironmentIndex(environmentUUID: string): number {
+    return this.environments.findIndex(environment => environment.uuid === environmentUUID)
+  }
+
+  public findRouteIndex(environment: EnvironmentType, routeUUID: string): number {
+    return environment.routes.findIndex(route => route.uuid === routeUUID)
   }
 }
