@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, EventEmitter, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 /**
@@ -16,9 +16,10 @@ export class ValidPathDirective {
   @Input() ValidPath: any;
   @Output() ngModelChange: EventEmitter<any> = new EventEmitter();
 
-  constructor(private model: NgModel) { }
+  constructor(private model: NgModel, private el: ElementRef) { }
 
   @HostListener('input', ['$event']) onInputChange(event) {
+    const pos = this.el.nativeElement.selectionStart;
     const value = event.target.value;
 
     // remove double slashes
@@ -32,5 +33,11 @@ export class ValidPathDirective {
 
     // emit a model change
     this.ngModelChange.emit(sanitizedValue);
+
+    // set selection at initial position
+    setTimeout(() => {
+      this.el.nativeElement.selectionStart = pos;
+      this.el.nativeElement.selectionEnd = pos;
+    });
   }
 }
