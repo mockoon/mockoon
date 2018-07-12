@@ -38,7 +38,8 @@ export class EnvironmentsService {
     needRestart: false,
     proxyMode: false,
     proxyHost: '',
-    https: false
+    https: false,
+    cors: true
   };
 
   private routeSchema: RouteType = {
