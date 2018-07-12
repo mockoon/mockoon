@@ -199,11 +199,9 @@ export class AppComponent implements OnInit {
     this.dragulaService.drop.subscribe((value) => {
       if (value[0] === 'environmentsContainer') {
         const environmentIndex = this.environmentsService.findEnvironmentIndex(this.currentEnvironment.environment.uuid);
-        console.log(environmentIndex)
         this.selectEnvironment(environmentIndex);
       } else if (value[0] === 'routesContainer') {
         const routeIndex = this.environmentsService.findRouteIndex(this.currentEnvironment.environment, this.currentRoute.route.uuid);
-        console.log(routeIndex)
         this.selectRoute(routeIndex);
       }
 
