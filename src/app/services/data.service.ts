@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Config } from 'app/config';
 import { DataSubjectType, ExportType } from 'app/types/data.type';
-import { EnvironmentsType } from 'app/types/environment.type';
+import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
+import { RouteType } from 'app/types/route.type';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -16,7 +17,7 @@ export class DataService {
    * @param data
    * @param subject
    */
-  public wrapExport(data: EnvironmentsType, subject: DataSubjectType): string {
+  public wrapExport(data: EnvironmentsType | EnvironmentType | RouteType, subject: DataSubjectType): string {
     return JSON.stringify(<ExportType>{
       id: this.exportId,
       checksum: crypto.createHash('md5').update(JSON.stringify(data) + Config.exportSalt).digest('hex'),
@@ -31,6 +32,9 @@ export class DataService {
    * @param importData
    */
   public verifyImportChecksum(importData: ExportType): boolean {
+    if (importData.id !== this.exportId) {
+      return false;
+    }
     const importMD5 = crypto.createHash('md5').update(JSON.stringify(importData.data) + Config.exportSalt).digest('hex');
 
     return importMD5 === importData.checksum;

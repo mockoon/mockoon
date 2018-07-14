@@ -5,10 +5,10 @@ import { Migrations } from 'app/libs/migrations.lib';
 import { AlertService } from 'app/services/alert.service';
 import { DataService } from 'app/services/data.service';
 import { ServerService } from 'app/services/server.service';
-import { ExportType } from 'app/types/data.type';
-import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
+import { DataSubjectType, ExportType } from 'app/types/data.type';
+import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
 import { CustomHeaderType, RouteType } from 'app/types/route.type';
-import { remote } from 'electron';
+import { clipboard, remote } from 'electron';
 import * as storage from 'electron-json-storage';
 import * as fs from 'fs';
 import { cloneDeep } from 'lodash';
@@ -18,8 +18,9 @@ import * as uuid from 'uuid/v1';
 
 @Injectable()
 export class EnvironmentsService {
+  public selectEnvironment: Subject<number> = new Subject<number>();
   public environmentUpdateEvents: Subject<{
-    environment: EnvironmentType,
+    environment?: EnvironmentType,
     callback?: Function
   }> = new Subject<{
     environment: EnvironmentType,
@@ -95,8 +96,9 @@ export class EnvironmentsService {
     this.environmentUpdateEvents.debounceTime(100).subscribe((params) => {
       if (params.environment) {
         this.checkRoutesDuplicates(params.environment);
-        this.checkEnvironmentsDuplicates();
       }
+
+      this.checkEnvironmentsDuplicates();
 
       if (params.callback) {
         params.callback();
@@ -246,30 +248,32 @@ export class EnvironmentsService {
    * Check if environments are duplicated and mark them
    */
   private checkEnvironmentsDuplicates() {
-    this.environments.forEach((environment, environmentIndex) => {
-      const duplicatedEnvironmentsIndexes = [];
+    if (this.environments) {
+      this.environments.forEach((environment, environmentIndex) => {
+        const duplicatedEnvironmentsIndexes = [];
 
-      // extract all environments with same port than current one
-      const duplicatedEnvironments: EnvironmentType[] = this.environments.filter((
-        otherEnvironmentItem: EnvironmentType,
-        otherEnvironmentIndex: number
-      ) => {
-        // ignore same environment
-        if (otherEnvironmentIndex === environmentIndex) {
-          return false;
-        } else {
-          // if duplicated index keep duplicated route index in an array, return the duplicated route
-          if (otherEnvironmentItem.port === environment.port) {
-            duplicatedEnvironmentsIndexes.push(otherEnvironmentIndex);
-            return true;
-          } else {
+        // extract all environments with same port than current one
+        const duplicatedEnvironments: EnvironmentType[] = this.environments.filter((
+          otherEnvironmentItem: EnvironmentType,
+          otherEnvironmentIndex: number
+        ) => {
+          // ignore same environment
+          if (otherEnvironmentIndex === environmentIndex) {
             return false;
+          } else {
+            // if duplicated index keep duplicated route index in an array, return the duplicated route
+            if (otherEnvironmentItem.port === environment.port) {
+              duplicatedEnvironmentsIndexes.push(otherEnvironmentIndex);
+              return true;
+            } else {
+              return false;
+            }
           }
-        }
-      });
+        });
 
-      environment.duplicates = duplicatedEnvironmentsIndexes;
-    });
+        environment.duplicates = duplicatedEnvironmentsIndexes;
+      });
+    }
   }
 
   /**
@@ -310,20 +314,35 @@ export class EnvironmentsService {
   /**
    * Renew all environments UUIDs
    *
-   * @param environments
+   * @param data
+   * @param subject
    */
-  private renewUUIDs(environments: EnvironmentsType) {
-    environments.forEach(environment => {
-      environment.uuid = uuid();
-      environment.routes.forEach(route => {
+  private renewUUIDs(data: EnvironmentsType | EnvironmentType | RouteType, subject: DataSubjectType) {
+    if (subject === 'full') {
+      (data as EnvironmentsType).forEach(environment => {
+        environment.uuid = uuid();
+        environment.routes.forEach(route => {
+          route.uuid = uuid();
+          route.customHeaders.forEach(customHeader => {
+            customHeader.uuid = uuid();
+          });
+        });
+      });
+    } else if (subject === 'environment') {
+      (data as EnvironmentType).routes.forEach(route => {
         route.uuid = uuid();
         route.customHeaders.forEach(customHeader => {
           customHeader.uuid = uuid();
         });
       });
-    });
+    } else if (subject === 'route') {
+      (data as RouteType).uuid = uuid();
+      (data as RouteType).customHeaders.forEach(customHeader => {
+        customHeader.uuid = uuid();
+      });
+    }
 
-    return environments;
+    return data;
   }
 
   /**
@@ -387,16 +406,114 @@ export class EnvironmentsService {
   /**
    * Export all envs in a json file
    */
-  public exportAllEnvironments() {
+  public exportAllEnvironments(callback: Function) {
     this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (path) => {
       fs.writeFile(path, this.dataService.wrapExport(this.environments, 'full'), (error) => {
         if (error) {
           this.alertService.showAlert('error', Errors.EXPORT_ERROR);
         } else {
           this.alertService.showAlert('success', Messages.EXPORT_SUCCESS);
+          callback();
         }
       });
     });
+  }
+
+  /**
+   * Export an environment to the clipboard
+   *
+   * @param environmentIndex
+   */
+  public exportEnvironmentToClipboard(environmentIndex: number, callback: Function) {
+    try {
+      clipboard.writeText(this.dataService.wrapExport(this.environments[environmentIndex], 'environment'));
+      this.alertService.showAlert('success', Messages.EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS);
+      callback();
+    } catch (error) {
+      this.alertService.showAlert('error', Errors.EXPORT_ENVIRONMENT_CLIPBOARD_ERROR);
+    }
+  }
+
+  /**
+   * Export an environment to the clipboard
+   *
+   * @param environmentIndex
+   */
+  public exportRouteToClipboard(environmentIndex: number, routeIndex: number, callback: Function) {
+    try {
+      clipboard.writeText(this.dataService.wrapExport(this.environments[environmentIndex].routes[routeIndex], 'route'));
+      this.alertService.showAlert('success', Messages.EXPORT_ROUTE_CLIPBOARD_SUCCESS);
+      callback();
+    } catch (error) {
+      this.alertService.showAlert('error', Errors.EXPORT_ROUTE_CLIPBOARD_ERROR);
+    }
+  }
+
+  /**
+   * Import an environment / route from clipboard
+   * Append environment, append route in currently selected environment
+   *
+   * @param currentEnvironment
+   */
+  public importFromClipboard(currentEnvironment: CurrentEnvironmentType, callback: Function) {
+    let importData: ExportType;
+    try {
+      importData = JSON.parse(clipboard.readText());
+
+      // verify data checksum
+      if (!this.dataService.verifyImportChecksum(importData)) {
+        this.alertService.showAlert('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
+        return;
+      }
+
+      if (importData.subject === 'environment') {
+        importData.data = this.renewUUIDs(importData.data as EnvironmentType, 'environment');
+        this.environments.push(importData.data as EnvironmentType);
+        this.environments = this.migrateData(this.environments);
+
+        // if only one environment ask for selection of the one just created
+        if (this.environments.length === 1) {
+          this.selectEnvironment.next(0);
+        }
+
+        this.alertService.showAlert('success', Messages.IMPORT_ENVIRONMENT_CLIPBOARD_SUCCESS);
+      } else if (importData.subject === 'route') {
+        let currentEnvironmentIndex: number;
+        // if no current environment create one and ask for selection
+        if (this.environments.length === 0) {
+          this.addEnvironment(() => { setTimeout(() => {
+            this.selectEnvironment.next(0);
+          }, 1000); });
+          this.environments[0].routes = [];
+
+          currentEnvironmentIndex = 0;
+        } else {
+          currentEnvironmentIndex = currentEnvironment.index;
+        }
+
+        importData.data = this.renewUUIDs(importData.data as RouteType, 'route');
+        this.environments[currentEnvironmentIndex].routes.push(importData.data as RouteType);
+        this.environments = this.migrateData(this.environments);
+
+        this.alertService.showAlert('success', Messages.IMPORT_ROUTE_CLIPBOARD_SUCCESS);
+      }
+
+      this.environmentUpdateEvents.next({
+        environment: (currentEnvironment) ? currentEnvironment.environment : null
+      });
+      callback();
+    } catch (error) {
+      if (!importData) {
+        this.alertService.showAlert('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
+        return;
+      }
+
+      if (importData.subject === 'environment') {
+        this.alertService.showAlert('error', Errors.IMPORT_ENVIRONMENT_CLIPBOARD_ERROR);
+      } else if (importData.subject === 'route') {
+        this.alertService.showAlert('error', Errors.IMPORT_ROUTE_CLIPBOARD_ERROR);
+      }
+    }
   }
 
   /**
@@ -404,8 +521,10 @@ export class EnvironmentsService {
    * Verify checksum and migrate data.
    *
    * Append imported envs to the env array.
+   *
+   * @param currentEnvironment
    */
-  public importEnvironmentsFile() {
+  public importEnvironmentsFile(callback: Function) {
     this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (file) => {
       if (file && file[0]) {
         fs.readFile(file[0], 'utf-8', (error, fileContent) => {
@@ -416,19 +535,21 @@ export class EnvironmentsService {
 
             // verify data checksum
             if (!this.dataService.verifyImportChecksum(importData)) {
-              this.alertService.showAlert('error', Errors.IMPORT_WRONG_CHECKSUM);
+              this.alertService.showAlert('error', Errors.IMPORT_FILE_WRONG_CHECKSUM);
               return;
             }
 
+            importData.data = this.renewUUIDs(importData.data as EnvironmentsType, 'full');
+
+            this.environments.push(...(importData.data as EnvironmentsType));
+
             // play migrations
-            importData.data = this.migrateData(importData.data);
-            importData.data = this.renewUUIDs(importData.data);
+            this.environments = this.migrateData(this.environments);
 
-            this.environments.push(...importData.data);
-
-            this.checkEnvironmentsDuplicates();
+            this.environmentUpdateEvents.next({});
 
             this.alertService.showAlert('success', Messages.IMPORT_SUCCESS);
+            callback();
           }
         });
       }

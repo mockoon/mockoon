@@ -11,7 +11,7 @@ import { ContextMenuEventType, EventsService } from 'app/services/events.service
 import { ServerService } from 'app/services/server.service';
 import { UpdateService } from 'app/services/update.service';
 import { DataSubjectType } from 'app/types/data.type.js';
-import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
+import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
 import { headerNames, headerValues, methods, RouteType, statusCodes, statusCodesExplanation } from 'app/types/route.type';
 import 'brace/index';
 import 'brace/mode/css';
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
   @ViewChild('environmentsMenu') private environmentsMenu: ElementRef;
   @ViewChild('headersTabContent') private headersTabContent: ElementRef;
   public environments: EnvironmentsType;
-  public currentEnvironment: { environment: EnvironmentType, index: number } = null;
+  public currentEnvironment: CurrentEnvironmentType = null;
   public currentRoute: { route: RouteType, index: number } = null;
   public methods = methods;
   public statusCodes = statusCodes;
@@ -142,10 +142,19 @@ export class AppComponent implements OnInit {
           }
           break;
         case 'IMPORT_FILE':
-          this.environmentsService.importEnvironmentsFile();
+          this.environmentsService.importEnvironmentsFile(() => {
+            this.analyticsService.collect({ type: 'event', category: 'import', action: 'file' });
+          });
+          break;
+        case 'IMPORT_CLIPBOARD':
+          this.environmentsService.importFromClipboard(this.currentEnvironment, () => {
+            this.analyticsService.collect({ type: 'event', category: 'import', action: 'clipboard' });
+          });
           break;
         case 'EXPORT_FILE':
-          this.environmentsService.exportAllEnvironments();
+          this.environmentsService.exportAllEnvironments(() => {
+            this.analyticsService.collect({ type: 'event', category: 'export', action: 'file' });
+          });
           break;
       }
     });
@@ -163,6 +172,10 @@ export class AppComponent implements OnInit {
       this.analyticsService.collect({ type: 'event', category: 'application', action: 'start' });
 
       this.selectEnvironment(0);
+    });
+
+    this.environmentsService.selectEnvironment.subscribe((environmentIndex: number) => {
+      this.selectEnvironment(environmentIndex);
     });
 
     this.alerts = this.alertService.alerts;
@@ -185,7 +198,7 @@ export class AppComponent implements OnInit {
   }
   @HostListener('mousemove', ['$event']) onMouseMove(event: MouseEvent) {
     // if left mouse button pressed
-    if (event.buttons === 1) {
+    if (this.lastMouseDownPosition && event.buttons === 1) {
       const delta = Math.sqrt(
         Math.pow(event.clientX - this.lastMouseDownPosition.x, 2) +
         Math.pow(event.clientY - this.lastMouseDownPosition.y, 2)
@@ -562,12 +575,30 @@ export class AppComponent implements OnInit {
    *
    * @param event - click event
    */
-  public navigationContextMenu(subject: 'environment' | 'route', subjectId: number, event: any) {
+  public navigationContextMenu(subject: DataSubjectType, subjectId: number, event: any) {
     // if right click display context menu
     if (event && event.which === 3) {
       const menu: ContextMenuEventType = {
         event: event,
         items: [
+          {
+            payload: {
+              subject,
+              action: 'duplicate',
+              subjectId
+            },
+            label: 'Duplicate ' + subject,
+            icon: 'content_copy'
+          },
+          {
+            payload: {
+              subject,
+              action: 'export',
+              subjectId
+            },
+            label: 'Copy to clipboard (JSON)',
+            icon: 'assignment'
+          },
           {
             payload: {
               subject,
@@ -581,15 +612,6 @@ export class AppComponent implements OnInit {
               label: 'Confirm deletion'
             },
             confirmColor: 'text-danger'
-          },
-          {
-            payload: {
-              subject,
-              action: 'duplicate',
-              subjectId
-            },
-            label: 'Duplicate ' + subject,
-            icon: 'content_copy'
           }
         ]
       };
@@ -616,23 +638,30 @@ export class AppComponent implements OnInit {
    * @param payload
    */
   public navigationContextMenuItemClicked(payload: ContextMenuItemPayload) {
-    if (payload.action === 'delete') {
-      if (payload.subject === 'route') {
-        this.removeRoute(payload.subjectId);
-      } else if (payload.subject === 'environment') {
-        this.removeEnvironment(payload.subjectId);
-      }
-    } else if (payload.action === 'duplicate') {
-      if (payload.subject === 'route') {
-        this.duplicateRoute(payload.subjectId);
-      } else if (payload.subject === 'environment') {
-        this.duplicateEnvironment(payload.subjectId);
-      }
-    } else if (payload.action === 'env_settings' && payload.subject === 'environment') {
-      if (payload.subjectId !== this.currentEnvironment.index) {
-        this.selectEnvironment(payload.subjectId);
-      }
-      this.setCurrentTab('ENV_SETTINGS');
+    switch (payload.action) {
+      case 'env_settings':
+        if (payload.subjectId !== this.currentEnvironment.index) {
+          this.selectEnvironment(payload.subjectId);
+        }
+        this.setCurrentTab('ENV_SETTINGS');
+        break;
+      case 'duplicate':
+        if (payload.subject === 'route') {
+          this.duplicateRoute(payload.subjectId);
+        } else if (payload.subject === 'environment') {
+          this.duplicateEnvironment(payload.subjectId);
+        }
+        break;
+      case 'export':
+        this.exportToClipboard(payload.subject, payload.subjectId);
+        break;
+      case 'delete':
+        if (payload.subject === 'route') {
+          this.removeRoute(payload.subjectId);
+        } else if (payload.subject === 'environment') {
+          this.removeEnvironment(payload.subjectId);
+        }
+        break;
     }
   }
 
@@ -664,5 +693,23 @@ export class AppComponent implements OnInit {
 
   public handleSettingsModalClosed() {
     this.settingsModalOpened = false;
+  }
+
+  /**
+   * Export an environment to the clipboard
+   *
+   * @param subject
+   * @param subjectIndex
+   */
+  public exportToClipboard(subject: DataSubjectType, subjectIndex: number) {
+    if (subject === 'environment') {
+      this.environmentsService.exportEnvironmentToClipboard(subjectIndex, () => {
+        this.analyticsService.collect({ type: 'event', category: 'export', action: 'clipboard' });
+      });
+    } else if (subject === 'route') {
+      this.environmentsService.exportRouteToClipboard(this.currentEnvironment.index, subjectIndex, () => {
+        this.analyticsService.collect({ type: 'event', category: 'export', action: 'clipboard' });
+      });
+    }
   }
 }

@@ -24,3 +24,5 @@ export type EnvironmentType = {
 };
 
 export type EnvironmentsType = EnvironmentType[];
+
+export type CurrentEnvironmentType = { environment: EnvironmentType, index: number };

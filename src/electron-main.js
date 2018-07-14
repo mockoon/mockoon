@@ -197,7 +197,12 @@ function createWindow() {
     label: 'Tools',
     submenu: [
       {
-        label: 'Import from file', click: function () {
+        label: 'Import environment / route from clipboard', click: function () {
+          mainWindow.webContents.send('keydown', { action: 'IMPORT_CLIPBOARD' });
+        }
+      },
+      {
+        label: 'Import all environments from file', click: function () {
           mainWindow.webContents.send('keydown', { action: 'IMPORT_FILE' });
         }
       },
