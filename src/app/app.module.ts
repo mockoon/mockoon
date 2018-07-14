@@ -13,6 +13,7 @@ import { ValidPathDirective } from 'app/directives/valid-path.directive';
 import { AlertService } from 'app/services/alert.service';
 import { AnalyticsService } from 'app/services/analytics.service';
 import { AuthService } from 'app/services/auth.service';
+import { DataService } from 'app/services/data.service';
 import { EnvironmentsService } from 'app/services/environments.service';
 import { EventsService } from 'app/services/events.service';
 import { ServerService } from 'app/services/server.service';
@@ -51,7 +52,8 @@ import { AppComponent } from './app.component';
     EventsService,
     ServerService,
     SettingsService,
-    UpdateService
+    UpdateService,
+    DataService
   ],
   bootstrap: [AppComponent]
 })

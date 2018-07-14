@@ -126,9 +126,9 @@ function createWindow() {
     });
   }
 
-  // add tools menu, send action through web contents
+  // add actions menu, send action through web contents
   menu.push({
-    label: 'Tools',
+    label: 'Actions',
     submenu: [
       {
         label: 'Add new environment', accelerator: 'Shift+CmdOrCtrl+E', click: function () {
@@ -189,6 +189,24 @@ function createWindow() {
           mainWindow.webContents.send('keydown', { action: 'NEXT_ROUTE' });
         }
       },
+    ]
+  });
+
+  // add tools menu, send action through web contents
+  menu.push({
+    label: 'Tools',
+    submenu: [
+      {
+        label: 'Import from file', click: function () {
+          mainWindow.webContents.send('keydown', { action: 'IMPORT_FILE' });
+        }
+      },
+      { type: 'separator' },
+      {
+        label: 'Export all environments', click: function () {
+          mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE' });
+        }
+      }
     ]
   });
 

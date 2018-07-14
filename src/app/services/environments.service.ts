@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
+import { Errors } from 'app/enums/errors.enum';
+import { Messages } from 'app/enums/messages.enum';
 import { Migrations } from 'app/libs/migrations.lib';
+import { AlertService } from 'app/services/alert.service';
+import { DataService } from 'app/services/data.service';
 import { ServerService } from 'app/services/server.service';
+import { ExportType } from 'app/types/data.type';
 import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
 import { CustomHeaderType, RouteType } from 'app/types/route.type';
+import { remote } from 'electron';
 import * as storage from 'electron-json-storage';
+import * as fs from 'fs';
 import { cloneDeep } from 'lodash';
 import 'rxjs/add/operator/debounceTime';
 import { Subject } from 'rxjs/Subject';
 import * as uuid from 'uuid/v1';
-
 
 @Injectable()
 export class EnvironmentsService {
@@ -22,6 +28,8 @@ export class EnvironmentsService {
   public environmentsReady: Subject<boolean> = new Subject<boolean>();
   public environments: EnvironmentsType;
   public routesTotal = 0;
+  private dialog = remote.dialog;
+  private BrowserWindow = remote.BrowserWindow;
 
   private environmentSchema: EnvironmentType = {
     uuid: '',
@@ -58,7 +66,7 @@ export class EnvironmentsService {
 
   private storageKey = 'environments';
 
-  constructor(private serverService: ServerService) {
+  constructor(private serverService: ServerService, private alertService: AlertService, private dataService: DataService) {
     // get existing environments from storage or default one
     storage.get(this.storageKey, (error, environments) => {
       // if empty object
@@ -300,6 +308,25 @@ export class EnvironmentsService {
   }
 
   /**
+   * Renew all environments UUIDs
+   *
+   * @param environments
+   */
+  private renewUUIDs(environments: EnvironmentsType) {
+    environments.forEach(environment => {
+      environment.uuid = uuid();
+      environment.routes.forEach(route => {
+        route.uuid = uuid();
+        route.customHeaders.forEach(customHeader => {
+          customHeader.uuid = uuid();
+        });
+      });
+    });
+
+    return environments;
+  }
+
+  /**
    * Duplicate an environment and put it at the end
    *
    * @param environmentIndex
@@ -356,4 +383,56 @@ export class EnvironmentsService {
   public findRouteIndex(environment: EnvironmentType, routeUUID: string): number {
     return environment.routes.findIndex(route => route.uuid === routeUUID)
   }
+
+  /**
+   * Export all envs in a json file
+   */
+  public exportAllEnvironments() {
+    this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (path) => {
+      fs.writeFile(path, this.dataService.wrapExport(this.environments, 'full'), (error) => {
+        if (error) {
+          this.alertService.showAlert('error', Errors.EXPORT_ERROR);
+        } else {
+          this.alertService.showAlert('success', Messages.EXPORT_SUCCESS);
+        }
+      });
+    });
+  }
+
+  /**
+   * Import a json environments file in Mockoon's format.
+   * Verify checksum and migrate data.
+   *
+   * Append imported envs to the env array.
+   */
+  public importEnvironmentsFile() {
+    this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (file) => {
+      if (file && file[0]) {
+        fs.readFile(file[0], 'utf-8', (error, fileContent) => {
+          if (error) {
+            this.alertService.showAlert('error', Errors.IMPORT_ERROR);
+          } else {
+            const importData: ExportType = JSON.parse(fileContent);
+
+            // verify data checksum
+            if (!this.dataService.verifyImportChecksum(importData)) {
+              this.alertService.showAlert('error', Errors.IMPORT_WRONG_CHECKSUM);
+              return;
+            }
+
+            // play migrations
+            importData.data = this.migrateData(importData.data);
+            importData.data = this.renewUUIDs(importData.data);
+
+            this.environments.push(...importData.data);
+
+            this.checkEnvironmentsDuplicates();
+
+            this.alertService.showAlert('success', Messages.IMPORT_SUCCESS);
+          }
+        });
+      }
+    });
+  }
 }
+

@@ -10,6 +10,7 @@ import { EnvironmentsService } from 'app/services/environments.service';
 import { ContextMenuEventType, EventsService } from 'app/services/events.service';
 import { ServerService } from 'app/services/server.service';
 import { UpdateService } from 'app/services/update.service';
+import { DataSubjectType } from 'app/types/data.type.js';
 import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
 import { headerNames, headerValues, methods, RouteType, statusCodes, statusCodesExplanation } from 'app/types/route.type';
 import 'brace/index';
@@ -82,51 +83,70 @@ export class AppComponent implements OnInit {
 
     // set listeners on main process messages
     ipcRenderer.on('keydown', (event, data) => {
-      if (data.action === 'NEW_ENVIRONMENT') {
-        this.addEnvironment();
-      } else if (data.action === 'NEW_ROUTE') {
-        this.addRoute();
-      } else if (data.action === 'START_ENVIRONMENT') {
-        if (this.currentEnvironment) {
-          this.toggleEnvironment(this.currentEnvironment.environment);
-        }
-      } else if (data.action === 'DUPLICATE_ENVIRONMENT') {
-        if (this.currentEnvironment) {
-          this.duplicateEnvironment(this.currentEnvironment.index);
-        }
-      } else if (data.action === 'DUPLICATE_ROUTE') {
-        if (this.currentRoute) {
-          this.duplicateRoute(this.currentRoute.index);
-        }
-      } else if (data.action === 'DELETE_ENVIRONMENT') {
-        if (this.currentEnvironment) {
-          this.removeEnvironment(this.currentEnvironment.index);
-        }
-      } else if (data.action === 'DELETE_ROUTE') {
-        if (this.currentRoute) {
-          this.removeRoute(this.currentRoute.index);
-        }
-      } else if (data.action === 'PREVIOUS_ENVIRONMENT') {
-        if (this.currentEnvironment) {
-          this.selectEnvironment(this.currentEnvironment.index - 1);
-        }
-      } else if (data.action === 'NEXT_ENVIRONMENT') {
-        if (this.currentEnvironment) {
-          this.selectEnvironment(this.currentEnvironment.index + 1);
-        }
-      } else if (data.action === 'PREVIOUS_ROUTE') {
-        if (this.currentRoute) {
-          this.selectRoute(this.currentRoute.index - 1);
-        }
-      } else if (data.action === 'NEXT_ROUTE') {
-        if (this.currentRoute) {
-          this.selectRoute(this.currentRoute.index + 1);
-        }
-      } else if (data.action === 'OPEN_SETTINGS') {
-        if (!this.settingsModalOpened) {
-          this.settingsModalOpened = true;
-          this.eventsService.settingsModalEvents.emit(true);
-        }
+      switch (data.action) {
+        case 'NEW_ENVIRONMENT':
+          this.addEnvironment();
+          break;
+        case 'NEW_ROUTE':
+          this.addRoute();
+          break;
+        case 'START_ENVIRONMENT':
+          if (this.currentEnvironment) {
+            this.toggleEnvironment(this.currentEnvironment.environment);
+          }
+          break;
+        case 'DUPLICATE_ENVIRONMENT':
+          if (this.currentEnvironment) {
+            this.duplicateEnvironment(this.currentEnvironment.index);
+          }
+          break;
+        case 'DUPLICATE_ROUTE':
+          if (this.currentRoute) {
+            this.duplicateRoute(this.currentRoute.index);
+          }
+          break;
+        case 'DELETE_ENVIRONMENT':
+          if (this.currentEnvironment) {
+            this.removeEnvironment(this.currentEnvironment.index);
+          }
+          break;
+        case 'DELETE_ROUTE':
+          if (this.currentRoute) {
+            this.removeRoute(this.currentRoute.index);
+          }
+          break;
+        case 'PREVIOUS_ENVIRONMENT':
+          if (this.currentEnvironment) {
+            this.selectEnvironment(this.currentEnvironment.index - 1);
+          }
+          break;
+        case 'NEXT_ENVIRONMENT':
+          if (this.currentEnvironment) {
+            this.selectEnvironment(this.currentEnvironment.index + 1);
+          }
+          break;
+        case 'PREVIOUS_ROUTE':
+          if (this.currentRoute) {
+            this.selectRoute(this.currentRoute.index - 1);
+          }
+          break;
+        case 'NEXT_ROUTE':
+          if (this.currentRoute) {
+            this.selectRoute(this.currentRoute.index + 1);
+          }
+          break;
+        case 'OPEN_SETTINGS':
+          if (!this.settingsModalOpened) {
+            this.settingsModalOpened = true;
+            this.eventsService.settingsModalEvents.emit(true);
+          }
+          break;
+        case 'IMPORT_FILE':
+          this.environmentsService.importEnvironmentsFile();
+          break;
+        case 'EXPORT_FILE':
+          this.environmentsService.exportAllEnvironments();
+          break;
       }
     });
   }

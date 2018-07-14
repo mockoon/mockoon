@@ -1,9 +1,10 @@
-import { Component, OnInit, HostListener, EventEmitter, Output } from '@angular/core';
-import { EventsService, ContextMenuEventType } from 'app/services/events.service';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { ContextMenuEventType, EventsService } from 'app/services/events.service';
+import { DataSubjectType } from 'app/types/data.type';
 
 export type ContextMenuItemPayload = {
-  subject: 'environment' | 'route';
-  action: 'delete' | 'duplicate' | 'env_settings';
+  subject: DataSubjectType;
+  action: 'delete' | 'duplicate' | 'env_settings' | 'export';
   subjectId: number;
 };
 
