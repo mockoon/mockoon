@@ -595,14 +595,15 @@ export class AppComponent implements OnInit {
       };
 
       if (subject === 'environment') {
-        menu.items.push({
+        menu.items.unshift({
           payload: {
             subject,
             action: 'env_settings',
             subjectId
           },
           label: 'Environment settings',
-          icon: 'settings'
+          icon: 'settings',
+          separator: true
         });
       }
       this.eventsService.contextMenuEvents.emit(menu);

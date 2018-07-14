@@ -14,6 +14,7 @@ export type ContextMenuItem = {
   icon: string;
   confirmColor?: string;
   confirm?: ContextMenuItem;
+  separator?: boolean;
 };
 
 export type ContextMenuPosition = {

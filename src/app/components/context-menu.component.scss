@@ -20,5 +20,9 @@
       background-color: lighten($gray-900, 12%);
       color: $gray-200;
     }
+
+    &.is-separator {
+      border-bottom: 2px solid lighten($gray-900, 3%);
+    }
   }
 }
