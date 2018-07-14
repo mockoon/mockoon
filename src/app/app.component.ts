@@ -62,6 +62,8 @@ export class AppComponent implements OnInit {
   private settingsModalOpened = false;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
+  private dragDeadzone = 10;
+  private lastMouseDownPosition: { x: number; y: number };
 
   constructor(
     public environmentsService: EnvironmentsService,
@@ -151,6 +153,28 @@ export class AppComponent implements OnInit {
     });
 
     this.initDragMonitoring();
+  }
+
+  /**
+   * Prevent dragging of envs/routes for small moves
+   *
+   * @param event
+   */
+  @HostListener('mousedown', ['$event']) onMouseDown(event: MouseEvent) {
+    this.lastMouseDownPosition = { x: event.clientX, y: event.clientY };
+  }
+  @HostListener('mousemove', ['$event']) onMouseMove(event: MouseEvent) {
+    // if left mouse button pressed
+    if (event.buttons === 1) {
+      const delta = Math.sqrt(
+        Math.pow(event.clientX - this.lastMouseDownPosition.x, 2) +
+        Math.pow(event.clientY - this.lastMouseDownPosition.y, 2)
+      );
+
+      if (delta < this.dragDeadzone) {
+        event.stopPropagation();
+      }
+    }
   }
 
   /**

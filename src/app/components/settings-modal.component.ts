@@ -1,7 +1,7 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SettingsService, SettingsType } from 'app/services/settings.service';
 import { EventsService } from 'app/services/events.service';
+import { SettingsService, SettingsType } from 'app/services/settings.service';
 
 @Component({
   selector: 'app-settings-modal',
