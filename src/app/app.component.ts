@@ -4,7 +4,6 @@ import { ContextMenuItemPayload } from 'app/components/context-menu.component';
 import { Config } from 'app/config';
 import { Errors } from 'app/enums/errors.enum.js';
 import { Alert, AlertService } from 'app/services/alert.service';
-import { AnalyticsService } from 'app/services/analytics.service';
 import { AuthService } from 'app/services/auth.service';
 import { EnvironmentsService } from 'app/services/environments.service';
 import { ContextMenuEventType, EventsService } from 'app/services/events.service';
@@ -71,7 +70,6 @@ export class AppComponent implements OnInit {
     private serverService: ServerService,
     private alertService: AlertService,
     private updateService: UpdateService,
-    private analyticsService: AnalyticsService,
     private authService: AuthService,
     private eventsService: EventsService,
     private config: NgbTooltipConfig,
@@ -146,18 +144,13 @@ export class AppComponent implements OnInit {
             if (!this.currentEnvironment) {
               this.selectEnvironment(0);
             }
-            this.analyticsService.collect({ type: 'event', category: 'import', action: 'file' });
           });
           break;
         case 'IMPORT_CLIPBOARD':
-          this.environmentsService.importFromClipboard(this.currentEnvironment, () => {
-            this.analyticsService.collect({ type: 'event', category: 'import', action: 'clipboard' });
-          });
+          this.environmentsService.importFromClipboard(this.currentEnvironment);
           break;
         case 'EXPORT_FILE':
-          this.environmentsService.exportAllEnvironments(() => {
-            this.analyticsService.collect({ type: 'event', category: 'export', action: 'file' });
-          });
+          this.environmentsService.exportAllEnvironments();
           break;
       }
     });
@@ -171,8 +164,8 @@ export class AppComponent implements OnInit {
       this.environments = this.environmentsService.environments;
 
       // send first GA requests when env are ready
-      this.analyticsService.collect({ type: 'pageview', pageName: '/' });
-      this.analyticsService.collect({ type: 'event', category: 'application', action: 'start' });
+      this.eventsService.analyticsEvents.next({ type: 'pageview', pageName: '/' });
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'application', action: 'start' });
 
       this.selectEnvironment(0);
     });
@@ -278,18 +271,18 @@ export class AppComponent implements OnInit {
       if (environment.running) {
         this.serverService.stop(environment);
 
-        this.analyticsService.collect({ type: 'event', category: 'server', action: 'stop' });
+        this.eventsService.analyticsEvents.next({ type: 'event', category: 'server', action: 'stop' });
 
         if (environment.needRestart) {
           this.serverService.start(environment);
-          this.analyticsService.collect({ type: 'event', category: 'server', action: 'restart' });
+          this.eventsService.analyticsEvents.next({ type: 'event', category: 'server', action: 'restart' });
         }
 
         // if stopping or restarting, restart is not needed
         environment.needRestart = false;
       } else {
         this.serverService.start(environment);
-        this.analyticsService.collect({ type: 'event', category: 'server', action: 'start' });
+        this.eventsService.analyticsEvents.next({ type: 'event', category: 'server', action: 'start' });
       }
     }
   }
@@ -307,7 +300,7 @@ export class AppComponent implements OnInit {
         this.routesMenu.nativeElement.scrollTop = 0;
       }
 
-      this.analyticsService.collect({ type: 'event', category: 'navigate', action: 'environment' });
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'navigate', action: 'environment' });
     }
   }
 
@@ -325,7 +318,7 @@ export class AppComponent implements OnInit {
 
       this.changeEditorSettings();
 
-      this.analyticsService.collect({ type: 'event', category: 'navigate', action: 'route' });
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'navigate', action: 'route' });
     } else {
       this.currentTab = 'ENV_SETTINGS';
       this.currentRoute = null;
@@ -333,9 +326,7 @@ export class AppComponent implements OnInit {
   }
 
   public addEnvironment() {
-    const index = this.environmentsService.addEnvironment(() => {
-      this.analyticsService.collect({ type: 'event', category: 'create', action: 'environment' });
-    });
+    const index = this.environmentsService.addEnvironment();
 
     this.selectEnvironment(index);
 
@@ -349,9 +340,7 @@ export class AppComponent implements OnInit {
     if (this.currentEnvironment) {
       this.environmentUpdated('addRoute', false);
 
-      const index = this.environmentsService.addRoute(this.currentEnvironment.environment, () => {
-        this.analyticsService.collect({ type: 'event', category: 'create', action: 'route' });
-      });
+      const index = this.environmentsService.addRoute(this.currentEnvironment.environment);
 
       this.selectRoute(index);
 
@@ -402,9 +391,7 @@ export class AppComponent implements OnInit {
   private removeRoute(routeIndex: number) {
     this.environmentUpdated('removeRoute', false);
 
-    this.environmentsService.removeRoute(this.currentEnvironment.environment, routeIndex, () => {
-      this.analyticsService.collect({ type: 'event', category: 'delete', action: 'route' });
-    });
+    this.environmentsService.removeRoute(this.currentEnvironment.environment, routeIndex);
 
     // if same route than deleted one
     if (routeIndex === this.currentRoute.index) {
@@ -430,7 +417,7 @@ export class AppComponent implements OnInit {
   private removeEnvironment(environmentIndex: number) {
     this.environmentsService.removeEnvironment(environmentIndex);
 
-    this.analyticsService.collect({ type: 'event', category: 'delete', action: 'environment' });
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'delete', action: 'environment' });
 
     // if same environment than deleted one
     if (environmentIndex === this.currentEnvironment.index) {
@@ -464,7 +451,7 @@ export class AppComponent implements OnInit {
 
       shell.openExternal(routeUrl);
 
-      this.analyticsService.collect({ type: 'event', category: 'link', action: 'route-in-browser' });
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'route-in-browser' });
     }
   }
 
@@ -499,7 +486,7 @@ export class AppComponent implements OnInit {
       this.currentRoute.route.customHeaders.push({ uuid: uuid(), key: '', value: '' });
       this.environmentUpdated('routeCustomHeader');
 
-      this.analyticsService.collect({ type: 'event', category: 'create', action: 'custom-header' });
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'create', action: 'custom-header' });
     }
 
     // auto scroll routes to bottom when adding
@@ -514,7 +501,7 @@ export class AppComponent implements OnInit {
     if (customHeaderIndex > -1) {
       this.currentRoute.route.customHeaders.splice(customHeaderIndex, 1);
 
-      this.analyticsService.collect({ type: 'event', category: 'delete', action: 'custom-header' });
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'delete', action: 'custom-header' });
     }
     this.environmentUpdated('routeCustomHeader');
   }
@@ -539,19 +526,19 @@ export class AppComponent implements OnInit {
   public openFeedbackLink() {
     shell.openExternal(Config.feedbackLink);
 
-    this.analyticsService.collect({ type: 'event', category: 'link', action: 'feedback' });
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'feedback' });
   }
 
   public openWikiLink(linkName: string) {
     shell.openExternal(Config.wikiLinks[linkName]);
 
-    this.analyticsService.collect({ type: 'event', category: 'link', action: 'wiki' });
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'wiki' });
   }
 
   public applyUpdate() {
     this.updateService.applyUpdate();
 
-    this.analyticsService.collect({ type: 'event', category: 'link', action: 'apply-update' });
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'apply-update' });
   }
 
   /**
@@ -672,9 +659,7 @@ export class AppComponent implements OnInit {
    * Duplicate an environment
    */
   public duplicateEnvironment(environmentIndex: number) {
-    const index = this.environmentsService.duplicateEnvironment(environmentIndex, () => {
-      this.analyticsService.collect({ type: 'event', category: 'duplicate', action: 'environment' });
-    });
+    const index = this.environmentsService.duplicateEnvironment(environmentIndex);
     this.selectEnvironment(index);
 
     // auto scroll environments to bottom when adding
@@ -685,9 +670,7 @@ export class AppComponent implements OnInit {
    * Duplicate a route
    */
   public duplicateRoute(routeIndex: number) {
-    const index = this.environmentsService.duplicateRoute(this.currentEnvironment.environment, routeIndex, () => {
-      this.analyticsService.collect({ type: 'event', category: 'duplicate', action: 'route' });
-    });
+    const index = this.environmentsService.duplicateRoute(this.currentEnvironment.environment, routeIndex);
     this.selectRoute(index);
 
     // auto scroll routes to bottom when adding
@@ -706,13 +689,9 @@ export class AppComponent implements OnInit {
    */
   public exportToClipboard(subject: DataSubjectType, subjectIndex: number) {
     if (subject === 'environment') {
-      this.environmentsService.exportEnvironmentToClipboard(subjectIndex, () => {
-        this.analyticsService.collect({ type: 'event', category: 'export', action: 'clipboard' });
-      });
+      this.environmentsService.exportEnvironmentToClipboard(subjectIndex);
     } else if (subject === 'route') {
-      this.environmentsService.exportRouteToClipboard(this.currentEnvironment.index, subjectIndex, () => {
-        this.analyticsService.collect({ type: 'event', category: 'export', action: 'clipboard' });
-      });
+      this.environmentsService.exportRouteToClipboard(this.currentEnvironment.index, subjectIndex);
     }
   }
 }

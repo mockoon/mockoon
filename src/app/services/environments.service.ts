@@ -4,6 +4,7 @@ import { Messages } from 'app/enums/messages.enum';
 import { Migrations } from 'app/libs/migrations.lib';
 import { AlertService } from 'app/services/alert.service';
 import { DataService } from 'app/services/data.service';
+import { EventsService } from 'app/services/events.service';
 import { ServerService } from 'app/services/server.service';
 import { DataSubjectType, ExportType } from 'app/types/data.type';
 import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
@@ -20,11 +21,9 @@ import * as uuid from 'uuid/v1';
 export class EnvironmentsService {
   public selectEnvironment: Subject<number> = new Subject<number>();
   public environmentUpdateEvents: Subject<{
-    environment?: EnvironmentType,
-    callback?: Function
+    environment?: EnvironmentType
   }> = new Subject<{
-    environment: EnvironmentType,
-    callback?: Function
+    environment: EnvironmentType
   }>();
   public environmentsReady: Subject<boolean> = new Subject<boolean>();
   public environments: EnvironmentsType;
@@ -67,7 +66,7 @@ export class EnvironmentsService {
 
   private storageKey = 'environments';
 
-  constructor(private serverService: ServerService, private alertService: AlertService, private dataService: DataService) {
+  constructor(private serverService: ServerService, private alertService: AlertService, private dataService: DataService, private eventsService: EventsService) {
     // get existing environments from storage or default one
     storage.get(this.storageKey, (error, environments) => {
       // if empty object
@@ -85,11 +84,7 @@ export class EnvironmentsService {
 
     // subscribe to environment data update from UI, and save
     this.environmentUpdateEvents.debounceTime(1000).subscribe((params) => {
-      storage.set(this.storageKey, this.cleanBeforeSave(this.environments), () => {
-        if (params.callback) {
-          params.callback();
-        }
-      });
+      storage.set(this.storageKey, this.cleanBeforeSave(this.environments));
     });
 
     // subscribe to environment data update from UI
@@ -99,19 +94,14 @@ export class EnvironmentsService {
       }
 
       this.checkEnvironmentsDuplicates();
-
-      if (params.callback) {
-        params.callback();
-      }
     });
   }
 
   /**
    * Add a new environment and save it
    *
-   * @param callback - callback to execute after adding the env
    */
-  public addEnvironment(callback: Function): number {
+  public addEnvironment(): number {
     const newRoute = Object.assign({}, this.routeSchema, { customHeaders: [Object.assign({}, this.customHeadersSchema, { uuid: uuid() })] });
     const newEnvironment = Object.assign(
       {},
@@ -130,7 +120,9 @@ export class EnvironmentsService {
 
     const newEnvironmentIndex = this.environments.push(newEnvironment) - 1;
 
-    this.environmentUpdateEvents.next({ environment: newEnvironment, callback });
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'create', action: 'environment' });
+
+    this.environmentUpdateEvents.next({ environment: newEnvironment });
 
     return newEnvironmentIndex;
   }
@@ -140,12 +132,14 @@ export class EnvironmentsService {
    *
    * @param environment - environment to which add a route
    */
-  public addRoute(environment: EnvironmentType, callback: Function): number {
+  public addRoute(environment: EnvironmentType): number {
     const newRoute = Object.assign({}, this.routeSchema, { customHeaders: [Object.assign({}, this.customHeadersSchema, { uuid: uuid() })] });
     const newRouteIndex = environment.routes.push(newRoute) - 1;
     this.routesTotal += 1;
 
-    this.environmentUpdateEvents.next({ environment, callback });
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'create', action: 'route' });
+
+    this.environmentUpdateEvents.next({ environment });
 
     return newRouteIndex;
   }
@@ -156,16 +150,17 @@ export class EnvironmentsService {
    * @param environment - environment to which remove a route
    * @param routeIndex - route index to remove
    */
-  public removeRoute(environment: EnvironmentType, routeIndex: number, callback: Function) {
+  public removeRoute(environment: EnvironmentType, routeIndex: number) {
     // delete the route
     environment.routes.splice(routeIndex, 1);
     this.routesTotal -= 1;
 
     this.checkRoutesDuplicates(environment);
 
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'delete', action: 'route' });
+
     this.environmentUpdateEvents.next({
-      environment,
-      callback
+      environment
     });
   }
 
@@ -184,10 +179,7 @@ export class EnvironmentsService {
 
     this.checkEnvironmentsDuplicates();
 
-    this.environmentUpdateEvents.next({
-      environment: null,
-      callback: null
-    });
+    this.environmentUpdateEvents.next({});
   }
 
   /**
@@ -349,9 +341,8 @@ export class EnvironmentsService {
    * Duplicate an environment and put it at the end
    *
    * @param environmentIndex
-   * @param callback
    */
-  public duplicateEnvironment(environmentIndex: number, callback: Function): number {
+  public duplicateEnvironment(environmentIndex: number): number {
     // copy the environment, reset some properties
     const newEnvironment = Object.assign(
       {},
@@ -372,7 +363,9 @@ export class EnvironmentsService {
 
     const newEnvironmentIndex = this.environments.push(newEnvironment) - 1;
 
-    this.environmentUpdateEvents.next({ environment: newEnvironment, callback });
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'duplicate', action: 'environment' });
+
+    this.environmentUpdateEvents.next({ environment: newEnvironment });
 
     return newEnvironmentIndex;
   }
@@ -382,15 +375,16 @@ export class EnvironmentsService {
    *
    * @param environment
    * @param routeIndex
-   * @param callback
    */
-  public duplicateRoute(environment: EnvironmentType, routeIndex: number, callback: Function): number {
+  public duplicateRoute(environment: EnvironmentType, routeIndex: number): number {
     // copy the route, reset duplicates (use cloneDeep to avoid headers pass by reference)
     const newRoute = Object.assign({}, cloneDeep(environment.routes[routeIndex]), { uuid: uuid(), duplicates: [] });
     const newRouteIndex = environment.routes.push(newRoute) - 1;
     this.routesTotal += 1;
 
-    this.environmentUpdateEvents.next({ environment, callback });
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'duplicate', action: 'route' });
+
+    this.environmentUpdateEvents.next({ environment });
 
     return newRouteIndex;
   }
@@ -406,14 +400,15 @@ export class EnvironmentsService {
   /**
    * Export all envs in a json file
    */
-  public exportAllEnvironments(callback: Function) {
+  public exportAllEnvironments() {
     this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (path) => {
       fs.writeFile(path, this.dataService.wrapExport(this.environments, 'full'), (error) => {
         if (error) {
           this.alertService.showAlert('error', Errors.EXPORT_ERROR);
         } else {
           this.alertService.showAlert('success', Messages.EXPORT_SUCCESS);
-          callback();
+
+          this.eventsService.analyticsEvents.next({ type: 'event', category: 'export', action: 'file' });
         }
       });
     });
@@ -424,11 +419,11 @@ export class EnvironmentsService {
    *
    * @param environmentIndex
    */
-  public exportEnvironmentToClipboard(environmentIndex: number, callback: Function) {
+  public exportEnvironmentToClipboard(environmentIndex: number) {
     try {
       clipboard.writeText(this.dataService.wrapExport(this.environments[environmentIndex], 'environment'));
       this.alertService.showAlert('success', Messages.EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS);
-      callback();
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'export', action: 'clipboard' });
     } catch (error) {
       this.alertService.showAlert('error', Errors.EXPORT_ENVIRONMENT_CLIPBOARD_ERROR);
     }
@@ -438,12 +433,13 @@ export class EnvironmentsService {
    * Export an environment to the clipboard
    *
    * @param environmentIndex
+   * @param routeIndex
    */
-  public exportRouteToClipboard(environmentIndex: number, routeIndex: number, callback: Function) {
+  public exportRouteToClipboard(environmentIndex: number, routeIndex: number) {
     try {
       clipboard.writeText(this.dataService.wrapExport(this.environments[environmentIndex].routes[routeIndex], 'route'));
       this.alertService.showAlert('success', Messages.EXPORT_ROUTE_CLIPBOARD_SUCCESS);
-      callback();
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'export', action: 'clipboard' });
     } catch (error) {
       this.alertService.showAlert('error', Errors.EXPORT_ROUTE_CLIPBOARD_ERROR);
     }
@@ -455,7 +451,7 @@ export class EnvironmentsService {
    *
    * @param currentEnvironment
    */
-  public importFromClipboard(currentEnvironment: CurrentEnvironmentType, callback: Function) {
+  public importFromClipboard(currentEnvironment: CurrentEnvironmentType) {
     let importData: ExportType;
     try {
       importData = JSON.parse(clipboard.readText());
@@ -481,7 +477,7 @@ export class EnvironmentsService {
         let currentEnvironmentIndex: number;
         // if no current environment create one and ask for selection
         if (this.environments.length === 0) {
-          const newEnvironmentIndex = this.addEnvironment(() => { });
+          const newEnvironmentIndex = this.addEnvironment();
 
           this.selectEnvironment.next(newEnvironmentIndex);
           this.environments[0].routes = [];
@@ -501,7 +497,8 @@ export class EnvironmentsService {
       this.environmentUpdateEvents.next({
         environment: (currentEnvironment) ? currentEnvironment.environment : null
       });
-      callback();
+
+      this.eventsService.analyticsEvents.next({ type: 'event', category: 'import', action: 'clipboard' });
     } catch (error) {
       if (!importData) {
         this.alertService.showAlert('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
@@ -549,6 +546,9 @@ export class EnvironmentsService {
             this.environmentUpdateEvents.next({});
 
             this.alertService.showAlert('success', Messages.IMPORT_SUCCESS);
+
+            this.eventsService.analyticsEvents.next({ type: 'event', category: 'import', action: 'file' });
+
             callback();
           }
         });

@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { Config } from 'app/config';
 import { AuthService } from 'app/services/auth.service';
 import { EnvironmentsService } from 'app/services/environments.service';
+import { EventsService } from 'app/services/events.service';
 import { SettingsService, SettingsType } from 'app/services/settings.service';
 
 /**
@@ -36,7 +37,13 @@ export class AnalyticsService {
 
   private queue: CollectParams[] = [];
 
-  constructor(private http: Http, private environmentsService: EnvironmentsService, private authService: AuthService, private settingsService: SettingsService) {
+  constructor(
+    private http: Http,
+    private environmentsService: EnvironmentsService,
+    private authService: AuthService,
+    private settingsService: SettingsService,
+    private eventsService: EventsService
+  ) {
     // wait for auth to be ready before processing the eventual queue
     this.authService.authReady.subscribe((ready) => {
       if (ready) {
@@ -54,6 +61,10 @@ export class AnalyticsService {
         this.settings = this.settingsService.settings;
       }
     });
+
+    this.eventsService.analyticsEvents.subscribe((event) => {
+      this.collect(event);
+    })
   }
 
   /**
