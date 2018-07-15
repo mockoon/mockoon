@@ -143,6 +143,9 @@ export class AppComponent implements OnInit {
           break;
         case 'IMPORT_FILE':
           this.environmentsService.importEnvironmentsFile(() => {
+            if (!this.currentEnvironment) {
+              this.selectEnvironment(0);
+            }
             this.analyticsService.collect({ type: 'event', category: 'import', action: 'file' });
           });
           break;

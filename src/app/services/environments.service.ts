@@ -481,9 +481,9 @@ export class EnvironmentsService {
         let currentEnvironmentIndex: number;
         // if no current environment create one and ask for selection
         if (this.environments.length === 0) {
-          this.addEnvironment(() => { setTimeout(() => {
-            this.selectEnvironment.next(0);
-          }, 1000); });
+          const newEnvironmentIndex = this.addEnvironment(() => { });
+
+          this.selectEnvironment.next(newEnvironmentIndex);
           this.environments[0].routes = [];
 
           currentEnvironmentIndex = 0;
