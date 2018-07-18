@@ -62,8 +62,11 @@
 
         <div class="col">
           <ng-container *ngIf="currentEnvironment">
-            <div class="btn btn-link btn-icon float-right" [ngClass]="{'active': currentTab === 'ENV_SETTINGS'}" (click)="setCurrentTab('ENV_SETTINGS')">
-              <i class="material-icons">settings</i> Environment settings
+            <div class="btn btn-link btn-icon float-right" [ngClass]="{'active': currentTab === 'ENV_SETTINGS'}" (click)="setCurrentTab('ENV_SETTINGS')" ngbTooltip="Environment settings" placement="left">
+              <i class="material-icons">settings</i>
+            </div>
+            <div class="btn btn-link btn-icon float-right" [ngClass]="{'active': currentTab === 'ENV_LOGS'}" (click)="setCurrentTab('ENV_LOGS')" ngbTooltip="Environment logs" placement="left">
+              <i class="material-icons">history</i>
             </div>
           </ng-container>
         </div>
@@ -137,7 +140,7 @@
 
         <!-- Navigation tabs -->
         <div class="col d-flex flex-column main-content">
-          <div *ngIf="currentTab !== 'ENV_SETTINGS'">
+          <div *ngIf="currentTab !== 'ENV_SETTINGS' && currentTab !== 'ENV_LOGS'">
             <div class="row">
               <div class="col">
                 <ul class="nav nav-tabs d-flex">
@@ -153,7 +156,7 @@
           </div>
 
           <!-- environment settings title and back button -->
-          <div *ngIf="currentTab === 'ENV_SETTINGS'">
+          <div *ngIf="currentTab === 'ENV_SETTINGS' || currentTab === 'ENV_LOGS'">
             <div class="row">
               <div class="col">
                 <button type="button" class="btn btn-link btn-icon pl-2" (click)="setCurrentTab('RESPONSE')">
@@ -343,6 +346,13 @@
                   </div>
                 </div>
               </div>
+            </ng-container>
+          </div>
+
+          <!-- ENVIRONMENT LOGS tab -->
+          <div [hidden]="currentTab !== 'ENV_LOGS'" class="tab-content no-scroll h-100">
+            <ng-container *ngIf="currentEnvironment && currentEnvironment.environment">
+              <app-environment-logs [currentEnvironment]="currentEnvironment.environment" (newLog)="handleNewLog()"></app-environment-logs>
             </ng-container>
           </div>
         </div>

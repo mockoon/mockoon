@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ContextMenuComponent } from 'app/components/context-menu.component';
+import { EnvironmentLogsComponent } from 'app/components/environment-logs.component';
 import { SettingsModalComponent } from 'app/components/settings-modal.component';
 import { WelcomeModalComponent } from 'app/components/welcome-modal.component';
 import { AutocompleteDirective } from 'app/directives/autocomplete.directive';
@@ -33,7 +34,8 @@ import { AppComponent } from './app.component';
     ContextMenuComponent,
     AutocompleteDirective,
     WelcomeModalComponent,
-    SettingsModalComponent
+    SettingsModalComponent,
+    EnvironmentLogsComponent
   ],
   imports: [
     AceEditorModule,

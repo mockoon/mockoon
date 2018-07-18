@@ -1,0 +1,30 @@
+@import '../../custom_bootstrap.scss';
+
+$logs-border: 1px solid lighten($gray-900, 1%);
+
+.environment-logs {
+  border-top: $logs-border;
+
+  &-column {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  &-content {
+    border-left: $logs-border;
+    word-break: break-all;
+
+    &-title {
+      color: darken($gray-300, 30%);
+      font-weight: $font-weight-bold;
+    }
+
+    &-item {
+      font-size: $font-size-sm;
+
+      &:not(:first-of-type) {
+        margin-top: 0.25rem;
+      }
+    }
+  }
+}

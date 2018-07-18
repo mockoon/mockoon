@@ -1,0 +1,38 @@
+<div class="row h-100 environment-logs" *ngIf="currentEnvironment && environmentsLogs[currentEnvironment.uuid]">
+  <div class="col-4 h-100 environment-logs-column">
+    <ul class="nav flex-column menu-list">
+      <li class="nav-item" *ngFor="let log of environmentsLogs[currentEnvironment.uuid]; let logIndex = index">
+        <a class="nav-link" [ngClass]="{'active': logIndex === selectedLogIndex}" (click)="showLogDetails(logIndex)">
+          <div class="ellipsis">
+            <span class="badge badge-default ml-0 mr-3 http-method-{{log.request.method | lowercase}}">{{log.request.method | uppercase}}</span> {{log.request.url}}
+            <span *ngIf="log.request.route" class="float-right text-success"><i class="material-icons" ngbTooltip="Request catched">check</i></span>
+          </div>
+          <div class="menu-subtitle ellipsis">
+            {{log.timestamp | date:'yyyy-MM-dd HH:mm:ss:SSS'}}
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-8 h-100 environment-logs-column">
+    <div *ngIf="selectedLog" class="environment-logs-content pl-2 pr-2 h-100">
+      <div class="environment-logs-content-title">General</div>
+      <div class="environment-logs-content-item">
+        <strong>Request URL:</strong> {{selectedLog.request.url}}
+      </div>
+      <div class="environment-logs-content-item">
+        <strong>Method:</strong> {{selectedLog.request.method}}
+      </div>
+      <div *ngIf="selectedLog.request.route" class="environment-logs-content-item">
+        <strong>Catched by route:</strong> {{selectedLog.request.route.path}}
+      </div>
+
+      <div class="environment-logs-content-title">Headers</div>
+      <div class="environment-logs-content-item" *ngFor="let header of getHeaders()">
+        <strong>{{header.name | titlecase}}:</strong> {{header.value}}
+      </div>
+
+      <!-- TODO query params, body -->
+    </div>
+  </div>
+</div>

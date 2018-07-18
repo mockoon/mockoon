@@ -5,6 +5,7 @@ import { AlertService } from 'app/services/alert.service';
 import { pemFiles } from 'app/ssl';
 import { EnvironmentType } from 'app/types/environment.type';
 import { RouteType } from 'app/types/route.type';
+import { EnvironmentLogsType } from 'app/types/server.type';
 import * as DummyJSON from 'dummy-json';
 import * as express from 'express';
 import * as fs from 'fs';
@@ -23,6 +24,7 @@ const httpsConfig = {
 
 @Injectable()
 export class ServerService {
+  public environmentsLogs: EnvironmentLogsType = {};
 
   constructor(private alertService: AlertService) { }
 
@@ -50,6 +52,7 @@ export class ServerService {
     });
 
     // apply latency, cors, routes and proxy to express server
+    this.logRequests(server, environment);
     this.setEnvironmentLatency(server, environment);
     this.setRoutes(server, environment);
     this.setCors(server, environment);
@@ -100,7 +103,7 @@ export class ServerService {
    */
   private setCors(server: any, environment: EnvironmentType) {
     if (environment.cors) {
-      server.options('/*', function (req, res) {
+      server.options('/*', (req, res) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With');
@@ -193,6 +196,26 @@ export class ServerService {
         target: environment.proxyHost, secure: false, changeOrigin: true, ssl: Object.assign({}, httpsConfig, { agent: false })
       }));
     }
+  }
+
+  /**
+   * Logs all request made to the environment
+   *
+   * @param server - server on which to launch the proxy
+   * @param environment - environment to get proxy settings from
+   */
+  private logRequests(server: any, environment: EnvironmentType) {
+    server.use((req, res, next) => {
+      if (!this.environmentsLogs[environment.uuid]) {
+        this.environmentsLogs[environment.uuid] = [];
+      }
+      this.environmentsLogs[environment.uuid].unshift({
+        timestamp: new Date(),
+        route: (req.route) ? req.route.path : null,
+        request: req
+      });
+      next();
+    });
   }
 
   /**

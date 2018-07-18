@@ -257,7 +257,11 @@ select, input, .btn {
 
 .tab-content {
   overflow-x: hidden;
-  overflow-y: scroll;// always display scrollbar so we can align delete icons
+  overflow-y: scroll;
+
+  &.no-scroll {
+    overflow-y: hidden;
+  }
 }
 
 // http methods badges

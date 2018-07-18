@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
     mode: 'json',
     theme: 'custom_theme'
   };
-  public currentTab: 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS' = 'RESPONSE';
+  public currentTab: 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS' | 'ENV_LOGS' = 'RESPONSE';
   public alerts: Alert[];
   public updateAvailable = false;
   public platform = platform;

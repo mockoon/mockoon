@@ -52,7 +52,14 @@ $theme-colors: (
 $body-bg:       $gray-900;
 $body-color:    $gray-300;
 
+$font-size-base:              1rem;
+$font-size-lg:                ($font-size-base * 1.25);
+$font-size-sm:                ($font-size-base * .875);
 $font-size-xs:   .75rem;
+
+$font-weight-light:           300;
+$font-weight-normal:          400;
+$font-weight-bold:            700;
 
 $grid-gutter-width: 0;
 
