@@ -59,6 +59,8 @@ export class AppComponent implements OnInit {
   public headerNamesList = headerNames;
   public headerValuesList = headerValues;
   public getCustomHeader = this.serverService.getCustomHeader;
+  public clearEnvironmentLogsTimeout: NodeJS.Timer;
+  public environmentLogs = this.serverService.environmentsLogs;
   private settingsModalOpened = false;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
@@ -306,6 +308,18 @@ export class AppComponent implements OnInit {
 
   public setCurrentTab(tabName: 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS') {
     this.currentTab = tabName;
+  }
+
+  public clearEnvironmentLogs(currentEnvironment: CurrentEnvironmentType) {
+    if (this.clearEnvironmentLogsTimeout) {
+      this.serverService.clearEnvironmentLogs(currentEnvironment.environment.uuid);
+      clearTimeout(this.clearEnvironmentLogsTimeout);
+      this.clearEnvironmentLogsTimeout = undefined;
+    } else {
+      this.clearEnvironmentLogsTimeout = setTimeout(() => {
+        this.clearEnvironmentLogsTimeout = undefined;
+      }, 4000);
+    }
   }
 
   public selectRoute(routeIndex: number) {

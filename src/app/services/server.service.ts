@@ -265,4 +265,13 @@ export class ServerService {
 
     return (header && header.value) || '';
   }
+
+  /**
+   * Clear the environment logs
+   *
+   * @param environmentUuid
+   */
+  public clearEnvironmentLogs(environmentUuid: string) {
+    this.environmentsLogs[environmentUuid] = []
+  }
 }

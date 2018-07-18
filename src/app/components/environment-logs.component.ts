@@ -33,21 +33,34 @@ export class EnvironmentLogsComponent implements OnInit, DoCheck {
     const environmentsLogsChanges = this.environmentsLogsDiffer.diff(currentLogs);
     const currentEnvironmentChanges = this.currentEnvironmentDiffer.diff(this.currentEnvironment);
 
-    if (currentEnvironmentChanges && currentLogs && currentLogs.length) {
-      this.showLogDetails(0);
+    if (currentEnvironmentChanges) {
+      if (currentLogs && currentLogs.length) {
+        this.showLogDetails(0);
+      } else {
+        this.resetSelectedLog();
+      }
     }
 
-    if (environmentsLogsChanges && currentLogs && currentLogs.length) {
-      if (this.selectedLogIndex === undefined) {
-        this.showLogDetails(0);
-      } else if (this.currentLogsLastLength < currentLogs.length) {
-        this.showLogDetails(this.selectedLogIndex + 1);
+    if (environmentsLogsChanges) {
+      if (currentLogs && currentLogs.length) {
+        if (this.selectedLogIndex === undefined) {
+          this.showLogDetails(0);
+        } else if (this.currentLogsLastLength < currentLogs.length) {
+          this.showLogDetails(this.selectedLogIndex + 1);
+        }
+      } else {
+        this.resetSelectedLog();
       }
     }
 
     if (currentLogs) {
       this.currentLogsLastLength = currentLogs.length;
     }
+  }
+
+  private resetSelectedLog() {
+    this.selectedLogIndex = undefined;
+    this.selectedLog = undefined;
   }
 
   public showLogDetails(logIndex: number) {
