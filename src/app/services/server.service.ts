@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Config } from 'app/config';
 import { Errors } from 'app/enums/errors.enum';
 import { DummyJSONHelpers } from 'app/libs/dummy-helpers.lib';
 import { AlertService } from 'app/services/alert.service';
@@ -206,14 +207,22 @@ export class ServerService {
    */
   private logRequests(server: any, environment: EnvironmentType) {
     server.use((req, res, next) => {
-      if (!this.environmentsLogs[environment.uuid]) {
+      let environmentLogs = this.environmentsLogs[environment.uuid];
+      if (!environmentLogs) {
         this.environmentsLogs[environment.uuid] = [];
+        environmentLogs = this.environmentsLogs[environment.uuid];
       }
-      this.environmentsLogs[environment.uuid].unshift({
+
+      environmentLogs.unshift({
         timestamp: new Date(),
         route: (req.route) ? req.route.path : null,
         request: req
       });
+
+      if (environmentLogs.length > Config.maxLogsPerEnvironment) {
+        environmentLogs.pop();
+      }
+
       next();
     });
   }

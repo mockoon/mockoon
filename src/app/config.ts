@@ -9,5 +9,6 @@ export const Config = {
     cors: 'https://github.com/255kb/mockoon/wiki/%E2%9C%88-CORS-preflight-requests',
     https: 'https://github.com/255kb/mockoon/wiki/%F0%9F%94%92-HTTPS'
   },
-  exportSalt: '6f5h8q9z32f1d5s4z86q'
+  exportSalt: '6f5h8q9z32f1d5s4z86q',
+  maxLogsPerEnvironment: 50
 };
