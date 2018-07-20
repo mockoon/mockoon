@@ -356,7 +356,7 @@
           <!-- ENVIRONMENT LOGS tab -->
           <div [hidden]="currentTab !== 'ENV_LOGS'" class="tab-content no-scroll h-100">
             <ng-container *ngIf="currentEnvironment && currentEnvironment.environment">
-              <app-environment-logs [currentEnvironment]="currentEnvironment.environment" (newLog)="handleNewLog()"></app-environment-logs>
+              <app-environment-logs [currentEnvironment]="currentEnvironment.environment"></app-environment-logs>
             </ng-container>
           </div>
         </div>
