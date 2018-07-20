@@ -321,6 +321,7 @@ export class EnvironmentsService {
         });
       });
     } else if (subject === 'environment') {
+      (data as EnvironmentType).uuid = uuid();
       (data as EnvironmentType).routes.forEach(route => {
         route.uuid = uuid();
         route.customHeaders.forEach(customHeader => {
@@ -344,7 +345,7 @@ export class EnvironmentsService {
    */
   public duplicateEnvironment(environmentIndex: number): number {
     // copy the environment, reset some properties
-    const newEnvironment = Object.assign(
+    let newEnvironment: EnvironmentType = Object.assign(
       {},
       this.environments[environmentIndex],
       {
@@ -361,6 +362,7 @@ export class EnvironmentsService {
     );
     this.routesTotal += this.environments[environmentIndex].routes.length;
 
+    newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as EnvironmentType;
     const newEnvironmentIndex = this.environments.push(newEnvironment) - 1;
 
     this.eventsService.analyticsEvents.next({ type: 'event', category: 'duplicate', action: 'environment' });

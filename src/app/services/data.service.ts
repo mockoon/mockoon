@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Config } from 'app/config';
+import { Utils } from 'app/libs/utils.lib';
 import { DataSubjectType, ExportType } from 'app/types/data.type';
 import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
 import { RouteType } from 'app/types/route.type';
+import { EnvironmentLogType } from 'app/types/server.type';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -38,5 +40,50 @@ export class DataService {
     const importMD5 = crypto.createHash('md5').update(JSON.stringify(importData.data) + Config.exportSalt).digest('hex');
 
     return importMD5 === importData.checksum;
+  }
+
+  /**
+   * Format a request log
+   *
+   * @param request
+   */
+  public formatRequestLog(request: any): EnvironmentLogType {
+    // use some getter to keep the scope because some request properties are be defined later by express (route, params, etc)
+    const requestLog: EnvironmentLogType = {
+      timestamp: new Date(),
+      get route() {
+        return (request.route) ? request.route.path : null;
+      },
+      method: request.method,
+      protocol: request.protocol,
+      url: request.originalUrl,
+      headers: [],
+      get params() {
+        if (request.params) {
+          return Object.keys(request.params).map((paramName) => {
+            return { name: paramName, value: request.params[paramName] }
+          });
+        }
+
+        return [];
+      },
+      get queryParams() {
+        if (request.query) {
+          return Object.keys(request.query).map((queryParamName) => {
+            return { name: queryParamName, value: request.query[queryParamName] }
+          });
+        }
+
+        return [];
+      },
+      body: request.body
+    };
+
+    // get and sort headers
+    requestLog.headers = Object.keys(request.headers).map((headerName) => {
+      return { name: headerName, value: request.headers[headerName] }
+    }).sort(Utils.ascSort);
+
+    return requestLog;
   }
 }

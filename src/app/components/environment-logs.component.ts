@@ -13,6 +13,11 @@ export class EnvironmentLogsComponent implements OnInit, DoCheck {
   public selectedLog: EnvironmentLogType;
   public selectedLogIndex: number;
   public environmentsLogs = this.serverService.environmentsLogs;
+  public generalCollapsed: boolean;
+  public headersCollapsed: boolean;
+  public routeParamsCollapsed: boolean;
+  public queryParamsCollapsed: boolean;
+  public bodyCollapsed: boolean;
   private environmentsLogsDiffer: KeyValueDiffer<any, any>;
   private currentEnvironmentDiffer: KeyValueDiffer<any, any>;
   private currentLogsLastLength: number;
@@ -22,7 +27,9 @@ export class EnvironmentLogsComponent implements OnInit, DoCheck {
     this.currentEnvironmentDiffer = keyValueDiffers.find({}).create();
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.initCollapse();
+  }
 
   /**
    * automatically select first item when switching environment, if any
@@ -59,27 +66,22 @@ export class EnvironmentLogsComponent implements OnInit, DoCheck {
   }
 
   private resetSelectedLog() {
+    this.initCollapse();
     this.selectedLogIndex = undefined;
     this.selectedLog = undefined;
   }
 
   public showLogDetails(logIndex: number) {
+    this.initCollapse();
     this.selectedLogIndex = logIndex;
     this.selectedLog = this.environmentsLogs[this.currentEnvironment.uuid][this.selectedLogIndex];
   }
 
-  /**
-   * Return request headers sorted
-   */
-  public getHeaders() {
-    return Object.keys(this.selectedLog.request.headers).map((headerName) => {
-      return { name: headerName, value: this.selectedLog.request.headers[headerName] }
-    }).sort((a, b) => {
-      if (a.name < b.name) {
-        return -1
-      } else {
-        return 1;
-      }
-    });
+  private initCollapse() {
+    this.generalCollapsed = false;
+    this.headersCollapsed = false;
+    this.routeParamsCollapsed = false;
+    this.queryParamsCollapsed = false;
+    this.bodyCollapsed = true;
   }
 }

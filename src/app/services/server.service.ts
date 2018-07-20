@@ -3,6 +3,7 @@ import { Config } from 'app/config';
 import { Errors } from 'app/enums/errors.enum';
 import { DummyJSONHelpers } from 'app/libs/dummy-helpers.lib';
 import { AlertService } from 'app/services/alert.service';
+import { DataService } from 'app/services/data.service';
 import { pemFiles } from 'app/ssl';
 import { EnvironmentType } from 'app/types/environment.type';
 import { RouteType } from 'app/types/route.type';
@@ -27,7 +28,7 @@ const httpsConfig = {
 export class ServerService {
   public environmentsLogs: EnvironmentLogsType = {};
 
-  constructor(private alertService: AlertService) { }
+  constructor(private alertService: AlertService, private dataService: DataService) { }
 
   /**
    * Start an environment / server
@@ -53,6 +54,7 @@ export class ServerService {
     });
 
     // apply latency, cors, routes and proxy to express server
+    this.parseBody(server);
     this.logRequests(server, environment);
     this.setEnvironmentLatency(server, environment);
     this.setRoutes(server, environment);
@@ -200,10 +202,42 @@ export class ServerService {
   }
 
   /**
-   * Logs all request made to the environment
+   * Parse body as a raw string
    *
    * @param server - server on which to launch the proxy
-   * @param environment - environment to get proxy settings from
+   */
+  private parseBody(server: any) {
+    try {
+      server.use((req, res, next) => {
+        req.setEncoding('utf8');
+        req.body = '';
+
+        req.on('data', (chunk) => {
+          req.body += chunk;
+        });
+
+        req.on('end', () => {
+          const maxLength = 10000;
+
+          // truncate
+          if (req.body.length > maxLength) {
+            req.body = req.body.substring(0, maxLength);
+            req.body = req.body + '\n\n-------- BODY HAS BEEN TRUNCATED --------';
+          }
+
+          next();
+        });
+      });
+    } catch (error) {
+
+    }
+  }
+
+  /**
+   * Logs all request made to the environment
+   *
+   * @param server - server on which to log the request
+   * @param environment - environment to link log to
    */
   private logRequests(server: any, environment: EnvironmentType) {
     server.use((req, res, next) => {
@@ -213,15 +247,12 @@ export class ServerService {
         environmentLogs = this.environmentsLogs[environment.uuid];
       }
 
-      environmentLogs.unshift({
-        timestamp: new Date(),
-        route: (req.route) ? req.route.path : null,
-        request: req
-      });
-
-      if (environmentLogs.length > Config.maxLogsPerEnvironment) {
+      // remove one at the end if we reach maximum
+      if (environmentLogs.length >= Config.maxLogsPerEnvironment) {
         environmentLogs.pop();
       }
+
+      environmentLogs.unshift(this.dataService.formatRequestLog(req));
 
       next();
     });

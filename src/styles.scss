@@ -486,3 +486,9 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
   @include loader02($size: 100px, $color: $gray-600, $border-size: 4px, $duration: 0.6s, $align: middle);
 }
 
+.message {
+  text-align: center;
+  font-size: $font-size-lg;
+  color: darken($gray-600, 20%);
+  font-weight: $font-weight-light;
+}
