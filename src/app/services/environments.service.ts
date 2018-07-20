@@ -174,6 +174,10 @@ export class EnvironmentsService {
     if (this.environments[environmentIndex].running) {
       this.serverService.stop(this.environments[environmentIndex]);
     }
+
+    // delete the request logs
+    this.serverService.deleteEnvironmentLogs(this.environments[environmentIndex].uuid);
+
     // delete the environment
     this.environments.splice(environmentIndex, 1);
 

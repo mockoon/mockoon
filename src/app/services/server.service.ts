@@ -305,4 +305,13 @@ export class ServerService {
   public clearEnvironmentLogs(environmentUuid: string) {
     this.environmentsLogs[environmentUuid] = []
   }
+
+  /**
+   * Delete an environment log
+   *
+   * @param environmentUuid
+   */
+  public deleteEnvironmentLogs(environmentUuid: string) {
+    delete this.environmentsLogs[environmentUuid];
+  }
 }
