@@ -9,8 +9,9 @@
 
   &-item {
     transition: all ease-in-out 200ms;
-    padding: 5px 10px;
+    padding: 6px;
     color: $gray-400;
+    font-size: $font-size-sm;
 
     &:not(:last-of-type) {
       border-bottom: 1px solid lighten($gray-900, 11%);

@@ -26,6 +26,8 @@ import * as uuid from 'uuid/v1';
 import '../assets/custom_theme.js';
 const platform = require('os').platform();
 
+type TabsNameType = 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS' | 'ENV_LOGS';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -52,7 +54,7 @@ export class AppComponent implements OnInit {
     mode: 'json',
     theme: 'custom_theme'
   };
-  public currentTab: 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS' | 'ENV_LOGS' = 'RESPONSE';
+  public currentTab: TabsNameType = 'RESPONSE';
   public alerts: Alert[];
   public updateAvailable = false;
   public platform = platform;
@@ -306,7 +308,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public setCurrentTab(tabName: 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS') {
+  public setCurrentTab(tabName: TabsNameType) {
     this.currentTab = tabName;
   }
 
@@ -621,16 +623,26 @@ export class AppComponent implements OnInit {
       };
 
       if (subject === 'environment') {
-        menu.items.unshift({
-          payload: {
-            subject,
-            action: 'env_settings',
-            subjectId
+        menu.items.unshift(
+          {
+            payload: {
+              subject,
+              action: 'env_logs',
+              subjectId
+            },
+            label: 'Environment logs',
+            icon: 'history'
           },
-          label: 'Environment settings',
-          icon: 'settings',
-          separator: true
-        });
+          {
+            payload: {
+              subject,
+              action: 'env_settings',
+              subjectId
+            },
+            label: 'Environment settings',
+            icon: 'settings',
+            separator: true
+          });
       }
       this.eventsService.contextMenuEvents.emit(menu);
     }
@@ -643,6 +655,12 @@ export class AppComponent implements OnInit {
    */
   public navigationContextMenuItemClicked(payload: ContextMenuItemPayload) {
     switch (payload.action) {
+      case 'env_logs':
+        if (payload.subjectId !== this.currentEnvironment.index) {
+          this.selectEnvironment(payload.subjectId);
+        }
+        this.setCurrentTab('ENV_LOGS');
+        break;
       case 'env_settings':
         if (payload.subjectId !== this.currentEnvironment.index) {
           this.selectEnvironment(payload.subjectId);
