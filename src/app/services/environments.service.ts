@@ -388,8 +388,12 @@ export class EnvironmentsService {
    */
   public duplicateRoute(environment: EnvironmentType, routeIndex: number): number {
     // copy the route, reset duplicates (use cloneDeep to avoid headers pass by reference)
-    const newRoute = Object.assign({}, cloneDeep(environment.routes[routeIndex]), { uuid: uuid(), duplicates: [] });
+    let newRoute = Object.assign({}, cloneDeep(environment.routes[routeIndex]), { duplicates: [] });
+
+    newRoute = this.renewUUIDs(newRoute, 'route') as RouteType;
+
     const newRouteIndex = environment.routes.push(newRoute) - 1;
+
     this.routesTotal += 1;
 
     this.eventsService.analyticsEvents.next({ type: 'event', category: 'duplicate', action: 'route' });
