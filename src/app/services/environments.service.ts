@@ -50,6 +50,15 @@ export class EnvironmentsService {
     cors: true
   };
 
+  private environmentResetSchema: Partial<EnvironmentType> = {
+    instance: null,
+    running: false,
+    startedAt: null,
+    modifiedAt: null,
+    duplicates: [],
+    needRestart: false
+  };
+
   private routeSchema: RouteType = {
     uuid: '',
     method: 'get',
@@ -348,25 +357,20 @@ export class EnvironmentsService {
    * @param environmentIndex
    */
   public duplicateEnvironment(environmentIndex: number): number {
-    // copy the environment, reset some properties
+    // copy the environment, reset some properties and change name
     let newEnvironment: EnvironmentType = Object.assign(
-      {},
-      this.environments[environmentIndex],
+      cloneDeep(this.environments[environmentIndex]),
+      this.environmentResetSchema,
       {
-        instance: null,
-        running: false,
-        uuid: uuid(),
-        name: this.environments[environmentIndex].name + ' (copy)',
-        startedAt: null,
-        modifiedAt: null,
-        duplicates: [],
-        needRestart: false,
-        routes: cloneDeep(this.environments[environmentIndex].routes) // avoid pass by reference for routes and headers
+        name: this.environments[environmentIndex].name + ' (copy)'
       }
     );
+
+    // add routes number to total
     this.routesTotal += this.environments[environmentIndex].routes.length;
 
     newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as EnvironmentType;
+
     const newEnvironmentIndex = this.environments.push(newEnvironment) - 1;
 
     this.eventsService.analyticsEvents.next({ type: 'event', category: 'duplicate', action: 'environment' });
