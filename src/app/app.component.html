@@ -157,7 +157,7 @@
 
           <!-- environment settings title and back button -->
           <div *ngIf="currentTab === 'ENV_SETTINGS' || currentTab === 'ENV_LOGS'">
-            <div class="row">
+            <div class="row" *ngIf="currentEnvironment">
               <div class="col">
                 <button type="button" class="btn btn-link btn-icon pl-2" (click)="setCurrentTab('RESPONSE')">
                   <i class="material-icons">arrow_back</i> Back
