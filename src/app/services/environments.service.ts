@@ -416,15 +416,25 @@ export class EnvironmentsService {
    */
   public exportAllEnvironments() {
     this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (path) => {
-      fs.writeFile(path, this.dataService.wrapExport(this.environments, 'full'), (error) => {
-        if (error) {
-          this.alertService.showAlert('error', Errors.EXPORT_ERROR);
-        } else {
-          this.alertService.showAlert('success', Messages.EXPORT_SUCCESS);
-
-          this.eventsService.analyticsEvents.next({ type: 'event', category: 'export', action: 'file' });
-        }
+      // reset environments before exporting (cannot export running env with server instance)
+      const dataToExport = cloneDeep(this.environments);
+      dataToExport.forEach(environment => {
+        Object.assign(environment, this.environmentResetSchema);
       });
+
+      try {
+        fs.writeFile(path, this.dataService.wrapExport(dataToExport, 'full'), (error) => {
+          if (error) {
+            this.alertService.showAlert('error', Errors.EXPORT_ERROR);
+          } else {
+            this.alertService.showAlert('success', Messages.EXPORT_SUCCESS);
+
+            this.eventsService.analyticsEvents.next({ type: 'event', category: 'export', action: 'file' });
+          }
+        });
+      } catch (error) {
+        this.alertService.showAlert('error', Errors.EXPORT_ERROR);
+      }
     });
   }
 
@@ -435,7 +445,8 @@ export class EnvironmentsService {
    */
   public exportEnvironmentToClipboard(environmentIndex: number) {
     try {
-      clipboard.writeText(this.dataService.wrapExport(this.environments[environmentIndex], 'environment'));
+      // reset environment before exporting (cannot export running env with server instance)
+      clipboard.writeText(this.dataService.wrapExport({ ...cloneDeep(this.environments[environmentIndex]), ...this.environmentResetSchema }, 'environment'));
       this.alertService.showAlert('success', Messages.EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS);
       this.eventsService.analyticsEvents.next({ type: 'event', category: 'export', action: 'clipboard' });
     } catch (error) {
