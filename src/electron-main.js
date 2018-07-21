@@ -89,7 +89,7 @@ function createWindow() {
           }
         },
         {
-          label: 'Changelog v0.4.0-beta', click: function () {
+          label: 'Release note v0.4.0-beta', click: function () {
             shell.openExternal('https://github.com/255kb/mockoon/releases/tag/v0.4.0-beta');
           }
         },
