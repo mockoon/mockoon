@@ -5,12 +5,12 @@ export const DummyJSONHelpers = (request) => {
       return request.params[paramName];
     },
     // use params from query string ?param1=xxx&param2=yyy
-    queryParam: (paramName) => {
-      return request.query[paramName];
+    queryParam: (paramName, defaultValue) => {
+      return request.query[paramName] || defaultValue;
     },
     // use content from request header
-    header: (headerName) => {
-      return request.get(headerName);
+    header: (headerName, defaultValue) => {
+      return request.get(headerName) || defaultValue;
     },
     // use request hostname
     hostname: () => {
