@@ -43,6 +43,8 @@ export const DummyJSONHelpers = (request) => {
     },
     // switch cases
     switch: (value, options) => {
+      this.found = false;
+
       this.switchValue = value;
       const htmlContent = options.fn(this);
       return htmlContent;
@@ -50,15 +52,15 @@ export const DummyJSONHelpers = (request) => {
     // case helper for switch
     case: (value, options) => {
       // check switch value to simulate break
-      if (this.switchValue && value === this.switchValue) {
-        delete this.switchValue;
+      if (value === this.switchValue && !this.found) {
+        this.found = true;
         return options.fn(this);
       }
     },
     // default helper for switch
     default: (options) => {
       // if there is still a switch value show default content
-      if (this.switchValue) {
+      if (!this.found) {
         delete this.switchValue;
         return options.fn(this);
       }
