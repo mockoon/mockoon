@@ -1,7 +1,7 @@
 {
   "name": "mockoon",
   "description": "Mock servers in seconds",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "hi@255kb.com",

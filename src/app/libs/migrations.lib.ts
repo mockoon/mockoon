@@ -16,7 +16,7 @@ export const Migrations: Function[] = [
     }
   },
 
-  // v0.5.0beta
+  // 1.0.0
   (environment: EnvironmentType) => {
     if (!environment.cors) {
       environment.cors = true;

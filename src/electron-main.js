@@ -36,7 +36,7 @@ function createWindow() {
     minHeight: 768,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    title: 'Mockoon - Mock servers in seconds - v0.4.0 beta',
+    title: 'Mockoon - Mock servers in seconds - v1.0.0',
     backgroundColor: '#252830'
   };
 
@@ -89,8 +89,8 @@ function createWindow() {
           }
         },
         {
-          label: 'Release note v0.4.0-beta', click: function () {
-            shell.openExternal('https://github.com/255kb/mockoon/releases/tag/v0.4.0-beta');
+          label: 'Release note v1.0.0', click: function () {
+            shell.openExternal('https://github.com/255kb/mockoon/releases/tag/1.0.0');
           }
         },
         { type: 'separator' },
