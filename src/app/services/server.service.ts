@@ -54,6 +54,7 @@ export class ServerService {
     });
 
     // apply latency, cors, routes and proxy to express server
+    this.rewriteUrl(server);
     this.parseBody(server);
     this.logRequests(server, environment);
     this.setEnvironmentLatency(server, environment);
@@ -95,6 +96,19 @@ export class ServerService {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Remove multiple slash and replace by single slash
+   *
+   * @param server - express instance
+   */
+  private rewriteUrl(server: any) {
+    server.use((req, res, next) => {
+      req.url = req.url.replace(/\/{2,}/g, '/');
+
+      next();
+    });
   }
 
   /**
