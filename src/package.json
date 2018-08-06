@@ -7,10 +7,7 @@
     "email": "hi@255kb.com",
     "url": "https://255kb.com/"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/255kb/mockoon.git"
-  },
+  "repository": "https://github.com/255kb/mockoon",
   "bugs": {
     "url": "https://github.com/255kb/mockoon/issues"
   },

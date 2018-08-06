@@ -8,10 +8,7 @@
     "url": "https://255kb.com/"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/255kb/mockoon.git"
-  },
+  "repository": "https://github.com/255kb/mockoon",
   "homepage": "https://mockoon.com",
   "build": {
     "appId": "com.mockoon.app",
@@ -28,7 +25,10 @@
       "artifactName": "mockoon.setup.${version}.${ext}"
     },
     "mac": {
-      "target": "dmg",
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "type": "distribution",
       "artifactName": "mockoon.setup.${version}.${ext}"
     },
