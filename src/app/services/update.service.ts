@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers } from '@angular/http';
+import { Headers, Http, RequestOptions } from '@angular/http';
 import { Config } from 'app/config';
-import * as semver from 'semver';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/do';
-import { Subject } from 'rxjs/Subject';
 import { AnalyticsService } from 'app/services/analytics.service';
 import { shell } from 'electron';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
+import { Subject } from 'rxjs/Subject';
+import * as semver from 'semver';
 const https = require('https');
 const fs = require('fs');
 const app = require('electron').remote.app;
