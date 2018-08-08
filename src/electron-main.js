@@ -36,7 +36,7 @@ function createWindow() {
     minHeight: 768,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    title: 'Mockoon - Mock servers in seconds - v1.0.0',
+    title: 'Mockoon - Mock API in seconds - v1.0.0',
     backgroundColor: '#252830'
   };
 

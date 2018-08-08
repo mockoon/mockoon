@@ -1,6 +1,6 @@
 ![Mockoon logo](./images/logo.png)
 
-*Mock servers in seconds*
+*Mock API in seconds*
 
 [![Website](https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6)](https://mockoon.com/) [![Newsletter](https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square)](http://eepurl.com/dskB2X) [![Twitter](https://img.shields.io/badge/Twitter_@255kb-follow-blue.svg?style=flat-square&colorB=1da1f2)](https://twitter.com/255kb) 
 
