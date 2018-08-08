@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
 import { Config } from 'app/config';
-import { AnalyticsService } from 'app/services/analytics.service';
 import { shell } from 'electron';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { Subject } from 'rxjs/Subject';
 import * as semver from 'semver';
-const https = require('https');
+const request = require('request');
 const fs = require('fs');
 const app = require('electron').remote.app;
 const spawn = require('child_process').spawn;
 const platform = require('os').platform();
+const packageJSON = require('../../../package.json');
 
 /**
  * Auto update for windows (with temp file and old update file deletion)
@@ -28,9 +28,10 @@ export class UpdateService {
   };
   public updateAvailable: Subject<any> = new Subject();
   private nextVersion: string;
-  private updateFilePath = app.getPath('userData') + '/';
+  private nextVersionFileName: string;
+  private userDataPath = app.getPath('userData') + '/';
 
-  constructor(private http: Http, private analyticsService: AnalyticsService) {
+  constructor(private http: Http) {
     // always remove temp file
     this.removeTempFile();
 
@@ -42,22 +43,21 @@ export class UpdateService {
 
     if (platform === 'darwin' || platform === 'linux' || platform === 'win32') {
       // request the updates.json file
-      this.http.get(Config.updatesUrl, options)
+      this.http.get(Config.githubLatestReleaseUrl, options)
         .map(response => response.json())
-        .subscribe((updates) => {
-          // check if version is ahead and trigger something depending on platform
-          if (semver.gt(updates[platform].version, Config.version)) {
-            this.nextVersion = updates[platform].version;
+        .subscribe((githubRelease) => {
+          // check if version is ahead and trigger something depending on platform (semver automatically strip 'v')
+          if (semver.gt(githubRelease.tag_name, packageJSON.version)) {
+            this.nextVersion = githubRelease.tag_name.replace('v', '');
+            this.nextVersionFileName = this.updateFileName[platform].replace('%v%', this.nextVersion);
 
             // only trigger download for windows, for other just inform
             if (platform === 'win32') {
-              const updateFileName = this.updateFileName[platform].replace('%v%', this.nextVersion);
-
               // if already have an update file
-              if (fs.existsSync(this.updateFilePath + updateFileName)) {
+              if (fs.existsSync(this.userDataPath + this.nextVersionFileName)) {
                 this.updateAvailable.next();
               } else {
-                this.fileDownload(updates[platform].file, this.updateFilePath, updateFileName, () => {
+                this.fileDownload(`${Config.githubBinaryDownloadUrl}${githubRelease.tag_name}/${this.nextVersionFileName}`, this.userDataPath, this.nextVersionFileName, () => {
                   this.updateAvailable.next();
                 });
               }
@@ -75,13 +75,13 @@ export class UpdateService {
    * Launch setup file and close the application
    */
   public applyUpdate() {
-    if (this.updateAvailable) {
+    if (this.nextVersion) {
       // launch exe detached and close app
       if (platform === 'win32') {
-        spawn(this.updateFilePath + this.updateFileName[platform].replace('%v%', this.nextVersion), ['--updated'], { detached: true, stdio: 'ignore' }).unref();
+        spawn(this.userDataPath + this.nextVersionFileName, ['--updated'], { detached: true, stdio: 'ignore' }).unref();
         app.quit();
       } else if (platform === 'darwin' || platform === 'linux') {
-        shell.openExternal(Config.releasesUrl + this.updateFileName[platform].replace('%v%', this.nextVersion));
+        shell.openExternal(`${Config.githubBinaryDownloadUrl}v${this.nextVersion}/${this.nextVersionFileName}`);
       }
     }
   }
@@ -91,16 +91,12 @@ export class UpdateService {
    */
   private fileDownload(url: string, destination: string, filename: string, callback: Function) {
     const file = fs.createWriteStream(destination + this.tempUpdateFileName);
-    const request = https.get(url, (response) => {
-      response.pipe(file);
-      file.on('finish', () => {
-        file.close(() => {
-          // rename when successful
-          fs.rename(destination + this.tempUpdateFileName, destination + filename, callback);
-        });
-      });
-    }).on('error', (error) => {
+
+    request.get(url).pipe(file).on('error', () => {
       fs.unlink(destination + this.tempUpdateFileName);
+    }).on('finish', () => {
+      // rename when successful
+      fs.rename(destination + this.tempUpdateFileName, destination + filename, callback);
     });
   }
 
@@ -109,7 +105,7 @@ export class UpdateService {
    */
   private removeOldUpdate() {
     if (platform === 'win32') {
-      fs.unlink(this.updateFilePath + this.updateFileName[platform].replace('%v%', Config.version), () => { });
+      fs.unlink(this.userDataPath + this.updateFileName[platform].replace('%v%', packageJSON.version), () => { });
     }
   }
 
@@ -118,7 +114,7 @@ export class UpdateService {
    */
   private removeTempFile() {
     if (platform === 'win32') {
-      fs.unlink(this.updateFilePath + this.tempUpdateFileName, () => { });
+      fs.unlink(this.userDataPath + this.tempUpdateFileName, () => { });
     }
   }
 }

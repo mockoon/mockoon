@@ -25,6 +25,7 @@
     "dummy-json": "2.0.0",
     "mime-types": "2.1.18",
     "semver": "5.5.0",
-    "uuid": "3.2.1"
+    "uuid": "3.2.1",
+    "request": "2.87.0"
   }
 }

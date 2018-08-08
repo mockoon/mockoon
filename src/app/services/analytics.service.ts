@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { Config } from 'app/config';
 import { AuthService } from 'app/services/auth.service';
 import { EnvironmentsService } from 'app/services/environments.service';
 import { EventsService } from 'app/services/events.service';
 import { SettingsService, SettingsType } from 'app/services/settings.service';
+const packageJSON = require('../../../package.json');
 
 /**
  * Reference: https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
@@ -28,12 +28,11 @@ export class AnalyticsService {
     v: '1',
     an: 'mockoon',
     aid: 'com.mockoon.app',
-    av: Config.version,
+    av: packageJSON.version,
     ds: 'app',
     tid: 'UA-7759211-13',
     dh: encodeURIComponent('https://app.mockoon.com')
   };
-  private userId = '1';
 
   private queue: CollectParams[] = [];
 
