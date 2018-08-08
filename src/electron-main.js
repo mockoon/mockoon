@@ -90,7 +90,7 @@ function createWindow() {
         },
         {
           label: 'Release note v1.0.0', click: function () {
-            shell.openExternal('https://github.com/255kb/mockoon/releases/tag/1.0.0');
+            shell.openExternal('https://github.com/255kb/mockoon/releases/tag/v1.0.0');
           }
         },
         { type: 'separator' },
