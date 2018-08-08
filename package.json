@@ -26,10 +26,7 @@
       "artifactName": "mockoon.setup.${version}.${ext}"
     },
     "mac": {
-      "target": [
-        "dmg",
-        "zip"
-      ],
+      "target": "dmg",
       "type": "distribution",
       "artifactName": "mockoon.setup.${version}.${ext}"
     },
