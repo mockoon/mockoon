@@ -19,7 +19,8 @@
     },
     "win": {
       "target": "nsis",
-      "publisherName": "Guillaume Monnet"
+      "publisherName": "Guillaume Monnet",
+      "rfc3161TimeStampServer": "http://sha256timestamp.ws.symantec.com/sha256/timestamp"
     },
     "nsis": {
       "artifactName": "mockoon.setup.${version}.${ext}"
