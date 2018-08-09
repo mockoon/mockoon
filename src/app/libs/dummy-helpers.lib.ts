@@ -1,18 +1,30 @@
 import * as DummyJSON from 'dummy-json';
 import random from 'lodash/random';
+import * as objectPath from 'object-path';
 
 export const DummyJSONHelpers = (request) => {
   return {
+    // get json property from body
+    body: (path: string, defaultValue: string) => {
+      const jsonBody = JSON.parse(request.body);
+      const value = objectPath.ensureExists(jsonBody, path);
+
+      if (value !== undefined) {
+        return value;
+      } else {
+        return defaultValue;
+      }
+    },
     // use params from url /:param1/:param2
-    urlParam: (paramName) => {
+    urlParam: (paramName: string) => {
       return request.params[paramName];
     },
     // use params from query string ?param1=xxx&param2=yyy
-    queryParam: (paramName, defaultValue) => {
+    queryParam: (paramName: string, defaultValue: string) => {
       return request.query[paramName] || defaultValue;
     },
     // use content from request header
-    header: (headerName, defaultValue) => {
+    header: (headerName: string, defaultValue: string) => {
       return request.get(headerName) || defaultValue;
     },
     // use request hostname

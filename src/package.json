@@ -15,17 +15,18 @@
   "main": "electron-main.js",
   "dependencies": {
     "brace": "0.11.1",
+    "dummy-json": "2.0.0",
     "electron-is-dev": "0.3.0",
     "electron-json-storage": "4.1.0",
     "electron-window-state": "4.1.1",
     "express": "4.16.3",
-    "http-proxy-middleware": "0.18.0",
     "firebase": "5.0.4",
+    "http-proxy-middleware": "0.18.0",
     "killable": "1.0.0",
-    "dummy-json": "2.0.0",
     "mime-types": "2.1.18",
+    "object-path": "0.11.4",
+    "request": "2.87.0",
     "semver": "5.5.0",
-    "uuid": "3.2.1",
-    "request": "2.87.0"
+    "uuid": "3.2.1"
   }
 }
