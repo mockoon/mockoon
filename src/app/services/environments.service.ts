@@ -6,6 +6,7 @@ import { AlertService } from 'app/services/alert.service';
 import { DataService } from 'app/services/data.service';
 import { EventsService } from 'app/services/events.service';
 import { ServerService } from 'app/services/server.service';
+import { SettingsService } from 'app/services/settings.service';
 import { DataSubjectType, ExportType } from 'app/types/data.type';
 import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
 import { CustomHeaderType, RouteType } from 'app/types/route.type';
@@ -75,7 +76,13 @@ export class EnvironmentsService {
 
   private storageKey = 'environments';
 
-  constructor(private serverService: ServerService, private alertService: AlertService, private dataService: DataService, private eventsService: EventsService) {
+  constructor(
+    private serverService: ServerService,
+    private alertService: AlertService,
+    private dataService: DataService,
+    private eventsService: EventsService,
+    private settingsService: SettingsService
+  ) {
     // get existing environments from storage or default one
     storage.get(this.storageKey, (error, environments) => {
       // if empty object
@@ -84,11 +91,17 @@ export class EnvironmentsService {
         const defaultEnvironment: EnvironmentType = this.buildDefaultEnvironment();
 
         this.environments = [defaultEnvironment];
-      } else {
-        this.environments = this.migrateData(environments);
-      }
 
-      this.environmentsReady.next(true);
+        this.environmentsReady.next(true);
+      } else {
+        // wait for settings to be ready before migrating and loading envs
+        this.settingsService.settingsReady.subscribe((ready) => {
+          if (ready) {
+            this.environments = this.migrateData(environments);
+            this.environmentsReady.next(true);
+          }
+        });
+      }
     });
 
     // subscribe to environment data update from UI, and save
@@ -309,9 +322,26 @@ export class EnvironmentsService {
    * @param environments - environments to migrate
    */
   private migrateData(environments: EnvironmentsType) {
+    let wasUpdated = false;
+    let lastMigrationId;
+
     Migrations.forEach(migration => {
-      environments.forEach(environment => migration(environment));
+      if (migration.id > this.settingsService.settings.lastMigration) {
+        lastMigrationId = migration.id;
+
+        environments.forEach(environment => migration.migrationFunction(environment));
+        wasUpdated = true;
+      }
     });
+
+    if (wasUpdated) {
+      // if a migration was played immediately save
+      this.environmentUpdateEvents.next({});
+
+      // save last migration in the settings
+      this.settingsService.settings.lastMigration = lastMigrationId;
+      this.settingsService.settingsUpdateEvents.next(this.settingsService.settings);
+    }
 
     return environments;
   }

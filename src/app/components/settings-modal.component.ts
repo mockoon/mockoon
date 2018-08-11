@@ -29,9 +29,6 @@ export class SettingsModalComponent implements OnInit {
   }
 
   public settingsUpdated(settingName: string) {
-    this.settingsService.settingsUpdateEvents.next({
-      settings: this.settings,
-      callback: () => { }
-    });
+    this.settingsService.settingsUpdateEvents.next(this.settings);
   }
 }

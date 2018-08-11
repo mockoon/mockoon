@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SettingsService, SettingsType } from 'app/services/settings.service';
 
@@ -31,9 +31,6 @@ export class WelcomeModalComponent implements OnInit {
   }
 
   public settingsUpdated(settingName: string) {
-    this.settingsService.settingsUpdateEvents.next({
-      settings: this.settings,
-      callback: () => {}
-    });
+    this.settingsService.settingsUpdateEvents.next(this.settings);
   }
 }

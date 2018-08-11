@@ -1,29 +1,34 @@
 import { Injectable } from '@angular/core';
-import * as jsonStorage from 'electron-json-storage';
+import * as storage from 'electron-json-storage';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import * as storage from 'electron-json-storage';
 
 export type SettingsType = {
   welcomeShown: boolean;
   analytics: boolean;
+  lastMigration: number;
 };
 
 @Injectable()
 export class SettingsService {
   public settings: SettingsType;
-  public settingsReady: BehaviorSubject <boolean> = new BehaviorSubject <boolean>(false);
+  public settingsReady: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  public settingsUpdateEvents: Subject<{ settings: SettingsType, callback: Function }> = new Subject();
+  public settingsUpdateEvents: Subject<SettingsType> = new Subject();
 
   private settingsSchema: SettingsType = {
     welcomeShown: false,
-    analytics: true
+    analytics: true,
+    lastMigration: 0
   };
   private storageKey = 'settings';
 
   constructor() {
+    // subscribe to settings update
+    this.settingsUpdateEvents.debounceTime(1000).subscribe((settings) => {
+      storage.set(this.storageKey, settings, () => { });
+    });
+
     // get existing settings from storage or default one
     storage.get(this.storageKey, (error, settings) => {
       // if empty object
@@ -31,20 +36,17 @@ export class SettingsService {
         // build default settings
         this.settings = Object.assign({}, this.settingsSchema);
       } else {
+        // add missing option
+        if (settings.lastMigration === undefined) {
+          settings.lastMigration = 0;
+
+          this.settingsUpdateEvents.next(settings);
+        }
+
         this.settings = settings;
       }
 
       this.settingsReady.next(true);
-    });
-
-    // subscribe to settings update
-    this.settingsUpdateEvents.debounceTime(1000).subscribe((params) => {
-      storage.set(this.storageKey, params.settings, () => {
-
-        if (params.callback) {
-          params.callback();
-        }
-      });
     });
   }
 }
