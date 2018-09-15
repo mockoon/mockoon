@@ -1,16 +1,18 @@
 # Publish a new version
 
-- `npm run setversion x.x.x`
-- update app menu changelog link and title
-- `npm run build:app`
-- `npm run package:win|mac|linux` alternatively
-- `npm run publish:win|mac|linux|file|all` -> will upload specific file(s) together with updates.json (do not forget that if updates.json is bumped you need to upload everything!), or upload one by one and then updates.json
+1. `npm run setversion x.x.x`
+2. update app menu changelog link and title
+3. `npm run build:app`
+4. `npm run package:win|mac|linux` alternatively
+5. Create release in 'mockoon' repository.
 
-- Update 'mockoon-website' download links.
+New way:
+6. Add built binaries to a new GitHub release. (Respect release tag format `vx.x.x`)
 
-- Create release in 'mockoon' repository.
+Old way:
+6. `npm run publish:win|mac|linux|file|all` -> will upload specific file(s) together with updates.json (do not forget that if updates.json is bumped you need to upload everything!), or upload one by one and then updates.json
 
-- tweet
+7. Update 'mockoon-website' download links (point to GitHub release).
 
 # Changes made to webpack configs
 

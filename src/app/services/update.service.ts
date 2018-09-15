@@ -42,7 +42,7 @@ export class UpdateService {
     const options = new RequestOptions({ headers });
 
     if (platform === 'darwin' || platform === 'linux' || platform === 'win32') {
-      // request the updates.json file
+      // request Github latest release data
       this.http.get(Config.githubLatestReleaseUrl, options)
         .map(response => response.json())
         .subscribe((githubRelease) => {
