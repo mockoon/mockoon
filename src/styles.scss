@@ -187,7 +187,7 @@ a:not([href]):not([tabindex]) {
 }
 
 ::selection {
-  background: $blue;
+  background: lighten($gray-900, 10%);
 }
 
 html {
