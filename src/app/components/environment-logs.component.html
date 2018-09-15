@@ -5,7 +5,7 @@
         <a class="nav-link" [ngClass]="{'active': logIndex === selectedLogIndex}" (click)="showLogDetails(logIndex)">
           <div class="ellipsis">
             <span class="badge badge-default ml-0 mr-3 http-method-{{log.method | lowercase}}">{{log.method | uppercase}}</span> {{log.url}}
-            <span *ngIf="log.route" class="float-right text-success"><i class="material-icons" ngbTooltip="Request catched">check</i></span>
+            <span *ngIf="log.route" class="float-right text-success"><i class="material-icons" ngbTooltip="Request caught">check</i></span>
           </div>
           <div class="menu-subtitle ellipsis">
             {{log.timestamp | date:'yyyy-MM-dd HH:mm:ss:SSS'}}
@@ -29,7 +29,7 @@
           <strong>Method:</strong> {{selectedLog.method}}
         </div>
         <div *ngIf="selectedLog.route" class="environment-logs-content-item">
-          <strong>Catched by route:</strong> {{selectedLog.route}}
+          <strong>Caught by route:</strong> {{selectedLog.route}}
         </div>
       </div>
 
