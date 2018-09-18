@@ -218,7 +218,7 @@ export class ServerService {
   /**
    * Parse body as a raw string
    *
-   * @param server - server on which to launch the proxy
+   * @param server - server on which to parse the body
    */
   private parseBody(server: any) {
     try {
@@ -231,14 +231,6 @@ export class ServerService {
         });
 
         req.on('end', () => {
-          const maxLength = 10000;
-
-          // truncate
-          if (req.body.length > maxLength) {
-            req.body = req.body.substring(0, maxLength);
-            req.body = req.body + '\n\n-------- BODY HAS BEEN TRUNCATED --------';
-          }
-
           next();
         });
       });

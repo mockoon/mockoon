@@ -76,7 +76,17 @@ export class DataService {
 
         return [];
       },
-      body: request.body
+      get body() {
+        const maxLength = 10000;
+        let truncatedBody: string = request.body;
+
+        // truncate
+        if (truncatedBody.length > maxLength) {
+          truncatedBody = truncatedBody.substring(0, maxLength) + '\n\n-------- BODY HAS BEEN TRUNCATED --------';
+        }
+
+        return truncatedBody;
+      }
     };
 
     // get and sort headers

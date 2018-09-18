@@ -23,8 +23,8 @@ export class EnvironmentLogsComponent implements OnInit, DoCheck {
   private currentLogsLastLength: number;
 
   constructor(private serverService: ServerService, private keyValueDiffers: KeyValueDiffers) {
-    this.environmentsLogsDiffer = keyValueDiffers.find({}).create();
-    this.currentEnvironmentDiffer = keyValueDiffers.find({}).create();
+    this.environmentsLogsDiffer = this.keyValueDiffers.find({}).create();
+    this.currentEnvironmentDiffer = this.keyValueDiffers.find({}).create();
   }
 
   ngOnInit() {

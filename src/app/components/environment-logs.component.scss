@@ -38,7 +38,7 @@ $logs-border: 1px solid lighten($gray-900, 1%);
       }
 
       &.pre {
-        white-space: pre-line;
+        white-space: pre-wrap;
       }
     }
   }

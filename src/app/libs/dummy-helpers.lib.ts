@@ -6,11 +6,16 @@ export const DummyJSONHelpers = (request) => {
   return {
     // get json property from body
     body: (path: string, defaultValue: string) => {
-      const jsonBody = JSON.parse(request.body);
-      const value = objectPath.ensureExists(jsonBody, path);
+      // only parse body if request header is set to json
+      if (request.get('Content-type') === 'application/json') {
+        const jsonBody = JSON.parse(request.body);
+        const value = objectPath.ensureExists(jsonBody, path);
 
-      if (value !== undefined) {
-        return value;
+        if (value !== undefined) {
+          return value;
+        } else {
+          return defaultValue;
+        }
       } else {
         return defaultValue;
       }
