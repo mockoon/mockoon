@@ -42,7 +42,9 @@ export class AnalyticsService {
     private authService: AuthService,
     private settingsService: SettingsService,
     private eventsService: EventsService
-  ) {
+  ) { }
+
+  public init() {
     // wait for auth to be ready before processing the eventual queue
     this.authService.authReady.subscribe((ready) => {
       if (ready) {
@@ -63,7 +65,7 @@ export class AnalyticsService {
 
     this.eventsService.analyticsEvents.subscribe((event) => {
       this.collect(event);
-    })
+    });
   }
 
   /**
@@ -71,7 +73,7 @@ export class AnalyticsService {
    *
    * @param params
    */
-  public collect(params: CollectParams) {
+  private collect(params: CollectParams) {
     // if firebase auth not ready add to queue
     if (!this.authService.userId) {
       this.queue.push(params);

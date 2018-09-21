@@ -2,14 +2,15 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ContextMenuItemPayload } from 'app/components/context-menu.component';
 import { Config } from 'app/config';
-import { Errors } from 'app/enums/errors.enum.js';
+import { Errors } from 'app/enums/errors.enum';
 import { Alert, AlertService } from 'app/services/alert.service';
+import { AnalyticsService } from 'app/services/analytics.service';
 import { AuthService } from 'app/services/auth.service';
 import { EnvironmentsService } from 'app/services/environments.service';
 import { ContextMenuEventType, EventsService } from 'app/services/events.service';
 import { ServerService } from 'app/services/server.service';
 import { UpdateService } from 'app/services/update.service';
-import { DataSubjectType } from 'app/types/data.type.js';
+import { DataSubjectType } from 'app/types/data.type';
 import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
 import { headerNames, headerValues, methods, RouteType, statusCodes, statusCodesExplanation } from 'app/types/route.type';
 import 'brace/index';
@@ -77,7 +78,8 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private eventsService: EventsService,
     private config: NgbTooltipConfig,
-    private dragulaService: DragulaService
+    private dragulaService: DragulaService,
+    private analyticsService: AnalyticsService
   ) {
     // tooltip config
     this.config.container = 'body';
@@ -161,6 +163,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.analyticsService.init();
+
     // auth anonymously through firebase
     this.authService.auth();
 
