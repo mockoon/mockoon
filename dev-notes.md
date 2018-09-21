@@ -9,7 +9,7 @@
 New way:
 6. Add built binaries to a new GitHub release. (Respect release tag format `vx.x.x`)
 
-Old way:
+Old way: (until v1.0.0)
 6. `npm run publish:win|mac|linux|file|all` -> will upload specific file(s) together with updates.json (do not forget that if updates.json is bumped you need to upload everything!), or upload one by one and then updates.json
 
 7. Update 'mockoon-website' download links (point to GitHub release).

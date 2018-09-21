@@ -12,6 +12,7 @@ const isDev = require('electron-is-dev');
 
 // if serving enable hot reload
 const args = process.argv.slice(1);
+const packageJSON = require('../../package.json');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -36,7 +37,7 @@ function createWindow() {
     minHeight: 768,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    title: 'Mockoon - Mock API in seconds - v1.0.0',
+    title: `Mockoon - Mock API in seconds - v${packageJSON.version}`,
     backgroundColor: '#252830'
   };
 
@@ -89,8 +90,8 @@ function createWindow() {
           }
         },
         {
-          label: 'Release note v1.0.0', click: function () {
-            shell.openExternal('https://github.com/255kb/mockoon/releases/tag/v1.0.0');
+          label: `Release note v${packageJSON.version}`, click: function () {
+            shell.openExternal(`https://github.com/255kb/mockoon/releases/tag/v${packageJSON.version}`);
           }
         },
         { type: 'separator' },
