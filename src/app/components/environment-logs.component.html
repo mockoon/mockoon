@@ -6,6 +6,7 @@
           <div class="ellipsis">
             <span class="badge badge-default ml-0 mr-3 http-method-{{log.method | lowercase}}">{{log.method | uppercase}}</span> {{log.url}}
             <span *ngIf="log.route" class="float-right text-success"><i class="material-icons" ngbTooltip="Request caught">check</i></span>
+            <span *ngIf="!log.route && log.proxied" class="float-right text-primary"><i class="material-icons" ngbTooltip="Request proxied">security</i></span>
           </div>
           <div class="menu-subtitle ellipsis">
             {{log.timestamp | date:'yyyy-MM-dd HH:mm:ss:SSS'}}

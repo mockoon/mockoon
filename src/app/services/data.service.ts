@@ -58,6 +58,9 @@ export class DataService {
       protocol: request.protocol,
       url: request.originalUrl,
       headers: [],
+      get proxied() {
+        return request.proxied;
+      },
       get params() {
         if (request.params) {
           return Object.keys(request.params).map((paramName) => {

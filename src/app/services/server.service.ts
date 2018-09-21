@@ -201,7 +201,8 @@ export class ServerService {
   }
 
   /**
-   * Enable catch all proxy
+   * Enable catch all proxy.
+   * Restream the body to the proxied API because it already has been intercepted by body parser
    *
    * @param server - server on which to launch the proxy
    * @param environment - environment to get proxy settings from
@@ -209,8 +210,23 @@ export class ServerService {
   private enableProxy(server: any, environment: EnvironmentType) {
     // Add catch all proxy if enabled
     if (environment.proxyMode && environment.proxyHost && this.isValidURL(environment.proxyHost)) {
+      // res-stream the body (intercepted by body parser method) and mark as proxied
+      const processRequest = (proxyReq, req, res, options) => {
+        req.proxied = true;
+
+        if (req.body) {
+          proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
+          // stream the content
+          proxyReq.write(req.body);
+        }
+      }
+
       server.use('*', proxy({
-        target: environment.proxyHost, secure: false, changeOrigin: true, ssl: Object.assign({}, httpsConfig, { agent: false })
+        target: environment.proxyHost,
+        secure: false,
+        changeOrigin: true,
+        ssl: Object.assign({}, httpsConfig, { agent: false }),
+        onProxyReq: processRequest
       }));
     }
   }
