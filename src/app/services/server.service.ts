@@ -191,7 +191,17 @@ export class ServerService {
                   res.end();
                 }
               } else {
-                res.send(route.body);
+                try {
+                  res.send(route.body);
+                } catch (error) {
+                  // if invalide Content-Type provided
+                  if (error.message.indexOf('invalid media type') >= 0) {
+                    this.alertService.showAlert('error', Errors.INVALID_CONTENT_TYPE);
+                    res.set('Content-Type', 'text/plain');
+                    res.send(Errors.INVALID_CONTENT_TYPE);
+                  }
+                  res.end();
+                }
               }
             }
           }, route.latency);
