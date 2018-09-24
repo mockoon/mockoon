@@ -81,12 +81,12 @@ $custom-select-focus-box-shadow: unset;
 $btn-border-radius-xs:           $border-radius-xs;
 $input-bg:                       lighten($gray-900, 7%);
 $input-disabled-bg:              lighten($gray-900, 7%);
-$input-color:                    $gray-300;
+$input-color:                    $gray-200;
 $input-border-color:             transparent;
 $input-border-radius:            0;
 $input-focus-border-color:       $gray-800;
-$input-focus-color:              $gray-200;
-$input-placeholder-color:        $gray-600;
+$input-focus-color:              $gray-100;
+$input-placeholder-color:        $gray-500;
 $input-group-addon-bg:           transparent;
 $custom-select-bg:               lighten($gray-900, 7%);
 $custom-select-indicator-color: $gray-600;
@@ -109,5 +109,7 @@ $modal-content-box-shadow-sm-up: none;
 $modal-backdrop-opacity: .8;
 $modal-header-border-color: lighten($gray-900, 4%);
 
-$tooltip-color: $gray-300;
+$tooltip-color: $gray-200;
 $tooltip-bg: darken($gray-900, 8%);
+
+$text-muted:                  $gray-500;

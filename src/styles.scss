@@ -18,14 +18,14 @@
   }
   .nav-link.active,
   .nav-item.show .nav-link {
-    color: $gray-200;
+    color: $gray-100;
     box-shadow: inset 0 -2px 0 0 $blue;
   }
 }
 .nav.flex-column {
   .nav-link.active,
   .nav-item.show .nav-link {
-    color: $gray-200;
+    color: $gray-100;
     box-shadow: inset 2px 0 0 0 $blue;
     background-color: $component-active-bg;
   }
@@ -54,7 +54,7 @@
 }
 .input-group-text {
   font-style: italic;
-  color: $gray-600;
+  color: $gray-400;
 
   i {
     font-size: 1.3rem;
@@ -62,7 +62,7 @@
   }
 }
 label {
-  color: $gray-600;
+  color: $gray-400;
 }
 .input-group-prepend, .input-group-append {
   i {
@@ -92,7 +92,7 @@ label {
   i {
     font-size: 1.3rem;
   }
-  color: $gray-700;
+  color: $gray-500;
 
   &:hover, &:active {
     color: $body-color;
@@ -161,7 +161,7 @@ label {
 }
 
 a:not([href]):not([tabindex]) {
-  color: $gray-600;
+  color: $gray-400;
 }
 
 /* Custom styles */
@@ -251,7 +251,7 @@ select, input, .btn {
 }
 
 .menu-subtitle {
-  color: $gray-700;
+  color: $gray-500;
   font-size: $small-font-size;
 }
 
@@ -279,7 +279,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
 }
 
 .footer {
-  color: $gray-600;
+  color: $gray-400;
   background-color: lighten($gray-900, 3%);
   box-shadow: 0 0 3px darken($gray-900, 2%);
 
@@ -313,7 +313,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
   padding-right: .25rem;
   padding-top: .25rem;
   margin-top: 2rem;
-  color: $gray-600;
+  color: $gray-400;
   top: -12px;
 
   &.is-first {
