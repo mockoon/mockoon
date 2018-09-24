@@ -12,7 +12,7 @@ const isDev = require('electron-is-dev');
 
 // if serving enable hot reload
 const args = process.argv.slice(1);
-const packageJSON = require('../../package.json');
+const packageJSON = require('./package.json');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
