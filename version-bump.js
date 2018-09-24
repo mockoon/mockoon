@@ -15,12 +15,10 @@ if (newVersion) {
     to: newVersion
   };
 
-  // TODO update to handle multiple replace in same file (updates.json)
   const jsonOptions = {
     files: [
       './src/package.json',
-      './package.json',
-      './updates.json'
+      './package.json'
     ],
     from: `"version": "${currentVersion}"`,
     to: `"version": "${newVersion}"`
