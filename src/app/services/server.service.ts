@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Config } from 'app/config';
-import { Errors } from 'app/enums/errors.enum';
-import { DummyJSONHelpers } from 'app/libs/dummy-helpers.lib';
-import { AlertService } from 'app/services/alert.service';
-import { DataService } from 'app/services/data.service';
-import { pemFiles } from 'app/ssl';
-import { EnvironmentType } from 'app/types/environment.type';
-import { RouteType } from 'app/types/route.type';
-import { EnvironmentLogsType } from 'app/types/server.type';
+import { Config } from 'src/app/config';
+import { Errors } from 'src/app/enums/errors.enum';
+import { DummyJSONHelpers } from 'src/app/libs/dummy-helpers.lib';
+import { AlertService } from 'src/app/services/alert.service';
+import { DataService } from 'src/app/services/data.service';
+import { pemFiles } from 'src/app/ssl';
+import { EnvironmentType } from 'src/app/types/environment.type';
+import { RouteType } from 'src/app/types/route.type';
+import { EnvironmentLogsType } from 'src/app/types/server.type';
 import * as DummyJSON from 'dummy-json';
 import * as express from 'express';
 import * as fs from 'fs';
@@ -229,7 +229,7 @@ export class ServerService {
           // stream the content
           proxyReq.write(req.body);
         }
-      }
+      };
 
       server.use('*', proxy({
         target: environment.proxyHost,
@@ -335,7 +335,7 @@ export class ServerService {
    * @param environmentUuid
    */
   public clearEnvironmentLogs(environmentUuid: string) {
-    this.environmentsLogs[environmentUuid] = []
+    this.environmentsLogs[environmentUuid] = [];
   }
 
   /**

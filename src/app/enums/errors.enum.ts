@@ -13,4 +13,4 @@ export enum Errors {
   IMPORT_CLIPBOARD_WRONG_CHECKSUM = 'Clipboard content has an incorrect format and cannot be imported',
   IMPORT_ENVIRONMENT_CLIPBOARD_ERROR = 'An error occured while importing the environment from the clipboard',
   IMPORT_ROUTE_CLIPBOARD_ERROR = 'An error occured while importing the route from the clipboard',
-};
+}

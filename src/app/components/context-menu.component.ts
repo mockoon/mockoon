@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
-import { ContextMenuEventType, EventsService } from 'app/services/events.service';
-import { DataSubjectType } from 'app/types/data.type';
+import { ContextMenuEventType, EventsService } from 'src/app/services/events.service';
+import { DataSubjectType } from 'src/app/types/data.type';
 
 export type ContextMenuItemPayload = {
   subject: DataSubjectType;

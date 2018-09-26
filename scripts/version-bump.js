@@ -1,15 +1,13 @@
 const replace = require('replace-in-file');
 
-const currentVersion = require('./package.json').version;
+const currentVersion = require('../package.json').version;
 
 const newVersion = process.argv[2];
 
 if (newVersion) {
   const options = {
     files: [
-       './src/index.html',
-      './src/app/config.ts',
-      './src/electron-main.js'
+       './src/index.html'
     ],
     from: new RegExp(currentVersion, 'g'),
     to: newVersion
@@ -17,7 +15,7 @@ if (newVersion) {
 
   const jsonOptions = {
     files: [
-      './src/package.json',
+      './src/electron-files/package.json',
       './package.json'
     ],
     from: `"version": "${currentVersion}"`,

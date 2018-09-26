@@ -1,7 +1,7 @@
 import { Component, DoCheck, Input, KeyValueDiffer, KeyValueDiffers, OnInit } from '@angular/core';
-import { ServerService } from 'app/services/server.service';
-import { EnvironmentType } from 'app/types/environment.type';
-import { EnvironmentLogType } from 'app/types/server.type';
+import { ServerService } from 'src/app/services/server.service';
+import { EnvironmentType } from 'src/app/types/environment.type';
+import { EnvironmentLogType } from 'src/app/types/server.type';
 
 @Component({
   selector: 'app-environment-logs',

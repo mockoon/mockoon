@@ -1,21 +1,22 @@
+
 import { Injectable } from '@angular/core';
-import { Errors } from 'app/enums/errors.enum';
-import { Messages } from 'app/enums/messages.enum';
-import { Migrations } from 'app/libs/migrations.lib';
-import { AlertService } from 'app/services/alert.service';
-import { DataService } from 'app/services/data.service';
-import { EventsService } from 'app/services/events.service';
-import { ServerService } from 'app/services/server.service';
-import { SettingsService } from 'app/services/settings.service';
-import { DataSubjectType, ExportType } from 'app/types/data.type';
-import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
-import { CustomHeaderType, RouteType } from 'app/types/route.type';
 import { clipboard, remote } from 'electron';
 import * as storage from 'electron-json-storage';
 import * as fs from 'fs';
 import { cloneDeep } from 'lodash';
-import 'rxjs/add/operator/debounceTime';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs/internal/Subject';
+import { debounceTime } from 'rxjs/operators';
+import { Errors } from 'src/app/enums/errors.enum';
+import { Messages } from 'src/app/enums/messages.enum';
+import { Migrations } from 'src/app/libs/migrations.lib';
+import { AlertService } from 'src/app/services/alert.service';
+import { DataService } from 'src/app/services/data.service';
+import { EventsService } from 'src/app/services/events.service';
+import { ServerService } from 'src/app/services/server.service';
+import { SettingsService } from 'src/app/services/settings.service';
+import { DataSubjectType, ExportType } from 'src/app/types/data.type';
+import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
+import { CustomHeaderType, RouteType } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
 
 @Injectable()
@@ -105,12 +106,12 @@ export class EnvironmentsService {
     });
 
     // subscribe to environment data update from UI, and save
-    this.environmentUpdateEvents.debounceTime(1000).subscribe((params) => {
+    this.environmentUpdateEvents.pipe(debounceTime(1000)).subscribe((params) => {
       storage.set(this.storageKey, this.cleanBeforeSave(this.environments));
     });
 
     // subscribe to environment data update from UI
-    this.environmentUpdateEvents.debounceTime(100).subscribe((params) => {
+    this.environmentUpdateEvents.pipe(debounceTime(100)).subscribe((params) => {
       if (params.environment) {
         this.checkRoutesDuplicates(params.environment);
       }
@@ -434,11 +435,11 @@ export class EnvironmentsService {
   }
 
   public findEnvironmentIndex(environmentUUID: string): number {
-    return this.environments.findIndex(environment => environment.uuid === environmentUUID)
+    return this.environments.findIndex(environment => environment.uuid === environmentUUID);
   }
 
   public findRouteIndex(environment: EnvironmentType, routeUUID: string): number {
-    return environment.routes.findIndex(route => route.uuid === routeUUID)
+    return environment.routes.findIndex(route => route.uuid === routeUUID);
   }
 
   /**

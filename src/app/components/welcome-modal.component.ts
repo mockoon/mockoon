@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SettingsService, SettingsType } from 'app/services/settings.service';
+import { SettingsService, SettingsType } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-welcome-modal',
@@ -25,7 +25,7 @@ export class WelcomeModalComponent implements OnInit {
           }, (reason) => {
             // closing
           });
-        };
+        }
       }
     });
   }

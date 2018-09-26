@@ -1,11 +1,9 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions } from '@angular/http';
-import { Config } from 'app/config';
 import { shell } from 'electron';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/map';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs/internal/Subject';
 import * as semver from 'semver';
+import { Config } from 'src/app/config';
 const request = require('request');
 const fs = require('fs');
 const app = require('electron').remote.app;
@@ -31,20 +29,18 @@ export class UpdateService {
   private nextVersionFileName: string;
   private userDataPath = app.getPath('userData') + '/';
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     // always remove temp file
     this.removeTempFile();
 
-    // avoid cache from AWS (cloudflare has a page rule for this)
-    const headers = new Headers();
-    headers.append('Cache-Control', 'no-cache');
-    headers.append('Pragma', 'no-cache');
-    const options = new RequestOptions({ headers });
-
     if (platform === 'darwin' || platform === 'linux' || platform === 'win32') {
-      // request Github latest release data
-      this.http.get(Config.githubLatestReleaseUrl, options)
-        .map(response => response.json())
+      // request Github latest release data (avoid cache with headers)
+      this.http.get<any>(Config.githubLatestReleaseUrl, {
+        headers: new HttpHeaders({
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        })
+      })
         .subscribe((githubRelease) => {
           // check if version is ahead and trigger something depending on platform (semver automatically strip 'v')
           if (semver.gt(githubRelease.tag_name, packageJSON.version)) {

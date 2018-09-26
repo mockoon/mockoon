@@ -5,4 +5,4 @@ export enum Messages {
   IMPORT_SUCCESS = 'Environments have been successfully imported',
   IMPORT_ENVIRONMENT_CLIPBOARD_SUCCESS = 'Environment has been successfully imported',
   IMPORT_ROUTE_CLIPBOARD_SUCCESS = 'Route has been successfully imported'
-};
+}

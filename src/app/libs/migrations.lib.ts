@@ -1,4 +1,4 @@
-import { EnvironmentType } from 'app/types/environment.type';
+import { EnvironmentType } from 'src/app/types/environment.type';
 import * as uuid from 'uuid/v1';
 
 export const Migrations: { id: number, migrationFunction: (environment: EnvironmentType) => void }[] = [
@@ -38,7 +38,7 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
 
         // add custom header only if no content type
         if (!ContentTypeHeader) {
-          route.customHeaders.unshift({ uuid: uuid(), key: 'Content-Type', value: route['contentType'] })
+          route.customHeaders.unshift({ uuid: uuid(), key: 'Content-Type', value: route['contentType'] });
         }
 
         // delete old content type

@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ContextMenuItem } from 'app/components/context-menu.component';
-import { CollectParams } from 'app/services/analytics.service';
+import { ContextMenuItem } from 'src/app/components/context-menu.component';
+import { CollectParams } from 'src/app/services/analytics.service';
 
 export type ContextMenuEventType = {
   event: MouseEvent;

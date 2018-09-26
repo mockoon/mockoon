@@ -1,7 +1,9 @@
+
 import { Injectable } from '@angular/core';
 import * as storage from 'electron-json-storage';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subject } from 'rxjs/internal/Subject';
+import { debounceTime } from 'rxjs/operators';
 
 export type SettingsType = {
   welcomeShown: boolean;
@@ -25,7 +27,7 @@ export class SettingsService {
 
   constructor() {
     // subscribe to settings update
-    this.settingsUpdateEvents.debounceTime(1000).subscribe((settings) => {
+    this.settingsUpdateEvents.pipe(debounceTime(1000)).subscribe((settings) => {
       storage.set(this.storageKey, settings, () => { });
     });
 

@@ -1,9 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { AuthService } from 'app/services/auth.service';
-import { EnvironmentsService } from 'app/services/environments.service';
-import { EventsService } from 'app/services/events.service';
-import { SettingsService, SettingsType } from 'app/services/settings.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { EnvironmentsService } from 'src/app/services/environments.service';
+import { EventsService } from 'src/app/services/events.service';
+import { SettingsService, SettingsType } from 'src/app/services/settings.service';
 const packageJSON = require('../../../package.json');
 
 /**
@@ -37,7 +37,7 @@ export class AnalyticsService {
   private queue: CollectParams[] = [];
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private environmentsService: EnvironmentsService,
     private authService: AuthService,
     private settingsService: SettingsService,
@@ -99,7 +99,7 @@ export class AnalyticsService {
     }
 
     if (this.settings.analytics) {
-      this.http.post(this.endpoint, payload).subscribe();
+      this.http.post(this.endpoint, payload, { responseType: 'text' }).subscribe();
     }
   }
 
@@ -125,7 +125,7 @@ export class AnalyticsService {
       if (index > 0) {
         payload += '&';
       }
-      payload += `${key}=${this.payload[key]}`
+      payload += `${key}=${this.payload[key]}`;
     });
 
     payload += this.getCid() + this.getCustomDimensions();

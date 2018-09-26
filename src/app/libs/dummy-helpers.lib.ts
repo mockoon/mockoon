@@ -82,5 +82,5 @@ export const DummyJSONHelpers = (request) => {
         return options.fn(this);
       }
     }
-  }
+  };
 };

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
 import * as uuid from 'uuid/v1';
 
 export type AlertTypes = 'error' | 'success' | 'warning';
