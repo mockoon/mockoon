@@ -287,6 +287,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
     padding: $spacer / 4 $spacer;
     display: inline-block;
     transition: all ease-in-out 200ms;
+    cursor: pointer;
 
     &.lighter {
       color: $gray-200;

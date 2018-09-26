@@ -366,6 +366,7 @@
     <div class="footer">
       <div class="row">
         <div class="col pl-0 pr-0">
+          <div class="footer-item with-border-right" (click)="openReleaseLink()">v{{appVersion}}</div>
           <div class="footer-item with-border-right" *ngIf="updateAvailable">
             <button class="btn btn-xs btn-success" (click)="applyUpdate()"><i class="material-icons material-icons-xs">update</i> New version available, click to {{(platform === 'win32') ? 'apply' : 'download'}}</button>
           </div>

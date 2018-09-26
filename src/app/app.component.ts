@@ -1,5 +1,15 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import 'brace/index';
+import 'brace/mode/css';
+import 'brace/mode/html.js';
+import 'brace/mode/json.js';
+import 'brace/mode/text.js';
+import 'brace/mode/xml.js';
+import { ipcRenderer, remote, shell } from 'electron';
+import * as mimeTypes from 'mime-types';
+import { DragulaService } from 'ng2-dragula';
+import * as path from 'path';
 import { ContextMenuItemPayload } from 'src/app/components/context-menu.component';
 import { Config } from 'src/app/config';
 import { Errors } from 'src/app/enums/errors.enum';
@@ -13,19 +23,10 @@ import { UpdateService } from 'src/app/services/update.service';
 import { DataSubjectType } from 'src/app/types/data.type';
 import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
 import { headerNames, headerValues, methods, RouteType, statusCodes, statusCodesExplanation } from 'src/app/types/route.type';
-import 'brace/index';
-import 'brace/mode/css';
-import 'brace/mode/html.js';
-import 'brace/mode/json.js';
-import 'brace/mode/text.js';
-import 'brace/mode/xml.js';
-import { ipcRenderer, remote, shell } from 'electron';
-import * as mimeTypes from 'mime-types';
-import { DragulaService } from 'ng2-dragula';
-import * as path from 'path';
 import * as uuid from 'uuid/v1';
 import '../assets/custom_theme.js';
 const platform = require('os').platform();
+const appVersion = require('../../package.json').version;
 
 type TabsNameType = 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
@@ -64,6 +65,7 @@ export class AppComponent implements OnInit {
   public getCustomHeader = this.serverService.getCustomHeader;
   public clearEnvironmentLogsTimeout: NodeJS.Timer;
   public environmentLogs = this.serverService.environmentsLogs;
+  public appVersion = appVersion;
   private settingsModalOpened = false;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
@@ -547,6 +549,12 @@ export class AppComponent implements OnInit {
     shell.openExternal(Config.feedbackLink);
 
     this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'feedback' });
+  }
+
+  public openReleaseLink() {
+    shell.openExternal(Config.githubTegReleaseUrl + this.appVersion);
+
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'release' });
   }
 
   public openWikiLink(linkName: string) {

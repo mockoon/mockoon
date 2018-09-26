@@ -5,14 +5,6 @@ const currentVersion = require('../package.json').version;
 const newVersion = process.argv[2];
 
 if (newVersion) {
-  const options = {
-    files: [
-       './src/index.html'
-    ],
-    from: new RegExp(currentVersion, 'g'),
-    to: newVersion
-  };
-
   const jsonOptions = {
     files: [
       './src/electron-files/package.json',
@@ -22,13 +14,6 @@ if (newVersion) {
     to: `"version": "${newVersion}"`
   };
 
-   replace(options)
-    .then(changedFiles => {
-      console.log('Modified files:', changedFiles.join(', '));
-    })
-    .catch(error => {
-      console.error('Error occurred:', error);
-    });
   replace(jsonOptions)
     .then(changedFiles => {
       console.log('Modified files:', changedFiles.join(', '));
