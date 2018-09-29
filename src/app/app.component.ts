@@ -27,6 +27,7 @@ import * as uuid from 'uuid/v1';
 import '../assets/custom_theme.js';
 const platform = require('os').platform();
 const appVersion = require('../../package.json').version;
+const arrayMove = require('array-move');
 
 type TabsNameType = 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
@@ -255,20 +256,26 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Trigger env/route re-selection when draging active route/env
+   * Trigger env/route saving and re-selection when draging active route/env
    */
   public initDragMonitoring() {
     // on drop reselect if we moved a selected env/route
-    this.dragulaService.drop.subscribe((value) => {
-      if (value[0] === 'environmentsContainer') {
-        const environmentIndex = this.environmentsService.findEnvironmentIndex(this.currentEnvironment.environment.uuid);
-        this.selectEnvironment(environmentIndex);
-      } else if (value[0] === 'routesContainer') {
-        const routeIndex = this.environmentsService.findRouteIndex(this.currentEnvironment.environment, this.currentRoute.route.uuid);
-        this.selectRoute(routeIndex);
-      }
+    this.dragulaService.dropModel().subscribe((movedItem) => {
+      if (movedItem.name === 'environmentsContainer') {
+        arrayMove.mut(this.environments, movedItem.sourceIndex, movedItem.targetIndex);
 
-      this.environmentUpdated('reorder', true);
+        const selectedEnvironmentIndex = this.environmentsService.findEnvironmentIndex(this.currentEnvironment.environment.uuid);
+        this.selectEnvironment(selectedEnvironmentIndex);
+
+        this.environmentUpdated('envReorder', true);
+      } else if (movedItem.name === 'routesContainer') {
+        arrayMove.mut(this.currentEnvironment.environment.routes, movedItem.sourceIndex, movedItem.targetIndex);
+
+        const selectedRouteIndex = this.environmentsService.findRouteIndex(this.currentEnvironment.environment, this.currentRoute.route.uuid);
+        this.selectRoute(selectedRouteIndex);
+
+        this.environmentUpdated('routeReorder', true);
+      }
     });
   }
   /**
@@ -387,7 +394,8 @@ export class AppComponent implements OnInit {
       fieldUpdated !== 'statusCode' &&
       fieldUpdated !== 'file' &&
       fieldUpdated !== 'routeCustomHeader' &&
-      fieldUpdated !== 'body'
+      fieldUpdated !== 'body' &&
+      fieldUpdated !== 'envReorder'
     ) {
       if (this.currentEnvironment.environment.running) {
         this.currentEnvironment.environment.needRestart = this.currentEnvironment.environment.modifiedAt > this.currentEnvironment.environment.startedAt;

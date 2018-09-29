@@ -90,7 +90,7 @@
               </li>
             </ul>
           </div>
-          <ul class="nav flex-column menu-list" #environmentsMenu *ngIf="environments" [dragula]="'environmentsContainer'" [dragulaModel]='environments'>
+          <ul class="nav flex-column menu-list" #environmentsMenu *ngIf="environments" dragula="environmentsContainer" [dragulaModel]='environments'>
             <li class="nav-item" *ngFor="let environment of environments; let environmentIndex = index">
               <a class="nav-link position-relative" [ngClass]="{'active': currentEnvironment && currentEnvironment.index === environmentIndex, 'running': environment.running && !environment.needRestart, 'need-restart': environment.needRestart}" (click)="selectEnvironment(environmentIndex, $event)" (contextmenu)="navigationContextMenu('environment', environmentIndex, $event)">
                 <div class="ellipsis">
@@ -125,7 +125,7 @@
               </li>
             </ul>
           </div>
-          <ul class="nav flex-column menu-list" #routesMenu *ngIf="currentEnvironment" [dragula]="'routesContainer'" [dragulaModel]='currentEnvironment.environment.routes'>
+          <ul class="nav flex-column menu-list" #routesMenu *ngIf="currentEnvironment" dragula="routesContainer" [dragulaModel]='currentEnvironment.environment.routes'>
             <li class="nav-item" *ngFor="let route of currentEnvironment.environment.routes; let routeIndex = index">
               <a class="nav-link" [ngClass]="{'active': currentRoute && currentRoute.index === routeIndex}" (click)="selectRoute(routeIndex)" (contextmenu)="navigationContextMenu('route', routeIndex, $event)">
                 <div class="ellipsis">

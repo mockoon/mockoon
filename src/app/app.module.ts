@@ -41,7 +41,7 @@ import { AppComponent } from './app.component';
     AceEditorModule,
     BrowserAnimationsModule,
     BrowserModule,
-    DragulaModule,
+    DragulaModule.forRoot(),
     FormsModule,
     HttpClientModule,
     NgbModule.forRoot()
