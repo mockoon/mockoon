@@ -156,7 +156,7 @@ export class EnvironmentsService {
    * @param environment - environment to which add a route
    */
   public addRoute(environment: EnvironmentType): number {
-    const newRoute = Object.assign({}, this.routeSchema, { customHeaders: [Object.assign({}, this.customHeadersSchema, { uuid: uuid() })] });
+    const newRoute = Object.assign({}, this.routeSchema, { uuid: uuid(), customHeaders: [Object.assign({}, this.customHeadersSchema, { uuid: uuid() })] });
     const newRouteIndex = environment.routes.push(newRoute) - 1;
     this.routesTotal += 1;
 

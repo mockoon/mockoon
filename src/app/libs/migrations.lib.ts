@@ -45,5 +45,18 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
         delete route['contentType'];
       });
     }
+  },
+
+  // 1.2.0
+  {
+    id: 3,
+    migrationFunction: (environment: EnvironmentType) => {
+      environment.routes.forEach(route => {
+        // add missing uuid
+        if (!route.uuid) {
+          route.uuid = uuid();
+        }
+      });
+    }
   }
 ];
