@@ -212,6 +212,11 @@ select, input, .btn {
   transition: all ease-in-out 200ms;
 }
 
+// fix bootstrap new flexfill which is incompatible with
+.flex-fill {
+  flex: 1 !important;
+}
+
 #content {
   overflow: hidden;
   flex: auto;
