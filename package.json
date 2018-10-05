@@ -80,7 +80,6 @@
     "object-path": "0.11.4",
     "request": "2.88.0",
     "rxjs": "6.3.3",
-    "rxjs-compat": "6.3.3",
     "semver": "5.5.1",
     "spinthatshit": "1.0.4",
     "uuid": "3.3.2",
