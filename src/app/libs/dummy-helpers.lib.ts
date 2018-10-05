@@ -2,10 +2,21 @@ import * as DummyJSON from 'dummy-json';
 import random from 'lodash/random';
 import * as objectPath from 'object-path';
 
+/**
+ * Prevents insertion of Dummy-JSON own object (last argument) when no default value is provided:
+ *
+ * if (typeof defaultValue === 'object') {
+ *   defaultValue = '';
+ * }
+ */
 export const DummyJSONHelpers = (request) => {
   return {
     // get json property from body
     body: (path: string, defaultValue: string) => {
+      if (typeof defaultValue === 'object') {
+        defaultValue = '';
+      }
+
       // try to parse body otherwise return defaultValue
       try {
         const jsonBody = JSON.parse(request.body);
@@ -26,10 +37,18 @@ export const DummyJSONHelpers = (request) => {
     },
     // use params from query string ?param1=xxx&param2=yyy
     queryParam: (paramName: string, defaultValue: string) => {
+      if (typeof defaultValue === 'object') {
+        defaultValue = '';
+      }
+
       return request.query[paramName] || defaultValue;
     },
     // use content from request header
     header: (headerName: string, defaultValue: string) => {
+      if (typeof defaultValue === 'object') {
+        defaultValue = '';
+      }
+
       return request.get(headerName) || defaultValue;
     },
     // use request hostname
