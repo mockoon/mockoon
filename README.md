@@ -25,6 +25,8 @@ All feedback is welcomed. But please follow these simple guidelines before submi
 
 ## Contributing
 
+If you are interested in contributing to Mockoon please see the document [CONTRIBUTING](https://github.com/255kb/mockoon/blob/master/CONTRIBUTING.md).
+
 Please see also our [Code of conduct](https://github.com/255kb/mockoon/blob/master/CODE_OF_CONDUCT.md).
 
 ## Documentation
