@@ -23,6 +23,10 @@ All feedback is welcomed. But please follow these simple guidelines before submi
 - try to give maximum details in order to reproduce the bug (providing the mock data you used could be useful)
 - purpose of Mockoon is to be simple, fast, easy to use, so keep in mind that some features **may not be implemented**! On purpose.
 
+## Contributing
+
+Please see also our [Code of conduct](https://github.com/255kb/mockoon/blob/master/CODE_OF_CONDUCT.md).
+
 ## Documentation
 
 I started to write a small documentation that you will find in the [Wiki](https://github.com/255kb/mockoon/wiki) section of this repository. Feel free to contribute or ask for new topics to be covered.
