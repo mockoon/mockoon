@@ -180,8 +180,8 @@
                     <div class="form-row" *ngIf="currentRoute">
                       <div class="input-group">
                         <select class="custom-select col-lg-2" name="route.method" [(ngModel)]="currentRoute.route.method" (ngModelChange)="environmentUpdated('method')">
-                        <option *ngFor="let method of methods" [value]="method" [selected]="currentRoute.route.method === method">{{method | uppercase}}</option>
-                      </select>
+                          <option *ngFor="let method of methods" [value]="method" [selected]="currentRoute.route.method === method">{{method | uppercase}}</option>
+                        </select>
                         <div class="input-group-prepend">
                           <span class="input-group-text">/</span>
                         </div>
