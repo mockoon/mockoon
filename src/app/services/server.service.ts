@@ -170,10 +170,7 @@ export class ServerService {
                 res.send(fileContent);
               } catch (error) {
                 if (error.code === 'ENOENT') {
-                  this.alertService.showAlert('error', Errors.FILE_NOT_EXISTS);
-
-                  res.set('Content-Type', 'text/plain');
-                  res.send(Errors.FILE_NOT_EXISTS);
+                  this.sendError(res, Errors.FILE_NOT_EXISTS);
                 }
               }
             } else {
@@ -184,9 +181,9 @@ export class ServerService {
                 } catch (error) {
                   // if JSON parsing error send plain text error
                   if (error.message.indexOf('Unexpected token') >= 0 || error.message.indexOf('Parse error') >= 0) {
-                    this.alertService.showAlert('error', Errors.JSON_PARSE);
-                    res.set('Content-Type', 'text/plain');
-                    res.send(Errors.JSON_PARSE);
+                    this.sendError(res, Errors.JSON_PARSE);
+                  } else if (error.message.indexOf('Missing helper') >= 0) {
+                    this.sendError(res, Errors.MISSING_HELPER + error.message.split('"')[1]);
                   }
                   res.end();
                 }
@@ -196,9 +193,7 @@ export class ServerService {
                 } catch (error) {
                   // if invalide Content-Type provided
                   if (error.message.indexOf('invalid media type') >= 0) {
-                    this.alertService.showAlert('error', Errors.INVALID_CONTENT_TYPE);
-                    res.set('Content-Type', 'text/plain');
-                    res.send(Errors.INVALID_CONTENT_TYPE);
+                    this.sendError(res, Errors.INVALID_CONTENT_TYPE);
                   }
                   res.end();
                 }
@@ -208,6 +203,19 @@ export class ServerService {
         });
       }
     });
+  }
+
+  /**
+   * Send an error with text/plain content type and the provided message.
+   * Also display a toast.
+   *
+   * @param res
+   * @param errorMessage
+   */
+  private sendError(res: any, errorMessage: string) {
+    this.alertService.showAlert('error', errorMessage);
+    res.set('Content-Type', 'text/plain');
+    res.send(errorMessage);
   }
 
   /**
