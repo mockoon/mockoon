@@ -260,7 +260,7 @@
                       <div class="title-separator-text">
                         <div>Body </div>
                         <div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div>
-                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getCustomHeader(currentRoute.route, 'Content-Type')) ? 'Content-Type ' + getCustomHeader(currentRoute.route, 'Content-Type') : 'No Content-Type is set'}} <ng-container *ngIf="getCustomHeader(currentRoute.route, 'Content-Type') === 'application/json'"> - Supports templating<span (click)="openWikiLink('json')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></ng-container></div>
+                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getCustomHeader(currentRoute.route, 'Content-Type')) ? 'Content-Type ' + getCustomHeader(currentRoute.route, 'Content-Type') : 'No Content-Type is set'}} - Supports templating<span (click)="openWikiLink('templating')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></div>
                       </div>
                     </div>
                     <div class="mt-3 flex-fill">

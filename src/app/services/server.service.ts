@@ -189,7 +189,7 @@ export class ServerService {
                 }
               } else {
                 try {
-                  res.send(route.body);
+                  res.send(DummyJSON.parse(route.body, { helpers: DummyJSONHelpers(req) }));
                 } catch (error) {
                   // if invalide Content-Type provided
                   if (error.message.indexOf('invalid media type') >= 0) {
