@@ -147,10 +147,10 @@ export class ServerService {
             // set http code
             res.status(route.statusCode);
 
-            // set custom headers
+            // set custom headers and parse values for templating
             route.customHeaders.forEach((customHeader) => {
               if (customHeader.key && customHeader.value && !this.testCustomHeader(customHeader.key)) {
-                res.set(customHeader.key, customHeader.value);
+                res.set(customHeader.key, DummyJSON.parse(customHeader.value, { helpers: DummyJSONHelpers(req) }));
               }
             });
 
