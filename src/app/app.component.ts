@@ -559,8 +559,8 @@ export class AppComponent implements OnInit {
     this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'feedback' });
   }
 
-  public openReleaseLink() {
-    shell.openExternal(Config.githubTegReleaseUrl + this.appVersion);
+  public openChangelogModal() {
+    this.eventsService.changelogModalEvents.next(true);
 
     this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'release' });
   }

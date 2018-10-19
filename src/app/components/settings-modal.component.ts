@@ -16,7 +16,7 @@ export class SettingsModalComponent implements OnInit {
 
   ngOnInit() {
     this.eventsService.settingsModalEvents.subscribe(() => {
-      this.modalService.open(this.modal, { backdrop: 'static' }).result.then(() => {
+      this.modalService.open(this.modal, { backdrop: 'static', centered: true }).result.then(() => {
         this.closed.emit();
       }, () => { });
     });

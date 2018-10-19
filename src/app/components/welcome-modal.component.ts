@@ -21,7 +21,7 @@ export class WelcomeModalComponent implements OnInit {
         if (!this.settings.welcomeShown) {
           this.settings.welcomeShown = true;
           this.settingsUpdated();
-          this.modalService.open(this.modal, { backdrop: 'static' }).result.then(() => {
+          this.modalService.open(this.modal, { backdrop: 'static', centered: true }).result.then(() => {
           }, () => { });
         }
       }

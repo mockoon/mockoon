@@ -11,6 +11,7 @@ export type ContextMenuEventType = {
 export class EventsService {
   public contextMenuEvents: EventEmitter<ContextMenuEventType> = new EventEmitter();
   public settingsModalEvents: EventEmitter<any> = new EventEmitter();
+  public changelogModalEvents: EventEmitter<any> = new EventEmitter();
   public analyticsEvents: EventEmitter<CollectParams> = new EventEmitter();
 
   constructor() { }

@@ -6,7 +6,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AceEditorModule } from 'ng2-ace-editor';
 import { DragulaModule } from 'ng2-dragula';
+import { MarkdownModule } from 'ngx-markdown';
 import 'reflect-metadata';
+import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
 import { ContextMenuComponent } from 'src/app/components/context-menu.component';
 import { EnvironmentLogsComponent } from 'src/app/components/environment-logs.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
@@ -35,6 +37,7 @@ import { AppComponent } from './app.component';
     AutocompleteDirective,
     WelcomeModalComponent,
     SettingsModalComponent,
+    ChangelogModalComponent,
     EnvironmentLogsComponent
   ],
   imports: [
@@ -44,7 +47,8 @@ import { AppComponent } from './app.component';
     DragulaModule.forRoot(),
     FormsModule,
     HttpClientModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    MarkdownModule.forRoot()
   ],
   providers: [
     AlertService,
