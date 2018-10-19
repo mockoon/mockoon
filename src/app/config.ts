@@ -1,7 +1,7 @@
 export const Config = {
   feedbackLink: 'https://github.com/255kb/mockoon/issues',
   githubLatestReleaseUrl: 'https://api.github.com/repos/255kb/mockoon/releases/latest',
-  githubTegReleaseUrl: 'https://github.com/255kb/mockoon/releases/tag/v',
+  githubTagReleaseUrl: 'https://github.com/255kb/mockoon/releases/tag/v',
   githubBinaryDownloadUrl: 'https://github.com/255kb/mockoon/releases/download/',
   wikiLinks: {
     templating: 'https://github.com/255kb/mockoon/wiki/%7B%7B-%7D%7D-templating',
