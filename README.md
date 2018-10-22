@@ -17,7 +17,7 @@ Feel free to test it and give some feedback!
 
 ## Download
 
-You can get Mockoon [latest release](https://github.com/255kb/mockoon/releases/latest) directly on this repository or on the official [website](https://mockoon.com/#download).
+You can get Mockoon [latest release](https://github.com/255kb/mockoon/releases/latest) directly on this repository or on the official [website](https://mockoon.com/#download). On macOS Mockoon is also available through Homebrew `brew cask install mockoon`.
 
 ## Give feedback
 
