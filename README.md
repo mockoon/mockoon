@@ -1,4 +1,4 @@
-![Mockoon logo](./images/logo.png)
+![Mockoon logo](https://mockoon.com/assets/images/logo.png)
 
 *Mock API in seconds*
 
@@ -11,7 +11,7 @@
 
 Mockoon is an open source server/API mocking tool built with Electron and available on Windows, Linux and MacOS. You can download it here: [mockoon.com](https://mockoon.com)
 
-![screenshot](./images/screenshot.jpg)
+![screenshot](https://mockoon.com/assets/images/screenshot_repo.jpg)
 
 Feel free to test it and give some feedback!
 
