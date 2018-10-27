@@ -38,3 +38,5 @@ Note that Windows and Mac OS versions need to be signed when packaged. This is t
 ## Distribute the application
 
 Only maintainers are entitled to build and package the application with Windows code signing and Mac OS certificates.
+
+Do not forget to update Homebrew cask repository.
