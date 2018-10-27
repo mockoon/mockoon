@@ -1,13 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Config } from 'app/config';
-import { Errors } from 'app/enums/errors.enum';
-import { DummyJSONHelpers } from 'app/libs/dummy-helpers.lib';
-import { AlertService } from 'app/services/alert.service';
-import { DataService } from 'app/services/data.service';
-import { pemFiles } from 'app/ssl';
-import { EnvironmentType } from 'app/types/environment.type';
-import { RouteType } from 'app/types/route.type';
-import { EnvironmentLogsType } from 'app/types/server.type';
 import * as DummyJSON from 'dummy-json';
 import * as express from 'express';
 import * as fs from 'fs';
@@ -17,6 +8,15 @@ import * as https from 'https';
 import * as killable from 'killable';
 import * as mime from 'mime-types';
 import * as path from 'path';
+import { Config } from 'src/app/config';
+import { Errors } from 'src/app/enums/errors.enum';
+import { DummyJSONHelpers } from 'src/app/libs/dummy-helpers.lib';
+import { AlertService } from 'src/app/services/alert.service';
+import { DataService } from 'src/app/services/data.service';
+import { pemFiles } from 'src/app/ssl';
+import { EnvironmentType } from 'src/app/types/environment.type';
+import { RouteType } from 'src/app/types/route.type';
+import { EnvironmentLogsType } from 'src/app/types/server.type';
 import { URL } from 'url';
 
 const httpsConfig = {
@@ -147,10 +147,10 @@ export class ServerService {
             // set http code
             res.status(route.statusCode);
 
-            // set custom headers
+            // set custom headers and parse values for templating
             route.customHeaders.forEach((customHeader) => {
               if (customHeader.key && customHeader.value && !this.testCustomHeader(customHeader.key)) {
-                res.set(customHeader.key, customHeader.value);
+                res.set(customHeader.key, DummyJSON.parse(customHeader.value, { helpers: DummyJSONHelpers(req) }));
               }
             });
 
@@ -170,10 +170,7 @@ export class ServerService {
                 res.send(fileContent);
               } catch (error) {
                 if (error.code === 'ENOENT') {
-                  this.alertService.showAlert('error', Errors.FILE_NOT_EXISTS);
-
-                  res.set('Content-Type', 'text/plain');
-                  res.send(Errors.FILE_NOT_EXISTS);
+                  this.sendError(res, Errors.FILE_NOT_EXISTS);
                 }
               }
             } else {
@@ -184,21 +181,19 @@ export class ServerService {
                 } catch (error) {
                   // if JSON parsing error send plain text error
                   if (error.message.indexOf('Unexpected token') >= 0 || error.message.indexOf('Parse error') >= 0) {
-                    this.alertService.showAlert('error', Errors.JSON_PARSE);
-                    res.set('Content-Type', 'text/plain');
-                    res.send(Errors.JSON_PARSE);
+                    this.sendError(res, Errors.JSON_PARSE);
+                  } else if (error.message.indexOf('Missing helper') >= 0) {
+                    this.sendError(res, Errors.MISSING_HELPER + error.message.split('"')[1]);
                   }
                   res.end();
                 }
               } else {
                 try {
-                  res.send(route.body);
+                  res.send(DummyJSON.parse(route.body, { helpers: DummyJSONHelpers(req) }));
                 } catch (error) {
                   // if invalide Content-Type provided
                   if (error.message.indexOf('invalid media type') >= 0) {
-                    this.alertService.showAlert('error', Errors.INVALID_CONTENT_TYPE);
-                    res.set('Content-Type', 'text/plain');
-                    res.send(Errors.INVALID_CONTENT_TYPE);
+                    this.sendError(res, Errors.INVALID_CONTENT_TYPE);
                   }
                   res.end();
                 }
@@ -208,6 +203,19 @@ export class ServerService {
         });
       }
     });
+  }
+
+  /**
+   * Send an error with text/plain content type and the provided message.
+   * Also display a toast.
+   *
+   * @param res
+   * @param errorMessage
+   */
+  private sendError(res: any, errorMessage: string) {
+    this.alertService.showAlert('error', errorMessage);
+    res.set('Content-Type', 'text/plain');
+    res.send(errorMessage);
   }
 
   /**
@@ -229,7 +237,7 @@ export class ServerService {
           // stream the content
           proxyReq.write(req.body);
         }
-      }
+      };
 
       server.use('*', proxy({
         target: environment.proxyHost,
@@ -335,7 +343,7 @@ export class ServerService {
    * @param environmentUuid
    */
   public clearEnvironmentLogs(environmentUuid: string) {
-    this.environmentsLogs[environmentUuid] = []
+    this.environmentsLogs[environmentUuid] = [];
   }
 
   /**

@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ContextMenuItem } from 'app/components/context-menu.component';
-import { CollectParams } from 'app/services/analytics.service';
+import { ContextMenuItem } from 'src/app/components/context-menu.component';
+import { CollectParams } from 'src/app/services/analytics.service';
 
 export type ContextMenuEventType = {
   event: MouseEvent;
@@ -11,6 +11,7 @@ export type ContextMenuEventType = {
 export class EventsService {
   public contextMenuEvents: EventEmitter<ContextMenuEventType> = new EventEmitter();
   public settingsModalEvents: EventEmitter<any> = new EventEmitter();
+  public changelogModalEvents: EventEmitter<any> = new EventEmitter();
   public analyticsEvents: EventEmitter<CollectParams> = new EventEmitter();
 
   constructor() { }

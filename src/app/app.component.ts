@@ -1,18 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import { ContextMenuItemPayload } from 'app/components/context-menu.component';
-import { Config } from 'app/config';
-import { Errors } from 'app/enums/errors.enum';
-import { Alert, AlertService } from 'app/services/alert.service';
-import { AnalyticsService } from 'app/services/analytics.service';
-import { AuthService } from 'app/services/auth.service';
-import { EnvironmentsService } from 'app/services/environments.service';
-import { ContextMenuEventType, EventsService } from 'app/services/events.service';
-import { ServerService } from 'app/services/server.service';
-import { UpdateService } from 'app/services/update.service';
-import { DataSubjectType } from 'app/types/data.type';
-import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
-import { headerNames, headerValues, methods, RouteType, statusCodes, statusCodesExplanation } from 'app/types/route.type';
 import 'brace/index';
 import 'brace/mode/css';
 import 'brace/mode/html.js';
@@ -23,9 +10,24 @@ import { ipcRenderer, remote, shell } from 'electron';
 import * as mimeTypes from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
 import * as path from 'path';
+import { ContextMenuItemPayload } from 'src/app/components/context-menu.component';
+import { Config } from 'src/app/config';
+import { Errors } from 'src/app/enums/errors.enum';
+import { Alert, AlertService } from 'src/app/services/alert.service';
+import { AnalyticsService } from 'src/app/services/analytics.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { EnvironmentsService } from 'src/app/services/environments.service';
+import { ContextMenuEventType, EventsService } from 'src/app/services/events.service';
+import { ServerService } from 'src/app/services/server.service';
+import { UpdateService } from 'src/app/services/update.service';
+import { DataSubjectType } from 'src/app/types/data.type';
+import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
+import { headerNames, headerValues, methods, RouteType, statusCodes, statusCodesExplanation } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
 import '../assets/custom_theme.js';
 const platform = require('os').platform();
+const appVersion = require('../../package.json').version;
+const arrayMove = require('array-move');
 
 type TabsNameType = 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
@@ -64,6 +66,7 @@ export class AppComponent implements OnInit {
   public getCustomHeader = this.serverService.getCustomHeader;
   public clearEnvironmentLogsTimeout: NodeJS.Timer;
   public environmentLogs = this.serverService.environmentsLogs;
+  public appVersion = appVersion;
   private settingsModalOpened = false;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
@@ -253,20 +256,26 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Trigger env/route re-selection when draging active route/env
+   * Trigger env/route saving and re-selection when draging active route/env
    */
   public initDragMonitoring() {
     // on drop reselect if we moved a selected env/route
-    this.dragulaService.drop.subscribe((value) => {
-      if (value[0] === 'environmentsContainer') {
-        const environmentIndex = this.environmentsService.findEnvironmentIndex(this.currentEnvironment.environment.uuid);
-        this.selectEnvironment(environmentIndex);
-      } else if (value[0] === 'routesContainer') {
-        const routeIndex = this.environmentsService.findRouteIndex(this.currentEnvironment.environment, this.currentRoute.route.uuid);
-        this.selectRoute(routeIndex);
-      }
+    this.dragulaService.dropModel().subscribe((movedItem) => {
+      if (movedItem.name === 'environmentsContainer') {
+        arrayMove.mut(this.environments, movedItem.sourceIndex, movedItem.targetIndex);
 
-      this.environmentUpdated('reorder', true);
+        const selectedEnvironmentIndex = this.environmentsService.findEnvironmentIndex(this.currentEnvironment.environment.uuid);
+        this.selectEnvironment(selectedEnvironmentIndex);
+
+        this.environmentUpdated('envReorder', true);
+      } else if (movedItem.name === 'routesContainer') {
+        arrayMove.mut(this.currentEnvironment.environment.routes, movedItem.sourceIndex, movedItem.targetIndex);
+
+        const selectedRouteIndex = this.environmentsService.findRouteIndex(this.currentEnvironment.environment, this.currentRoute.route.uuid);
+        this.selectRoute(selectedRouteIndex);
+
+        this.environmentUpdated('routeReorder', true);
+      }
     });
   }
   /**
@@ -385,7 +394,8 @@ export class AppComponent implements OnInit {
       fieldUpdated !== 'statusCode' &&
       fieldUpdated !== 'file' &&
       fieldUpdated !== 'routeCustomHeader' &&
-      fieldUpdated !== 'body'
+      fieldUpdated !== 'body' &&
+      fieldUpdated !== 'envReorder'
     ) {
       if (this.currentEnvironment.environment.running) {
         this.currentEnvironment.environment.needRestart = this.currentEnvironment.environment.modifiedAt > this.currentEnvironment.environment.startedAt;
@@ -547,6 +557,12 @@ export class AppComponent implements OnInit {
     shell.openExternal(Config.feedbackLink);
 
     this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'feedback' });
+  }
+
+  public openChangelogModal() {
+    this.eventsService.changelogModalEvents.next(true);
+
+    this.eventsService.analyticsEvents.next({ type: 'event', category: 'link', action: 'release' });
   }
 
   public openWikiLink(linkName: string) {

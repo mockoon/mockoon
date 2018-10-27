@@ -2,12 +2,26 @@ import * as DummyJSON from 'dummy-json';
 import random from 'lodash/random';
 import * as objectPath from 'object-path';
 
+/**
+ * Prevents insertion of Dummy-JSON own object (last argument) when no default value is provided:
+ *
+ * if (typeof defaultValue === 'object') {
+ *   defaultValue = '';
+ * }
+ *
+ * /!\ Do not use () => {} for custom helpers in order to keep DummyJSON `this`
+ *
+ */
 export const DummyJSONHelpers = (request) => {
   return {
     // get json property from body
-    body: (path: string, defaultValue: string) => {
-      // only parse body if request header is set to json
-      if (request.get('Content-type') === 'application/json') {
+    body: function (path: string, defaultValue: string) {
+      if (typeof defaultValue === 'object') {
+        defaultValue = '';
+      }
+
+      // try to parse body otherwise return defaultValue
+      try {
         const jsonBody = JSON.parse(request.body);
         const value = objectPath.ensureExists(jsonBody, path);
 
@@ -16,50 +30,58 @@ export const DummyJSONHelpers = (request) => {
         } else {
           return defaultValue;
         }
-      } else {
+      } catch (e) {
         return defaultValue;
       }
     },
     // use params from url /:param1/:param2
-    urlParam: (paramName: string) => {
+    urlParam: function (paramName: string) {
       return request.params[paramName];
     },
     // use params from query string ?param1=xxx&param2=yyy
-    queryParam: (paramName: string, defaultValue: string) => {
+    queryParam: function (paramName: string, defaultValue: string) {
+      if (typeof defaultValue === 'object') {
+        defaultValue = '';
+      }
+
       return request.query[paramName] || defaultValue;
     },
     // use content from request header
-    header: (headerName: string, defaultValue: string) => {
+    header: function (headerName: string, defaultValue: string) {
+      if (typeof defaultValue === 'object') {
+        defaultValue = '';
+      }
+
       return request.get(headerName) || defaultValue;
     },
     // use request hostname
-    hostname: () => {
+    hostname: function () {
       return request.hostname;
     },
     // use request ip
-    ip: () => {
+    ip: function () {
       return request.ip;
     },
     // use request method
-    method: () => {
+    method: function () {
       return request.method;
     },
     // return one random item
-    oneOf: (itemList: string[]) => {
+    oneOf: function (itemList: string[]) {
       return DummyJSON.utils.randomArrayItem(itemList);
     },
     // return some random item
-    someOf: (itemList: string[], min: number, max: number) => {
+    someOf: function (itemList: string[], min: number, max: number) {
       const shuffledList = itemList.sort(() => .5 - Math.random());
       return shuffledList.slice(0, random(min, max));
     },
     // create an array
-    array: (...args: any[]) => {
+    array: function (...args: any[]) {
       // remove last item (dummy json options argument)S
       return args.slice(0, args.length - 1);
     },
     // switch cases
-    switch: (value, options) => {
+    switch: function (value, options) {
       this.found = false;
 
       this.switchValue = value;
@@ -67,7 +89,7 @@ export const DummyJSONHelpers = (request) => {
       return htmlContent;
     },
     // case helper for switch
-    case: (value, options) => {
+    case: function (value, options) {
       // check switch value to simulate break
       if (value === this.switchValue && !this.found) {
         this.found = true;
@@ -75,12 +97,12 @@ export const DummyJSONHelpers = (request) => {
       }
     },
     // default helper for switch
-    default: (options) => {
+    default: function (options) {
       // if there is still a switch value show default content
       if (!this.found) {
         delete this.switchValue;
         return options.fn(this);
       }
     }
-  }
+  };
 };

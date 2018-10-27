@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Config } from 'app/config';
-import { Utils } from 'app/libs/utils.lib';
-import { DataSubjectType, ExportType } from 'app/types/data.type';
-import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
-import { RouteType } from 'app/types/route.type';
-import { EnvironmentLogType } from 'app/types/server.type';
+import { Config } from 'src/app/config';
+import { Utils } from 'src/app/libs/utils.lib';
+import { DataSubjectType, ExportType } from 'src/app/types/data.type';
+import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
+import { RouteType } from 'src/app/types/route.type';
+import { EnvironmentLogType } from 'src/app/types/server.type';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -64,7 +64,7 @@ export class DataService {
       get params() {
         if (request.params) {
           return Object.keys(request.params).map((paramName) => {
-            return { name: paramName, value: request.params[paramName] }
+            return { name: paramName, value: request.params[paramName] };
           });
         }
 
@@ -73,7 +73,7 @@ export class DataService {
       get queryParams() {
         if (request.query) {
           return Object.keys(request.query).map((queryParamName) => {
-            return { name: queryParamName, value: request.query[queryParamName] }
+            return { name: queryParamName, value: request.query[queryParamName] };
           });
         }
 
@@ -94,7 +94,7 @@ export class DataService {
 
     // get and sort headers
     requestLog.headers = Object.keys(request.headers).map((headerName) => {
-      return { name: headerName, value: request.headers[headerName] }
+      return { name: headerName, value: request.headers[headerName] };
     }).sort(Utils.ascSort);
 
     return requestLog;

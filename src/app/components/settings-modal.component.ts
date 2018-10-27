@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EventsService } from 'app/services/events.service';
-import { SettingsService, SettingsType } from 'app/services/settings.service';
+import { EventsService } from 'src/app/services/events.service';
+import { SettingsService, SettingsType } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-settings-modal',
@@ -16,9 +16,9 @@ export class SettingsModalComponent implements OnInit {
 
   ngOnInit() {
     this.eventsService.settingsModalEvents.subscribe(() => {
-      this.modalService.open(this.modal, { backdrop: 'static' }).result.then((result) => {
+      this.modalService.open(this.modal, { backdrop: 'static', centered: true }).result.then(() => {
         this.closed.emit();
-      }, (reason) => { });
+      }, () => { });
     });
 
     this.settingsService.settingsReady.subscribe((ready) => {
@@ -28,7 +28,7 @@ export class SettingsModalComponent implements OnInit {
     });
   }
 
-  public settingsUpdated(settingName: string) {
+  public settingsUpdated() {
     this.settingsService.settingsUpdateEvents.next(this.settings);
   }
 }

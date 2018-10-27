@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs/internal/Subject';
 
 @Injectable()
 export class AuthService {

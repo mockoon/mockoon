@@ -37,7 +37,7 @@ function createWindow() {
     minHeight: 768,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    title: `Mockoon - Mock API in seconds - v${packageJSON.version}`,
+    title: `Mockoon`,
     backgroundColor: '#252830'
   };
 

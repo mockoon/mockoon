@@ -1,5 +1,6 @@
 export enum Errors {
   JSON_PARSE = 'Error while parsing JSON during the call',
+  MISSING_HELPER = 'Error, this helper does not exists: ',
   INVALID_CONTENT_TYPE = 'Invalid Content-Type provided',
   FILE_NOT_EXISTS = 'This file cannot be served because it does not exists',
   FILE_TYPE_NOT_SUPPORTED = 'This type of file is not supported',
@@ -13,4 +14,4 @@ export enum Errors {
   IMPORT_CLIPBOARD_WRONG_CHECKSUM = 'Clipboard content has an incorrect format and cannot be imported',
   IMPORT_ENVIRONMENT_CLIPBOARD_ERROR = 'An error occured while importing the environment from the clipboard',
   IMPORT_ROUTE_CLIPBOARD_ERROR = 'An error occured while importing the route from the clipboard',
-};
+}

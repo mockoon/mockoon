@@ -1,5 +1,5 @@
-import { EnvironmentsType, EnvironmentType } from 'app/types/environment.type';
-import { RouteType } from 'app/types/route.type';
+import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
+import { RouteType } from 'src/app/types/route.type';
 
 export type DataSubjectType = 'full' | 'environment' | 'route';
 

@@ -1,4 +1,4 @@
-import { RouteType } from 'app/types/route.type';
+import { RouteType } from 'src/app/types/route.type';
 
 export type EnvironmentType = {
   uuid: string;

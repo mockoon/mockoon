@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SettingsService, SettingsType } from 'app/services/settings.service';
+import { SettingsService, SettingsType } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-welcome-modal',
@@ -20,17 +20,15 @@ export class WelcomeModalComponent implements OnInit {
 
         if (!this.settings.welcomeShown) {
           this.settings.welcomeShown = true;
-          this.settingsUpdated('welcomeShown');
-          this.modalService.open(this.modal, { backdrop: 'static' }).result.then((result) => {
-          }, (reason) => {
-            // closing
-          });
-        };
+          this.settingsUpdated();
+          this.modalService.open(this.modal, { backdrop: 'static', centered: true }).result.then(() => {
+          }, () => { });
+        }
       }
     });
   }
 
-  public settingsUpdated(settingName: string) {
+  public settingsUpdated() {
     this.settingsService.settingsUpdateEvents.next(this.settings);
   }
 }

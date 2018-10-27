@@ -2,6 +2,7 @@
 
 <app-welcome-modal></app-welcome-modal>
 <app-settings-modal (closed)="handleSettingsModalClosed()"></app-settings-modal>
+<app-changelog-modal></app-changelog-modal>
 
 <div class="container-fluid">
   <div id="page" class="d-flex flex-column">
@@ -90,7 +91,7 @@
               </li>
             </ul>
           </div>
-          <ul class="nav flex-column menu-list" #environmentsMenu *ngIf="environments" [dragula]="'environmentsContainer'" [dragulaModel]='environments'>
+          <ul class="nav flex-column menu-list" #environmentsMenu *ngIf="environments" dragula="environmentsContainer" [dragulaModel]='environments'>
             <li class="nav-item" *ngFor="let environment of environments; let environmentIndex = index">
               <a class="nav-link position-relative" [ngClass]="{'active': currentEnvironment && currentEnvironment.index === environmentIndex, 'running': environment.running && !environment.needRestart, 'need-restart': environment.needRestart}" (click)="selectEnvironment(environmentIndex, $event)" (contextmenu)="navigationContextMenu('environment', environmentIndex, $event)">
                 <div class="ellipsis">
@@ -125,7 +126,7 @@
               </li>
             </ul>
           </div>
-          <ul class="nav flex-column menu-list" #routesMenu *ngIf="currentEnvironment" [dragula]="'routesContainer'" [dragulaModel]='currentEnvironment.environment.routes'>
+          <ul class="nav flex-column menu-list" #routesMenu *ngIf="currentEnvironment" dragula="routesContainer" [dragulaModel]='currentEnvironment.environment.routes'>
             <li class="nav-item" *ngFor="let route of currentEnvironment.environment.routes; let routeIndex = index">
               <a class="nav-link" [ngClass]="{'active': currentRoute && currentRoute.index === routeIndex}" (click)="selectRoute(routeIndex)" (contextmenu)="navigationContextMenu('route', routeIndex, $event)">
                 <div class="ellipsis">
@@ -180,8 +181,8 @@
                     <div class="form-row" *ngIf="currentRoute">
                       <div class="input-group">
                         <select class="custom-select col-lg-2" name="route.method" [(ngModel)]="currentRoute.route.method" (ngModelChange)="environmentUpdated('method')">
-                        <option *ngFor="let method of methods" [value]="method" [selected]="currentRoute.route.method === method">{{method | uppercase}}</option>
-                      </select>
+                          <option *ngFor="let method of methods" [value]="method" [selected]="currentRoute.route.method === method">{{method | uppercase}}</option>
+                        </select>
                         <div class="input-group-prepend">
                           <span class="input-group-text">/</span>
                         </div>
@@ -260,7 +261,7 @@
                       <div class="title-separator-text">
                         <div>Body </div>
                         <div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div>
-                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getCustomHeader(currentRoute.route, 'Content-Type')) ? 'Content-Type ' + getCustomHeader(currentRoute.route, 'Content-Type') : 'No Content-Type is set'}} <ng-container *ngIf="getCustomHeader(currentRoute.route, 'Content-Type') === 'application/json'"> - Supports templating<span (click)="openWikiLink('json')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></ng-container></div>
+                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getCustomHeader(currentRoute.route, 'Content-Type')) ? 'Content-Type ' + getCustomHeader(currentRoute.route, 'Content-Type') : 'No Content-Type is set'}} - Supports templating<span (click)="openWikiLink('templating')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></div>
                       </div>
                     </div>
                     <div class="mt-3 flex-fill">
@@ -366,6 +367,7 @@
     <div class="footer">
       <div class="row">
         <div class="col pl-0 pr-0">
+          <div class="footer-item with-border-right" (click)="openChangelogModal()" ngbTooltip="View changelog" placement="right">v{{appVersion}}</div>
           <div class="footer-item with-border-right" *ngIf="updateAvailable">
             <button class="btn btn-xs btn-success" (click)="applyUpdate()"><i class="material-icons material-icons-xs">update</i> New version available, click to {{(platform === 'win32') ? 'apply' : 'download'}}</button>
           </div>

@@ -212,6 +212,11 @@ select, input, .btn {
   transition: all ease-in-out 200ms;
 }
 
+// fix bootstrap new flexfill which is incompatible with
+.flex-fill {
+  flex: 1 !important;
+}
+
 #content {
   overflow: hidden;
   flex: auto;
@@ -287,6 +292,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
     padding: $spacer / 4 $spacer;
     display: inline-block;
     transition: all ease-in-out 200ms;
+    cursor: pointer;
 
     &.lighter {
       color: $gray-200;
