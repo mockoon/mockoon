@@ -27,6 +27,10 @@ All feedback is welcomed. But please follow these simple guidelines before submi
 - try to give maximum details in order to reproduce the bug (providing the mock data you used could be useful)
 - purpose of Mockoon is to be simple, fast, easy to use, so keep in mind that some features **may not be implemented**! On purpose.
 
+## Community
+
+You can discuss all things related to Mockoon on the [Spectrum community](https://spectrum.chat/mockoon). It's also a good thing to discuss bugs and feature there requests before open an issue on this repository.
+
 ## Contributing
 
 If you are interested in contributing to Mockoon please see the document [CONTRIBUTING](https://github.com/255kb/mockoon/blob/master/CONTRIBUTING.md).
@@ -35,7 +39,7 @@ Please see also our [Code of conduct](https://github.com/255kb/mockoon/blob/mast
 
 ## Documentation
 
-I started to write a small documentation that you will find in the [Wiki](https://github.com/255kb/mockoon/wiki) section of this repository. Feel free to contribute or ask for new topics to be covered.
+I started to write a small documentation that you will find in the [Wiki](https://github.com/255kb/mockoon/wiki) section of this repository. You will also find a bunch of [tutorials](https://mockoon.com/tutorials) on the official website. Feel free to contribute or ask for new topics to be covered.
 
 ## More to come
 
