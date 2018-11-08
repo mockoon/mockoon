@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
+import { EventsService } from 'src/app/services/events.service';
 import { SettingsService, SettingsType } from 'src/app/services/settings.service';
 
 @Component({
@@ -10,7 +12,7 @@ export class WelcomeModalComponent implements OnInit {
   @ViewChild('modal') modal: ElementRef;
   public settings: SettingsType;
 
-  constructor(private modalService: NgbModal, private settingsService: SettingsService) { }
+  constructor(private modalService: NgbModal, private settingsService: SettingsService, private eventsService: EventsService) { }
 
   ngOnInit() {
     // wait for settings to be ready and check if display needed
@@ -30,5 +32,10 @@ export class WelcomeModalComponent implements OnInit {
 
   public settingsUpdated() {
     this.settingsService.settingsUpdateEvents.next(this.settings);
+  }
+
+  public closeModal() {
+    this.modalService.dismissAll();
+    this.eventsService.analyticsEvents.next(AnalyticsEvents.APPLICATION_FIRST_LOAD);
   }
 }

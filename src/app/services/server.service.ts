@@ -9,10 +9,12 @@ import * as killable from 'killable';
 import * as mime from 'mime-types';
 import * as path from 'path';
 import { Config } from 'src/app/config';
+import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
 import { DummyJSONHelpers } from 'src/app/libs/dummy-helpers.lib';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataService } from 'src/app/services/data.service';
+import { EventsService } from 'src/app/services/events.service';
 import { pemFiles } from 'src/app/ssl';
 import { EnvironmentType } from 'src/app/types/environment.type';
 import { RouteType } from 'src/app/types/route.type';
@@ -28,7 +30,7 @@ const httpsConfig = {
 export class ServerService {
   public environmentsLogs: EnvironmentLogsType = {};
 
-  constructor(private alertService: AlertService, private dataService: DataService) { }
+  constructor(private alertService: AlertService, private dataService: DataService, private eventsService: EventsService) { }
 
   /**
    * Start an environment / server
@@ -54,6 +56,7 @@ export class ServerService {
     });
 
     // apply latency, cors, routes and proxy to express server
+    this.analytics(server);
     this.rewriteUrl(server);
     this.parseBody(server);
     this.logRequests(server, environment);
@@ -96,6 +99,19 @@ export class ServerService {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Send event for all entering requests
+   *
+   * @param server - express instance
+   */
+  private analytics(server: any) {
+    server.use((req, res, next) => {
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_ENTERING_REQUEST);
+
+      next();
+    });
   }
 
   /**
