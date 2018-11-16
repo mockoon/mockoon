@@ -250,6 +250,11 @@ select, input, .btn {
   height: 100%;
 }
 
+.menu-columns--width {
+  min-width: 200px;
+  max-width: 300px;
+}
+
 .menu-list {
   overflow-x: hidden;
   overflow-y: auto;

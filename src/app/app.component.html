@@ -9,11 +9,11 @@
     <!-- First row: logo / env name +start / env port + prefix -->
     <div class="header">
       <div class="row">
-        <div class="col-2">
+        <div class="col-2 menu-columns--width">
           <div class="logo"></div>
         </div>
 
-        <div class="col-2">
+        <div class="col-2 menu-columns--width">
           <div *ngIf="!currentEnvironment" class="input-group">
             <span class="input-group-prepend">
               <button class="btn btn-link text-muted" type="button">
@@ -81,7 +81,7 @@
 
       <div id="content-inner" class="row">
         <!-- Environments menu -->
-        <div class="col-2 menu-columns d-flex flex-column">
+        <div class="col-2 menu-columns menu-columns--width d-flex flex-column">
           <div><!-- container needed for flexboxes -->
             <ul class="nav flex-column">
               <li class="nav-item">
@@ -116,7 +116,7 @@
         </div>
 
         <!-- Routes menu -->
-        <div class="col-2 menu-columns d-flex flex-column">
+        <div class="col-2 menu-columns menu-columns--width d-flex flex-column">
           <div><!-- container needed for flexboxes -->
             <ul class="nav flex-column">
               <li class="nav-item">
