@@ -39,6 +39,7 @@
   "scripts": {
     "lint": "ng lint --type-check",
     "test": "ng test",
+    "test-spectron": "mocha",
     "setversion": "node ./scripts/version-bump.js",
     "dev:electron": "electron ./dist --serve",
     "dev:app": "ng build --watch --output-hashing=all",
@@ -97,6 +98,8 @@
     "@types/jasmine": "2.8.9",
     "@types/jasminewd2": "2.0.5",
     "@types/node": "10.11.7",
+    "chai": "4.2.0",
+    "chai-as-promised": "7.1.1",
     "codelyzer": "4.5.0",
     "electron": "3.0.4",
     "electron-builder": "20.28.4",
@@ -109,7 +112,9 @@
     "karma-coverage-istanbul-reporter": "2.0.4",
     "karma-jasmine": "1.1.2",
     "karma-jasmine-html-reporter": "0.2.2",
+    "mocha": "5.2.0",
     "replace-in-file": "3.4.2",
+    "spectron": "5.0.0",
     "ts-node": "7.0.1",
     "tslint": "5.11.0",
     "typescript": "2.9.2"
