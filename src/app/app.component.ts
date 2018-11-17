@@ -387,17 +387,11 @@ export class AppComponent implements OnInit {
    * @param propagate - should propagate event to env service
    */
   public environmentUpdated(fieldUpdated: string = '', propagate = true) {
+    const restartNotNeeded = ['name', 'envLatency', 'statusCode', 'file', 'routeCustomHeader', 'body', 'envReorder', 'fileSendAsBody'];
     this.currentEnvironment.environment.modifiedAt = new Date();
 
     // restart is not needed for some fields
-    if (fieldUpdated !== 'name' &&
-      fieldUpdated !== 'envLatency' &&
-      fieldUpdated !== 'statusCode' &&
-      fieldUpdated !== 'file' &&
-      fieldUpdated !== 'routeCustomHeader' &&
-      fieldUpdated !== 'body' &&
-      fieldUpdated !== 'envReorder'
-    ) {
+    if (!restartNotNeeded.includes(fieldUpdated)) {
       if (this.currentEnvironment.environment.running) {
         this.currentEnvironment.environment.needRestart = this.currentEnvironment.environment.modifiedAt > this.currentEnvironment.environment.startedAt;
       }
@@ -486,23 +480,47 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public browseFiles(event) {
+  public browseFiles() {
     this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), {}, (file) => {
       if (file && file[0]) {
-        const filePath = file[0];
-        // if start with a dot, refuse (cannot serve with sendFile in Express)
-        if (!/^\./i.test(path.basename(filePath))) {
-          this.currentRoute.route.file = {
-            path: filePath,
-            filename: path.basename(filePath),
-            mimeType: mimeTypes.lookup(filePath)
-          };
-          this.environmentUpdated('file');
-        } else {
-          this.alertService.showAlert('error', Errors.FILE_TYPE_NOT_SUPPORTED);
-        }
+        this.updateRouteFile(file[0]);
       }
     });
+  }
+
+  /**
+   * Monitor file path input changes
+   *
+   * @param filePath
+   */
+  public onFileInputChange(filePath: string) {
+    if (!filePath) {
+      this.deleteFile();
+
+      return;
+    }
+    this.updateRouteFile(filePath);
+  }
+
+  /**
+   * Update the route file object from a path
+   *
+   * @param filePath
+   */
+  private updateRouteFile(filePath: string) {
+    // if start with a dot, refuse (cannot serve with sendFile in Express)
+    if (!/^\./i.test(path.basename(filePath))) {
+      this.currentRoute.route.file = {
+        ...this.currentRoute.route.file,
+        path: filePath,
+        filename: path.basename(filePath),
+        mimeType: mimeTypes.lookup(filePath)
+      };
+
+      this.environmentUpdated('file');
+    } else {
+      this.alertService.showAlert('error', Errors.FILE_TYPE_NOT_SUPPORTED);
+    }
   }
 
   public deleteFile() {

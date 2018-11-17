@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as DummyJSON from 'dummy-json';
 import * as express from 'express';
 import * as fs from 'fs';
 import * as http from 'http';
@@ -11,7 +10,7 @@ import * as path from 'path';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
-import { DummyJSONHelpers } from 'src/app/libs/dummy-helpers.lib';
+import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
@@ -166,34 +165,45 @@ export class ServerService {
             // set custom headers and parse values for templating
             route.customHeaders.forEach((customHeader) => {
               if (customHeader.key && customHeader.value && !this.testCustomHeader(customHeader.key)) {
-                res.set(customHeader.key, DummyJSON.parse(customHeader.value, { helpers: DummyJSONHelpers(req) }));
+                res.set(customHeader.key, DummyJSONParser(customHeader.value, req));
               }
             });
 
+            // send the file
             if (route.file) {
-              let fileContent;
+              const filePath = DummyJSONParser(route.file.path, req);
 
               // throw error or serve file
               try {
-                fileContent = fs.readFileSync(route.file.path);
-
-                // Set content type, set content disposition and send Buffer
+                // set Content-Type to detected or user defined
                 if (!this.getCustomHeader(route, 'Content-Type')) {
-                  res.set('Content-Type', mime.lookup(route.file.path));
+                  res.set('Content-Type', mime.lookup(filePath));
                 }
 
-                res.set('Content-Disposition', `attachment; filename="${path.basename(route.file.path)}"`);
-                res.send(fileContent);
+                if (route.file.sendAsBody) {
+                  res.sendFile(filePath, {}, (error) => {
+                    if (error) {
+                      this.sendError(res, Errors.FILE_NOT_EXISTS + filePath);
+                      res.end();
+                    }
+                  });
+                } else {
+                  const fileContent = fs.readFileSync(filePath);
+
+                  res.set('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
+                  res.send(fileContent);
+                }
               } catch (error) {
                 if (error.code === 'ENOENT') {
-                  this.sendError(res, Errors.FILE_NOT_EXISTS);
+                  this.sendError(res, Errors.FILE_NOT_EXISTS + filePath);
                 }
+                res.end();
               }
             } else {
               // detect if content type is json in order to parse
               if (this.getCustomHeader(route, 'Content-Type') === 'application/json') {
                 try {
-                  res.json(JSON.parse(DummyJSON.parse(route.body, { helpers: DummyJSONHelpers(req) })));
+                  res.json(JSON.parse(DummyJSONParser(route.body, req)));
                 } catch (error) {
                   // if JSON parsing error send plain text error
                   if (error.message.indexOf('Unexpected token') >= 0 || error.message.indexOf('Parse error') >= 0) {
@@ -205,7 +215,7 @@ export class ServerService {
                 }
               } else {
                 try {
-                  res.send(DummyJSON.parse(route.body, { helpers: DummyJSONHelpers(req) }));
+                  res.send(DummyJSONParser(route.body, req));
                 } catch (error) {
                   // if invalide Content-Type provided
                   if (error.message.indexOf('invalid media type') >= 0) {

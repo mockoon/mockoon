@@ -58,5 +58,18 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
         }
       });
     }
+  },
+
+  // 1.3.0
+  {
+    id: 4,
+    migrationFunction: (environment: EnvironmentType) => {
+      environment.routes.forEach(route => {
+        // add missing sendAsBody
+        if (route.file && route.file.sendAsBody === undefined) {
+          route.file.sendAsBody = false;
+        }
+      });
+    }
   }
 ];

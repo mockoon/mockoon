@@ -233,25 +233,34 @@
                 <!-- body: file -->
                 <div class="row mt-2">
                   <div class="col">
-                    <div class="form-row" *ngIf="currentRoute">
-                      <div class="input-group">
+                    <div class="form-inline" *ngIf="currentRoute">
+                      <div class="input-group col-9">
                         <div class="input-group-prepend">
                           <button class="btn btn-link" (click)="browseFiles()"><i class="material-icons">find_in_page</i></button>
                         </div>
-                        <input type="text" class="form-control col-lg-4" [value]="currentRoute.route.file && currentRoute.route.file.filename" readonly>
-                        <div class="input-group-prepend">
-                          <small *ngIf="currentRoute && currentRoute.route.file" class="input-group-text text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}}</small>
-                        </div>
+                        <input type="text" class="form-control" name="route.file" [(ngModel)]="currentRoute.route.file && currentRoute.route.file.path" (ngModelChange)="onFileInputChange($event)">
                         <div class="input-group-prepend">
                           <span *ngIf="currentRoute.route.file" class="input-group-text text-danger" (click)="deleteFile()" ngbTooltip="Remove file serving">
                             <i class="material-icons">clear</i>
                           </span>
                         </div>
                       </div>
+                      <div class="form-group col-3">
+                        <div *ngIf="currentRoute.route.file" class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="UseAsBody" name="UseAsBody" [(ngModel)]="currentRoute.route.file.sendAsBody" (ngModelChange)="environmentUpdated('fileSendAsBody')">
+                          <label class="custom-control-label" for="UseAsBody">Send as body</label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-
+                <div class="row">
+                  <div class="col">
+                    <div>
+                      &nbsp;<small *ngIf="currentRoute?.route?.file" class="text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}}</small>
+                    </div>
+                  </div>
+                </div>
 
                 <!-- body: custom content -->
                 <div class="row transition flex-fill" *ngIf="currentRoute" [ngClass]="{'dimmed': currentRoute.route.file}">

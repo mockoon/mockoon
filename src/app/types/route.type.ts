@@ -292,9 +292,10 @@ export type RouteType = {
   body?: string;
   latency: number;
   file?: {
-    path: string;
+    path?: string;
     filename: string;
     mimeType: string;
+    sendAsBody?: boolean;
   };
 
   /**

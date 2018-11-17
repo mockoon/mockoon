@@ -106,3 +106,13 @@ export const DummyJSONHelpers = (request) => {
     }
   };
 };
+
+/**
+ * Parse a text with DummyJSON
+ *
+ * @param text
+ * @param request
+ */
+export const DummyJSONParser = (text: string, request: any): string => {
+  return DummyJSON.parse(text, { helpers: DummyJSONHelpers(request) });
+};
