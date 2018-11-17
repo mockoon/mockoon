@@ -14,9 +14,13 @@ const isDev = require('electron-is-dev');
 const args = process.argv.slice(1);
 const packageJSON = require('./package.json');
 
+// init CMD flags
+const isServing = args.some(val => val === '--serve');
+const isTesting = args.some(val => val === '--tests');
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-if (isDev && args.some(val => val === '--serve')) {
+if (isDev && isServing) {
   require('electron-reload')(__dirname, {});
 }
 
@@ -60,8 +64,8 @@ function createWindow() {
     slashes: true
   }));
 
-  // Open the DevTools.
-  if (isDev) {
+  // Open the DevTools except when running functional tests
+  if (isDev && !isTesting) {
     mainWindow.webContents.openDevTools()
   }
 
