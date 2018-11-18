@@ -20,6 +20,11 @@ const isTesting = args.some(val => val === '--tests');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
+// set test folder when testing
+if (isTesting) {
+  app.setPath('userData', path.resolve('./tmp'));
+}
+
 if (isDev && isServing) {
   require('electron-reload')(__dirname, {});
 }

@@ -39,7 +39,7 @@
   "scripts": {
     "lint": "ng lint --type-check",
     "test": "ng test",
-    "test-spectron": "mocha",
+    "test-spectron": "rm -rf ./tmp && mocha",
     "setversion": "node ./scripts/version-bump.js",
     "serve:electron": "electron ./dist --serve",
     "serve:app": "ng build --configuration=development --watch --output-hashing=all",
