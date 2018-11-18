@@ -58,6 +58,14 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
+            },
+            "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
             }
           }
         },
@@ -69,6 +77,9 @@
           "configurations": {
             "production": {
               "browserTarget": "mockoon:build:production"
+            },
+            "development": {
+              "browserTarget": "mockoon:build:development"
             }
           }
         },

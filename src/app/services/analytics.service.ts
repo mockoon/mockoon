@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { SettingsService, SettingsType } from 'src/app/services/settings.service';
+import { environment } from 'src/environments/environment';
 const packageJSON = require('../../../package.json');
 
 /**
@@ -30,7 +31,7 @@ export class AnalyticsService {
     aid: 'com.mockoon.app',
     av: packageJSON.version,
     ds: 'app',
-    tid: 'UA-7759211-13',
+    tid: environment.analyticsID,
     dh: encodeURIComponent('https://app.mockoon.com')
   };
 

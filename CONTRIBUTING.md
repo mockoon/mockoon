@@ -23,7 +23,7 @@ You will get auto reload on both Angular and Electron applications.
 ### Build and package the application for production 
 
 - Increment the version in package.json files. Use `npm run setversion x.x.x`.
-- Run `npm run build:app`.
+- Run `npm run build:prod`.
 - Package the application for different platforms with `npm run package:win|mac|linux`.
 - Create a release in GitHub 'mockoon' repository. (Respect release tag format `vx.x.x`)
 - Add binaries to the new GitHub release.
