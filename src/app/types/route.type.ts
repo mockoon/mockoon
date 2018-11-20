@@ -217,6 +217,18 @@ export const headerNames = [
   'X-Requested-With'
 ];
 
+export const mimeTypesWithTemplating = [
+  'application/json',
+  'text/html',
+  'text/css',
+  'text/csv',
+  'application/javascript',
+  'application/typescript',
+  'text/plain',
+  'application/xhtml+xml',
+  'application/xml'
+];
+
 // values used to suggest
 export const headerValues = [
   // content types

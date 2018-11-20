@@ -257,7 +257,7 @@
                 <div class="row">
                   <div class="col">
                     <div>
-                      &nbsp;<small *ngIf="currentRoute?.route?.file" class="text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}}</small>
+                      &nbsp;<small *ngIf="currentRoute?.route?.file" class="text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}}{{fileSupportsTemplating() ? ' - Supports templating' : ''}}</small>
                     </div>
                   </div>
                 </div>

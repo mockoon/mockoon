@@ -23,7 +23,7 @@ import { ServerService } from 'src/app/services/server.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { DataSubjectType } from 'src/app/types/data.type';
 import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
-import { headerNames, headerValues, methods, RouteType, statusCodes, statusCodesExplanation } from 'src/app/types/route.type';
+import { headerNames, headerValues, methods, mimeTypesWithTemplating, RouteType, statusCodes, statusCodesExplanation } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
 import '../assets/custom_theme.js';
 const platform = require('os').platform();
@@ -764,5 +764,12 @@ export class AppComponent implements OnInit {
     } else if (subject === 'route') {
       this.environmentsService.exportRouteToClipboard(this.currentEnvironment.index, subjectIndex);
     }
+  }
+
+  /**
+   * Check if selected file's mime type supports templating
+   */
+  public fileSupportsTemplating(): boolean {
+    return mimeTypesWithTemplating.indexOf(this.currentRoute.route.file.mimeType) > -1;
   }
 }

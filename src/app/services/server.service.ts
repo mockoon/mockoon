@@ -5,7 +5,6 @@ import * as http from 'http';
 import * as proxy from 'http-proxy-middleware';
 import * as https from 'https';
 import * as killable from 'killable';
-import * as mime from 'mime-types';
 import * as path from 'path';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
@@ -16,7 +15,7 @@ import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { pemFiles } from 'src/app/ssl';
 import { EnvironmentType } from 'src/app/types/environment.type';
-import { RouteType } from 'src/app/types/route.type';
+import { mimeTypesWithTemplating, RouteType } from 'src/app/types/route.type';
 import { EnvironmentLogsType } from 'src/app/types/server.type';
 import { URL } from 'url';
 
@@ -177,22 +176,20 @@ export class ServerService {
               try {
                 // set Content-Type to detected or user defined
                 if (!this.getCustomHeader(route, 'Content-Type')) {
-                  res.set('Content-Type', mime.lookup(filePath));
+                  res.set('Content-Type', route.file.mimeType);
                 }
 
-                if (route.file.sendAsBody) {
-                  res.sendFile(filePath, {}, (error) => {
-                    if (error) {
-                      this.sendError(res, Errors.FILE_NOT_EXISTS + filePath);
-                      res.end();
-                    }
-                  });
-                } else {
-                  const fileContent = fs.readFileSync(filePath);
+                let fileContent: Buffer | string = fs.readFileSync(filePath);
 
+                // parse templating for a limited list of mime types
+                if (mimeTypesWithTemplating.indexOf(route.file.mimeType) > -1) {
+                  fileContent = DummyJSONParser(fileContent.toString('utf-8', 0, fileContent.length), req);
+                }
+
+                if (!route.file.sendAsBody) {
                   res.set('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
-                  res.send(fileContent);
                 }
+                res.send(fileContent);
               } catch (error) {
                 if (error.code === 'ENOENT') {
                   this.sendError(res, Errors.FILE_NOT_EXISTS + filePath);
