@@ -12,7 +12,6 @@ const isDev = require('electron-is-dev');
 
 // if serving enable hot reload
 const args = process.argv.slice(1);
-const packageJSON = require('./package.json');
 
 // init CMD flags
 const isServing = args.some(val => val === '--serve');
@@ -96,11 +95,6 @@ function createWindow() {
         {
           label: 'Send feedback', click: function () {
             shell.openExternal('https://github.com/255kb/mockoon/issues');
-          }
-        },
-        {
-          label: `Release note v${packageJSON.version}`, click: function () {
-            shell.openExternal(`https://github.com/255kb/mockoon/releases/tag/v${packageJSON.version}`);
           }
         },
         { type: 'separator' },

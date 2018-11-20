@@ -1,6 +1,6 @@
 <ng-template #modal let-close="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title">v{{appVersion}} changelog</h4>
+    <h4 class="modal-title">v{{appVersion}} changelog <a class="btn btn-link btn-sm btn-icon text-primary" (click)="openReleaseLink()">View online</a></h4>
   </div>
   <div class="modal-body">
     <markdown ngPreserveWhitespaces>

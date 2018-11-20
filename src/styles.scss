@@ -47,6 +47,10 @@
     margin-top: 2px;
   }
 }
+.modal-body {
+  overflow-y: auto;
+  max-height: 65vh;
+}
 .form-control {
   &[readonly] {
     color: $text-muted;

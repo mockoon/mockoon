@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AceEditorModule } from 'ng2-ace-editor';
 import { DragulaModule } from 'ng2-dragula';
-import { MarkdownModule } from 'ngx-markdown';
+import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import 'reflect-metadata';
 import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
 import { ContextMenuComponent } from 'src/app/components/context-menu.component';
@@ -16,6 +16,7 @@ import { WelcomeModalComponent } from 'src/app/components/welcome-modal.componen
 import { AutocompleteDirective } from 'src/app/directives/autocomplete.directive';
 import { OnlyNumberDirective } from 'src/app/directives/only-numbers.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
+import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
 import { AlertService } from 'src/app/services/alert.service';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -48,7 +49,7 @@ import { AppComponent } from './app.component';
     FormsModule,
     HttpClientModule,
     NgbModule.forRoot(),
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot({ markedOptions: { provide: MarkedOptions, useFactory: MarkedOptionsFactory } })
   ],
   providers: [
     AlertService,
