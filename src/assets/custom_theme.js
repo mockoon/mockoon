@@ -101,6 +101,54 @@ color: #969896\
 }\
 .ace-custom-theme .ace_indent-guide {\
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y\
+}\
+.ace-custom-theme .ace_search {\
+color: #A7ACBA;\
+background-color: #21232a;\
+border-color: #292d36;\
+}\
+.ace-custom-theme .ace_search_form.ace_nomatch {\
+outline: 1px solid #bf4e46;\
+}\
+.ace-custom-theme .ace_search_field {\
+color: #EEF0F3;\
+background-color: #353944;\
+border-color: #353944;\
+border-radius: 0;\
+}\
+.ace-custom-theme .ace_search_field:focus {\
+border-color: #454A5B;\
+transition: all 100ms ease-in-out\
+}\
+.ace-custom-theme .ace_search_field::placeholder {\
+color: #878C9A;\
+}\
+.ace-custom-theme .ace_search .ace_button {\
+color: #878C9A;\
+border: none;\
+}\
+.ace-custom-theme .ace_search .ace_button:hover {\
+color: #B8BCC4;\
+background-color: #21232a;\
+}\
+.ace-custom-theme .ace_search .ace_button.checked {\
+color: #B8BCC4;\
+}\
+.ace-custom-theme .ace_searchbtn {\
+background-color: #21232a;\
+border-color: #21232a;\
+}\
+.ace-custom-theme .ace_searchbtn {\
+color: #878C9A;\
+}\
+.ace-custom-theme .ace_searchbtn:hover {\
+color: #B8BCC4;\
+}\
+.ace-custom-theme .ace_searchbtn::after {\
+border-color: #878C9A;\
+}\
+.ace-custom-theme .ace_searchbtn:hover::after {\
+border-color: #B8BCC4;\
 }";
 
 var dom = acequire("../lib/dom");
