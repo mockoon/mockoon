@@ -93,6 +93,11 @@ function createWindow() {
           }
         },
         {
+          label: 'Tutorials', click: function () {
+            shell.openExternal('https://mockoon.com/tutorials');
+          }
+        },
+        {
           label: 'Send feedback', click: function () {
             shell.openExternal('https://github.com/255kb/mockoon/issues');
           }
