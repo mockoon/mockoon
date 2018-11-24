@@ -155,7 +155,7 @@ export class ServerService {
       // only launch non duplicated routes
       if (!route.duplicates.length) {
         // create route
-        server[route.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + route.endpoint, (req, res) => {
+        server[route.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + route.endpoint.replace(/ /g, '%20'), (req, res) => {
           // add route latency if any
           setTimeout(() => {
             // set http code
