@@ -10,7 +10,7 @@
   flex-wrap: nowrap;
 }
 .nav-link {
-  transition: all ease-in-out 150ms;
+  transition: background-color ease-in-out 150ms;
 }
 .nav-tabs {
   .nav-link {
@@ -61,7 +61,7 @@
   color: $gray-400;
 
   i {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     line-height: 1.5rem;
   }
 }
@@ -70,7 +70,7 @@ label {
 }
 .input-group-prepend, .input-group-append {
   i {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     line-height: 1.5rem;
   }
   .btn {
@@ -269,7 +269,7 @@ select, input, .btn {
   font-size: $small-font-size;
 }
 
-.tab-content {
+.tab-content, .scroll-content {
   overflow-x: hidden;
   overflow-y: scroll;
 
@@ -388,6 +388,11 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
   flex: 1;
 }
 
+.form-right {
+  position: absolute;
+  right: 0;
+}
+
 .server-icons {
   position: absolute;
   display: block;
@@ -487,7 +492,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
     100% { opacity: 1; }
 }
 
-.custom-header {
+.headers-list {
   &:first-of-type {
     margin-top: 0;
   }

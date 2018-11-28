@@ -25,7 +25,6 @@ import { UpdateService } from 'src/app/services/update.service';
 import { DataSubjectType } from 'src/app/types/data.type';
 import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
 import { headerNames, headerValues, methods, mimeTypesWithTemplating, RouteType, statusCodes, statusCodesExplanation } from 'src/app/types/route.type';
-import * as uuid from 'uuid/v1';
 import '../assets/custom_theme.js';
 const platform = require('os').platform();
 const appVersion = require('../../package.json').version;
@@ -40,7 +39,6 @@ type TabsNameType = 'RESPONSE' | 'HEADERS' | 'ENV_SETTINGS' | 'ENV_LOGS';
 export class AppComponent implements OnInit {
   @ViewChild('routesMenu') private routesMenu: ElementRef;
   @ViewChild('environmentsMenu') private environmentsMenu: ElementRef;
-  @ViewChild('headersTabContent') private headersTabContent: ElementRef;
   public environments: EnvironmentsType;
   public currentEnvironment: CurrentEnvironmentType = null;
   public currentRoute: { route: RouteType, index: number } = null;
@@ -65,7 +63,8 @@ export class AppComponent implements OnInit {
   public platform = platform;
   public headerNamesList = headerNames;
   public headerValuesList = headerValues;
-  public getCustomHeader = this.serverService.getCustomHeader;
+  public getRouteContentType = this.environmentsService.getRouteContentType;
+  public hasEnvironmentHeaders = this.environmentsService.hasEnvironmentHeaders;
   public clearEnvironmentLogsTimeout: NodeJS.Timer;
   public environmentLogs = this.serverService.environmentsLogs;
   public appVersion = appVersion;
@@ -361,10 +360,7 @@ export class AppComponent implements OnInit {
 
     this.selectEnvironment(index);
 
-    // auto scroll environments to bottom when adding (wait for element to be in page)
-    setTimeout(() => {
-      this.environmentsMenu.nativeElement.scrollTop = this.environmentsMenu.nativeElement.scrollHeight;
-    }, 0);
+    this.scrollToBottom(this.environmentsMenu.nativeElement);
   }
 
   public addRoute() {
@@ -375,8 +371,7 @@ export class AppComponent implements OnInit {
 
       this.selectRoute(index);
 
-      // auto scroll routes to bottom when adding
-      this.routesMenu.nativeElement.scrollTop = this.routesMenu.nativeElement.scrollHeight;
+      this.scrollToBottom(this.routesMenu.nativeElement);
     }
   }
 
@@ -388,7 +383,7 @@ export class AppComponent implements OnInit {
    * @param propagate - should propagate event to env service
    */
   public environmentUpdated(fieldUpdated: string = '', propagate = true) {
-    const restartNotNeeded = ['name', 'envLatency', 'statusCode', 'file', 'routeCustomHeader', 'body', 'envReorder', 'fileSendAsBody'];
+    const restartNotNeeded = ['name', 'envLatency', 'routeLatency', 'statusCode', 'file', 'routeHeaders', 'environmentHeaders', 'body', 'envReorder', 'fileSendAsBody'];
     this.currentEnvironment.environment.modifiedAt = new Date();
 
     // restart is not needed for some fields
@@ -398,7 +393,7 @@ export class AppComponent implements OnInit {
       }
     }
 
-    if (fieldUpdated === 'routeCustomHeader') {
+    if (fieldUpdated === 'routeHeaders' || fieldUpdated === 'environmentHeaders') {
       this.changeEditorSettings();
     }
 
@@ -529,33 +524,6 @@ export class AppComponent implements OnInit {
     this.environmentUpdated('file');
   }
 
-  public addCustomHeader() {
-    const lastCustomHeader = this.currentRoute.route.customHeaders[this.currentRoute.route.customHeaders.length - 1];
-
-    if (lastCustomHeader.key !== '') {
-      this.currentRoute.route.customHeaders.push({ uuid: uuid(), key: '', value: '' });
-      this.environmentUpdated('routeCustomHeader');
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_CUSTOM_HEADER);
-    }
-
-    // auto scroll routes to bottom when adding
-    this.headersTabContent.nativeElement.scrollTop = this.headersTabContent.nativeElement.scrollHeight;
-  }
-
-  public removeCustomHeader(customHeaderUUID: string) {
-    const customHeaderIndex = this.currentRoute.route.customHeaders.findIndex((customHeader: any) => {
-      return customHeader.uuid === customHeaderUUID;
-    });
-
-    if (customHeaderIndex > -1) {
-      this.currentRoute.route.customHeaders.splice(customHeaderIndex, 1);
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_CUSTOM_HEADER);
-    }
-    this.environmentUpdated('routeCustomHeader');
-  }
-
   /**
    * Pass remove event to alert service
    *
@@ -563,10 +531,6 @@ export class AppComponent implements OnInit {
    */
   public removeAlert(alertId: string) {
     this.alertService.removeAlert(alertId);
-  }
-
-  public testCustomHeader(key: string) {
-    return this.serverService.testCustomHeader(key);
   }
 
   public isValidURL(URL: string) {
@@ -601,7 +565,7 @@ export class AppComponent implements OnInit {
    * Set editor mode depending on content type
    */
   private changeEditorSettings() {
-    const contentType = this.serverService.getCustomHeader(this.currentRoute.route, 'Content-Type');
+    const contentType = this.environmentsService.getRouteContentType(this.currentEnvironment.environment, this.currentRoute.route);
 
     if (contentType === 'application/json') {
       this.editorConfig.mode = 'json';
@@ -772,5 +736,20 @@ export class AppComponent implements OnInit {
    */
   public fileSupportsTemplating(): boolean {
     return mimeTypesWithTemplating.indexOf(this.currentRoute.route.file.mimeType) > -1;
+  }
+
+  /**
+   * Scroll to bottom of an element
+   *
+   * @param element
+   */
+  public scrollToBottom(element: Element) {
+    setTimeout(() => {
+      element.scrollTop = element.scrollHeight;
+    });
+  }
+
+  public addCORSHeadersToEnvironment() {
+    this.environmentsService.setEnvironmentCORSHeaders(this.currentEnvironment.environment);
   }
 }

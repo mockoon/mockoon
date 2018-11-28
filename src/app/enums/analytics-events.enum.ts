@@ -3,8 +3,8 @@ import { CollectParams } from 'src/app/services/analytics.service';
 type AnalyticsEventsNames =
   'PAGEVIEW' | 'APPLICATION_START' | 'APPLICATION_FIRST_LOAD' | 'SERVER_STOP' | 'SERVER_RESTART' |
   'SERVER_START' | 'SERVER_ENTERING_REQUEST' | 'NAVIGATE_ENVIRONMENT' | 'NAVIGATE_ROUTE' |
-  'CREATE_ENVIRONMENT' | 'CREATE_ROUTE' | 'CREATE_CUSTOM_HEADER' | 'DUPLICATE_ENVIRONMENT' |
-  'DUPLICATE_ROUTE' | 'DELETE_ENVIRONMENT' | 'DELETE_ROUTE' | 'DELETE_CUSTOM_HEADER' |
+  'CREATE_ENVIRONMENT' | 'CREATE_ROUTE' | 'CREATE_HEADER' | 'DUPLICATE_ENVIRONMENT' |
+  'DUPLICATE_ROUTE' | 'DELETE_ENVIRONMENT' | 'DELETE_ROUTE' | 'DELETE_HEADER' |
   'LINK_ROUTE_IN_BROWSER' | 'LINK_FEEDBACK' | 'LINK_RELEASE' | 'LINK_WIKI' | 'LINK_APPLY_UPDATE' |
   'EXPORT_FILE' | 'EXPORT_CLIPBOARD' | 'IMPORT_FILE' | 'IMPORT_CLIPBOARD';
 
@@ -20,12 +20,12 @@ export const AnalyticsEvents: { [keyof in AnalyticsEventsNames]: CollectParams }
   NAVIGATE_ROUTE: { type: 'event', category: 'navigate', action: 'route' },
   CREATE_ENVIRONMENT: { type: 'event', category: 'create', action: 'environment' },
   CREATE_ROUTE: { type: 'event', category: 'create', action: 'route' },
-  CREATE_CUSTOM_HEADER: { type: 'event', category: 'create', action: 'custom-header' },
+  CREATE_HEADER: { type: 'event', category: 'create', action: 'header' },
   DUPLICATE_ENVIRONMENT: { type: 'event', category: 'duplicate', action: 'environment' },
   DUPLICATE_ROUTE: { type: 'event', category: 'duplicate', action: 'route' },
   DELETE_ENVIRONMENT: { type: 'event', category: 'delete', action: 'environment' },
   DELETE_ROUTE: { type: 'event', category: 'delete', action: 'route' },
-  DELETE_CUSTOM_HEADER: { type: 'event', category: 'delete', action: 'custom-header' },
+  DELETE_HEADER: { type: 'event', category: 'delete', action: 'header' },
   LINK_ROUTE_IN_BROWSER: { type: 'event', category: 'link', action: 'route-in-browser' },
   LINK_FEEDBACK: { type: 'event', category: 'link', action: 'feedback' },
   LINK_RELEASE: { type: 'event', category: 'link', action: 'release' },

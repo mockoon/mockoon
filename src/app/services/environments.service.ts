@@ -13,11 +13,10 @@ import { Migrations } from 'src/app/libs/migrations.lib';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
-import { ServerService } from 'src/app/services/server.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
-import { CustomHeaderType, RouteType } from 'src/app/types/route.type';
+import { CORSHeaders, HeaderType, RouteType } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
 
 @Injectable()
@@ -50,7 +49,8 @@ export class EnvironmentsService {
     proxyMode: false,
     proxyHost: '',
     https: false,
-    cors: true
+    cors: true,
+    headers: []
   };
 
   private environmentResetSchema: Partial<EnvironmentType> = {
@@ -66,20 +66,20 @@ export class EnvironmentsService {
     uuid: '',
     method: 'get',
     endpoint: '',
-    body: 'Environment is running.',
+    body: '{}',
     latency: 0,
     statusCode: '200',
-    customHeaders: [],
+    headers: [],
     file: null,
     duplicates: []
   };
 
-  private customHeadersSchema: CustomHeaderType = { uuid: '', key: 'Content-Type', value: 'text/plain' };
+  private emptyHeaderSchema: HeaderType = { uuid: '', key: '', value: '' };
+  private routeHeadersSchema: HeaderType = { uuid: '', key: '', value: '' };
 
   private storageKey = 'environments';
 
   constructor(
-    private serverService: ServerService,
     private alertService: AlertService,
     private dataService: DataService,
     private eventsService: EventsService,
@@ -108,7 +108,7 @@ export class EnvironmentsService {
 
     // subscribe to environment data update from UI, and save
     this.environmentUpdateEvents.pipe(debounceTime(1000)).subscribe((params) => {
-      storage.set(this.storageKey, this.cleanBeforeSave(this.environments));
+      storage.set(this.storageKey, this.cleanBeforeSave());
     });
 
     // subscribe to environment data update from UI
@@ -126,7 +126,7 @@ export class EnvironmentsService {
    *
    */
   public addEnvironment(): number {
-    const newRoute = Object.assign({}, this.routeSchema, { customHeaders: [Object.assign({}, this.customHeadersSchema, { uuid: uuid() })] });
+    const newRoute = Object.assign({}, this.routeSchema, { headers: [Object.assign({}, this.routeHeadersSchema, { uuid: uuid() })] });
     const newEnvironment = Object.assign(
       {},
       this.environmentSchema,
@@ -137,7 +137,8 @@ export class EnvironmentsService {
         routes: [
           newRoute
         ],
-        modifiedAt: new Date()
+        modifiedAt: new Date(),
+        headers: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }]
       }
     );
     this.routesTotal += 1;
@@ -157,7 +158,7 @@ export class EnvironmentsService {
    * @param environment - environment to which add a route
    */
   public addRoute(environment: EnvironmentType): number {
-    const newRoute = Object.assign({}, this.routeSchema, { uuid: uuid(), customHeaders: [Object.assign({}, this.customHeadersSchema, { uuid: uuid() })] });
+    const newRoute = Object.assign({}, this.routeSchema, { uuid: uuid(), headers: [Object.assign({}, this.routeHeadersSchema, { uuid: uuid() })] });
     const newRouteIndex = environment.routes.push(newRoute) - 1;
     this.routesTotal += 1;
 
@@ -194,13 +195,7 @@ export class EnvironmentsService {
    * @param environmentIndex - environment index to remove
    */
   public removeEnvironment(environmentIndex: number) {
-    // stop if needed before deletion
-    if (this.environments[environmentIndex].running) {
-      this.serverService.stop(this.environments[environmentIndex]);
-    }
-
-    // delete the request logs
-    this.serverService.deleteEnvironmentLogs(this.environments[environmentIndex].uuid);
+    this.eventsService.environmentDeleted.emit(this.environments[environmentIndex]);
 
     // delete the environment
     this.environments.splice(environmentIndex, 1);
@@ -217,13 +212,14 @@ export class EnvironmentsService {
     const defaultEnvironment: EnvironmentType = Object.assign({}, this.environmentSchema);
     defaultEnvironment.uuid = uuid(); // random uuid
     defaultEnvironment.name = 'Example';
+    defaultEnvironment.headers = [Object.assign({}, this.emptyHeaderSchema, { uuid: uuid() })];
     this.routesTotal = 2;
     defaultEnvironment.routes.push(Object.assign(
-      {}, this.routeSchema, { uuid: uuid(), customHeaders: [{ uuid: uuid(), key: 'Content-Type', value: 'text/plain' }] },
+      {}, this.routeSchema, { uuid: uuid(), headers: [{ uuid: uuid(), key: 'Content-Type', value: 'text/plain' }] },
       { endpoint: 'answer', body: '42' }
     ));
     defaultEnvironment.routes.push(Object.assign(
-      {}, this.routeSchema, { uuid: uuid(), customHeaders: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }] },
+      {}, this.routeSchema, { uuid: uuid(), headers: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }] },
       {
         method: 'post',
         endpoint: 'dolphins',
@@ -299,9 +295,8 @@ export class EnvironmentsService {
   /**
    * Clean environments before saving (avoid saving server instance and things like this)
    *
-   * @param environments - environments to clean
    */
-  private cleanBeforeSave(environments: EnvironmentsType) {
+  private cleanBeforeSave() {
     const environmentsCopy: EnvironmentsType = this.environments.map((environment: EnvironmentType): EnvironmentType => {
       const environmentCopy = cloneDeep(environment);
 
@@ -357,26 +352,20 @@ export class EnvironmentsService {
   private renewUUIDs(data: EnvironmentsType | EnvironmentType | RouteType, subject: DataSubjectType) {
     if (subject === 'full') {
       (data as EnvironmentsType).forEach(environment => {
-        environment.uuid = uuid();
-        environment.routes.forEach(route => {
-          route.uuid = uuid();
-          route.customHeaders.forEach(customHeader => {
-            customHeader.uuid = uuid();
-          });
-        });
+        this.renewUUIDs(environment, 'environment');
       });
     } else if (subject === 'environment') {
       (data as EnvironmentType).uuid = uuid();
+      (data as EnvironmentType).headers.forEach(header => {
+        header.uuid = uuid();
+      });
       (data as EnvironmentType).routes.forEach(route => {
-        route.uuid = uuid();
-        route.customHeaders.forEach(customHeader => {
-          customHeader.uuid = uuid();
-        });
+        this.renewUUIDs(route, 'route');
       });
     } else if (subject === 'route') {
       (data as RouteType).uuid = uuid();
-      (data as RouteType).customHeaders.forEach(customHeader => {
-        customHeader.uuid = uuid();
+      (data as RouteType).headers.forEach(header => {
+        header.uuid = uuid();
       });
     }
 
@@ -612,5 +601,64 @@ export class EnvironmentsService {
       }
     });
   }
-}
 
+  /**
+   * Return the route content type or environment content type if any
+   *
+   * @param environment
+   * @param route
+   */
+  public getRouteContentType(environment: EnvironmentType, route: RouteType) {
+    const routeContentType = route.headers.find(header => header.key === 'Content-Type');
+
+    if (routeContentType && routeContentType.value) {
+      return routeContentType.value;
+    }
+
+    const environmentContentType = environment.headers.find(header => header.key === 'Content-Type');
+
+    if (environmentContentType && environmentContentType.value) {
+      return environmentContentType.value;
+    }
+
+    return '';
+  }
+
+  /**
+   * Check if an environment has headers
+   *
+   * @param environment
+   */
+  public hasEnvironmentHeaders(environment: EnvironmentType) {
+    return environment.headers.some(header => {
+      return !!header.key;
+    });
+  }
+
+  /**
+   * Add CORS headers to environment headers if not already exists
+   *
+   * @param environment
+   */
+  public setEnvironmentCORSHeaders(environment: EnvironmentType) {
+    CORSHeaders.forEach(CORSHeader => {
+      const headerExists = this.findHeaderByName(environment.headers, CORSHeader.key);
+      // only write header if wasn't found or has no value
+      if (!headerExists) {
+        environment.headers.push({ uuid: uuid(), key: CORSHeader.key, value: CORSHeader.value });
+      } else if (!headerExists.value) {
+        headerExists.value = CORSHeader.value;
+      }
+    });
+  }
+
+  /**
+   * Find a header by its key
+   *
+   * @param headers
+   * @param name
+   */
+  private findHeaderByName(headers: HeaderType[], name: string) {
+    return headers.find(header => header.key === name);
+  }
+}

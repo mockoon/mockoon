@@ -1,4 +1,4 @@
-import { RouteType } from 'src/app/types/route.type';
+import { HeaderType, RouteType } from 'src/app/types/route.type';
 
 export type EnvironmentType = {
   uuid: string;
@@ -16,6 +16,7 @@ export type EnvironmentType = {
   proxyHost: string;
   https: boolean;
   cors: boolean;
+  headers: HeaderType[];
 
   /**
    * Store duplicates environment indexes, use .length to assess if there is any duplicate

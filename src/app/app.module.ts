@@ -11,6 +11,7 @@ import 'reflect-metadata';
 import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
 import { ContextMenuComponent } from 'src/app/components/context-menu.component';
 import { EnvironmentLogsComponent } from 'src/app/components/environment-logs.component';
+import { HeadersListComponent } from 'src/app/components/headers-list.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { WelcomeModalComponent } from 'src/app/components/welcome-modal.component';
 import { AutocompleteDirective } from 'src/app/directives/autocomplete.directive';
@@ -39,7 +40,8 @@ import { AppComponent } from './app.component';
     WelcomeModalComponent,
     SettingsModalComponent,
     ChangelogModalComponent,
-    EnvironmentLogsComponent
+    EnvironmentLogsComponent,
+    HeadersListComponent
   ],
   imports: [
     AceEditorModule,

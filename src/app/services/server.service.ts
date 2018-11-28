@@ -12,10 +12,11 @@ import { Errors } from 'src/app/enums/errors.enum';
 import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataService } from 'src/app/services/data.service';
+import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { pemFiles } from 'src/app/ssl';
 import { EnvironmentType } from 'src/app/types/environment.type';
-import { mimeTypesWithTemplating, RouteType } from 'src/app/types/route.type';
+import { CORSHeaders, HeaderType, mimeTypesWithTemplating, RouteType } from 'src/app/types/route.type';
 import { EnvironmentLogsType } from 'src/app/types/server.type';
 import { URL } from 'url';
 
@@ -28,7 +29,22 @@ const httpsConfig = {
 export class ServerService {
   public environmentsLogs: EnvironmentLogsType = {};
 
-  constructor(private alertService: AlertService, private dataService: DataService, private eventsService: EventsService) { }
+  constructor(
+    private alertService: AlertService,
+    private dataService: DataService,
+    private eventsService: EventsService,
+    private environmentService: EnvironmentsService
+  ) {
+    this.eventsService.environmentDeleted.subscribe((environment: EnvironmentType) => {
+      // stop if needed before deletion
+      if (environment.running) {
+        this.stop(environment);
+      }
+
+      // delete the request logs
+      this.deleteEnvironmentLogs(environment.uuid);
+    });
+  }
 
   /**
    * Start an environment / server
@@ -92,8 +108,13 @@ export class ServerService {
     }
   }
 
-  public testCustomHeader(key: string) {
-    if (key.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)) {
+  /**
+   * Test a header validity
+   *
+   * @param headerName
+   */
+  public testHeaderValidity(headerName: string) {
+    if (headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)) {
       return true;
     }
     return false;
@@ -135,9 +156,9 @@ export class ServerService {
   private setCors(server: any, environment: EnvironmentType) {
     if (environment.cors) {
       server.options('/*', (req, res) => {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With');
+        CORSHeaders.forEach(CORSHeader => {
+          res.header(CORSHeader.key, CORSHeader.value);
+        });
 
         res.send(200);
       });
@@ -158,15 +179,13 @@ export class ServerService {
         server[route.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + route.endpoint.replace(/ /g, '%20'), (req, res) => {
           // add route latency if any
           setTimeout(() => {
+            const routeContentType = this.environmentService.getRouteContentType(environment, route);
+
             // set http code
             res.status(route.statusCode);
 
-            // set custom headers and parse values for templating
-            route.customHeaders.forEach((customHeader) => {
-              if (customHeader.key && customHeader.value && !this.testCustomHeader(customHeader.key)) {
-                res.set(customHeader.key, DummyJSONParser(customHeader.value, req));
-              }
-            });
+            this.setHeaders(environment.headers, req, res);
+            this.setHeaders(route.headers, req, res);
 
             // send the file
             if (route.file) {
@@ -174,8 +193,8 @@ export class ServerService {
 
               // throw error or serve file
               try {
-                // set Content-Type to detected or user defined
-                if (!this.getCustomHeader(route, 'Content-Type')) {
+                // if no route content type set to the one detected
+                if (!routeContentType) {
                   res.set('Content-Type', route.file.mimeType);
                 }
 
@@ -198,7 +217,7 @@ export class ServerService {
               }
             } else {
               // detect if content type is json in order to parse
-              if (this.getCustomHeader(route, 'Content-Type') === 'application/json') {
+              if (routeContentType === 'application/json') {
                 try {
                   res.json(JSON.parse(DummyJSONParser(route.body, req)));
                 } catch (error) {
@@ -224,6 +243,14 @@ export class ServerService {
             }
           }, route.latency);
         });
+      }
+    });
+  }
+
+  private setHeaders(headers: HeaderType[], req, res) {
+    headers.forEach((header) => {
+      if (header.key && header.value && !this.testHeaderValidity(header.key)) {
+        res.set(header.key, DummyJSONParser(header.value, req));
       }
     });
   }
@@ -347,17 +374,6 @@ export class ServerService {
     } catch (e) {
       return false;
     }
-  }
-
-  /**
-   * Return the content type header value
-   *
-   * @param route
-   */
-  public getCustomHeader(route: RouteType, headerName: string): string {
-    const header = route.customHeaders.find(customHeader => customHeader.key === headerName);
-
-    return (header && header.value) || '';
   }
 
   /**

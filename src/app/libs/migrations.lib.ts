@@ -33,16 +33,18 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
           route.uuid = uuid();
         }
 
-        // find content type header
-        const ContentTypeHeader = route.customHeaders.find(customHeader => customHeader.key === 'Content-Type');
+        if (route['customHeaders']) {
+          // find content type header
+          const ContentTypeHeader = route['customHeaders'].find(customHeader => customHeader.key === 'Content-Type');
 
-        // add custom header only if no content type
-        if (!ContentTypeHeader) {
-          route.customHeaders.unshift({ uuid: uuid(), key: 'Content-Type', value: route['contentType'] });
+          // add custom header only if no content type
+          if (!ContentTypeHeader) {
+            route['customHeaders'].unshift({ uuid: uuid(), key: 'Content-Type', value: route['contentType'] });
+          }
+
+          // delete old content type
+          delete route['contentType'];
         }
-
-        // delete old content type
-        delete route['contentType'];
       });
     }
   },
@@ -64,10 +66,21 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
   {
     id: 4,
     migrationFunction: (environment: EnvironmentType) => {
+      // add new headers property to environments
+      if (!environment.headers) {
+        environment.headers = [{ uuid: uuid(), key: '', value: '' }];
+      }
+
       environment.routes.forEach(route => {
         // add missing sendAsBody
         if (route.file && route.file.sendAsBody === undefined) {
           route.file.sendAsBody = false;
+        }
+
+        // rename customHeaders to headers
+        if (route['customHeaders']) {
+          route.headers = route['customHeaders'];
+          delete route['customHeaders'];
         }
       });
     }
