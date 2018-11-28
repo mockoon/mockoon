@@ -202,19 +202,19 @@
                 <!-- status code + latency -->
                 <div class="row mt-3">
                   <!-- route status code -->
-                  <div class="col-auto">
+                  <div class="col">
                     <div class="form-row" *ngIf="currentRoute">
                       <div class="input-group">
                         <div class="input-group-prepend">
                           <span class="input-group-text">Status code</span>
                         </div>
-                        <select class="custom-select col-lg-4" name="route.statusCode" [(ngModel)]="currentRoute.route.statusCode" (ngModelChange)="environmentUpdated('statusCode')">
+                        <select class="custom-select col-4" name="route.statusCode" [(ngModel)]="currentRoute.route.statusCode" (ngModelChange)="environmentUpdated('statusCode')">
                         <option *ngFor="let statusCode of statusCodes" [value]="statusCode" [selected]="currentRoute.route.statusCode === statusCode">{{statusCode}} - {{statusCodesExplanation[statusCode]}}</option>
                       </select>
                         <div class="input-group-prepend">
                           <span class="input-group-text"><i class="material-icons">access_time</i></span>
                         </div>
-                        <input type="text" class="form-control col-lg-4" ngbTooltip="Route specific latency (ms)" [OnlyNumber]="{min: 0, max: Infinity}" name="route.latency"
+                        <input type="text" class="form-control col-1" ngbTooltip="Route specific latency (ms)" [OnlyNumber]="{min: 0, max: Infinity}" name="route.latency"
                           [(ngModel)]="currentRoute.route.latency" (ngModelChange)="environmentUpdated('routeLatency')">
                       </div>
                     </div>
@@ -257,7 +257,7 @@
                 <div class="row">
                   <div class="col">
                     <div>
-                      &nbsp;<small *ngIf="currentRoute?.route?.file" class="text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}}{{fileSupportsTemplating() ? ' - Supports templating' : ''}}</small>
+                      &nbsp;<small *ngIf="currentRoute?.route?.file" class="text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}} <span *ngIf="fileSupportsTemplating()"> - Supports templating <span (click)="openWikiLink('templating')" class="pl-2 btn btn-sm btn-link text-primary cp doc-link"><i class="material-icons" ngbTooltip="Templating documentation">info</i></span></span></small>
                     </div>
                   </div>
                 </div>
@@ -270,7 +270,7 @@
                       <div class="title-separator-text">
                         <div>Body </div>
                         <div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div>
-                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getRouteContentType(currentEnvironment.environment, currentRoute.route)) ? 'Content-Type ' + getRouteContentType(currentEnvironment.environment, currentRoute.route) : 'No Content-Type is set'}} - Supports templating<span (click)="openWikiLink('templating')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></div>
+                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getRouteContentType(currentEnvironment.environment, currentRoute.route)) ? 'Content-Type ' + getRouteContentType(currentEnvironment.environment, currentRoute.route) : 'No Content-Type is set'}} <span (click)="openWikiLink('templating')" class="btn btn-xs btn-link text-primary cp doc-link"><i class="material-icons" ngbTooltip="Templating documentation" placement="left">info</i></span></div>
                       </div>
                     </div>
                     <div class="mt-3 flex-fill">
@@ -300,7 +300,7 @@
                     <div class="col">
                       <div class="title-separator is-first has-icon">
                         <div class="title-separator-icon text-primary"><i class="material-icons">security</i></div>
-                        <div class="title-separator-text"><div>Proxy mode </div><div>Non defined routes will be forwarded to the specified host<span (click)="openWikiLink('proxy')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></div></div>
+                        <div class="title-separator-text"><div>Proxy mode </div><div>Non defined routes will be forwarded to the specified host<span (click)="openWikiLink('proxy')" class="pl-2 btn btn-link text-primary cp doc-link"><i class="material-icons">info</i></span></div></div>
                       </div>
                       <div class="form-inline pl-4">
                         <div class="custom-control custom-checkbox mr-4">
@@ -321,7 +321,7 @@
                     <div class="col">
                       <div class="title-separator has-icon">
                         <div class="title-separator-icon text-warning"><i class="material-icons">https</i></div>
-                        <div class="title-separator-text"><div>HTTPS </div><div><span (click)="openWikiLink('https')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></div></div>
+                        <div class="title-separator-text"><div>HTTPS </div><div><span (click)="openWikiLink('https')" class="pl-2 btn btn-link text-primary cp doc-link"><i class="material-icons">info</i></span></div></div>
                       </div>
                       <div class="form-inline pl-4">
                         <div class="custom-control custom-checkbox">
@@ -336,7 +336,7 @@
                     <div class="col">
                       <div class="title-separator has-icon">
                         <div class="title-separator-icon text-info"><i class="material-icons">shuffle</i></div>
-                        <div class="title-separator-text"><div>CORS </div><div>Automatically handle OPTIONS requests<span (click)="openWikiLink('cors')" class="pl-2 btn btn-link text-primary cp"><i class="material-icons">info</i></span></div></div>
+                        <div class="title-separator-text"><div>CORS </div><div>Automatically handle OPTIONS requests<span (click)="openWikiLink('cors')" class="pl-2 btn btn-link text-primary cp doc-link"><i class="material-icons">info</i></span></div></div>
                       </div>
                       <div class="form-inline pl-4">
                         <div class="custom-control custom-checkbox">
@@ -352,7 +352,7 @@
                     <div class="col d-flex flex-column">
                       <div class="title-separator has-icon">
                         <div class="title-separator-icon"><i class="material-icons text-purple">featured_play_list</i></div>
-                        <div class="title-separator-text"><div>Environment headers </div><div>Headers will be added to all routes of this environment</div></div>
+                        <div class="title-separator-text"><div>Environment headers </div><div>Headers will be added to all routes of this environment<span (click)="openWikiLink('headers')" class="pl-2 btn btn-link text-primary cp doc-link"><i class="material-icons">info</i></span></div></div>
                       </div>
                       <div class="scroll-content flex-fill" #environmentHeadersContainer>
                         <ng-container *ngIf="currentRoute">

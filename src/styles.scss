@@ -278,6 +278,14 @@ select, input, .btn {
   }
 }
 
+.doc-link {
+  opacity: 0.5;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 // http methods badges
 $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $red), ('head', $purple), ('patch', $teal), ('options', $dark-blue);
 @each $method in $http-methods {
