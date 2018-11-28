@@ -142,14 +142,14 @@
         <!-- Navigation tabs -->
         <div class="col d-flex flex-column main-content">
           <div *ngIf="currentTab !== 'ENV_SETTINGS' && currentTab !== 'ENV_LOGS'">
-            <div class="row">
+            <div class="row" *ngIf="currentEnvironment">
               <div class="col">
                 <ul class="nav nav-tabs d-flex">
                   <li class="nav-item" *ngIf="currentRoute">
                     <a class="nav-link" [ngClass]="{'active': currentTab === 'RESPONSE'}" (click)="setCurrentTab('RESPONSE')">Response & Body</a>
                   </li>
                   <li class="nav-item" *ngIf="currentRoute">
-                    <a class="nav-link" [ngClass]="{'active': currentTab === 'HEADERS'}" (click)="setCurrentTab('HEADERS')">Headers <i *ngIf="hasEnvironmentHeaders(currentEnvironment?.environment)" class="material-icons text-purple" ngbTooltip="Some environment headers are defined">featured_play_list</i></a>
+                    <a class="nav-link" [ngClass]="{'active': currentTab === 'HEADERS'}" (click)="setCurrentTab('HEADERS')">Headers <i *ngIf="hasEnvironmentHeaders(currentEnvironment.environment)" class="material-icons text-purple" ngbTooltip="Some environment headers are defined">featured_play_list</i></a>
                   </li>
                 </ul>
               </div>
