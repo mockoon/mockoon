@@ -94,6 +94,8 @@ export class EnvironmentsService {
 
         this.environments = [defaultEnvironment];
 
+        this.updateRoutesTotal();
+
         this.environmentsReady.next(true);
       } else {
         // wait for settings to be ready before migrating and loading envs
@@ -108,6 +110,8 @@ export class EnvironmentsService {
 
     // subscribe to environment data update from UI, and save
     this.environmentUpdateEvents.pipe(debounceTime(1000)).subscribe((params) => {
+      this.updateRoutesTotal();
+
       storage.set(this.storageKey, this.cleanBeforeSave());
     });
 
@@ -141,7 +145,6 @@ export class EnvironmentsService {
         headers: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }]
       }
     );
-    this.routesTotal += 1;
 
     const newEnvironmentIndex = this.environments.push(newEnvironment) - 1;
 
@@ -160,7 +163,6 @@ export class EnvironmentsService {
   public addRoute(environment: EnvironmentType): number {
     const newRoute = Object.assign({}, this.routeSchema, { uuid: uuid(), headers: [Object.assign({}, this.routeHeadersSchema, { uuid: uuid() })] });
     const newRouteIndex = environment.routes.push(newRoute) - 1;
-    this.routesTotal += 1;
 
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
 
@@ -178,7 +180,6 @@ export class EnvironmentsService {
   public removeRoute(environment: EnvironmentType, routeIndex: number) {
     // delete the route
     environment.routes.splice(routeIndex, 1);
-    this.routesTotal -= 1;
 
     this.checkRoutesDuplicates(environment);
 
@@ -213,7 +214,7 @@ export class EnvironmentsService {
     defaultEnvironment.uuid = uuid(); // random uuid
     defaultEnvironment.name = 'Example';
     defaultEnvironment.headers = [Object.assign({}, this.emptyHeaderSchema, { uuid: uuid() })];
-    this.routesTotal = 2;
+
     defaultEnvironment.routes.push(Object.assign(
       {}, this.routeSchema, { uuid: uuid(), headers: [{ uuid: uuid(), key: 'Content-Type', value: 'text/plain' }] },
       { endpoint: 'answer', body: '42' }
@@ -387,9 +388,6 @@ export class EnvironmentsService {
       }
     );
 
-    // add routes number to total
-    this.routesTotal += this.environments[environmentIndex].routes.length;
-
     newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as EnvironmentType;
 
     const newEnvironmentIndex = this.environments.push(newEnvironment) - 1;
@@ -414,8 +412,6 @@ export class EnvironmentsService {
     newRoute = this.renewUUIDs(newRoute, 'route') as RouteType;
 
     const newRouteIndex = environment.routes.push(newRoute) - 1;
-
-    this.routesTotal += 1;
 
     this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ROUTE);
 
@@ -660,5 +656,15 @@ export class EnvironmentsService {
    */
   private findHeaderByName(headers: HeaderType[], name: string) {
     return headers.find(header => header.key === name);
+  }
+
+  /**
+   * Calculate the total number of routes
+   *
+   */
+  private updateRoutesTotal() {
+    this.routesTotal = this.environments.reduce((total, environment) => {
+      return total + environment.routes.length;
+    }, 0);
   }
 }
