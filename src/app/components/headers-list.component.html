@@ -3,18 +3,18 @@
     <div class="input-group" style="position: relative;">
       <input type="text" class="form-control col-4" placeholder="name" name="header{{headerIndex}}.key" [(ngModel)]="header.key" (ngModelChange)="triggerUpdate()" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="headerNamesList">
       <input type="text" class="form-control col-6" placeholder="value" name="header{{headerIndex}}.value" [(ngModel)]="header.value" (ngModelChange)="triggerUpdate()" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="headerValuesList">
-      <div class="input-group-prepend">
-        <span *ngIf="headerIndex !== 0" class="input-group-text p-1 text-danger" (click)="removeHeader(header.uuid)"><i class="material-icons">clear</i></span>
+      <div class="input-group-prepend" *ngIf="headerIndex !== 0">
+        <span class="input-group-text p-1 text-danger" (click)="removeHeader(header.uuid)"><i class="material-icons">clear</i></span>
       </div>
-      <div class="input-group-prepend">
-        <span *ngIf="headerIndex === (headersList.length - 1) && header.key" class="input-group-text p-1 text-success" (click)="addHeader()"><i class="material-icons">add_box</i></span>
+      <div class="input-group-prepend" *ngIf="headerIndex === (headersList.length - 1) && header.key">
+        <span class="input-group-text p-1 text-success" (click)="addHeader()"><i class="material-icons">add_box</i></span>
       </div>
-      <div class="input-group-prepend">
-        <span class="input-group-text p-1 text-warning" *ngIf="testHeaderValidity(header.key)" ngbTooltip="Header key contains prohibited characters and won't be used" placement="left"><i class="material-icons">warning</i></span>
+      <div class="input-group-prepend" *ngIf="testHeaderValidity(header.key)">
+        <span class="input-group-text p-1 text-warning" ngbTooltip="Header key contains prohibited characters and won't be used" placement="left"><i class="material-icons">warning</i></span>
       </div>
       <!-- Display empty warning if: one is empty, OR for last line if one is filled and other is empty -->
-      <div class="input-group-prepend">
-        <span class="input-group-text p-1 text-warning" *ngIf="(headerIndex === (headersList.length - 1) && ((header.key && !header.value) || (!header.key && header.value))) || (headerIndex < (headersList.length - 1) && (!header.value || !header.key))" ngbTooltip="Headers with empty name or value are ignored" placement="left"><i class="material-icons">warning</i></span>
+      <div class="input-group-prepend" *ngIf="(headerIndex === (headersList.length - 1) && ((header.key && !header.value) || (!header.key && header.value))) || (headerIndex < (headersList.length - 1) && (!header.value || !header.key))">
+        <span class="input-group-text p-1 text-warning" ngbTooltip="Headers with empty name or value are ignored" placement="left"><i class="material-icons">warning</i></span>
       </div>
     </div>
   </div>
