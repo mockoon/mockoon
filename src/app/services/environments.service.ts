@@ -64,6 +64,7 @@ export class EnvironmentsService {
 
   private routeSchema: RouteType = {
     uuid: '',
+    documentation: '',
     method: 'get',
     endpoint: '',
     body: '{}',

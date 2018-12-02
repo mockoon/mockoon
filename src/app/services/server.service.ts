@@ -175,74 +175,81 @@ export class ServerService {
     environment.routes.forEach((route: RouteType) => {
       // only launch non duplicated routes
       if (!route.duplicates.length) {
-        // create route
-        server[route.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + route.endpoint.replace(/ /g, '%20'), (req, res) => {
-          // add route latency if any
-          setTimeout(() => {
-            const routeContentType = this.environmentService.getRouteContentType(environment, route);
+        try {
+          // create route
+          server[route.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + route.endpoint.replace(/ /g, '%20'), (req, res) => {
+            // add route latency if any
+            setTimeout(() => {
+              const routeContentType = this.environmentService.getRouteContentType(environment, route);
 
-            // set http code
-            res.status(route.statusCode);
+              // set http code
+              res.status(route.statusCode);
 
-            this.setHeaders(environment.headers, req, res);
-            this.setHeaders(route.headers, req, res);
+              this.setHeaders(environment.headers, req, res);
+              this.setHeaders(route.headers, req, res);
 
-            // send the file
-            if (route.file) {
-              const filePath = DummyJSONParser(route.file.path, req);
+              // send the file
+              if (route.file) {
+                const filePath = DummyJSONParser(route.file.path, req);
 
-              // throw error or serve file
-              try {
-                // if no route content type set to the one detected
-                if (!routeContentType) {
-                  res.set('Content-Type', route.file.mimeType);
-                }
-
-                let fileContent: Buffer | string = fs.readFileSync(filePath);
-
-                // parse templating for a limited list of mime types
-                if (mimeTypesWithTemplating.indexOf(route.file.mimeType) > -1) {
-                  fileContent = DummyJSONParser(fileContent.toString('utf-8', 0, fileContent.length), req);
-                }
-
-                if (!route.file.sendAsBody) {
-                  res.set('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
-                }
-                res.send(fileContent);
-              } catch (error) {
-                if (error.code === 'ENOENT') {
-                  this.sendError(res, Errors.FILE_NOT_EXISTS + filePath);
-                }
-                res.end();
-              }
-            } else {
-              // detect if content type is json in order to parse
-              if (routeContentType === 'application/json') {
+                // throw error or serve file
                 try {
-                  res.json(JSON.parse(DummyJSONParser(route.body, req)));
+                  // if no route content type set to the one detected
+                  if (!routeContentType) {
+                    res.set('Content-Type', route.file.mimeType);
+                  }
+
+                  let fileContent: Buffer | string = fs.readFileSync(filePath);
+
+                  // parse templating for a limited list of mime types
+                  if (mimeTypesWithTemplating.indexOf(route.file.mimeType) > -1) {
+                    fileContent = DummyJSONParser(fileContent.toString('utf-8', 0, fileContent.length), req);
+                  }
+
+                  if (!route.file.sendAsBody) {
+                    res.set('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
+                  }
+                  res.send(fileContent);
                 } catch (error) {
-                  // if JSON parsing error send plain text error
-                  if (error.message.indexOf('Unexpected token') >= 0 || error.message.indexOf('Parse error') >= 0) {
-                    this.sendError(res, Errors.JSON_PARSE);
-                  } else if (error.message.indexOf('Missing helper') >= 0) {
-                    this.sendError(res, Errors.MISSING_HELPER + error.message.split('"')[1]);
+                  if (error.code === 'ENOENT') {
+                    this.sendError(res, Errors.FILE_NOT_EXISTS + filePath);
                   }
                   res.end();
                 }
               } else {
-                try {
-                  res.send(DummyJSONParser(route.body, req));
-                } catch (error) {
-                  // if invalide Content-Type provided
-                  if (error.message.indexOf('invalid media type') >= 0) {
-                    this.sendError(res, Errors.INVALID_CONTENT_TYPE);
+                // detect if content type is json in order to parse
+                if (routeContentType === 'application/json') {
+                  try {
+                    res.json(JSON.parse(DummyJSONParser(route.body, req)));
+                  } catch (error) {
+                    // if JSON parsing error send plain text error
+                    if (error.message.indexOf('Unexpected token') >= 0 || error.message.indexOf('Parse error') >= 0) {
+                      this.sendError(res, Errors.JSON_PARSE);
+                    } else if (error.message.indexOf('Missing helper') >= 0) {
+                      this.sendError(res, Errors.MISSING_HELPER + error.message.split('"')[1]);
+                    }
+                    res.end();
                   }
-                  res.end();
+                } else {
+                  try {
+                    res.send(DummyJSONParser(route.body, req));
+                  } catch (error) {
+                    // if invalid Content-Type provided
+                    if (error.message.indexOf('invalid media type') >= 0) {
+                      this.sendError(res, Errors.INVALID_CONTENT_TYPE);
+                    }
+                    res.end();
+                  }
                 }
               }
-            }
-          }, route.latency);
-        });
+            }, route.latency);
+          });
+        } catch (error) {
+          // if invalid regex defined
+          if (error.message.indexOf('Invalid regular expression') >= 0) {
+            this.alertService.showAlert('error', Errors.INVALID_ROUTE_REGEX + route.endpoint);
+          }
+        }
       }
     });
   }
