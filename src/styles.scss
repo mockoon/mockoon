@@ -11,6 +11,7 @@
 }
 .nav-link {
   transition: background-color ease-in-out 150ms;
+  padding-right: 1.3rem;
 }
 .nav-tabs {
   .nav-link {
@@ -335,7 +336,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
   padding-left: .25rem;
   padding-right: .25rem;
   padding-top: .25rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
   color: $gray-400;
   top: -12px;
 

@@ -77,6 +77,11 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
           route.file.sendAsBody = false;
         }
 
+        // add missing documentation
+        if (route.documentation === undefined) {
+          route.documentation = '';
+        }
+
         // rename customHeaders to headers
         if (route['customHeaders']) {
           route.headers = route['customHeaders'];

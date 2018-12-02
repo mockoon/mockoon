@@ -134,6 +134,9 @@
                   <span class="badge badge-default http-method-{{route.method}} float-right">{{route.method | uppercase}}</span>
                   /{{route.endpoint}}
                 </div>
+                <div class="menu-subtitle ellipsis">
+                  {{route.documentation}}
+                </div>
               </a>
             </li>
           </ul>
@@ -175,18 +178,39 @@
           <div [hidden]="currentTab !== 'RESPONSE'" class="tab-content mt-3 pr-2 ml-2 mb-2 h-100">
             <div class="row h-100">
               <div class="col d-flex flex-column">
-                <!-- Method + endpoint + warning + delete -->
+                <!-- Documentation -->
                 <div class="row">
                   <div class="col">
                     <div class="form-row" *ngIf="currentRoute">
                       <div class="input-group">
-                        <select class="custom-select col-lg-2" name="route.method" [(ngModel)]="currentRoute.route.method" (ngModelChange)="environmentUpdated('method')">
+                        <input type="text" class="form-control col-10" placeholder="Documentation" ValidPath name="route.documentation" [(ngModel)]="currentRoute.route.documentation"
+                          (ngModelChange)="environmentUpdated('documentation')">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <div class="title-separator has-icon">
+                      <div class="title-separator-icon text-secondary"><i class="material-icons">settings_input_component</i></div>
+                      <div class="title-separator-text"><div>Route settings</div></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Method + endpoint + warning + delete -->
+                <div class="row mt-3">
+                  <div class="col">
+                    <div class="form-row" *ngIf="currentRoute">
+                      <div class="input-group">
+                        <select class="custom-select col-2" name="route.method" [(ngModel)]="currentRoute.route.method" (ngModelChange)="environmentUpdated('method')">
                           <option *ngFor="let method of methods" [value]="method" [selected]="currentRoute.route.method === method">{{method | uppercase}}</option>
                         </select>
                         <div class="input-group-prepend">
                           <span class="input-group-text">/</span>
                         </div>
-                        <input type="text" class="form-control col-lg-6" placeholder="endpoint" ValidPath name="route.endpoint" [(ngModel)]="currentRoute.route.endpoint"
+                        <input type="text" class="form-control col-6" placeholder="Path (support regexes and params: */:var/a(b)?c/[0-9]{1,5})" ValidPath name="route.endpoint" [(ngModel)]="currentRoute.route.endpoint"
                           (ngModelChange)="environmentUpdated('endpoint')">
                         <div class="input-group-prepend">
                           <span *ngIf="currentEnvironment.environment.running && currentRoute.route.method === 'get'" class="input-group-text text-primary" ngbTooltip="Open route in browser" (click)="openRouteInBrowser()"><i class="material-icons">open_in_new</i></span>

@@ -383,7 +383,7 @@ export class AppComponent implements OnInit {
    * @param propagate - should propagate event to env service
    */
   public environmentUpdated(fieldUpdated: string = '', propagate = true) {
-    const restartNotNeeded = ['name', 'envLatency', 'routeLatency', 'statusCode', 'file', 'routeHeaders', 'environmentHeaders', 'body', 'envReorder', 'fileSendAsBody'];
+    const restartNotNeeded = ['name', 'envLatency', 'routeLatency', 'statusCode', 'file', 'routeHeaders', 'environmentHeaders', 'body', 'envReorder', 'fileSendAsBody', 'documentation'];
     this.currentEnvironment.environment.modifiedAt = new Date();
 
     // restart is not needed for some fields
