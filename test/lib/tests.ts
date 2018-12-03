@@ -24,7 +24,8 @@ export class Tests {
     before(() => {
       return new Promise((resolve) => {
         if (!existsSync('./tmp/') || !existsSync('./tmp/storage/')) {
-          mkdirSync('./tmp/storage/', { recursive: true });
+          mkdirSync('./tmp/');
+          mkdirSync('./tmp/storage/');
         }
 
         copyFile('./test/data/' + this.dataFileName + '/environments.json', './tmp/storage/environments.json', () => {
