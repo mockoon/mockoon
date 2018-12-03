@@ -39,7 +39,8 @@
   "scripts": {
     "lint": "ng lint --type-check",
     "test": "ng test",
-    "test-spectron": "rm -rf ./tmp && mocha",
+    "pretest-spectron": "npm run build:dev",
+    "test-spectron": "ts-mocha -p test/tsconfig.spec.json --timeout 10000 test/**/*.spec.ts",
     "setversion": "node ./scripts/version-bump.js",
     "serve:electron": "electron ./dist --serve",
     "serve:app": "ng build --configuration=development --watch --output-hashing=all",
@@ -95,9 +96,13 @@
     "@angular/cli": "7.1.0",
     "@angular/compiler-cli": "7.1.1",
     "@angular/language-service": "7.1.1",
+    "@types/chai": "4.1.7",
+    "@types/chai-as-promised": "7.1.0",
     "@types/jasmine": "3.3.0",
     "@types/jasminewd2": "2.0.6",
+    "@types/mocha": "5.2.5",
     "@types/node": "10.12.10",
+    "@types/webdriverio": "4.13.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "codelyzer": "4.5.0",
@@ -115,7 +120,7 @@
     "mocha": "5.2.0",
     "replace-in-file": "3.4.2",
     "spectron": "5.0.0",
-    "ts-node": "7.0.1",
+    "ts-mocha": "2.0.0",
     "tslint": "5.11.0",
     "typescript": "3.1.6"
   }
