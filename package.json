@@ -95,6 +95,7 @@
     "@angular-devkit/core": "7.1.0",
     "@angular/cli": "7.1.0",
     "@angular/compiler-cli": "7.1.1",
+    "@angular/fire": "5.1.1",
     "@angular/language-service": "7.1.1",
     "@types/chai": "4.1.7",
     "@types/chai-as-promised": "7.1.0",
