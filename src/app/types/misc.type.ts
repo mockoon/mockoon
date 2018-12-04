@@ -1,4 +1,5 @@
 export type BannerType = {
+  id: string;
   enabled: boolean;
   text: string;
   link: string;

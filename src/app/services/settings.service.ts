@@ -9,6 +9,7 @@ export type SettingsType = {
   welcomeShown: boolean;
   analytics: boolean;
   lastMigration: number;
+  bannerDismissed: string[];
 };
 
 @Injectable()
@@ -21,7 +22,8 @@ export class SettingsService {
   private settingsSchema: SettingsType = {
     welcomeShown: false,
     analytics: true,
-    lastMigration: 0
+    lastMigration: 0,
+    bannerDismissed: []
   };
   private storageKey = 'settings';
 
@@ -41,6 +43,13 @@ export class SettingsService {
         // add missing option
         if (settings.lastMigration === undefined) {
           settings.lastMigration = 0;
+
+          this.settingsUpdateEvents.next(settings);
+        }
+
+        // add missing bannerDismissed
+        if (settings.bannerDismissed === undefined) {
+          settings.bannerDismissed = [];
 
           this.settingsUpdateEvents.next(settings);
         }

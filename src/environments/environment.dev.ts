@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  analyticsID: 'xxxxxx'
+  analyticsID: 'xxxxxx',
+  remoteConfigCollection: 'config_dev'
 };
