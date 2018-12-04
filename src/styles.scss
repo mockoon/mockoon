@@ -53,6 +53,8 @@
   max-height: 65vh;
 }
 .form-control {
+  letter-spacing: 0.02rem;
+
   &[readonly] {
     color: $text-muted;
   }
@@ -203,14 +205,12 @@ html {
 body {
   user-select: none;
   cursor: default;
+  overflow: hidden;
+  letter-spacing: 0.02rem;
 }
 
 html, body, #page {
   height: 100vh;
-}
-
-body {
-  overflow: hidden;
 }
 
 select, input, .btn {
