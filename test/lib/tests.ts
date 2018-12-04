@@ -52,4 +52,14 @@ export class Tests {
       return undefined;
     });
   }
+
+  /**
+   * Wait for window to be ready and environments loaded
+   */
+  public waitForWindowReady() {
+    it('Window ready', async () => {
+      await this.spectron.client.waitUntilWindowLoaded();
+      await this.spectron.client.pause(1000);
+    });
+  }
 }
