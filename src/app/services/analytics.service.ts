@@ -47,14 +47,12 @@ export class AnalyticsService {
 
   public init() {
     // wait for auth to be ready before processing the eventual queue
-    this.authService.authReady.subscribe((ready) => {
-      if (ready) {
-        this.queue.forEach((item) => {
-          this.makeRequest(item);
-        });
+    this.authService.authReady.subscribe(() => {
+      this.queue.forEach((item) => {
+        this.makeRequest(item);
+      });
 
-        this.queue = [];
-      }
+      this.queue = [];
     });
 
     // wait for settings to be ready and check if display needed

@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -43,7 +44,8 @@ import { AppComponent } from './app.component';
     SettingsModalComponent,
     ChangelogModalComponent,
     EnvironmentLogsComponent,
-    HeadersListComponent
+    HeadersListComponent,
+    BannerComponent
   ],
   imports: [
     AceEditorModule,
@@ -55,7 +57,8 @@ import { AppComponent } from './app.component';
     NgbModule.forRoot(),
     MarkdownModule.forRoot({ markedOptions: { provide: MarkedOptions, useFactory: MarkedOptionsFactory } }),
     AngularFireModule.initializeApp(Config.firebaseConfig),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    AngularFirestoreModule
   ],
   providers: [
     AlertService,

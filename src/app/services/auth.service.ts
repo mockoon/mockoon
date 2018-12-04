@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/internal/Subject';
 @Injectable()
 export class AuthService {
   public userId: string = null;
-  public authReady: Subject<boolean> = new Subject();
+  public authReady: Subject<void> = new Subject();
 
   constructor(public angularFireAuth: AngularFireAuth) { }
 
@@ -18,7 +18,7 @@ export class AuthService {
         this.userId = credentials.user.uid;
       }
 
-      this.authReady.next(true);
+      this.authReady.next();
     });
   }
 }

@@ -1,0 +1,8 @@
+<ng-container *ngIf="bannerData?.enabled">
+  <span [ngClass]="bannerData.classes" [ngStyle]="bannerData.styles" (click)="openLink()">
+    <span *ngIf="bannerData.iconName">
+      <i class="material-icons">{{bannerData.iconName}}</i>
+    </span>
+    {{bannerData.text}}
+  </span>
+</ng-container>
