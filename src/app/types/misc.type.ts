@@ -1,4 +1,4 @@
-export type BannerType = {
+export type BannerConfigType = {
   id: string;
   enabled: boolean;
   text: string;

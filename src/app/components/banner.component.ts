@@ -1,33 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { shell } from 'electron';
-import { filter, take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { filter, take, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
-import { BannerType } from 'src/app/types/misc.type';
+import { BannerConfigType } from 'src/app/types/misc.type';
 import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-banner',
   templateUrl: 'banner.component.html'
 })
-export class BannerComponent implements OnInit {
-  public bannerData: BannerType;
+export class BannerComponent implements OnInit, DoCheck {
+  public bannerData: BannerConfigType;
+  private bannerConfigSubscription: Subscription;
 
-  constructor(private firestore: AngularFirestore, private authService: AuthService, private settingsService: SettingsService) { }
+  constructor(
+    private firestore: AngularFirestore,
+    private authService: AuthService,
+    private settingsService: SettingsService
+  ) { }
 
-  ngOnInit() {
-    // retrieve banner config object in database (TODO refactor to chain observables)
-    this.authService.authReady.subscribe(() => {
-      this.settingsService.settingsReady.subscribe(() => {
-        this.firestore.collection(environment.remoteConfigCollection).doc('banner').valueChanges().pipe(
-          take(1),
-          filter((bannerData: BannerType) => bannerData.enabled && !this.settingsService.settings.bannerDismissed.includes(bannerData.id))
-        ).subscribe((bannerData: BannerType) => {
+  ngOnInit() { }
+
+  ngDoCheck() {
+    // wait for settings and auth to be ready to load banner config
+    if (this.authService.userId && this.settingsService.settings && !this.bannerConfigSubscription) {
+      this.bannerConfigSubscription = this.firestore.collection(environment.remoteConfigCollection).doc('banner').valueChanges().pipe(
+        take(1),
+        filter((bannerData: BannerConfigType) => bannerData.enabled && !this.settingsService.settings.bannerDismissed.includes(bannerData.id)),
+        tap((bannerData: BannerConfigType) => {
           this.bannerData = bannerData;
-        });
-      });
-    });
+        })
+      ).subscribe();
+    }
   }
 
   /**
