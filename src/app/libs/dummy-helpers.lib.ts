@@ -77,7 +77,7 @@ export const DummyJSONHelpers = (request) => {
     },
     // create an array
     array: function (...args: any[]) {
-      // remove last item (dummy json options argument)S
+      // remove last item (dummy json options argument)
       return args.slice(0, args.length - 1);
     },
     // switch cases
