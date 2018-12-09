@@ -167,7 +167,13 @@ export class AutocompleteDirective {
       let oneItem;
       searchResult.forEach((autocompleteString, stringIndex) => {
         const itemElement = this.renderer.createElement('div');
-        this.renderer.setAttribute(itemElement, 'class', 'autocomplete-item');
+        this.renderer.addClass(itemElement, 'autocomplete-item');
+
+        // preselect first item
+        if (stringIndex === 0) {
+          this.renderer.addClass(itemElement, 'selected');
+        }
+
         this.renderer.setProperty(itemElement, 'innerHTML', autocompleteString);
 
         // create click event

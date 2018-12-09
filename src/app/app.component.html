@@ -183,7 +183,7 @@
                   <div class="col">
                     <div class="form-row" *ngIf="currentRoute">
                       <div class="input-group">
-                        <input type="text" class="form-control col-10" placeholder="Documentation" ValidPath name="route.documentation" [(ngModel)]="currentRoute.route.documentation"
+                        <input type="text" class="form-control" placeholder="Documentation" ValidPath name="route.documentation" [(ngModel)]="currentRoute.route.documentation"
                           (ngModelChange)="environmentUpdated('documentation')">
                       </div>
                     </div>
@@ -200,7 +200,7 @@
                 </div>
 
                 <!-- Method + endpoint + warning + delete -->
-                <div class="row mt-3">
+                <div class="row">
                   <div class="col">
                     <div class="form-row" *ngIf="currentRoute">
                       <div class="input-group">
@@ -255,7 +255,7 @@
                 </div>
 
                 <!-- body: file -->
-                <div class="row mt-2">
+                <div class="row">
                   <div class="col">
                     <div class="form-inline" *ngIf="currentRoute">
                       <div class="input-group col-9">
@@ -297,7 +297,7 @@
                         <div *ngIf="currentRoute && !currentRoute.route.file">{{(getRouteContentType(currentEnvironment.environment, currentRoute.route)) ? 'Content-Type ' + getRouteContentType(currentEnvironment.environment, currentRoute.route) : 'No Content-Type is set'}} <span (click)="openWikiLink('templating')" class="btn btn-xs btn-link text-primary cp doc-link"><i class="material-icons" ngbTooltip="Templating documentation" placement="left">info</i></span></div>
                       </div>
                     </div>
-                    <div class="mt-3 flex-fill">
+                    <div class="flex-fill">
                       <ace-editor class="h-100" [options]="editorConfig.options" [mode]="editorConfig.mode" [theme]="editorConfig.theme"
                         [(text)]="currentRoute.route.body" (textChanged)="environmentUpdated('body')"></ace-editor>
                     </div>
