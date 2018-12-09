@@ -281,7 +281,7 @@
                 <div class="row">
                   <div class="col">
                     <div>
-                      &nbsp;<small *ngIf="currentRoute?.route?.file" class="text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}} <span *ngIf="fileSupportsTemplating()"> - Supports templating <span (click)="openWikiLink('templating')" class="pl-2 btn btn-sm btn-link text-primary cp doc-link"><i class="material-icons" ngbTooltip="Templating documentation">info</i></span></span></small>
+                      &nbsp;<small *ngIf="currentRoute?.route?.file" class="text-muted">Detected MIME type: {{currentRoute.route.file.mimeType || 'none'}} <span *ngIf="fileSupportsTemplating()"> - Supports templating <span (click)="openWikiLink('templating')" class="pl-2 btn btn-sm btn-link text-primary cp doc-link"><i class="material-icons">info</i></span></span></small>
                     </div>
                   </div>
                 </div>
@@ -294,7 +294,7 @@
                       <div class="title-separator-text">
                         <div>Body </div>
                         <div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div>
-                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getRouteContentType(currentEnvironment.environment, currentRoute.route)) ? 'Content-Type ' + getRouteContentType(currentEnvironment.environment, currentRoute.route) : 'No Content-Type is set'}} <span (click)="openWikiLink('templating')" class="btn btn-xs btn-link text-primary cp doc-link"><i class="material-icons" ngbTooltip="Templating documentation" placement="left">info</i></span></div>
+                        <div *ngIf="currentRoute && !currentRoute.route.file">{{(getRouteContentType(currentEnvironment.environment, currentRoute.route)) ? 'Content-Type ' + getRouteContentType(currentEnvironment.environment, currentRoute.route) : 'No Content-Type is set'}} <span (click)="openWikiLink('templating')" class="btn btn-xs btn-link text-primary cp doc-link"><i class="material-icons" placement="left">info</i></span></div>
                       </div>
                     </div>
                     <div class="flex-fill">

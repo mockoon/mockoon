@@ -9,7 +9,7 @@ export const Config = {
     proxy: 'https://mockoon.com/tutorial/api-mocking-proxy-mode/',
     cors: 'https://mockoon.com/tutorial/automatic-handling-preflight-requests/',
     https: 'https://mockoon.com/tutorial/serve-mock-api-tls/',
-    headers: 'https://mockoon.com/tutorial/add-global-environment-headers/'
+    headers: 'https://mockoon.com/tutorial/define-response-headers/'
   },
   exportSalt: '6f5h8q9z32f1d5s4z86q',
   maxLogsPerEnvironment: 50,
