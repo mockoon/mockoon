@@ -8,8 +8,8 @@ const autocompleteElementMaxHeight = 135; // from styles.scss
   selector: '[autocomplete]'
 })
 export class AutocompleteDirective {
-  // list of strings for autocomplete
-  @Input() autocomplete: string[];
+  // list of strings for autocomplete and container for positioning
+  @Input() autocomplete: { list: string[], container: string };
   @Output() ngModelChange: EventEmitter<any> = new EventEmitter();
 
   constructor(private renderer: Renderer2, private element: ElementRef, private model: NgModel) { }
@@ -150,7 +150,7 @@ export class AutocompleteDirective {
       autocompleteElement = this.createAutocompleteElement(input, parentContainer);
     }
 
-    const searchResult = this.autocomplete.filter((autocompleteString) => {
+    const searchResult = this.autocomplete.list.filter((autocompleteString) => {
       // filter when string found but excludes self
       return autocompleteString.toLowerCase().includes(input.value.toLowerCase()) && autocompleteString.toLowerCase() !== input.value.toLowerCase();
     });
@@ -214,7 +214,7 @@ export class AutocompleteDirective {
    */
   private createAutocompleteElement(input: any, parentContainer) {
     const inputPosition = input.getBoundingClientRect();
-    const headersTabContentHeight = document.querySelector('.tab-content-headers')['offsetHeight'];
+    const headersTabContentHeight = document.querySelector(this.autocomplete.container)['offsetHeight'];
     let positionTop = inputPosition.bottom + 'px';
 
     // create autocomplete element

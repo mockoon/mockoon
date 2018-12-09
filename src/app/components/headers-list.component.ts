@@ -11,12 +11,17 @@ import * as uuid from 'uuid/v1';
 })
 export class HeadersListComponent implements OnInit {
   @Input() headersList: HeaderType[];
+  @Input() type: 'routeHeaders' | 'environmentHeaders';
   @Output() headersUpdated: EventEmitter<any> = new EventEmitter();
   @Output() headerAdded: EventEmitter<any> = new EventEmitter();
 
   public headerNamesList = headerNames;
   public headerValuesList = headerValues;
   public testHeaderValidity = this.serverService.testHeaderValidity;
+  public containersList = {
+    routeHeaders: '.route-headers',
+    environmentHeaders: '.environment-headers'
+  };
 
   constructor(private serverService: ServerService, private eventsService: EventsService) { }
 

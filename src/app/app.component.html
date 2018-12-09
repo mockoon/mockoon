@@ -308,15 +308,15 @@
           </div>
 
           <!-- HEADERS tab -->
-          <div [hidden]="currentTab !== 'HEADERS'" class="tab-content tab-content-headers h-100 pr-2 ml-2 mb-2" #routeHeadersContainer>
+          <div [hidden]="currentTab !== 'HEADERS'" class="tab-content route-headers h-100 pr-2 ml-2 mb-2" #routeHeadersContainer>
             <button class="btn btn-link btn-icon text-primary mb-2" type="button" (click)="setCurrentTab('ENV_SETTINGS')">Go to environment headers</button>
             <ng-container *ngIf="currentRoute">
-              <app-headers-list [headersList]="currentRoute.route.headers" (headersUpdated)="environmentUpdated('routeHeaders')" (headerAdded)="scrollToBottom(routeHeadersContainer)"></app-headers-list>
+              <app-headers-list [headersList]="currentRoute.route.headers" (headersUpdated)="environmentUpdated('routeHeaders')" (headerAdded)="scrollToBottom(routeHeadersContainer)" type="routeHeaders"></app-headers-list>
             </ng-container>
           </div>
 
           <!-- ENVIRONMENT SETTINGS tab -->
-          <div [hidden]="currentTab !== 'ENV_SETTINGS'" class="tab-content h-100 mt-3 pr-2 ml-2 mb-2">
+          <div [hidden]="currentTab !== 'ENV_SETTINGS'" class="tab-content environment-headers h-100 mt-3 pr-2 ml-2 mb-2">
             <ng-container *ngIf="currentEnvironment">
               <div class="row h-100">
                 <div class="col d-flex flex-column">
@@ -380,7 +380,7 @@
                       </div>
                       <div class="scroll-content flex-fill" #environmentHeadersContainer>
                         <ng-container *ngIf="currentRoute">
-                          <app-headers-list [headersList]="currentEnvironment.environment.headers" (headersUpdated)="environmentUpdated('environmentHeaders')" (headerAdded)="scrollToBottom(environmentHeadersContainer)"></app-headers-list>
+                          <app-headers-list [headersList]="currentEnvironment.environment.headers" (headersUpdated)="environmentUpdated('environmentHeaders')" (headerAdded)="scrollToBottom(environmentHeadersContainer)" type="environmentHeaders"></app-headers-list>
                         </ng-container>
                       </div>
                     </div>

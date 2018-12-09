@@ -1,8 +1,8 @@
 <div class="row headers-list" *ngFor="let header of headersList; index as headerIndex">
   <div class="col">
     <div class="input-group" style="position: relative;">
-      <input type="text" class="form-control col-4" placeholder="name" name="header{{headerIndex}}.key" [(ngModel)]="header.key" (ngModelChange)="triggerUpdate()" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="headerNamesList">
-      <input type="text" class="form-control col-6" placeholder="value" name="header{{headerIndex}}.value" [(ngModel)]="header.value" (ngModelChange)="triggerUpdate()" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="headerValuesList">
+      <input type="text" class="form-control col-4" placeholder="name" name="header{{headerIndex}}.key" [(ngModel)]="header.key" (ngModelChange)="triggerUpdate()" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="{list: headerNamesList, container: containersList[type]}">
+      <input type="text" class="form-control col-6" placeholder="value" name="header{{headerIndex}}.value" [(ngModel)]="header.value" (ngModelChange)="triggerUpdate()" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="{list: headerValuesList, container: containersList[type]}">
       <div class="input-group-prepend" *ngIf="headerIndex !== 0">
         <span class="input-group-text p-1 text-danger" (click)="removeHeader(header.uuid)"><i class="material-icons">clear</i></span>
       </div>
