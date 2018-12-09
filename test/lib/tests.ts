@@ -59,7 +59,15 @@ export class Tests {
   public waitForWindowReady() {
     it('Window ready', async () => {
       await this.spectron.client.waitUntilWindowLoaded();
-      await this.spectron.client.pause(1000);
+    });
+  }
+
+  /**
+   * Wait for environement to be loaded by checking for active environment menu item
+   */
+  public waitForEnvironmentLoaded() {
+    it('Environment loaded', async () => {
+      await this.spectron.client.waitForExist('.nav-item .nav-link.active', 5000);
     });
   }
 }

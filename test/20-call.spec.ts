@@ -7,6 +7,7 @@ describe('Basic endpoint calls', () => {
   tests.runHooks();
 
   tests.waitForWindowReady();
+  tests.waitForEnvironmentLoaded();
 
   it('Start default environment', async () => {
     await tests.spectron.client.element('.btn i[ngbtooltip="Start server"]').click().pause(100);

@@ -6,6 +6,7 @@ describe('Environment start/stop/restart', () => {
   tests.runHooks();
 
   tests.waitForWindowReady();
+  tests.waitForEnvironmentLoaded();
 
   it('Start default selected environment', async () => {
     await tests.spectron.client.element('.btn i[ngbtooltip="Start server"]').click().pause(500);
