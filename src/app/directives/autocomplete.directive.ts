@@ -20,7 +20,7 @@ export class AutocompleteDirective {
    * @param event
    */
   @HostListener('focusout', ['$event']) onFocusOut(event) {
-    // delay a little bit to allow item click (unfocus happens before click handler)
+    // delay a little bit to allow item click (input unfocus happens before autocomplete item click event listener)
     setTimeout(() => {
       const autocompleteElement = this.element.nativeElement.parentNode.querySelector('.autocomplete');
 
@@ -28,7 +28,7 @@ export class AutocompleteDirective {
       if (autocompleteElement) {
         autocompleteElement.remove();
       }
-    }, 200);
+    }, 100);
   }
 
   /**
@@ -124,21 +124,17 @@ export class AutocompleteDirective {
   }
 
   /**
-   * Handle input events
+   * Handle input and focus events
    *
    * @param event
    */
-  @HostListener('input', ['$event']) onInputChange(event: KeyboardEvent) {
-    this.buildAutocompleteElement(event.target);
-  }
-
-  /**
-   * Handle input events
-   *
-   * @param event
-   */
-  @HostListener('focus', ['$event']) onFocus(event: KeyboardEvent) {
-    this.buildAutocompleteElement(event.target);
+  @HostListener('input', ['$event'])
+  @HostListener('focus', ['$event'])
+  onThing(event: KeyboardEvent) {
+    // delay opening after closing of previous autocomplete (when switching from one to the other)
+    setTimeout(() => {
+      this.buildAutocompleteElement(event.target);
+    }, 110);
   }
 
   /**
