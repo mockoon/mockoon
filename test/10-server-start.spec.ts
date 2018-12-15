@@ -9,12 +9,12 @@ describe('Environment start/stop/restart', () => {
   tests.waitForEnvironmentLoaded();
 
   it('Start default selected environment', async () => {
-    await tests.spectron.client.element('.btn i[ngbtooltip="Start server"]').click().pause(500);
-    await tests.spectron.client.isExisting('.nav-item .nav-link.running').should.eventually.equal(true);
+    await tests.spectron.client.element('.btn i[ngbtooltip="Start server"]').click();
+    await tests.spectron.client.waitForExist('.menu-columns:first-of-type .menu-list .nav-item .nav-link.running', 5000);
   });
 
   it('Stop default selected environment', async () => {
-    await tests.spectron.client.element('.btn i[ngbtooltip="Stop server"]').click().pause(500);
-    await tests.spectron.client.isExisting('.nav-item .nav-link.running').should.eventually.equal(false);
+    await tests.spectron.client.element('.btn i[ngbtooltip="Stop server"]').click();
+    await tests.spectron.client.waitForExist('.menu-columns:first-of-type .menu-list .nav-item .nav-link:not(.running)', 5000);
   });
 });
