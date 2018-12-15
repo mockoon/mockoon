@@ -32,6 +32,11 @@
                 "glob": "package.json",
                 "input": "src/electron-files",
                 "output": "/"
+              },
+              {
+                "glob": "icon_512x512x32.png",
+                "input": "build/",
+                "output": "/"
               }
             ],
             "styles": [

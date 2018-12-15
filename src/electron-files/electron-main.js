@@ -46,7 +46,8 @@ function createWindow() {
     width: mainWindowState.width,
     height: mainWindowState.height,
     title: `Mockoon`,
-    backgroundColor: '#252830'
+    backgroundColor: '#252830',
+    icon: path.join(__dirname, '/icon_512x512x32.png')
   };
 
   // remove devtools in prod
