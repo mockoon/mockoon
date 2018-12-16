@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import 'brace';
 import 'brace/ext/searchbox';
 import 'brace/index';
 import 'brace/mode/css';
