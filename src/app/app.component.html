@@ -166,7 +166,7 @@
                 <button type="button" class="btn btn-link btn-icon pl-2" (click)="setCurrentTab('RESPONSE')">
                   <i class="material-icons">arrow_back</i> Back
                 </button>
-                <button *ngIf="environmentLogs[currentEnvironment.environment.uuid]?.length" type="button" class="btn btn-link btn-icon pl-2 float-right" (click)="clearEnvironmentLogs(currentEnvironment)">
+                <button *ngIf="environmentLogs[currentEnvironment.environment.uuid]?.length && currentTab === 'ENV_LOGS'" type="button" class="btn btn-link btn-icon pl-2 float-right" (click)="clearEnvironmentLogs(currentEnvironment)">
                   <span *ngIf="!clearEnvironmentLogsTimeout"><i class="material-icons">delete</i> Clear</span>
                   <span *ngIf="clearEnvironmentLogsTimeout" class="text-danger"><i class="material-icons">delete</i> Confirm</span>
                 </button>
