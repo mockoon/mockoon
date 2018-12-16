@@ -223,9 +223,9 @@ export class ServerService {
                     res.json(JSON.parse(DummyJSONParser(route.body, req)));
                   } catch (error) {
                     // if JSON parsing error send plain text error
-                    if (error.message.indexOf('Unexpected token') >= 0 || error.message.indexOf('Parse error') >= 0) {
+                    if (error.message.indexOf('Unexpected token') > -1 || error.message.indexOf('Parse error') > -1) {
                       this.sendError(res, Errors.JSON_PARSE);
-                    } else if (error.message.indexOf('Missing helper') >= 0) {
+                    } else if (error.message.indexOf('Missing helper') > -1) {
                       this.sendError(res, Errors.MISSING_HELPER + error.message.split('"')[1]);
                     }
                     res.end();
@@ -235,7 +235,7 @@ export class ServerService {
                     res.send(DummyJSONParser(route.body, req));
                   } catch (error) {
                     // if invalid Content-Type provided
-                    if (error.message.indexOf('invalid media type') >= 0) {
+                    if (error.message.indexOf('invalid media type') > -1) {
                       this.sendError(res, Errors.INVALID_CONTENT_TYPE);
                     }
                     res.end();
@@ -246,7 +246,7 @@ export class ServerService {
           });
         } catch (error) {
           // if invalid regex defined
-          if (error.message.indexOf('Invalid regular expression') >= 0) {
+          if (error.message.indexOf('Invalid regular expression') > -1) {
             this.alertService.showAlert('error', Errors.INVALID_ROUTE_REGEX + route.endpoint);
           }
         }
