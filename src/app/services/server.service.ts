@@ -190,10 +190,12 @@ export class ServerService {
 
               // send the file
               if (route.file) {
-                const filePath = DummyJSONParser(route.file.path, req);
+                let filePath: string;
 
                 // throw error or serve file
                 try {
+                  filePath = DummyJSONParser(route.file.path, req);
+
                   // if no route content type set to the one detected
                   if (!routeContentType) {
                     res.set('Content-Type', route.file.mimeType);
@@ -212,7 +214,9 @@ export class ServerService {
                   res.send(fileContent);
                 } catch (error) {
                   if (error.code === 'ENOENT') {
-                    this.sendError(res, Errors.FILE_NOT_EXISTS + filePath);
+                    this.sendError(res, Errors.FILE_NOT_EXISTS + filePath, false);
+                  } else if (error.message.indexOf('Parse error') > -1) {
+                    this.sendError(res, Errors.TEMPLATE_PARSE, false);
                   }
                   res.end();
                 }
@@ -268,9 +272,12 @@ export class ServerService {
    *
    * @param res
    * @param errorMessage
+   * @param showAlert
    */
-  private sendError(res: any, errorMessage: string) {
-    this.alertService.showAlert('error', errorMessage);
+  private sendError(res: any, errorMessage: string, showAlert = true) {
+    if (showAlert) {
+      this.alertService.showAlert('error', errorMessage);
+    }
     res.set('Content-Type', 'text/plain');
     res.send(errorMessage);
   }

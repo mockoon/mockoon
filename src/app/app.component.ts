@@ -14,7 +14,6 @@ import * as path from 'path';
 import { ContextMenuItemPayload } from 'src/app/components/context-menu.component';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
-import { Errors } from 'src/app/enums/errors.enum';
 import { Alert, AlertService } from 'src/app/services/alert.service';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -504,19 +503,14 @@ export class AppComponent implements OnInit {
    * @param filePath
    */
   private updateRouteFile(filePath: string) {
-    // if start with a dot, refuse (cannot serve with sendFile in Express)
-    if (!/^\./i.test(path.basename(filePath))) {
-      this.currentRoute.route.file = {
-        ...this.currentRoute.route.file,
-        path: filePath,
-        filename: path.basename(filePath),
-        mimeType: mimeTypes.lookup(filePath)
-      };
+    this.currentRoute.route.file = {
+      ...this.currentRoute.route.file,
+      path: filePath,
+      filename: path.basename(filePath),
+      mimeType: mimeTypes.lookup(filePath)
+    };
 
-      this.environmentUpdated('file');
-    } else {
-      this.alertService.showAlert('error', Errors.FILE_TYPE_NOT_SUPPORTED);
-    }
+    this.environmentUpdated('file');
   }
 
   public deleteFile() {
