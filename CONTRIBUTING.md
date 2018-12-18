@@ -4,7 +4,7 @@ There are many ways to contribute to Mockoon: opening bugs or issues, submitting
 
 After cloning the repository please check the opened and unassigned issues. 
 If you want to contribute significant changes please discuss with the maintainer (@255kb) before starting to work.
-Please note that Mockoon promise is to be simple, easy to use, and fast. So not all features are worth implementing and maintainer may chose to not implement features thatare out of Mockoon's scope.
+Please note that Mockoon promise is to be simple, easy to use, and fast. So not all features are worth implementing and maintainer may chose to not implement features that are out of Mockoon's scope.
 
 ## Build and run
 
@@ -16,9 +16,9 @@ Clone the repository: `git@github.com:255kb/mockoon.git`
 ### Run the application in dev mode
 
 - Run `npm install`.
-- Run `npm run dev:app` and `npm run dev:electron`.
+- Run `npm run serve:app` and `npm run serve:electron`.
 
-You will get auto reload on both Angular and Electron applications.
+You will get hot reload on both Angular and Electron applications.
 
 ### Build and package the application for production 
 
@@ -40,3 +40,4 @@ Note that Windows and Mac OS versions need to be signed when packaged. This is t
 Only maintainers are entitled to build and package the application with Windows code signing and Mac OS certificates.
 
 Do not forget to update Homebrew cask repository.
+Chocolatey package should be automatically updated.
