@@ -9,7 +9,7 @@
 
 ## What is it? 
 
-Mockoon is an open source server/API mocking tool built with Electron and available on Windows, Linux and MacOS. You can download it here: [mockoon.com](https://mockoon.com)
+Mockoon is a free and open source local server/API mocking tool built with Electron and available on Windows, Linux and MacOS. You can download it here: [mockoon.com](https://mockoon.com)
 
 ![screenshot](https://mockoon.com/assets/images/screenshot_repo.jpg)
 
@@ -17,19 +17,19 @@ Feel free to test it and give some feedback!
 
 ## Download
 
-You can get Mockoon [latest release](https://github.com/255kb/mockoon/releases/latest) directly on this repository or on the official [website](https://mockoon.com/#download). On macOS Mockoon is also available through Homebrew `brew cask install mockoon`.
+You can get Mockoon [latest release](https://github.com/255kb/mockoon/releases/latest) directly on this repository or on the official [website](https://mockoon.com/#download). Mockoon is also available through Homebrew `brew cask install mockoon` or Chocolatey `choco install mockoon`.
 
 ## Give feedback
 
 All feedback is welcomed. But please follow these simple guidelines before submitting a new feature or a bug:
 
-- search the [opened issues](https://github.com/255kb/mockoon/issues) before opening any issue
+- search the [opened](https://github.com/255kb/mockoon/issues) and [closed](https://github.com/255kb/mockoon/issues?q=is%3Aissue+is%3Aclosed) issues before opening any issue
 - try to give maximum details in order to reproduce the bug (providing the mock data you used could be useful)
-- purpose of Mockoon is to be simple, fast, easy to use, so keep in mind that some features **may not be implemented**! On purpose.
+- purpose of Mockoon is to be simple, fast, easy to use, so keep in mind that some features **may not be implemented**!
 
 ## Community
 
-You can discuss all things related to Mockoon on the [Spectrum community](https://spectrum.chat/mockoon). It's also a good thing to discuss bugs and feature there requests before open an issue on this repository.
+You can discuss all things related to Mockoon on the [Spectrum community](https://spectrum.chat/mockoon). It's also a good thing to discuss bugs and feature requests there before opening an issue on this repository.
 
 ## Contributing
 
