@@ -41,7 +41,7 @@ Please see also our [Code of conduct](https://github.com/255kb/mockoon/blob/mast
 
 I started to write a small documentation that you will find in the [Wiki](https://github.com/255kb/mockoon/wiki) section of this repository. You will also find a bunch of [tutorials](https://mockoon.com/tutorials) on the official website. Feel free to contribute or ask for new topics to be covered.
 
-## More to come
+## Roadmap
 
 If you want to know what will be coming in the next releases you ou can check the [milestones](https://github.com/255kb/mockoon/milestones) or directly check the features requests [here](https://github.com/255kb/mockoon/labels/feature).
 
