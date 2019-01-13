@@ -33,7 +33,8 @@
     "linux": {
       "target": "AppImage",
       "category": "Development",
-      "icon": "build"
+      "icon": "build",
+      "artifactName": "mockoon-${version}-x86_64.${ext}"
     }
   },
   "scripts": {
