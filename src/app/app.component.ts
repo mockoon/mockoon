@@ -734,6 +734,13 @@ export class AppComponent implements OnInit {
   }
 
   /**
+   * Check if route has query params
+   */
+  public routeHasQueryParams(): boolean {
+    return this.currentRoute.route.endpoint && this.currentRoute.route.endpoint.match(/\?.*=/ig).length > 0;
+  }
+
+  /**
    * Scroll to bottom of an element
    *
    * @param element
