@@ -20,6 +20,12 @@ Clone the repository: `git@github.com:255kb/mockoon.git`
 
 You will get hot reload on both Angular and Electron applications.
 
+### Run the tests
+
+Tests are written with Spectron and you can run them using `npm run test-spectron`. These tests will also be run on each commit or pull request by CircleCI.
+
+When running the tests locally, you will first need to run `npm run build:dev` in order to have an application build to test against.
+
 ### Build and package the application for production 
 
 - Increment the version in package.json files. Use `npm run setversion x.x.x`.
