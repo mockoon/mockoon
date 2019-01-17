@@ -156,9 +156,10 @@ export class ServerService {
   private setCors(server: any, environment: EnvironmentType) {
     if (environment.cors) {
       server.options('/*', (req, res) => {
-        CORSHeaders.forEach(CORSHeader => {
-          res.header(CORSHeader.key, CORSHeader.value);
-        });
+        this.setHeaders(CORSHeaders, req, res);
+
+        // override default CORS headers with environment's headers
+        this.setHeaders(environment.headers, req, res);
 
         res.send(200);
       });
@@ -258,7 +259,14 @@ export class ServerService {
     });
   }
 
-  private setHeaders(headers: HeaderType[], req, res) {
+  /**
+   * Apply each header to the response
+   *
+   * @param headers
+   * @param req
+   * @param res
+   */
+  private setHeaders(headers: Partial<HeaderType>[], req, res) {
     headers.forEach((header) => {
       if (header.key && header.value && !this.testHeaderValidity(header.key)) {
         res.set(header.key, DummyJSONParser(header.value, req));

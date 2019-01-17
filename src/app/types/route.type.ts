@@ -319,7 +319,7 @@ export type RouteType = {
 
 export type HeaderType = { uuid: '', key: string, value: string };
 
-export const CORSHeaders = [
+export const CORSHeaders: Partial<HeaderType>[] = [
   { key: 'Access-Control-Allow-Origin', value: '*' },
   { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS' },
   { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With' }
