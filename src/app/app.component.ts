@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import 'brace';
 import 'brace/ext/searchbox';
@@ -83,7 +83,8 @@ export class AppComponent implements OnInit {
     private eventsService: EventsService,
     private config: NgbTooltipConfig,
     private dragulaService: DragulaService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     // tooltip config
     this.config.container = 'body';
@@ -180,6 +181,9 @@ export class AppComponent implements OnInit {
       this.eventsService.analyticsEvents.next(AnalyticsEvents.APPLICATION_START);
 
       this.selectEnvironment(0);
+
+      // force change detection on first load
+      this.changeDetectorRef.detectChanges();
     });
 
     this.environmentsService.selectEnvironment.subscribe((environmentIndex: number) => {
