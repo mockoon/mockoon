@@ -741,7 +741,15 @@ export class AppComponent implements OnInit {
    * Check if route has query params
    */
   public routeHasQueryParams(): boolean {
-    return this.currentRoute.route.endpoint && this.currentRoute.route.endpoint.match(/\?.*=/ig).length > 0;
+    const endpoint = this.currentRoute.route.endpoint;
+
+    if (endpoint) {
+      const queryStringMatch = endpoint.match(/\?.*=/ig);
+
+      return queryStringMatch && queryStringMatch.length > 0;
+    }
+
+    return false;
   }
 
   /**
