@@ -85,6 +85,7 @@
     "rxjs": "6.3.3",
     "semver": "5.6.0",
     "spinthatshit": "1.0.4",
+    "timers": "0.1.1",
     "uuid": "3.3.2",
     "zone.js": "0.8.26"
   },
