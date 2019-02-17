@@ -119,6 +119,7 @@
     "karma-coverage-istanbul-reporter": "2.0.5",
     "karma-jasmine": "1.1.2",
     "karma-jasmine-html-reporter": "0.2.2",
+    "mkdirp": "0.5.1",
     "mocha": "5.2.0",
     "replace-in-file": "3.4.3",
     "spectron": "5.0.0",

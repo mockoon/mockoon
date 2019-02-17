@@ -3,9 +3,12 @@ const windowState = require('electron-window-state');
 // Module to control application life.
 const app = electron.app;
 const shell = electron.shell;
+
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
+const fs = require('fs');
+const mkdirp = require('mkdirp');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
@@ -24,7 +27,12 @@ if (isTesting) {
   app.setPath('userData', path.resolve('./tmp'));
 }
 
+// in dev mode add local data and enable hot reloading
 if (isDev && isServing) {
+  mkdirp.sync('./tmp/storage/');
+  fs.copyFileSync(path.resolve('./test/data/dev/environments.json'), path.resolve('./tmp/storage/environments.json'));
+
+  electron.app.setPath('userData', path.resolve('./tmp'));
   require('electron-reload')(__dirname, {});
 }
 

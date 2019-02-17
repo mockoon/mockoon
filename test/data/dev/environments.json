@@ -1,0 +1,140 @@
+[
+  {
+    "uuid": "5b7a21e0-0146-11e9-a619-ad87a54b7db9",
+    "name": "Example",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3000,
+    "routes": [
+      {
+        "uuid": "5b7a21e1-0146-11e9-a619-ad87a54b7db9",
+        "method": "get",
+        "endpoint": "salut?dffff=fdsffsd",
+        "body": "42",
+        "latency": 0,
+        "statusCode": "200",
+        "file": null,
+        "duplicates": [],
+        "documentation": "",
+        "headers": [
+          {
+            "uuid": "5b7a21e2-0146-11e9-a619-ad87a54b7db9",
+            "key": "Content-Type",
+            "value": "text/plain"
+          }
+        ]
+      },
+      {
+        "uuid": "5b7a21e3-0146-11e9-a619-ad87a54b7db9",
+        "method": "post",
+        "endpoint": "dolphins",
+        "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
+        "latency": 0,
+        "statusCode": "200",
+        "file": null,
+        "duplicates": [],
+        "documentation": "",
+        "headers": [
+          {
+            "uuid": "5b7a21e4-0146-11e9-a619-ad87a54b7db9",
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
+      },
+      {
+        "uuid": "f1b0e420-1738-11e9-8fd6-0fc13944e69a",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "salut?hfg-d+d+qf=fdsffsd&ghgdfhg=hfhgf",
+        "body": "{}",
+        "latency": 0,
+        "statusCode": "200",
+        "headers": [
+          {
+            "uuid": "f1b0e421-1738-11e9-8fd6-0fc13944e69a",
+            "key": "",
+            "value": ""
+          }
+        ],
+        "file": null,
+        "duplicates": []
+      },
+      {
+        "uuid": "f1bb6b70-1738-11e9-8fd6-0fc13944e69a",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "",
+        "body": "{}",
+        "latency": 0,
+        "statusCode": "200",
+        "headers": [
+          {
+            "uuid": "f1bb6b71-1738-11e9-8fd6-0fc13944e69a",
+            "key": "",
+            "value": ""
+          }
+        ],
+        "file": null,
+        "duplicates": []
+      }
+    ],
+    "modifiedAt": "2019-02-17T20:49:34.811Z",
+    "duplicates": [
+      1
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [
+      {
+        "uuid": "6e07e360-0146-11e9-9538-0b13aac74cb1",
+        "key": "Access-Control-Allow-Origin",
+        "value": "pout"
+      }
+    ]
+  },
+  {
+    "uuid": "97c1f061-20e5-11e9-9086-6ba8c98ff3ce",
+    "name": "New environment",
+    "endpointPrefix": "api",
+    "latency": 50,
+    "port": 3001,
+    "routes": [
+      {
+        "uuid": "",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "",
+        "body": "{}",
+        "latency": 0,
+        "statusCode": "200",
+        "headers": [
+          {
+            "uuid": "97c1f060-20e5-11e9-9086-6ba8c98ff3ce",
+            "key": "",
+            "value": ""
+          }
+        ],
+        "file": null,
+        "duplicates": []
+      }
+    ],
+    "modifiedAt": "2019-01-25T21:10:07.718Z",
+    "duplicates": [
+      0
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [
+      {
+        "uuid": "97c1f062-20e5-11e9-9086-6ba8c98ff3ce",
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ]
+  }
+]
