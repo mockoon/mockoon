@@ -290,7 +290,9 @@
                 <div class="row transition flex-fill" *ngIf="currentRoute" [ngClass]="{'dimmed': currentRoute.route.file}">
                   <div class="col d-flex flex-column">
                     <div class="title-separator has-icon">
-                      <div class="title-separator-icon text-secondary"><i class="material-icons">subject</i></div>
+                      <div class="title-separator-icon text-secondary">
+                        <span (click)="formatBody()"><i class="material-icons">subject</i></span>
+                      </div>
                       <div class="title-separator-text">
                         <div>Body </div>
                         <div *ngIf="currentRoute && currentRoute.route.file" class="text-warning">A file is selected, this body will not be served</div>

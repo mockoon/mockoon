@@ -764,4 +764,21 @@ export class AppComponent implements OnInit {
   public addCORSHeadersToEnvironment() {
     this.environmentsService.setEnvironmentCORSHeaders(this.currentEnvironment.environment);
   }
+
+  /**
+   * If the body is set and the Content-Type is application/json, then prettify the JSON.
+   */
+  public formatBody() {
+    if (! this.currentRoute.route.body) {
+      return;
+    }
+    const contentType = this.getRouteContentType(this.currentEnvironment.environment, this.currentRoute.route);
+    if (contentType === 'application/json') {
+      try {
+        this.currentRoute.route.body = JSON.stringify(JSON.parse(this.currentRoute.route.body), undefined, 2);
+      } catch (e) {
+        // ignore any errors with parsing / stringifying the JSON
+      }
+    }
+  }
 }
