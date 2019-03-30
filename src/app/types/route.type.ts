@@ -297,6 +297,7 @@ export const headerValues = [
 
 export type RouteType = {
   uuid: string;
+  enabled: boolean;
   documentation: string;
   method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
   endpoint: string;

@@ -89,5 +89,16 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
         }
       });
     }
+  },
+
+  // idk :/
+  {
+    id: 5,
+    migrationFunction: (environment: EnvironmentType) => {
+      environment.routes.forEach(route => {
+        // add enabled
+        route.enabled = true;
+      });
+    }
   }
 ];

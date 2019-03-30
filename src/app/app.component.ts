@@ -562,13 +562,13 @@ export class AppComponent implements OnInit {
   private changeEditorSettings() {
     const contentType = this.environmentsService.getRouteContentType(this.currentEnvironment.environment, this.currentRoute.route);
 
-    if (contentType === 'application/json') {
+    if (contentType.includes('application/json')) {
       this.editorConfig.mode = 'json';
-    } else if (contentType === 'text/html' || contentType === 'application/xhtml+xml') {
+    } else if (contentType.includes('text/html') || contentType.includes('application/xhtml+xml')) {
       this.editorConfig.mode = 'html';
-    } else if (contentType === 'application/xml') {
+    } else if (contentType.includes('application/xml')) {
       this.editorConfig.mode = 'xml';
-    } else if (contentType === 'text/css') {
+    } else if (contentType.includes('text/css')) {
       this.editorConfig.mode = 'css';
     } else {
       this.editorConfig.mode = 'text';
@@ -701,11 +701,15 @@ export class AppComponent implements OnInit {
    * Duplicate a route
    */
   public duplicateRoute(routeIndex: number) {
-    const index = this.environmentsService.duplicateRoute(this.currentEnvironment.environment, routeIndex);
+    const index = this.environmentsService.addRoute(this.currentEnvironment.environment, this.currentEnvironment.environment.routes[routeIndex]);
     this.selectRoute(index);
 
     // auto scroll routes to bottom when adding
     this.routesMenu.nativeElement.scrollTop = this.routesMenu.nativeElement.scrollHeight;
+  }
+
+  public routeHasEnabledDuplicates(route: RouteType) {
+    return !!route.duplicates.filter(duplicateIndex => this.currentEnvironment.environment.routes[duplicateIndex].enabled).length;
   }
 
   public handleSettingsModalClosed() {

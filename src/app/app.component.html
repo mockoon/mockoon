@@ -130,7 +130,8 @@
             <li class="nav-item" *ngFor="let route of currentEnvironment.environment.routes; let routeIndex = index">
               <a class="nav-link" [ngClass]="{'active': currentRoute && currentRoute.index === routeIndex}" (click)="selectRoute(routeIndex)" (contextmenu)="navigationContextMenu('route', routeIndex, $event)">
                 <div class="ellipsis">
-                  <span class="text-warning" ngbTooltip="Route is duplicated"><i *ngIf="route.duplicates.length" class="material-icons">warning</i></span>
+                  <span class="text-warning" ngbTooltip="Route is disabled"><i *ngIf="!route.enabled" class="material-icons">warning</i></span>
+                  <span class="text-warning" ngbTooltip="Route is duplicated"><i *ngIf="route.enabled && routeHasEnabledDuplicates(route)" class="material-icons">warning</i></span>
                   <span class="badge badge-default http-method-{{route.method}} float-right">{{route.method | uppercase}}</span>
                   /{{route.endpoint}}
                 </div>
@@ -175,7 +176,7 @@
           </div>
 
           <!-- OPTIONS tab -->
-          <div [hidden]="currentTab !== 'RESPONSE'" class="tab-content mt-3 pr-2 ml-2 mb-2 h-100">
+          <div [hidden]="currentTab !== 'RESPONSE'" *ngIf="currentRoute && currentRoute.route" class="tab-content mt-3 pr-2 ml-2 mb-2 h-100">
             <div class="row h-100">
               <div class="col d-flex flex-column">
                 <!-- Documentation -->
@@ -233,13 +234,19 @@
                           <span class="input-group-text">Status code</span>
                         </div>
                         <select class="custom-select col-4" name="route.statusCode" [(ngModel)]="currentRoute.route.statusCode" (ngModelChange)="environmentUpdated('statusCode')">
-                        <option *ngFor="let statusCode of statusCodes" [value]="statusCode" [selected]="currentRoute.route.statusCode === statusCode">{{statusCode}} - {{statusCodesExplanation[statusCode]}}</option>
-                      </select>
+                          <option *ngFor="let statusCode of statusCodes" [value]="statusCode" [selected]="currentRoute.route.statusCode === statusCode">{{statusCode}} - {{statusCodesExplanation[statusCode]}}</option>
+                        </select>
                         <div class="input-group-prepend">
                           <span class="input-group-text"><i class="material-icons">access_time</i></span>
                         </div>
                         <input type="text" class="form-control col-1" ngbTooltip="Route specific latency (ms)" [OnlyNumber]="{min: 0, max: Infinity}" name="route.latency"
                           [(ngModel)]="currentRoute.route.latency" (ngModelChange)="environmentUpdated('routeLatency')">
+                        <div class="form-inline pl-4">
+                          <div class="custom-control custom-checkbox" ngbTooltip="Is route enabled">
+                            <input type="checkbox" class="custom-control-input" id="routeEnabled" name="routeEnabled" [(ngModel)]="currentRoute.route.enabled" (ngModelChange)="environmentUpdated('enabled')">
+                            <label class="custom-control-label" for="routeEnabled">Enabled</label>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -308,7 +315,7 @@
           </div>
 
           <!-- HEADERS tab -->
-          <div [hidden]="currentTab !== 'HEADERS'" class="tab-content route-headers h-100 pr-2 ml-2 mb-2" #routeHeadersContainer>
+          <div [hidden]="currentTab !== 'HEADERS'" *ngIf="currentRoute && currentRoute.route" class="tab-content route-headers h-100 pr-2 ml-2 mb-2" #routeHeadersContainer>
             <button class="btn btn-link btn-icon text-primary mb-2" type="button" (click)="setCurrentTab('ENV_SETTINGS')">Go to environment headers</button>
             <ng-container *ngIf="currentRoute">
               <app-headers-list [headersList]="currentRoute.route.headers" (headersUpdated)="environmentUpdated('routeHeaders')" (headerAdded)="scrollToBottom(routeHeadersContainer)" type="routeHeaders"></app-headers-list>

@@ -2,6 +2,7 @@ import { Component, DoCheck, Input, KeyValueDiffer, KeyValueDiffers, OnInit } fr
 import { ServerService } from 'src/app/services/server.service';
 import { EnvironmentType } from 'src/app/types/environment.type';
 import { EnvironmentLogType } from 'src/app/types/server.type';
+import { EnvironmentsService } from 'src/app/services/environments.service';
 
 @Component({
   selector: 'app-environment-logs',
@@ -18,11 +19,13 @@ export class EnvironmentLogsComponent implements OnInit, DoCheck {
   public routeParamsCollapsed: boolean;
   public queryParamsCollapsed: boolean;
   public bodyCollapsed: boolean;
+  public responseHeadersCollapsed: boolean;
+  public responseBodyCollapsed: boolean;
   private environmentsLogsDiffer: KeyValueDiffer<any, any>;
   private currentEnvironmentDiffer: KeyValueDiffer<any, any>;
   private currentLogsLastLength: number;
 
-  constructor(private serverService: ServerService, private keyValueDiffers: KeyValueDiffers) {
+  constructor(private serverService: ServerService, private environmentsService: EnvironmentsService, private keyValueDiffers: KeyValueDiffers) {
     this.environmentsLogsDiffer = this.keyValueDiffers.find({}).create();
     this.currentEnvironmentDiffer = this.keyValueDiffers.find({}).create();
   }
@@ -83,5 +86,11 @@ export class EnvironmentLogsComponent implements OnInit, DoCheck {
     this.routeParamsCollapsed = false;
     this.queryParamsCollapsed = false;
     this.bodyCollapsed = true;
+    this.responseHeadersCollapsed = true;
+    this.responseBodyCollapsed = true;
+  }
+
+  private cloneRequest(log: EnvironmentLogType) {
+    this.environmentsService.addRouteBasedOnLog(this.currentEnvironment, log);
   }
 }

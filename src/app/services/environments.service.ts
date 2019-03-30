@@ -17,6 +17,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
 import { CORSHeaders, HeaderType, RouteType } from 'src/app/types/route.type';
+import { EnvironmentLogType } from 'src/app/types/server.type';
 import * as uuid from 'uuid/v1';
 
 @Injectable()
@@ -64,6 +65,7 @@ export class EnvironmentsService {
 
   private routeSchema: RouteType = {
     uuid: '',
+    enabled: true,
     documentation: '',
     method: 'get',
     endpoint: '',
@@ -160,9 +162,18 @@ export class EnvironmentsService {
    * Add a new route and save it
    *
    * @param environment - environment to which add a route
+   * @param baseRoute - an optional base route to clone for this route
    */
-  public addRoute(environment: EnvironmentType): number {
-    const newRoute = Object.assign({}, this.routeSchema, { uuid: uuid(), headers: [Object.assign({}, this.routeHeadersSchema, { uuid: uuid() })] });
+  public addRoute(environment: EnvironmentType, baseRoute?: RouteType): number {
+    let newRoute: RouteType;
+    if (baseRoute) {
+      // copy the route, reset duplicates (use cloneDeep to avoid headers pass by reference)
+      newRoute = Object.assign({}, cloneDeep(baseRoute), { duplicates: [] });
+      newRoute = this.renewUUIDs(newRoute, 'route') as RouteType;
+    } else {
+      newRoute = Object.assign({}, this.routeSchema, { uuid: uuid(), headers: [Object.assign({}, this.routeHeadersSchema, { uuid: uuid() })] });
+    }
+
     const newRouteIndex = environment.routes.push(newRoute) - 1;
 
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
@@ -170,6 +181,22 @@ export class EnvironmentsService {
     this.environmentUpdateEvents.next({ environment });
 
     return newRouteIndex;
+  }
+
+  public addRouteBasedOnLog(environment: EnvironmentType, log: EnvironmentLogType): number {
+    const newRoute = Object.assign({}, this.routeSchema, { uuid: uuid() });
+    newRoute.method = log.method;
+    newRoute.endpoint = log.url;
+    if (newRoute.endpoint.startsWith('/')) {
+      newRoute.endpoint = newRoute.endpoint.substr(1);
+    }
+    newRoute.body = log.responseBody;
+    newRoute.statusCode = log.responseStatusCode;
+    newRoute.headers = log.responseHeaders.filter(header => header.name.toLowerCase() !== 'content-encoding').map(header => {
+      return {uuid: uuid(), key: header.name, value: header.value};
+    });
+
+    return this.addRoute(environment, newRoute);
   }
 
   /**
@@ -400,27 +427,6 @@ export class EnvironmentsService {
     return newEnvironmentIndex;
   }
 
-  /**
-   * Duplicate a route and add it at the end
-   *
-   * @param environment
-   * @param routeIndex
-   */
-  public duplicateRoute(environment: EnvironmentType, routeIndex: number): number {
-    // copy the route, reset duplicates (use cloneDeep to avoid headers pass by reference)
-    let newRoute = Object.assign({}, cloneDeep(environment.routes[routeIndex]), { duplicates: [] });
-
-    newRoute = this.renewUUIDs(newRoute, 'route') as RouteType;
-
-    const newRouteIndex = environment.routes.push(newRoute) - 1;
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ROUTE);
-
-    this.environmentUpdateEvents.next({ environment });
-
-    return newRouteIndex;
-  }
-
   public findEnvironmentIndex(environmentUUID: string): number {
     return this.environments.findIndex(environment => environment.uuid === environmentUUID);
   }
@@ -606,13 +612,13 @@ export class EnvironmentsService {
    * @param route
    */
   public getRouteContentType(environment: EnvironmentType, route: RouteType) {
-    const routeContentType = route.headers.find(header => header.key === 'Content-Type');
+    const routeContentType = route.headers.find(header => header.key.toLowerCase() === 'content-type');
 
     if (routeContentType && routeContentType.value) {
       return routeContentType.value;
     }
 
-    const environmentContentType = environment.headers.find(header => header.key === 'Content-Type');
+    const environmentContentType = environment.headers.find(header => header.key.toLowerCase() === 'content-type');
 
     if (environmentContentType && environmentContentType.value) {
       return environmentContentType.value;

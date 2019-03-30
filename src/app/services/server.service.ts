@@ -6,6 +6,7 @@ import * as proxy from 'http-proxy-middleware';
 import * as https from 'https';
 import * as killable from 'killable';
 import * as path from 'path';
+import pako from 'pako';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
@@ -173,8 +174,8 @@ export class ServerService {
    */
   private setRoutes(server: any, environment: EnvironmentType) {
     environment.routes.forEach((route: RouteType) => {
-      // only launch non duplicated routes
-      if (!route.duplicates.length) {
+      // only launch enabled, non duplicated routes
+      if (route.enabled && !route.duplicates.filter(duplicateIndex => environment.routes[duplicateIndex].enabled).length) {
         try {
           // create route
           server[route.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + route.endpoint.replace(/ /g, '%20'), (req, res) => {
@@ -303,12 +304,37 @@ export class ServerService {
         }
       };
 
+      const processResponse = (proxyRes, req, res) => {
+        req.responseHeaders = proxyRes.headers;
+        req.responseStatusCode = proxyRes.statusCode;
+        const buffers = [];
+        proxyRes.on('data', function(data) {
+          buffers.push(data);
+        });
+        proxyRes.on('end', () => {
+          req.rawResponseBody = Buffer.concat(buffers);
+          const contentEncodingKey = Object.keys(proxyRes.headers).filter(k => k.toLowerCase() === 'content-encoding');
+          const contentTypeKey = Object.keys(proxyRes.headers).filter(k => k.toLowerCase() === 'content-type');
+          // concat the response body, handling gzip if necessary
+          if (contentEncodingKey.length > 0 && proxyRes.headers[contentEncodingKey[0]] === 'gzip') {
+            req.responseBody = pako.ungzip(req.rawResponseBody, { to: 'string' });
+          } else {
+            // convert to string using the given charset
+            const re = /charset=([^()<>@,;:\"/[\]?.=\s]*)/i;
+            const charset = contentTypeKey.length > 0 && re.test(proxyRes.headers[contentTypeKey[0]]) ?
+              re.exec(proxyRes.headers[contentTypeKey[0]])[1] : 'utf8';
+            req.responseBody = req.rawResponseBody.toString(charset);
+          }
+        });
+      };
+
       server.use('*', proxy({
         target: environment.proxyHost,
         secure: false,
         changeOrigin: true,
         ssl: Object.assign({}, httpsConfig, { agent: false }),
-        onProxyReq: processRequest
+        onProxyReq: processRequest,
+        onProxyRes: processResponse
       }));
     }
   }

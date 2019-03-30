@@ -6,7 +6,7 @@ export type ServerStateEventType = {
 export type EnvironmentLogType = {
   timestamp: Date;
   url: string;
-  method: string;
+  method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
   route: string;
   protocol: string;
   headers: { name: string, value: string }[];
@@ -14,6 +14,9 @@ export type EnvironmentLogType = {
   queryParams: { name: string, value: string }[];
   body: string;
   proxied: boolean;
+  responseHeaders: { name: string, value: string }[];
+  responseBody: string;
+  responseStatusCode: string,
 };
 
 export type EnvironmentLogsType = { [key: string]: EnvironmentLogType[] };

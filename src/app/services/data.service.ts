@@ -54,7 +54,7 @@ export class DataService {
       get route() {
         return (request.route) ? request.route.path : null;
       },
-      method: request.method,
+      method: request.method.toLowerCase(),
       protocol: request.protocol,
       url: request.originalUrl,
       headers: [],
@@ -89,6 +89,28 @@ export class DataService {
         }
 
         return truncatedBody;
+      },
+      get responseHeaders() {
+        if (!request.responseHeaders) {
+          return [];
+        }
+        return Object.keys(request.responseHeaders).map((headerName) => {
+          return { name: headerName, value: request.responseHeaders[headerName] };
+        }).sort(Utils.ascSort);
+      },
+      get responseBody() {
+        const maxLength = 10000;
+        let truncatedBody: string = request.responseBody;
+
+        // truncate
+        if (truncatedBody && truncatedBody.length > maxLength) {
+          truncatedBody = truncatedBody.substring(0, maxLength) + '\n\n-------- BODY HAS BEEN TRUNCATED --------';
+        }
+
+        return truncatedBody;
+      },
+      get responseStatusCode() {
+        return request.responseStatusCode;
       }
     };
 
