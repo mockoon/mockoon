@@ -451,7 +451,9 @@ export class EnvironmentsService {
           }
         });
       } catch (error) {
-        this.alertService.showAlert('error', Errors.EXPORT_ERROR);
+        if (path !== undefined) {
+          this.alertService.showAlert('error', Errors.EXPORT_ERROR);
+        }
       }
     });
   }
