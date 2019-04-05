@@ -438,7 +438,7 @@ export class EnvironmentsService {
       if (path === undefined) {
         return;
       }
-      
+
       // reset environments before exporting (cannot export running env with server instance)
       const dataToExport = cloneDeep(this.environments);
       dataToExport.forEach(environment => {
