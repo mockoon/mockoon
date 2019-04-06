@@ -10,6 +10,7 @@
   flex-wrap: nowrap;
 }
 .nav-link {
+  cursor: pointer;
   transition: background-color ease-in-out 150ms;
   padding-right: 1.3rem;
 }
@@ -48,6 +49,15 @@
     margin-top: 2px;
   }
 }
+
+.custom-control-label::after {
+  cursor: pointer;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
 .modal-body {
   overflow-y: auto;
   max-height: 65vh;
