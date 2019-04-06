@@ -105,7 +105,7 @@ function createWindow() {
         },
         { type: 'separator' },
         {
-          label: 'Settings', click: function () {
+          label: 'Settings', accelerator: 'CmdOrCtrl+,', click: function () {
             mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
           }
         },
@@ -115,7 +115,10 @@ function createWindow() {
           }
         },
         { type: 'separator' },
-        { label: 'Quit', accelerator: 'CmdOrCtrl+Q', click: function () { app.quit(); } }
+        { label: 'Hide', role: 'hide' },
+        { role: 'hideOthers' },
+        { type: 'separator' },
+        { label: 'Quit', role: 'quit' }
       ]
     }
   ];
