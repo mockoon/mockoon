@@ -19,14 +19,14 @@
   }
   .nav-link.active,
   .nav-item.show .nav-link {
-    color: $gray-100;
+    color: $gray-900;
     box-shadow: inset 0 -2px 0 0 $blue;
   }
 }
 .nav.flex-column {
   .nav-link.active,
   .nav-item.show .nav-link {
-    color: $gray-100;
+    color: $gray-900;
     box-shadow: inset 2px 0 0 0 $blue;
     background-color: $component-active-bg;
   }
@@ -61,7 +61,7 @@
 }
 .input-group-text {
   font-style: italic;
-  color: $gray-400;
+  color: $gray-600;
 
   i {
     font-size: 1.2rem;
@@ -69,7 +69,7 @@
   }
 }
 label {
-  color: $gray-400;
+  color: $gray-600;
 }
 .input-group-prepend, .input-group-append {
   i {
@@ -107,7 +107,7 @@ label {
   }
 
   &.active {
-    color: $gray-200;
+    color: $gray-800;
     box-shadow: inset 0 -2px 0 0 $blue;
     border-radius: 0;
   }
@@ -120,7 +120,7 @@ label {
 
 .custom-select {
   &:focus {
-    color: $gray-200;
+    color: $gray-800;
   }
 }
 
@@ -168,7 +168,7 @@ label {
 }
 
 a:not([href]):not([tabindex]) {
-  color: $gray-400;
+  color: $gray-600;
 }
 
 /* Custom styles */
@@ -179,18 +179,18 @@ a:not([href]):not([tabindex]) {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: darken($gray-900, 4%);
+  background: darken($gray-100, 4%);
   border-radius: 20px;
 }
 
 ::-webkit-scrollbar-track {
-  background: $gray-900;
+  background: $gray-100;
   border-radius: 20px;
 }
 
 // ace editor custom scrollbar
 .ace_scrollbar.ace_scrollbar-v::-webkit-scrollbar-thumb {
-  background: lighten($gray-900, 5%);
+  background: lighten($gray-100, 5%);
 }
 
 ::selection {
@@ -236,7 +236,7 @@ select, input, .btn {
 }
 
 .main-content {
-  background-color: darken($gray-900, 2%);
+  background-color: darken($gray-100, 2%);
 }
 
 .ellipsis {
@@ -247,11 +247,11 @@ select, input, .btn {
 
 .menu-columns {
   &:first-of-type {
-    background-color: lighten($gray-900, 2%);
-    border-right: 1px solid lighten($gray-900, 4%);
+    background-color: lighten($gray-100, 2%);
+    border-right: 1px solid lighten($gray-100, 4%);
   }
 
-  border-right: 1px solid lighten($gray-900, 2%);
+  border-right: 1px solid lighten($gray-100, 2%);
   height: 100%;
 }
 
@@ -292,19 +292,19 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
 @each $method in $http-methods {
   .http-method-#{nth($method, 1)} {
     background-color: #{nth($method, 2)};
-    color: $gray-900;
+    color: $gray-100;
   }
 }
 
 .header {
-  background-color: lighten($gray-900, 3%);
-  box-shadow: 0 0 3px darken($gray-900, 2%);
+  background-color: lighten($gray-100, 3%);
+  box-shadow: 0 0 3px darken($gray-100, 2%);
 }
 
 .footer {
-  color: $gray-400;
-  background-color: lighten($gray-900, 3%);
-  box-shadow: 0 0 3px darken($gray-900, 2%);
+  color: $gray-600;
+  background-color: lighten($gray-100, 3%);
+  box-shadow: 0 0 3px darken($gray-100, 2%);
 
   .footer-item {
     padding: $spacer / 4 $spacer;
@@ -313,15 +313,15 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
     cursor: pointer;
 
     &.lighter {
-      color: $gray-200;
+      color: $gray-800;
     }
 
     &.with-border-left {
-      border-left: 1px solid lighten($gray-900, 5%);
+      border-left: 1px solid lighten($gray-100, 5%);
     }
 
     &.with-border-right {
-      border-right: 1px solid lighten($gray-900, 5%);
+      border-right: 1px solid lighten($gray-100, 5%);
     }
 
     &:first-of-type {
@@ -331,13 +331,13 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
 }
 
 .title-separator {
-  border-bottom: 1px solid lighten($gray-900, 3%);
+  border-bottom: 1px solid lighten($gray-100, 3%);
   margin-bottom: 1rem;
   padding-left: .25rem;
   padding-right: .25rem;
   padding-top: .25rem;
   margin-top: 1rem;
-  color: $gray-400;
+  color: $gray-600;
   top: -12px;
 
   &.is-first {
@@ -350,7 +350,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
 
     .title-separator-text {
       margin-left: 22px;
-      border-bottom: 1px solid lighten($gray-900, 3%);
+      border-bottom: 1px solid lighten($gray-100, 3%);
       display: flex;
 
       div:nth-child(2) {
@@ -445,7 +445,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
     max-height: 100px;
     margin-bottom: $spacer / 2;
     animation: fadein 300ms ease-in;
-    color: $gray-100;
+    color: $gray-900;
 
     &-success {
       background-color: rgba($green, 0.8);
@@ -465,33 +465,33 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
   position: fixed;
   z-index: 5000;
   background-color: $input-bg;
-  border-left: 1px solid $gray-800;
-  border-right: 1px solid $gray-800;
-  border-bottom: 1px solid $gray-800;
+  border-left: 1px solid $gray-200;
+  border-right: 1px solid $gray-200;
+  border-bottom: 1px solid $gray-200;
   max-height: 135px;
   overflow-y: auto;
   overflow-x: hidden;
 
   &-inverted {
-    border-top: 1px solid $gray-800;
+    border-top: 1px solid $gray-200;
     border-bottom: none;
   }
 
   &-item {
     transition: all ease-in-out 200ms;
     padding: 5px 10px;
-    color: $gray-300;
+    color: $gray-700;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
     &:not(:last-of-type) {
-      box-shadow: inset 0 -1px 0 0 $gray-800;
+      box-shadow: inset 0 -1px 0 0 $gray-200;
     }
 
     &:hover, &.selected {
-      background-color: lighten($gray-900, 12%);
-      color: $gray-200;
+      background-color: lighten($gray-100, 12%);
+      color: $gray-800;
     }
   }
 }
@@ -512,12 +512,12 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
 @import '../node_modules/spinthatshit/src/loaders.scss';
 
 .loader {
-  @include loader02($size: 100px, $color: $gray-600, $border-size: 4px, $duration: 0.6s, $align: middle);
+  @include loader02($size: 100px, $color: $gray-400, $border-size: 4px, $duration: 0.6s, $align: middle);
 }
 
 .message {
   text-align: center;
   font-size: $font-size-lg;
-  color: darken($gray-600, 20%);
+  color: darken($gray-400, 20%);
   font-weight: $font-weight-light;
 }

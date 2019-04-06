@@ -34,13 +34,13 @@ $colors: (
   teal: $teal,
   cyan: $cyan,
   white: $white,
-  gray: $gray-600,
-  gray-dark: $gray-900
+  gray: $gray-400,
+  gray-dark: $gray-100
 );
 
 $theme-colors: (
   primary: $blue,
-  secondary: $gray-600,
+  secondary: $gray-400,
   success: $green,
   info: $cyan,
   warning: $yellow,
@@ -54,8 +54,8 @@ $theme-colors: (
   teal: $teal
 );
 
-$body-bg:       $gray-900;
-$body-color:    $gray-300;
+$body-bg:       $gray-100;
+$body-color:    $gray-700;
 
 $font-size-base:              1rem;
 $font-size-lg:                ($font-size-base * 1.25);
@@ -69,9 +69,9 @@ $font-weight-bold:            700;
 $grid-gutter-width: 0;
 
 $border-radius-xs:       .1rem;
-$component-active-bg:    lighten($gray-900, 7%);
+$component-active-bg:    lighten($gray-100, 7%);
 
-$hr-border-color: lighten($gray-900, 2%);
+$hr-border-color: lighten($gray-100, 2%);
 
 $input-btn-padding-x-xs:               .3rem;
 $input-btn-padding-y-xs:               .1rem;
@@ -84,38 +84,38 @@ $btn-active-box-shadow:          unset;
 $custom-select-focus-box-shadow: unset;
 
 $btn-border-radius-xs:           $border-radius-xs;
-$input-bg:                       lighten($gray-900, 7%);
-$input-disabled-bg:              lighten($gray-900, 7%);
-$input-color:                    $gray-200;
+$input-bg:                       lighten($gray-100, 7%);
+$input-disabled-bg:              lighten($gray-100, 7%);
+$input-color:                    $gray-800;
 $input-border-color:             transparent;
 $input-border-radius:            0;
-$input-focus-border-color:       $gray-800;
-$input-focus-color:              $gray-100;
+$input-focus-border-color:       $gray-200;
+$input-focus-color:              $gray-900;
 $input-placeholder-color:        $gray-500;
 $input-group-addon-bg:           transparent;
-$custom-select-bg:               lighten($gray-900, 7%);
-$custom-select-indicator-color: $gray-600;
+$custom-select-bg:               lighten($gray-100, 7%);
+$custom-select-indicator-color: $gray-400;
 $custom-select-border-radius: 0;
-$custom-select-focus-border-color: $gray-800;
-$nav-tabs-border-color:                       lighten($gray-900, 2%);
+$custom-select-focus-border-color: $gray-200;
+$nav-tabs-border-color:                       lighten($gray-100, 2%);
 
 $nav-tabs-border-radius:                      0;
-$nav-tabs-link-active-color:                  lighten($gray-900, 7%);
+$nav-tabs-link-active-color:                  lighten($gray-100, 7%);
 $nav-tabs-link-active-bg:                     $component-active-bg;
 
 $nav-pills-border-radius:     0;
 
-$custom-control-indicator-bg: lighten($gray-900, 7%);
+$custom-control-indicator-bg: lighten($gray-100, 7%);
 
-$modal-content-bg: lighten($gray-900, 2%);
-$modal-content-border-color: lighten($gray-900, 4%);
+$modal-content-bg: lighten($gray-100, 2%);
+$modal-content-border-color: lighten($gray-100, 4%);
 $modal-content-box-shadow-xs: none;
 $modal-content-box-shadow-sm-up: none;
 $modal-backdrop-opacity: .8;
-$modal-header-border-color: lighten($gray-900, 4%);
+$modal-header-border-color: lighten($gray-100, 4%);
 
-$tooltip-color: $gray-200;
-$tooltip-bg: darken($gray-900, 8%);
+$tooltip-color: $gray-800;
+$tooltip-bg: darken($gray-100, 8%);
 
 $text-muted:                  $gray-500;
 
