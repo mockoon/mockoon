@@ -434,6 +434,11 @@ export class EnvironmentsService {
    */
   public exportAllEnvironments() {
     this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (path) => {
+      // If the user clicked 'cancel'
+      if (path === undefined) {
+        return;
+      }
+
       // reset environments before exporting (cannot export running env with server instance)
       const dataToExport = cloneDeep(this.environments);
       dataToExport.forEach(environment => {
