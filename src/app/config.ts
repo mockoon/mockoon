@@ -1,9 +1,9 @@
 export const Config = {
-  feedbackLink: 'https://github.com/255kb/mockoon/issues',
-  githubLatestReleaseUrl: 'https://api.github.com/repos/255kb/mockoon/releases/latest',
-  githubTagReleaseUrl: 'https://github.com/255kb/mockoon/releases/tag/v',
-  githubAPITagReleaseUrl: 'https://api.github.com/repos/255kb/mockoon/releases/tags/v',
-  githubBinaryDownloadUrl: 'https://github.com/255kb/mockoon/releases/download/',
+  feedbackLink: 'https://github.com/mockoon/mockoon/issues',
+  githubLatestReleaseUrl: 'https://api.github.com/repos/mockoon/mockoon/releases/latest',
+  githubTagReleaseUrl: 'https://github.com/mockoon/mockoon/releases/tag/v',
+  githubAPITagReleaseUrl: 'https://api.github.com/repos/mockoon/mockoon/releases/tags/v',
+  githubBinaryDownloadUrl: 'https://github.com/mockoon/mockoon/releases/download/',
   wikiLinks: {
     templating: 'https://mockoon.com/tutorial/dynamic-response-with-templating',
     proxy: 'https://mockoon.com/tutorial/api-mocking-proxy-mode/',

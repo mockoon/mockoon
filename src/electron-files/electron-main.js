@@ -100,7 +100,7 @@ function createWindow() {
         },
         {
           label: 'Send feedback', click: function () {
-            shell.openExternal('https://github.com/255kb/mockoon/issues');
+            shell.openExternal('https://github.com/mockoon/mockoon/issues');
           }
         },
         { type: 'separator' },
@@ -111,7 +111,7 @@ function createWindow() {
         },
         {
           label: 'Help', click: function () {
-            shell.openExternal('https://github.com/255kb/mockoon/wiki');
+            shell.openExternal('https://github.com/mockoon/mockoon/wiki');
           }
         },
         { type: 'separator' },

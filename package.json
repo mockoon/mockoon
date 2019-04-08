@@ -8,7 +8,7 @@
     "url": "https://255kb.com/"
   },
   "license": "MIT",
-  "repository": "https://github.com/255kb/mockoon",
+  "repository": "https://github.com/mockoon/mockoon",
   "homepage": "https://mockoon.com",
   "build": {
     "appId": "com.mockoon.app",
