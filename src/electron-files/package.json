@@ -7,9 +7,9 @@
     "email": "hi@255kb.com",
     "url": "https://255kb.com/"
   },
-  "repository": "https://github.com/255kb/mockoon",
+  "repository": "https://github.com/mockoon/mockoon",
   "bugs": {
-    "url": "https://github.com/255kb/mockoon/issues"
+    "url": "https://github.com/mockoon/mockoon/issues"
   },
   "homepage": "https://mockoon.com",
   "main": "electron-main.js",

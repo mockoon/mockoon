@@ -3,7 +3,7 @@
 There are many ways to contribute to Mockoon: opening bugs or issues, submitting pull requests, suggesting new features...
 
 After cloning the repository please check the opened and unassigned issues. 
-If you want to contribute significant changes please discuss with the maintainer (@255kb) before starting to work.
+If you want to contribute significant changes please discuss with the maintainers before starting to work.
 Please note that Mockoon promise is to be simple, easy to use, and fast. So not all features are worth implementing and maintainer may chose to not implement features that are out of Mockoon's scope.
 
 ## Build and run
@@ -11,7 +11,7 @@ Please note that Mockoon promise is to be simple, easy to use, and fast. So not 
 Prerequisites: 
 - Node.js >= 8.x.x
 
-Clone the repository: `git@github.com:255kb/mockoon.git`
+Clone the repository: `git@github.com:mockoon/mockoon.git`
 
 ### Run the application in dev mode
 
