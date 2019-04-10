@@ -2,7 +2,7 @@ import { CollectParams } from 'src/app/services/analytics.service';
 
 type AnalyticsEventsNames =
   'PAGEVIEW' | 'APPLICATION_START' | 'APPLICATION_FIRST_LOAD' | 'SERVER_STOP' | 'SERVER_RESTART' |
-  'SERVER_START' | 'SERVER_ENTERING_REQUEST' | 'NAVIGATE_ENVIRONMENT' | 'NAVIGATE_ROUTE' |
+  'SERVER_START' | 'NAVIGATE_ENVIRONMENT' | 'NAVIGATE_ROUTE' |
   'CREATE_ENVIRONMENT' | 'CREATE_ROUTE' | 'CREATE_HEADER' | 'DUPLICATE_ENVIRONMENT' |
   'DUPLICATE_ROUTE' | 'DELETE_ENVIRONMENT' | 'DELETE_ROUTE' | 'DELETE_HEADER' |
   'LINK_ROUTE_IN_BROWSER' | 'LINK_FEEDBACK' | 'LINK_RELEASE' | 'LINK_WIKI' | 'LINK_APPLY_UPDATE' |
@@ -15,7 +15,6 @@ export const AnalyticsEvents: { [keyof in AnalyticsEventsNames]: CollectParams }
   SERVER_STOP: { type: 'event', category: 'server', action: 'stop' },
   SERVER_RESTART: { type: 'event', category: 'server', action: 'restart' },
   SERVER_START: { type: 'event', category: 'server', action: 'start' },
-  SERVER_ENTERING_REQUEST: { type: 'event', category: 'server', action: 'entering-request' },
   NAVIGATE_ENVIRONMENT: { type: 'event', category: 'navigate', action: 'environment' },
   NAVIGATE_ROUTE: { type: 'event', category: 'navigate', action: 'route' },
   CREATE_ENVIRONMENT: { type: 'event', category: 'create', action: 'environment' },

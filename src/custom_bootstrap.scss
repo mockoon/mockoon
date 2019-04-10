@@ -69,6 +69,7 @@ $font-weight-bold:            700;
 $grid-gutter-width: 0;
 
 $border-radius-xs:       .1rem;
+$component-active-color:      $white !default;
 $component-active-bg:    lighten($gray-900, 7%);
 
 $hr-border-color: lighten($gray-900, 2%);
@@ -120,3 +121,21 @@ $tooltip-bg: darken($gray-900, 8%);
 $text-muted:                  $gray-500;
 
 $code-color:                  $blue;
+
+$dropdown-padding-y:                0;
+$dropdown-color:                    $gray-300;
+$dropdown-bg:                       $input-bg;
+$dropdown-border-color:             $gray-800;
+$dropdown-border-radius:            0;
+$dropdown-box-shadow:               none;
+$dropdown-link-color:               $gray-300;
+$dropdown-link-hover-color:         darken($gray-900, 5%) !default;
+$dropdown-link-hover-bg:            $gray-100 !default;
+$dropdown-link-active-bg:           lighten($component-active-bg, 2%);
+$dropdown-item-padding-y:           5px;
+$dropdown-item-padding-x:           10px;
+
+$toast-color:                       $gray-100;
+$toast-border-radius:               .4rem;
+$toast-padding-x:                   .4rem;
+$toast-padding-y:                   .25rem;

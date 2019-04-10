@@ -1,10 +1,10 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { shell } from 'electron';
-import { Subscription } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
-import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { Store } from 'src/app/stores/store';
 import { BannerConfigType } from 'src/app/types/misc.type';
 import { environment } from 'src/environments/environment';
 
@@ -12,29 +12,30 @@ import { environment } from 'src/environments/environment';
   selector: 'app-banner',
   templateUrl: 'banner.component.html'
 })
-export class BannerComponent implements OnInit, DoCheck {
+export class BannerComponent implements OnInit {
   public bannerData: BannerConfigType;
-  private bannerConfigSubscription: Subscription;
 
   constructor(
     private firestore: AngularFirestore,
-    private authService: AuthService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private store: Store
   ) { }
 
-  ngOnInit() { }
-
-  ngDoCheck() {
-    // wait for settings and auth to be ready to load banner config
-    if (this.authService.userId && this.settingsService.settings && !this.bannerConfigSubscription) {
-      this.bannerConfigSubscription = this.firestore.collection(environment.remoteConfigCollection).doc('banner').valueChanges().pipe(
+  ngOnInit() {
+    combineLatest(
+      this.store.select('userId'),
+      this.store.select('settings')
+    ).pipe(
+      filter(result => !!result[0] && !!result[1])
+    ).subscribe((r) => {
+      this.firestore.collection(environment.remoteConfigCollection).doc('banner').valueChanges().pipe(
         take(1),
-        filter((bannerData: BannerConfigType) => bannerData.enabled && !this.settingsService.settings.bannerDismissed.includes(bannerData.id)),
+        filter((bannerData: BannerConfigType) => bannerData.enabled && !this.store.get('settings').bannerDismissed.includes(bannerData.id)),
         tap((bannerData: BannerConfigType) => {
           this.bannerData = bannerData;
         })
       ).subscribe();
-    }
+    });
   }
 
   /**
@@ -50,7 +51,6 @@ export class BannerComponent implements OnInit, DoCheck {
   public dismissBanner() {
     this.bannerData.enabled = false;
 
-    this.settingsService.settings.bannerDismissed = [...this.settingsService.settings.bannerDismissed, this.bannerData.id];
-    this.settingsService.settingsUpdateEvents.next(this.settingsService.settings);
+    this.settingsService.updateSettings({ bannerDismissed: [...this.store.get('settings').bannerDismissed, this.bannerData.id] });
   }
 }

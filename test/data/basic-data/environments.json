@@ -20,8 +20,8 @@
             "value": "application/json"
           }
         ],
-        "file": null,
-        "duplicates": [],
+        "filePath": "",
+        "sendFileAsBody": false,
         "documentation": "Test documentation"
       },
       {
@@ -38,8 +38,8 @@
             "value": "text/plain"
           }
         ],
-        "file": null,
-        "duplicates": [],
+        "filePath": "",
+        "sendFileAsBody": false,
         "documentation": ""
       },
       {
@@ -56,13 +56,11 @@
             "value": "application/json"
           }
         ],
-        "file": null,
-        "duplicates": [],
+        "filePath": "",
+        "sendFileAsBody": false,
         "documentation": ""
       }
     ],
-    "modifiedAt": "2018-12-03T14:45:51.787Z",
-    "duplicates": [],
     "proxyMode": false,
     "proxyHost": "",
     "https": false,
