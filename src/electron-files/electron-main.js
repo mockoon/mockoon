@@ -51,12 +51,15 @@ function createWindow() {
     height: mainWindowState.height,
     title: `Mockoon`,
     backgroundColor: '#252830',
-    icon: path.join(__dirname, '/icon_512x512x32.png')
+    icon: path.join(__dirname, '/icon_512x512x32.png'),
+    webPreferences: {
+      nodeIntegration: true
+    }
   };
 
   // remove devtools in prod
   if (!isDev) {
-    BrowserWindowConfig['webPreferences'] = {
+    BrowserWindowConfig.webPreferences = {
       devTools: false
     };
   }
