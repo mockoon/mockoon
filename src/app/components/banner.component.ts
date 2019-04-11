@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { shell } from 'electron';
 import { combineLatest } from 'rxjs';
-import { filter, take, tap } from 'rxjs/operators';
+import { filter, first, take, tap } from 'rxjs/operators';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Store } from 'src/app/stores/store';
 import { BannerConfigType } from 'src/app/types/misc.type';
@@ -26,8 +26,9 @@ export class BannerComponent implements OnInit {
       this.store.select('userId'),
       this.store.select('settings')
     ).pipe(
-      filter(result => !!result[0] && !!result[1])
-    ).subscribe((r) => {
+      filter(result => !!result[0] && !!result[1]),
+      first()
+    ).subscribe(() => {
       this.firestore.collection(environment.remoteConfigCollection).doc('banner').valueChanges().pipe(
         take(1),
         filter((bannerData: BannerConfigType) => bannerData.enabled && !this.store.get('settings').bannerDismissed.includes(bannerData.id)),
