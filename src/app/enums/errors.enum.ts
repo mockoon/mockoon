@@ -13,6 +13,7 @@ export enum Errors {
   EXPORT_ROUTE_CLIPBOARD_ERROR = 'An error occured while exporting the route to the clipboard',
   IMPORT_ERROR = 'An error occured while importing the file',
   IMPORT_FILE_WRONG_CHECKSUM = 'File content has an incorrect format and cannot be imported',
+  IMPORT_WRONG_VERSION = 'Imported data version is not compatible with your version',
   IMPORT_CLIPBOARD_WRONG_CHECKSUM = 'Clipboard content has an incorrect format and cannot be imported',
   IMPORT_ENVIRONMENT_CLIPBOARD_ERROR = 'An error occured while importing the environment from the clipboard',
   IMPORT_ROUTE_CLIPBOARD_ERROR = 'An error occured while importing the route from the clipboard',

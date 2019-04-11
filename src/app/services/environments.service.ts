@@ -4,62 +4,40 @@ import { clipboard, remote } from 'electron';
 import * as storage from 'electron-json-storage';
 import * as fs from 'fs';
 import { cloneDeep } from 'lodash';
-import { Subject } from 'rxjs/internal/Subject';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, filter, first } from 'rxjs/operators';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
 import { Messages } from 'src/app/enums/messages.enum';
 import { Migrations } from 'src/app/libs/migrations.lib';
-import { AlertService } from 'src/app/services/alert.service';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
+import { ServerService } from 'src/app/services/server.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { ToastsService } from 'src/app/services/toasts.service';
+import { ReducerDirectionType } from 'src/app/stores/reducer';
+import { Store, TabsNameType } from 'src/app/stores/store';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
-import { CurrentEnvironmentType, EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
+import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
 import { CORSHeaders, HeaderType, RouteType } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
+const appVersion = require('../../../package.json').version;
 
 @Injectable()
 export class EnvironmentsService {
-  public selectEnvironment: Subject<number> = new Subject<number>();
-  public environmentUpdateEvents: Subject<{
-    environment?: EnvironmentType
-  }> = new Subject<{
-    environment: EnvironmentType
-  }>();
-  public environmentsReady: Subject<boolean> = new Subject<boolean>();
-  public environments: EnvironmentsType;
-  public routesTotal = 0;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
-
   private environmentSchema: EnvironmentType = {
     uuid: '',
-    running: false,
-    instance: null,
     name: '',
     endpointPrefix: '',
     latency: 0,
     port: 3000,
     routes: [],
-    startedAt: null,
-    modifiedAt: null,
-    duplicates: [],
-    needRestart: false,
     proxyMode: false,
     proxyHost: '',
     https: false,
     cors: true,
     headers: []
-  };
-
-  private environmentResetSchema: Partial<EnvironmentType> = {
-    instance: null,
-    running: false,
-    startedAt: null,
-    modifiedAt: null,
-    duplicates: [],
-    needRestart: false
   };
 
   private routeSchema: RouteType = {
@@ -71,247 +49,265 @@ export class EnvironmentsService {
     latency: 0,
     statusCode: '200',
     headers: [],
-    file: null,
-    duplicates: []
+    filePath: '',
+    sendFileAsBody: false
   };
 
-  private emptyHeaderSchema: HeaderType = { uuid: '', key: '', value: '' };
-  private routeHeadersSchema: HeaderType = { uuid: '', key: '', value: '' };
-
+  private emptyHeaderSchema: HeaderType = { key: '', value: '' };
+  private routeHeadersSchema: HeaderType = { key: '', value: '' };
   private storageKey = 'environments';
 
   constructor(
-    private alertService: AlertService,
+    private toastService: ToastsService,
     private dataService: DataService,
     private eventsService: EventsService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private store: Store,
+    private serverService: ServerService
   ) {
     // get existing environments from storage or default one
-    storage.get(this.storageKey, (error, environments) => {
-      // if empty object
+    storage.get(this.storageKey, (_error: any, environments: EnvironmentType[]) => {
+      // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
-        // build default starting env
-        const defaultEnvironment: EnvironmentType = this.buildDefaultEnvironment();
-
-        this.environments = [defaultEnvironment];
-
-        this.updateRoutesTotal();
-
-        this.environmentsReady.next(true);
+        this.store.update({ type: 'SET_INITIAL_ENVIRONMENTS', item: [this.buildDefaultEnvironment()] });
       } else {
         // wait for settings to be ready before migrating and loading envs
-        this.settingsService.settingsReady.subscribe((ready) => {
-          if (ready) {
-            this.environments = this.migrateData(environments);
-            this.environmentsReady.next(true);
-          }
+        this.store.select('settings').pipe(
+          filter(Boolean),
+          first()
+        ).subscribe(() => {
+          this.store.update({ type: 'SET_INITIAL_ENVIRONMENTS', item: this.migrateData(environments) });
         });
       }
     });
 
-    // subscribe to environment data update from UI, and save
-    this.environmentUpdateEvents.pipe(debounceTime(1000)).subscribe((params) => {
-      this.updateRoutesTotal();
-
-      storage.set(this.storageKey, this.cleanBeforeSave());
-    });
-
-    // subscribe to environment data update from UI
-    this.environmentUpdateEvents.pipe(debounceTime(100)).subscribe((params) => {
-      if (params.environment) {
-        this.checkRoutesDuplicates(params.environment);
-      }
-
-      this.checkEnvironmentsDuplicates();
+    // subscribe to environments update to save
+    this.store.select('environments').pipe(debounceTime(2000)).subscribe((environments) => {
+      storage.set(this.storageKey, environments);
     });
   }
 
   /**
-   * Add a new environment and save it
-   *
+   * Set active environment by UUID or navigation
    */
-  public addEnvironment(): number {
-    const newRoute = Object.assign({}, this.routeSchema, { headers: [Object.assign({}, this.routeHeadersSchema, { uuid: uuid() })] });
-    const newEnvironment = Object.assign(
-      {},
-      this.environmentSchema,
-      {
-        uuid: uuid(),
-        name: 'New environment',
-        port: 3000,
-        routes: [
-          newRoute
-        ],
-        modifiedAt: new Date(),
-        headers: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }]
+  public setActiveEnvironment(environmentUUIDOrDirection: string | ReducerDirectionType) {
+    if (this.store.get('activeEnvironmentUUID') !== environmentUUIDOrDirection) {
+      if (environmentUUIDOrDirection === 'next' || environmentUUIDOrDirection === 'previous') {
+        this.store.update({ type: 'NAVIGATE_ENVIRONMENTS', direction: environmentUUIDOrDirection });
+      } else {
+        this.store.update({ type: 'SET_ACTIVE_ENVIRONMENT', UUID: environmentUUIDOrDirection });
       }
-    );
 
-    const newEnvironmentIndex = this.environments.push(newEnvironment) - 1;
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.NAVIGATE_ENVIRONMENT);
+    }
+  }
 
+  /**
+   * Set active route by UUID or navigation
+   */
+  public setActiveRoute(routeUUIDOrDirection: string | ReducerDirectionType) {
+    if (this.store.get('activeRouteUUID') !== routeUUIDOrDirection) {
+      if (routeUUIDOrDirection === 'next' || routeUUIDOrDirection === 'previous') {
+        this.store.update({ type: 'NAVIGATE_ROUTES', direction: routeUUIDOrDirection });
+      } else {
+        this.store.update({ type: 'SET_ACTIVE_ROUTE', UUID: routeUUIDOrDirection });
+      }
+
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.NAVIGATE_ROUTE);
+    }
+  }
+
+  /**
+   * Add a new environment and save it in the store
+   */
+  public addEnvironment() {
+    this.store.update({ type: 'ADD_ENVIRONMENT', item: this.buildNewEnvironment() });
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ENVIRONMENT);
-
-    this.environmentUpdateEvents.next({ environment: newEnvironment });
-
-    return newEnvironmentIndex;
   }
 
   /**
-   * Add a new route and save it
-   *
-   * @param environment - environment to which add a route
+   * Duplicate an environment, or the active environment and append it at the end of the list.
    */
-  public addRoute(environment: EnvironmentType): number {
-    const newRoute = Object.assign({}, this.routeSchema, { uuid: uuid(), headers: [Object.assign({}, this.routeHeadersSchema, { uuid: uuid() })] });
-    const newRouteIndex = environment.routes.push(newRoute) - 1;
+  public duplicateEnvironment(environmentUUID?: string) {
+    let environmentToDuplicate = this.store.getActiveEnvironment();
 
+    if (environmentUUID) {
+      environmentToDuplicate = this.store.get('environments').find(environment => environment.uuid === environmentUUID);
+    }
+
+    if (environmentToDuplicate) {
+      // copy the environment, reset some properties and change name
+      let newEnvironment: EnvironmentType = {
+        ...cloneDeep(environmentToDuplicate),
+        name: `${environmentToDuplicate.name} (copy)`
+      };
+
+      newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as EnvironmentType;
+
+      this.store.update({ type: 'ADD_ENVIRONMENT', item: newEnvironment });
+
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
+    }
+  }
+
+  /**
+   * Remove an environment or the current one if not environmentUUID is provided
+   */
+  public removeEnvironment(environmentUUID?: string) {
+    const currentEnvironmentUUID = this.store.get('activeEnvironmentUUID');
+
+    if (!environmentUUID) {
+      if (!currentEnvironmentUUID) {
+        return;
+      }
+      environmentUUID = this.store.get('activeEnvironmentUUID');
+    }
+
+    this.serverService.stop(environmentUUID);
+
+    this.store.update({ type: 'REMOVE_ENVIRONMENT', UUID: environmentUUID });
+
+    this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ENVIRONMENT);
+  }
+
+  /**
+   * Add a new route and save it in the store
+   */
+  public addRoute() {
+    const newRoute: RouteType = {
+      ...this.routeSchema,
+      uuid: uuid(),
+      headers: [
+        { ...this.routeHeadersSchema }
+      ]
+    };
+
+    this.store.update({ type: 'ADD_ROUTE', item: newRoute });
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
+  }
 
-    this.environmentUpdateEvents.next({ environment });
+  /**
+   * Duplicate a route, or the current active route and append it at the end
+   */
+  public duplicateRoute(routeUUID?: string) {
+    let routeToDuplicate = this.store.getActiveRoute();
 
-    return newRouteIndex;
+    if (routeUUID) {
+      routeToDuplicate = this.store.getActiveEnvironment().routes.find(route => route.uuid === routeUUID);
+    }
+
+    if (routeToDuplicate) {
+      let newRoute: RouteType = cloneDeep(routeToDuplicate);
+
+      newRoute = this.renewUUIDs(newRoute, 'route') as RouteType;
+
+      this.store.update({ type: 'ADD_ROUTE', item: newRoute });
+
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ROUTE);
+    }
   }
 
   /**
    * Remove a route and save
-   *
-   * @param environment - environment to which remove a route
-   * @param routeIndex - route index to remove
    */
-  public removeRoute(environment: EnvironmentType, routeIndex: number) {
-    // delete the route
-    environment.routes.splice(routeIndex, 1);
-
-    this.checkRoutesDuplicates(environment);
+  public removeRoute(routeUUID: string = this.store.get('activeRouteUUID')) {
+    this.store.update({ type: 'REMOVE_ROUTE', UUID: routeUUID });
 
     this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE);
-
-    this.environmentUpdateEvents.next({
-      environment
-    });
   }
 
   /**
-   * Remove an environment and save
-   *
-   * @param environmentIndex - environment index to remove
+   * Set active tab
    */
-  public removeEnvironment(environmentIndex: number) {
-    this.eventsService.environmentDeleted.emit(this.environments[environmentIndex]);
+  public setActiveTab(activeTab: TabsNameType) {
+    this.store.update({ type: 'SET_ACTIVE_TAB', item: activeTab });
+  }
 
-    // delete the environment
-    this.environments.splice(environmentIndex, 1);
+  /**
+   * Update the active environment
+   */
+  public updateActiveEnvironment(properties: { [T in keyof EnvironmentType]?: EnvironmentType[T] }) {
+    this.store.update({ type: 'UPDATE_ENVIRONMENT', properties });
+  }
 
-    this.checkEnvironmentsDuplicates();
+  /**
+   * Update the active route
+   */
+  public updateActiveRoute(properties: { [T in keyof RouteType]?: RouteType[T] }) {
+    this.store.update({ type: 'UPDATE_ROUTE', properties });
+  }
 
-    this.environmentUpdateEvents.next({});
+  /**
+   * Start / stop active environment
+   */
+  public toggleActiveEnvironment() {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const environmentsStatus = this.store.get('environmentsStatus');
+    const activeEnvironmentState = environmentsStatus[activeEnvironment.uuid];
+
+    if (activeEnvironmentState.running) {
+      this.serverService.stop(activeEnvironment.uuid);
+
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_STOP);
+
+      if (activeEnvironmentState.needRestart) {
+        this.serverService.start(activeEnvironment);
+        this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_RESTART);
+      }
+    } else {
+      this.serverService.start(activeEnvironment);
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_START);
+    }
+  }
+
+  /**
+   * Build a new environment
+   */
+  private buildNewEnvironment(): EnvironmentType {
+    return {
+      ...this.environmentSchema,
+      uuid: uuid(),
+      name: 'New environment',
+      port: 3000,
+      routes: [
+        {
+          ...this.routeSchema,
+          headers: [
+            { ...this.routeHeadersSchema }
+          ]
+        }
+      ],
+      headers: [{ key: 'Content-Type', value: 'application/json' }]
+    };
   }
 
   /**
    * Build a default environment when starting the application for the first time
    */
   private buildDefaultEnvironment(): EnvironmentType {
-    const defaultEnvironment: EnvironmentType = Object.assign({}, this.environmentSchema);
-    defaultEnvironment.uuid = uuid(); // random uuid
-    defaultEnvironment.name = 'Example';
-    defaultEnvironment.headers = [Object.assign({}, this.emptyHeaderSchema, { uuid: uuid() })];
-
-    defaultEnvironment.routes.push(Object.assign(
-      {}, this.routeSchema, { uuid: uuid(), headers: [{ uuid: uuid(), key: 'Content-Type', value: 'text/plain' }] },
-      { endpoint: 'answer', body: '42' }
-    ));
-    defaultEnvironment.routes.push(Object.assign(
-      {}, this.routeSchema, { uuid: uuid(), headers: [{ uuid: uuid(), key: 'Content-Type', value: 'application/json' }] },
-      {
-        method: 'post',
-        endpoint: 'dolphins',
-        body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}'
-      }
-    ));
-    defaultEnvironment.modifiedAt = new Date();
-
-    return defaultEnvironment;
-  }
-
-  /**
-   * Check if route is duplicated and mark it
-   *
-   * @param environment - environment to which check the route against
-   */
-  private checkRoutesDuplicates(environment: EnvironmentType) {
-    environment.routes.forEach((firstRoute, firstRouteIndex) => {
-      const duplicatedRoutesIndexes = [];
-
-      // extract all routes with same endpoint than current one
-      const duplicatedRoutes: RouteType[] = environment.routes.filter((otherRouteItem: RouteType, otherRouteIndex: number) => {
-        // ignore same route
-        if (otherRouteIndex === firstRouteIndex) {
-          return false;
-        } else {
-          // if duplicated index keep duplicated route index in an array, return the duplicated route
-          if (otherRouteItem.endpoint === firstRoute.endpoint && otherRouteItem.method === firstRoute.method) {
-            duplicatedRoutesIndexes.push(otherRouteIndex);
-            return true;
-          } else {
-            return false;
-          }
+    return {
+      ...this.environmentSchema,
+      uuid: uuid(),
+      name: 'Example',
+      headers: [{ ...this.emptyHeaderSchema }],
+      routes: [
+        {
+          ...this.routeSchema,
+          uuid: uuid(),
+          headers: [{ key: 'Content-Type', value: 'text/plain' }],
+          endpoint: 'answer',
+          body: '42'
+        },
+        {
+          ...this.routeSchema,
+          uuid: uuid(),
+          headers: [{ key: 'Content-Type', value: 'application/json' }],
+          method: 'post',
+          endpoint: 'dolphins',
+          body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}'
         }
-      });
-
-      firstRoute.duplicates = duplicatedRoutesIndexes;
-    });
-  }
-
-  /**
-   * Check if environments are duplicated and mark them
-   */
-  private checkEnvironmentsDuplicates() {
-    if (this.environments) {
-      this.environments.forEach((environment, environmentIndex) => {
-        const duplicatedEnvironmentsIndexes = [];
-
-        // extract all environments with same port than current one
-        const duplicatedEnvironments: EnvironmentType[] = this.environments.filter((
-          otherEnvironmentItem: EnvironmentType,
-          otherEnvironmentIndex: number
-        ) => {
-          // ignore same environment
-          if (otherEnvironmentIndex === environmentIndex) {
-            return false;
-          } else {
-            // if duplicated index keep duplicated route index in an array, return the duplicated route
-            if (otherEnvironmentItem.port === environment.port) {
-              duplicatedEnvironmentsIndexes.push(otherEnvironmentIndex);
-              return true;
-            } else {
-              return false;
-            }
-          }
-        });
-
-        environment.duplicates = duplicatedEnvironmentsIndexes;
-      });
-    }
-  }
-
-  /**
-   * Clean environments before saving (avoid saving server instance and things like this)
-   *
-   */
-  private cleanBeforeSave() {
-    const environmentsCopy: EnvironmentsType = this.environments.map((environment: EnvironmentType): EnvironmentType => {
-      const environmentCopy = cloneDeep(environment);
-
-      // remove some items
-      delete environmentCopy.instance;
-      delete environmentCopy.running;
-      delete environmentCopy.startedAt;
-      delete environmentCopy.needRestart;
-
-      return environmentCopy;
-    });
-
-    return environmentsCopy;
+      ]
+    };
   }
 
   /**
@@ -325,7 +321,7 @@ export class EnvironmentsService {
     let lastMigrationId;
 
     Migrations.forEach(migration => {
-      if (migration.id > this.settingsService.settings.lastMigration) {
+      if (migration.id > this.store.get('settings').lastMigration) {
         lastMigrationId = migration.id;
 
         environments.forEach(environment => migration.migrationFunction(environment));
@@ -334,12 +330,8 @@ export class EnvironmentsService {
     });
 
     if (wasUpdated) {
-      // if a migration was played immediately save
-      this.environmentUpdateEvents.next({});
-
       // save last migration in the settings
-      this.settingsService.settings.lastMigration = lastMigrationId;
-      this.settingsService.settingsUpdateEvents.next(this.settingsService.settings);
+      this.settingsService.updateSettings({ lastMigration: lastMigrationId });
     }
 
     return environments;
@@ -358,100 +350,50 @@ export class EnvironmentsService {
       });
     } else if (subject === 'environment') {
       (data as EnvironmentType).uuid = uuid();
-      (data as EnvironmentType).headers.forEach(header => {
-        header.uuid = uuid();
-      });
       (data as EnvironmentType).routes.forEach(route => {
         this.renewUUIDs(route, 'route');
       });
     } else if (subject === 'route') {
       (data as RouteType).uuid = uuid();
-      (data as RouteType).headers.forEach(header => {
-        header.uuid = uuid();
-      });
     }
 
     return data;
   }
 
   /**
-   * Duplicate an environment and put it at the end
-   *
-   * @param environmentIndex
+   * Move a menu item (envs / routes)
    */
-  public duplicateEnvironment(environmentIndex: number): number {
-    // copy the environment, reset some properties and change name
-    let newEnvironment: EnvironmentType = Object.assign(
-      cloneDeep(this.environments[environmentIndex]),
-      this.environmentResetSchema,
-      {
-        name: this.environments[environmentIndex].name + ' (copy)'
-      }
-    );
-
-    newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as EnvironmentType;
-
-    const newEnvironmentIndex = this.environments.push(newEnvironment) - 1;
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
-
-    this.environmentUpdateEvents.next({ environment: newEnvironment });
-
-    return newEnvironmentIndex;
-  }
-
-  /**
-   * Duplicate a route and add it at the end
-   *
-   * @param environment
-   * @param routeIndex
-   */
-  public duplicateRoute(environment: EnvironmentType, routeIndex: number): number {
-    // copy the route, reset duplicates (use cloneDeep to avoid headers pass by reference)
-    let newRoute = Object.assign({}, cloneDeep(environment.routes[routeIndex]), { duplicates: [] });
-
-    newRoute = this.renewUUIDs(newRoute, 'route') as RouteType;
-
-    const newRouteIndex = environment.routes.push(newRoute) - 1;
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ROUTE);
-
-    this.environmentUpdateEvents.next({ environment });
-
-    return newRouteIndex;
-  }
-
-  public findEnvironmentIndex(environmentUUID: string): number {
-    return this.environments.findIndex(environment => environment.uuid === environmentUUID);
-  }
-
-  public findRouteIndex(environment: EnvironmentType, routeUUID: string): number {
-    return environment.routes.findIndex(route => route.uuid === routeUUID);
+  public moveMenuItem(type: 'routes' | 'environments' | string, sourceIndex: number, targetIndex: number) {
+    this.store.update({ type: (type === 'environments') ? 'MOVE_ENVIRONMENTS' : 'MOVE_ROUTES', indexes: { sourceIndex, targetIndex } });
   }
 
   /**
    * Export all envs in a json file
    */
   public exportAllEnvironments() {
+    const environments = this.store.get('environments');
+
     this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (path) => {
-      // reset environments before exporting (cannot export running env with server instance)
-      const dataToExport = cloneDeep(this.environments);
-      dataToExport.forEach(environment => {
-        Object.assign(environment, this.environmentResetSchema);
-      });
+      // If the user clicked 'cancel'
+      if (path === undefined) {
+        return;
+      }
+
+      // reset environments before exporting
+      const dataToExport = cloneDeep(environments);
 
       try {
         fs.writeFile(path, this.dataService.wrapExport(dataToExport, 'full'), (error) => {
           if (error) {
-            this.alertService.showAlert('error', Errors.EXPORT_ERROR);
+            this.toastService.addToast('error', Errors.EXPORT_ERROR);
           } else {
-            this.alertService.showAlert('success', Messages.EXPORT_SUCCESS);
+            this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
 
             this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_FILE);
           }
         });
       } catch (error) {
-        this.alertService.showAlert('error', Errors.EXPORT_ERROR);
+        this.toastService.addToast('error', Errors.EXPORT_ERROR);
       }
     });
   }
@@ -459,99 +401,90 @@ export class EnvironmentsService {
   /**
    * Export an environment to the clipboard
    *
-   * @param environmentIndex
+   * @param environmentUUID
    */
-  public exportEnvironmentToClipboard(environmentIndex: number) {
+  public exportEnvironmentToClipboard(environmentUUID: string) {
+    const environment = this.store.getEnvironmentByUUID(environmentUUID);
+
     try {
-      // reset environment before exporting (cannot export running env with server instance)
-      clipboard.writeText(this.dataService.wrapExport({ ...cloneDeep(this.environments[environmentIndex]), ...this.environmentResetSchema }, 'environment'));
-      this.alertService.showAlert('success', Messages.EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS);
+      // reset environment before exporting
+      clipboard.writeText(this.dataService.wrapExport(cloneDeep(environment), 'environment'));
+      this.toastService.addToast('success', Messages.EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS);
       this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_CLIPBOARD);
     } catch (error) {
-      this.alertService.showAlert('error', Errors.EXPORT_ENVIRONMENT_CLIPBOARD_ERROR);
+      this.toastService.addToast('error', Errors.EXPORT_ENVIRONMENT_CLIPBOARD_ERROR);
     }
   }
 
   /**
-   * Export an environment to the clipboard
+   * Export a route from the active environment to the clipboard
    *
-   * @param environmentIndex
-   * @param routeIndex
+   * @param routeUUID
    */
-  public exportRouteToClipboard(environmentIndex: number, routeIndex: number) {
+  public exportRouteToClipboard(routeUUID: string) {
+    const environment = this.store.getActiveEnvironment();
+
     try {
-      clipboard.writeText(this.dataService.wrapExport(this.environments[environmentIndex].routes[routeIndex], 'route'));
-      this.alertService.showAlert('success', Messages.EXPORT_ROUTE_CLIPBOARD_SUCCESS);
+      clipboard.writeText(this.dataService.wrapExport(environment.routes.find(route => route.uuid === routeUUID), 'route'));
+      this.toastService.addToast('success', Messages.EXPORT_ROUTE_CLIPBOARD_SUCCESS);
       this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_CLIPBOARD);
     } catch (error) {
-      this.alertService.showAlert('error', Errors.EXPORT_ROUTE_CLIPBOARD_ERROR);
+      this.toastService.addToast('error', Errors.EXPORT_ROUTE_CLIPBOARD_ERROR);
     }
   }
 
   /**
    * Import an environment / route from clipboard
    * Append environment, append route in currently selected environment
-   *
-   * @param currentEnvironment
    */
-  public importFromClipboard(currentEnvironment: CurrentEnvironmentType) {
+  public importFromClipboard() {
     let importData: ExportType;
+
     try {
       importData = JSON.parse(clipboard.readText());
 
       // verify data checksum
       if (!this.dataService.verifyImportChecksum(importData)) {
-        this.alertService.showAlert('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
+        this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
+        return;
+      }
+
+      // verify version compatibility
+      if (importData.appVersion !== appVersion) {
+        this.toastService.addToast('error', Errors.IMPORT_WRONG_VERSION);
         return;
       }
 
       if (importData.subject === 'environment') {
         importData.data = this.renewUUIDs(importData.data as EnvironmentType, 'environment');
-        this.environments.push(importData.data as EnvironmentType);
-        this.environments = this.migrateData(this.environments);
-
-        // if only one environment ask for selection of the one just created
-        if (this.environments.length === 1) {
-          this.selectEnvironment.next(0);
-        }
-
-        this.alertService.showAlert('success', Messages.IMPORT_ENVIRONMENT_CLIPBOARD_SUCCESS);
+        this.store.update({ type: 'ADD_ENVIRONMENT', item: importData.data });
       } else if (importData.subject === 'route') {
-        let currentEnvironmentIndex: number;
-        // if no current environment create one and ask for selection
-        if (this.environments.length === 0) {
-          const newEnvironmentIndex = this.addEnvironment();
-
-          this.selectEnvironment.next(newEnvironmentIndex);
-          this.environments[0].routes = [];
-
-          currentEnvironmentIndex = 0;
-        } else {
-          currentEnvironmentIndex = currentEnvironment.index;
-        }
-
         importData.data = this.renewUUIDs(importData.data as RouteType, 'route');
-        this.environments[currentEnvironmentIndex].routes.push(importData.data as RouteType);
-        this.environments = this.migrateData(this.environments);
 
-        this.alertService.showAlert('success', Messages.IMPORT_ROUTE_CLIPBOARD_SUCCESS);
+        // if has a current environment append imported route
+        if (this.store.get('activeEnvironmentUUID')) {
+          this.store.update({ type: 'ADD_ROUTE', item: importData.data });
+        } else {
+          const newEnvironment: EnvironmentType = {
+            ...this.buildNewEnvironment(),
+            routes: [importData.data as RouteType]
+          };
+
+          this.store.update({ type: 'ADD_ENVIRONMENT', item: newEnvironment });
+        }
       }
-
-      this.environmentUpdateEvents.next({
-        environment: (currentEnvironment) ? currentEnvironment.environment : null
-      });
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_CLIPBOARD);
     } catch (error) {
       if (!importData) {
-        this.alertService.showAlert('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
+        this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
         return;
       }
 
       if (importData.subject === 'environment') {
-        this.alertService.showAlert('error', Errors.IMPORT_ENVIRONMENT_CLIPBOARD_ERROR);
+        this.toastService.addToast('error', Errors.IMPORT_ENVIRONMENT_CLIPBOARD_ERROR);
       } else if (importData.subject === 'route') {
-        this.alertService.showAlert('error', Errors.IMPORT_ROUTE_CLIPBOARD_ERROR);
+        this.toastService.addToast('error', Errors.IMPORT_ROUTE_CLIPBOARD_ERROR);
       }
     }
   }
@@ -561,38 +494,34 @@ export class EnvironmentsService {
    * Verify checksum and migrate data.
    *
    * Append imported envs to the env array.
-   *
-   * @param currentEnvironment
    */
-  public importEnvironmentsFile(callback: Function) {
+  public importEnvironmentsFile() {
     this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (file) => {
       if (file && file[0]) {
         fs.readFile(file[0], 'utf-8', (error, fileContent) => {
           if (error) {
-            this.alertService.showAlert('error', Errors.IMPORT_ERROR);
+            this.toastService.addToast('error', Errors.IMPORT_ERROR);
           } else {
             const importData: ExportType = JSON.parse(fileContent);
 
             // verify data checksum
             if (!this.dataService.verifyImportChecksum(importData)) {
-              this.alertService.showAlert('error', Errors.IMPORT_FILE_WRONG_CHECKSUM);
+              this.toastService.addToast('error', Errors.IMPORT_FILE_WRONG_CHECKSUM);
+              return;
+            }
+
+            // verify version compatibility
+            if (importData.appVersion !== appVersion) {
+              this.toastService.addToast('error', Errors.IMPORT_WRONG_VERSION);
               return;
             }
 
             importData.data = this.renewUUIDs(importData.data as EnvironmentsType, 'full');
-
-            this.environments.push(...(importData.data as EnvironmentsType));
-
-            // play migrations
-            this.environments = this.migrateData(this.environments);
-
-            this.environmentUpdateEvents.next({});
-
-            this.alertService.showAlert('success', Messages.IMPORT_SUCCESS);
+            (importData.data as EnvironmentsType).forEach(environment => {
+              this.store.update({ type: 'ADD_ENVIRONMENT', item: environment });
+            });
 
             this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);
-
-            callback();
           }
         });
       }
@@ -600,72 +529,17 @@ export class EnvironmentsService {
   }
 
   /**
-   * Return the route content type or environment content type if any
-   *
-   * @param environment
-   * @param route
+   * Check if active environment has headers
    */
-  public getRouteContentType(environment: EnvironmentType, route: RouteType) {
-    const routeContentType = route.headers.find(header => header.key === 'Content-Type');
-
-    if (routeContentType && routeContentType.value) {
-      return routeContentType.value;
-    }
-
-    const environmentContentType = environment.headers.find(header => header.key === 'Content-Type');
-
-    if (environmentContentType && environmentContentType.value) {
-      return environmentContentType.value;
-    }
-
-    return '';
+  public hasEnvironmentHeaders() {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    return activeEnvironment && activeEnvironment.headers.some(header => !!header.key);
   }
 
   /**
-   * Check if an environment has headers
-   *
-   * @param environment
+   * Emit an headers injection event in order to add CORS headers to the headers list component
    */
-  public hasEnvironmentHeaders(environment: EnvironmentType) {
-    return environment.headers.some(header => {
-      return !!header.key;
-    });
-  }
-
-  /**
-   * Add CORS headers to environment headers if not already exists
-   *
-   * @param environment
-   */
-  public setEnvironmentCORSHeaders(environment: EnvironmentType) {
-    CORSHeaders.forEach(CORSHeader => {
-      const headerExists = this.findHeaderByName(environment.headers, CORSHeader.key);
-      // only write header if wasn't found or has no value
-      if (!headerExists) {
-        environment.headers.push({ uuid: uuid(), key: CORSHeader.key, value: CORSHeader.value });
-      } else if (!headerExists.value) {
-        headerExists.value = CORSHeader.value;
-      }
-    });
-  }
-
-  /**
-   * Find a header by its key
-   *
-   * @param headers
-   * @param name
-   */
-  private findHeaderByName(headers: HeaderType[], name: string) {
-    return headers.find(header => header.key === name);
-  }
-
-  /**
-   * Calculate the total number of routes
-   *
-   */
-  private updateRoutesTotal() {
-    this.routesTotal = this.environments.reduce((total, environment) => {
-      return total + environment.routes.length;
-    }, 0);
+  public setEnvironmentCORSHeaders() {
+    this.eventsService.injectHeaders.emit({ target: 'environmentHeaders', headers: CORSHeaders });
   }
 }

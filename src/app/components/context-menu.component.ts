@@ -5,7 +5,7 @@ import { DataSubjectType } from 'src/app/types/data.type';
 export type ContextMenuItemPayload = {
   subject: DataSubjectType;
   action: 'delete' | 'duplicate' | 'env_settings' | 'env_logs' | 'export';
-  subjectId: number;
+  subjectUUID: string;
 };
 
 export type ContextMenuItem = {

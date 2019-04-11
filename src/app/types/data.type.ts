@@ -5,6 +5,7 @@ export type DataSubjectType = 'full' | 'environment' | 'route';
 
 export type ExportType = {
   id: string;
+  appVersion: string;
   checksum: string;
   subject: DataSubjectType;
   data: EnvironmentsType | EnvironmentType | RouteType;
