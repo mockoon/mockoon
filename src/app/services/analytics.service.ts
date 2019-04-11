@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
-import { EnvironmentsService } from 'src/app/services/environments.service';
+import { combineLatest } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { EventsService } from 'src/app/services/events.service';
-import { SettingsService, SettingsType } from 'src/app/services/settings.service';
+import { Store } from 'src/app/stores/store';
 import { environment } from 'src/environments/environment';
 const packageJSON = require('../../../package.json');
 
@@ -14,7 +14,6 @@ const packageJSON = require('../../../package.json');
  * Queue items before auth is ready with the uniq id. Then process the queue on ready.
  *
  * Custom dimensions:
- * - routesTotal = cd1
  * - environmentsTotal = cd2
  *
  */
@@ -23,7 +22,6 @@ export type CollectParams = { type: 'event' | 'pageview', pageName?: string, cat
 
 @Injectable()
 export class AnalyticsService {
-  private settings: SettingsType;
   private endpoint = 'https://www.google-analytics.com/collect';
   private payload = {
     v: '1',
@@ -34,32 +32,29 @@ export class AnalyticsService {
     tid: environment.analyticsID,
     dh: encodeURIComponent('https://app.mockoon.com')
   };
-
   private queue: CollectParams[] = [];
+  private servicesReady = false;
 
   constructor(
     private http: HttpClient,
-    private environmentsService: EnvironmentsService,
-    private authService: AuthService,
-    private settingsService: SettingsService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private store: Store
   ) { }
 
   public init() {
-    // wait for auth to be ready before processing the eventual queue
-    this.authService.authReady.subscribe(() => {
+    combineLatest(
+      this.store.select('userId'),
+      this.store.select('settings')
+    ).pipe(
+      filter(result => !!result[0] && !!result[1])
+    ).subscribe(() => {
+      this.servicesReady = true;
+
       this.queue.forEach((item) => {
         this.makeRequest(item);
       });
 
       this.queue = [];
-    });
-
-    // wait for settings to be ready and check if display needed
-    this.settingsService.settingsReady.subscribe((ready) => {
-      if (ready) {
-        this.settings = this.settingsService.settings;
-      }
     });
 
     this.eventsService.analyticsEvents.subscribe((event) => {
@@ -74,7 +69,7 @@ export class AnalyticsService {
    */
   private collect(params: CollectParams) {
     // if firebase auth not ready add to queue
-    if (!this.authService.userId) {
+    if (!this.servicesReady) {
       this.queue.push(params);
     } else {
       this.makeRequest(params);
@@ -97,24 +92,15 @@ export class AnalyticsService {
       payload = this.getPayload() + `&t=pageview&dp=${encodeURIComponent(params.pageName)}`;
     }
 
-    if (this.settings.analytics) {
+    if (this.store.get('settings').analytics) {
       this.http.post(this.endpoint, payload, { responseType: 'text' }).subscribe();
     }
   }
 
   private getCustomDimensions(): string {
-    const environmentsTotal = this.environmentsService.environments.length;
-    const routesTotal = this.environmentsService.routesTotal;
+    const environments = this.store.get('environments');
 
-    return `&cd1=${routesTotal}&cd2=${environmentsTotal}`;
-  }
-
-  private getCid(): string {
-    if (this.authService.userId) {
-      return '&cid=' + this.authService.userId;
-    } else {
-      return '';
-    }
+    return `&cd2=${environments.length}`;
   }
 
   private getPayload(): string {
@@ -127,7 +113,7 @@ export class AnalyticsService {
       payload += `${key}=${this.payload[key]}`;
     });
 
-    payload += this.getCid() + this.getCustomDimensions();
+    payload += '&cid=' + this.store.get('userId') + this.getCustomDimensions();
 
     return payload;
   }

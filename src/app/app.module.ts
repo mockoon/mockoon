@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -18,11 +18,11 @@ import { HeadersListComponent } from 'src/app/components/headers-list.component'
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { WelcomeModalComponent } from 'src/app/components/welcome-modal.component';
 import { Config } from 'src/app/config';
-import { AutocompleteDirective } from 'src/app/directives/autocomplete.directive';
-import { OnlyNumberDirective } from 'src/app/directives/only-numbers.directive';
+import { InputNumberDirective } from 'src/app/directives/input-number.directive';
+import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzone.directive';
+import { MousewheelUpdateDirective } from 'src/app/directives/mousewheel-update.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
-import { AlertService } from 'src/app/services/alert.service';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
@@ -30,16 +30,18 @@ import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { ToastsService } from 'src/app/services/toasts.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    OnlyNumberDirective,
+    InputNumberDirective,
     ValidPathDirective,
+    MousewheelUpdateDirective,
+    MousedragDeadzoneDirective,
     ContextMenuComponent,
-    AutocompleteDirective,
     WelcomeModalComponent,
     SettingsModalComponent,
     ChangelogModalComponent,
@@ -58,10 +60,11 @@ import { AppComponent } from './app.component';
     MarkdownModule.forRoot({ markedOptions: { provide: MarkedOptions, useFactory: MarkedOptionsFactory } }),
     AngularFireModule.initializeApp(Config.firebaseConfig),
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    ReactiveFormsModule
   ],
   providers: [
-    AlertService,
+    ToastsService,
     AnalyticsService,
     AuthService,
     EnvironmentsService,

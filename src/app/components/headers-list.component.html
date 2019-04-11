@@ -1,21 +1,24 @@
-<div class="row headers-list" *ngFor="let header of headersList; index as headerIndex">
-  <div class="col">
-    <div class="input-group" style="position: relative;">
-      <input type="text" class="form-control col-4" placeholder="name" name="header{{headerIndex}}.key" [(ngModel)]="header.key" (ngModelChange)="triggerUpdate()" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="{list: headerNamesList, container: containersList[type]}">
-      <input type="text" class="form-control col-6" placeholder="value" name="header{{headerIndex}}.value" [(ngModel)]="header.value" (ngModelChange)="triggerUpdate()" [ngModelOptions]="{updateOn: 'change'}" [autocomplete]="{list: headerValuesList, container: containersList[type]}">
-      <div class="input-group-prepend clickable" *ngIf="headerIndex !== 0">
-        <span class="input-group-text p-1 text-danger" ngbTooltip="Remove" placement="bottom" (click)="removeHeader(header.uuid)"><i class="material-icons">clear</i></span>
-      </div>
-      <div class="input-group-prepend clickable" *ngIf="headerIndex === (headersList.length - 1) && header.key">
-        <span class="input-group-text p-1 text-success" ngbTooltip="Add" placement="bottom" (click)="addHeader()"><i class="material-icons">add_box</i></span>
-      </div>
-      <div class="input-group-prepend" *ngIf="testHeaderValidity(header.key)">
-        <span class="input-group-text p-1 text-warning" ngbTooltip="Header key contains prohibited characters and won't be used" placement="left"><i class="material-icons">warning</i></span>
-      </div>
-      <!-- Display empty warning if: one is empty, OR for last line if one is filled and other is empty -->
-      <div class="input-group-prepend" *ngIf="(headerIndex === (headersList.length - 1) && ((header.key && !header.value) || (!header.key && header.value))) || (headerIndex < (headersList.length - 1) && (!header.value || !header.key))">
-        <span class="input-group-text p-1 text-warning" ngbTooltip="Headers with empty name or value are ignored" placement="left"><i class="material-icons">warning</i></span>
+<ng-container [formGroup]="form">
+  <ng-container formArrayName="headers">
+    <div class="row headers-list" *ngFor="let header of form.get('headers')['controls']; index as headerIndex" [formGroupName]="headerIndex">
+      <div class="col">
+        <div class="input-group" style="position: relative;">
+          <input type="text" class="form-control col-4" placeholder="name" formControlName="key" [ngbTypeahead]="search('headerNames')">
+          <input type="text" class="form-control col-6" placeholder="value" formControlName="value" [ngbTypeahead]="search('headerValues')">
+          <div class="input-group-prepend clickable">
+            <span class="input-group-text p-1 text-danger" (click)="removeHeader(headerIndex)" ngbTooltip="Remove" placement="bottom"><i class="material-icons">clear</i></span>
+          </div>
+          <div class="input-group-prepend" *ngIf="testHeaderValidity(header.get('key')?.value)">
+            <span class="input-group-text p-1 text-warning" ngbTooltip="Header key contains prohibited characters and won't be used"><i class="material-icons">warning</i></span>
+          </div>
+          <div class="input-group-prepend" *ngIf="((header.get('key')?.value && !header.get('value')?.value) || (!header.get('key')?.value && header.get('value')?.value) || (!header.get('key')?.value && !header.get('value')?.value)) && headerIndex < (form.get('headers')['controls'].length - 1)">
+            <span class="input-group-text p-1 text-warning" ngbTooltip="Headers with empty name or value are ignored"><i class="material-icons">warning</i></span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+    <div class="mt-2 clickable">
+      <span (click)="addHeader()"><i class="material-icons text-success">add_box</i> Add header</span>
+    </div>
+  </ng-container>
+</ng-container>

@@ -5,19 +5,18 @@ import * as http from 'http';
 import * as proxy from 'http-proxy-middleware';
 import * as https from 'https';
 import * as killable from 'killable';
+import * as mimeTypes from 'mime-types';
 import * as path from 'path';
-import { Config } from 'src/app/config';
-import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
 import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
-import { AlertService } from 'src/app/services/alert.service';
+import { ExpressMiddlewares } from 'src/app/libs/express-middlewares.lib';
+import { Utils } from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
-import { EnvironmentsService } from 'src/app/services/environments.service';
-import { EventsService } from 'src/app/services/events.service';
+import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
+import { Store } from 'src/app/stores/store';
 import { EnvironmentType } from 'src/app/types/environment.type';
 import { CORSHeaders, HeaderType, mimeTypesWithTemplating, RouteType } from 'src/app/types/route.type';
-import { EnvironmentLogsType } from 'src/app/types/server.type';
 import { URL } from 'url';
 
 const httpsConfig = {
@@ -27,24 +26,14 @@ const httpsConfig = {
 
 @Injectable()
 export class ServerService {
-  public environmentsLogs: EnvironmentLogsType = {};
+  // running servers instances
+  private instances: { [key: string]: any } = {};
 
   constructor(
-    private alertService: AlertService,
+    private toastService: ToastsService,
     private dataService: DataService,
-    private eventsService: EventsService,
-    private environmentService: EnvironmentsService
-  ) {
-    this.eventsService.environmentDeleted.subscribe((environment: EnvironmentType) => {
-      // stop if needed before deletion
-      if (environment.running) {
-        this.stop(environment);
-      }
-
-      // delete the request logs
-      this.deleteEnvironmentLogs(environment.uuid);
-    });
-  }
+    private store: Store
+  ) { }
 
   /**
    * Start an environment / server
@@ -63,18 +52,19 @@ export class ServerService {
     }
 
     // listen to port
-    serverInstance.listen(environment.port, (error, success) => {
-      environment.instance = serverInstance;
-      environment.running = true;
-      environment.startedAt = new Date();
+    serverInstance.listen(environment.port, () => {
+      this.instances[environment.uuid] = serverInstance;
+      this.store.update({ type: 'UPDATE_ENVIRONMENT_STATUS', properties: { running: true, needRestart: false } });
+    });
+
+    // apply middlewares
+    ExpressMiddlewares.forEach(expressMiddleware => {
+      server.use(expressMiddleware);
     });
 
     // apply latency, cors, routes and proxy to express server
-    this.analytics(server);
-    this.rewriteUrl(server);
-    this.parseBody(server);
     this.logRequests(server, environment);
-    this.setEnvironmentLatency(server, environment);
+    this.setEnvironmentLatency(server, environment.uuid);
     this.setRoutes(server, environment);
     this.setCors(server, environment);
     this.enableProxy(server, environment);
@@ -82,11 +72,11 @@ export class ServerService {
     // handle server errors
     serverInstance.on('error', (error: any) => {
       if (error.code === 'EADDRINUSE') {
-        this.alertService.showAlert('error', Errors.PORT_ALREADY_USED);
+        this.toastService.addToast('error', Errors.PORT_ALREADY_USED);
       } else if (error.code === 'EACCES') {
-        this.alertService.showAlert('error', Errors.PORT_INVALID);
+        this.toastService.addToast('error', Errors.PORT_INVALID);
       } else {
-        this.alertService.showAlert('error', error.message);
+        this.toastService.addToast('error', error.message);
       }
     });
 
@@ -95,15 +85,14 @@ export class ServerService {
 
   /**
    * Completely stop an environment / server
-   *
-   * @param environment - an environment
    */
-  public stop(environment: EnvironmentType) {
-    if (environment.instance) {
-      environment.instance.kill(() => {
-        environment.instance = null;
-        environment.running = false;
-        environment.startedAt = null;
+  public stop(environmentUUID: string) {
+    const instance = this.instances[environmentUUID];
+
+    if (instance) {
+      instance.kill(() => {
+        delete this.instances[environmentUUID];
+        this.store.update({ type: 'UPDATE_ENVIRONMENT_STATUS', properties: { running: false, needRestart: false } });
       });
     }
   }
@@ -114,36 +103,10 @@ export class ServerService {
    * @param headerName
    */
   public testHeaderValidity(headerName: string) {
-    if (headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)) {
+    if (headerName && headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)) {
       return true;
     }
     return false;
-  }
-
-  /**
-   * Send event for all entering requests
-   *
-   * @param server - express instance
-   */
-  private analytics(server: any) {
-    server.use((req, res, next) => {
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_ENTERING_REQUEST);
-
-      next();
-    });
-  }
-
-  /**
-   * Remove multiple slash and replace by single slash
-   *
-   * @param server - express instance
-   */
-  private rewriteUrl(server: any) {
-    server.use((req, res, next) => {
-      req.url = req.url.replace(/\/{2,}/g, '/');
-
-      next();
-    });
   }
 
   /**
@@ -156,10 +119,12 @@ export class ServerService {
   private setCors(server: any, environment: EnvironmentType) {
     if (environment.cors) {
       server.options('/*', (req, res) => {
+        const environmentSelected = this.store.getEnvironmentByUUID(environment.uuid);
+
         this.setHeaders(CORSHeaders, req, res);
 
         // override default CORS headers with environment's headers
-        this.setHeaders(environment.headers, req, res);
+        this.setHeaders(environmentSelected.headers, req, res);
 
         res.send(200);
       });
@@ -173,43 +138,49 @@ export class ServerService {
    * @param environment - environment to get route schema from
    */
   private setRoutes(server: any, environment: EnvironmentType) {
-    environment.routes.forEach((route: RouteType) => {
+    environment.routes.forEach((declaredRoute: RouteType) => {
+      const duplicatedRoutes = this.store.get('duplicatedRoutes')[environment.uuid];
+
       // only launch non duplicated routes
-      if (!route.duplicates.length) {
+      if (!duplicatedRoutes || !duplicatedRoutes.has(declaredRoute.uuid)) {
         try {
           // create route
-          server[route.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + route.endpoint.replace(/ /g, '%20'), (req, res) => {
+          server[declaredRoute.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + declaredRoute.endpoint.replace(/ /g, '%20'), (req, res) => {
+            const currentEnvironment = this.store.getEnvironmentByUUID(environment.uuid);
+            const currentRoute = currentEnvironment.routes.find(route => route.uuid === declaredRoute.uuid);
+
             // add route latency if any
             setTimeout(() => {
-              const routeContentType = this.environmentService.getRouteContentType(environment, route);
+              const routeContentType = Utils.getRouteContentType(currentEnvironment, currentRoute);
 
               // set http code
-              res.status(route.statusCode);
+              res.status(currentRoute.statusCode);
 
-              this.setHeaders(environment.headers, req, res);
-              this.setHeaders(route.headers, req, res);
+              this.setHeaders(currentEnvironment.headers, req, res);
+              this.setHeaders(currentRoute.headers, req, res);
 
               // send the file
-              if (route.file) {
+              if (currentRoute.filePath) {
                 let filePath: string;
 
                 // throw error or serve file
                 try {
-                  filePath = DummyJSONParser(route.file.path, req);
+                  filePath = DummyJSONParser(currentRoute.filePath, req);
+                  const fileMimeType = mimeTypes.lookup(currentRoute.filePath);
 
                   // if no route content type set to the one detected
                   if (!routeContentType) {
-                    res.set('Content-Type', route.file.mimeType);
+                    res.set('Content-Type', fileMimeType);
                   }
 
                   let fileContent: Buffer | string = fs.readFileSync(filePath);
 
                   // parse templating for a limited list of mime types
-                  if (mimeTypesWithTemplating.indexOf(route.file.mimeType) > -1) {
+                  if (mimeTypesWithTemplating.indexOf(fileMimeType) > -1) {
                     fileContent = DummyJSONParser(fileContent.toString('utf-8', 0, fileContent.length), req);
                   }
 
-                  if (!route.file.sendAsBody) {
+                  if (!currentRoute.sendFileAsBody) {
                     res.set('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
                   }
                   res.send(fileContent);
@@ -225,7 +196,7 @@ export class ServerService {
                 // detect if content type is json in order to parse
                 if (routeContentType === 'application/json') {
                   try {
-                    res.json(JSON.parse(DummyJSONParser(route.body, req)));
+                    res.json(JSON.parse(DummyJSONParser(currentRoute.body, req)));
                   } catch (error) {
                     // if JSON parsing error send plain text error
                     if (error.message.indexOf('Unexpected token') > -1 || error.message.indexOf('Parse error') > -1) {
@@ -237,7 +208,7 @@ export class ServerService {
                   }
                 } else {
                   try {
-                    res.send(DummyJSONParser(route.body, req));
+                    res.send(DummyJSONParser(currentRoute.body, req));
                   } catch (error) {
                     // if invalid Content-Type provided
                     if (error.message.indexOf('invalid media type') > -1) {
@@ -247,12 +218,12 @@ export class ServerService {
                   }
                 }
               }
-            }, route.latency);
+            }, currentRoute.latency);
           });
         } catch (error) {
           // if invalid regex defined
           if (error.message.indexOf('Invalid regular expression') > -1) {
-            this.alertService.showAlert('error', Errors.INVALID_ROUTE_REGEX + route.endpoint);
+            this.toastService.addToast('error', Errors.INVALID_ROUTE_REGEX + declaredRoute.endpoint);
           }
         }
       }
@@ -280,11 +251,11 @@ export class ServerService {
    *
    * @param res
    * @param errorMessage
-   * @param showAlert
+   * @param showToast
    */
-  private sendError(res: any, errorMessage: string, showAlert = true) {
-    if (showAlert) {
-      this.alertService.showAlert('error', errorMessage);
+  private sendError(res: any, errorMessage: string, showToast = true) {
+    if (showToast) {
+      this.toastService.addToast('error', errorMessage);
     }
     res.set('Content-Type', 'text/plain');
     res.send(errorMessage);
@@ -315,33 +286,9 @@ export class ServerService {
         target: environment.proxyHost,
         secure: false,
         changeOrigin: true,
-        ssl: Object.assign({}, httpsConfig, { agent: false }),
+        ssl: { ...httpsConfig, agent: false },
         onProxyReq: processRequest
       }));
-    }
-  }
-
-  /**
-   * Parse body as a raw string
-   *
-   * @param server - server on which to parse the body
-   */
-  private parseBody(server: any) {
-    try {
-      server.use((req, res, next) => {
-        req.setEncoding('utf8');
-        req.body = '';
-
-        req.on('data', (chunk) => {
-          req.body += chunk;
-        });
-
-        req.on('end', () => {
-          next();
-        });
-      });
-    } catch (error) {
-
     }
   }
 
@@ -353,18 +300,7 @@ export class ServerService {
    */
   private logRequests(server: any, environment: EnvironmentType) {
     server.use((req, res, next) => {
-      let environmentLogs = this.environmentsLogs[environment.uuid];
-      if (!environmentLogs) {
-        this.environmentsLogs[environment.uuid] = [];
-        environmentLogs = this.environmentsLogs[environment.uuid];
-      }
-
-      // remove one at the end if we reach maximum
-      if (environmentLogs.length >= Config.maxLogsPerEnvironment) {
-        environmentLogs.pop();
-      }
-
-      environmentLogs.unshift(this.dataService.formatRequestLog(req));
+      this.store.update({ type: 'LOG_REQUEST', UUID: environment.uuid, item: this.dataService.formatRequestLog(req) });
 
       next();
     });
@@ -374,14 +310,13 @@ export class ServerService {
    * Set the environment latency if any
    *
    * @param server - server instance
-   * @param environment - environment
+   * @param environmentUUID - environment UUID
    */
-  private setEnvironmentLatency(server: any, environment: EnvironmentType) {
-    if (environment.latency > 0) {
-      server.use((req, res, next) => {
-        setTimeout(next, environment.latency);
-      });
-    }
+  private setEnvironmentLatency(server: any, environmentUUID: string) {
+    server.use((req, res, next) => {
+      const environmentSelected = this.store.getEnvironmentByUUID(environmentUUID);
+      setTimeout(next, environmentSelected.latency);
+    });
   }
 
   /**
@@ -396,23 +331,5 @@ export class ServerService {
     } catch (e) {
       return false;
     }
-  }
-
-  /**
-   * Clear the environment logs
-   *
-   * @param environmentUuid
-   */
-  public clearEnvironmentLogs(environmentUuid: string) {
-    this.environmentsLogs[environmentUuid] = [];
-  }
-
-  /**
-   * Delete an environment log
-   *
-   * @param environmentUuid
-   */
-  public deleteEnvironmentLogs(environmentUuid: string) {
-    delete this.environmentsLogs[environmentUuid];
   }
 }

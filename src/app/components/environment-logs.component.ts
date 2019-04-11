@@ -1,80 +1,50 @@
-import { Component, DoCheck, Input, KeyValueDiffer, KeyValueDiffers, OnInit } from '@angular/core';
-import { ServerService } from 'src/app/services/server.service';
-import { EnvironmentType } from 'src/app/types/environment.type';
-import { EnvironmentLogType } from 'src/app/types/server.type';
+import { Component, Input, OnInit } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { Store } from 'src/app/stores/store';
+import { EnvironmentLogsType } from 'src/app/types/server.type';
 
 @Component({
   selector: 'app-environment-logs',
   templateUrl: 'environment-logs.component.html',
   styleUrls: ['environment-logs.component.scss']
 })
-export class EnvironmentLogsComponent implements OnInit, DoCheck {
-  @Input() currentEnvironment: EnvironmentType;
-  public selectedLog: EnvironmentLogType;
-  public selectedLogIndex: number;
-  public environmentsLogs = this.serverService.environmentsLogs;
+export class EnvironmentLogsComponent implements OnInit {
+  @Input() activeEnvironmentUUID$: Observable<string>;
+  @Input() environmentsLogs$: Observable<EnvironmentLogsType>;
   public generalCollapsed: boolean;
   public headersCollapsed: boolean;
   public routeParamsCollapsed: boolean;
   public queryParamsCollapsed: boolean;
   public bodyCollapsed: boolean;
-  private environmentsLogsDiffer: KeyValueDiffer<any, any>;
-  private currentEnvironmentDiffer: KeyValueDiffer<any, any>;
-  private currentLogsLastLength: number;
+  public selectedLogIndex = new BehaviorSubject<number>(0);
+  public selectedLogIndex$: Observable<number>;
 
-  constructor(private serverService: ServerService, private keyValueDiffers: KeyValueDiffers) {
-    this.environmentsLogsDiffer = this.keyValueDiffers.find({}).create();
-    this.currentEnvironmentDiffer = this.keyValueDiffers.find({}).create();
-  }
+  constructor(private store: Store) { }
 
   ngOnInit() {
-    this.initCollapse();
+    this.selectedLogIndex$ = this.selectedLogIndex.asObservable();
+
+    const environmentsLogs = this.store.get('environmentsLogs');
+    this.activeEnvironmentUUID$.pipe(
+      distinctUntilChanged()
+    ).subscribe((activeEnvironmentUUID) => {
+      if (environmentsLogs[activeEnvironmentUUID] && environmentsLogs[activeEnvironmentUUID].length) {
+        this.showLogDetails(0);
+      } else {
+        this.initCollapse();
+        this.selectedLogIndex.next(0);
+      }
+    });
   }
 
   /**
-   * automatically select first item when switching environment, if any
+   * Select environment logs details at specified index
+   * @param logIndex
    */
-  ngDoCheck() {
-    const currentLogs = this.environmentsLogs[this.currentEnvironment.uuid];
-
-    const environmentsLogsChanges = this.environmentsLogsDiffer.diff(currentLogs);
-    const currentEnvironmentChanges = this.currentEnvironmentDiffer.diff(this.currentEnvironment);
-
-    if (currentEnvironmentChanges) {
-      if (currentLogs && currentLogs.length) {
-        this.showLogDetails(0);
-      } else {
-        this.resetSelectedLog();
-      }
-    }
-
-    if (environmentsLogsChanges) {
-      if (currentLogs && currentLogs.length) {
-        if (this.selectedLogIndex === undefined) {
-          this.showLogDetails(0);
-        } else if (this.currentLogsLastLength < currentLogs.length) {
-          this.showLogDetails(this.selectedLogIndex + 1);
-        }
-      } else {
-        this.resetSelectedLog();
-      }
-    }
-
-    if (currentLogs) {
-      this.currentLogsLastLength = currentLogs.length;
-    }
-  }
-
-  private resetSelectedLog() {
-    this.initCollapse();
-    this.selectedLogIndex = undefined;
-    this.selectedLog = undefined;
-  }
-
   public showLogDetails(logIndex: number) {
     this.initCollapse();
-    this.selectedLogIndex = logIndex;
-    this.selectedLog = this.environmentsLogs[this.currentEnvironment.uuid][this.selectedLogIndex];
+    this.selectedLogIndex.next(logIndex);
   }
 
   private initCollapse() {

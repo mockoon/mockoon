@@ -441,74 +441,33 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
   }
 }
 
-.toast-container {
+.toasts-container {
   z-index: 5000;
   position: absolute;
   width: 250px;
   top: $spacer / 2;
   right: $spacer / 2;
 
-  .toast {
-    font-size: $font-size-sm;
-    border-radius: $border-radius;
-    padding: .3rem .4rem;
-    max-height: 100px;
-    margin-bottom: $spacer / 2;
-    animation: fadein 300ms ease-in;
-    color: $gray-100;
-
-    &-success {
-      background-color: rgba($green, 0.8);
-    }
-
-    &-warning {
-      background-color: rgba($orange, 0.8);
-    }
-
-    &-error {
-      background-color: rgba($red, 0.8);
+  .toast-success {
+    .toast-body {
+      background-color: $green;
+      border-color: lighten($green, 10%);
     }
   }
-}
 
-.autocomplete {
-  position: fixed;
-  z-index: 5000;
-  background-color: $input-bg;
-  border-left: 1px solid $gray-800;
-  border-right: 1px solid $gray-800;
-  border-bottom: 1px solid $gray-800;
-  max-height: 135px;
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  &-inverted {
-    border-top: 1px solid $gray-800;
-    border-bottom: none;
-  }
-
-  &-item {
-    transition: all ease-in-out 200ms;
-    padding: 5px 10px;
-    color: $gray-300;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    &:not(:last-of-type) {
-      box-shadow: inset 0 -1px 0 0 $gray-800;
-    }
-
-    &:hover, &.selected {
-      background-color: lighten($gray-900, 12%);
-      color: $gray-200;
+  .toast-warning {
+    .toast-body {
+      background-color: $orange;
+      border-color: lighten($orange, 10%);
     }
   }
-}
 
-@keyframes fadein {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+  .toast-error {
+    .toast-body {
+      background-color: $red;
+      border-color: lighten($red, 10%);
+    }
+  }
 }
 
 .headers-list {
