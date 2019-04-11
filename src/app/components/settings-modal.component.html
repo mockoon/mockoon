@@ -3,6 +3,14 @@
     <h4 class="modal-title">Settings</h4>
   </div>
   <div class="modal-body">
+    <h4>Theme</h4>
+    <label class="radio-inline" style="margin-right: 30px">
+      <input type="radio" name="inlineRadioOptions" value="themeDark" style="margin-right: 5px" checked>Dark
+    </label>
+    <label class="radio-inline" style="margin-right: 30px">
+      <input type="radio" name="inlineRadioOptions" value="themeLight" style="margin-right: 5px">Light
+    </label>
+    <h4 class="mt-4">Usage Data</h4>
     <div class="custom-control custom-checkbox">
       <input type="checkbox" class="custom-control-input" id="analytics" name="analytics" [ngModel]="(settings$ | async)?.analytics" (ngModelChange)="settingsUpdated($event, 'analytics')">
       <label class="custom-control-label" for="analytics">I agree to share anonymous usage data</label>
