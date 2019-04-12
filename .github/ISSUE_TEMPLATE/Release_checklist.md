@@ -3,6 +3,7 @@ name: Release checklist
 about: Checklist for releases (admin use only)
 
 ---
+
 - [ ] Rename milestone to version number
 - [ ] Add version in migration comment
 - [ ] Bump app version
