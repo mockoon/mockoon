@@ -16,16 +16,16 @@
   "dependencies": {
     "brace": "0.11.1",
     "dummy-json": "2.0.0",
-    "electron-is-dev": "1.0.1",
+    "electron-is-dev": "1.1.0",
     "electron-json-storage": "4.1.0",
     "electron-window-state": "5.0.3",
     "express": "4.16.4",
     "http-proxy-middleware": "0.19.1",
     "killable": "1.0.1",
-    "mime-types": "2.1.21",
+    "mime-types": "2.1.22",
     "object-path": "0.11.4",
     "request": "2.88.0",
-    "semver": "5.6.0",
+    "semver": "6.0.0",
     "uuid": "3.3.2"
   }
 }
