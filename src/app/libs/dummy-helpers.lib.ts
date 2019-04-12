@@ -1,3 +1,4 @@
+import { format as dateFormat } from 'date-fns';
 import * as DummyJSON from 'dummy-json';
 import random from 'lodash/random';
 import * as objectPath from 'object-path';
@@ -103,6 +104,10 @@ export const DummyJSONHelpers = (request) => {
         delete this.switchValue;
         return options.fn(this);
       }
+    },
+    // provide current time with format
+    now: function (format) {
+      return dateFormat(new Date(), (typeof format === 'string') ? format : '');
     }
   };
 };
