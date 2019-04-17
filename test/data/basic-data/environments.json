@@ -15,7 +15,6 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "5904a6d1-f3d9-11e8-befa-911f4eb28c95",
             "key": "Content-Type",
             "value": "application/json"
           }
@@ -33,7 +32,6 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "7365d863-f3d8-11e8-befa-911f4eb28c95",
             "key": "Content-Type",
             "value": "text/plain"
           }
@@ -51,7 +49,6 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "7365d865-f3d8-11e8-befa-911f4eb28c95",
             "key": "Content-Type",
             "value": "application/json"
           }
@@ -67,7 +64,6 @@
     "cors": true,
     "headers": [
       {
-        "uuid": "7365d861-f3d8-11e8-befa-911f4eb28c95",
         "key": "",
         "value": ""
       }

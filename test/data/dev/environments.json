@@ -18,7 +18,6 @@
         "documentation": "",
         "headers": [
           {
-            "uuid": "5b7a21e2-0146-11e9-a619-ad87a54b7db9",
             "key": "Content-Type",
             "value": "text/plain"
           }
@@ -36,7 +35,6 @@
         "documentation": "",
         "headers": [
           {
-            "uuid": "5b7a21e4-0146-11e9-a619-ad87a54b7db9",
             "key": "Content-Type",
             "value": "application/json"
           }
@@ -52,7 +50,6 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "f1b0e421-1738-11e9-8fd6-0fc13944e69a",
             "key": "",
             "value": ""
           }
@@ -70,7 +67,6 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "f1bb6b71-1738-11e9-8fd6-0fc13944e69a",
             "key": "",
             "value": ""
           }
@@ -85,7 +81,6 @@
     "cors": true,
     "headers": [
       {
-        "uuid": "6e07e360-0146-11e9-9538-0b13aac74cb1",
         "key": "Access-Control-Allow-Origin",
         "value": "test"
       }
@@ -108,7 +103,6 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "97c1f060-20e5-11e9-9086-6ba8c98ff3ce",
             "key": "",
             "value": ""
           }
@@ -123,7 +117,6 @@
     "cors": true,
     "headers": [
       {
-        "uuid": "97c1f062-20e5-11e9-9086-6ba8c98ff3ce",
         "key": "Content-Type",
         "value": "application/json"
       }
