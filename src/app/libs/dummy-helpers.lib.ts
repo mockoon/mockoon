@@ -2,6 +2,7 @@ import { format as dateFormat } from 'date-fns';
 import * as DummyJSON from 'dummy-json';
 import random from 'lodash/random';
 import * as objectPath from 'object-path';
+import * as queryString from 'querystring';
 
 /**
  * Prevents insertion of Dummy-JSON own object (last argument) when no default value is provided:
@@ -17,14 +18,22 @@ export const DummyJSONHelpers = (request) => {
   return {
     // get json property from body
     body: function (path: string, defaultValue: string) {
+      const requestContentType = request.header('Content-Type');
+
       if (typeof defaultValue === 'object') {
         defaultValue = '';
       }
 
       // try to parse body otherwise return defaultValue
       try {
-        const jsonBody = JSON.parse(request.body);
-        const value = objectPath.ensureExists(jsonBody, path);
+        let value;
+
+        if (requestContentType === 'application/x-www-form-urlencoded') {
+          value = queryString.parse(request.body)[path];
+        } else {
+          const jsonBody = JSON.parse(request.body);
+          value = objectPath.ensureExists(jsonBody, path);
+        }
 
         if (value !== undefined) {
           return value;

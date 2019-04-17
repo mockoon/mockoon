@@ -179,7 +179,6 @@ export const headerValues = [
   'text/csv',
   'text/css',
   'application/javascript',
-  'application/x-www-form-urlencoded',
   'application/zip',
   'application/pdf',
   'application/sql',
