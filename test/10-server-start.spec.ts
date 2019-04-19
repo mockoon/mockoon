@@ -10,7 +10,7 @@ describe('Environment start/stop/restart', () => {
 
   it('Start default selected environment', async () => {
     await tests.spectron.client.element('.btn i[ngbtooltip="Start server"]').click();
-    await tests.spectron.client.waitForExist('.menu-columns:first-of-type .menu-list .nav-item .nav-link.running', 5000);
+    await tests.spectron.client.waitForExist('.menu-columns:first-of-type .menu-list .nav-item .nav-link.running');
   });
 
   it('Stop default selected environment', async () => {

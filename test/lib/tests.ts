@@ -37,7 +37,10 @@ export class Tests {
     before(() => {
       this.spectron = new Application({
         path: electronPath,
-        args: ['./dist', '--tests']
+        args: ['./dist', '--tests'],
+        webdriverOptions: {
+          deprecationWarnings: false
+        }
       });
 
       return this.spectron.start();
