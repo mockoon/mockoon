@@ -27,7 +27,7 @@ export class DataService {
       checksum: crypto.createHash('md5').update(JSON.stringify(data) + Config.exportSalt).digest('hex'),
       subject,
       data
-    });
+    }, null, 4);
   }
 
   /**
