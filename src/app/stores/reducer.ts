@@ -502,15 +502,13 @@ export function environmentReducer(
  */
 function getBodyEditorMode(state: StoreType) {
   const currentEnvironment = state.environments.find(environment => environment.uuid === state.activeEnvironmentUUID);
+  const currentRoute = currentEnvironment && currentEnvironment.routes.find(route => route.uuid === state.activeRouteUUID);
 
-  if (!currentEnvironment) {
+  if (!currentEnvironment || !currentRoute) {
     return 'text';
   }
 
-  const routeContentType = Utils.getRouteContentType(
-    currentEnvironment,
-    currentEnvironment.routes.find(route => route.uuid === state.activeRouteUUID)
-  );
+  const routeContentType = Utils.getRouteContentType(currentEnvironment, currentRoute);
 
   if (routeContentType === 'application/json') {
     return 'json';
