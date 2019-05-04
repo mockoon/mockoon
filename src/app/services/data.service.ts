@@ -6,6 +6,7 @@ import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
 import { RouteType } from 'src/app/types/route.type';
 import { EnvironmentLogType } from 'src/app/types/server.type';
+import * as url from 'url';
 const appVersion = require('../../../package.json').version;
 
 @Injectable()
@@ -58,7 +59,7 @@ export class DataService {
       },
       method: request.method,
       protocol: request.protocol,
-      url: request.originalUrl,
+      url: url.parse(request.originalUrl).pathname,
       headers: [],
       get proxied() {
         return request.proxied;

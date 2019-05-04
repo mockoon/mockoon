@@ -13,7 +13,7 @@ describe('Create and delete routes', () => {
   });
 
   it('Remove 3 routes over 4', async () => {
-    const menuTarget = '.menu-columns:nth-child(2) .menu-list .nav-item:first-of-type';
+    const menuTarget = '.menu-column--routes .menu-list .nav-item:first-of-type';
 
     await contextMenuClickAndConfirm(menuTarget, 3, tests);
     await contextMenuClickAndConfirm(menuTarget, 3, tests);
@@ -23,11 +23,11 @@ describe('Create and delete routes', () => {
   });
 
   it('Last added route should remain and be active', async () => {
-    await tests.spectron.client.getText('.menu-columns:nth-child(2) .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type').should.eventually.equal('GET\n/');
+    await tests.spectron.client.getText('.menu-column--routes .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type').should.eventually.equal('GET\n/');
   });
 
   it('Remove last route, active tab should be environment settings', async () => {
-    await contextMenuClickAndConfirm('.menu-columns:nth-child(2) .menu-list .nav-item:first-of-type', 3, tests);
+    await contextMenuClickAndConfirm('.menu-column--routes .menu-list .nav-item:first-of-type', 3, tests);
 
     await countRoutes(0, tests);
 

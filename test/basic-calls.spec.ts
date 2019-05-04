@@ -47,7 +47,7 @@ describe('Basic endpoint calls', () => {
   tests.runHooks();
 
   it('Start default environment', async () => {
-    await startEnvironment(1, tests);
+    await startEnvironment(tests);
   });
 
   for (let index = 0; index < cases.length; index++) {

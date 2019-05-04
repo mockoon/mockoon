@@ -1,21 +1,21 @@
 import { HttpCall } from 'test/lib/types';
 import { fetch } from './fetch';
-import { Tests } from './lib/tests';
+import { Tests } from './tests';
 
 export async function addEnvironment(testsInstance: Tests) {
-  await testsInstance.spectron.client.element('.menu-columns:nth-child(1) .nav:first-of-type .nav-item .nav-link').click();
+  await testsInstance.spectron.client.element('.menu-column--environments .nav:first-of-type .nav-item .nav-link').click();
 }
 
 export async function addRoute(testsInstance: Tests) {
-  await testsInstance.spectron.client.element('.menu-columns:nth-child(2) .nav:first-of-type .nav-item .nav-link').click();
+  await testsInstance.spectron.client.element('.menu-column--routes .nav:first-of-type .nav-item .nav-link').click();
 }
 
 export async function countEnvironments(expected: number, testsInstance: Tests) {
-  await testsInstance.spectron.client.elements('.menu-columns:nth-child(1) .menu-list .nav-item').should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
+  await testsInstance.spectron.client.elements('.menu-column--environments .menu-list .nav-item').should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
 }
 
 export async function countRoutes(expected: number, testsInstance: Tests) {
-  await testsInstance.spectron.client.elements('.menu-columns:nth-child(2) .menu-list .nav-item').should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
+  await testsInstance.spectron.client.elements('.menu-column--routes .menu-list .nav-item').should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
 }
 
 export async function contextMenuClickAndConfirm(targetMenuItemSelector: string, contextMenuItemIndex: number, testsInstance: Tests) {
@@ -26,15 +26,9 @@ export async function contextMenuClickAndConfirm(targetMenuItemSelector: string,
   await testsInstance.spectron.client.element(`.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`).click();
 }
 
-/**
- * Start the selected environment
- *
- * @param environmentIndex - environmentIndex (1 based)
- * @param testsInstance
- */
-export async function startEnvironment(environmentIndex: number, testsInstance: Tests) {
+export async function startEnvironment(testsInstance: Tests) {
   await testsInstance.spectron.client.element('.btn i[ngbtooltip="Start server"]').click();
-  await testsInstance.spectron.client.waitForExist(`.menu-columns:nth-child(${environmentIndex}) .menu-list .nav-item .nav-link.running`);
+  await testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.running`);
 }
 
 export async function switchTab(tabName: 'LOGS' | 'SETTINGS', testsInstance: Tests) {

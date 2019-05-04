@@ -32,7 +32,7 @@ describe('Environment logs', () => {
   tests.runHooks();
 
   it('Start default environment', async () => {
-    await startEnvironment(1, tests);
+    await startEnvironment(tests);
   });
 
   for (let index = 0; index < cases.length; index++) {
@@ -46,10 +46,12 @@ describe('Environment logs', () => {
   });
 
   it('First entry is GET /test and was not caught by the application', async () => {
-    await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link div:first-of-type`).should.eventually.equal('GET /test');
+    await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('GET\n/test');
+    await tests.spectron.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request caught"]`, 5000, true);
   });
 
   it('Second entry is GET /answer and was caught by the application', async () => {
-    await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link div:first-of-type`).should.eventually.equal('GET /answer\ncheck');
+    await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link .route`).should.eventually.equal('GET\n/answer');
+    await tests.spectron.client.waitForExist(`${environmentLogsItemSelector}:nth-child(2) .nav-link i[ngbTooltip="Request caught"]`);
   });
 });

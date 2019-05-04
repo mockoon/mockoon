@@ -13,17 +13,17 @@ describe('Create and delete environments', () => {
   });
 
   it('Remove first environment', async () => {
-    await contextMenuClickAndConfirm('.menu-columns:nth-child(1) .menu-list .nav-item:first-of-type', 5, tests);
+    await contextMenuClickAndConfirm('.menu-column--environments .menu-list .nav-item:first-of-type', 5, tests);
 
     await countEnvironments(1, tests);
   });
 
   it('Added environment should remain and be active', async () => {
-    await tests.spectron.client.getText('.menu-columns:nth-child(1) .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type').should.eventually.equal('New environment');
+    await tests.spectron.client.getText('.menu-column--environments .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type').should.eventually.equal('New environment');
   });
 
   it('Remove last environment, interface should be empty', async () => {
-    await contextMenuClickAndConfirm('.menu-columns:nth-child(1) .menu-list .nav-item:first-of-type', 5, tests);
+    await contextMenuClickAndConfirm('.menu-column--environments .menu-list .nav-item:first-of-type', 5, tests);
 
     await countEnvironments(0, tests);
     await countRoutes(0, tests);
