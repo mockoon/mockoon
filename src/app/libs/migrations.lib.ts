@@ -92,7 +92,7 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
     }
   },
 
-  // next (TODO rename)
+  // 1.4.0
   {
     id: 5,
     migrationFunction: (environment: EnvironmentType) => {
