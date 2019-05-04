@@ -8,7 +8,11 @@ export const fetch = (params: { protocol: 'http' | 'https', port: number, path: 
     }, (response) => {
       let body = '';
       response.on('data', (chunk) => body += chunk);
-      response.on('end', () => resolve({ headers: response.headers, body }));
+      response.on('end', () => resolve({
+        status: response.statusCode,
+        headers: response.headers,
+        body
+      }));
     });
 
     request.on('error', (err) => reject(err));

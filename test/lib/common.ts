@@ -1,4 +1,6 @@
-import { Tests } from 'test/lib/tests';
+import { HttpCall } from 'test/lib/types';
+import { fetch } from './fetch';
+import { Tests } from './lib/tests';
 
 export async function addEnvironment(testsInstance: Tests) {
   await testsInstance.spectron.client.element('.menu-columns:nth-child(1) .nav:first-of-type .nav-item .nav-link').click();
@@ -22,4 +24,38 @@ export async function contextMenuClickAndConfirm(targetMenuItemSelector: string,
   // click twice to confirm (cannot double click)
   await testsInstance.spectron.client.element(`.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`).click();
   await testsInstance.spectron.client.element(`.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`).click();
+}
+
+/**
+ * Start the selected environment
+ *
+ * @param environmentIndex - environmentIndex (1 based)
+ * @param testsInstance
+ */
+export async function startEnvironment(environmentIndex: number, testsInstance: Tests) {
+  await testsInstance.spectron.client.element('.btn i[ngbtooltip="Start server"]').click();
+  await testsInstance.spectron.client.waitForExist(`.menu-columns:nth-child(${environmentIndex}) .menu-list .nav-item .nav-link.running`);
+}
+
+export async function switchTab(tabName: 'LOGS' | 'SETTINGS', testsInstance: Tests) {
+  const selectors = {
+    LOGS: 'Environment logs',
+    SETTINGS: 'Environment settings'
+  };
+
+  await testsInstance.spectron.client.element(`.header .btn[ngbTooltip="${selectors[tabName]}"]`).click();
+}
+
+
+export async function httpCallAsserter(httpCall: HttpCall, testsInstance: Tests) {
+  await fetch({
+    protocol: 'http',
+    port: 3000,
+    path: httpCall.path,
+    method: httpCall.method
+  }).should.eventually.deep.include(
+    Object.keys(httpCall.testedProperties).reduce((propertiesToTest, propertyName) => {
+      return { ...propertiesToTest, [propertyName]: httpCall.testedProperties[propertyName] };
+    }, {})
+  );
 }

@@ -6,9 +6,6 @@ const tests = new Tests('basic-data');
 describe('Create and delete environments', () => {
   tests.runHooks();
 
-  tests.waitForWindowReady();
-  tests.waitForEnvironmentLoaded();
-
   it('Add an environment', async () => {
     await countEnvironments(1, tests);
     await addEnvironment(tests);

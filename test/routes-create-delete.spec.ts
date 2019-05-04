@@ -6,9 +6,6 @@ const tests = new Tests('basic-data');
 describe('Create and delete routes', () => {
   tests.runHooks();
 
-  tests.waitForWindowReady();
-  tests.waitForEnvironmentLoaded();
-
   it('Add a route', async () => {
     await countRoutes(3, tests);
     await addRoute(tests);

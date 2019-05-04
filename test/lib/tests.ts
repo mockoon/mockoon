@@ -20,7 +20,7 @@ export class Tests {
   /**
    * Before and after hooks to run prior to the tests
    */
-  public runHooks() {
+  public runHooks(waitUntilReady = true) {
     // copy data files before starting tests
     before(() => {
       return new Promise((resolve) => {
@@ -52,6 +52,11 @@ export class Tests {
       }
       return undefined;
     });
+
+    if (waitUntilReady) {
+      this.waitForWindowReady();
+      this.waitForEnvironmentLoaded();
+    }
   }
 
   /**

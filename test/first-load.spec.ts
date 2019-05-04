@@ -3,8 +3,7 @@ import { Tests } from './lib/tests';
 const tests = new Tests('first-load');
 
 describe('First load', () => {
-  tests.runHooks();
-
+  tests.runHooks(false);
   tests.waitForWindowReady();
 
   it('Open window with Mockoon title', async () => {
