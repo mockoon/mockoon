@@ -15,13 +15,12 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "5904a6d1-f3d9-11e8-befa-911f4eb28c95",
             "key": "Content-Type",
             "value": "application/json"
           }
         ],
-        "file": null,
-        "duplicates": [],
+        "filePath": "",
+        "sendFileAsBody": false,
         "documentation": "Test documentation"
       },
       {
@@ -33,13 +32,12 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "7365d863-f3d8-11e8-befa-911f4eb28c95",
             "key": "Content-Type",
             "value": "text/plain"
           }
         ],
-        "file": null,
-        "duplicates": [],
+        "filePath": "",
+        "sendFileAsBody": false,
         "documentation": ""
       },
       {
@@ -51,25 +49,21 @@
         "statusCode": "200",
         "headers": [
           {
-            "uuid": "7365d865-f3d8-11e8-befa-911f4eb28c95",
             "key": "Content-Type",
             "value": "application/json"
           }
         ],
-        "file": null,
-        "duplicates": [],
+        "filePath": "",
+        "sendFileAsBody": false,
         "documentation": ""
       }
     ],
-    "modifiedAt": "2018-12-03T14:45:51.787Z",
-    "duplicates": [],
     "proxyMode": false,
     "proxyHost": "",
     "https": false,
     "cors": true,
     "headers": [
       {
-        "uuid": "7365d861-f3d8-11e8-befa-911f4eb28c95",
         "key": "",
         "value": ""
       }

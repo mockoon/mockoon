@@ -1,46 +1,139 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
-import { headerNames, HeaderType, headerValues } from 'src/app/types/route.type';
-import * as uuid from 'uuid/v1';
+import { EnvironmentType } from 'src/app/types/environment.type';
+import { headerNames, HeaderType, headerValues, RouteType } from 'src/app/types/route.type';
+
+export type HeadersListType = 'routeHeaders' | 'environmentHeaders';
 
 @Component({
   selector: 'app-headers-list',
   templateUrl: 'headers-list.component.html'
 })
 export class HeadersListComponent implements OnInit {
-  @Input() headersList: HeaderType[];
-  @Input() type: 'routeHeaders' | 'environmentHeaders';
-  @Output() headersUpdated: EventEmitter<any> = new EventEmitter();
+  @Input() data$: Observable<EnvironmentType | RouteType>;
+  @Input() type: HeadersListType;
   @Output() headerAdded: EventEmitter<any> = new EventEmitter();
-
-  public headerNamesList = headerNames;
-  public headerValuesList = headerValues;
+  public form: FormGroup;
+  public headersFormChanges: Subscription;
   public testHeaderValidity = this.serverService.testHeaderValidity;
   public containersList = {
     routeHeaders: '.route-headers',
     environmentHeaders: '.environment-headers'
   };
 
-  constructor(private serverService: ServerService, private eventsService: EventsService) { }
+  constructor(
+    private serverService: ServerService,
+    private environmentsService: EnvironmentsService,
+    private formBuilder: FormBuilder,
+    private eventsService: EventsService
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.form = this.formBuilder.group({
+      headers: this.formBuilder.array([])
+    });
+
+    // subscribe to header injection events
+    this.eventsService.injectHeaders.pipe(
+      filter(data => data.target === this.type),
+      map(data => data.headers)
+    ).subscribe(headers => { this.injectHeaders(headers); });
+
+    // subscribe to headers changes to reset the form
+    this.data$.pipe(
+      filter(data => !!data),
+      distinctUntilKeyChanged('uuid')
+    ).subscribe(data => {
+      // unsubscribe to prevent emitting when clearing the FormArray
+      if (this.headersFormChanges) {
+        this.headersFormChanges.unsubscribe();
+      }
+
+      this.replaceHeaders(data.headers);
+
+      // subscribe to changes and send new headers values to the store
+      this.headersFormChanges = this.form.get('headers').valueChanges.pipe(
+        map(newValue => ({ headers: newValue }))
+      ).subscribe(newProperty => {
+        if (this.type === 'environmentHeaders') {
+          this.environmentsService.updateActiveEnvironment(newProperty);
+        } else if (this.type === 'routeHeaders') {
+          this.environmentsService.updateActiveRoute(newProperty);
+        }
+      });
+    });
+  }
+
+  /**
+   * Replace existing header with injected header value, or append injected header
+   */
+  private injectHeaders(headers: HeaderType[]) {
+    const newHeaders = [...this.form.value.headers];
+
+    headers.forEach(header => {
+      const headerExistsIndex = newHeaders.findIndex(newHeader => newHeader.key === header.key);
+
+      if (headerExistsIndex > -1 && !newHeaders[headerExistsIndex].value) {
+        newHeaders[headerExistsIndex] = { ...header };
+      } else if (headerExistsIndex === -1) {
+        newHeaders.push({ ...header });
+      }
+    });
+
+    this.replaceHeaders(newHeaders);
+  }
+
+  /**
+   * Replace all headers in the FormArray
+   */
+  private replaceHeaders(newHeaders: HeaderType[]) {
+    const formHeadersArray = (this.form.get('headers') as FormArray);
+
+    // clear formArray (with Angular 8 use .clear())
+    while (formHeadersArray.length !== 0) {
+      formHeadersArray.removeAt(0);
+    }
+
+    newHeaders.forEach(header => {
+      formHeadersArray.push(this.formBuilder.group({
+        key: header.key,
+        value: header.value
+      }));
+    });
+  }
+
+  /**
+   * Return observable for the typeahead directive
+   */
+  public search(listName: 'headerNames' | 'headerValues') {
+    let list: string[];
+    if (listName === 'headerNames') {
+      list = headerNames;
+    } else if (listName === 'headerValues') {
+      list = headerValues;
+    }
+
+    return (text$: Observable<string>) =>
+      text$.pipe(
+        debounceTime(100),
+        distinctUntilChanged(),
+        map(term => term.length < 1 ? []
+          : list.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+      );
+  }
 
   /**
    * Add a new header to the list if possible
    */
   public addHeader() {
-    const lastHeader = this.headersList[this.headersList.length - 1];
+    (this.form.get('headers') as FormArray).push(this.formBuilder.group({ key: '', value: '' }));
 
-    if (lastHeader.key !== '') {
-      this.headersList.push({ uuid: uuid(), key: '', value: '' });
-      this.headersUpdated.emit();
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_HEADER);
-
-      this.headerAdded.emit();
-    }
+    this.headerAdded.emit();
   }
 
   /**
@@ -48,20 +141,7 @@ export class HeadersListComponent implements OnInit {
    *
    * @param headerUUID
    */
-  public removeHeader(headerUUID: string) {
-    const headerIndex = this.headersList.findIndex((header: any) => {
-      return header.uuid === headerUUID;
-    });
-
-    if (headerIndex > -1) {
-      this.headersList.splice(headerIndex, 1);
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_HEADER);
-    }
-    this.headersUpdated.emit();
-  }
-
-  public triggerUpdate() {
-    this.headersUpdated.emit();
+  public removeHeader(headerIndex: number) {
+    (this.form.get('headers') as FormArray).removeAt(headerIndex);
   }
 }

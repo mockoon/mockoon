@@ -53,7 +53,10 @@ import 'core-js/es7/reflect';
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
  */
-import 'zone.js/dist/zone';  // Included with Angular CLI.
+// import 'zone.js/dist/zone';  // Included with Angular CLI.
+import 'zone.js/dist/zone-mix'; // add zone-mix to patch both Browser and Nodejs
+import 'zone.js/dist/zone-patch-electron'; // add zone-patch-electron to patch Electron native API
+
 
 
 

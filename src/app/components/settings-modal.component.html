@@ -4,7 +4,7 @@
   </div>
   <div class="modal-body">
     <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" id="analytics" name="analytics" [(ngModel)]="this.settings.analytics" (ngModelChange)="settingsUpdated()">
+      <input type="checkbox" class="custom-control-input" id="analytics" name="analytics" [ngModel]="(settings$ | async)?.analytics" (ngModelChange)="settingsUpdated($event, 'analytics')">
       <label class="custom-control-label" for="analytics">I agree to share anonymous usage data</label>
     </div>
     <p class="text-muted"><small>We are using a basic Google Analytics setup, none of your data/content is kept anywhere and it helps us improve Mockoon :)</small></p>

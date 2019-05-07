@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
+import * as crypto from 'crypto';
 import { Config } from 'src/app/config';
 import { Utils } from 'src/app/libs/utils.lib';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
 import { RouteType } from 'src/app/types/route.type';
 import { EnvironmentLogType } from 'src/app/types/server.type';
-import * as crypto from 'crypto';
+import * as url from 'url';
+const appVersion = require('../../../package.json').version;
 
 @Injectable()
 export class DataService {
@@ -22,10 +24,11 @@ export class DataService {
   public wrapExport(data: EnvironmentsType | EnvironmentType | RouteType, subject: DataSubjectType): string {
     return JSON.stringify(<ExportType>{
       id: this.exportId,
+      appVersion: appVersion,
       checksum: crypto.createHash('md5').update(JSON.stringify(data) + Config.exportSalt).digest('hex'),
       subject,
       data
-    });
+    }, null, 4);
   }
 
   /**
@@ -56,7 +59,7 @@ export class DataService {
       },
       method: request.method,
       protocol: request.protocol,
-      url: request.originalUrl,
+      url: url.parse(request.originalUrl).pathname,
       headers: [],
       get proxied() {
         return request.proxied;
