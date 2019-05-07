@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { combineLatest } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { combineLatest, merge } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
+import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
 import { Store } from 'src/app/stores/store';
 import { environment } from 'src/environments/environment';
@@ -57,7 +58,21 @@ export class AnalyticsService {
       this.queue = [];
     });
 
-    this.eventsService.analyticsEvents.subscribe((event) => {
+    const allEventsObservable = this.eventsService.analyticsEvents.pipe(
+      filter((collectParams) => {
+        return collectParams.action !== AnalyticsEvents.SERVER_ENTERING_REQUEST.action;
+      })
+    );
+
+    // debounce entering request events every 2mn
+    const enteringRequestEventsbservable = this.eventsService.analyticsEvents.pipe(
+      filter((collectParams) => {
+        return collectParams.action === AnalyticsEvents.SERVER_ENTERING_REQUEST.action;
+      }),
+      debounceTime(120000)
+    );
+
+    merge(allEventsObservable, enteringRequestEventsbservable).subscribe((event) => {
       this.collect(event);
     });
   }

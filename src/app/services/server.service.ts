@@ -12,6 +12,7 @@ import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
 import { ExpressMiddlewares } from 'src/app/libs/express-middlewares.lib';
 import { Utils } from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
+import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
 import { Store } from 'src/app/stores/store';
@@ -32,7 +33,8 @@ export class ServerService {
   constructor(
     private toastService: ToastsService,
     private dataService: DataService,
-    private store: Store
+    private store: Store,
+    private eventsService: EventsService
   ) { }
 
   /**
@@ -58,7 +60,7 @@ export class ServerService {
     });
 
     // apply middlewares
-    ExpressMiddlewares.forEach(expressMiddleware => {
+    ExpressMiddlewares(this.eventsService).forEach(expressMiddleware => {
       server.use(expressMiddleware);
     });
 
