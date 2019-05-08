@@ -94,32 +94,6 @@
             "browserTarget": "mockoon:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "scripts": [],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "assets": [
-              "src/assets",
-              {
-                "glob": "electron-main.js",
-                "input": "src",
-                "output": "/"
-              },
-              {
-                "glob": "package.json",
-                "input": "src",
-                "output": "/"
-              }
-            ]
-          }
-        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {

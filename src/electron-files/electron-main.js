@@ -1,14 +1,17 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const electron = require('electron');
 const windowState = require('electron-window-state');
-// Module to control application life.
-const app = electron.app;
-const shell = electron.shell;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
-
+const fs = require('fs');
+const mkdirp = require('mkdirp');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
+
+const app = electron.app;
+const shell = electron.shell;
+const BrowserWindow = electron.BrowserWindow;
+
 
 // if serving enable hot reload
 const args = process.argv.slice(1);
@@ -17,19 +20,20 @@ const args = process.argv.slice(1);
 const isServing = args.some(val => val === '--serve');
 const isTesting = args.some(val => val === '--tests');
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 // set test folder when testing
 if (isTesting) {
   app.setPath('userData', path.resolve('./tmp'));
 }
 
+// in dev mode add local data and enable hot reloading
 if (isDev && isServing) {
+  mkdirp.sync('./tmp/storage/');
+  fs.copyFileSync(path.resolve('./test/data/dev/environments.json'), path.resolve('./tmp/storage/environments.json'));
+
+  electron.app.setPath('userData', path.resolve('./tmp'));
   require('electron-reload')(__dirname, {});
 }
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
 function createWindow() {
@@ -47,12 +51,15 @@ function createWindow() {
     height: mainWindowState.height,
     title: `Mockoon`,
     backgroundColor: '#252830',
-    icon: path.join(__dirname, '/icon_512x512x32.png')
+    icon: path.join(__dirname, '/icon_512x512x32.png'),
+    webPreferences: {
+      nodeIntegration: true
+    }
   };
 
   // remove devtools in prod
   if (!isDev) {
-    BrowserWindowConfig['webPreferences'] = {
+    BrowserWindowConfig.webPreferences = {
       devTools: false
     };
   }
@@ -69,7 +76,7 @@ function createWindow() {
     slashes: true
   }));
 
-  // Open the DevTools except when running functional tests
+  // Open the DevTools / Redux except when running functional tests
   if (isDev && !isTesting) {
     mainWindow.webContents.openDevTools()
   }
@@ -81,7 +88,6 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   });
-
 
   // create prod menu
   var menu = [
@@ -105,7 +111,7 @@ function createWindow() {
         },
         { type: 'separator' },
         {
-          label: 'Settings', click: function () {
+          label: 'Settings', accelerator: 'CmdOrCtrl+,', click: function () {
             mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
           }
         },
@@ -115,7 +121,10 @@ function createWindow() {
           }
         },
         { type: 'separator' },
-        { label: 'Quit', accelerator: 'CmdOrCtrl+Q', click: function () { app.quit(); } }
+        { label: 'Hide', role: 'hide' },
+        { role: 'hideOthers' },
+        { type: 'separator' },
+        { label: 'Quit', role: 'quit' }
       ]
     }
   ];

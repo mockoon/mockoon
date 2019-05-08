@@ -1,4 +1,5 @@
 import { EnvironmentType } from 'src/app/types/environment.type';
+import { RouteType } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
 
 export const Migrations: { id: number, migrationFunction: (environment: EnvironmentType) => void }[] = [
@@ -68,10 +69,10 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
     migrationFunction: (environment: EnvironmentType) => {
       // add new headers property to environments
       if (!environment.headers) {
-        environment.headers = [{ uuid: uuid(), key: '', value: '' }];
+        (environment.headers as any) = [{ uuid: uuid(), key: '', value: '' }];
       }
 
-      environment.routes.forEach(route => {
+      environment.routes.forEach((route: RouteType & { file: any }) => {
         // add missing sendAsBody
         if (route.file && route.file.sendAsBody === undefined) {
           route.file.sendAsBody = false;
@@ -87,6 +88,23 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
           route.headers = route['customHeaders'];
           delete route['customHeaders'];
         }
+      });
+    }
+  },
+
+  // 1.4.0
+  {
+    id: 5,
+    migrationFunction: (environment: EnvironmentType) => {
+      delete environment['duplicates'];
+
+      environment.routes.forEach((route: RouteType & { file: any }) => {
+        // remove file object
+        route.filePath = (route.file) ? route.file.path : '';
+        route.sendFileAsBody = (route.file) ? route.file.sendAsBody : false;
+        delete route.file;
+
+        delete route['duplicates'];
       });
     }
   }

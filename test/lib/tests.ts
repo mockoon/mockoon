@@ -1,8 +1,9 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { copyFile, existsSync, mkdirSync } from 'fs';
+import { copyFile } from 'fs';
 import { Application } from 'spectron';
 const electronPath: any = require('electron');
+const mkdirp = require('mkdirp');
 
 export class Tests {
   // folder name for test data
@@ -19,14 +20,11 @@ export class Tests {
   /**
    * Before and after hooks to run prior to the tests
    */
-  public runHooks() {
+  public runHooks(waitUntilReady = true) {
     // copy data files before starting tests
     before(() => {
       return new Promise((resolve) => {
-        if (!existsSync('./tmp/') || !existsSync('./tmp/storage/')) {
-          mkdirSync('./tmp/');
-          mkdirSync('./tmp/storage/');
-        }
+        mkdirp.sync('./tmp/storage/');
 
         copyFile('./test/data/' + this.dataFileName + '/environments.json', './tmp/storage/environments.json', () => {
           copyFile('./test/data/' + this.dataFileName + '/settings.json', './tmp/storage/settings.json', () => {
@@ -39,7 +37,10 @@ export class Tests {
     before(() => {
       this.spectron = new Application({
         path: electronPath,
-        args: ['./dist', '--tests']
+        args: ['./dist', '--tests'],
+        webdriverOptions: {
+          deprecationWarnings: false
+        }
       });
 
       return this.spectron.start();
@@ -51,6 +52,11 @@ export class Tests {
       }
       return undefined;
     });
+
+    if (waitUntilReady) {
+      this.waitForWindowReady();
+      this.waitForEnvironmentLoaded();
+    }
   }
 
   /**

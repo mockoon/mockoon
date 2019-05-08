@@ -1,7 +1,7 @@
 [
   {
     "uuid": "7365d860-f3d8-11e8-befa-911f4eb28c95",
-    "name": "FT env",
+    "name": "Dev env",
     "endpointPrefix": "",
     "latency": 0,
     "port": 3000,

@@ -2,11 +2,11 @@ import { CollectParams } from 'src/app/services/analytics.service';
 
 type AnalyticsEventsNames =
   'PAGEVIEW' | 'APPLICATION_START' | 'APPLICATION_FIRST_LOAD' | 'SERVER_STOP' | 'SERVER_RESTART' |
-  'SERVER_START' | 'SERVER_ENTERING_REQUEST' | 'NAVIGATE_ENVIRONMENT' | 'NAVIGATE_ROUTE' |
+  'SERVER_START' | 'NAVIGATE_ENVIRONMENT' | 'NAVIGATE_ROUTE' |
   'CREATE_ENVIRONMENT' | 'CREATE_ROUTE' | 'CREATE_HEADER' | 'DUPLICATE_ENVIRONMENT' |
   'DUPLICATE_ROUTE' | 'DELETE_ENVIRONMENT' | 'DELETE_ROUTE' | 'DELETE_HEADER' |
   'LINK_ROUTE_IN_BROWSER' | 'LINK_FEEDBACK' | 'LINK_RELEASE' | 'LINK_WIKI' | 'LINK_APPLY_UPDATE' |
-  'EXPORT_FILE' | 'EXPORT_CLIPBOARD' | 'IMPORT_FILE' | 'IMPORT_CLIPBOARD';
+  'EXPORT_FILE' | 'EXPORT_CLIPBOARD' | 'IMPORT_FILE' | 'IMPORT_CLIPBOARD' | 'SERVER_ENTERING_REQUEST';
 
 export const AnalyticsEvents: { [keyof in AnalyticsEventsNames]: CollectParams } = {
   PAGEVIEW: { type: 'pageview', pageName: '/' },
@@ -15,7 +15,6 @@ export const AnalyticsEvents: { [keyof in AnalyticsEventsNames]: CollectParams }
   SERVER_STOP: { type: 'event', category: 'server', action: 'stop' },
   SERVER_RESTART: { type: 'event', category: 'server', action: 'restart' },
   SERVER_START: { type: 'event', category: 'server', action: 'start' },
-  SERVER_ENTERING_REQUEST: { type: 'event', category: 'server', action: 'entering-request' },
   NAVIGATE_ENVIRONMENT: { type: 'event', category: 'navigate', action: 'environment' },
   NAVIGATE_ROUTE: { type: 'event', category: 'navigate', action: 'route' },
   CREATE_ENVIRONMENT: { type: 'event', category: 'create', action: 'environment' },
@@ -34,5 +33,6 @@ export const AnalyticsEvents: { [keyof in AnalyticsEventsNames]: CollectParams }
   EXPORT_FILE: { type: 'event', category: 'export', action: 'file' },
   EXPORT_CLIPBOARD: { type: 'event', category: 'export', action: 'clipboard' },
   IMPORT_FILE: { type: 'event', category: 'import', action: 'file' },
-  IMPORT_CLIPBOARD: { type: 'event', category: 'import', action: 'clipboard' }
+  IMPORT_CLIPBOARD: { type: 'event', category: 'import', action: 'clipboard' },
+  SERVER_ENTERING_REQUEST: { type: 'event', category: 'server', action: 'entering-request' }
 };
