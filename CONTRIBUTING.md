@@ -20,6 +20,17 @@ Clone the repository: `git@github.com:mockoon/mockoon.git`
 
 You will get hot reload on both Angular and Electron applications.
 
+### Start working
+
+- Start your `feature` or `fix` from `master`
+- Preferably squash your commits, except when it makes sense to keep them separate (one refactoring + feature development)
+- Do not forget to add "Closes #xx" in one of the commit messages (where xx is the GitHub issue number)
+- Open a pull request on GitHub
+
+Branches naming convention: 
+- features and enhancements: `feature/name-or-issue-number`
+- bug fixes: `fix/name-or-issue-number`
+
 ### Run the tests
 
 Tests are written with Spectron and you can run them using `npm run test`. These tests will also be run on each commit or pull request by CircleCI.
