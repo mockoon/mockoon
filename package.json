@@ -39,7 +39,7 @@
   },
   "scripts": {
     "lint": "ng lint --type-check",
-    "test-spectron": "ts-mocha -p test/tsconfig.spec.json --timeout 10000 test/**/*.spec.ts",
+    "test": "ts-mocha -p test/tsconfig.spec.json --timeout 10000 test/**/*.spec.ts",
     "setversion": "node ./scripts/version-bump.js",
     "serve:electron": "electron ./dist --serve",
     "serve:app": "ng build --configuration=development --watch --output-hashing=all",

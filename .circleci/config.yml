@@ -26,4 +26,4 @@ jobs:
 
       - run: npm run lint
       - run: npm run build:dev
-      - run: npm run test-spectron
+      - run: npm run test
