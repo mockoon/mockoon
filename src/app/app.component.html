@@ -40,7 +40,7 @@
                   {{environment.name}}
                 </div>
                 <div class="menu-subtitle ellipsis">
-                  localhost:{{environment.port}}/{{environment.endpointPrefix}}
+                  0.0.0.0:{{environment.port}}/{{environment.endpointPrefix}}
                 </div>
                 <div *ngIf="environment.proxyMode" class="server-icons server-icons-proxy-mode">
                   <i class="material-icons" ngbTooltip="Proxy mode enabled">security</i>
@@ -86,7 +86,7 @@
               <div class="col">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">localhost:</span>
+                    <span class="input-group-text"><i class="material-icons" ngbTooltip="Server available on all network interfaces (localhost, 127.0.0.1, etc)">power</i> 0.0.0.0 :</span>
                   </div>
                   <input type="text" class="form-control col-2" placeholder="port" formControlName="port"
                     [InputNumber]="{ min: 0, max: 65535 }" MousewheelUpdate>
