@@ -1,4 +1,4 @@
-![Mockoon logo](https://mockoon.com/assets/images/logo.png)
+![Mockoon logo](https://mockoon.com/static/images/logo.png)
 
 *Mock API in seconds*
 
