@@ -2,13 +2,13 @@
 
 There are many ways to contribute to Mockoon: opening bugs or issues, submitting pull requests, suggesting new features...
 
-After cloning the repository please check the opened and unassigned issues. 
+After cloning the repository please check the opened and unassigned issues.
 If you want to contribute significant changes please discuss with the maintainers before starting to work.
 Please note that Mockoon promise is to be simple, easy to use, and fast. So not all features are worth implementing and maintainer may chose to not implement features that are out of Mockoon's scope.
 
 ## Build and run
 
-Prerequisites: 
+Prerequisites:
 - Node.js >= 8.x.x
 
 Clone the repository: `git@github.com:mockoon/mockoon.git`
@@ -16,7 +16,7 @@ Clone the repository: `git@github.com:mockoon/mockoon.git`
 ### Run the application in dev mode
 
 - Run `npm install`.
-- Run `npm run serve:app` and `npm run serve:electron`.
+- Run `npm run serve:app` then `npm run serve:electron` when the first command finish (`dist` folder must be available for Electron). Or directly run `npm run serve` which will run both commands in a row.
 
 You will get hot reload on both Angular and Electron applications.
 
@@ -27,7 +27,7 @@ You will get hot reload on both Angular and Electron applications.
 - Do not forget to add "Closes #xx" in one of the commit messages (where xx is the GitHub issue number)
 - Open a pull request on GitHub
 
-Branches naming convention: 
+Branches naming convention:
 - features and enhancements: `feature/name-or-issue-number`
 - bug fixes: `fix/name-or-issue-number`
 
@@ -37,7 +37,7 @@ Tests are written with Spectron and you can run them using `npm run test`. These
 
 When running the tests locally, you will first need to run `npm run build:dev` in order to have an application build to test against.
 
-### Build and package the application for production 
+### Build and package the application for production
 
 - Increment the version in package.json files. Use `npm run setversion x.x.x`.
 - Run `npm run build:prod`.
