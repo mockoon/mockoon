@@ -11,7 +11,7 @@
 
 Mockoon is a free and open source local server/API mocking tool built with Electron and can be used on Windows, Linux and MacOS. You can download it here: [mockoon.com](https://mockoon.com)
 
-![screenshot](https://mockoon.com/assets/images/screenshot_repo.jpg)
+![screenshot](https://mockoon.com/static/images/screenshot_repo.jpg)
 
 Feel free to test it and give some feedback!
 
