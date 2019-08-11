@@ -638,7 +638,7 @@ export class AppComponent implements OnInit {
 
     if (contentType === 'application/json') {
       try {
-        this.environmentsService.updateActiveRoute({ body: JSON.stringify(JSON.parse(activeRoute.body), undefined, 2) });
+        this.activeRouteForm.get('body').setValue(JSON.stringify(JSON.parse(activeRoute.body), undefined, 2));
       } catch (e) {
         // ignore any errors with parsing / stringifying the JSON
       }
