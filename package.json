@@ -43,7 +43,7 @@
     "setversion": "node ./scripts/version-bump.js",
     "serve": "concurrently \"npm run serve:app\" \"wait-on -d 10000 ./dist && npm run serve:electron\"",
     "serve:app": "ng build --configuration=development --watch --output-hashing=all",
-    "serve:electron": "electron ./dist --serve",
+    "serve:electron": "electron ./dist --serve --remote-debugging-port=8888",
     "build:dev": "rm -rf ./dist && ng build --prod --configuration=development",
     "build:prod": "rm -rf ./dist && ng build --prod --configuration=production",
     "clean-packages": "rm -rf ./packages",
