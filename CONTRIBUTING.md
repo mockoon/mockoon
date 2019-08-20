@@ -7,7 +7,7 @@ If you want to contribute significant changes please discuss with the maintainer
 Please note that Mockoon promise is to be simple, easy to use, and fast. So not all features are worth implementing and maintainer may chose to not implement features that are out of Mockoon's scope.
 
 > Prerequisites:
-> - Node.js >= 8.x.x
+> - Node.js ^10.x.x
 
 ### Run the application in dev mode
 
