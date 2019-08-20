@@ -8,6 +8,7 @@ $gray-600: #777C8C;
 $gray-700: #5A6073;
 $gray-800: #454A5B;
 $gray-900: #252830;
+$custom-gray: lighten($gray-900, 7%);
 $black:  #000;
 
 $blue:    #03a9f4;
@@ -35,12 +36,14 @@ $colors: (
   cyan: $cyan,
   white: $white,
   gray: $gray-600,
-  gray-dark: $gray-900
+  gray-dark: $gray-900,
+  custom-gray: $custom-gray,
 );
 
 $theme-colors: (
   primary: $blue,
   secondary: $gray-600,
+  custom: $custom-gray,
   success: $green,
   info: $cyan,
   warning: $yellow,
@@ -56,6 +59,7 @@ $theme-colors: (
 
 $body-bg:       $gray-900;
 $body-color:    $gray-300;
+$line-height-base:            1.5 !default;
 
 $font-size-base:              1rem;
 $font-size-lg:                ($font-size-base * 1.25);
@@ -69,24 +73,29 @@ $font-weight-bold:            700;
 $grid-gutter-width: 0;
 
 $border-radius-xs:       .1rem;
-$component-active-color:      $white !default;
-$component-active-bg:    lighten($gray-900, 7%);
+$component-active-color:      $white;
+$component-active-bg:    $custom-gray;
 
 $hr-border-color: lighten($gray-900, 2%);
 
+$input-btn-padding-y:         .375rem !default;
 $input-btn-padding-x-xs:               .3rem;
 $input-btn-padding-y-xs:               .1rem;
 $input-btn-line-height-xs:              1.25;
+$input-btn-line-height:       $line-height-base !default;
 
-$input-btn-focus-box-shadow:           unset;
-$input-box-shadow:           unset;
-$btn-focus-box-shadow:           unset;
-$btn-active-box-shadow:          unset;
-$custom-select-focus-box-shadow: unset;
 
+$input-btn-focus-box-shadow:           none;
+$input-box-shadow:           none;
+$btn-focus-box-shadow:           none;
+$btn-active-box-shadow:          none;
+$custom-select-focus-box-shadow: none;
+
+$btn-border-radius:              0;
 $btn-border-radius-xs:           $border-radius-xs;
-$input-bg:                       lighten($gray-900, 7%);
-$input-disabled-bg:              lighten($gray-900, 7%);
+$input-bg:                       $custom-gray;
+$input-line-height:              $input-btn-line-height !default;
+$input-disabled-bg:              $custom-gray;
 $input-color:                    $gray-200;
 $input-border-color:             transparent;
 $input-border-radius:            0;
@@ -94,19 +103,21 @@ $input-focus-border-color:       $gray-800;
 $input-focus-color:              $gray-100;
 $input-placeholder-color:        $gray-500;
 $input-group-addon-bg:           transparent;
-$custom-select-bg:               lighten($gray-900, 7%);
+$input-padding-y:                       $input-btn-padding-y !default;
+$custom-select-bg:               $custom-gray;
 $custom-select-indicator-color: $gray-600;
 $custom-select-border-radius: 0;
 $custom-select-focus-border-color: $gray-800;
+$custom-select-height: calc(#{$input-line-height * 1em} + #{$input-padding-y * 2});
 $nav-tabs-border-color:                       lighten($gray-900, 2%);
 
 $nav-tabs-border-radius:                      0;
-$nav-tabs-link-active-color:                  lighten($gray-900, 7%);
+$nav-tabs-link-active-color:                  $custom-gray;
 $nav-tabs-link-active-bg:                     $component-active-bg;
 
 $nav-pills-border-radius:     0;
 
-$custom-control-indicator-bg: lighten($gray-900, 7%);
+$custom-control-indicator-bg: $custom-gray;
 
 $modal-content-bg: lighten($gray-900, 2%);
 $modal-content-border-color: lighten($gray-900, 4%);
@@ -129,8 +140,8 @@ $dropdown-border-color:             $gray-800;
 $dropdown-border-radius:            0;
 $dropdown-box-shadow:               none;
 $dropdown-link-color:               $gray-300;
-$dropdown-link-hover-color:         darken($gray-900, 5%) !default;
-$dropdown-link-hover-bg:            $gray-100 !default;
+$dropdown-link-hover-color:         $component-active-color;
+$dropdown-link-hover-bg:            lighten($component-active-bg, 2%);$dropdown-link-active-color:        $component-active-color;
 $dropdown-link-active-bg:           lighten($component-active-bg, 2%);
 $dropdown-item-padding-y:           5px;
 $dropdown-item-padding-x:           10px;

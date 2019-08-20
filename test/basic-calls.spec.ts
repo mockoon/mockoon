@@ -1,4 +1,3 @@
-import { httpCallAsserter, startEnvironment } from './lib/common';
 import { Tests } from './lib/tests';
 import { HttpCall } from './lib/types';
 
@@ -47,12 +46,12 @@ describe('Basic endpoint calls', () => {
   tests.runHooks();
 
   it('Start default environment', async () => {
-    await startEnvironment(tests);
+    await tests.helpers.startEnvironment();
   });
 
   for (let index = 0; index < cases.length; index++) {
     it(cases[index].description, async () => {
-      await httpCallAsserter(cases[index], tests);
+      await tests.helpers.httpCallAsserter(cases[index]);
     });
   }
 });

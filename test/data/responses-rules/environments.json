@@ -1,0 +1,265 @@
+[
+  {
+    "uuid": "779707a0-ee51-40e2-9f88-3698c8c8640c",
+    "name": "FT env",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3000,
+    "routes": [
+      {
+        "uuid": "3cf6e8a5-6458-4fc6-a848-04ff8f0edc22",
+        "method": "get",
+        "endpoint": "users/:userid",
+        "documentation": "",
+        "responses": [
+          {
+            "uuid": "68461303-b003-475b-95aa-5f2b19252baf",
+            "body": "{}",
+            "latency": 0,
+            "statusCode": "500",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "c82c1850-d905-4b71-891f-c094f85dea0c",
+        "method": "get",
+        "endpoint": "rules/:id",
+        "documentation": "",
+        "responses": [
+          {
+            "uuid": "0d37217f-badc-4cbd-8ec8-61d693cf91aa",
+            "body": "0",
+            "latency": 0,
+            "statusCode": "404",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          },
+          {
+            "uuid": "a2749ee8-2f7b-4457-9961-1b2a49bc713b",
+            "body": "1",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "query",
+                "modifier": "obj.prop2",
+                "value": "^value",
+                "isRegex": true
+              }
+            ]
+          },
+          {
+            "uuid": "0d37217f-badc-4cbd-8ec8-61d693cf91aa",
+            "body": "2",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "query",
+                "modifier": "array",
+                "value": "test1|test2",
+                "isRegex": true
+              }
+            ]
+          },
+          {
+            "uuid": "3fa96055-5fce-438d-9a97-565cc51a1537",
+            "body": "3",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "params",
+                "modifier": "id",
+                "value": "^1",
+                "isRegex": true
+              }
+            ]
+          },
+          {
+            "uuid": "3fa96055-5fce-438d-9a97-565cc51a1537",
+            "body": "4",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "header",
+                "modifier": "Accept-Charset",
+                "value": "UTF-8",
+                "isRegex": false
+              }
+            ]
+          },
+          {
+            "uuid": "93cdabc4-5f5a-4d34-b753-01172e21745b",
+            "body": "5",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "header",
+                "modifier": "Accept-Charset",
+                "value": "UTF\\-8|UTF\\-16",
+                "isRegex": true
+              }
+            ]
+          },
+          {
+            "uuid": "b5f66551-ae59-4ce8-95da-b7bdb8ba3f14",
+            "body": "6",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "name",
+                "value": "john",
+                "isRegex": false
+              }
+            ]
+          },
+          {
+            "uuid": "d2743d98-1b99-468d-b5e3-a7be0ed7f2c5",
+            "body": "7",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "user.0.name",
+                "value": "John",
+                "isRegex": false
+              }
+            ]
+          },
+          {
+            "uuid": "ebfce072-8a05-4856-81d1-89ee1726a9be",
+            "body": "8",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "users",
+                "value": "Paul",
+                "isRegex": false
+              }
+            ]
+          },
+          {
+            "uuid": "ebfce072-8a05-4856-81d1-89ee1726a9be",
+            "body": "9",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "users",
+                "value": "^Ric",
+                "isRegex": true
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ]
+  }
+]

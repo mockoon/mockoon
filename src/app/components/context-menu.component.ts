@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
-import { ContextMenuEventType, EventsService } from 'src/app/services/events.service';
+import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
 import { DataSubjectType } from 'src/app/types/data.type';
 
 export type ContextMenuItemPayload = {
@@ -38,7 +38,7 @@ export class ContextMenuComponent implements OnInit {
   constructor(private eventsService: EventsService) { }
 
   ngOnInit() {
-    this.eventsService.contextMenuEvents.subscribe((contextMenuEvent: ContextMenuEventType) => {
+    this.eventsService.contextMenuEvents.subscribe((contextMenuEvent: ContextMenuEvent) => {
       this.position = {
         left: contextMenuEvent.event.clientX + 'px',
         top: contextMenuEvent.event.clientY + 'px'

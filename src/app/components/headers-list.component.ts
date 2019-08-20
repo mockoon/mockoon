@@ -5,26 +5,22 @@ import { debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, ma
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
-import { EnvironmentType } from 'src/app/types/environment.type';
-import { headerNames, HeaderType, headerValues, RouteType } from 'src/app/types/route.type';
+import { Environment } from 'src/app/types/environment.type';
+import { Header, headerNames, headerValues, RouteResponse } from 'src/app/types/route.type';
 
-export type HeadersListType = 'routeHeaders' | 'environmentHeaders';
+export type HeadersListType = 'routeResponseHeaders' | 'environmentHeaders';
 
 @Component({
   selector: 'app-headers-list',
   templateUrl: 'headers-list.component.html'
 })
 export class HeadersListComponent implements OnInit {
-  @Input() data$: Observable<EnvironmentType | RouteType>;
+  @Input() data$: Observable<Environment | RouteResponse>;
   @Input() type: HeadersListType;
   @Output() headerAdded: EventEmitter<any> = new EventEmitter();
   public form: FormGroup;
   public headersFormChanges: Subscription;
   public testHeaderValidity = this.serverService.testHeaderValidity;
-  public containersList = {
-    routeHeaders: '.route-headers',
-    environmentHeaders: '.environment-headers'
-  };
 
   constructor(
     private serverService: ServerService,
@@ -42,7 +38,7 @@ export class HeadersListComponent implements OnInit {
     this.eventsService.injectHeaders.pipe(
       filter(data => data.target === this.type),
       map(data => data.headers)
-    ).subscribe(headers => { this.injectHeaders(headers); });
+    ).subscribe(this.injectHeaders);
 
     // subscribe to headers changes to reset the form
     this.data$.pipe(
@@ -62,8 +58,8 @@ export class HeadersListComponent implements OnInit {
       ).subscribe(newProperty => {
         if (this.type === 'environmentHeaders') {
           this.environmentsService.updateActiveEnvironment(newProperty);
-        } else if (this.type === 'routeHeaders') {
-          this.environmentsService.updateActiveRoute(newProperty);
+        } else if (this.type === 'routeResponseHeaders') {
+          this.environmentsService.updateActiveRouteResponse(newProperty);
         }
       });
     });
@@ -72,7 +68,7 @@ export class HeadersListComponent implements OnInit {
   /**
    * Replace existing header with injected header value, or append injected header
    */
-  private injectHeaders(headers: HeaderType[]) {
+  private injectHeaders(headers: Header[]) {
     const newHeaders = [...this.form.value.headers];
 
     headers.forEach(header => {
@@ -91,7 +87,7 @@ export class HeadersListComponent implements OnInit {
   /**
    * Replace all headers in the FormArray
    */
-  private replaceHeaders(newHeaders: HeaderType[]) {
+  private replaceHeaders(newHeaders: Header[]) {
     const formHeadersArray = (this.form.get('headers') as FormArray);
 
     // clear formArray (with Angular 8 use .clear())

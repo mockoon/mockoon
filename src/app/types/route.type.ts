@@ -1,3 +1,4 @@
+
 export const methods = [
   'get',
   'post',
@@ -231,22 +232,37 @@ export const headerValues = [
   'UTF-16'
 ];
 
-export type RouteType = {
+export type RouteResponse = {
   uuid: string;
-  documentation: string;
-  method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
-  endpoint: string;
+  rules: ResponseRule[];
   statusCode: string;
-  headers: HeaderType[];
+  headers: Header[];
   body?: string;
   latency: number;
   filePath: string;
   sendFileAsBody: boolean;
 };
 
-export type HeaderType = { key: string, value: string };
+export type ResponseRule = {
+  target: ResponseRuleTargets;
+  modifier: string;
+  value: string;
+  isRegex: boolean;
+};
 
-export const CORSHeaders: HeaderType[] = [
+export type ResponseRuleTargets = 'body' | 'query' | 'header' | 'params';
+
+export type Route = {
+  uuid: string;
+  documentation: string;
+  method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
+  endpoint: string;
+  responses: RouteResponse[];
+};
+
+export type Header = { key: string, value: string };
+
+export const CORSHeaders: Header[] = [
   { key: 'Access-Control-Allow-Origin', value: '*' },
   { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS' },
   { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With' }

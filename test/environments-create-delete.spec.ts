@@ -1,4 +1,3 @@
-import { addEnvironment, contextMenuClickAndConfirm, countEnvironments, countRoutes } from './lib/common';
 import { Tests } from './lib/tests';
 
 const tests = new Tests('basic-data');
@@ -7,15 +6,15 @@ describe('Create and delete environments', () => {
   tests.runHooks();
 
   it('Add an environment', async () => {
-    await countEnvironments(1, tests);
-    await addEnvironment(tests);
-    await countEnvironments(2, tests);
+    await tests.helpers.countEnvironments(1);
+    await tests.helpers.addEnvironment();
+    await tests.helpers.countEnvironments(2);
   });
 
   it('Remove first environment', async () => {
-    await contextMenuClickAndConfirm('.menu-column--environments .menu-list .nav-item:first-of-type', 5, tests);
+    await tests.helpers.contextMenuClickAndConfirm('.menu-column--environments .menu-list .nav-item:first-of-type', 5);
 
-    await countEnvironments(1, tests);
+    await tests.helpers.countEnvironments(1);
   });
 
   it('Added environment should remain and be active', async () => {
@@ -23,10 +22,10 @@ describe('Create and delete environments', () => {
   });
 
   it('Remove last environment, interface should be empty', async () => {
-    await contextMenuClickAndConfirm('.menu-column--environments .menu-list .nav-item:first-of-type', 5, tests);
+    await tests.helpers.contextMenuClickAndConfirm('.menu-column--environments .menu-list .nav-item:first-of-type', 5);
 
-    await countEnvironments(0, tests);
-    await countRoutes(0, tests);
+    await tests.helpers.countEnvironments(0);
+    await tests.helpers.countRoutes(0);
 
     await tests.spectron.client.waitForExist('.header input[placeholder="No environment"]');
   });

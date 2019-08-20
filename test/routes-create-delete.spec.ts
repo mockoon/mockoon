@@ -1,4 +1,3 @@
-import { addRoute, contextMenuClickAndConfirm, countRoutes } from './lib/common';
 import { Tests } from './lib/tests';
 
 const tests = new Tests('basic-data');
@@ -7,19 +6,19 @@ describe('Create and delete routes', () => {
   tests.runHooks();
 
   it('Add a route', async () => {
-    await countRoutes(3, tests);
-    await addRoute(tests);
-    await countRoutes(4, tests);
+    await tests.helpers.countRoutes(3);
+    await tests.helpers.addRoute();
+    await tests.helpers.countRoutes(4);
   });
 
   it('Remove 3 routes over 4', async () => {
     const menuTarget = '.menu-column--routes .menu-list .nav-item:first-of-type';
 
-    await contextMenuClickAndConfirm(menuTarget, 3, tests);
-    await contextMenuClickAndConfirm(menuTarget, 3, tests);
-    await contextMenuClickAndConfirm(menuTarget, 3, tests);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 3);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 3);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 3);
 
-    await countRoutes(1, tests);
+    await tests.helpers.countRoutes(1);
   });
 
   it('Last added route should remain and be active', async () => {
@@ -27,9 +26,9 @@ describe('Create and delete routes', () => {
   });
 
   it('Remove last route, active tab should be environment settings', async () => {
-    await contextMenuClickAndConfirm('.menu-column--routes .menu-list .nav-item:first-of-type', 3, tests);
+    await tests.helpers.contextMenuClickAndConfirm('.menu-column--routes .menu-list .nav-item:first-of-type', 3);
 
-    await countRoutes(0, tests);
+    await tests.helpers.countRoutes(0);
 
     await tests.spectron.client.waitForExist('.header .btn[ngbTooltip="Environment settings"].active');
   });
