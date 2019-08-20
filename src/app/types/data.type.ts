@@ -1,5 +1,5 @@
-import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
-import { RouteType } from 'src/app/types/route.type';
+import { Environment, Environments } from 'src/app/types/environment.type';
+import { Route } from 'src/app/types/route.type';
 
 export type DataSubjectType = 'full' | 'environment' | 'route';
 
@@ -8,5 +8,5 @@ export type ExportType = {
   appVersion: string;
   checksum: string;
   subject: DataSubjectType;
-  data: EnvironmentsType | EnvironmentType | RouteType;
+  data: Environments | Environment | Route;
 };

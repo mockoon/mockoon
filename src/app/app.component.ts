@@ -13,23 +13,24 @@ import { ipcRenderer, remote, shell } from 'electron';
 import * as mimeTypes from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
 import { merge, Observable } from 'rxjs';
-import { distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import { TimedBoolean } from 'src/app/classes/timed-boolean';
 import { ContextMenuItemPayload } from 'src/app/components/context-menu.component';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
-import { Utils } from 'src/app/libs/utils.lib';
+import { GetRouteResponseContentType } from 'src/app/libs/utils.lib';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
-import { ContextMenuEventType, EventsService } from 'src/app/services/events.service';
+import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
 import { Toast, ToastsService } from 'src/app/services/toasts.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { DuplicatedRoutesTypes, EnvironmentsStatusType, EnvironmentStatusType, Store, TabsNameType } from 'src/app/stores/store';
+import { DuplicatedRoutesTypes, EnvironmentsStatusType, EnvironmentStatusType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { DataSubjectType } from 'src/app/types/data.type';
-import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
-import { methods, mimeTypesWithTemplating, RouteType, statusCodes } from 'src/app/types/route.type';
+import { Environment, Environments } from 'src/app/types/environment.type';
+import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
 import { EnvironmentLogsType } from 'src/app/types/server.type.js';
 import '../assets/custom_theme.js';
 const platform = require('os').platform();
@@ -48,13 +49,16 @@ export class AppComponent implements OnInit {
   public updateAvailable = false;
   public platform = platform;
   public hasEnvironmentHeaders = this.environmentsService.hasEnvironmentHeaders;
-  public clearEnvironmentLogsTimeout: NodeJS.Timer;
+  public clearEnvironmentLogsRequested$ = new TimedBoolean(false, 4000);
+  public deleteCurrentRouteResponseRequested$ = new TimedBoolean(false, 4000);
   public appVersion = appVersion;
-
-  public environments$: Observable<EnvironmentsType>;
-  public activeEnvironment$: Observable<EnvironmentType>;
+  public environments$: Observable<Environments>;
+  public activeEnvironment$: Observable<Environment>;
   public activeEnvironmentUUID$: Observable<string>;
-  public activeRoute$: Observable<RouteType>;
+  public activeRoute$: Observable<Route>;
+  public activeRouteResponse$: Observable<RouteResponse>;
+  public activeRouteResponseIndex$: Observable<number>;
+  public activeView$: Observable<ViewsNameType>;
   public activeTab$: Observable<TabsNameType>;
   public activeEnvironmentState$: Observable<EnvironmentStatusType>;
   public environmentsStatus$: Observable<EnvironmentsStatusType>;
@@ -65,7 +69,7 @@ export class AppComponent implements OnInit {
   public toasts$: Observable<Toast[]>;
   public activeEnvironmentForm: FormGroup;
   public activeRouteForm: FormGroup;
-
+  public activeRouteResponseForm: FormGroup;
   private settingsModalOpened = false;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
@@ -85,7 +89,6 @@ export class AppComponent implements OnInit {
   ) {
     // tooltip config
     this.config.container = 'body';
-    this.config.placement = 'bottom';
 
     // set listeners on main process messages
     ipcRenderer.on('keydown', (event, data) => {
@@ -156,7 +159,10 @@ export class AppComponent implements OnInit {
     this.environments$ = this.store.select('environments');
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeRoute$ = this.store.selectActiveRoute();
+    this.activeRouteResponse$ = this.store.selectActiveRouteResponse();
+    this.activeRouteResponseIndex$ = this.store.selectActiveRouteResponseIndex();
     this.activeTab$ = this.store.select('activeTab');
+    this.activeView$ = this.store.select('activeView');
     this.activeEnvironmentState$ = this.store.selectActiveEnvironmentStatus();
     this.activeEnvironmentUUID$ = this.store.select('activeEnvironmentUUID');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
@@ -194,12 +200,16 @@ export class AppComponent implements OnInit {
     this.activeRouteForm = this.formBuilder.group({
       documentation: [''],
       method: [''],
-      endpoint: [''],
+      endpoint: ['']
+    });
+
+    this.activeRouteResponseForm = this.formBuilder.group({
       statusCode: [''],
       latency: [''],
       filePath: [''],
       sendFileAsBody: [''],
-      body: ['']
+      body: [''],
+      rules: this.formBuilder.array([])
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -218,6 +228,15 @@ export class AppComponent implements OnInit {
       );
     })).subscribe(newProperty => {
       this.environmentsService.updateActiveRoute(newProperty);
+    });
+
+    // send new activeRouteResponseForm values to the store, one by one
+    merge(...Object.keys(this.activeRouteResponseForm.controls).map(controlName => {
+      return this.activeRouteResponseForm.get(controlName).valueChanges.pipe(
+        map(newValue => ({ [controlName]: newValue }))
+      );
+    })).subscribe(newProperty => {
+      this.environmentsService.updateActiveRouteResponse(newProperty);
     });
   }
 
@@ -250,12 +269,23 @@ export class AppComponent implements OnInit {
       this.activeRouteForm.patchValue({
         documentation: activeRoute.documentation,
         method: activeRoute.method,
-        endpoint: activeRoute.endpoint,
-        statusCode: activeRoute.statusCode,
-        latency: activeRoute.latency,
-        filePath: activeRoute.filePath,
-        sendFileAsBody: activeRoute.sendFileAsBody,
-        body: activeRoute.body
+        endpoint: activeRoute.endpoint
+      }, { emitEvent: false });
+    });
+
+    // subscribe to active route response changes to reset the form
+    this.activeRouteResponse$.pipe(
+      filter(routeResponse => !!routeResponse),
+      // monitor changes in uuid and body (for body formatter method)
+      distinctUntilChanged((previous, next) => previous.uuid === next.uuid && previous.body === next.body)
+    ).subscribe(activeRouteResponse => {
+      this.activeRouteResponseForm.patchValue({
+        statusCode: activeRouteResponse.statusCode,
+        latency: activeRouteResponse.latency,
+        filePath: activeRouteResponse.filePath,
+        sendFileAsBody: activeRouteResponse.sendFileAsBody,
+        body: activeRouteResponse.body,
+        rules: activeRouteResponse.rules
       }, { emitEvent: false });
     });
   }
@@ -296,17 +326,34 @@ export class AppComponent implements OnInit {
   }
 
   /**
+   * Set the application active view
+   */
+  public setActiveView(viewName: ViewsNameType) {
+    this.environmentsService.setActiveView(viewName);
+  }
+
+  /**
+   * Set the application active route response
+   */
+  public setActiveRouteResponse(routeResponseUUID: string) {
+    this.environmentsService.setActiveRouteResponse(routeResponseUUID);
+  }
+
+  /**
    * Clear logs for active environment
    */
   public clearEnvironmentLogs() {
-    if (this.clearEnvironmentLogsTimeout) {
+    if (this.clearEnvironmentLogsRequested$.readValue()) {
       this.store.update({ type: 'CLEAR_LOGS', UUID: this.store.get('activeEnvironmentUUID') });
-      clearTimeout(this.clearEnvironmentLogsTimeout);
-      this.clearEnvironmentLogsTimeout = undefined;
-    } else {
-      this.clearEnvironmentLogsTimeout = setTimeout(() => {
-        this.clearEnvironmentLogsTimeout = undefined;
-      }, 4000);
+    }
+  }
+
+  /**
+   * Delete currently selected route response
+   */
+  public deleteCurrentRouteResponse() {
+    if (this.deleteCurrentRouteResponseRequested$.readValue()) {
+      this.environmentsService.removeRouteResponse();
     }
   }
 
@@ -344,6 +391,13 @@ export class AppComponent implements OnInit {
     if (this.routesMenu) {
       this.scrollToBottom(this.routesMenu.nativeElement);
     }
+  }
+
+  /**
+   * Create a new route response in the current route. Append at the end of the list
+   */
+  public addRouteResponse() {
+    this.environmentsService.addRouteResponse();
   }
 
   /**
@@ -399,7 +453,7 @@ export class AppComponent implements OnInit {
   public browseFiles() {
     this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), {}, (file) => {
       if (file && file[0]) {
-        this.activeRouteForm.get('filePath').setValue(file[0]);
+        this.activeRouteResponseForm.get('filePath').setValue(file[0]);
       }
     });
   }
@@ -447,7 +501,7 @@ export class AppComponent implements OnInit {
   public navigationContextMenu(subject: DataSubjectType, subjectUUID: string, event: any) {
     // if right click display context menu
     if (event && event.which === 3) {
-      const menu: ContextMenuEventType = {
+      const menu: ContextMenuEvent = {
         event: event,
         items: [
           {
@@ -522,13 +576,13 @@ export class AppComponent implements OnInit {
         if (payload.subjectUUID !== this.store.get('activeEnvironmentUUID')) {
           this.selectEnvironment(payload.subjectUUID);
         }
-        this.setActiveTab('ENV_LOGS');
+        this.setActiveView('ENV_LOGS');
         break;
       case 'env_settings':
         if (payload.subjectUUID !== this.store.get('activeEnvironmentUUID')) {
           this.selectEnvironment(payload.subjectUUID);
         }
-        this.setActiveTab('ENV_SETTINGS');
+        this.setActiveView('ENV_SETTINGS');
         break;
       case 'duplicate':
         if (payload.subject === 'route') {
@@ -612,13 +666,13 @@ export class AppComponent implements OnInit {
   /**
    * Get the route content type or the parent environment content type
    */
-  public getRouteContentType() {
+  public getRouteResponseContentType() {
     const activeEnvironment = this.store.getActiveEnvironment();
-    const activeRoute = this.store.getActiveRoute();
-    const routeContentType = Utils.getRouteContentType(activeEnvironment, activeRoute);
+    const activeRouteResponse = this.store.getActiveRouteResponse();
+    const routeResponseContentType = GetRouteResponseContentType(activeEnvironment, activeRouteResponse);
 
-    if (routeContentType) {
-      return 'Content-Type ' + routeContentType;
+    if (routeResponseContentType) {
+      return 'Content-Type ' + routeResponseContentType;
     }
 
     return 'No Content-Type is set';
@@ -628,17 +682,17 @@ export class AppComponent implements OnInit {
    * If the body is set and the Content-Type is application/json, then prettify the JSON.
    */
   public formatBody() {
-    const activeRoute = this.store.getActiveRoute();
+    const activeRouteResponse = this.store.getActiveRouteResponse();
 
-    if (!activeRoute.body) {
+    if (!activeRouteResponse.body) {
       return;
     }
 
-    const contentType = Utils.getRouteContentType(this.store.getActiveEnvironment(), this.store.getActiveRoute());
+    const contentType = GetRouteResponseContentType(this.store.getActiveEnvironment(), activeRouteResponse);
 
     if (contentType === 'application/json') {
       try {
-        this.activeRouteForm.get('body').setValue(JSON.stringify(JSON.parse(activeRoute.body), undefined, 2));
+        this.activeRouteResponseForm.get('body').setValue(JSON.stringify(JSON.parse(activeRouteResponse.body), undefined, 2));
       } catch (e) {
         // ignore any errors with parsing / stringifying the JSON
       }

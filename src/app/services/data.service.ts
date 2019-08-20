@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import * as crypto from 'crypto';
 import { Config } from 'src/app/config';
-import { Utils } from 'src/app/libs/utils.lib';
+import { AscSort } from 'src/app/libs/utils.lib';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
-import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
-import { RouteType } from 'src/app/types/route.type';
+import { Environment, Environments } from 'src/app/types/environment.type';
+import { Route } from 'src/app/types/route.type';
 import { EnvironmentLogType } from 'src/app/types/server.type';
 import * as url from 'url';
 const appVersion = require('../../../package.json').version;
@@ -21,7 +21,7 @@ export class DataService {
    * @param data
    * @param subject
    */
-  public wrapExport(data: EnvironmentsType | EnvironmentType | RouteType, subject: DataSubjectType): string {
+  public wrapExport(data: Environments | Environment | Route, subject: DataSubjectType): string {
     return JSON.stringify(<ExportType>{
       id: this.exportId,
       appVersion: appVersion,
@@ -98,7 +98,7 @@ export class DataService {
     // get and sort headers
     requestLog.headers = Object.keys(request.headers).map((headerName) => {
       return { name: headerName, value: request.headers[headerName] };
-    }).sort(Utils.ascSort);
+    }).sort(AscSort);
 
     return requestLog;
   }

@@ -6,7 +6,7 @@
           <input type="text" class="form-control col-4" placeholder="name" formControlName="key" [ngbTypeahead]="search('headerNames')">
           <input type="text" class="form-control col-6" placeholder="value" formControlName="value" [ngbTypeahead]="search('headerValues')">
           <div class="input-group-prepend clickable">
-            <span class="input-group-text p-1 text-danger" (click)="removeHeader(headerIndex)" ngbTooltip="Remove" placement="bottom"><i class="material-icons">clear</i></span>
+            <span class="input-group-text p-1 text-danger" (click)="removeHeader(headerIndex)" ngbTooltip="Remove"><i class="material-icons">delete</i></span>
           </div>
           <div class="input-group-prepend" *ngIf="testHeaderValidity(header.get('key')?.value)">
             <span class="input-group-text p-1 text-warning" ngbTooltip="Header key contains prohibited characters and won't be used"><i class="material-icons">warning</i></span>
@@ -17,8 +17,8 @@
         </div>
       </div>
     </div>
-    <div class="mt-2 clickable">
-      <span (click)="addHeader()"><i class="material-icons text-success">add_box</i> Add header</span>
-    </div>
+    <button type="button" class="btn btn-link btn-icon mt-2" (click)="addHeader()">
+      <i class="material-icons text-success">add_box</i> Add header
+    </button>
   </ng-container>
 </ng-container>

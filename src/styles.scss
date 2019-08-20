@@ -11,8 +11,12 @@
 }
 .nav-link {
   cursor: pointer;
-  transition: background-color ease-in-out 150ms;
-  padding-right: 1.3rem;
+  transition: all ease-in-out 150ms;
+}
+.nav:not(.nav-tabs) {
+  .nav-link {
+    padding-right: 1.3rem;
+  }
 }
 .nav-tabs {
   .nav-link {
@@ -96,9 +100,11 @@ label {
     }
   }
 }
+
 .btn {
   border-width: 0;
 }
+
 .btn.btn-icon {
   text-decoration: none;
 
@@ -123,9 +129,35 @@ label {
   }
 }
 
+.btn-custom {
+  @include button-variant($custom-gray, $custom-gray, $custom-gray, $custom-gray, $custom-gray, $gray-800);
+  color: $gray-500;
+  border-width: $btn-border-width;
+
+  &:hover, &.dropdown-toggle {
+    color: $gray-100;
+  }
+
+  &:focus,
+  &.focus,
+  &:not(:disabled):not(.disabled):active:focus, &:not(:disabled):not(.disabled).active:focus, .show > &.dropdown-toggle:focus {
+    box-shadow: none;
+  }
+}
+
 .btn-xs {
   // line-height: ensure proper height of button next to small input
   @include button-size($input-btn-padding-y-xs, $input-btn-padding-x-xs, $font-size-xs, $input-btn-line-height-xs, $btn-border-radius-xs);
+}
+
+.btn-group {
+  .btn:first-of-type {
+    border-right: 1px solid $gray-800;
+  }
+
+  .btn:last-of-type {
+    border-left: 1px solid $gray-800;
+  }
 }
 
 .custom-select {
@@ -137,6 +169,11 @@ label {
 // fix bootstrap flexfill which is incompatible with ace editor
 .flex-fill {
   flex: 1 !important;
+}
+
+// add margin to the split dropdown caret, when there is text
+.dropdown-toggle-split:not(:empty)::after, .dropup .dropdown-toggle-split:not(:empty)::after, .dropright .dropdown-toggle-split:not(:empty)::after {
+  margin-left: 15px;
 }
 
 /* Icon font */
@@ -228,8 +265,8 @@ html, body {
   height: 100vh;
 }
 
-select, input, .btn {
-  transition: all ease-in-out 200ms;
+select, input, .btn, .dropdown-item {
+  transition: all ease-in-out 100ms;
 }
 
 .main-content {
@@ -269,17 +306,16 @@ select, input, .btn {
   font-size: $small-font-size;
 }
 
-.tab-content, .scroll-content {
+.scroll-content {
   overflow-x: hidden;
   overflow-y: scroll;
-
-  &.no-scroll {
-    overflow-y: hidden;
-  }
 }
 
 .doc-link {
+  cursor: pointer;
   opacity: 0.5;
+  padding: 0;
+  vertical-align: baseline;
 
   &:hover {
     opacity: 1;

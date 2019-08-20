@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as express from 'express';
+import { Application } from 'express';
 import * as fs from 'fs';
 import * as http from 'http';
 import * as proxy from 'http-proxy-middleware';
@@ -7,17 +8,18 @@ import * as https from 'https';
 import * as killable from 'killable';
 import * as mimeTypes from 'mime-types';
 import * as path from 'path';
+import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpreter';
 import { Errors } from 'src/app/enums/errors.enum';
 import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
 import { ExpressMiddlewares } from 'src/app/libs/express-middlewares.lib';
-import { Utils } from 'src/app/libs/utils.lib';
+import { GetRouteResponseContentType } from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
 import { Store } from 'src/app/stores/store';
-import { EnvironmentType } from 'src/app/types/environment.type';
-import { CORSHeaders, HeaderType, mimeTypesWithTemplating, RouteType } from 'src/app/types/route.type';
+import { Environment } from 'src/app/types/environment.type';
+import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
 import { URL } from 'url';
 
 const httpsConfig = {
@@ -42,7 +44,7 @@ export class ServerService {
    *
    * @param environment - an environment
    */
-  public start(environment: EnvironmentType) {
+  public start(environment: Environment) {
     const server = express();
     let serverInstance;
 
@@ -118,7 +120,7 @@ export class ServerService {
    * @param server - express instance
    * @param environment - environment to be started
    */
-  private setCors(server: any, environment: EnvironmentType) {
+  private setCors(server: Application, environment: Environment) {
     if (environment.cors) {
       server.options('/*', (req, res) => {
         const environmentSelected = this.store.getEnvironmentByUUID(environment.uuid);
@@ -139,8 +141,8 @@ export class ServerService {
    * @param server - server on which attach routes
    * @param environment - environment to get route schema from
    */
-  private setRoutes(server: any, environment: EnvironmentType) {
-    environment.routes.forEach((declaredRoute: RouteType) => {
+  private setRoutes(server: Application, environment: Environment) {
+    environment.routes.forEach((declaredRoute: Route) => {
       const duplicatedRoutes = this.store.get('duplicatedRoutes')[environment.uuid];
 
       // only launch non duplicated routes
@@ -150,25 +152,26 @@ export class ServerService {
           server[declaredRoute.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + declaredRoute.endpoint.replace(/ /g, '%20'), (req, res) => {
             const currentEnvironment = this.store.getEnvironmentByUUID(environment.uuid);
             const currentRoute = currentEnvironment.routes.find(route => route.uuid === declaredRoute.uuid);
+            const enabledRouteResponse = new ResponseRulesInterpreter(currentRoute.responses, req).chooseResponse();
 
             // add route latency if any
             setTimeout(() => {
-              const routeContentType = Utils.getRouteContentType(currentEnvironment, currentRoute);
+              const routeContentType = GetRouteResponseContentType(currentEnvironment, enabledRouteResponse);
 
               // set http code
-              res.status(currentRoute.statusCode);
+              res.status(enabledRouteResponse.statusCode as unknown as number);
 
               this.setHeaders(currentEnvironment.headers, req, res);
-              this.setHeaders(currentRoute.headers, req, res);
+              this.setHeaders(enabledRouteResponse.headers, req, res);
 
               // send the file
-              if (currentRoute.filePath) {
+              if (enabledRouteResponse.filePath) {
                 let filePath: string;
 
                 // throw error or serve file
                 try {
-                  filePath = DummyJSONParser(currentRoute.filePath, req);
-                  const fileMimeType = mimeTypes.lookup(currentRoute.filePath);
+                  filePath = DummyJSONParser(enabledRouteResponse.filePath, req);
+                  const fileMimeType = mimeTypes.lookup(enabledRouteResponse.filePath);
 
                   // if no route content type set to the one detected
                   if (!routeContentType) {
@@ -182,7 +185,7 @@ export class ServerService {
                     fileContent = DummyJSONParser(fileContent.toString('utf-8', 0, fileContent.length), req);
                   }
 
-                  if (!currentRoute.sendFileAsBody) {
+                  if (!enabledRouteResponse.sendFileAsBody) {
                     res.set('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
                   }
                   res.send(fileContent);
@@ -198,7 +201,7 @@ export class ServerService {
                 // detect if content type is json in order to parse
                 if (routeContentType === 'application/json') {
                   try {
-                    res.json(JSON.parse(DummyJSONParser(currentRoute.body, req)));
+                    res.json(JSON.parse(DummyJSONParser(enabledRouteResponse.body, req)));
                   } catch (error) {
                     // if JSON parsing error send plain text error
                     if (error.message.indexOf('Unexpected token') > -1 || error.message.indexOf('Parse error') > -1) {
@@ -210,7 +213,7 @@ export class ServerService {
                   }
                 } else {
                   try {
-                    res.send(DummyJSONParser(currentRoute.body, req));
+                    res.send(DummyJSONParser(enabledRouteResponse.body, req));
                   } catch (error) {
                     // if invalid Content-Type provided
                     if (error.message.indexOf('invalid media type') > -1) {
@@ -220,7 +223,7 @@ export class ServerService {
                   }
                 }
               }
-            }, currentRoute.latency);
+            }, enabledRouteResponse.latency);
           });
         } catch (error) {
           // if invalid regex defined
@@ -239,7 +242,7 @@ export class ServerService {
    * @param req
    * @param res
    */
-  private setHeaders(headers: Partial<HeaderType>[], req, res) {
+  private setHeaders(headers: Partial<Header>[], req, res) {
     headers.forEach((header) => {
       if (header.key && header.value && !this.testHeaderValidity(header.key)) {
         res.set(header.key, DummyJSONParser(header.value, req));
@@ -270,7 +273,7 @@ export class ServerService {
    * @param server - server on which to launch the proxy
    * @param environment - environment to get proxy settings from
    */
-  private enableProxy(server: any, environment: EnvironmentType) {
+  private enableProxy(server: Application, environment: Environment) {
     // Add catch all proxy if enabled
     if (environment.proxyMode && environment.proxyHost && this.isValidURL(environment.proxyHost)) {
       // res-stream the body (intercepted by body parser method) and mark as proxied
@@ -300,7 +303,7 @@ export class ServerService {
    * @param server - server on which to log the request
    * @param environment - environment to link log to
    */
-  private logRequests(server: any, environment: EnvironmentType) {
+  private logRequests(server: Application, environment: Environment) {
     server.use((req, res, next) => {
       this.store.update({ type: 'LOG_REQUEST', UUID: environment.uuid, item: this.dataService.formatRequestLog(req) });
 
@@ -314,7 +317,7 @@ export class ServerService {
    * @param server - server instance
    * @param environmentUUID - environment UUID
    */
-  private setEnvironmentLatency(server: any, environmentUUID: string) {
+  private setEnvironmentLatency(server: Application, environmentUUID: string) {
     server.use((req, res, next) => {
       const environmentSelected = this.store.getEnvironmentByUUID(environmentUUID);
       setTimeout(next, environmentSelected.latency);

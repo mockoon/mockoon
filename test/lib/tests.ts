@@ -2,17 +2,16 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { copyFile } from 'fs';
 import { Application } from 'spectron';
+import { Helpers } from './helpers';
 const electronPath: any = require('electron');
 const mkdirp = require('mkdirp');
 
 export class Tests {
-  // folder name for test data
-  private dataFileName: string;
   public spectron: Application;
+  public helpers: Helpers;
 
-  constructor(dataFileName) {
-    this.dataFileName = dataFileName;
-
+  constructor(private dataFileName: string) {
+    this.helpers = new Helpers(this);
     chai.should();
     chai.use(chaiAsPromised);
   }

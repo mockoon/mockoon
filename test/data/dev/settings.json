@@ -1,1 +1,6 @@
-{"welcomeShown":true,"analytics":true,"bannerDismissed":[]}
+{
+  "welcomeShown": true,
+  "analytics": true,
+  "bannerDismissed": [],
+  "lastMigration": 6
+}

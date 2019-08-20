@@ -1,4 +1,3 @@
-import { httpCallAsserter, startEnvironment, switchTab } from './lib/common';
 import { Tests } from './lib/tests';
 import { HttpCall } from './lib/types';
 
@@ -32,16 +31,16 @@ describe('Environment logs', () => {
   tests.runHooks();
 
   it('Start default environment', async () => {
-    await startEnvironment(tests);
+    await tests.helpers.startEnvironment();
   });
 
   for (let index = 0; index < cases.length; index++) {
     it(cases[index].description, async () => {
-      await httpCallAsserter(cases[index], tests);
+      await tests.helpers.httpCallAsserter(cases[index]);
     });
   }
   it('Environment logs have two entries', async () => {
-    await switchTab('LOGS', tests);
+    await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.spectron.client.elements(`${environmentLogsItemSelector}`).should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(2);
   });
 

@@ -15,10 +15,10 @@ import { ServerService } from 'src/app/services/server.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { Store, TabsNameType } from 'src/app/stores/store';
+import { Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
-import { EnvironmentsType, EnvironmentType } from 'src/app/types/environment.type';
-import { CORSHeaders, HeaderType, RouteType } from 'src/app/types/route.type';
+import { Environment, Environments } from 'src/app/types/environment.type';
+import { CORSHeaders, Header, Route, RouteResponse } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
 const appVersion = require('../../../package.json').version;
 
@@ -26,7 +26,7 @@ const appVersion = require('../../../package.json').version;
 export class EnvironmentsService {
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
-  private environmentSchema: EnvironmentType = {
+  private environmentSchema: Environment = {
     uuid: '',
     name: '',
     endpointPrefix: '',
@@ -40,21 +40,28 @@ export class EnvironmentsService {
     headers: []
   };
 
-  private routeSchema: RouteType = {
+  private routeSchema: Route = {
     uuid: '',
     documentation: '',
     method: 'get',
     endpoint: '',
+    responses: []
+  };
+
+  private routeResponseSchema: RouteResponse = {
+    uuid: '',
     body: '{}',
     latency: 0,
     statusCode: '200',
-    headers: [],
+    headers: [
+      { key: '', value: '' }
+    ],
     filePath: '',
-    sendFileAsBody: false
+    sendFileAsBody: false,
+    rules: []
   };
 
-  private emptyHeaderSchema: HeaderType = { key: '', value: '' };
-  private routeHeadersSchema: HeaderType = { key: '', value: '' };
+  private emptyHeaderSchema: Header = { key: '', value: '' };
   private storageKey = 'environments';
 
   constructor(
@@ -66,7 +73,7 @@ export class EnvironmentsService {
     private serverService: ServerService
   ) {
     // get existing environments from storage or default one
-    storage.get(this.storageKey, (_error: any, environments: EnvironmentType[]) => {
+    storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
         this.store.update({ type: 'SET_INITIAL_ENVIRONMENTS', item: [this.buildDefaultEnvironment()] });
@@ -137,12 +144,12 @@ export class EnvironmentsService {
 
     if (environmentToDuplicate) {
       // copy the environment, reset some properties and change name
-      let newEnvironment: EnvironmentType = {
+      let newEnvironment: Environment = {
         ...cloneDeep(environmentToDuplicate),
         name: `${environmentToDuplicate.name} (copy)`
       };
 
-      newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as EnvironmentType;
+      newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as Environment;
 
       this.store.update({ type: 'ADD_ENVIRONMENT', item: newEnvironment });
 
@@ -174,16 +181,32 @@ export class EnvironmentsService {
    * Add a new route and save it in the store
    */
   public addRoute() {
-    const newRoute: RouteType = {
+    const newRoute: Route = {
       ...this.routeSchema,
       uuid: uuid(),
-      headers: [
-        { ...this.routeHeadersSchema }
+      responses: [
+        {
+          ...this.routeResponseSchema,
+          uuid: uuid()
+        }
       ]
     };
 
     this.store.update({ type: 'ADD_ROUTE', item: newRoute });
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
+  }
+
+  /**
+   * Add a new route response and save it in the store
+   */
+  public addRouteResponse() {
+    const newRouteResponse: RouteResponse = {
+      ...this.routeResponseSchema,
+      uuid: uuid()
+    };
+
+    this.store.update({ type: 'ADD_ROUTE_RESPONSE', item: newRouteResponse });
+    this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE_RESPONSE);
   }
 
   /**
@@ -197,9 +220,9 @@ export class EnvironmentsService {
     }
 
     if (routeToDuplicate) {
-      let newRoute: RouteType = cloneDeep(routeToDuplicate);
+      let newRoute: Route = cloneDeep(routeToDuplicate);
 
-      newRoute = this.renewUUIDs(newRoute, 'route') as RouteType;
+      newRoute = this.renewUUIDs(newRoute, 'route') as Route;
 
       this.store.update({ type: 'ADD_ROUTE', item: newRoute });
 
@@ -217,6 +240,15 @@ export class EnvironmentsService {
   }
 
   /**
+   * Remove current route response and save
+   */
+  public removeRouteResponse() {
+    this.store.update({ type: 'REMOVE_ROUTE_RESPONSE' });
+
+    this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE_RESPONSE);
+  }
+
+  /**
    * Set active tab
    */
   public setActiveTab(activeTab: TabsNameType) {
@@ -224,17 +256,38 @@ export class EnvironmentsService {
   }
 
   /**
+   * Set active view
+   */
+  public setActiveView(activeView: ViewsNameType) {
+    this.store.update({ type: 'SET_ACTIVE_VIEW', item: activeView });
+  }
+
+  /**
+   * Set active view
+   */
+  public setActiveRouteResponse(routeResponseUUID: string) {
+    this.store.update({ type: 'SET_ACTIVE_ROUTE_RESPONSE', UUID: routeResponseUUID });
+  }
+
+  /**
    * Update the active environment
    */
-  public updateActiveEnvironment(properties: { [T in keyof EnvironmentType]?: EnvironmentType[T] }) {
+  public updateActiveEnvironment(properties: { [T in keyof Environment]?: Environment[T] }) {
     this.store.update({ type: 'UPDATE_ENVIRONMENT', properties });
   }
 
   /**
    * Update the active route
    */
-  public updateActiveRoute(properties: { [T in keyof RouteType]?: RouteType[T] }) {
+  public updateActiveRoute(properties: { [T in keyof Route]?: Route[T] }) {
     this.store.update({ type: 'UPDATE_ROUTE', properties });
+  }
+
+  /**
+   * Update the active route response
+   */
+  public updateActiveRouteResponse(properties: { [T in keyof RouteResponse]?: RouteResponse[T] }) {
+    this.store.update({ type: 'UPDATE_ROUTE_RESPONSE', properties });
   }
 
   /**
@@ -263,7 +316,7 @@ export class EnvironmentsService {
   /**
    * Build a new environment
    */
-  private buildNewEnvironment(): EnvironmentType {
+  private buildNewEnvironment(): Environment {
     return {
       ...this.environmentSchema,
       uuid: uuid(),
@@ -272,8 +325,12 @@ export class EnvironmentsService {
       routes: [
         {
           ...this.routeSchema,
-          headers: [
-            { ...this.routeHeadersSchema }
+          uuid: uuid(),
+          responses: [
+            {
+              ...this.routeResponseSchema,
+              uuid: uuid()
+            }
           ]
         }
       ],
@@ -284,7 +341,7 @@ export class EnvironmentsService {
   /**
    * Build a default environment when starting the application for the first time
    */
-  private buildDefaultEnvironment(): EnvironmentType {
+  private buildDefaultEnvironment(): Environment {
     return {
       ...this.environmentSchema,
       uuid: uuid(),
@@ -294,17 +351,37 @@ export class EnvironmentsService {
         {
           ...this.routeSchema,
           uuid: uuid(),
-          headers: [{ key: 'Content-Type', value: 'text/plain' }],
           endpoint: 'answer',
-          body: '42'
+          responses: [
+            {
+              uuid: uuid(),
+              statusCode: '200',
+              latency: 0,
+              filePath: '',
+              sendFileAsBody: false,
+              headers: [{ key: 'Content-Type', value: 'text/plain' }],
+              body: '42',
+              rules: []
+            }
+          ]
         },
         {
           ...this.routeSchema,
           uuid: uuid(),
-          headers: [{ key: 'Content-Type', value: 'application/json' }],
           method: 'post',
           endpoint: 'dolphins',
-          body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}'
+          responses: [
+            {
+              uuid: uuid(),
+              statusCode: '200',
+              latency: 0,
+              filePath: '',
+              sendFileAsBody: false,
+              headers: [{ key: 'Content-Type', value: 'application/json' }],
+              body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}',
+              rules: []
+            }
+          ]
         }
       ]
     };
@@ -316,7 +393,7 @@ export class EnvironmentsService {
    *
    * @param environments - environments to migrate
    */
-  private migrateData(environments: EnvironmentsType) {
+  private migrateData(environments: Environments) {
     let wasUpdated = false;
     let lastMigrationId;
 
@@ -343,18 +420,18 @@ export class EnvironmentsService {
    * @param data
    * @param subject
    */
-  private renewUUIDs(data: EnvironmentsType | EnvironmentType | RouteType, subject: DataSubjectType) {
+  private renewUUIDs(data: Environments | Environment | Route, subject: DataSubjectType) {
     if (subject === 'full') {
-      (data as EnvironmentsType).forEach(environment => {
+      (data as Environments).forEach(environment => {
         this.renewUUIDs(environment, 'environment');
       });
     } else if (subject === 'environment') {
-      (data as EnvironmentType).uuid = uuid();
-      (data as EnvironmentType).routes.forEach(route => {
+      (data as Environment).uuid = uuid();
+      (data as Environment).routes.forEach(route => {
         this.renewUUIDs(route, 'route');
       });
     } else if (subject === 'route') {
-      (data as RouteType).uuid = uuid();
+      (data as Route).uuid = uuid();
     }
 
     return data;
@@ -363,8 +440,13 @@ export class EnvironmentsService {
   /**
    * Move a menu item (envs / routes)
    */
-  public moveMenuItem(type: 'routes' | 'environments' | string, sourceIndex: number, targetIndex: number) {
-    this.store.update({ type: (type === 'environments') ? 'MOVE_ENVIRONMENTS' : 'MOVE_ROUTES', indexes: { sourceIndex, targetIndex } });
+  public moveMenuItem(type: 'routes' | 'environments' | 'routeResponses' | string, sourceIndex: number, targetIndex: number) {
+    const storeActions = {
+      routes: 'MOVE_ROUTES',
+      environments: 'MOVE_ENVIRONMENTS',
+      routeResponses: 'MOVE_ROUTE_RESPONSES'
+    };
+    this.store.update({ type: storeActions[type], indexes: { sourceIndex, targetIndex } });
   }
 
   /**
@@ -456,18 +538,18 @@ export class EnvironmentsService {
       }
 
       if (importData.subject === 'environment') {
-        importData.data = this.renewUUIDs(importData.data as EnvironmentType, 'environment');
+        importData.data = this.renewUUIDs(importData.data as Environment, 'environment');
         this.store.update({ type: 'ADD_ENVIRONMENT', item: importData.data });
       } else if (importData.subject === 'route') {
-        importData.data = this.renewUUIDs(importData.data as RouteType, 'route');
+        importData.data = this.renewUUIDs(importData.data as Route, 'route');
 
         // if has a current environment append imported route
         if (this.store.get('activeEnvironmentUUID')) {
           this.store.update({ type: 'ADD_ROUTE', item: importData.data });
         } else {
-          const newEnvironment: EnvironmentType = {
+          const newEnvironment: Environment = {
             ...this.buildNewEnvironment(),
-            routes: [importData.data as RouteType]
+            routes: [importData.data as Route]
           };
 
           this.store.update({ type: 'ADD_ENVIRONMENT', item: newEnvironment });
@@ -516,8 +598,8 @@ export class EnvironmentsService {
               return;
             }
 
-            importData.data = this.renewUUIDs(importData.data as EnvironmentsType, 'full');
-            (importData.data as EnvironmentsType).forEach(environment => {
+            importData.data = this.renewUUIDs(importData.data as Environments, 'full');
+            (importData.data as Environments).forEach(environment => {
               this.store.update({ type: 'ADD_ENVIRONMENT', item: environment });
             });
 

@@ -1,19 +1,19 @@
-import { HeaderType, RouteType } from 'src/app/types/route.type';
+import { Header, Route } from 'src/app/types/route.type';
 
-export type EnvironmentType = {
+export type Environment = {
   uuid: string;
   name: string;
   port: number;
   endpointPrefix: string;
   latency: number;
-  routes: RouteType[];
+  routes: Route[];
   proxyMode: boolean;
   proxyHost: string;
   https: boolean;
   cors: boolean;
-  headers: HeaderType[];
+  headers: Header[];
 };
 
-export type EnvironmentsType = EnvironmentType[];
+export type Environments = Environment[];
 
-export type CurrentEnvironmentType = { environment: EnvironmentType, index: number };
+export type CurrentEnvironment = { environment: Environment, index: number };

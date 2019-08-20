@@ -1,61 +1,79 @@
 [
   {
-    "uuid": "7365d860-f3d8-11e8-befa-911f4eb28c95",
+    "uuid": "d609f7f1-6bb5-4253-9d2b-89379f06eba6",
     "name": "Dev env",
     "endpointPrefix": "",
     "latency": 0,
     "port": 3000,
     "routes": [
       {
-        "uuid": "5904a6d0-f3d9-11e8-befa-911f4eb28c95",
+        "uuid": "7919e716-8e59-4dc4-a993-561dbd9129ac",
         "method": "get",
         "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
-        "body": "{\"response\": \"{{urlParam 'var'}}\"}",
-        "latency": 0,
-        "statusCode": "200",
-        "headers": [
+        "documentation": "Test documentation",
+        "responses": [
           {
-            "key": "Content-Type",
-            "value": "application/json"
+            "uuid": "a6092eb3-5e0c-42f1-beb3-a545056c070d",
+            "body": "{\"response\": \"{{urlParam 'var'}}\"}",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
           }
-        ],
-        "filePath": "",
-        "sendFileAsBody": false,
-        "documentation": "Test documentation"
+        ]
       },
       {
-        "uuid": "7365d862-f3d8-11e8-befa-911f4eb28c95",
+        "uuid": "3dae1543-f2d8-4110-a930-3cac6af90b11",
         "method": "get",
         "endpoint": "answer",
-        "body": "42",
-        "latency": 0,
-        "statusCode": "200",
-        "headers": [
+        "documentation": "",
+        "responses": [
           {
-            "key": "Content-Type",
-            "value": "text/plain"
+            "uuid": "184a72a5-06d8-4875-b2a5-64977e1669ad",
+            "body": "42",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
           }
-        ],
-        "filePath": "",
-        "sendFileAsBody": false,
-        "documentation": ""
+        ]
       },
       {
-        "uuid": "7365d864-f3d8-11e8-befa-911f4eb28c95",
+        "uuid": "4e4bd5d7-bb2c-4ed4-8795-8b90b132c8f7",
         "method": "post",
         "endpoint": "dolphins",
-        "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
-        "latency": 0,
-        "statusCode": "200",
-        "headers": [
+        "documentation": "",
+        "responses": [
           {
-            "key": "Content-Type",
-            "value": "application/json"
+            "uuid": "cea5910c-068f-4418-9162-f94097a17987",
+            "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
           }
-        ],
-        "filePath": "",
-        "sendFileAsBody": false,
-        "documentation": ""
+        ]
       }
     ],
     "proxyMode": false,

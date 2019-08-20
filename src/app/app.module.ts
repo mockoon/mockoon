@@ -15,6 +15,7 @@ import { ChangelogModalComponent } from 'src/app/components/changelog-modal.comp
 import { ContextMenuComponent } from 'src/app/components/context-menu.component';
 import { EnvironmentLogsComponent } from 'src/app/components/environment-logs.component';
 import { HeadersListComponent } from 'src/app/components/headers-list.component';
+import { RouteResponseRulesComponent } from 'src/app/components/route-response-rules.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { WelcomeModalComponent } from 'src/app/components/welcome-modal.component';
 import { Config } from 'src/app/config';
@@ -47,7 +48,8 @@ import { AppComponent } from './app.component';
     ChangelogModalComponent,
     EnvironmentLogsComponent,
     HeadersListComponent,
-    BannerComponent
+    BannerComponent,
+    RouteResponseRulesComponent
   ],
   imports: [
     AceEditorModule,
