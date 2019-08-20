@@ -105,6 +105,11 @@ function createWindow() {
           }
         },
         {
+          label: 'Community', click: function () {
+            shell.openExternal('https://spectrum.chat/mockoon');
+          }
+        },
+        {
           label: 'Send feedback', click: function () {
             shell.openExternal('https://github.com/mockoon/mockoon/issues');
           }
@@ -113,11 +118,6 @@ function createWindow() {
         {
           label: 'Settings', accelerator: 'CmdOrCtrl+,', click: function () {
             mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
-          }
-        },
-        {
-          label: 'Help', click: function () {
-            shell.openExternal('https://github.com/mockoon/mockoon/wiki');
           }
         },
         { type: 'separator' },
