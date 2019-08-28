@@ -10,14 +10,14 @@
         <input type="text" class="form-control col-3" placeholder="name or path (users.0.name)" formControlName="modifier">
 
         <div class="input-group-prepend">
-          <span class="input-group-text" [ngbTooltip]="'equals or includes if ' + (form.get(['rules', ruleIndex, 'modifier']).value || 'name') + ' is an array'">==</span>
+          <span class="input-group-text" [ngbTooltip]="'equals or includes if ' + (form.get(['rules', ruleIndex, 'modifier']).value || 'name') + ' is an array'">=</span>
         </div>
 
         <input type="text" class="form-control col-3" placeholder="value" formControlName="value">
 
         <div class="custom-control custom-checkbox ml-2">
-          <input type="checkbox" class="custom-control-input" id="isRegex" formControlName="isRegex">
-          <label class="custom-control-label" for="isRegex" ngbTooltip="Value is a regex">(.*)</label>
+          <input type="checkbox" class="custom-control-input" id="isRegex{{ruleIndex}}" formControlName="isRegex">
+          <label class="custom-control-label" for="isRegex{{ruleIndex}}" ngbTooltip="Value is a regex">(.*)</label>
         </div>
 
         <div class="input-group-prepend clickable ml-4">
