@@ -29,6 +29,7 @@ if (isTesting) {
 if (isDev && isServing) {
   mkdirp.sync('./tmp/storage/');
   fs.copyFileSync(path.resolve('./test/data/dev/environments.json'), path.resolve('./tmp/storage/environments.json'));
+  fs.copyFileSync(path.resolve('./test/data/dev/settings.json'), path.resolve('./tmp/storage/settings.json'));
 
   electron.app.setPath('userData', path.resolve('./tmp'));
   require('electron-reload')(__dirname, {});
