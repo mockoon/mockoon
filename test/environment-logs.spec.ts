@@ -53,4 +53,14 @@ describe('Environment logs', () => {
     await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link .route`).should.eventually.equal('GET\n/answer');
     await tests.spectron.client.waitForExist(`${environmentLogsItemSelector}:nth-child(2) .nav-link i[ngbTooltip="Request caught"]`);
   });
+
+  it('View response log', async () => {
+    await tests.spectron.client.element('#tab-response').click();
+    await tests.spectron.client.getText(`#tab-response-panel > div > div:nth-child(2)`).should.eventually.equal('Status: 404');
+  });
+
+  it('View request log again', async () => {
+    await tests.spectron.client.element('#tab-request').click();
+    await tests.spectron.client.getText(`#tab-request-panel > div:nth-child(2) > div:nth-child(1)`).should.eventually.equal('Request URL: /test');
+  });
 });
