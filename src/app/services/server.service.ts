@@ -21,6 +21,8 @@ import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
 import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
 import { URL } from 'url';
+import * as uuid from 'uuid/v1';
+import { IEnhancedRequest } from '../types/misc.type';
 
 const httpsConfig = {
   key: pemFiles.key,
@@ -68,10 +70,12 @@ export class ServerService {
 
     // apply latency, cors, routes and proxy to express server
     this.logRequests(server, environment);
+    this.logResponses(server, environment);
     this.setEnvironmentLatency(server, environment.uuid);
     this.setRoutes(server, environment);
     this.setCors(server, environment);
     this.enableProxy(server, environment);
+    this.logErrorResponses(server, environment);
 
     // handle server errors
     serverInstance.on('error', (error: any) => {
@@ -287,13 +291,37 @@ export class ServerService {
         }
       };
 
+      // logging the proxied response
+      const self = this;
+      const logResponse = (proxyRes, req, res) => {
+        let body = '';
+        proxyRes.on('data', (chunk) => {
+          body += chunk;
+        });
+        proxyRes.on('end', () => {
+          proxyRes.getHeaders = function () {
+            return proxyRes.headers;
+          };
+          const enhancedReq = req as IEnhancedRequest;
+          const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
+          self.store.update({ type: 'LOG_RESPONSE', UUID: environment.uuid, item: response});
+        });
+      };
+
       server.use('*', proxy({
         target: environment.proxyHost,
         secure: false,
         changeOrigin: true,
         ssl: { ...httpsConfig, agent: false },
-        onProxyReq: processRequest
+        onProxyReq: processRequest,
+        onProxyRes: logResponse
       }));
+    } else {
+      //if not proxy, log the 404 response
+      server.use(function(req, res, next) {
+        // the send function is logging the response
+        return res.status(404).send('Cannot ' + req.method + ' ' + req.url);
+      });
     }
   }
 
@@ -305,9 +333,47 @@ export class ServerService {
    */
   private logRequests(server: Application, environment: Environment) {
     server.use((req, res, next) => {
-      this.store.update({ type: 'LOG_REQUEST', UUID: environment.uuid, item: this.dataService.formatRequestLog(req) });
+      const log = this.dataService.formatRequestLog(req);
+      log.uuid = uuid();
+      const enhancedReq = req as IEnhancedRequest;
+      enhancedReq.uuid = log.uuid;
+      this.store.update({ type: 'LOG_REQUEST', UUID: environment.uuid, item: log });
+      next();
+    });
+  }
+
+  /**
+   * Log all response made by the environment
+   *
+   * @param server - server on which to log the response
+   * @param environment - environment to link log to
+   */
+  private logResponses(server: any, environment: Environment) {
+    server.use((req, res, next) => {
+      const oldSend = res.send;
+
+      const self = this;
+      res.send = function(body) {
+        oldSend.apply(res, arguments);
+        const enhancedReq = this.req as IEnhancedRequest;
+        const response = self.dataService.formatResponseLog(this, body, enhancedReq.uuid);
+        self.store.update({ type: 'LOG_RESPONSE', UUID: environment.uuid, item: response});
+      };
 
       next();
+    });
+  }
+
+  /**
+   * Log all error responses made by the environment
+   *
+   * @param server - server on which to log the response
+   * @param environment - environment to link log to
+   */
+  private logErrorResponses(server: any, environment: Environment) {
+    const self = this;
+    server.use((err, req, res, next) => {
+      return res.status(500).send(err);
     });
   }
 

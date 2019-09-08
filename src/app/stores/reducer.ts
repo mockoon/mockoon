@@ -35,7 +35,8 @@ export type ReducerActionType = {
   'ADD_TOAST' |
   'REMOVE_TOAST' |
   'SET_USER_ID' |
-  'UPDATE_SETTINGS';
+  'UPDATE_SETTINGS'|
+  'LOG_RESPONSE';
   // used to select entities (environment, routes)
   UUID?: string;
   // item to add
@@ -640,6 +641,26 @@ export function environmentReducer(
         ...state,
         settings: { ...state.settings, ...action.properties as SettingsType }
       };
+      break;
+    }
+
+    case 'LOG_RESPONSE': {
+      if ( action.item != null ) {
+        const requestUuid = action.item.requestUuid;
+        const newEnvironmentsLogs = { ...state.environmentsLogs };
+
+        for (const item of newEnvironmentsLogs[action.UUID]) {
+          if (item.uuid === requestUuid) {
+            item.response = action.item;
+            break;
+          }
+        }
+        newState = {
+          ...state,
+          environmentsLogs: newEnvironmentsLogs
+        };
+      }
+
       break;
     }
 

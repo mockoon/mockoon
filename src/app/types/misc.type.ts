@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export type BannerConfigType = {
   id: string;
   enabled: boolean;
@@ -7,3 +9,7 @@ export type BannerConfigType = {
   styles?: { [key: string]: string };
   iconName?: string;
 };
+
+export interface IEnhancedRequest extends Request {
+  uuid: string;
+}

@@ -17,6 +17,9 @@ export class EnvironmentLogsComponent implements OnInit {
   public routeParamsCollapsed: boolean;
   public queryParamsCollapsed: boolean;
   public bodyCollapsed: boolean;
+  public responseGeneralCollapsed: boolean;
+  public responseHeadersCollapsed: boolean;
+  public responseBodyCollapsed: boolean;
   public selectedLogIndex = new BehaviorSubject<number>(0);
   public selectedLogIndex$: Observable<number>;
 
@@ -53,5 +56,8 @@ export class EnvironmentLogsComponent implements OnInit {
     this.routeParamsCollapsed = false;
     this.queryParamsCollapsed = false;
     this.bodyCollapsed = true;
+    this.responseGeneralCollapsed = false;
+    this.responseHeadersCollapsed = false;
+    this.responseBodyCollapsed = false;
   }
 }

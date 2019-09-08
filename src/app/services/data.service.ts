@@ -5,7 +5,7 @@ import { AscSort } from 'src/app/libs/utils.lib';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
-import { EnvironmentLogType } from 'src/app/types/server.type';
+import { EnvironmentLogType, EnvironmentLogResponse } from 'src/app/types/server.type';
 import * as url from 'url';
 const appVersion = require('../../../package.json').version;
 
@@ -53,6 +53,7 @@ export class DataService {
   public formatRequestLog(request: any): EnvironmentLogType {
     // use some getter to keep the scope because some request properties are be defined later by express (route, params, etc)
     const requestLog: EnvironmentLogType = {
+      uuid: request.uuid,
       timestamp: new Date(),
       get route() {
         return (request.route) ? request.route.path : null;
@@ -92,7 +93,8 @@ export class DataService {
         }
 
         return truncatedBody;
-      }
+      },
+      response: null
     };
 
     // get and sort headers
@@ -101,5 +103,39 @@ export class DataService {
     }).sort(AscSort);
 
     return requestLog;
+  }
+
+  public formatResponseLog(response: any, body: string, requestUuid: string): EnvironmentLogResponse {
+    // if don't have uuid it can't be found, so let's return null and consider this an error
+    if (requestUuid == null) {
+      return null;
+    }
+
+    // use some getter to keep the scope because some request properties are be defined later by express (route, params, etc)
+    const responseLog: EnvironmentLogResponse = {
+      requestUuid: requestUuid,
+      status: response.statusCode,
+      headers: [],
+      body: ''
+    };
+    // get and sort headers
+    const headers = response.getHeaders();
+    responseLog.headers = Object.keys(headers).map((headerName) => {
+      return { name: headerName, value: headers[headerName] };
+    }).sort(AscSort);
+
+    responseLog.body = function () {
+      const maxLength = 10000;
+      let truncatedBody: string = body;
+
+      // truncate
+      if (truncatedBody.length > maxLength) {
+        truncatedBody = truncatedBody.substring(0, maxLength) + '\n\n-------- BODY HAS BEEN TRUNCATED --------';
+      }
+      return truncatedBody;
+    }();
+
+
+    return responseLog;
   }
 }

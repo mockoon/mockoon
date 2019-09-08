@@ -37,68 +37,119 @@
       <div class="col h-100 environment-logs-column">
         <div *ngIf="environmentsLogs[activeEnvironmentUUID][(selectedLogIndex$ | async)] as selectedLog"
           class="environment-logs-content pl-2 pr-2">
-          <div class="environment-logs-content-title" (click)="generalCollapsed = !generalCollapsed">
-            <i *ngIf="!generalCollapsed" class="material-icons">unfold_less</i>
-            <i *ngIf="generalCollapsed" class="material-icons">unfold_more</i>
-            General
-          </div>
-          <div [ngbCollapse]="generalCollapsed">
-            <div class="environment-logs-content-item">
-              <strong>Request URL:</strong> {{selectedLog.url}}
-            </div>
-            <div class="environment-logs-content-item">
-              <strong>Method:</strong> {{selectedLog.method}}
-            </div>
-            <div *ngIf="selectedLog.route" class="environment-logs-content-item">
-              <strong>Caught by route:</strong> {{selectedLog.route}}
-            </div>
-          </div>
-
-          <!-- Headers -->
-          <div class="environment-logs-content-title" (click)="headersCollapsed = !headersCollapsed">
-            <i *ngIf="selectedLog.headers.length && !headersCollapsed" class="material-icons">unfold_less</i>
-            <i *ngIf="selectedLog.headers.length && headersCollapsed" class="material-icons">unfold_more</i>
-            Headers ({{selectedLog?.headers?.length}})
-          </div>
-          <div [ngbCollapse]="headersCollapsed">
-            <div class="environment-logs-content-item" *ngFor="let header of selectedLog?.headers">
-              <strong>{{header.name | titlecase}}:</strong> {{header.value}}
-            </div>
-          </div>
-
-          <!-- Route params -->
-          <div class="environment-logs-content-title" (click)="routeParamsCollapsed = !routeParamsCollapsed">
-            <i *ngIf="selectedLog.params.length && !routeParamsCollapsed" class="material-icons">unfold_less</i>
-            <i *ngIf="selectedLog.params.length && routeParamsCollapsed" class="material-icons">unfold_more</i>
-            Route params ({{selectedLog?.params?.length}})
-          </div>
-          <div [ngbCollapse]="routeParamsCollapsed">
-            <div class="environment-logs-content-item" *ngFor="let param of selectedLog?.params">
-              <strong>{{param.name}}:</strong> {{param.value}}
-            </div>
-          </div>
-
-          <!-- Query params -->
-          <div class="environment-logs-content-title" (click)="queryParamsCollapsed = !queryParamsCollapsed">
-            <i *ngIf="selectedLog.queryParams.length && !queryParamsCollapsed" class="material-icons">unfold_less</i>
-            <i *ngIf="selectedLog.queryParams.length && queryParamsCollapsed" class="material-icons">unfold_more</i>
-            Query params ({{selectedLog?.queryParams?.length}})
-          </div>
-          <div [ngbCollapse]="queryParamsCollapsed">
-            <div class="environment-logs-content-item" *ngFor="let queryParam of selectedLog?.queryParams">
-              <strong>{{queryParam.name}}:</strong> {{queryParam.value}}
-            </div>
-          </div>
-
-          <!-- Body -->
-          <div class="environment-logs-content-title" (click)="bodyCollapsed = !bodyCollapsed">
-            <i *ngIf="selectedLog.body && !bodyCollapsed" class="material-icons">unfold_less</i>
-            <i *ngIf="selectedLog.body && bodyCollapsed" class="material-icons">unfold_more</i>
-            Body ({{(!selectedLog.body)?'none': 'raw'}})
-          </div>
-          <div [ngbCollapse]="bodyCollapsed">
-            <div class="environment-logs-content-item pre">{{selectedLog.body}}</div>
-          </div>
+          <ngb-tabset #t="ngbTabset">
+            <ngb-tab id="tab-request" title="Request">
+              <ng-template ngbTabTitle><i class="material-icons">call_made</i></ng-template>
+              <ng-template ngbTabContent>
+                <div class="environment-logs-content-title" (click)="generalCollapsed = !generalCollapsed">
+                  <i *ngIf="!generalCollapsed" class="material-icons">unfold_less</i>
+                  <i *ngIf="generalCollapsed" class="material-icons">unfold_more</i>
+                  General
+                </div>
+                <div [ngbCollapse]="generalCollapsed">
+                  <div class="environment-logs-content-item">
+                    <strong>Request URL:</strong> {{selectedLog.url}}
+                  </div>
+                  <div class="environment-logs-content-item">
+                    <strong>Method:</strong> {{selectedLog.method}}
+                  </div>
+                  <div *ngIf="selectedLog.route" class="environment-logs-content-item">
+                    <strong>Caught by route:</strong> {{selectedLog.route}}
+                  </div>
+                </div>
+      
+                <!-- Headers -->
+                <div class="environment-logs-content-title" (click)="headersCollapsed = !headersCollapsed">
+                  <i *ngIf="selectedLog.headers.length && !headersCollapsed" class="material-icons">unfold_less</i>
+                  <i *ngIf="selectedLog.headers.length && headersCollapsed" class="material-icons">unfold_more</i>
+                  Headers ({{selectedLog?.headers?.length}})
+                </div>
+                <div [ngbCollapse]="headersCollapsed">
+                  <div class="environment-logs-content-item" *ngFor="let header of selectedLog?.headers">
+                    <strong>{{header.name | titlecase}}:</strong> {{header.value}}
+                  </div>
+                </div>
+      
+                <!-- Route params -->
+                <div class="environment-logs-content-title" (click)="routeParamsCollapsed = !routeParamsCollapsed">
+                  <i *ngIf="selectedLog.params.length && !routeParamsCollapsed" class="material-icons">unfold_less</i>
+                  <i *ngIf="selectedLog.params.length && routeParamsCollapsed" class="material-icons">unfold_more</i>
+                  Route params ({{selectedLog?.params?.length}})
+                </div>
+                <div [ngbCollapse]="routeParamsCollapsed">
+                  <div class="environment-logs-content-item" *ngFor="let param of selectedLog?.params">
+                    <strong>{{param.name}}:</strong> {{param.value}}
+                  </div>
+                </div>
+      
+                <!-- Query params -->
+                <div class="environment-logs-content-title" (click)="queryParamsCollapsed = !queryParamsCollapsed">
+                  <i *ngIf="selectedLog.queryParams.length && !queryParamsCollapsed" class="material-icons">unfold_less</i>
+                  <i *ngIf="selectedLog.queryParams.length && queryParamsCollapsed" class="material-icons">unfold_more</i>
+                  Query params ({{selectedLog?.queryParams?.length}})
+                </div>
+                <div [ngbCollapse]="queryParamsCollapsed">
+                  <div class="environment-logs-content-item" *ngFor="let queryParam of selectedLog?.queryParams">
+                    <strong>{{queryParam.name}}:</strong> {{queryParam.value}}
+                  </div>
+                </div>
+      
+                <!-- Body -->
+                <div class="environment-logs-content-title" (click)="bodyCollapsed = !bodyCollapsed">
+                  <i *ngIf="selectedLog.body && !bodyCollapsed" class="material-icons">unfold_less</i>
+                  <i *ngIf="selectedLog.body && bodyCollapsed" class="material-icons">unfold_more</i>
+                  Body ({{(!selectedLog.body)?'none': 'raw'}})
+                </div>
+                <div [ngbCollapse]="bodyCollapsed">
+                  <div class="environment-logs-content-item pre">{{selectedLog.body}}</div>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab id="tab-response" title="Response">
+              <ng-template ngbTabTitle><i class="material-icons">call_received</i></ng-template>
+              <ng-template ngbTabContent>
+                <div *ngIf="selectedLog.response != null">
+                  <!-- General Response -->
+                  <div *ngIf="selectedLog.response != null" class="environment-logs-content-title" (click)="responseGeneralCollapsed = !responseGeneralCollapsed">
+                    <i *ngIf="!responseGeneralCollapsed" class="material-icons">unfold_less</i>
+                    <i *ngIf="responseGeneralCollapsed" class="material-icons">unfold_more</i>
+                    General
+                  </div>
+                  <div [ngbCollapse]="responseGeneralCollapsed">
+                    <div class="environment-logs-content-item">
+                      <strong>Status:</strong> {{selectedLog.response?.status}}
+                    </div>
+                  </div>
+        
+                  <!-- Response Headers -->
+                  <div *ngIf="selectedLog.response != null" class="environment-logs-content-title" (click)="responseHeadersCollapsed = !responseHeadersCollapsed">
+                    <i *ngIf="selectedLog.response?.headers.length && !responseHeadersCollapsed" class="material-icons">unfold_less</i>
+                    <i *ngIf="selectedLog.response?.headers.length && responseHeadersCollapsed" class="material-icons">unfold_more</i>
+                    Headers ({{selectedLog?.response?.headers?.length}})
+                  </div>
+                  <div [ngbCollapse]="responseHeadersCollapsed">
+                    <div class="environment-logs-content-item" *ngFor="let header of selectedLog?.response?.headers">
+                      <strong>{{header.name | titlecase}}:</strong> {{header.value}}
+                    </div>
+                  </div>
+        
+                  <!-- Response Body -->
+                  <div *ngIf="selectedLog.response != null" class="environment-logs-content-title" (click)="responseBodyCollapsed = !responseBodyCollapsed">
+                    <i *ngIf="selectedLog.response?.body && !responseBodyCollapsed" class="material-icons">unfold_less</i>
+                    <i *ngIf="selectedLog.response?.body && responseBodyCollapsed" class="material-icons">unfold_more</i>
+                    Body ({{(!selectedLog.response?.body)?'none': 'raw'}})
+                  </div>
+                  <div [ngbCollapse]="responseBodyCollapsed">
+                    <div class="environment-logs-content-item pre">{{selectedLog.response?.body}}</div>
+                  </div>
+                </div>
+                <div *ngIf="selectedLog.response == null">
+                    <p class="message">No reponse yet</p>
+                </div>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+          
         </div>
       </div>
     </div>
