@@ -308,16 +308,22 @@ export class ServerService {
         });
       };
 
+      const logErrorResponse = (err, req, res) => {
+        // the response is logged by the overrided function
+        res.status(504).send('Error occured while trying to proxy to: ' + req.url);
+      };
+
       server.use('*', proxy({
         target: environment.proxyHost,
         secure: false,
         changeOrigin: true,
         ssl: { ...httpsConfig, agent: false },
         onProxyReq: processRequest,
-        onProxyRes: logResponse
+        onProxyRes: logResponse,
+        onError: logErrorResponse
       }));
     } else {
-      //if not proxy, log the 404 response
+      // if not proxy, log the 404 response
       server.use(function(req, res, next) {
         // the send function is logging the response
         return res.status(404).send('Cannot ' + req.method + ' ' + req.url);
@@ -373,6 +379,7 @@ export class ServerService {
   private logErrorResponses(server: any, environment: Environment) {
     const self = this;
     server.use((err, req, res, next) => {
+      // the response is logged by the overrided function
       return res.status(500).send(err);
     });
   }
