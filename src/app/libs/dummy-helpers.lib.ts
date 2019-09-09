@@ -80,10 +80,15 @@ export const DummyJSONHelpers = (request) => {
     oneOf: function (itemList: string[]) {
       return DummyJSON.utils.randomArrayItem(itemList);
     },
-    // return some random item
-    someOf: function (itemList: string[], min: number, max: number) {
-      const shuffledList = itemList.sort(() => .5 - Math.random());
-      return shuffledList.slice(0, random(min, max));
+    // return some random item as an array (to be used in triple braces) or as a string
+    someOf: function (itemList: string[], min: number, max: number, asArray = false) {
+      const randomItems = itemList.sort(() => .5 - Math.random()).slice(0, random(min, max));
+
+      if (asArray === true) {
+        return `["${randomItems.join('","')}"]`;
+      }
+
+      return randomItems;
     },
     // create an array
     array: function (...args: any[]) {
