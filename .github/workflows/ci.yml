@@ -1,0 +1,20 @@
+name: CI
+
+on: [push]
+
+jobs:
+  tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install, lint and build
+      run: |
+        npm ci
+        npm run lint
+        npm run build:dev
+    - name: Run tests
+      uses: mujo-code/puppeteer-headful@12.3.1
+      with:
+        args: test
