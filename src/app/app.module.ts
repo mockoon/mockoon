@@ -58,7 +58,7 @@ import { AppComponent } from './app.component';
     DragulaModule.forRoot(),
     FormsModule,
     HttpClientModule,
-    NgbModule.forRoot(),
+    NgbModule,
     MarkdownModule.forRoot({ markedOptions: { provide: MarkedOptions, useFactory: MarkedOptionsFactory } }),
     AngularFireModule.initializeApp(Config.firebaseConfig),
     AngularFireAuthModule,

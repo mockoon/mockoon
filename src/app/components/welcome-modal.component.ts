@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
@@ -11,8 +11,8 @@ import { Store } from 'src/app/stores/store';
   selector: 'app-welcome-modal',
   templateUrl: './welcome-modal.component.html'
 })
-export class WelcomeModalComponent implements OnInit {
-  @ViewChild('modal') modal: ElementRef;
+export class WelcomeModalComponent implements OnInit, AfterViewInit {
+  @ViewChild('modal', { static: false }) modal: ElementRef;
   public settings$: Observable<SettingsType>;
 
   constructor(
@@ -21,12 +21,14 @@ export class WelcomeModalComponent implements OnInit {
     private eventsService: EventsService,
     private store: Store) { }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  ngAfterViewInit() {
     this.settings$ = this.store.select('settings');
 
     // wait for settings to be ready and check if display needed
     this.settings$.pipe(
-      filter(Boolean),
+      filter<SettingsType>(Boolean),
       first()
     ).subscribe(settings => {
       if (!settings.welcomeShown) {
