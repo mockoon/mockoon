@@ -5,10 +5,15 @@
 <app-changelog-modal></app-changelog-modal>
 
 <div class="toasts-container">
-  <div *ngFor="let toast of toasts$ | async; index as toastIndex" class="toast fade show"
-    [ngClass]="'toast-' + toast.type" (click)="removeToast(toast.UUID)">
-    <div class="toast-body">{{toast.message}}</div>
-  </div>
+  <ngb-toast
+    *ngFor="let toast of toasts$ | async"
+    [class]="'toast-' + toast.type"
+    [autohide]="true" [delay]="5000"
+    (hide)="removeToast(toast.UUID)"
+    (click)="removeToast(toast.UUID)"
+  >
+    {{toast.message}}
+  </ngb-toast>
 </div>
 
 <div class="container-fluid h-100">

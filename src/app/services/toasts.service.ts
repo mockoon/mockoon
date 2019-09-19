@@ -16,18 +16,13 @@ export class ToastsService {
    * @param message - text message to display
    */
   public addToast(type: ToastTypes, message: string) {
-    const newToast: Toast = {
-      UUID: uuid(),
-      type,
-      message
-    };
-
-    this.store.update({ type: 'ADD_TOAST', item: newToast });
-
-    // schedule automatic toast deletion
-    setTimeout(() => {
-      this.removeToast(newToast.UUID);
-    }, 5000);
+    this.store.update({
+      type: 'ADD_TOAST', item: {
+        UUID: uuid(),
+        type,
+        message
+      }
+    });
   }
 
   /**
