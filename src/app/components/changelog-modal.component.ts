@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { shell } from 'electron';
 import { Config } from 'src/app/config';
@@ -11,8 +11,8 @@ const appVersion = require('../../../package.json').version;
   selector: 'app-changelog-modal',
   templateUrl: './changelog-modal.component.html'
 })
-export class ChangelogModalComponent implements OnInit {
-  @ViewChild('modal') modal: ElementRef;
+export class ChangelogModalComponent implements OnInit, AfterViewInit {
+  @ViewChild('modal', { static: false }) modal: ElementRef;
   @Output() closed: EventEmitter<any> = new EventEmitter();
   public appVersion = appVersion;
   public releaseChangelog: string;
@@ -23,7 +23,9 @@ export class ChangelogModalComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  ngAfterViewInit() {
     this.eventsService.changelogModalEvents.subscribe(() => {
       this.modalService.open(this.modal, { backdrop: 'static', centered: true }).result.then(() => {
         this.closed.emit();

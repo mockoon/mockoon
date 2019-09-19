@@ -42,8 +42,8 @@ const appVersion = require('../../package.json').version;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-  @ViewChild('routesMenu') private routesMenu: ElementRef;
-  @ViewChild('environmentsMenu') private environmentsMenu: ElementRef;
+  @ViewChild('routesMenu', { static: false }) private routesMenu: ElementRef;
+  @ViewChild('environmentsMenu', { static: false }) private environmentsMenu: ElementRef;
   public methods = methods;
   public statusCodes = statusCodes;
   public updateAvailable = false;
