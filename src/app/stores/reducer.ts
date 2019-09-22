@@ -36,7 +36,8 @@ export type ReducerActionType = {
   'REMOVE_TOAST' |
   'SET_USER_ID' |
   'UPDATE_SETTINGS'|
-  'LOG_RESPONSE';
+  'LOG_RESPONSE'|
+  'SET_ACTIVE_ENVIRONMENT_LOG_TAB';
   // used to select entities (environment, routes)
   UUID?: string;
   // item to add
@@ -661,6 +662,17 @@ export function environmentReducer(
         };
       }
 
+      break;
+    }
+
+    case 'SET_ACTIVE_ENVIRONMENT_LOG_TAB': {
+      const tab = action.item;
+      if ( tab != null ) {
+        newState = {
+          ...state,
+          activeEnvironmentLogsTab: tab
+        };
+      }
       break;
     }
 

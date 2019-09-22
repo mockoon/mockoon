@@ -12,6 +12,8 @@ export type ViewsNameType = 'ROUTE' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
 export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES';
 
+export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
+
 export type EnvironmentStatusType = { running: boolean, needRestart: boolean };
 
 export type EnvironmentsStatusType = { [key: string]: EnvironmentStatusType };
@@ -21,6 +23,7 @@ export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
 export type StoreType = {
   activeTab: TabsNameType;
   activeView: ViewsNameType;
+  activeEnvironmentLogsTab: EnvironmentLogsTabsNameType;
   activeEnvironmentUUID: string;
   activeRouteUUID: string;
   activeRouteResponseUUID: string;
@@ -40,6 +43,7 @@ export class Store {
   private store$ = new BehaviorSubject<StoreType>({
     activeView: 'ROUTE',
     activeTab: 'RESPONSE',
+    activeEnvironmentLogsTab: 'REQUEST',
     activeEnvironmentUUID: null,
     activeRouteUUID: null,
     activeRouteResponseUUID: null,

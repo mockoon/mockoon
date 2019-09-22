@@ -37,9 +37,9 @@
       <div class="col h-100 environment-logs-column">
         <div *ngIf="environmentsLogs[activeEnvironmentUUID][(selectedLogIndex$ | async)] as selectedLog"
           class="environment-logs-content pl-2 pr-2">
-          <ngb-tabset #t="ngbTabset">
+          <ngb-tabset #t="ngbTabset" (tabChange)="beforeTabChange($event)">
             <ngb-tab id="tab-request">
-              <ng-template ngbTabTitle>Request <i class="material-icons">call_made</i></ng-template>
+              <ng-template ngbTabTitle>Request <i class="material-icons">call_received</i></ng-template>
               <ng-template ngbTabContent>
                 <div class="environment-logs-content-title" (click)="generalCollapsed = !generalCollapsed">
                   <i *ngIf="!generalCollapsed" class="material-icons">unfold_less</i>
@@ -106,7 +106,7 @@
               </ng-template>
             </ngb-tab>
             <ngb-tab id="tab-response">
-              <ng-template ngbTabTitle>Response <i class="material-icons">call_received</i></ng-template>
+              <ng-template ngbTabTitle>Response <i class="material-icons">call_made</i></ng-template>
               <ng-template ngbTabContent>
                 <div *ngIf="selectedLog.response != null">
                   <!-- General Response -->
