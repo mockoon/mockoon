@@ -35,8 +35,8 @@ export type ReducerActionType = {
   'ADD_TOAST' |
   'REMOVE_TOAST' |
   'SET_USER_ID' |
-  'UPDATE_SETTINGS'|
-  'LOG_RESPONSE'|
+  'UPDATE_SETTINGS' |
+  'LOG_RESPONSE' |
   'SET_ACTIVE_ENVIRONMENT_LOG_TAB';
   // used to select entities (environment, routes)
   UUID?: string;
@@ -86,10 +86,12 @@ export function environmentReducer(
         environments: newEnvironments,
         environmentsStatus: newEnvironments.reduce<EnvironmentsStatusType>((environmentsStatus, environment) => {
           environmentsStatus[environment.uuid] = { running: false, needRestart: false };
+
           return environmentsStatus;
         }, {}),
         environmentsLogs: newEnvironments.reduce<EnvironmentLogsType>((environmentsLogs, environment) => {
           environmentsLogs[environment.uuid] = [];
+
           return environmentsLogs;
         }, {})
       };
@@ -346,6 +348,7 @@ export function environmentReducer(
               ...action.properties
             };
           }
+
           return environment;
         }),
         environmentsStatus: {
@@ -382,6 +385,7 @@ export function environmentReducer(
             routes: newRoutes
           };
         }
+
         return environment;
       });
 
@@ -427,10 +431,12 @@ export function environmentReducer(
                   responses: newRouteResponses
                 };
               }
+
               return route;
             })
           };
         }
+
         return environment;
       });
 
@@ -461,6 +467,7 @@ export function environmentReducer(
                 routes: [...environment.routes, newRoute]
               };
             }
+
             return environment;
           })
         };
@@ -495,10 +502,12 @@ export function environmentReducer(
                     ...action.properties,
                   };
                 }
+
                 return route;
               })
             };
           }
+
           return environment;
         }),
         environmentsStatus: {
@@ -545,6 +554,7 @@ export function environmentReducer(
               })
             };
           }
+
           return environment;
         })
       };
@@ -569,14 +579,17 @@ export function environmentReducer(
                           ...action.properties,
                         };
                       }
+
                       return response;
                     })
                   };
                 }
+
                 return route;
               })
             };
           }
+
           return environment;
         })
       };
@@ -646,7 +659,7 @@ export function environmentReducer(
     }
 
     case 'LOG_RESPONSE': {
-      if ( action.item != null ) {
+      if (action.item != null) {
         const requestUuid = action.item.requestUuid;
         const newEnvironmentsLogs = { ...state.environmentsLogs };
 
@@ -667,7 +680,7 @@ export function environmentReducer(
 
     case 'SET_ACTIVE_ENVIRONMENT_LOG_TAB': {
       const tab = action.item;
-      if ( tab != null ) {
+      if (tab != null) {
         newState = {
           ...state,
           activeEnvironmentLogsTab: tab

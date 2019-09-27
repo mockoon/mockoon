@@ -13,6 +13,7 @@ export const ArrayContainsObjectKey = (obj: { [key: string]: string }, arr: stri
   if (obj && arr) {
     return !!Object.keys(obj).find(key => arr.includes(key));
   }
+
   return false;
 };
 

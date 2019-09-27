@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { Store, EnvironmentLogsTabsNameType } from 'src/app/stores/store';
+import { EnvironmentLogsTabsNameType, Store } from 'src/app/stores/store';
 import { EnvironmentLogsType } from 'src/app/types/server.type';
-import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-environment-logs',
@@ -13,7 +13,7 @@ import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 export class EnvironmentLogsComponent implements OnInit, AfterViewInit {
   @Input() activeEnvironmentUUID$: Observable<string>;
   @Input() environmentsLogs$: Observable<EnvironmentLogsType>;
-  @ViewChild(NgbTabset) logTabset: NgbTabset;
+  @ViewChild(NgbTabset, { static: false }) logTabset: NgbTabset;
   public generalCollapsed: boolean;
   public headersCollapsed: boolean;
   public routeParamsCollapsed: boolean;

@@ -114,6 +114,7 @@ export class ServerService {
     if (headerName && headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)) {
       return true;
     }
+
     return false;
   }
 
@@ -304,7 +305,7 @@ export class ServerService {
           };
           const enhancedReq = req as IEnhancedRequest;
           const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
-          self.store.update({ type: 'LOG_RESPONSE', UUID: environment.uuid, item: response});
+          self.store.update({ type: 'LOG_RESPONSE', UUID: environment.uuid, item: response });
         });
       };
 
@@ -324,7 +325,7 @@ export class ServerService {
       }));
     } else {
       // if not proxy, log the 404 response
-      server.use(function(req, res, next) {
+      server.use(function (req, res, next) {
         // the send function is logging the response
         return res.status(404).send('Cannot ' + req.method + ' ' + req.url);
       });
@@ -359,11 +360,11 @@ export class ServerService {
       const oldSend = res.send;
 
       const self = this;
-      res.send = function(body) {
+      res.send = function (body) {
         oldSend.apply(res, arguments);
         const enhancedReq = this.req as IEnhancedRequest;
         const response = self.dataService.formatResponseLog(this, body, enhancedReq.uuid);
-        self.store.update({ type: 'LOG_RESPONSE', UUID: environment.uuid, item: response});
+        self.store.update({ type: 'LOG_RESPONSE', UUID: environment.uuid, item: response });
       };
 
       next();
@@ -405,6 +406,7 @@ export class ServerService {
   public isValidURL(address: string): boolean {
     try {
       const myURL = new URL(address);
+
       return true;
     } catch (e) {
       return false;

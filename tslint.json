@@ -124,6 +124,7 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "align": [true, "parameters", "statements"]
+    "align": [true, "parameters", "statements"],
+    "newline-before-return": true
   }
 }

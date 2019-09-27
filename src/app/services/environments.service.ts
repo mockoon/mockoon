@@ -528,12 +528,14 @@ export class EnvironmentsService {
       // verify data checksum
       if (!this.dataService.verifyImportChecksum(importData)) {
         this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
+
         return;
       }
 
       // verify version compatibility
       if (importData.appVersion !== appVersion) {
         this.toastService.addToast('error', Errors.IMPORT_WRONG_VERSION);
+
         return;
       }
 
@@ -560,6 +562,7 @@ export class EnvironmentsService {
     } catch (error) {
       if (!importData) {
         this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
+
         return;
       }
 
@@ -589,12 +592,14 @@ export class EnvironmentsService {
             // verify data checksum
             if (!this.dataService.verifyImportChecksum(importData)) {
               this.toastService.addToast('error', Errors.IMPORT_FILE_WRONG_CHECKSUM);
+
               return;
             }
 
             // verify version compatibility
             if (importData.appVersion !== appVersion) {
               this.toastService.addToast('error', Errors.IMPORT_WRONG_VERSION);
+
               return;
             }
 
@@ -615,6 +620,7 @@ export class EnvironmentsService {
    */
   public hasEnvironmentHeaders() {
     const activeEnvironment = this.store.getActiveEnvironment();
+
     return activeEnvironment && activeEnvironment.headers.some(header => !!header.key);
   }
 

@@ -5,7 +5,7 @@ import { AscSort } from 'src/app/libs/utils.lib';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
-import { EnvironmentLogType, EnvironmentLogResponse } from 'src/app/types/server.type';
+import { EnvironmentLogResponse, EnvironmentLogType } from 'src/app/types/server.type';
 import * as url from 'url';
 const appVersion = require('../../../package.json').version;
 
@@ -132,6 +132,7 @@ export class DataService {
       if (truncatedBody.length > maxLength) {
         truncatedBody = truncatedBody.substring(0, maxLength) + '\n\n-------- BODY HAS BEEN TRUNCATED --------';
       }
+
       return truncatedBody;
     }();
 

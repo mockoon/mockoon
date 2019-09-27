@@ -101,6 +101,7 @@ export const DummyJSONHelpers = (request) => {
 
       this.switchValue = value;
       const htmlContent = options.fn(this);
+
       return htmlContent;
     },
     // case helper for switch
@@ -108,6 +109,7 @@ export const DummyJSONHelpers = (request) => {
       // check switch value to simulate break
       if (value === this.switchValue && !this.found) {
         this.found = true;
+
         return options.fn(this);
       }
     },
@@ -116,6 +118,7 @@ export const DummyJSONHelpers = (request) => {
       // if there is still a switch value show default content
       if (!this.found) {
         delete this.switchValue;
+
         return options.fn(this);
       }
     },
