@@ -4,6 +4,7 @@ export type ServerStateEventType = {
 };
 
 export type EnvironmentLogType = {
+  uuid: string;
   timestamp: Date;
   url: string;
   method: string;
@@ -14,8 +15,16 @@ export type EnvironmentLogType = {
   queryParams: { name: string, value: string }[];
   body: string;
   proxied: boolean;
+  response: EnvironmentLogResponse;
 };
 
 export type EnvironmentLogsType = { [key: string]: EnvironmentLogType[] };
 
 export type EnvironmentLogNameValuePairsType = { name: string, value: string }[];
+
+export type EnvironmentLogResponse = {
+  requestUuid: string;
+  status: number;
+  headers: { name: string, value: string }[];
+  body: string;
+};
