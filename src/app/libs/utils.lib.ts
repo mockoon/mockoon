@@ -9,7 +9,7 @@ export const AscSort = (a, b) => {
   }
 };
 
-export const ArrayContainsObjectKey = (obj: { [key: string]: string }, arr: string[]) => {
+export const ArrayContainsObjectKey = (obj: { [key: string]: any }, arr: string[]) => {
   if (obj && arr) {
     return !!Object.keys(obj).find(key => arr.includes(key));
   }

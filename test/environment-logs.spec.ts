@@ -55,12 +55,12 @@ describe('Environment logs', () => {
   });
 
   it('View response log', async () => {
-    await tests.spectron.client.element('#tab-response').click();
-    await tests.spectron.client.getText(`#tab-response-panel > div > div:nth-child(2)`).should.eventually.equal('Status: 404');
+    await tests.spectron.client.element('.environment-logs-content .nav .nav-item:nth-child(2)').click();
+    await tests.spectron.client.getText('.environment-logs-content-response > div > div:nth-child(2) > div').should.eventually.equal('Status: 404');
   });
 
   it('View request log again', async () => {
-    await tests.spectron.client.element('#tab-request').click();
-    await tests.spectron.client.getText(`#tab-request-panel > div:nth-child(2) > div:nth-child(1)`).should.eventually.equal('Request URL: /test');
+    await tests.spectron.client.element('.environment-logs-content .nav .nav-item:nth-child(1)').click();
+    await tests.spectron.client.getText('.environment-logs-content-request > div:nth-child(2) > div:nth-child(1)').should.eventually.equal('Request URL: /test');
   });
 });

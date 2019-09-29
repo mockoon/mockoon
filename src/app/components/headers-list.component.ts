@@ -38,7 +38,7 @@ export class HeadersListComponent implements OnInit {
     this.eventsService.injectHeaders.pipe(
       filter(data => data.target === this.type),
       map(data => data.headers)
-    ).subscribe(this.injectHeaders);
+    ).subscribe(headers => this.injectHeaders(headers));
 
     // subscribe to headers changes to reset the form
     this.data$.pipe(

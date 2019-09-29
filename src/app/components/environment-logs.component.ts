@@ -1,19 +1,18 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EnvironmentLogsTabsNameType, Store } from 'src/app/stores/store';
-import { EnvironmentLogsType } from 'src/app/types/server.type';
+import { EnvironmentLogs } from 'src/app/types/server.type';
 
 @Component({
   selector: 'app-environment-logs',
   templateUrl: 'environment-logs.component.html',
   styleUrls: ['environment-logs.component.scss']
 })
-export class EnvironmentLogsComponent implements OnInit, AfterViewInit {
+export class EnvironmentLogsComponent implements OnInit {
   @Input() activeEnvironmentUUID$: Observable<string>;
-  @Input() environmentsLogs$: Observable<EnvironmentLogsType>;
-  @ViewChild(NgbTabset, { static: false }) logTabset: NgbTabset;
+  @Input() environmentsLogs$: Observable<EnvironmentLogs>;
   public generalCollapsed: boolean;
   public headersCollapsed: boolean;
   public routeParamsCollapsed: boolean;
@@ -24,13 +23,14 @@ export class EnvironmentLogsComponent implements OnInit, AfterViewInit {
   public responseBodyCollapsed: boolean;
   public selectedLogIndex = new BehaviorSubject<number>(0);
   public selectedLogIndex$: Observable<number>;
-  public activeEnvironmentLogTab$: Observable<EnvironmentLogsTabsNameType>;
-  private lastActiveEnvironmentLogTab: EnvironmentLogsTabsNameType;
+  public activeEnvironmentLogsTab$: Observable<EnvironmentLogsTabsNameType>;
 
-  constructor(private store: Store) { }
+  constructor(private store: Store, private environmentsService: EnvironmentsService) { }
 
   ngOnInit() {
     this.selectedLogIndex$ = this.selectedLogIndex.asObservable();
+
+    this.activeEnvironmentLogsTab$ = this.store.select('activeEnvironmentLogsTab');
 
     const environmentsLogs = this.store.get('environmentsLogs');
     this.activeEnvironmentUUID$.pipe(
@@ -43,13 +43,6 @@ export class EnvironmentLogsComponent implements OnInit, AfterViewInit {
         this.selectedLogIndex.next(0);
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this.store.select('activeEnvironmentLogsTab').subscribe(
-      activeEnvironmentLogTab => this.selectTab(activeEnvironmentLogTab),
-      error => console.log('Select Environment Log tab error => ' + error)
-    );
   }
 
   /**
@@ -73,35 +66,9 @@ export class EnvironmentLogsComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Set active environment log tab
+   * Set the environment logs active tab
    */
-  public async beforeTabChange($event: NgbTabChangeEvent) {
-    let tab: EnvironmentLogsTabsNameType;
-    if ($event.nextId === 'tab-request') {
-      tab = 'REQUEST';
-    } else {
-      tab = 'RESPONSE';
-    }
-
-    if (this.lastActiveEnvironmentLogTab !== tab) {
-      this.store.update({ type: 'SET_ACTIVE_ENVIRONMENT_LOG_TAB', item: tab });
-    }
-  }
-
-  public async selectTab(tab: EnvironmentLogsTabsNameType) {
-    if (this.lastActiveEnvironmentLogTab !== tab) {
-      let tabId: string;
-      if (tab === 'REQUEST') {
-        tabId = 'tab-request';
-      } else {
-        tabId = 'tab-response';
-      }
-
-      if (this.logTabset != null && this.logTabset.activeId !== tabId) {
-        // Prevent change tab loop
-        this.lastActiveEnvironmentLogTab = tab;
-        this.logTabset.select(tabId);
-      }
-    }
+  public setActiveTab(tabName: EnvironmentLogsTabsNameType) {
+    this.environmentsService.setActiveEnvironmentLogTab(tabName);
   }
 }

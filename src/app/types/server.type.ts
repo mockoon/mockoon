@@ -3,7 +3,7 @@ export type ServerStateEventType = {
   running: boolean;
 };
 
-export type EnvironmentLogType = {
+export type EnvironmentLog = {
   uuid: string;
   timestamp: Date;
   url: string;
@@ -18,12 +18,12 @@ export type EnvironmentLogType = {
   response: EnvironmentLogResponse;
 };
 
-export type EnvironmentLogsType = { [key: string]: EnvironmentLogType[] };
+export type EnvironmentLogs = { [key: string]: EnvironmentLog[] };
 
-export type EnvironmentLogNameValuePairsType = { name: string, value: string }[];
+export type EnvironmentLogNameValuePairs = { name: string, value: string }[];
 
 export type EnvironmentLogResponse = {
-  requestUuid: string;
+  requestUUID: string;
   status: number;
   headers: { name: string, value: string }[];
   body: string;

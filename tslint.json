@@ -26,7 +26,10 @@
     "label-position": true,
     "max-line-length": [
       true,
-      200
+      {
+        "limit": 200,
+        "ignore-pattern": "^import"
+      }
     ],
     "member-access": false,
     "member-ordering": [
@@ -124,7 +127,11 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "align": [true, "parameters", "statements"],
+    "align": [
+      true,
+      "parameters",
+      "statements"
+    ],
     "newline-before-return": true
   }
 }

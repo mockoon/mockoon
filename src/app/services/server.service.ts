@@ -17,6 +17,7 @@ import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
+import { logRequestAction, logResponseAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
 import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
@@ -60,7 +61,7 @@ export class ServerService {
     // listen to port
     serverInstance.listen(environment.port, () => {
       this.instances[environment.uuid] = serverInstance;
-      this.store.update({ type: 'UPDATE_ENVIRONMENT_STATUS', properties: { running: true, needRestart: false } });
+      this.store.update(updateEnvironmentStatusAction({ running: true, needRestart: false }));
     });
 
     // apply middlewares
@@ -100,7 +101,7 @@ export class ServerService {
     if (instance) {
       instance.kill(() => {
         delete this.instances[environmentUUID];
-        this.store.update({ type: 'UPDATE_ENVIRONMENT_STATUS', properties: { running: false, needRestart: false } });
+        this.store.update(updateEnvironmentStatusAction({ running: false, needRestart: false }));
       });
     }
   }
@@ -305,7 +306,7 @@ export class ServerService {
           };
           const enhancedReq = req as IEnhancedRequest;
           const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
-          self.store.update({ type: 'LOG_RESPONSE', UUID: environment.uuid, item: response });
+          self.store.update(logResponseAction(environment.uuid, response));
         });
       };
 
@@ -344,7 +345,7 @@ export class ServerService {
       log.uuid = uuid();
       const enhancedReq = req as IEnhancedRequest;
       enhancedReq.uuid = log.uuid;
-      this.store.update({ type: 'LOG_REQUEST', UUID: environment.uuid, item: log });
+      this.store.update(logRequestAction(environment.uuid, log));
       next();
     });
   }
@@ -363,8 +364,8 @@ export class ServerService {
       res.send = function (body) {
         oldSend.apply(res, arguments);
         const enhancedReq = this.req as IEnhancedRequest;
-        const response = self.dataService.formatResponseLog(this, body, enhancedReq.uuid);
-        self.store.update({ type: 'LOG_RESPONSE', UUID: environment.uuid, item: response });
+        const responseLog = self.dataService.formatResponseLog(this, body, enhancedReq.uuid);
+        self.store.update(logResponseAction(environment.uuid, responseLog));
       };
 
       next();

@@ -14,11 +14,13 @@ import { EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ToastsService } from 'src/app/services/toasts.service';
+import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
-import { Environment, Environments } from 'src/app/types/environment.type';
-import { CORSHeaders, Header, Route, RouteResponse } from 'src/app/types/route.type';
+import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
+import { CORSHeaders, Header, Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
+import { dragulaNamespaces } from 'src/app/types/ui.type';
 import * as uuid from 'uuid/v1';
 const appVersion = require('../../../package.json').version;
 
@@ -76,14 +78,14 @@ export class EnvironmentsService {
     storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
-        this.store.update({ type: 'SET_INITIAL_ENVIRONMENTS', item: [this.buildDefaultEnvironment()] });
+        this.store.update(setInitialEnvironmentsAction([this.buildDefaultEnvironment()]));
       } else {
         // wait for settings to be ready before migrating and loading envs
         this.store.select('settings').pipe(
           filter(Boolean),
           first()
         ).subscribe(() => {
-          this.store.update({ type: 'SET_INITIAL_ENVIRONMENTS', item: this.migrateData(environments) });
+          this.store.update(setInitialEnvironmentsAction(this.migrateData(environments)));
         });
       }
     });
@@ -100,9 +102,9 @@ export class EnvironmentsService {
   public setActiveEnvironment(environmentUUIDOrDirection: string | ReducerDirectionType) {
     if (this.store.get('activeEnvironmentUUID') !== environmentUUIDOrDirection) {
       if (environmentUUIDOrDirection === 'next' || environmentUUIDOrDirection === 'previous') {
-        this.store.update({ type: 'NAVIGATE_ENVIRONMENTS', direction: environmentUUIDOrDirection });
+        this.store.update(navigateEnvironmentsAction(environmentUUIDOrDirection));
       } else {
-        this.store.update({ type: 'SET_ACTIVE_ENVIRONMENT', UUID: environmentUUIDOrDirection });
+        this.store.update(setActiveEnvironmentAction(environmentUUIDOrDirection));
       }
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.NAVIGATE_ENVIRONMENT);
@@ -115,9 +117,9 @@ export class EnvironmentsService {
   public setActiveRoute(routeUUIDOrDirection: string | ReducerDirectionType) {
     if (this.store.get('activeRouteUUID') !== routeUUIDOrDirection) {
       if (routeUUIDOrDirection === 'next' || routeUUIDOrDirection === 'previous') {
-        this.store.update({ type: 'NAVIGATE_ROUTES', direction: routeUUIDOrDirection });
+        this.store.update(navigateRoutesAction(routeUUIDOrDirection));
       } else {
-        this.store.update({ type: 'SET_ACTIVE_ROUTE', UUID: routeUUIDOrDirection });
+        this.store.update(setActiveRouteAction(routeUUIDOrDirection));
       }
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.NAVIGATE_ROUTE);
@@ -128,7 +130,7 @@ export class EnvironmentsService {
    * Add a new environment and save it in the store
    */
   public addEnvironment() {
-    this.store.update({ type: 'ADD_ENVIRONMENT', item: this.buildNewEnvironment() });
+    this.store.update(addEnvironmentAction(this.buildNewEnvironment()));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ENVIRONMENT);
   }
 
@@ -151,7 +153,7 @@ export class EnvironmentsService {
 
       newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as Environment;
 
-      this.store.update({ type: 'ADD_ENVIRONMENT', item: newEnvironment });
+      this.store.update(addEnvironmentAction(newEnvironment));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
     }
@@ -172,7 +174,7 @@ export class EnvironmentsService {
 
     this.serverService.stop(environmentUUID);
 
-    this.store.update({ type: 'REMOVE_ENVIRONMENT', UUID: environmentUUID });
+    this.store.update(removeEnvironmentAction(environmentUUID));
 
     this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ENVIRONMENT);
   }
@@ -192,7 +194,7 @@ export class EnvironmentsService {
       ]
     };
 
-    this.store.update({ type: 'ADD_ROUTE', item: newRoute });
+    this.store.update(addRouteAction(newRoute));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
   }
 
@@ -205,7 +207,7 @@ export class EnvironmentsService {
       uuid: uuid()
     };
 
-    this.store.update({ type: 'ADD_ROUTE_RESPONSE', item: newRouteResponse });
+    this.store.update(addRouteResponseAction(newRouteResponse));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE_RESPONSE);
   }
 
@@ -224,7 +226,7 @@ export class EnvironmentsService {
 
       newRoute = this.renewUUIDs(newRoute, 'route') as Route;
 
-      this.store.update({ type: 'ADD_ROUTE', item: newRoute });
+      this.store.update(addRouteAction(newRoute));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ROUTE);
     }
@@ -234,7 +236,7 @@ export class EnvironmentsService {
    * Remove a route and save
    */
   public removeRoute(routeUUID: string = this.store.get('activeRouteUUID')) {
-    this.store.update({ type: 'REMOVE_ROUTE', UUID: routeUUID });
+    this.store.update(removeRouteAction(routeUUID));
 
     this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE);
   }
@@ -243,7 +245,7 @@ export class EnvironmentsService {
    * Remove current route response and save
    */
   public removeRouteResponse() {
-    this.store.update({ type: 'REMOVE_ROUTE_RESPONSE' });
+    this.store.update(removeRouteResponseAction());
 
     this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE_RESPONSE);
   }
@@ -252,42 +254,49 @@ export class EnvironmentsService {
    * Set active tab
    */
   public setActiveTab(activeTab: TabsNameType) {
-    this.store.update({ type: 'SET_ACTIVE_TAB', item: activeTab });
+    this.store.update(setActiveTabAction(activeTab));
+  }
+
+  /**
+   * Set active environment logs tab
+   */
+  public setActiveEnvironmentLogTab(activeTab: EnvironmentLogsTabsNameType) {
+    this.store.update(setActiveEnvironmentLogTabAction(activeTab));
   }
 
   /**
    * Set active view
    */
   public setActiveView(activeView: ViewsNameType) {
-    this.store.update({ type: 'SET_ACTIVE_VIEW', item: activeView });
+    this.store.update(setActiveViewAction(activeView));
   }
 
   /**
    * Set active view
    */
   public setActiveRouteResponse(routeResponseUUID: string) {
-    this.store.update({ type: 'SET_ACTIVE_ROUTE_RESPONSE', UUID: routeResponseUUID });
+    this.store.update(setActiveRouteResponseAction(routeResponseUUID));
   }
 
   /**
    * Update the active environment
    */
-  public updateActiveEnvironment(properties: { [T in keyof Environment]?: Environment[T] }) {
-    this.store.update({ type: 'UPDATE_ENVIRONMENT', properties });
+  public updateActiveEnvironment(properties: EnvironmentProperties) {
+    this.store.update(updateEnvironmentAction(properties));
   }
 
   /**
    * Update the active route
    */
-  public updateActiveRoute(properties: { [T in keyof Route]?: Route[T] }) {
-    this.store.update({ type: 'UPDATE_ROUTE', properties });
+  public updateActiveRoute(properties: RouteProperties) {
+    this.store.update(updateRouteAction(properties));
   }
 
   /**
    * Update the active route response
    */
-  public updateActiveRouteResponse(properties: { [T in keyof RouteResponse]?: RouteResponse[T] }) {
-    this.store.update({ type: 'UPDATE_ROUTE_RESPONSE', properties });
+  public updateActiveRouteResponse(properties: RouteResponseProperties) {
+    this.store.update(updateRouteResponseAction(properties));
   }
 
   /**
@@ -440,13 +449,14 @@ export class EnvironmentsService {
   /**
    * Move a menu item (envs / routes)
    */
-  public moveMenuItem(type: 'routes' | 'environments' | 'routeResponses' | string, sourceIndex: number, targetIndex: number) {
+  public moveMenuItem(type: dragulaNamespaces, sourceIndex: number, targetIndex: number) {
     const storeActions = {
-      routes: 'MOVE_ROUTES',
-      environments: 'MOVE_ENVIRONMENTS',
-      routeResponses: 'MOVE_ROUTE_RESPONSES'
+      routes: moveRoutesAction,
+      environments: moveEnvironmentsAction,
+      routeResponses: moveRouteResponsesAction
     };
-    this.store.update({ type: storeActions[type], indexes: { sourceIndex, targetIndex } });
+
+    this.store.update(storeActions[type]({ sourceIndex, targetIndex }));
   }
 
   /**
@@ -541,20 +551,20 @@ export class EnvironmentsService {
 
       if (importData.subject === 'environment') {
         importData.data = this.renewUUIDs(importData.data as Environment, 'environment');
-        this.store.update({ type: 'ADD_ENVIRONMENT', item: importData.data });
+        this.store.update(addEnvironmentAction(importData.data as Environment));
       } else if (importData.subject === 'route') {
         importData.data = this.renewUUIDs(importData.data as Route, 'route');
 
         // if has a current environment append imported route
         if (this.store.get('activeEnvironmentUUID')) {
-          this.store.update({ type: 'ADD_ROUTE', item: importData.data });
+          this.store.update(addRouteAction(importData.data as Route));
         } else {
           const newEnvironment: Environment = {
             ...this.buildNewEnvironment(),
             routes: [importData.data as Route]
           };
 
-          this.store.update({ type: 'ADD_ENVIRONMENT', item: newEnvironment });
+          this.store.update(addEnvironmentAction(newEnvironment));
         }
       }
 
@@ -605,7 +615,7 @@ export class EnvironmentsService {
 
             importData.data = this.renewUUIDs(importData.data as Environments, 'full');
             (importData.data as Environments).forEach(environment => {
-              this.store.update({ type: 'ADD_ENVIRONMENT', item: environment });
+              this.store.update(addEnvironmentAction(environment));
             });
 
             this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);

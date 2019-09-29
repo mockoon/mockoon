@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
-import { SettingsService, SettingsType } from 'src/app/services/settings.service';
+import { Settings, SettingsService } from 'src/app/services/settings.service';
 import { Store } from 'src/app/stores/store';
 
 @Component({
@@ -13,7 +13,7 @@ import { Store } from 'src/app/stores/store';
 })
 export class WelcomeModalComponent implements OnInit, AfterViewInit {
   @ViewChild('modal', { static: false }) modal: ElementRef;
-  public settings$: Observable<SettingsType>;
+  public settings$: Observable<Settings>;
 
   constructor(
     private modalService: NgbModal,
@@ -28,7 +28,7 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
 
     // wait for settings to be ready and check if display needed
     this.settings$.pipe(
-      filter<SettingsType>(Boolean),
+      filter<Settings>(Boolean),
       first()
     ).subscribe(settings => {
       if (!settings.welcomeShown) {

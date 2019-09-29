@@ -17,3 +17,5 @@ export type Environment = {
 export type Environments = Environment[];
 
 export type CurrentEnvironment = { environment: Environment, index: number };
+
+export type EnvironmentProperties = { [T in keyof Environment]?: Environment[T] };
