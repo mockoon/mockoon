@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
-import { SettingsType } from 'src/app/services/settings.service';
+import { Settings } from 'src/app/services/settings.service';
 import { Toast } from 'src/app/services/toasts.service';
-import { environmentReducer, ReducerActionType } from 'src/app/stores/reducer';
+import { Actions } from 'src/app/stores/actions';
+import { environmentReducer } from 'src/app/stores/reducer';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
-import { EnvironmentLogsType } from 'src/app/types/server.type';
+import { EnvironmentLogs } from 'src/app/types/server.type';
 
 export type ViewsNameType = 'ROUTE' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
@@ -14,9 +15,11 @@ export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES';
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 
-export type EnvironmentStatusType = { running: boolean, needRestart: boolean };
+export type EnvironmentStatus = { running: boolean, needRestart: boolean };
 
-export type EnvironmentsStatusType = { [key: string]: EnvironmentStatusType };
+export type EnvironmentStatusProperties = { [T in keyof EnvironmentStatus]?: EnvironmentStatus[T] };
+
+export type EnvironmentsStatuses = { [key: string]: EnvironmentStatus };
 
 export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
 
@@ -28,14 +31,14 @@ export type StoreType = {
   activeRouteUUID: string;
   activeRouteResponseUUID: string;
   environments: Environments;
-  environmentsStatus: EnvironmentsStatusType;
+  environmentsStatus: EnvironmentsStatuses;
   bodyEditorConfig: any;
   duplicatedEnvironments: Set<string>;
   duplicatedRoutes: DuplicatedRoutesTypes;
-  environmentsLogs: EnvironmentLogsType;
+  environmentsLogs: EnvironmentLogs;
   toasts: Toast[];
   userId: string;
-  settings: SettingsType;
+  settings: Settings;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -98,7 +101,7 @@ export class Store {
   /**
    * Select active environment status observable
    */
-  public selectActiveEnvironmentStatus(): Observable<EnvironmentStatusType> {
+  public selectActiveEnvironmentStatus(): Observable<EnvironmentStatus> {
     return this.store$.asObservable().pipe(
       map(store => store.environmentsStatus[this.store$.value.activeEnvironmentUUID])
     );
@@ -172,7 +175,7 @@ export class Store {
   /**
    * Update the store using the reducer
    */
-  public update(action: ReducerActionType) {
+  public update(action: Actions) {
     this.store$.next(environmentReducer(this.store$.value, action));
   }
 }

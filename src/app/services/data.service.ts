@@ -5,7 +5,7 @@ import { AscSort } from 'src/app/libs/utils.lib';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
-import { EnvironmentLogResponse, EnvironmentLogType } from 'src/app/types/server.type';
+import { EnvironmentLog, EnvironmentLogResponse } from 'src/app/types/server.type';
 import * as url from 'url';
 const appVersion = require('../../../package.json').version;
 
@@ -50,9 +50,9 @@ export class DataService {
    *
    * @param request
    */
-  public formatRequestLog(request: any): EnvironmentLogType {
-    // use some getter to keep the scope because some request properties are be defined later by express (route, params, etc)
-    const requestLog: EnvironmentLogType = {
+  public formatRequestLog(request: any): EnvironmentLog {
+    // use some getter to keep the scope because some request properties are being defined later by express (route, params, etc)
+    const requestLog: EnvironmentLog = {
       uuid: request.uuid,
       timestamp: new Date(),
       get route() {
@@ -105,15 +105,22 @@ export class DataService {
     return requestLog;
   }
 
-  public formatResponseLog(response: any, body: string, requestUuid: string): EnvironmentLogResponse {
+  /**
+   * Format a response log
+   *
+   * @param response
+   * @param body
+   * @param requestUUID
+   */
+  public formatResponseLog(response: any, body: string, requestUUID: string): EnvironmentLogResponse {
     // if don't have uuid it can't be found, so let's return null and consider this an error
-    if (requestUuid == null) {
+    if (requestUUID == null) {
       return null;
     }
 
-    // use some getter to keep the scope because some request properties are be defined later by express (route, params, etc)
+    // use some getter to keep the scope because some request properties are being defined later by express (route, params, etc)
     const responseLog: EnvironmentLogResponse = {
-      requestUuid: requestUuid,
+      requestUUID: requestUUID,
       status: response.statusCode,
       headers: [],
       body: ''

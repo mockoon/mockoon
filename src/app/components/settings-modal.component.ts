@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Vie
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
-import { SettingsService, SettingsType } from 'src/app/services/settings.service';
+import { Settings, SettingsService } from 'src/app/services/settings.service';
 import { Store } from 'src/app/stores/store';
 
 @Component({
@@ -12,7 +12,7 @@ import { Store } from 'src/app/stores/store';
 export class SettingsModalComponent implements OnInit, AfterViewInit {
   @ViewChild('modal', { static: false }) modal: ElementRef;
   @Output() closed: EventEmitter<any> = new EventEmitter();
-  public settings$: Observable<SettingsType>;
+  public settings$: Observable<Settings>;
 
   constructor(
     private modalService: NgbModal,

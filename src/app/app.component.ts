@@ -26,12 +26,14 @@ import { ContextMenuEvent, EventsService } from 'src/app/services/events.service
 import { ServerService } from 'src/app/services/server.service';
 import { Toast, ToastsService } from 'src/app/services/toasts.service';
 import { UpdateService } from 'src/app/services/update.service';
+import { clearLogsAction } from 'src/app/stores/actions.js';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { DuplicatedRoutesTypes, EnvironmentsStatusType, EnvironmentStatusType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import { DuplicatedRoutesTypes, EnvironmentsStatuses, EnvironmentStatus, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { DataSubjectType } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
-import { EnvironmentLogsType } from 'src/app/types/server.type.js';
+import { EnvironmentLogs } from 'src/app/types/server.type.js';
+import { dragulaNamespaces as DraggableContainerNames } from 'src/app/types/ui.type.js';
 import '../assets/custom_theme.js';
 const platform = require('os').platform();
 const appVersion = require('../../package.json').version;
@@ -60,12 +62,12 @@ export class AppComponent implements OnInit {
   public activeRouteResponseIndex$: Observable<number>;
   public activeView$: Observable<ViewsNameType>;
   public activeTab$: Observable<TabsNameType>;
-  public activeEnvironmentState$: Observable<EnvironmentStatusType>;
-  public environmentsStatus$: Observable<EnvironmentsStatusType>;
+  public activeEnvironmentState$: Observable<EnvironmentStatus>;
+  public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedEnvironments$: Observable<Set<string>>;
   public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
   public bodyEditorConfig$: Observable<any>;
-  public environmentsLogs$: Observable<EnvironmentLogsType>;
+  public environmentsLogs$: Observable<EnvironmentLogs>;
   public toasts$: Observable<Toast[]>;
   public activeEnvironmentForm: FormGroup;
   public activeRouteForm: FormGroup;
@@ -295,7 +297,7 @@ export class AppComponent implements OnInit {
    */
   public initDragMonitoring() {
     this.dragulaService.dropModel().subscribe((dragResult) => {
-      this.environmentsService.moveMenuItem(dragResult.name, dragResult.sourceIndex, dragResult.targetIndex);
+      this.environmentsService.moveMenuItem(dragResult.name as DraggableContainerNames, dragResult.sourceIndex, dragResult.targetIndex);
     });
   }
 
@@ -344,7 +346,7 @@ export class AppComponent implements OnInit {
    */
   public clearEnvironmentLogs() {
     if (this.clearEnvironmentLogsRequested$.readValue()) {
-      this.store.update({ type: 'CLEAR_LOGS', UUID: this.store.get('activeEnvironmentUUID') });
+      this.store.update(clearLogsAction(this.store.get('activeEnvironmentUUID')));
     }
   }
 

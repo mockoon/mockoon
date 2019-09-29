@@ -36,11 +36,21 @@
       </div>
       <div class="col h-100 environment-logs-column">
         <div *ngIf="environmentsLogs[activeEnvironmentUUID][(selectedLogIndex$ | async)] as selectedLog"
-          class="environment-logs-content pl-2 pr-2">
-          <ngb-tabset #t="ngbTabset" (tabChange)="beforeTabChange($event)">
-            <ngb-tab id="tab-request">
-              <ng-template ngbTabTitle>Request <i class="material-icons">call_received</i></ng-template>
-              <ng-template ngbTabContent>
+          class="environment-logs-content">
+          <ng-container *ngIf="activeEnvironmentLogsTab$ | async as activeEnvironmentLogsTab">
+            <ul class="nav nav-tabs flex-grow-1">
+              <li class="nav-item">
+                <a class="nav-link" [ngClass]="{'active': activeEnvironmentLogsTab === 'REQUEST'}"
+                (click)="setActiveTab('REQUEST')">Request <i class="material-icons">call_received</i></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" [ngClass]="{'active': activeEnvironmentLogsTab === 'RESPONSE'}"
+                (click)="setActiveTab('RESPONSE')">Response <i class="material-icons">call_made</i></a>
+              </li>
+            </ul>
+
+            <ng-container *ngIf="activeEnvironmentLogsTab === 'REQUEST'">
+              <div class="environment-logs-content-request pt-2 pl-2 pr-2">
                 <div class="environment-logs-content-title" (click)="generalCollapsed = !generalCollapsed">
                   <i *ngIf="!generalCollapsed" class="material-icons">unfold_less</i>
                   <i *ngIf="generalCollapsed" class="material-icons">unfold_more</i>
@@ -57,7 +67,7 @@
                     <strong>Caught by route:</strong> {{selectedLog.route}}
                   </div>
                 </div>
-      
+
                 <!-- Headers -->
                 <div class="environment-logs-content-title" (click)="headersCollapsed = !headersCollapsed">
                   <i *ngIf="selectedLog.headers.length && !headersCollapsed" class="material-icons">unfold_less</i>
@@ -69,7 +79,7 @@
                     <strong>{{header.name | titlecase}}:</strong> {{header.value}}
                   </div>
                 </div>
-      
+
                 <!-- Route params -->
                 <div class="environment-logs-content-title" (click)="routeParamsCollapsed = !routeParamsCollapsed">
                   <i *ngIf="selectedLog.params.length && !routeParamsCollapsed" class="material-icons">unfold_less</i>
@@ -81,7 +91,7 @@
                     <strong>{{param.name}}:</strong> {{param.value}}
                   </div>
                 </div>
-      
+
                 <!-- Query params -->
                 <div class="environment-logs-content-title" (click)="queryParamsCollapsed = !queryParamsCollapsed">
                   <i *ngIf="selectedLog.queryParams.length && !queryParamsCollapsed" class="material-icons">unfold_less</i>
@@ -93,7 +103,7 @@
                     <strong>{{queryParam.name}}:</strong> {{queryParam.value}}
                   </div>
                 </div>
-      
+
                 <!-- Body -->
                 <div class="environment-logs-content-title" (click)="bodyCollapsed = !bodyCollapsed">
                   <i *ngIf="selectedLog.body && !bodyCollapsed" class="material-icons">unfold_less</i>
@@ -103,14 +113,14 @@
                 <div [ngbCollapse]="bodyCollapsed">
                   <div class="environment-logs-content-item pre">{{selectedLog.body}}</div>
                 </div>
-              </ng-template>
-            </ngb-tab>
-            <ngb-tab id="tab-response">
-              <ng-template ngbTabTitle>Response <i class="material-icons">call_made</i></ng-template>
-              <ng-template ngbTabContent>
-                <div *ngIf="selectedLog.response != null">
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="activeEnvironmentLogsTab === 'RESPONSE'">
+              <div class="environment-logs-content-response pt-2 pl-2 pr-2">
+                <div *ngIf="selectedLog.response">
                   <!-- General Response -->
-                  <div *ngIf="selectedLog.response != null" class="environment-logs-content-title" (click)="responseGeneralCollapsed = !responseGeneralCollapsed">
+                  <div *ngIf="selectedLog.response" class="environment-logs-content-title" (click)="responseGeneralCollapsed = !responseGeneralCollapsed">
                     <i *ngIf="!responseGeneralCollapsed" class="material-icons">unfold_less</i>
                     <i *ngIf="responseGeneralCollapsed" class="material-icons">unfold_more</i>
                     General
@@ -120,9 +130,9 @@
                       <strong>Status:</strong> {{selectedLog.response?.status}}
                     </div>
                   </div>
-        
+
                   <!-- Response Headers -->
-                  <div *ngIf="selectedLog.response != null" class="environment-logs-content-title" (click)="responseHeadersCollapsed = !responseHeadersCollapsed">
+                  <div *ngIf="selectedLog.response" class="environment-logs-content-title" (click)="responseHeadersCollapsed = !responseHeadersCollapsed">
                     <i *ngIf="selectedLog.response?.headers.length && !responseHeadersCollapsed" class="material-icons">unfold_less</i>
                     <i *ngIf="selectedLog.response?.headers.length && responseHeadersCollapsed" class="material-icons">unfold_more</i>
                     Headers ({{selectedLog?.response?.headers?.length}})
@@ -132,9 +142,9 @@
                       <strong>{{header.name | titlecase}}:</strong> {{header.value}}
                     </div>
                   </div>
-        
+
                   <!-- Response Body -->
-                  <div *ngIf="selectedLog.response != null" class="environment-logs-content-title" (click)="responseBodyCollapsed = !responseBodyCollapsed">
+                  <div *ngIf="selectedLog.response" class="environment-logs-content-title" (click)="responseBodyCollapsed = !responseBodyCollapsed">
                     <i *ngIf="selectedLog.response?.body && !responseBodyCollapsed" class="material-icons">unfold_less</i>
                     <i *ngIf="selectedLog.response?.body && responseBodyCollapsed" class="material-icons">unfold_more</i>
                     Body ({{(!selectedLog.response?.body)?'none': 'raw'}})
@@ -146,10 +156,9 @@
                 <div *ngIf="selectedLog.response == null">
                     <p class="message">No reponse yet</p>
                 </div>
-              </ng-template>
-            </ngb-tab>
-          </ngb-tabset>
-          
+              </div>
+            </ng-container>
+          </ng-container>
         </div>
       </div>
     </div>

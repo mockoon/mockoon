@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { addToastAction, removeToastAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import * as uuid from 'uuid/v1';
 
@@ -16,13 +17,11 @@ export class ToastsService {
    * @param message - text message to display
    */
   public addToast(type: ToastTypes, message: string) {
-    this.store.update({
-      type: 'ADD_TOAST', item: {
-        UUID: uuid(),
-        type,
-        message
-      }
-    });
+    this.store.update(addToastAction({
+      UUID: uuid(),
+      type,
+      message
+    }));
   }
 
   /**
@@ -31,6 +30,6 @@ export class ToastsService {
    * @param toastUUID
    */
   public removeToast(toastUUID: string) {
-    this.store.update({ type: 'REMOVE_TOAST', UUID: toastUUID });
+    this.store.update(removeToastAction(toastUUID));
   }
 }

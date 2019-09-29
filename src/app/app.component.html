@@ -318,36 +318,34 @@
 
               <!-- ROUTE VIEW -->
               <ng-container *ngIf="activeView === 'ROUTE'">
-                <div class="m-2 h-100 d-flex flex-column overflow-hidden">
+                <div class="p-2 h-100 d-flex flex-column overflow-hidden">
                   <ng-container *ngIf="activeRoute$ | async as activeRoute" [formGroup]="activeRouteForm">
 
                     <!-- Method + endpoint + warning + delete -->
                     <div class="row">
                       <div class="col">
-                        <div class="form-row">
-                          <div class="input-group">
-                            <select class="custom-select col-2" formControlName="method">
-                              <option *ngFor="let method of methods" [value]="method"
-                                [selected]="activeRouteForm.get('method').value === method">{{method | uppercase}}
-                              </option>
-                            </select>
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">/</span>
-                            </div>
-                            <input type="text" class="form-control"
-                              placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" ValidPath
-                              formControlName="endpoint">
-                            <div class="input-group-prepend">
-                              <span
-                                *ngIf="(environmentsStatus$ | async)[activeEnvironment.uuid].running && activeRoute.method === 'get'"
-                                class="input-group-text text-primary" ngbTooltip="Open route in browser"
-                                (click)="openRouteInBrowser()"><i class="material-icons">open_in_new</i></span>
-                            </div>
-                            <div class="input-group-prepend">
-                              <span *ngIf="routeHasQueryParams()" class="input-group-text text-warning"
-                                ngbTooltip="Route cannot be declared with query parameters, please add them when you call the route"><i
-                                  class="material-icons">warning</i></span>
-                            </div>
+                        <div class="input-group">
+                          <select class="custom-select col-2" formControlName="method">
+                            <option *ngFor="let method of methods" [value]="method"
+                              [selected]="activeRouteForm.get('method').value === method">{{method | uppercase}}
+                            </option>
+                          </select>
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">/</span>
+                          </div>
+                          <input type="text" class="form-control"
+                            placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" ValidPath
+                            formControlName="endpoint">
+                          <div class="input-group-prepend">
+                            <span
+                              *ngIf="(environmentsStatus$ | async)[activeEnvironment.uuid].running && activeRoute.method === 'get'"
+                              class="input-group-text text-primary" ngbTooltip="Open route in browser"
+                              (click)="openRouteInBrowser()"><i class="material-icons">open_in_new</i></span>
+                          </div>
+                          <div class="input-group-prepend">
+                            <span *ngIf="routeHasQueryParams()" class="input-group-text text-warning"
+                              ngbTooltip="Route cannot be declared with query parameters, please add them when you call the route"><i
+                                class="material-icons">warning</i></span>
                           </div>
                         </div>
                       </div>
@@ -356,11 +354,9 @@
                     <!-- Documentation -->
                     <div class="row mt-2">
                       <div class="col">
-                        <div class="form-row">
-                          <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Add notes or documentation" ValidPath
-                              formControlName="documentation">
-                          </div>
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="Add notes or documentation" ValidPath
+                            formControlName="documentation">
                         </div>
                       </div>
                     </div>
@@ -416,10 +412,10 @@
                           <!-- Response delete button -->
                           <button *ngIf="activeRoute?.responses.length > 1" type="button" class="btn btn-link btn-icon"
                             (click)="deleteCurrentRouteResponse()">
-                            <span *ngIf="!(deleteCurrentRouteResponseRequested$ | async)"><i
-                                class="material-icons">delete</i> Delete response</span>
-                            <span *ngIf="deleteCurrentRouteResponseRequested$ | async" class="text-danger"><i
-                                class="material-icons">delete</i> Confirm deletion</span>
+                            <span *ngIf="!(deleteCurrentRouteResponseRequested$ | async)" ngbTooltip="Delete response"><i
+                                class="material-icons">delete</i></span>
+                            <span *ngIf="deleteCurrentRouteResponseRequested$ | async" class="text-danger" ngbTooltip="Confirm deletion"><i
+                                class="material-icons">delete</i></span>
                           </button>
                         </div>
                       </div>
@@ -434,23 +430,21 @@
                       <div class="row mt-3">
                         <!-- route status code -->
                         <div class="col">
-                          <div class="form-row">
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text">Status code</span>
-                              </div>
-                              <select class="custom-select col-4" formControlName="statusCode">
-                                <option *ngFor="let statusCode of statusCodes" [value]="statusCode.code"
-                                  [selected]="activeRouteResponse.statusCode === statusCode.code">{{statusCode.code}}
-                                  -
-                                  {{statusCode.text}}</option>
-                              </select>
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="material-icons">access_time</i></span>
-                              </div>
-                              <input type="text" class="form-control col-1" ngbTooltip="Route specific latency (ms)"
-                                [InputNumber]="{min: 0, max: Infinity}" MousewheelUpdate formControlName="latency">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Status code</span>
                             </div>
+                            <select class="custom-select col-4" formControlName="statusCode">
+                              <option *ngFor="let statusCode of statusCodes" [value]="statusCode.code"
+                                [selected]="activeRouteResponse.statusCode === statusCode.code">{{statusCode.code}}
+                                -
+                                {{statusCode.text}}</option>
+                            </select>
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="material-icons">access_time</i></span>
+                            </div>
+                            <input type="text" class="form-control col-1" ngbTooltip="Route specific latency (ms)"
+                              [InputNumber]="{min: 0, max: Infinity}" MousewheelUpdate formControlName="latency">
                           </div>
                         </div>
                       </div>

@@ -267,3 +267,7 @@ export const CORSHeaders: Header[] = [
   { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS' },
   { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With' }
 ];
+
+export type RouteProperties = { [T in keyof Route]?: Route[T] };
+
+export type RouteResponseProperties = { [T in keyof RouteResponse]?: RouteResponse[T] };
