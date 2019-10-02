@@ -72,6 +72,7 @@ export class AppComponent implements OnInit {
   public activeEnvironmentForm: FormGroup;
   public activeRouteForm: FormGroup;
   public activeRouteResponseForm: FormGroup;
+  public Infinity = Infinity;
   private settingsModalOpened = false;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
