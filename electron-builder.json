@@ -1,0 +1,40 @@
+{
+  "appId": "com.mockoon.app",
+  "productName": "Mockoon",
+  "directories": {
+    "output": "packages",
+    "app": "dist"
+  },
+  "win": {
+    "target": "nsis",
+    "publisherName": "Guillaume Monnet",
+    "rfc3161TimeStampServer": "http://sha256timestamp.ws.symantec.com/sha256/timestamp"
+  },
+  "nsis": {
+    "artifactName": "mockoon.setup.${version}.${ext}"
+  },
+  "mac": {
+    "target": "dmg",
+    "type": "distribution",
+    "artifactName": "mockoon.setup.${version}.${ext}"
+  },
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage"
+      },
+      {
+        "target": "snap"
+      },
+      {
+        "target": "deb"
+      },
+      {
+        "target": "rpm"
+      }
+    ],
+    "category": "Development",
+    "icon": "build",
+    "artifactName": "mockoon-${version}-x86_64.${ext}"
+  }
+}
