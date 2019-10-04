@@ -45,10 +45,10 @@ export class UpdateService {
           // check if version is ahead and trigger something depending on platform (semver automatically strip 'v')
           if (semver.gt(githubRelease.tag_name, packageJSON.version)) {
             this.nextVersion = githubRelease.tag_name.replace('v', '');
-            this.nextVersionFileName = this.updateFileName[platform].replace('%v%', this.nextVersion);
 
             // only trigger download for windows, for other just inform
             if (platform === 'win32') {
+              this.nextVersionFileName = this.updateFileName[platform].replace('%v%', this.nextVersion);
               // if already have an update file
               if (fs.existsSync(this.userDataPath + this.nextVersionFileName)) {
                 this.updateAvailable.next();
@@ -77,7 +77,7 @@ export class UpdateService {
         spawn(this.userDataPath + this.nextVersionFileName, ['--updated'], { detached: true, stdio: 'ignore' }).unref();
         app.quit();
       } else if (platform === 'darwin' || platform === 'linux') {
-        shell.openExternal(`${Config.githubBinaryDownloadUrl}v${this.nextVersion}/${this.nextVersionFileName}`);
+        shell.openExternal(`${Config.githubTagReleaseUrl}${this.nextVersion}`);
       }
     }
   }

@@ -35,6 +35,6 @@
     ],
     "category": "Development",
     "icon": "build",
-    "artifactName": "mockoon-${version}-x86_64.${ext}"
+    "artifactName": "mockoon-${version}.${ext}"
   }
 }
