@@ -1,6 +1,6 @@
 {
   "name": "mockoon",
-  "description": "Mock API in seconds",
+  "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
   "version": "1.4.0",
   "author": {
     "name": "Guillaume Monnet",
@@ -10,33 +10,6 @@
   "license": "MIT",
   "repository": "https://github.com/mockoon/mockoon",
   "homepage": "https://mockoon.com",
-  "build": {
-    "appId": "com.mockoon.app",
-    "productName": "Mockoon",
-    "directories": {
-      "output": "packages",
-      "app": "dist"
-    },
-    "win": {
-      "target": "nsis",
-      "publisherName": "Guillaume Monnet",
-      "rfc3161TimeStampServer": "http://sha256timestamp.ws.symantec.com/sha256/timestamp"
-    },
-    "nsis": {
-      "artifactName": "mockoon.setup.${version}.${ext}"
-    },
-    "mac": {
-      "target": "dmg",
-      "type": "distribution",
-      "artifactName": "mockoon.setup.${version}.${ext}"
-    },
-    "linux": {
-      "target": "AppImage",
-      "category": "Development",
-      "icon": "build",
-      "artifactName": "mockoon-${version}-x86_64.${ext}"
-    }
-  },
   "browserslist": [
     "Electron >= 6.0"
   ],
@@ -50,9 +23,9 @@
     "build:dev": "rm -rf ./dist && ng build --prod --configuration=development",
     "build:prod": "rm -rf ./dist && ng build --prod --configuration=production",
     "clean-packages": "rm -rf ./packages",
-    "package:win": "npm run clean-packages && electron-builder --win",
-    "package:linux": "npm run clean-packages && electron-builder --linux",
-    "package:mac": "npm run clean-packages && electron-builder --mac"
+    "package:win": "npm run clean-packages && electron-builder --win --config electron-builder.json",
+    "package:linux": "npm run clean-packages && electron-builder --linux --config electron-builder.json",
+    "package:mac": "npm run clean-packages && electron-builder --mac --config electron-builder.json"
   },
   "dependencies": {
     "@angular/animations": "8.2.6",
@@ -110,7 +83,7 @@
     "concurrently": "4.1.2",
     "date-fns": "1.30.1",
     "electron": "4.2.10",
-    "electron-builder": "20.44.4",
+    "electron-builder": "21.2.0",
     "electron-reload": "1.4.0",
     "istanbul-instrumenter-loader": "3.0.1",
     "jasmine-core": "2.99.1",
