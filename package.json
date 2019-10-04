@@ -1,7 +1,7 @@
 {
   "name": "mockoon",
   "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "hi@255kb.com",
@@ -10,6 +10,9 @@
   "license": "MIT",
   "repository": "https://github.com/mockoon/mockoon",
   "homepage": "https://mockoon.com",
+  "bugs": {
+    "url": "https://github.com/mockoon/mockoon/issues"
+  },
   "browserslist": [
     "Electron >= 6.0"
   ],

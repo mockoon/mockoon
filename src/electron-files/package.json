@@ -1,17 +1,18 @@
 {
   "name": "mockoon",
-  "description": "Mock API in seconds",
-  "version": "1.4.0",
+  "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
+  "version": "1.5.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "hi@255kb.com",
     "url": "https://255kb.com/"
   },
+  "license": "MIT",
   "repository": "https://github.com/mockoon/mockoon",
+  "homepage": "https://mockoon.com",
   "bugs": {
     "url": "https://github.com/mockoon/mockoon/issues"
   },
-  "homepage": "https://mockoon.com",
   "main": "electron-main.js",
   "dependencies": {
     "brace": "0.11.1",
