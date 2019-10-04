@@ -4,19 +4,17 @@ about: Checklist for releases (admin use only)
 
 ---
 
-- [ ] Rename milestone to version number
-- [ ] Add version in migration comment
 - [ ] Bump app version
 
-**Builds:** 
-- [ ] Build and sign Windows version
-- [ ] Build Linux version
-- [ ] Build OSX version
+**Builds:**
+- [ ] Build and sign Windows binary
+- [ ] Build Linux binaries (deb, rpm, snap, AppImage)
+- [ ] Build OSX binary (dmg)
 
 **Tests:**
-- [ ] Test Windows build
-- [ ] Test Linux build
-- [ ] Test OSX build
+- [ ] Test Windows binary
+- [ ] Test Linux binary(ies)
+- [ ] Test OSX binary
 
 **Release:**
 - [ ] Create release on repository with correct version and tag
@@ -27,14 +25,14 @@ about: Checklist for releases (admin use only)
 
 **Website:**
 - [ ] Update website versions
-- [ ] Merge website branch
 - [ ] Publish website on Firebase
 
 **Distribution:**
 - [ ] Update homebrew cask
+- [ ] Update Snap Store
 - [ ] Update choco
 
 **Misc:**
 - [ ] Close / update Github issues
-- [ ] Clean 'Next release' project
+- [ ] Clean 'Roadmap' project
 - [ ] Spread the word!
