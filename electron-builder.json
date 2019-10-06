@@ -16,7 +16,14 @@
   "mac": {
     "target": "dmg",
     "type": "distribution",
-    "artifactName": "mockoon.setup.${version}.${ext}"
+    "artifactName": "mockoon.setup.${version}.${ext}",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "entitlements": "build/entitlements.mac.plist",
+    "entitlementsInherit": "build/entitlements.mac.plist"
+  },
+  "dmg": {
+    "sign": false
   },
   "linux": {
     "target": [
@@ -36,5 +43,6 @@
     "category": "Development",
     "icon": "build",
     "artifactName": "mockoon-${version}.${ext}"
-  }
+  },
+  "afterSign": "scripts/notarize.js"
 }
