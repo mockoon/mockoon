@@ -40,6 +40,7 @@
     "@angular/platform-browser-dynamic": "8.2.6",
     "@angular/router": "8.2.6",
     "@ng-bootstrap/ng-bootstrap": "5.1.1",
+    "axios": "^0.19.0",
     "bootstrap": "4.3.1",
     "brace": "0.11.1",
     "dummy-json": "2.0.0",

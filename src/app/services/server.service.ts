@@ -24,6 +24,7 @@ import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/typ
 import { URL } from 'url';
 import * as uuid from 'uuid/v1';
 import { IEnhancedRequest } from '../types/misc.type';
+const axios = require('axios');
 
 const httpsConfig = {
   key: pemFiles.key,
@@ -71,12 +72,10 @@ export class ServerService {
 
     // apply latency, cors, routes and proxy to express server
     this.logRequests(server, environment);
-    this.logResponses(server, environment);
     this.setEnvironmentLatency(server, environment.uuid);
     this.setRoutes(server, environment);
     this.setCors(server, environment);
     this.enableProxy(server, environment);
-    this.logErrorResponses(server, environment);
 
     // handle server errors
     serverInstance.on('error', (error: any) => {
@@ -219,7 +218,29 @@ export class ServerService {
                   }
                 } else {
                   try {
-                    res.send(DummyJSONParser(enabledRouteResponse.body, req));
+
+                    if (enabledRouteResponse.body === "{}" && req.headers.base_url) {
+                      console.log(req.method.toLowerCase()+":"+req.headers.base_url+ req.url);
+                      axios({
+                        method: req.method.toLowerCase(),
+                        url: req.headers.base_url + req.url, // base_url/route
+                        headers: req.headers,
+                        param: req.body
+                      })
+
+                        .then(function (response) {
+                          res.send(response.data)
+                        })
+                        .catch(function (error) {
+
+                          console.log(error);
+                          res.send(error)
+                        })
+
+                    } else {
+                      res.send(DummyJSONParser(enabledRouteResponse.body, req));
+                    }
+
                   } catch (error) {
                     // if invalid Content-Type provided
                     if (error.message.indexOf('invalid media type') > -1) {
