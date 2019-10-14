@@ -23,7 +23,6 @@ export const enum ActionTypes {
   MOVE_ROUTES,
   MOVE_ROUTE_RESPONSES,
   ADD_ROUTE,
-  ADD_DEFAULT_ROUTE,
   REMOVE_ROUTE,
   REMOVE_ROUTE_RESPONSE,
   UPDATE_ROUTE,
@@ -228,18 +227,6 @@ export function addRouteAction(route: Route) {
   return <const>{
     type: ActionTypes.ADD_ROUTE,
     route
-  };
-}
-
-/**
- * Add a route
- *
- * @param route - route to add
- */
-export function addDefaultRoutesAction(routes: Route[]) {
-  return <const>{
-    type: ActionTypes.ADD_DEFAULT_ROUTE,
-    routes
   };
 }
 

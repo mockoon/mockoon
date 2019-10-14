@@ -14,7 +14,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ToastsService } from 'src/app/services/toasts.service';
-import { addEnvironmentAction, addRouteAction,addDefaultRoutesAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
+import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
@@ -76,6 +76,7 @@ export class EnvironmentsService {
   ) {
     // get existing environments from storage or default one
     storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
+      console.log('environments',environments)
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
         this.store.update(setInitialEnvironmentsAction([this.buildDefaultEnvironment()]));
@@ -132,7 +133,6 @@ export class EnvironmentsService {
   public addEnvironment() {
     this.store.update(addEnvironmentAction(this.buildNewEnvironment()));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ENVIRONMENT);
-   // this.addDefaultRoute()
   }
 
   /**
@@ -199,23 +199,11 @@ export class EnvironmentsService {
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
   }
 
-  public addDefaultRoute() {
-    var defaultRoutes = [
-      this.createDeaultRoute("get"),
-      this.createDeaultRoute("post"),
-      this.createDeaultRoute("put"),
-      this.createDeaultRoute("patch"),
-      this.createDeaultRoute("delete")
-    ]
-    console.log(defaultRoutes)
-    this.store.update(addDefaultRoutesAction(defaultRoutes));
-   
-  }
 
-  private createDeaultRoute(method:any) {
+  private createDefaultRoute(method:any) {
     const newRoute: Route = {
-      ...this.routeSchema,
-      uuid: uuid(),
+      uuid: uuid()+ method,
+      documentation: '',
       endpoint: '*',
       method: method,
       responses: [
@@ -363,18 +351,13 @@ export class EnvironmentsService {
       name: 'New environment',
       port: 3000,
       routes: [
-        {
-          ...this.routeSchema,
-          uuid: uuid(),
-          responses: [
-            {
-              ...this.routeResponseSchema,
-              uuid: uuid()
-            }
-          ]
-        }
+        this.createDefaultRoute('get'),
+        this.createDefaultRoute('post'),
+        this.createDefaultRoute('put'),
+        this.createDefaultRoute('patch'),
+        this.createDefaultRoute("delete")
       ],
-      headers: [{ key: 'Content-Type', value: 'application/json' }]
+     // headers: [{ key: 'Content-Type', value: 'application/json' }]
     };
   }
 

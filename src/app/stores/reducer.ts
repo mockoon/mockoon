@@ -460,33 +460,6 @@ export function environmentReducer(
       break;
     }
 
-    case ActionTypes.ADD_DEFAULT_ROUTE: {
-      // only add a route if there is at least one environment
-      if (state.environments.length > 0) {
-        const defaultRoutes = action.routes;
-        newState = {
-          ...state,
-          environments: state.environments.map(environment => {
-
-            if (environment.uuid === state.activeEnvironmentUUID) {
-              
-              return {
-                ...environment,
-                routes: defaultRoutes
-              };
-          }
-
-            return environment;
-          })
-        };
-        break;
-      }
-
-      newState = state;
-      break;
-    }
-
-
     case ActionTypes.UPDATE_ROUTE: {
       const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method'];
       const activeEnvironmentStatus = state.environmentsStatus[state.activeEnvironmentUUID];

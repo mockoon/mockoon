@@ -248,6 +248,7 @@ export class ServerService {
                         })
 
                     } else {
+                      console.log('mock api',enabledRouteResponse.body)
                       res.send(DummyJSONParser(enabledRouteResponse.body, req));
                     }
 
@@ -301,6 +302,7 @@ export class ServerService {
     }
     res.set('Content-Type', 'text/plain');
     res.send(errorMessage);
+    console.log('sendError',errorMessage)
   }
 
   /**
