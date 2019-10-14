@@ -23,6 +23,7 @@ export const enum ActionTypes {
   MOVE_ROUTES,
   MOVE_ROUTE_RESPONSES,
   ADD_ROUTE,
+  ADD_DEFAULT_ROUTE,
   REMOVE_ROUTE,
   REMOVE_ROUTE_RESPONSE,
   UPDATE_ROUTE,
@@ -231,6 +232,18 @@ export function addRouteAction(route: Route) {
 }
 
 /**
+ * Add a route
+ *
+ * @param route - route to add
+ */
+export function addDefaultRoutesAction(routes: Route[]) {
+  return <const>{
+    type: ActionTypes.ADD_DEFAULT_ROUTE,
+    routes
+  };
+}
+
+/**
  * Remove a route
  *
  * @param routeUUID - route UUID to remove
@@ -407,6 +420,7 @@ export type Actions =
   ReturnType<typeof setActiveRouteAction> |
   ReturnType<typeof navigateRoutesAction> |
   ReturnType<typeof addRouteAction> |
+  ReturnType<typeof addDefaultRoutesAction> |
   ReturnType<typeof removeRouteAction> |
   ReturnType<typeof removeRouteResponseAction> |
   ReturnType<typeof updateRouteAction> |

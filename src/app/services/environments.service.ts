@@ -14,7 +14,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ToastsService } from 'src/app/services/toasts.service';
-import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
+import { addEnvironmentAction, addRouteAction,addDefaultRoutesAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
@@ -132,6 +132,7 @@ export class EnvironmentsService {
   public addEnvironment() {
     this.store.update(addEnvironmentAction(this.buildNewEnvironment()));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ENVIRONMENT);
+   // this.addDefaultRoute()
   }
 
   /**
@@ -193,10 +194,40 @@ export class EnvironmentsService {
         }
       ]
     };
-
+    console.log(this.routeSchema)
     this.store.update(addRouteAction(newRoute));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
   }
+
+  public addDefaultRoute() {
+    var defaultRoutes = [
+      this.createDeaultRoute("get"),
+      this.createDeaultRoute("post"),
+      this.createDeaultRoute("put"),
+      this.createDeaultRoute("patch"),
+      this.createDeaultRoute("delete")
+    ]
+    console.log(defaultRoutes)
+    this.store.update(addDefaultRoutesAction(defaultRoutes));
+   
+  }
+
+  private createDeaultRoute(method:any) {
+    const newRoute: Route = {
+      ...this.routeSchema,
+      uuid: uuid(),
+      endpoint: '*',
+      method: method,
+      responses: [
+        {
+          ...this.routeResponseSchema,
+          uuid: uuid()
+        }
+      ]
+    };
+    return newRoute
+  }
+
 
   /**
    * Add a new route response and save it in the store

@@ -6,6 +6,7 @@ import { DuplicatedRoutesTypes, EnvironmentsStatuses, StoreType } from 'src/app/
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
 import { EnvironmentLogs } from 'src/app/types/server.type';
+import { ReturnStatement } from '@angular/compiler';
 
 export type ReducerDirectionType = 'next' | 'previous';
 export type ReducerIndexes = { sourceIndex: number, targetIndex: number };
@@ -423,7 +424,6 @@ export function environmentReducer(
       // only add a route if there is at least one environment
       if (state.environments.length > 0) {
         const newRoute = action.route;
-
         newState = {
           ...state,
           activeRouteUUID: newRoute.uuid,
@@ -431,12 +431,24 @@ export function environmentReducer(
           activeTab: 'RESPONSE',
           activeView: 'ROUTE',
           environments: state.environments.map(environment => {
+
             if (environment.uuid === state.activeEnvironmentUUID) {
-              return {
+              //do not add duplicated endpoints by auto 
+              var isDuplicate = false
+              environment.routes.forEach( route => {
+                if(newRoute.endpoint && newRoute.endpoint.length > 0 
+                  && newRoute.endpoint === route.endpoint 
+                  && newRoute.method === route.method){
+                    isDuplicate = true;
+                }
+              })
+            if(!isDuplicate){
+                return {
                 ...environment,
-                routes: [...environment.routes, newRoute]
+                routes: [newRoute,...environment.routes]
               };
             }
+          }
 
             return environment;
           })
@@ -447,6 +459,33 @@ export function environmentReducer(
       newState = state;
       break;
     }
+
+    case ActionTypes.ADD_DEFAULT_ROUTE: {
+      // only add a route if there is at least one environment
+      if (state.environments.length > 0) {
+        const defaultRoutes = action.routes;
+        newState = {
+          ...state,
+          environments: state.environments.map(environment => {
+
+            if (environment.uuid === state.activeEnvironmentUUID) {
+              
+              return {
+                ...environment,
+                routes: defaultRoutes
+              };
+          }
+
+            return environment;
+          })
+        };
+        break;
+      }
+
+      newState = state;
+      break;
+    }
+
 
     case ActionTypes.UPDATE_ROUTE: {
       const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method'];

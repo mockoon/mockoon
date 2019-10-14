@@ -17,7 +17,7 @@ import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
-import { logRequestAction, logResponseAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
+import { addRouteAction, logRequestAction, logResponseAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
 import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
@@ -40,7 +40,7 @@ export class ServerService {
     private toastService: ToastsService,
     private dataService: DataService,
     private store: Store,
-    private eventsService: EventsService
+    private eventsService: EventsService,
   ) { }
 
   /**
@@ -147,6 +147,7 @@ export class ServerService {
    * @param environment - environment to get route schema from
    */
   private setRoutes(server: Application, environment: Environment) {
+    var self = this
     environment.routes.forEach((declaredRoute: Route) => {
       const duplicatedRoutes = this.store.get('duplicatedRoutes')[environment.uuid];
 
@@ -170,6 +171,7 @@ export class ServerService {
               this.setHeaders(enabledRouteResponse.headers, req, res);
 
               // send the file
+             
               if (enabledRouteResponse.filePath) {
                 let filePath: string;
 
@@ -218,7 +220,7 @@ export class ServerService {
                   }
                 } else {
                   try {
-
+                    console.log(req.method.toLowerCase()+":"+req.headers.base_url+ req.url);
                     if (enabledRouteResponse.body === "{}" && req.headers.base_url) {
                       console.log(req.method.toLowerCase()+":"+req.headers.base_url+ req.url);
                       axios({
@@ -229,12 +231,20 @@ export class ServerService {
                       })
 
                         .then(function (response) {
-                          res.send(response.data)
+                          var resposneStr = JSON.stringify(response.data,null,2)
+                          console.log('resposneStr',resposneStr)
+                          if(resposneStr === 'undefined'){
+                            resposneStr = response.data.toString()
+                          }
+                    
+                          self.addRouteWith(req, resposneStr);
+                          res.send(response);
+                          
                         })
                         .catch(function (error) {
 
                           console.log(error);
-                          res.send(error)
+                          res.send(error);
                         })
 
                     } else {
@@ -291,6 +301,42 @@ export class ServerService {
     }
     res.set('Content-Type', 'text/plain');
     res.send(errorMessage);
+  }
+
+  /**
+   * 
+   * @param req 
+   * @param response 
+   */
+  private addRouteWith(req: any, response: string) {
+    var endpoint = req.url.toString()
+    endpoint = endpoint.substr(1,endpoint.length-1)// remove / first
+    const newRoute: Route = {
+      method : req.method.toLowerCase(),
+      endpoint: endpoint,
+      documentation: '',
+      uuid: uuid(),
+      responses: [
+        {
+          ...{
+            uuid: '',
+            body: response,
+            latency: 0,
+            statusCode: '200',
+            headers: [
+              { key: '', value: '' }
+            ],
+            filePath: '',
+            sendFileAsBody: false,
+            rules: []
+          },
+          uuid: uuid(),
+        
+        }
+      ]
+    };
+    console.log(newRoute)
+    this.store.update(addRouteAction(newRoute));
   }
 
   /**
@@ -370,6 +416,8 @@ export class ServerService {
       next();
     });
   }
+
+  
 
   /**
    * Log all response made by the environment
