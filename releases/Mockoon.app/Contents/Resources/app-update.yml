@@ -1,0 +1,4 @@
+owner: mockoon
+repo: mockoon
+provider: github
+updaterCacheDirName: mockoon-updater
