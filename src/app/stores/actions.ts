@@ -407,7 +407,6 @@ export type Actions =
   ReturnType<typeof setActiveRouteAction> |
   ReturnType<typeof navigateRoutesAction> |
   ReturnType<typeof addRouteAction> |
-  ReturnType<typeof addDefaultRoutesAction> |
   ReturnType<typeof removeRouteAction> |
   ReturnType<typeof removeRouteResponseAction> |
   ReturnType<typeof updateRouteAction> |

@@ -76,7 +76,7 @@ export class EnvironmentsService {
   ) {
     // get existing environments from storage or default one
     storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
-      console.log('environments',environments)
+      //console.log('environments',environments)
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
         this.store.update(setInitialEnvironmentsAction([this.buildDefaultEnvironment()]));

@@ -220,9 +220,9 @@ export class ServerService {
                   }
                 } else {
                   try {
-                    console.log(req.method.toLowerCase()+":"+req.headers.base_url+ req.url);
+                  
                     if (enabledRouteResponse.body === "{}" && req.headers.base_url) {
-                      console.log(req.method.toLowerCase()+":"+req.headers.base_url+ req.url);
+                      console.log(req.headers.base_url+ req.url);
                       axios({
                         method: req.method.toLowerCase(),
                         url: req.headers.base_url + req.url, // base_url/route
@@ -238,7 +238,7 @@ export class ServerService {
                           }
                     
                           self.addRouteWith(req, resposneStr);
-                          res.send(response);
+                          res.send(resposneStr);
                           
                         })
                         .catch(function (error) {
@@ -248,7 +248,7 @@ export class ServerService {
                         })
 
                     } else {
-                      console.log('mock api',enabledRouteResponse.body)
+                      console.log('mock api',req.url)
                       res.send(DummyJSONParser(enabledRouteResponse.body, req));
                     }
 

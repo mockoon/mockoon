@@ -422,36 +422,41 @@ export function environmentReducer(
 
     case ActionTypes.ADD_ROUTE: {
       // only add a route if there is at least one environment
+      var isDuplicate = false
       if (state.environments.length > 0) {
         const newRoute = action.route;
+        var enviroment = state.environments.map(environment => {
+
+          if (environment.uuid === state.activeEnvironmentUUID) {
+            //do not add duplicated endpoints by auto 
+           
+            environment.routes.forEach( route => {
+              if(newRoute.endpoint && newRoute.endpoint.length > 0 
+                && newRoute.endpoint === route.endpoint 
+                && newRoute.method === route.method){
+                  isDuplicate = true;
+              }
+            })
+          if(!isDuplicate){
+              return {
+              ...environment,
+              routes: [newRoute,...environment.routes]
+            };
+          }
+        }
+
+          return environment;
+        })
+
+        var activeRoute = state.activeRouteUUID
+        if(!isDuplicate) activeRoute =  newRoute.uuid 
         newState = {
           ...state,
-          activeRouteUUID: newRoute.uuid,
+          activeRouteUUID: activeRoute,
           activeRouteResponseUUID: newRoute.responses[0].uuid,
           activeTab: 'RESPONSE',
           activeView: 'ROUTE',
-          environments: state.environments.map(environment => {
-
-            if (environment.uuid === state.activeEnvironmentUUID) {
-              //do not add duplicated endpoints by auto 
-              var isDuplicate = false
-              environment.routes.forEach( route => {
-                if(newRoute.endpoint && newRoute.endpoint.length > 0 
-                  && newRoute.endpoint === route.endpoint 
-                  && newRoute.method === route.method){
-                    isDuplicate = true;
-                }
-              })
-            if(!isDuplicate){
-                return {
-                ...environment,
-                routes: [newRoute,...environment.routes]
-              };
-            }
-          }
-
-            return environment;
-          })
+          environments: enviroment
         };
         break;
       }
