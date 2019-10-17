@@ -8,7 +8,7 @@
   "win": {
     "target": "nsis",
     "publisherName": "Guillaume Monnet",
-    "rfc3161TimeStampServer": "http://sha256timestamp.ws.symantec.com/sha256/timestamp"
+    "rfc3161TimeStampServer": "http://timestamp.digicert.com"
   },
   "nsis": {
     "artifactName": "mockoon.setup.${version}.${ext}"
