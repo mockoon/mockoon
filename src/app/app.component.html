@@ -379,11 +379,12 @@
                             <div class="dropdown-menu" aria-labelledby="route-responses-dropdown" ngbDropdownMenu MousedragDeadzone dragula="routeResponses"
                             [dragulaModel]="activeRoute.responses">
                               <button type="button" *ngFor="let routeResponse of activeRoute.responses; index as routeResponseIndex"
-                                class="btn dropdown-item"
+                                class="btn dropdown-item d-flex"
                                 [ngClass]="{'active': activeRouteResponse?.uuid === routeResponse.uuid}"
                                 ngbDropdownItem
                                 (click)="setActiveRouteResponse(routeResponse.uuid)">
-                                {{routeResponseIndex + 1}}: {{routeResponse.statusCode}}
+                                <span class="flex-grow-1">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}}</span>
+                                <span><i *ngIf="routeResponseIndex === 0" class="material-icons text-primary" ngbTooltip="Default response served if no rule matches">flag</i></span>
                               </button>
                             </div>
                           </div>
