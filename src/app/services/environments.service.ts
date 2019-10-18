@@ -19,7 +19,7 @@ import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
-import { CORSHeaders, Header, Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
+import { CORSHeaders, Header, Route, RouteProperties, RouteResponse, RouteResponseProperties, Method } from 'src/app/types/route.type';
 import { dragulaNamespaces } from 'src/app/types/ui.type';
 import * as uuid from 'uuid/v1';
 const appVersion = require('../../../package.json').version;
@@ -639,5 +639,45 @@ export class EnvironmentsService {
    */
   public setEnvironmentCORSHeaders() {
     this.eventsService.injectHeaders.emit({ target: 'environmentHeaders', headers: CORSHeaders });
+  }
+
+  /**
+   * Create a route based on a environment log entry
+   */
+  public createRouteFromLog(logUUID?: string) {
+    const environmentsLogs = this.store.get('environmentsLogs');
+    const uuidEnvironment = this.store.get('activeEnvironmentUUID');
+    const log = environmentsLogs[uuidEnvironment].find(environmentLog => environmentLog.uuid === logUUID)
+
+    if (log) {
+      const headers: Header[] = [];
+      log.response.headers.forEach(element => {
+        headers.push({
+          key: element.name,
+          value: element.value
+        });
+      });
+
+      const newRoute: Route = {
+        uuid: uuid(),
+        documentation: '',
+        method: log.method.toLowerCase() as Method,
+        endpoint: log.url.slice(1), // Remove the initial slash '/'
+        responses: [{
+          headers: headers,
+          statusCode: log.response.status.toString(),
+          body: log.response.body,
+          rules: [],
+          latency: 0,
+          sendFileAsBody: false,
+          filePath: null,
+          uuid: uuid()
+        }]
+
+      };
+      this.store.update(addRouteAction(newRoute));
+
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE_FROM_LOG);
+    }
   }
 }

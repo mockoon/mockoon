@@ -16,6 +16,11 @@
                     <div class="ellipsis">{{log.url}}</div>
                   </div>
                   <div>
+                    <button *ngIf="log.proxied" type="button" class="btn btn-link btn-icon pl-2" (click)="createRouteFromLog(log.uuid)">
+                      Mock
+                    </button>
+                  </div>
+                  <div>
                     <span *ngIf="log.route" class="float-right text-success">
                       <i class="material-icons" ngbTooltip="Request caught">check</i>
                     </span>

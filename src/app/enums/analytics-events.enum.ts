@@ -6,7 +6,8 @@ type AnalyticsEventsNames =
   'CREATE_ENVIRONMENT' | 'CREATE_ROUTE' | 'CREATE_ROUTE_RESPONSE' | 'CREATE_HEADER' | 'DUPLICATE_ENVIRONMENT' |
   'DUPLICATE_ROUTE' | 'DELETE_ENVIRONMENT' | 'DELETE_ROUTE' | 'DELETE_ROUTE_RESPONSE' | 'DELETE_HEADER' |
   'LINK_ROUTE_IN_BROWSER' | 'LINK_FEEDBACK' | 'LINK_RELEASE' | 'LINK_WIKI' | 'LINK_APPLY_UPDATE' |
-  'EXPORT_FILE' | 'EXPORT_CLIPBOARD' | 'IMPORT_FILE' | 'IMPORT_CLIPBOARD' | 'SERVER_ENTERING_REQUEST';
+  'EXPORT_FILE' | 'EXPORT_CLIPBOARD' | 'IMPORT_FILE' | 'IMPORT_CLIPBOARD' | 'SERVER_ENTERING_REQUEST' |
+  'CREATE_ROUTE_FROM_LOG';
 
 export const AnalyticsEvents: { [keyof in AnalyticsEventsNames]: CollectParams } = {
   PAGEVIEW: { type: 'pageview', pageName: '/' },
@@ -36,5 +37,6 @@ export const AnalyticsEvents: { [keyof in AnalyticsEventsNames]: CollectParams }
   EXPORT_CLIPBOARD: { type: 'event', category: 'export', action: 'clipboard' },
   IMPORT_FILE: { type: 'event', category: 'import', action: 'file' },
   IMPORT_CLIPBOARD: { type: 'event', category: 'import', action: 'clipboard' },
-  SERVER_ENTERING_REQUEST: { type: 'event', category: 'server', action: 'entering-request' }
+  SERVER_ENTERING_REQUEST: { type: 'event', category: 'server', action: 'entering-request' },
+  CREATE_ROUTE_FROM_LOG: { type: 'event', category: 'create', action: 'route-from-log' },
 };

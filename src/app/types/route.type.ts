@@ -255,7 +255,7 @@ export type ResponseRuleTargets = 'body' | 'query' | 'header' | 'params';
 export type Route = {
   uuid: string;
   documentation: string;
-  method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
+  method: Method;
   endpoint: string;
   responses: RouteResponse[];
 };
@@ -271,3 +271,5 @@ export const CORSHeaders: Header[] = [
 export type RouteProperties = { [T in keyof Route]?: Route[T] };
 
 export type RouteResponseProperties = { [T in keyof RouteResponse]?: RouteResponse[T] };
+
+export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';

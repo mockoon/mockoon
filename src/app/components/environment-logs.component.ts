@@ -71,4 +71,8 @@ export class EnvironmentLogsComponent implements OnInit {
   public setActiveTab(tabName: EnvironmentLogsTabsNameType) {
     this.environmentsService.setActiveEnvironmentLogTab(tabName);
   }
+
+  public createRouteFromLog(logUuid: string) {
+    this.environmentsService.createRouteFromLog(logUuid);
+  }
 }
