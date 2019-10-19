@@ -1,7 +1,7 @@
 {
   "name": "mockoon",
   "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "author": {
     "name": "Guillaume Monnet",
     "email": "hi@255kb.com",
@@ -85,8 +85,10 @@
     "codelyzer": "5.1.0",
     "concurrently": "4.1.2",
     "date-fns": "1.30.1",
+    "dotenv": "^8.1.0",
     "electron": "4.2.10",
     "electron-builder": "21.2.0",
+    "electron-notarize": "^0.1.1",
     "electron-reload": "1.4.0",
     "istanbul-instrumenter-loader": "3.0.1",
     "jasmine-core": "2.99.1",

@@ -441,6 +441,9 @@ export class EnvironmentsService {
       });
     } else if (subject === 'route') {
       (data as Route).uuid = uuid();
+      (data as Route).responses.forEach(routeResponse => {
+        routeResponse.uuid = uuid();
+      });
     }
 
     return data;

@@ -7,7 +7,18 @@ If you want to contribute significant changes please discuss with the maintainer
 Please note that Mockoon promise is to be simple, easy to use, and fast. So not all features are worth implementing and maintainer may chose to not implement features that are out of Mockoon's scope.
 
 > Prerequisites:
-> - Node.js ^10.x.x
+> - Node.js ^12.x.x
+
+### Find an issue to work on
+
+- Check for **opened unassigned** issues or open a new one (after searching for closed issues). 
+- Comment on the issue and request to work on it.
+- After discussing the implementation, the issue will be assigned to you by a maintainer. As a rule, the assignee is the person working on the issue.
+
+Please respect this workflow to ensure that: 
+- Your work is in line with Mockoon direction.
+- It hasn't been already done/rejected.
+- You are the only one working on an issue.
 
 ### Run the application in dev mode
 
@@ -20,9 +31,9 @@ You will get hot reload on both Angular and Electron applications.
 ### Work on your feature or bugfix
 
 - Start your `feature` or `fix` from `master`
-- Add some spectron tests. You will find them in the `test` folder. Please try to cover at least the easiest test cases of your feature. 
+- Cover it with spectron tests. You will find them in the `test` folder. Please try to cover at least the easiest test cases of your feature. 
 - Preferably squash your commits, except when it makes sense to keep them separate (one refactoring + feature development)
-- Do not forget to add "Closes #xx" in one of the commit messages (where xx is the GitHub issue number)
+- Do not forget to add "Closes #xx" in one of the commit messages or in the pull request description (where xx is the GitHub issue number)
 
 Branches naming convention:
 - features and enhancements: `feature/name-or-issue-number`
@@ -37,7 +48,7 @@ When running the tests locally, you will first need to run `npm run build:dev` i
 ### Open a pull request
 
 Open a pull request to be merge in the `master` branch. All branches should start from `master` and must be merged into `master`. 
-Ask maintainers to review the code and be prepared to rework your code if it does not match the style or do not follow the way it's usually done. 
+Ask maintainers to review the code and be prepared to rework your code if it does not match the style or do not follow the way it's usually done (typing, reducer, etc). 
 
 ---
 

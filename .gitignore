@@ -43,3 +43,5 @@ testem.log
 Thumbs.db
 
 package-win.bat
+
+.env

@@ -137,5 +137,19 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
         delete route.body;
       });
     }
+  },
+
+  /**
+   * Renew route responses UUID to ensure no uuid were duplicated after v1.5.0
+   */
+  {
+    id: 7,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach(routeResponse => {
+          routeResponse.uuid = uuid();
+        });
+      });
+    }
   }
 ];
