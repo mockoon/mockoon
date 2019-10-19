@@ -16,8 +16,8 @@
                     <div class="ellipsis">{{log.url}}</div>
                   </div>
                   <div>
-                    <button *ngIf="log.proxied" type="button" class="btn btn-link btn-icon pl-2" (click)="createRouteFromLog(log.uuid)">
-                      Mock
+                    <button *ngIf="log.proxied" type="button" class="btn btn-link btn-icon btn-mock" (click)="createRouteFromLog(log.uuid)">
+                      <i class="material-icons" ngbTooltip="Mock">control_point_duplicate</i>
                     </button>
                   </div>
                   <div>
