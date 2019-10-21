@@ -49,6 +49,7 @@ export class Tests {
       if (this.spectron && this.spectron.isRunning()) {
         return this.spectron.stop();
       }
+
       return undefined;
     });
 
