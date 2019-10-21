@@ -650,7 +650,7 @@ export class EnvironmentsService {
   public createRouteFromLog(logUUID?: string) {
     const environmentsLogs = this.store.get('environmentsLogs');
     const uuidEnvironment = this.store.get('activeEnvironmentUUID');
-    const log = environmentsLogs[uuidEnvironment].find(environmentLog => environmentLog.uuid === logUUID)
+    const log = environmentsLogs[uuidEnvironment].find(environmentLog => environmentLog.uuid === logUUID);
 
     if (log) {
       const headers: Header[] = [];

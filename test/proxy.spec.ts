@@ -24,8 +24,8 @@ describe('Proxy', () => {
     await tests.helpers.startEnvironment();
   });
 
-  it ('Call /anwser', () => {
-    tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
+  it ('Call /anwser', async () => {
+    await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
   });
 
   it('Environment logs have one entry', async () => {
