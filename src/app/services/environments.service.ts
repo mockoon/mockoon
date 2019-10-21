@@ -465,32 +465,32 @@ export class EnvironmentsService {
   /**
    * Export all envs in a json file
    */
-  public exportAllEnvironments() {
+  public async exportAllEnvironments() {
     const environments = this.store.get('environments');
 
-    this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (path) => {
-      // If the user clicked 'cancel'
-      if (path === undefined) {
-        return;
-      }
+    const dialogResult = await this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] });
 
-      // reset environments before exporting
-      const dataToExport = cloneDeep(environments);
+    // If the user clicked 'cancel'
+    if (dialogResult.filePath === undefined) {
+      return;
+    }
 
-      try {
-        fs.writeFile(path, this.dataService.wrapExport(dataToExport, 'full'), (error) => {
-          if (error) {
-            this.toastService.addToast('error', Errors.EXPORT_ERROR);
-          } else {
-            this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
+    // reset environments before exporting
+    const dataToExport = cloneDeep(environments);
 
-            this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_FILE);
-          }
-        });
-      } catch (error) {
-        this.toastService.addToast('error', Errors.EXPORT_ERROR);
-      }
-    });
+    try {
+      fs.writeFile(dialogResult.filePath, this.dataService.wrapExport(dataToExport, 'full'), (error) => {
+        if (error) {
+          this.toastService.addToast('error', Errors.EXPORT_ERROR);
+        } else {
+          this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
+
+          this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_FILE);
+        }
+      });
+    } catch (error) {
+      this.toastService.addToast('error', Errors.EXPORT_ERROR);
+    }
   }
 
   /**
@@ -593,39 +593,39 @@ export class EnvironmentsService {
    *
    * Append imported envs to the env array.
    */
-  public importEnvironmentsFile() {
-    this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] }, (file) => {
-      if (file && file[0]) {
-        fs.readFile(file[0], 'utf-8', (error, fileContent) => {
-          if (error) {
-            this.toastService.addToast('error', Errors.IMPORT_ERROR);
-          } else {
-            const importData: ExportType = JSON.parse(fileContent);
+  public async importEnvironmentsFile() {
+    const dialogResult = await this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] });
 
-            // verify data checksum
-            if (!this.dataService.verifyImportChecksum(importData)) {
-              this.toastService.addToast('error', Errors.IMPORT_FILE_WRONG_CHECKSUM);
+    if (dialogResult.filePaths && dialogResult.filePaths[0]) {
+      fs.readFile(dialogResult.filePaths[0], 'utf-8', (error, fileContent) => {
+        if (error) {
+          this.toastService.addToast('error', Errors.IMPORT_ERROR);
+        } else {
+          const importData: ExportType = JSON.parse(fileContent);
 
-              return;
-            }
+          // verify data checksum
+          if (!this.dataService.verifyImportChecksum(importData)) {
+            this.toastService.addToast('error', Errors.IMPORT_FILE_WRONG_CHECKSUM);
 
-            // verify version compatibility
-            if (importData.appVersion !== appVersion) {
-              this.toastService.addToast('error', Errors.IMPORT_WRONG_VERSION);
-
-              return;
-            }
-
-            importData.data = this.renewUUIDs(importData.data as Environments, 'full');
-            (importData.data as Environments).forEach(environment => {
-              this.store.update(addEnvironmentAction(environment));
-            });
-
-            this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);
+            return;
           }
-        });
-      }
-    });
+
+          // verify version compatibility
+          if (importData.appVersion !== appVersion) {
+            this.toastService.addToast('error', Errors.IMPORT_WRONG_VERSION);
+
+            return;
+          }
+
+          importData.data = this.renewUUIDs(importData.data as Environments, 'full');
+          (importData.data as Environments).forEach(environment => {
+            this.store.update(addEnvironmentAction(environment));
+          });
+
+          this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);
+        }
+      });
+    }
   }
 
   /**
