@@ -16,12 +16,12 @@
                     <div class="ellipsis">{{log.url}}</div>
                   </div>
                   <div>
-                    <button *ngIf="log.proxied" type="button" class="btn btn-link btn-icon btn-mock" (click)="createRouteFromLog(log.uuid)">
+                    <button type="button" class="btn btn-link btn-icon btn-mock" (click)="createRouteFromLog(log.uuid)">
                       <i class="material-icons" ngbTooltip="Mock">control_point_duplicate</i>
                     </button>
                   </div>
                   <div>
-                    <span *ngIf="log.route" class="float-right text-success">
+                    <span *ngIf="log.response" class="float-right text-success">
                       <i class="material-icons" ngbTooltip="Request caught">check</i>
                     </span>
                   </div>

@@ -22,6 +22,7 @@ import { Environment, EnvironmentProperties, Environments } from 'src/app/types/
 import { CORSHeaders, Header, Route, RouteProperties, RouteResponse, RouteResponseProperties, Method } from 'src/app/types/route.type';
 import { dragulaNamespaces } from 'src/app/types/ui.type';
 import * as uuid from 'uuid/v1';
+import { RouteResponseRulesComponent } from '../components/route-response-rules.component';
 const appVersion = require('../../../package.json').version;
 
 @Injectable()
@@ -653,20 +654,16 @@ export class EnvironmentsService {
     const log = environmentsLogs[uuidEnvironment].find(environmentLog => environmentLog.uuid === logUUID);
 
     if (log) {
-      const headers: Header[] = [];
-      log.response.headers.forEach(element => {
-        headers.push({
-          key: element.name,
-          value: element.value
+      let response: RouteResponse;
+      if (log.response) {
+        const headers: Header[] = [];
+        log.response.headers.forEach(element => {
+          headers.push({
+            key: element.name,
+            value: element.value
+          });
         });
-      });
-
-      const newRoute: Route = {
-        uuid: uuid(),
-        documentation: '',
-        method: log.method.toLowerCase() as Method,
-        endpoint: log.url.slice(1), // Remove the initial slash '/'
-        responses: [{
+        response = {
           headers: headers,
           statusCode: log.response.status.toString(),
           body: log.response.body,
@@ -675,8 +672,26 @@ export class EnvironmentsService {
           sendFileAsBody: false,
           filePath: null,
           uuid: uuid()
-        }]
+        };
+      } else {
+        response = {
+          headers: [],
+          statusCode: '200',
+          body: '{}',
+          rules: [],
+          latency: 0,
+          sendFileAsBody: false,
+          filePath: null,
+          uuid: uuid()
+        };
+      }
 
+      const newRoute: Route = {
+        uuid: uuid(),
+        documentation: '',
+        method: log.method.toLowerCase() as Method,
+        endpoint: log.url.slice(1), // Remove the initial slash '/'
+        responses: [response],
       };
       this.store.update(addRouteAction(newRoute));
 
