@@ -39,6 +39,11 @@ export class Helpers {
       .should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
   }
 
+  async countEnvironmentLogsEntries(expected: number) {
+    await this.testsInstance.spectron.client.elements('.environment-logs-column:nth-child(1) .menu-list .nav-item')
+      .should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
+  }
+
   async contextMenuClickAndConfirm(targetMenuItemSelector: string, contextMenuItemIndex: number) {
     await this.testsInstance.spectron.client.element(targetMenuItemSelector).rightClick();
 
@@ -49,7 +54,16 @@ export class Helpers {
 
   async startEnvironment() {
     await this.testsInstance.spectron.client.element('.btn i[ngbtooltip="Start server"]').click();
-    await this.testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.running`);
+    await this.testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.active.running`);
+  }
+
+  async stopEnvironment() {
+    await this.testsInstance.spectron.client.element('.btn i[ngbtooltip="Stop server"]').click();
+    await this.testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.active.running`, 1000, true);
+  }
+
+  async selectEnvironment(index: number)  {
+    await this.testsInstance.spectron.client.element(`.menu-column--environments .menu-list .nav-item:nth-child(${index}) .nav-link`).click();
   }
 
   async setRouteStatusCode(statusCode: string) {
@@ -91,10 +105,10 @@ export class Helpers {
     await this.testsInstance.spectron.client.element('app-route-response-rules .row:last-of-type .form-inline input[formcontrolname="value"]').setValue(rule.value);
   }
 
-  async httpCallAsserter(httpCall: HttpCall) {
+  async httpCallAsserterWithPort(httpCall: HttpCall, port: number) {
     await fetch({
       protocol: 'http',
-      port: 3000,
+      port: port,
       path: httpCall.path,
       method: httpCall.method,
       headers: httpCall.headers,
@@ -104,5 +118,9 @@ export class Helpers {
         return { ...propertiesToTest, [propertyName]: httpCall.testedProperties[propertyName] };
       }, {})
     );
+  }
+
+  async httpCallAsserter(httpCall: HttpCall) {
+    await this.httpCallAsserterWithPort(httpCall, 3000);
   }
 }

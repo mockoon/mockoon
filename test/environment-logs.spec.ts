@@ -63,4 +63,10 @@ describe('Environment logs', () => {
     await tests.spectron.client.element('.environment-logs-content .nav .nav-item:nth-child(1)').click();
     await tests.spectron.client.getText('.environment-logs-content-request > div:nth-child(2) > div:nth-child(1)').should.eventually.equal('Request URL: /test');
   });
+
+  it('Mock /test log', async () => {
+    await tests.helpers.countRoutes(3);
+    await tests.spectron.client.element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`).click();
+    await tests.helpers.countRoutes(4);
+  })
 });
