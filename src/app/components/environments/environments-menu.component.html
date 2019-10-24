@@ -1,0 +1,49 @@
+<div class="col-2 menu-column--environments menu-column--width d-flex flex-column h-100" MousedragDeadzone>
+  <div>
+    <!-- container needed for flexboxes -->
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link text-primary" (click)="addEnvironment()">
+          <i class="material-icons">add_circle</i> Add environment
+        </a>
+      </li>
+    </ul>
+  </div>
+  <ul #environmentsMenu *ngIf="(environments$ | async) as environments"
+      class="nav flex-column flex-fill menu-list"
+      dragula="environments" [dragulaModel]="environments">
+    <li class="nav-item" *ngFor="let environment of environments">
+      <a *ngIf="(environmentsStatus$ | async) as environmentsStatus"
+          class="nav-link position-relative"
+          [ngClass]="{
+            'active': (activeEnvironment$ | async)?.uuid === environment.uuid,
+            'running': environmentsStatus[environment.uuid].running &&
+              !environmentsStatus[environment.uuid].needRestart,
+            'need-restart': environmentsStatus[environment.uuid].needRestart
+          }"
+          (click)="selectEnvironment(environment.uuid)"
+          (contextmenu)="navigationContextMenu(environment.uuid, $event)">
+        <div *ngIf="(duplicatedEnvironments$ | async) as duplicatedEnvironments" 
+            class="ellipsis">
+          <span class="text-warning" ngbTooltip="Port is shared with another environment">
+            <i *ngIf="duplicatedEnvironments?.has(environment.uuid)"
+              class="material-icons">warning</i>
+          </span>
+          {{environment.name}}
+        </div>
+        <div class="menu-subtitle ellipsis">
+          0.0.0.0:{{environment.port}}/{{environment.endpointPrefix}}
+        </div>
+        <div *ngIf="environment.proxyMode" class="server-icons server-icons-proxy-mode">
+          <i class="material-icons" ngbTooltip="Proxy mode enabled">security</i>
+        </div>
+        <div *ngIf="environment.https" class="server-icons server-icons-https">
+          <i class="material-icons" ngbTooltip="HTTPS enabled">https</i>
+        </div>
+        <div *ngIf="environment.cors" class="server-icons server-icons-cors">
+          <i class="material-icons" ngbTooltip="CORS enabled">shuffle</i>
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>

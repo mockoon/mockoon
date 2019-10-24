@@ -34,6 +34,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { AppComponent } from './app.component';
+import { EnvironmentsMenuModule } from './components/environments/environments-menu.module';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { AppComponent } from './app.component';
     AngularFireModule.initializeApp(Config.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    EnvironmentsMenuModule
   ],
   providers: [
     ToastsService,
