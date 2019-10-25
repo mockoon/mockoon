@@ -453,12 +453,12 @@ export class AppComponent implements OnInit {
   /**
    * Open file browsing dialog
    */
-  public browseFiles() {
-    this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), {}, (file) => {
-      if (file && file[0]) {
-        this.activeRouteResponseForm.get('filePath').setValue(file[0]);
-      }
-    });
+  public async browseFiles() {
+    const dialogResult = await this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), {});
+
+    if (dialogResult.filePaths && dialogResult.filePaths[0]) {
+      this.activeRouteResponseForm.get('filePath').setValue(dialogResult.filePaths[0]);
+    }
   }
 
   /**
