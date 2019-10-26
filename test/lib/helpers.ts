@@ -62,6 +62,11 @@ export class Helpers {
     await this.testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.active.running`, 1000, true);
   }
 
+  async restartEnvironment() {
+    await this.testsInstance.spectron.client.element('.btn i[ngbtooltip="Server needs restart"]').click();
+    await this.testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.active.running`);
+  }
+
   async selectEnvironment(index: number)  {
     await this.testsInstance.spectron.client.element(`.menu-column--environments .menu-list .nav-item:nth-child(${index}) .nav-link`).click();
   }
@@ -122,5 +127,9 @@ export class Helpers {
 
   async httpCallAsserter(httpCall: HttpCall) {
     await this.httpCallAsserterWithPort(httpCall, 3000);
+  }
+
+  async disableRoute() {
+    await this.testsInstance.spectron.client.element('.main-content .btn-enable').click();
   }
 }

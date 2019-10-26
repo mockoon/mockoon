@@ -362,7 +362,7 @@
                         <!-- Enable/disable route -->
                         <div class="input-group">
                           <div class="btn-group btn-group-toggle">
-                            <label class="btn" ngbButtonLabel
+                            <label class="btn btn-enable" ngbButtonLabel
                               [ngClass]="{'btn-danger': activeRouteForm.get('enabled').value == true, 'btn-success': activeRouteForm.get('enabled').value  == false}">
                               <input type="checkbox" ngbButton formControlName="enabled"> 
                               <span *ngIf="activeRouteForm.get('enabled').value == true">Disable</span>
