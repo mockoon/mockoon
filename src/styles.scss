@@ -331,6 +331,13 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
   }
 }
 
+.badge {
+  &.route-disabled {
+    float: right;
+    overflow: auto;
+  }
+}
+
 .header {
   background-color: lighten($gray-900, 3%);
 }

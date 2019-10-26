@@ -203,7 +203,8 @@ export class AppComponent implements OnInit {
     this.activeRouteForm = this.formBuilder.group({
       documentation: [''],
       method: [''],
-      endpoint: ['']
+      endpoint: [''],
+      enabled: [true],
     });
 
     this.activeRouteResponseForm = this.formBuilder.group({
@@ -272,7 +273,8 @@ export class AppComponent implements OnInit {
       this.activeRouteForm.patchValue({
         documentation: activeRoute.documentation,
         method: activeRoute.method,
-        endpoint: activeRoute.endpoint
+        endpoint: activeRoute.endpoint,
+        enabled: activeRoute.enabled
       }, { emitEvent: false });
     });
 

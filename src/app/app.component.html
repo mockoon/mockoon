@@ -177,8 +177,13 @@
                         class="badge badge-default http-method-{{environmentRoute.method}} float-right">{{environmentRoute.method | uppercase}}</span>
                       /{{environmentRoute.endpoint}}
                     </div>
-                    <div class="menu-subtitle ellipsis">
-                      {{environmentRoute.documentation}}
+                    <div class="ellipsis">
+                      <div class="menu-subtitle">
+                        {{environmentRoute.documentation}}
+                      </div>
+                      <div *ngIf="environmentRoute.enabled==false">
+                        <span class="badge badge-danger route-disabled">DISABLED</span>
+                      </div>
                     </div>
                   </a>
                 </li>
@@ -351,10 +356,21 @@
                       </div>
                     </div>
 
-                    <!-- Documentation -->
                     <div class="row mt-2">
                       <div class="col">
+
+                        <!-- Enable/disable route -->
                         <div class="input-group">
+                          <div class="btn-group btn-group-toggle">
+                            <label class="btn" ngbButtonLabel
+                              [ngClass]="{'btn-danger': activeRouteForm.get('enabled').value == true, 'btn-success': activeRouteForm.get('enabled').value  == false}">
+                              <input type="checkbox" ngbButton formControlName="enabled"> 
+                              <span *ngIf="activeRouteForm.get('enabled').value == true">Disable</span>
+                              <span *ngIf="activeRouteForm.get('enabled').value  == false">Enable</span>
+                            </label>
+                          </div>
+
+                          <!-- Documentation -->
                           <input type="text" class="form-control" placeholder="Add notes or documentation" ValidPath
                             formControlName="documentation">
                         </div>

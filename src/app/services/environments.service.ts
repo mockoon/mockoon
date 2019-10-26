@@ -48,7 +48,8 @@ export class EnvironmentsService {
     documentation: '',
     method: 'get',
     endpoint: '',
-    responses: []
+    responses: [],
+    enabled: true
   };
 
   private routeResponseSchema: RouteResponse = {
@@ -692,6 +693,7 @@ export class EnvironmentsService {
         method: log.method.toLowerCase() as Method,
         endpoint: log.url.slice(1), // Remove the initial slash '/'
         responses: [response],
+        active: true
       };
       this.store.update(addRouteAction(newRoute));
 

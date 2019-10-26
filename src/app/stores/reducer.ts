@@ -449,7 +449,7 @@ export function environmentReducer(
     }
 
     case ActionTypes.UPDATE_ROUTE: {
-      const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method'];
+      const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method', 'enabled'];
       const activeEnvironmentStatus = state.environmentsStatus[state.activeEnvironmentUUID];
       let needRestart: boolean;
 

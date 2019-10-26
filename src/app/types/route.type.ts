@@ -258,6 +258,7 @@ export type Route = {
   method: Method;
   endpoint: string;
   responses: RouteResponse[];
+  enabled: boolean;
 };
 
 export type Header = { key: string, value: string };

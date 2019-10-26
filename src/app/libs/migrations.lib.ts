@@ -151,5 +151,17 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
         });
       });
     }
+  },
+
+  /**
+   * Create a "enabled" param
+   */
+  {
+    id: 8,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.enabled = true;
+      });
+    }
   }
 ];
