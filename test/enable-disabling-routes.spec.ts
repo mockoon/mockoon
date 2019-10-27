@@ -31,12 +31,14 @@ describe('Enable/disable routes', () => {
   });
 
   it('Call untouched route', async () => {
+    await tests.helpers.selectRoute(2);
+    await tests.spectron.client.waitForExist('.menu-column--routes .menu-list .nav-item .nav-link.active .route-disabled', null, true);
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall[0], 3000);
   });
 
   it('Disabling route /answer', async () => {
-    await tests.helpers.selectRoute(2);
     await tests.helpers.disableRoute();
+    await tests.spectron.client.waitForExist('.menu-column--routes .menu-list .nav-item .nav-link.active .route-disabled');
     await tests.helpers.restartEnvironment();
   });
 
@@ -44,8 +46,9 @@ describe('Enable/disable routes', () => {
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall[1], 3000);
   });
 
-  it('Renable route', async () => {
+  it('Re-enable route', async () => {
     await tests.helpers.disableRoute();
+    await tests.spectron.client.waitForExist('.menu-column--routes .menu-list .nav-item .nav-link.active .route-disabled', null, true);
     await tests.helpers.restartEnvironment();
   });
 
