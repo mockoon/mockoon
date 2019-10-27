@@ -123,4 +123,18 @@ export class Helpers {
   async httpCallAsserter(httpCall: HttpCall) {
     await this.httpCallAsserterWithPort(httpCall, 3000);
   }
+
+  async openSettingsModal() {
+    await this.testsInstance.spectron.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
+    await this.testsInstance.spectron.client.waitForExist(`.modal-dialog`);
+  }
+
+  async closeSettingsModal() {
+    await this.testsInstance.spectron.client.element(`.modal-dialog .modal-footer button`).click();
+  }
+
+  async requestLogBodyContains(str: string) {
+    await this.testsInstance.spectron.client.element(`div.environment-logs-content-title:nth-child(9)`).click();
+    await this.testsInstance.spectron.client.element(`div.environment-logs-content-item.pre`).getHTML().should.eventually.contain(str);
+  }
 }

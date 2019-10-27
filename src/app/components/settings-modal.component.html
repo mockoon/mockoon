@@ -8,6 +8,14 @@
       <label class="custom-control-label" for="analytics">I agree to share anonymous usage data</label>
     </div>
     <p class="text-muted"><small>We are using a basic Google Analytics setup, none of your data/content is kept anywhere and it helps us improve Mockoon :)</small></p>
+
+    <div>
+      <label for="log-body-size">Log body size:</label>
+      <input type="number" class="form-control col-4" id="log-body-size"
+          ngbTooltip="Log's body size" min="1"
+          placeholder="10000 (default)" digitOnly 
+          [ngModel]="(settings$ | async)?.logSizeLimit" (ngModelChange)="settingsUpdated($event, 'logSizeLimit')">
+    </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="close()">Close</button>
