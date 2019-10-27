@@ -693,7 +693,7 @@ export class EnvironmentsService {
         method: log.method.toLowerCase() as Method,
         endpoint: log.url.slice(1), // Remove the initial slash '/'
         responses: [response],
-        active: true
+        enabled: true
       };
       this.store.update(addRouteAction(newRoute));
 
