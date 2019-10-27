@@ -24,7 +24,7 @@ describe('Proxy', () => {
     await tests.helpers.startEnvironment();
   });
 
-  it ('Call /anwser', async () => {
+  it('Call /anwser', async () => {
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
   });
 
@@ -40,8 +40,7 @@ describe('Proxy', () => {
 
   it('Click on mock button ', async () => {
     await tests.spectron.client.element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`).click();
-    await tests.helpers.stopEnvironment();
-    await tests.helpers.startEnvironment();
+    await tests.helpers.restartEnvironment();
   });
 
   it('Check route added', async () => {
