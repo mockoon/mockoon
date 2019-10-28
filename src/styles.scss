@@ -68,6 +68,7 @@
 }
 .form-control {
   letter-spacing: 0.02rem;
+  background-clip: border-box;
 
   &[readonly] {
     color: $text-muted;
