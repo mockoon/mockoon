@@ -2,7 +2,7 @@
   <ng-container formArrayName="rules">
     <div class="row mt-2" *ngFor="let rule of form.get('rules')['controls']; index as ruleIndex" [formGroupName]="ruleIndex">
       <div class="col form-inline">
-        <select class="custom-select col-3" formControlName="target" #targetFormControl>
+        <select class="custom-select col-3 mr-1" formControlName="target" #targetFormControl>
           <option *ngFor="let responseRuleTarget of responseRuleTargets" [value]="responseRuleTarget.code"
             [selected]="targetFormControl.value === responseRuleTarget.code">{{responseRuleTarget.text}}</option>
         </select>
