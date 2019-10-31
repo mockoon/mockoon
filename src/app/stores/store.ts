@@ -189,10 +189,10 @@ export class Store {
       testSelectedPort = activeEnvironment.port;
     }
     for (let i = 0; i < 10; i++) {
-      testSelectedPort++;
       if (!usedPorts.includes(testSelectedPort)) {
         return testSelectedPort;
       }
+      testSelectedPort++;
     }
 
     const min = Math.ceil(1024);

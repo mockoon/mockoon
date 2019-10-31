@@ -132,4 +132,9 @@ export class Helpers {
   async httpCallAsserter(httpCall: HttpCall) {
     await this.httpCallAsserterWithPort(httpCall, 3000);
   }
+
+  async assertActiveEnvironmentPort(expectedPort: number) {
+    let val: String = await this.testsInstance.spectron.client.element('input[formcontrolname="port"]').getAttribute("value");
+    await val.should.be.equals(expectedPort.toString());
+  }
 }
