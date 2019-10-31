@@ -154,6 +154,8 @@ export class EnvironmentsService {
 
       newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as Environment;
 
+      newEnvironment.port = this.store.getNewEnvironmentPort();
+
       this.store.update(addEnvironmentAction(newEnvironment));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
@@ -331,7 +333,7 @@ export class EnvironmentsService {
       ...this.environmentSchema,
       uuid: uuid(),
       name: 'New environment',
-      port: 3000,
+      port: this.store.getNewEnvironmentPort(),
       routes: [
         {
           ...this.routeSchema,
