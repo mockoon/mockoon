@@ -134,7 +134,7 @@ export class Helpers {
   }
 
   async assertActiveEnvironmentPort(expectedPort: number) {
-    let val: String = await this.testsInstance.spectron.client.element('input[formcontrolname="port"]').getAttribute("value");
+    const val: String = await this.testsInstance.spectron.client.element('input[formcontrolname="port"]').getAttribute('value');
     await val.should.be.equals(expectedPort.toString());
   }
 }
