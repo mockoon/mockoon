@@ -346,6 +346,13 @@ export function environmentReducer(
 
     case ActionTypes.REMOVE_ROUTE: {
       const activeEnvironment = state.environments.find(environment => environment.uuid === state.activeEnvironmentUUID);
+      const activeEnvironmentStatus = state.environmentsStatus[state.activeEnvironmentUUID];
+
+      let needRestart: boolean;
+      if (activeEnvironmentStatus.running) {
+        needRestart = true;
+      }
+
       const newRoutes = activeEnvironment.routes.filter(route => route.uuid !== action.routeUUID);
 
       const newEnvironments = state.environments.map(environment => {
@@ -359,28 +366,24 @@ export function environmentReducer(
         return environment;
       });
 
+      newState = {
+        ...state,
+        environments: newEnvironments,
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          [state.activeEnvironmentUUID]: { ...activeEnvironmentStatus, needRestart }
+        }
+      };
+
       if (state.activeRouteUUID === action.routeUUID) {
         if (newRoutes.length) {
-          newState = {
-            ...state,
-            activeRouteUUID: newRoutes[0].uuid,
-            activeRouteResponseUUID: newRoutes[0].responses.length ? newRoutes[0].responses[0].uuid : null,
-            environments: newEnvironments
-          };
+          newState.activeRouteUUID = newRoutes[0].uuid;
+          newState.activeRouteResponseUUID = newRoutes[0].responses.length ? newRoutes[0].responses[0].uuid : null;
         } else {
-          newState = {
-            ...state,
-            activeRouteUUID: null,
-            activeRouteResponseUUID: null,
-            activeView: 'ENV_SETTINGS',
-            environments: newEnvironments
-          };
+          newState.activeRouteUUID = null;
+          newState.activeRouteResponseUUID = null;
+          newState.activeView = 'ENV_SETTINGS';
         }
-      } else {
-        newState = {
-          ...state,
-          environments: newEnvironments
-        };
       }
       break;
     }
@@ -422,6 +425,13 @@ export function environmentReducer(
     case ActionTypes.ADD_ROUTE: {
       // only add a route if there is at least one environment
       if (state.environments.length > 0) {
+        const activeEnvironmentStatus = state.environmentsStatus[state.activeEnvironmentUUID];
+
+        let needRestart: boolean;
+        if (activeEnvironmentStatus.running) {
+          needRestart = true;
+        }
+
         const newRoute = action.route;
 
         newState = {
@@ -439,7 +449,11 @@ export function environmentReducer(
             }
 
             return environment;
-          })
+          }),
+          environmentsStatus: {
+            ...state.environmentsStatus,
+            [state.activeEnvironmentUUID]: { ...activeEnvironmentStatus, needRestart }
+          }
         };
         break;
       }

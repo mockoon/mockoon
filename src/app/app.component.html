@@ -18,9 +18,9 @@
 
 <div class="container-fluid h-100">
   <div class="d-flex flex-column h-100">
-    <div class="row flex-fill">
+    <div class="row flex-fill mh0">
       <!-- Environments menu -->
-      <div class="col-2 menu-column--environments menu-column--width d-flex flex-column" MousedragDeadzone>
+      <div class="col-2 menu-column--environments menu-column--width d-flex flex-column h-100" MousedragDeadzone>
         <div>
           <!-- container needed for flexboxes -->
           <ul class="nav flex-column">
@@ -62,7 +62,7 @@
         </ng-container>
       </div>
 
-      <div class="col d-flex flex-column">
+      <div class="col d-flex flex-column h-100">
         <!-- First row: env name +start / env port + prefix -->
         <div class="header">
           <div class="row">
@@ -146,10 +146,10 @@
           </div>
         </div>
 
-        <div class="row flex-fill">
+        <div class="row flex-fill mh0">
           <!-- Routes menu (only display if there is at least one environment) -->
           <div *ngIf="(environments$ | async)?.length"
-            class="col-2 menu-column--routes menu-column--width d-flex flex-column" MousedragDeadzone>
+            class="col-2 menu-column--routes menu-column--width d-flex flex-column h-100" MousedragDeadzone>
             <div>
               <!-- container needed for flexboxes -->
               <ul class="nav flex-column">
@@ -191,7 +191,7 @@
             </ng-container>
           </div>
 
-          <div *ngIf="activeEnvironment$ | async as activeEnvironment" class="col d-flex flex-column main-content">
+          <div *ngIf="activeEnvironment$ | async as activeEnvironment" class="col d-flex flex-column main-content h-100">
 
             <ng-container *ngIf="activeView$ | async as activeView">
 
@@ -291,8 +291,8 @@
                     </div>
                   </div>
 
-                  <div class="row flex-fill">
-                    <div class="col d-flex flex-column">
+                  <div class="row flex-fill mh0">
+                    <div class="col d-flex flex-column h-100">
                       <div class="title-separator has-icon">
                         <div class="title-separator-icon"><i class="material-icons text-purple">featured_play_list</i>
                         </div>
@@ -313,8 +313,8 @@
                 </div>
 
                 <!-- ENVIRONMENT LOGS VIEW -->
-                <div *ngIf="activeView === 'ENV_LOGS'" class="row h-100">
-                  <div class="col">
+                <div *ngIf="activeView === 'ENV_LOGS'" class="row flex-fill mh0">
+                  <div class="col h-100">
                     <app-environment-logs [activeEnvironmentUUID$]="activeEnvironmentUUID$"
                       [environmentsLogs$]="environmentsLogs$"></app-environment-logs>
                   </div>
@@ -559,8 +559,8 @@
                         </div>
                       </div>
 
-                      <div class="row flex-fill">
-                        <div class="col scroll-content" #routeHeadersContainer>
+                      <div class="row flex-fill mh0">
+                        <div class="col scroll-content h-100" #routeHeadersContainer>
                           <app-headers-list [data$]="activeRouteResponse$" type="routeResponseHeaders"
                             (headerAdded)="scrollToBottom(routeHeadersContainer)"></app-headers-list>
                         </div>
@@ -569,8 +569,8 @@
 
                     <!-- RULES tab -->
                     <ng-container *ngIf="(activeTab$ | async) === 'RULES'">
-                      <div class="row flex-fill">
-                        <div class="col scroll-content" #routeResponseRulesContainer>
+                      <div class="row flex-fill mh0">
+                        <div class="col scroll-content h-100" #routeResponseRulesContainer>
                           <app-route-response-rules [data$]="activeRouteResponse$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
                         </div>
                       </div>

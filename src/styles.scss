@@ -68,6 +68,7 @@
 }
 .form-control {
   letter-spacing: 0.02rem;
+  background-clip: border-box;
 
   &[readonly] {
     color: $text-muted;
@@ -169,6 +170,10 @@ label {
 // fix bootstrap flexfill which is incompatible with ace editor
 .flex-fill {
   flex: 1 !important;
+}
+
+.mh0 {
+  min-height: 0;
 }
 
 // add margin to the split dropdown caret, when there is text
