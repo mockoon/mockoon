@@ -11,11 +11,11 @@ Please note that Mockoon promise is to be simple, easy to use, and fast. So not 
 
 ### Find an issue to work on
 
-- Check for **opened unassigned** issues or open a new one (after searching for closed issues). 
+- Check for **opened unassigned** issues or open a new one (after searching for closed issues).
 - Comment on the issue and request to work on it.
 - After discussing the implementation, the issue will be assigned to you by a maintainer. As a rule, the assignee is the person working on the issue.
 
-Please respect this workflow to ensure that: 
+Please respect this workflow to ensure that:
 - Your work is in line with Mockoon direction.
 - It hasn't been already done/rejected.
 - You are the only one working on an issue.
@@ -31,7 +31,7 @@ You will get hot reload on both Angular and Electron applications.
 ### Work on your feature or bugfix
 
 - Start your `feature` or `fix` from `master`
-- Cover it with spectron tests. You will find them in the `test` folder. Please try to cover at least the easiest test cases of your feature. 
+- Cover it with spectron tests. You will find them in the `test` folder. Please try to cover at least the easiest test cases of your feature.
 - Preferably squash your commits, except when it makes sense to keep them separate (one refactoring + feature development)
 - Do not forget to add "Closes #xx" in one of the commit messages or in the pull request description (where xx is the GitHub issue number)
 
@@ -47,8 +47,8 @@ When running the tests locally, you will first need to run `npm run build:dev` i
 
 ### Open a pull request
 
-Open a pull request to be merge in the `master` branch. All branches should start from `master` and must be merged into `master`. 
-Ask maintainers to review the code and be prepared to rework your code if it does not match the style or do not follow the way it's usually done (typing, reducer, etc). 
+Open a pull request to be merge in the `master` branch. All branches should start from `master` and must be merged into `master`.
+Ask maintainers to review the code and be prepared to rework your code if it does not match the style or do not follow the way it's usually done (typing, reducer, etc).
 
 ---
 
@@ -61,7 +61,7 @@ Ask maintainers to review the code and be prepared to rework your code if it doe
 
 After this, binaries build is now automated through GitHub Actions. It basically run `npm run build:prod` and package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing (and notarization).
 
-Next steps are: 
+Next steps are:
 - Create a release in GitHub 'mockoon' repository. (Link to the created tag `vx.x.x`)
 - Download binaries from the GitHub Action and add them to the new GitHub release.
 - Publish the release
@@ -76,4 +76,5 @@ Only maintainers (@255kb) are entitled to build and package the application with
 
 - A pull request must be created to update Homebrew cask repository.
 - Binary must be uploaded to the Snap store manually.
+- Arch Linux repository must be updated.
 - Chocolatey package should be automatically updated.
