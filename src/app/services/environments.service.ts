@@ -253,6 +253,19 @@ export class EnvironmentsService {
   }
 
   /**
+   * Enable and disable a route
+   */
+  public toggleRoute(routeUUID?: string) {
+    const selectedRoute = this.store.getActiveEnvironment().routes.find(route => route.uuid === routeUUID);
+    if (selectedRoute) {
+      this.store.update(updateRouteAction({
+        uuid: selectedRoute.uuid,
+        enabled: !selectedRoute.enabled
+      }));
+    }
+  }
+
+  /**
    * Set active tab
    */
   public setActiveTab(activeTab: TabsNameType) {
