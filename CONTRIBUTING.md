@@ -57,21 +57,23 @@ Ask maintainers to review the code and be prepared to rework your code if it doe
 ### Build and package the application for production
 
 - Increment the version in package.json files. Use `npm run setversion x.x.x`.
-- Run `npm run build:prod`.
-- Package the application for different platforms with `npm run package:win|mac|linux`.
-- Create a release in GitHub 'mockoon' repository. (Respect release tag format `vx.x.x`)
-- Add binaries to the new GitHub release.
+- Create a new tag (Respect release tag format `vx.x.x`)
 
-You will get a packaged application in `./packages` folder.
-Mac version can only be built and signed on Mac OS.
+After this, binaries build is now automated through GitHub Actions. It basically run `npm run build:prod` and package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing (and notarization).
 
-Note that Windows and Mac OS versions need to be signed when packaged. This is the responsibility of maintainers (see below).
+Next steps are: 
+- Create a release in GitHub 'mockoon' repository. (Link to the created tag `vx.x.x`)
+- Download binaries from the GitHub Action and add them to the new GitHub release.
+- Publish the release
+
+Note that Windows and Mac OS versions need to be signed (and notarized) when packaged. This is the responsibility of @255kb.
 
 /!\ Auto update depends on GitHub release proper taging (`vx.x.x`) and binaries correct naming (as set in `package.json` and `update.service.ts`). Do not change them.
 
 ### Distribute the application
 
-Only maintainers are entitled to build and package the application with Windows code signing and Mac OS certificates.
+Only maintainers (@255kb) are entitled to build and package the application with Windows code signing and macOS certificates.
 
-Do not forget to update Homebrew cask repository.
-Chocolatey package should be automatically updated.
+- A pull request must be created to update Homebrew cask repository.
+- Binary must be uploaded to the Snap store manually.
+- Chocolatey package should be automatically updated.

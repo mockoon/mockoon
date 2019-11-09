@@ -19,10 +19,10 @@ import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
-import { CORSHeaders, Header, Route, RouteProperties, RouteResponse, RouteResponseProperties, Method } from 'src/app/types/route.type';
+import { CORSHeaders, Header, Method, Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
 import { dragulaNamespaces } from 'src/app/types/ui.type';
 import * as uuid from 'uuid/v1';
-import { RouteResponseRulesComponent } from '../components/route-response-rules.component';
+
 const appVersion = require('../../../package.json').version;
 
 @Injectable()
