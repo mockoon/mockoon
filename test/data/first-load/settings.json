@@ -1,5 +1,7 @@
 {
   "welcomeShown": false,
   "analytics": true,
-  "lastMigration": 8
+  "bannerDismissed": [],
+  "lastMigration": 8,
+  "logSizeLimit": 10000
 }
