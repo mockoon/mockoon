@@ -44,6 +44,14 @@ export class Helpers {
       .should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
   }
 
+  async openEnvironmentMenu() {
+    await this.testsInstance.spectron.client.element('.open-environment-menu').click();
+
+  }
+  async closeEnvironmentMenu() {
+    await this.testsInstance.spectron.client.element('.close-environment-menu').click();
+  }
+
   async contextMenuClickAndConfirm(targetMenuItemSelector: string, contextMenuItemIndex: number) {
     await this.testsInstance.spectron.client.element(targetMenuItemSelector).rightClick();
 

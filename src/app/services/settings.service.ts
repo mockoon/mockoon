@@ -10,6 +10,7 @@ export type Settings = {
   analytics: boolean;
   lastMigration: number;
   bannerDismissed: string[];
+  environmentsMenuState: boolean;
 };
 
 export type SettingsProperties = { [T in keyof Settings]?: Settings[T] };
@@ -20,7 +21,8 @@ export class SettingsService {
     welcomeShown: false,
     analytics: true,
     lastMigration: 0,
-    bannerDismissed: []
+    bannerDismissed: [],
+    environmentsMenuState: true
   };
   private storageKey = 'settings';
 

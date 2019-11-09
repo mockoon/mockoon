@@ -5,6 +5,7 @@ import { EnvironmentLogsTabsNameType, EnvironmentStatusProperties, TabsNameType,
 import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
 import { Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
 import { EnvironmentLog, EnvironmentLogResponse } from 'src/app/types/server.type';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 export const enum ActionTypes {
   SET_ACTIVE_TAB,
@@ -35,7 +36,8 @@ export const enum ActionTypes {
   ADD_TOAST,
   REMOVE_TOAST,
   SET_USER_ID,
-  UPDATE_SETTINGS
+  UPDATE_SETTINGS,
+  UPDATE_ENVIRONMENTS_MENU_STATE
 }
 
 /**
@@ -388,7 +390,6 @@ export function updateSettingsAction(properties: SettingsProperties) {
     properties
   };
 }
-
 
 export type Actions =
   ReturnType<typeof setActiveTabAction> |

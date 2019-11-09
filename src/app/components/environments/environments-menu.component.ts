@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
-import { EnvironmentsService } from 'src/app/services/environments.service';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { DragulaService } from 'ng2-dragula';
-import { dragulaNamespaces as DraggableContainerNames, Scroll } from 'src/app/types/ui.type.js';
-import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { Observable } from 'rxjs';
+import { EnvironmentsService } from 'src/app/services/environments.service';
+import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
+import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentsStatuses, Store } from 'src/app/stores/store';
-import { Environments, Environment } from 'src/app/types/environment.type';
-import { EventsService, ContextMenuEvent } from 'src/app/services/events.service';
+import { Environment, Environments } from 'src/app/types/environment.type';
+import { dragulaNamespaces as DraggableContainerNames, Scroll } from 'src/app/types/ui.type.js';
 import { EnvironmentsContextMenuItems } from './environments-context-menu-items';
 
 @Component({
@@ -23,20 +23,23 @@ export class EnvironmentsMenuComponent implements OnInit {
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedEnvironments$: Observable<Set<string>>;
 
+  public menuOpen: boolean;
+
   constructor(
     private environmentsService: EnvironmentsService,
     private dragulaService: DragulaService,
     private store: Store,
-    private eventsService: EventsService,
-  ) { }
+    private eventsService: EventsService
+  ) {  }
 
   ngOnInit() {
     this.initDragMonitoring();
 
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
+    this.duplicatedEnvironments$ = this.store.select('duplicatedEnvironments');
     this.environments$ = this.store.select('environments');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
-    this.duplicatedEnvironments$ = this.store.select('duplicatedEnvironments');
+    this.menuOpen = this.store.get('environmentsMenuState');
   }
 
   /**
@@ -72,6 +75,11 @@ export class EnvironmentsMenuComponent implements OnInit {
     }
   }
 
+  public toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+    this.environmentsService.updateEnvironmentsMenuState(this.menuOpen);
+  }
+
   private initDragMonitoring() {
     this.dragulaService.dropModel().subscribe(({name, sourceIndex, targetIndex}) => {
       this.environmentsService.moveMenuItem(
@@ -82,11 +90,6 @@ export class EnvironmentsMenuComponent implements OnInit {
     });
   }
 
-  /**
-  * Scroll to bottom of an element
-  *
-  * @param element
-  */
  private scrollToBottom(element: Element) {
    setTimeout(() => element.scrollTop = element.scrollHeight);
  }
