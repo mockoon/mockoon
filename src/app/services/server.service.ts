@@ -152,7 +152,7 @@ export class ServerService {
       const duplicatedRoutes = this.store.get('duplicatedRoutes')[environment.uuid];
 
       // only launch non duplicated routes
-      if ((!duplicatedRoutes || !duplicatedRoutes.has(declaredRoute.uuid)) && declaredRoute.enabled !== false) {
+      if ((!duplicatedRoutes || !duplicatedRoutes.has(declaredRoute.uuid)) && declaredRoute.enabled) {
         try {
           // create route
           server[declaredRoute.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + declaredRoute.endpoint.replace(/ /g, '%20'), (req, res) => {
