@@ -164,7 +164,7 @@
               <ul class="nav flex-column menu-list" #routesMenu dragula="routes"
                 [dragulaModel]="activeEnvironment.routes">
                 <li class="nav-item" *ngFor="let environmentRoute of activeEnvironment.routes">
-                  <a class="nav-link" [ngClass]="{'active': (activeRoute$ | async)?.uuid === environmentRoute.uuid}"
+                  <a class="nav-link" [ngClass]="{'active': (activeRoute$ | async)?.uuid === environmentRoute.uuid, 'route-disabled': !environmentRoute.enabled}"
                     (click)="selectRoute(environmentRoute.uuid)"
                     (contextmenu)="navigationContextMenu('route', environmentRoute.uuid, $event)">
                     <div class="ellipsis">

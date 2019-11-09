@@ -44,6 +44,12 @@ export class Helpers {
       .should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
   }
 
+  async contextMenuClick(targetMenuItemSelector: string, contextMenuItemIndex: number) {
+    await this.testsInstance.spectron.client.element(targetMenuItemSelector).rightClick();
+
+    await this.testsInstance.spectron.client.element(`.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`).click();
+  }
+
   async contextMenuClickAndConfirm(targetMenuItemSelector: string, contextMenuItemIndex: number) {
     await this.testsInstance.spectron.client.element(targetMenuItemSelector).rightClick();
 
@@ -145,5 +151,9 @@ export class Helpers {
   async requestLogBodyContains(str: string) {
     await this.testsInstance.spectron.client.element(`div.environment-logs-content-title:nth-child(9)`).click();
     await this.testsInstance.spectron.client.element(`div.environment-logs-content-item.pre`).getHTML().should.eventually.contain(str);
+  }
+
+  async disableRoute() {
+    await this.contextMenuClick('.menu-column--routes .menu-list .nav-item .nav-link.active', 4);
   }
 }
