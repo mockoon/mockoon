@@ -1,0 +1,19 @@
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+
+.log-body {
+    label {
+        margin-bottom: 0;
+    }
+
+    p {
+        margin-bottom: 10px;
+    }
+}
