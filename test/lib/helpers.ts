@@ -44,6 +44,12 @@ export class Helpers {
       .should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(expected);
   }
 
+  async contextMenuClick(targetMenuItemSelector: string, contextMenuItemIndex: number) {
+    await this.testsInstance.spectron.client.element(targetMenuItemSelector).rightClick();
+
+    await this.testsInstance.spectron.client.element(`.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`).click();
+  }
+
   async contextMenuClickAndConfirm(targetMenuItemSelector: string, contextMenuItemIndex: number) {
     await this.testsInstance.spectron.client.element(targetMenuItemSelector).rightClick();
 
@@ -134,6 +140,6 @@ export class Helpers {
   }
 
   async disableRoute() {
-    await this.testsInstance.spectron.client.element('.main-content .btn-enable').click();
+    await this.contextMenuClick('.menu-column--routes .menu-list .nav-item .nav-link.active', 4);
   }
 }
