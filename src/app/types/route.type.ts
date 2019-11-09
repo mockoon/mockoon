@@ -69,7 +69,7 @@ export const statusCodes = [
   { code: 507, text: 'Insufficient Storage' },
   { code: 508, text: 'Loop Detected' },
   { code: 510, text: 'Not Extended' },
-  { code: 511, text: 'Network Authentication Required}' }
+  { code: 511, text: 'Network Authentication Required' }
 ];
 
 export const headerNames = [

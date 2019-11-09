@@ -90,44 +90,52 @@ function createWindow() {
     mainWindow = null
   });
 
+  var menuApplication = {
+    label: 'Application',
+    submenu: [
+      {
+        label: 'Mockoon website', click: function () {
+          shell.openExternal('https://mockoon.com');
+        }
+      },
+      {
+        label: 'Tutorials', click: function () {
+          shell.openExternal('https://mockoon.com/tutorials');
+        }
+      },
+      {
+        label: 'Community', click: function () {
+          shell.openExternal('https://spectrum.chat/mockoon');
+        }
+      },
+      {
+        label: 'Send feedback', click: function () {
+          shell.openExternal('https://github.com/mockoon/mockoon/issues');
+        }
+      },
+      { type: 'separator' },
+      {
+        label: 'Settings', accelerator: 'CmdOrCtrl+,', click: function () {
+          mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
+        }
+      },
+      { type: 'separator' }
+    ]
+  };
+
+  if (process.platform === 'darwin') {
+    menuApplication.submenu.push(
+      { label: 'Hide', role: 'hide' },
+      { role: 'hideOthers' },
+      { type: 'separator' }
+    );
+  }
+
+  menuApplication.submenu.push({ label: 'Quit', role: 'quit' });
+
   // create prod menu
   var menu = [
-    {
-      label: 'Application',
-      submenu: [
-        {
-          label: 'Mockoon website', click: function () {
-            shell.openExternal('https://mockoon.com');
-          }
-        },
-        {
-          label: 'Tutorials', click: function () {
-            shell.openExternal('https://mockoon.com/tutorials');
-          }
-        },
-        {
-          label: 'Community', click: function () {
-            shell.openExternal('https://spectrum.chat/mockoon');
-          }
-        },
-        {
-          label: 'Send feedback', click: function () {
-            shell.openExternal('https://github.com/mockoon/mockoon/issues');
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Settings', accelerator: 'CmdOrCtrl+,', click: function () {
-            mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
-          }
-        },
-        { type: 'separator' },
-        { label: 'Hide', role: 'hide' },
-        { role: 'hideOthers' },
-        { type: 'separator' },
-        { label: 'Quit', role: 'quit' }
-      ]
-    }
+    menuApplication
   ];
 
   // add edit menu for mac because needed for copy paste

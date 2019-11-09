@@ -62,6 +62,15 @@ export class Helpers {
     await this.testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.active.running`, 1000, true);
   }
 
+  async restartEnvironment() {
+    await this.testsInstance.spectron.client.element('.btn i[ngbtooltip="Server needs restart"]').click();
+    await this.testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.active.running`);
+  }
+
+  async checkEnvironmentNeedsRestart() {
+    await this.testsInstance.spectron.client.waitForExist(`.menu-column--environments .menu-list .nav-item .nav-link.active.need-restart`);
+  }
+
   async selectEnvironment(index: number)  {
     await this.testsInstance.spectron.client.element(`.menu-column--environments .menu-list .nav-item:nth-child(${index}) .nav-link`).click();
   }
