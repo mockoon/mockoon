@@ -463,9 +463,10 @@ export function environmentReducer(
     }
 
     case ActionTypes.UPDATE_ROUTE: {
-      const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method'];
+      const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method', 'enabled'];
       const activeEnvironmentStatus = state.environmentsStatus[state.activeEnvironmentUUID];
       let needRestart: boolean;
+      const specifiedUUID = action.properties.uuid;
 
       if (activeEnvironmentStatus.needRestart) {
         needRestart = true;
@@ -480,7 +481,14 @@ export function environmentReducer(
             return {
               ...environment,
               routes: environment.routes.map(route => {
-                if (route.uuid === state.activeRouteUUID) {
+                if (specifiedUUID) {
+                  if (route.uuid === specifiedUUID) {
+                    return {
+                      ...route,
+                      ...action.properties,
+                    };
+                  }
+                } else if (route.uuid === state.activeRouteUUID) {
                   return {
                     ...route,
                     ...action.properties,

@@ -48,7 +48,8 @@ export class EnvironmentsService {
     documentation: '',
     method: 'get',
     endpoint: '',
-    responses: []
+    responses: [],
+    enabled: true
   };
 
   private routeResponseSchema: RouteResponse = {
@@ -251,6 +252,19 @@ export class EnvironmentsService {
     this.store.update(removeRouteResponseAction());
 
     this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE_RESPONSE);
+  }
+
+  /**
+   * Enable and disable a route
+   */
+  public toggleRoute(routeUUID?: string) {
+    const selectedRoute = this.store.getActiveEnvironment().routes.find(route => route.uuid === routeUUID);
+    if (selectedRoute) {
+      this.store.update(updateRouteAction({
+        uuid: selectedRoute.uuid,
+        enabled: !selectedRoute.enabled
+      }));
+    }
   }
 
   /**
@@ -694,6 +708,7 @@ export class EnvironmentsService {
         method: log.method.toLowerCase() as Method,
         endpoint: log.url.slice(1), // Remove the initial slash '/'
         responses: [response],
+        enabled: true
       };
       this.store.update(addRouteAction(newRoute));
 

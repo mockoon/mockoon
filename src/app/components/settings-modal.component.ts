@@ -7,7 +7,8 @@ import { Store } from 'src/app/stores/store';
 
 @Component({
   selector: 'app-settings-modal',
-  templateUrl: './settings-modal.component.html'
+  templateUrl: './settings-modal.component.html',
+  styleUrls: ['settings-modal.component.scss']
 })
 export class SettingsModalComponent implements OnInit, AfterViewInit {
   @ViewChild('modal', { static: false }) modal: ElementRef;
