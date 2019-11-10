@@ -173,41 +173,20 @@ export class Store {
   }
 
   /**
-   * Generate a unused port to a new environment
-   */
-  public getNewEnvironmentPort(): number {
-    const usedPorts: number[] = [];
-    this.store$.value.environments.forEach((environment) => {
-      usedPorts.push(environment.port);
-    });
-
-    const activeEnvironment: Environment = this.getActiveEnvironment();
-    let testSelectedPort: number;
-    if (activeEnvironment == null) {
-      testSelectedPort = 3000;
-    } else {
-      testSelectedPort = activeEnvironment.port;
-    }
-    for (let i = 0; i < 10; i++) {
-      if (!usedPorts.includes(testSelectedPort)) {
-        return testSelectedPort;
-      }
-      testSelectedPort++;
-    }
-
-    const min = Math.ceil(1024);
-    const max = Math.floor(65535);
-    do {
-      testSelectedPort = Math.floor(Math.random() * (max - min)) + min;
-    } while (usedPorts.includes(testSelectedPort));
-
-    return testSelectedPort;
-  }
-
-  /**
    * Update the store using the reducer
    */
   public update(action: Actions) {
     this.store$.next(environmentReducer(this.store$.value, action));
+  }
+
+  /**
+   * Get a list with all environment ports
+   */
+  public getEnvironmentsPorts(): number[] {
+    return this.store$.value.environments.reduce((list, env) => {
+      list.push(env.port);
+
+      return list;
+    }, []);
   }
 }

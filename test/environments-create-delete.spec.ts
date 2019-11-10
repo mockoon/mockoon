@@ -32,12 +32,10 @@ describe('Create and delete environments', () => {
   });
 
   it('Add ten environments ever clicking in the first', async () => {
-    let port = 3000;
-    for (let i = 0; i < 10; i++) {
+    for (let port = 3000; port < 3010; port++) {
       await tests.helpers.addEnvironment();
       await tests.helpers.assertActiveEnvironmentPort(port);
       await tests.helpers.selectEnvironment(1);
-      port++;
     }
   });
 });
