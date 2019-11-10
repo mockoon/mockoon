@@ -139,6 +139,11 @@ export class Helpers {
     await this.httpCallAsserterWithPort(httpCall, 3000);
   }
 
+  async assertActiveEnvironmentPort(expectedPort: number) {
+    const port: String = await this.testsInstance.spectron.client.element('input[formcontrolname="port"]').getAttribute('value');
+    await port.should.be.equals(expectedPort.toString());
+  }
+
   async openSettingsModal() {
     await this.testsInstance.spectron.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
     await this.testsInstance.spectron.client.waitForExist(`.modal-dialog`);

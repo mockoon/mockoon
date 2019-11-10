@@ -8,6 +8,7 @@ describe('Create and delete environments', () => {
   it('Add an environment', async () => {
     await tests.helpers.countEnvironments(1);
     await tests.helpers.addEnvironment();
+    await tests.helpers.assertActiveEnvironmentPort(3001);
     await tests.helpers.countEnvironments(2);
   });
 
@@ -28,5 +29,13 @@ describe('Create and delete environments', () => {
     await tests.helpers.countRoutes(0);
 
     await tests.spectron.client.waitForExist('.header input[placeholder="No environment"]');
+  });
+
+  it('Add ten environments ever clicking in the first', async () => {
+    for (let port = 3000; port < 3010; port++) {
+      await tests.helpers.addEnvironment();
+      await tests.helpers.assertActiveEnvironmentPort(port);
+      await tests.helpers.selectEnvironment(1);
+    }
   });
 });

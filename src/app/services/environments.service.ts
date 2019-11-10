@@ -155,6 +155,8 @@ export class EnvironmentsService {
 
       newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as Environment;
 
+      newEnvironment.port = this.getNewEnvironmentPort();
+
       this.store.update(addEnvironmentAction(newEnvironment));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
@@ -345,7 +347,7 @@ export class EnvironmentsService {
       ...this.environmentSchema,
       uuid: uuid(),
       name: 'New environment',
-      port: 3000,
+      port: this.getNewEnvironmentPort(),
       routes: [
         {
           ...this.routeSchema,
@@ -712,5 +714,38 @@ export class EnvironmentsService {
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE_FROM_LOG);
     }
+  }
+
+
+  /**
+   * Generate a unused port to a new environment
+   */
+  public getNewEnvironmentPort(): number {
+    const usedPorts = this.store.getEnvironmentsPorts();
+
+    const activeEnvironment: Environment = this.store.getActiveEnvironment();
+    let testSelectedPort: number;
+    if (activeEnvironment == null) {
+      testSelectedPort = 3000;
+    } else {
+      testSelectedPort = activeEnvironment.port + 1;
+    }
+
+    for (let i = 0; i < 10; i++) {
+      if (testSelectedPort >= 65535) {
+        break;
+      } else if (!usedPorts.includes(testSelectedPort)) {
+        return testSelectedPort;
+      }
+      testSelectedPort++;
+    }
+
+    const min = Math.ceil(1024);
+    const max = Math.floor(65535);
+    do {
+      testSelectedPort = Math.floor(Math.random() * (max - min)) + min;
+    } while (usedPorts.includes(testSelectedPort));
+
+    return testSelectedPort;
   }
 }
