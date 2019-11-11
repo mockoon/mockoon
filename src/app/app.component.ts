@@ -431,6 +431,13 @@ export class AppComponent implements OnInit {
   }
 
   /**
+   * Enable/disable a route
+   */
+  private toggleRoute(routeUUID?: string) {
+    this.environmentsService.toggleRoute(routeUUID);
+  }
+
+  /**
    * Remove environment and navigate depending on remaining environments
    */
   private removeEnvironment(environmentUUID?: string) {
@@ -549,6 +556,20 @@ export class AppComponent implements OnInit {
         ]
       };
 
+      if (subject === 'route') {
+        menu.items.push(
+          {
+            payload: {
+              subject,
+              action: 'toggle',
+              subjectUUID
+            },
+            label: 'Toggle Route',
+            icon: 'power_settings_new'
+          }
+        );
+      }
+
       if (subject === 'environment') {
         menu.items.unshift(
           {
@@ -609,6 +630,11 @@ export class AppComponent implements OnInit {
           this.removeRoute(payload.subjectUUID);
         } else if (payload.subject === 'environment') {
           this.removeEnvironment(payload.subjectUUID);
+        }
+        break;
+      case 'toggle':
+        if (payload.subject === 'route') {
+          this.toggleRoute(payload.subjectUUID);
         }
         break;
     }

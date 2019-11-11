@@ -10,6 +10,7 @@ export type Settings = {
   analytics: boolean;
   lastMigration: number;
   bannerDismissed: string[];
+  logSizeLimit: number;
   environmentsMenuState: boolean;
 };
 
@@ -22,6 +23,7 @@ export class SettingsService {
     analytics: true,
     lastMigration: 0,
     bannerDismissed: [],
+    logSizeLimit: 10000,
     environmentsMenuState: true
   };
   private storageKey = 'settings';

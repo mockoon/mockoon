@@ -6,6 +6,7 @@ import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
 import { EnvironmentLog, EnvironmentLogResponse } from 'src/app/types/server.type';
+import { Store } from 'src/app/stores/store';
 import * as url from 'url';
 const appVersion = require('../../../package.json').version;
 
@@ -13,7 +14,7 @@ const appVersion = require('../../../package.json').version;
 export class DataService {
   private exportId = 'mockoon_export';
 
-  constructor() { }
+  constructor(private store: Store) { }
 
   /**
    * Wrap data to export in Mockoon export format
@@ -52,6 +53,7 @@ export class DataService {
    */
   public formatRequestLog(request: any): EnvironmentLog {
     // use some getter to keep the scope because some request properties are being defined later by express (route, params, etc)
+    const maxLength = this.store.get('settings').logSizeLimit;
     const requestLog: EnvironmentLog = {
       uuid: request.uuid,
       timestamp: new Date(),
@@ -84,7 +86,6 @@ export class DataService {
         return [];
       },
       get body() {
-        const maxLength = 10000;
         let truncatedBody: string = request.body;
 
         // truncate
@@ -131,8 +132,8 @@ export class DataService {
       return { name: headerName, value: headers[headerName] };
     }).sort(AscSort);
 
+    const maxLength = this.store.get('settings').logSizeLimit;
     responseLog.body = function () {
-      const maxLength = 10000;
       let truncatedBody: string = body;
 
       // truncate

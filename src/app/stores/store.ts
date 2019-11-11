@@ -180,4 +180,15 @@ export class Store {
   public update(action: Actions) {
     this.store$.next(environmentReducer(this.store$.value, action));
   }
+
+  /**
+   * Get a list with all environment ports
+   */
+  public getEnvironmentsPorts(): number[] {
+    return this.store$.value.environments.reduce((list, env) => {
+      list.push(env.port);
+
+      return list;
+    }, []);
+  }
 }

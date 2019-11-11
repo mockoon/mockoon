@@ -52,6 +52,12 @@ export class Helpers {
     await this.testsInstance.spectron.client.element('.close-environment-menu').click();
   }
 
+  async contextMenuClick(targetMenuItemSelector: string, contextMenuItemIndex: number) {
+    await this.testsInstance.spectron.client.element(targetMenuItemSelector).rightClick();
+
+    await this.testsInstance.spectron.client.element(`.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`).click();
+  }
+
   async contextMenuClickAndConfirm(targetMenuItemSelector: string, contextMenuItemIndex: number) {
     await this.testsInstance.spectron.client.element(targetMenuItemSelector).rightClick();
 
@@ -139,5 +145,28 @@ export class Helpers {
 
   async httpCallAsserter(httpCall: HttpCall) {
     await this.httpCallAsserterWithPort(httpCall, 3000);
+  }
+
+  async assertActiveEnvironmentPort(expectedPort: number) {
+    const port: String = await this.testsInstance.spectron.client.element('input[formcontrolname="port"]').getAttribute('value');
+    await port.should.be.equals(expectedPort.toString());
+  }
+
+  async openSettingsModal() {
+    await this.testsInstance.spectron.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
+    await this.testsInstance.spectron.client.waitForExist(`.modal-dialog`);
+  }
+
+  async closeSettingsModal() {
+    await this.testsInstance.spectron.client.element(`.modal-dialog .modal-footer button`).click();
+  }
+
+  async requestLogBodyContains(str: string) {
+    await this.testsInstance.spectron.client.element(`div.environment-logs-content-title:nth-child(9)`).click();
+    await this.testsInstance.spectron.client.element(`div.environment-logs-content-item.pre`).getHTML().should.eventually.contain(str);
+  }
+
+  async disableRoute() {
+    await this.contextMenuClick('.menu-column--routes .menu-list .nav-item .nav-link.active', 4);
   }
 }

@@ -30,6 +30,7 @@ about: Checklist for releases (admin use only)
 **Distribution:**
 - [ ] Update homebrew cask
 - [ ] Update Snap Store
+- [ ] Update Arch Linux repository
 - [ ] Update choco
 
 **Misc:**

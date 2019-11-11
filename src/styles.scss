@@ -35,6 +35,14 @@
     box-shadow: inset 2px 0 0 0 $blue;
     background-color: $component-active-bg;
   }
+  .nav-link.route-disabled,
+  .nav-item.show .nav-link {
+    box-shadow: inset -2px 0 0 0 $red;
+  }
+  .nav-link.route-disabled.active,
+  .nav-item.show .nav-link {
+    box-shadow: inset -2px 0 0 0 $red, inset 2px 0 0 0 $blue;
+  }
   .nav-link.running {
     box-shadow: inset -3px 0 0 0 $green;
   }

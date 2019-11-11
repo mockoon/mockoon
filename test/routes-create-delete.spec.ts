@@ -22,7 +22,7 @@ describe('Create and delete routes', () => {
   });
 
   it('Last added route should remain and be active', async () => {
-    await tests.spectron.client.getText('.menu-column--routes .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type').should.eventually.equal('GET\n/');
+    await tests.spectron.client.getText('.menu-column--routes .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child').should.eventually.equal('GET\n/');
   });
 
   it('Remove last route, active tab should be environment settings', async () => {

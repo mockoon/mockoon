@@ -48,7 +48,8 @@ export class EnvironmentsService {
     documentation: '',
     method: 'get',
     endpoint: '',
-    responses: []
+    responses: [],
+    enabled: true
   };
 
   private routeResponseSchema: RouteResponse = {
@@ -154,6 +155,8 @@ export class EnvironmentsService {
 
       newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as Environment;
 
+      newEnvironment.port = this.getNewEnvironmentPort();
+
       this.store.update(addEnvironmentAction(newEnvironment));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
@@ -252,6 +255,19 @@ export class EnvironmentsService {
   }
 
   /**
+   * Enable and disable a route
+   */
+  public toggleRoute(routeUUID?: string) {
+    const selectedRoute = this.store.getActiveEnvironment().routes.find(route => route.uuid === routeUUID);
+    if (selectedRoute) {
+      this.store.update(updateRouteAction({
+        uuid: selectedRoute.uuid,
+        enabled: !selectedRoute.enabled
+      }));
+    }
+  }
+
+  /**
    * Set active tab
    */
   public setActiveTab(activeTab: TabsNameType) {
@@ -338,7 +354,7 @@ export class EnvironmentsService {
       ...this.environmentSchema,
       uuid: uuid(),
       name: 'New environment',
-      port: 3000,
+      port: this.getNewEnvironmentPort(),
       routes: [
         {
           ...this.routeSchema,
@@ -699,10 +715,44 @@ export class EnvironmentsService {
         method: log.method.toLowerCase() as Method,
         endpoint: log.url.slice(1), // Remove the initial slash '/'
         responses: [response],
+        enabled: true
       };
       this.store.update(addRouteAction(newRoute));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE_FROM_LOG);
     }
+  }
+
+
+  /**
+   * Generate a unused port to a new environment
+   */
+  public getNewEnvironmentPort(): number {
+    const usedPorts = this.store.getEnvironmentsPorts();
+
+    const activeEnvironment: Environment = this.store.getActiveEnvironment();
+    let testSelectedPort: number;
+    if (activeEnvironment == null) {
+      testSelectedPort = 3000;
+    } else {
+      testSelectedPort = activeEnvironment.port + 1;
+    }
+
+    for (let i = 0; i < 10; i++) {
+      if (testSelectedPort >= 65535) {
+        break;
+      } else if (!usedPorts.includes(testSelectedPort)) {
+        return testSelectedPort;
+      }
+      testSelectedPort++;
+    }
+
+    const min = Math.ceil(1024);
+    const max = Math.floor(65535);
+    do {
+      testSelectedPort = Math.floor(Math.random() * (max - min)) + min;
+    } while (usedPorts.includes(testSelectedPort));
+
+    return testSelectedPort;
   }
 }
