@@ -52,27 +52,29 @@ Ask maintainers to review the code and be prepared to rework your code if it doe
 
 ---
 
-## Maintainers only
+### **[Maintainers only]** Build and package the application for production
 
-### Build and package the application for production
+- Increment the version in package.json files. Use `npm run setversion x.x.x` and follow [semver](https://semver.org/).
+- Push.
+- Create a release in GitHub 'mockoon' repository with a new tag. Respect the releases tag format `vx.x.x`.
 
-- Increment the version in package.json files. Use `npm run setversion x.x.x`.
-- Create a new tag (Respect release tag format `vx.x.x`)
+**/!\\ Mark the release as a pre-release, and only set it as a final release when all binaries are successfully build, tested and uploaded. /!\\**
 
-After this, binaries build is now automated through GitHub Actions. It basically run `npm run build:prod` and package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing (and notarization).
+Binaries build will be automatically triggered through GitHub Actions. It will basically run `npm run build:prod` and package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing (and notarization).
 
 Next steps are:
-- Create a release in GitHub 'mockoon' repository. (Link to the created tag `vx.x.x`)
-- Download binaries from the GitHub Action and add them to the new GitHub release.
-- Publish the release
+- Download all the binaries from the GitHub Action, test them and add them to the new GitHub release.
+- Publish the release (remove "pre-release" label).
 
 Note that Windows and Mac OS versions need to be signed (and notarized) when packaged. This is the responsibility of @255kb.
 
-/!\ Auto update depends on GitHub release proper taging (`vx.x.x`) and binaries correct naming (as set in `package.json` and `update.service.ts`). Do not change them.
+**/!\\ Auto update depends on GitHub release proper taging (`vx.x.x`) and binaries correct naming (as set in `package.json` and `update.service.ts`). Do not change them. /!\\**
 
 ### Distribute the application
 
 Only maintainers (@255kb) are entitled to build and package the application with Windows code signing and macOS certificates.
+
+Some manual steps are required in order to properly distribute the application:
 
 - A pull request must be created to update Homebrew cask repository.
 - Binary must be uploaded to the Snap store manually.

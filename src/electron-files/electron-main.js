@@ -54,15 +54,14 @@ function createWindow() {
     backgroundColor: '#252830',
     icon: path.join(__dirname, '/icon_512x512x32.png'),
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      devTools: false
     }
   };
 
-  // remove devtools in prod
-  if (!isDev) {
-    BrowserWindowConfig.webPreferences = {
-      devTools: false
-    };
+  // show devtools in dev
+  if (isDev) {
+    BrowserWindowConfig.webPreferences.devTools = true;
   }
 
   // Create the browser window.
@@ -79,7 +78,7 @@ function createWindow() {
 
   // Open the DevTools / Redux except when running functional tests
   if (isDev && !isTesting) {
-    mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.

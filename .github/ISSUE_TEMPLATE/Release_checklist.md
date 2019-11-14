@@ -36,4 +36,5 @@ about: Checklist for releases (admin use only)
 **Misc:**
 - [ ] Close / update Github issues
 - [ ] Clean 'Roadmap' project
+- [ ] Close milestone
 - [ ] Spread the word!
