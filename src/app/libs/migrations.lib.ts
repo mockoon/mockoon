@@ -121,6 +121,7 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
         route.responses.push({
           uuid: uuid(),
           statusCode: route.statusCode,
+          label: '',
           latency: route.latency,
           filePath: route.filePath,
           sendFileAsBody: route.sendFileAsBody,
@@ -161,6 +162,22 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
         route.enabled = true;
+      });
+    }
+  },
+
+  /**
+   * Add route response label
+   */
+  {
+    id: 9,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach(routeResponse => {
+          if (!routeResponse.label) {
+            routeResponse.label = '';
+          }
+        });
       });
     }
   }

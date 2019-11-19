@@ -208,6 +208,7 @@ export class AppComponent implements OnInit {
 
     this.activeRouteResponseForm = this.formBuilder.group({
       statusCode: [''],
+      label: [''],
       latency: [''],
       filePath: [''],
       sendFileAsBody: [''],
@@ -284,6 +285,7 @@ export class AppComponent implements OnInit {
     ).subscribe(activeRouteResponse => {
       this.activeRouteResponseForm.patchValue({
         statusCode: activeRouteResponse.statusCode,
+        label: activeRouteResponse.label,
         latency: activeRouteResponse.latency,
         filePath: activeRouteResponse.filePath,
         sendFileAsBody: activeRouteResponse.sendFileAsBody,

@@ -18,6 +18,7 @@
                     "body": "{\"response\": \"{{urlParam 'var'}}\"}",
                     "latency": 0,
                     "statusCode": "200",
+                    "label": "",
                     "headers": [
                         {
                             "key": "Content-Type",
@@ -42,6 +43,7 @@
                     "body": "42",
                     "latency": 0,
                     "statusCode": "200",
+                    "label": "",
                     "headers": [
                         {
                             "key": "Content-Type",
@@ -66,6 +68,7 @@
                     "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
                     "latency": 0,
                     "statusCode": "200",
+                    "label": "",
                     "headers": [
                         {
                             "key": "Content-Type",

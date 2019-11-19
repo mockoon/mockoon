@@ -236,6 +236,7 @@ export type RouteResponse = {
   uuid: string;
   rules: ResponseRule[];
   statusCode: string;
+  label: string;
   headers: Header[];
   body?: string;
   latency: number;
