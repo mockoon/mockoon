@@ -18,6 +18,7 @@
             "body": "{}",
             "latency": 0,
             "statusCode": "500",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -42,6 +43,7 @@
             "body": "0",
             "latency": 0,
             "statusCode": "404",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -57,6 +59,7 @@
             "body": "1",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -79,6 +82,7 @@
             "body": "2",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -101,6 +105,7 @@
             "body": "3",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -123,6 +128,7 @@
             "body": "4",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -145,6 +151,7 @@
             "body": "5",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -167,6 +174,7 @@
             "body": "6",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -189,6 +197,7 @@
             "body": "7",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -211,6 +220,7 @@
             "body": "8",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
@@ -233,6 +243,7 @@
             "body": "9",
             "latency": 0,
             "statusCode": "200",
+            "label": "",
             "headers": [
               {
                 "key": "Content-Type",
