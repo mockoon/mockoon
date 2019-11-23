@@ -188,6 +188,14 @@ label {
 .dropdown-toggle-split:not(:empty)::after, .dropup .dropdown-toggle-split:not(:empty)::after, .dropright .dropdown-toggle-split:not(:empty)::after {
   margin-left: 15px;
 }
+.route-responses-dropdown-content {
+  display: inline-block;
+  width: 140px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  vertical-align: bottom;
+  text-align: left;
+}
 
 /* Icon font */
 

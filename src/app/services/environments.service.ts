@@ -57,6 +57,7 @@ export class EnvironmentsService {
     body: '{}',
     latency: 0,
     statusCode: '200',
+    label: '',
     headers: [
       { key: '', value: '' }
     ],
@@ -389,6 +390,7 @@ export class EnvironmentsService {
             {
               uuid: uuid(),
               statusCode: '200',
+              label: '',
               latency: 0,
               filePath: '',
               sendFileAsBody: false,
@@ -407,6 +409,7 @@ export class EnvironmentsService {
             {
               uuid: uuid(),
               statusCode: '200',
+              label: '',
               latency: 0,
               filePath: '',
               sendFileAsBody: false,
@@ -689,6 +692,7 @@ export class EnvironmentsService {
         response = {
           headers: headers,
           statusCode: log.response.status.toString(),
+          label: '',
           body: log.response.body,
           rules: [],
           latency: 0,
@@ -700,6 +704,7 @@ export class EnvironmentsService {
         response = {
           headers: [],
           statusCode: '200',
+          label: '',
           body: '{}',
           rules: [],
           latency: 0,

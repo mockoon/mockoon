@@ -327,12 +327,13 @@
                           <!-- Responses dropdown -->
                           <div *ngIf="activeRouteResponse$ | async as activeRouteResponse" class="btn-group dropdown mr-1" ngbDropdown>
                             <button type="button" class="btn btn-custom" (click)="addRouteResponse()">
-                              <i class="material-icons">add</i> Add response
+                              <i class="material-icons">add</i> <span class="d-none d-xl-inline">Add response</span>
                             </button>
                             <button type="button" class="btn btn-custom dropdown-toggle dropdown-toggle-split mr-1"
                               role="button" id="route-responses-dropdown" aria-haspopup="true" aria-expanded="false"
                               ngbDropdownToggle>
-                                {{activeRouteResponseIndex$ | async}}: {{activeRouteResponse?.statusCode}}
+                                <div class="route-responses-dropdown-content">
+                                  <span class="pr-2">{{activeRouteResponseIndex$ | async}}: {{activeRouteResponse?.statusCode}}</span> {{activeRouteResponse?.label}}</div>
                             </button>
 
                             <div class="dropdown-menu" aria-labelledby="route-responses-dropdown" ngbDropdownMenu MousedragDeadzone dragula="routeResponses"
@@ -342,7 +343,7 @@
                                 [ngClass]="{'active': activeRouteResponse?.uuid === routeResponse.uuid}"
                                 ngbDropdownItem
                                 (click)="setActiveRouteResponse(routeResponse.uuid)">
-                                <span class="flex-grow-1">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}}</span>
+                                <span class="flex-grow-1 mr-2">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}} {{routeResponse.label | truncate: 20}}</span>
                                 <span><i *ngIf="routeResponseIndex === 0" class="material-icons text-primary" ngbTooltip="Default response served if no rule matches">flag</i></span>
                               </button>
                             </div>
@@ -391,9 +392,6 @@
                         <!-- route status code -->
                         <div class="col">
                           <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">Status code</span>
-                            </div>
                             <select class="custom-select col-4" formControlName="statusCode">
                               <option *ngFor="let statusCode of statusCodes" [value]="statusCode.code"
                                 [selected]="activeRouteResponse.statusCode === statusCode.code">{{statusCode.code}}
@@ -405,6 +403,7 @@
                             </div>
                             <input type="text" class="form-control col-1" ngbTooltip="Route specific latency (ms)"
                               [InputNumber]="{min: 0, max: Infinity}" MousewheelUpdate formControlName="latency">
+                            <input type="text" class="form-control ml-1" formControlName="label" placeholder="Add label or notes">
                           </div>
                         </div>
                       </div>
