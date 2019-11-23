@@ -8,6 +8,7 @@ import { EnvironmentsStatuses, Store } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { dragulaNamespaces as DraggableContainerNames, Scroll } from 'src/app/types/ui.type.js';
 import { EnvironmentsContextMenuItems } from './environments-context-menu-items';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-environments-menu',
@@ -33,11 +34,11 @@ export class EnvironmentsMenuComponent implements OnInit {
   ) {  }
 
   ngOnInit() {
-    this.initDragMonitoring();
-
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.duplicatedEnvironments$ = this.store.select('duplicatedEnvironments');
-    this.environments$ = this.store.select('environments');
+    this.environments$ = this.store.select('environments').pipe(
+      tap(e => console.log(e))
+    );
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.menuOpen = this.store.get('environmentsMenuState');
   }
@@ -78,16 +79,6 @@ export class EnvironmentsMenuComponent implements OnInit {
   public toggleMenu() {
     this.menuOpen = !this.menuOpen;
     this.environmentsService.updateEnvironmentsMenuState(this.menuOpen);
-  }
-
-  private initDragMonitoring() {
-    this.dragulaService.dropModel().subscribe(({name, sourceIndex, targetIndex}) => {
-      this.environmentsService.moveMenuItem(
-        name as DraggableContainerNames,
-        sourceIndex,
-        targetIndex
-      );
-    });
   }
 
  private scrollToBottom(element: Element) {

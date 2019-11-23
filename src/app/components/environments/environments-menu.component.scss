@@ -10,6 +10,10 @@
 
   ul {
     padding-top: 2.5rem;
+
+    li {
+      list-style: none;
+    }
   }
 
   a[class*="active"] {
