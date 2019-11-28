@@ -30,6 +30,9 @@
     "package:linux": "npm run clean-packages && electron-builder --linux --config electron-builder.json",
     "package:mac": "npm run clean-packages && electron-builder --mac --config electron-builder.json"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "dependencies": {
     "@angular/animations": "8.2.6",
     "@angular/common": "8.2.6",
@@ -96,6 +99,7 @@
     "mkdirp": "0.5.1",
     "mocha": "6.1.4",
     "node-sass": "4.12.0",
+    "prettier": "1.19.1",
     "replace-in-file": "3.4.4",
     "spectron": "5.0.0",
     "ts-mocha": "6.0.0",
