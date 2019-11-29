@@ -286,6 +286,12 @@ export class ServerService {
       const processRequest = (proxyReq, req, res, options) => {
         req.proxied = true;
 
+        environment.proxyReqHeaders.forEach((header) => {
+          if (header.key && header.value && !this.testHeaderValidity(header.key)) {
+            proxyReq.setHeader(header.key, header.value);
+          }
+        });
+
         if (req.body) {
           proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
           // stream the content
@@ -308,6 +314,13 @@ export class ServerService {
           const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
           self.store.update(logResponseAction(environment.uuid, response));
         });
+
+        environment.proxyResHeaders.forEach((header) => {
+          if (header.key && header.value && !this.testHeaderValidity(header.key)) {
+            proxyRes.headers[header.key]= header.value;
+          }
+        });
+
       };
 
       const logErrorResponse = (err, req, res) => {

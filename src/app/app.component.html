@@ -240,6 +240,22 @@
                           </div>
                         </div>
                       </div>
+
+                      <div class="row flex-fill mh0 pl-4">
+                        <div class="col-6 d-flex flex-column h-100">
+                          <div class="mt-2 mb-2">Proxy request headers </div>
+                          <div class="scroll-content flex-fill">
+                            <app-headers-list [data$]="activeEnvironment$" headers="proxyReqHeaders" type="environmentHeaders"></app-headers-list>
+                          </div>
+                        </div>
+                        <div class="col-6 d-flex flex-column h-100">
+                          <div class="mt-2 mb-2">Proxy response headers </div>
+                          <div class="scroll-content flex-fill">
+                            <app-headers-list [data$]="activeEnvironment$"  headers="proxyResHeaders" type="environmentHeaders"></app-headers-list>
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
 

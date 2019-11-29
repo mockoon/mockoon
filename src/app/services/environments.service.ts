@@ -38,6 +38,8 @@ export class EnvironmentsService {
     routes: [],
     proxyMode: false,
     proxyHost: '',
+    proxyReqHeaders: [],
+    proxyResHeaders: [],
     https: false,
     cors: true,
     headers: []

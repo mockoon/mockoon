@@ -9,6 +9,8 @@ export type Environment = {
   routes: Route[];
   proxyMode: boolean;
   proxyHost: string;
+  proxyReqHeaders: Header[];
+  proxyResHeaders: Header[];
   https: boolean;
   cors: boolean;
   headers: Header[];
