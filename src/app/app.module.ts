@@ -30,6 +30,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
+import { MigrationService } from 'src/app/services/migration.service';
+import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ServerService } from 'src/app/services/server.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ToastsService } from 'src/app/services/toasts.service';
@@ -61,7 +63,12 @@ import { AppComponent } from './app.component';
     FormsModule,
     HttpClientModule,
     NgbModule,
-    MarkdownModule.forRoot({ markedOptions: { provide: MarkedOptions, useFactory: MarkedOptionsFactory } }),
+    MarkdownModule.forRoot({
+      markedOptions: {
+        provide: MarkedOptions,
+        useFactory: MarkedOptionsFactory
+      }
+    }),
     AngularFireModule.initializeApp(Config.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
@@ -77,8 +84,10 @@ import { AppComponent } from './app.component';
     SettingsService,
     UpdateService,
     DataService,
+    MigrationService,
+    SchemasBuilderService,
     { provide: FirestoreSettingsToken, useValue: {} }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

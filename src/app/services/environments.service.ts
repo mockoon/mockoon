@@ -4,15 +4,15 @@ import { clipboard, remote } from 'electron';
 import * as storage from 'electron-json-storage';
 import * as fs from 'fs';
 import { cloneDeep } from 'lodash';
-import { debounceTime, filter, first } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
 import { Messages } from 'src/app/enums/messages.enum';
-import { Migrations } from 'src/app/libs/migrations.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
+import { MigrationService } from 'src/app/services/migration.service';
+import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ServerService } from 'src/app/services/server.service';
-import { SettingsService } from 'src/app/services/settings.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
@@ -29,67 +29,24 @@ const appVersion = require('../../../package.json').version;
 export class EnvironmentsService {
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
-  private environmentSchema: Environment = {
-    uuid: '',
-    name: '',
-    endpointPrefix: '',
-    latency: 0,
-    port: 3000,
-    routes: [],
-    proxyMode: false,
-    proxyHost: '',
-    https: false,
-    cors: true,
-    headers: []
-  };
-
-  private routeSchema: Route = {
-    uuid: '',
-    documentation: '',
-    method: 'get',
-    endpoint: '',
-    responses: [],
-    enabled: true
-  };
-
-  private routeResponseSchema: RouteResponse = {
-    uuid: '',
-    body: '{}',
-    latency: 0,
-    statusCode: '200',
-    label: '',
-    headers: [
-      { key: '', value: '' }
-    ],
-    filePath: '',
-    sendFileAsBody: false,
-    rules: []
-  };
-
-  private emptyHeaderSchema: Header = { key: '', value: '' };
   private storageKey = 'environments';
 
   constructor(
     private toastService: ToastsService,
     private dataService: DataService,
     private eventsService: EventsService,
-    private settingsService: SettingsService,
     private store: Store,
-    private serverService: ServerService
+    private serverService: ServerService,
+    private migrationService: MigrationService,
+    private schemasBuilderService: SchemasBuilderService
   ) {
     // get existing environments from storage or default one
     storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
-        this.store.update(setInitialEnvironmentsAction([this.buildDefaultEnvironment()]));
+        this.store.update(setInitialEnvironmentsAction([this.schemasBuilderService.buildDefaultEnvironment()]));
       } else {
-        // wait for settings to be ready before migrating and loading envs
-        this.store.select('settings').pipe(
-          filter(Boolean),
-          first()
-        ).subscribe(() => {
-          this.store.update(setInitialEnvironmentsAction(this.migrateData(environments)));
-        });
+        this.store.update(setInitialEnvironmentsAction(this.migrationService.migrateEnvironments(environments)));
       }
     });
 
@@ -133,7 +90,7 @@ export class EnvironmentsService {
    * Add a new environment and save it in the store
    */
   public addEnvironment() {
-    this.store.update(addEnvironmentAction(this.buildNewEnvironment()));
+    this.store.update(addEnvironmentAction(this.schemasBuilderService.buildEnvironment()));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ENVIRONMENT);
   }
 
@@ -151,12 +108,11 @@ export class EnvironmentsService {
       // copy the environment, reset some properties and change name
       let newEnvironment: Environment = {
         ...cloneDeep(environmentToDuplicate),
-        name: `${environmentToDuplicate.name} (copy)`
+        name: `${environmentToDuplicate.name} (copy)`,
+        port: this.dataService.getNewEnvironmentPort()
       };
 
       newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as Environment;
-
-      newEnvironment.port = this.getNewEnvironmentPort();
 
       this.store.update(addEnvironmentAction(newEnvironment));
 
@@ -188,18 +144,7 @@ export class EnvironmentsService {
    * Add a new route and save it in the store
    */
   public addRoute() {
-    const newRoute: Route = {
-      ...this.routeSchema,
-      uuid: uuid(),
-      responses: [
-        {
-          ...this.routeResponseSchema,
-          uuid: uuid()
-        }
-      ]
-    };
-
-    this.store.update(addRouteAction(newRoute));
+    this.store.update(addRouteAction(this.schemasBuilderService.buildRoute()));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
   }
 
@@ -207,12 +152,7 @@ export class EnvironmentsService {
    * Add a new route response and save it in the store
    */
   public addRouteResponse() {
-    const newRouteResponse: RouteResponse = {
-      ...this.routeResponseSchema,
-      uuid: uuid()
-    };
-
-    this.store.update(addRouteResponseAction(newRouteResponse));
+    this.store.update(addRouteResponseAction(this.schemasBuilderService.buildRouteResponse()));
     this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE_RESPONSE);
   }
 
@@ -338,109 +278,6 @@ export class EnvironmentsService {
       this.serverService.start(activeEnvironment);
       this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_START);
     }
-  }
-
-  /**
-   * Build a new environment
-   */
-  private buildNewEnvironment(): Environment {
-    return {
-      ...this.environmentSchema,
-      uuid: uuid(),
-      name: 'New environment',
-      port: this.getNewEnvironmentPort(),
-      routes: [
-        {
-          ...this.routeSchema,
-          uuid: uuid(),
-          responses: [
-            {
-              ...this.routeResponseSchema,
-              uuid: uuid()
-            }
-          ]
-        }
-      ],
-      headers: [{ key: 'Content-Type', value: 'application/json' }]
-    };
-  }
-
-  /**
-   * Build a default environment when starting the application for the first time
-   */
-  private buildDefaultEnvironment(): Environment {
-    return {
-      ...this.environmentSchema,
-      uuid: uuid(),
-      name: 'Example',
-      headers: [{ ...this.emptyHeaderSchema }],
-      routes: [
-        {
-          ...this.routeSchema,
-          uuid: uuid(),
-          endpoint: 'answer',
-          responses: [
-            {
-              uuid: uuid(),
-              statusCode: '200',
-              label: '',
-              latency: 0,
-              filePath: '',
-              sendFileAsBody: false,
-              headers: [{ key: 'Content-Type', value: 'text/plain' }],
-              body: '42',
-              rules: []
-            }
-          ]
-        },
-        {
-          ...this.routeSchema,
-          uuid: uuid(),
-          method: 'post',
-          endpoint: 'dolphins',
-          responses: [
-            {
-              uuid: uuid(),
-              statusCode: '200',
-              label: '',
-              latency: 0,
-              filePath: '',
-              sendFileAsBody: false,
-              headers: [{ key: 'Content-Type', value: 'application/json' }],
-              body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}',
-              rules: []
-            }
-          ]
-        }
-      ]
-    };
-  }
-
-  /**
-   * Migrate data after loading if needed.
-   * This cumulate all versions migration
-   *
-   * @param environments - environments to migrate
-   */
-  private migrateData(environments: Environments) {
-    let wasUpdated = false;
-    let lastMigrationId;
-
-    Migrations.forEach(migration => {
-      if (migration.id > this.store.get('settings').lastMigration) {
-        lastMigrationId = migration.id;
-
-        environments.forEach(environment => migration.migrationFunction(environment));
-        wasUpdated = true;
-      }
-    });
-
-    if (wasUpdated) {
-      // save last migration in the settings
-      this.settingsService.updateSettings({ lastMigration: lastMigrationId });
-    }
-
-    return environments;
   }
 
   /**
@@ -583,7 +420,7 @@ export class EnvironmentsService {
           this.store.update(addRouteAction(importData.data as Route));
         } else {
           const newEnvironment: Environment = {
-            ...this.buildNewEnvironment(),
+            ...this.schemasBuilderService.buildEnvironment(),
             routes: [importData.data as Route]
           };
 
@@ -673,84 +510,36 @@ export class EnvironmentsService {
     const log = environmentsLogs[uuidEnvironment].find(environmentLog => environmentLog.uuid === logUUID);
 
     if (log) {
-      let response: RouteResponse;
+      let routeResponse: RouteResponse;
+
       if (log.response) {
         const headers: Header[] = [];
         log.response.headers.forEach(element => {
-          headers.push({
-            key: element.name,
-            value: element.value
-          });
+          headers.push(
+            this.schemasBuilderService.buildHeader(element.name, element.value)
+          );
         });
-        response = {
-          headers: headers,
+
+        routeResponse = {
+          ...this.schemasBuilderService.buildRouteResponse(),
+          headers,
           statusCode: log.response.status.toString(),
-          label: '',
-          body: log.response.body,
-          rules: [],
-          latency: 0,
-          sendFileAsBody: false,
-          filePath: null,
-          uuid: uuid()
+          body: log.response.body
         };
       } else {
-        response = {
-          headers: [],
-          statusCode: '200',
-          label: '',
-          body: '{}',
-          rules: [],
-          latency: 0,
-          sendFileAsBody: false,
-          filePath: null,
-          uuid: uuid()
-        };
+        routeResponse = this.schemasBuilderService.buildRouteResponse();
       }
 
       const newRoute: Route = {
-        uuid: uuid(),
-        documentation: '',
+        ...this.schemasBuilderService.buildRoute(),
         method: log.method.toLowerCase() as Method,
         endpoint: log.url.slice(1), // Remove the initial slash '/'
-        responses: [response],
-        enabled: true
+        responses: [routeResponse]
       };
+
       this.store.update(addRouteAction(newRoute));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE_FROM_LOG);
     }
-  }
-
-
-  /**
-   * Generate a unused port to a new environment
-   */
-  public getNewEnvironmentPort(): number {
-    const usedPorts = this.store.getEnvironmentsPorts();
-
-    const activeEnvironment: Environment = this.store.getActiveEnvironment();
-    let testSelectedPort: number;
-    if (activeEnvironment == null) {
-      testSelectedPort = 3000;
-    } else {
-      testSelectedPort = activeEnvironment.port + 1;
-    }
-
-    for (let i = 0; i < 10; i++) {
-      if (testSelectedPort >= 65535) {
-        break;
-      } else if (!usedPorts.includes(testSelectedPort)) {
-        return testSelectedPort;
-      }
-      testSelectedPort++;
-    }
-
-    const min = Math.ceil(1024);
-    const max = Math.floor(65535);
-    do {
-      testSelectedPort = Math.floor(Math.random() * (max - min)) + min;
-    } while (usedPorts.includes(testSelectedPort));
-
-    return testSelectedPort;
   }
 }

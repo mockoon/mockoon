@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import * as storage from 'electron-json-storage';
 import { debounceTime, filter } from 'rxjs/operators';
@@ -8,7 +7,6 @@ import { Store } from 'src/app/stores/store';
 export type Settings = {
   welcomeShown: boolean;
   analytics: boolean;
-  lastMigration: number;
   bannerDismissed: string[];
   logSizeLimit: number;
 };
@@ -17,10 +15,11 @@ export type SettingsProperties = { [T in keyof Settings]?: Settings[T] };
 
 @Injectable()
 export class SettingsService {
+  public oldLastMigration: number;
+
   private settingsSchema: Settings = {
     welcomeShown: false,
     analytics: true,
-    lastMigration: 0,
     bannerDismissed: [],
     logSizeLimit: 10000
   };
@@ -30,21 +29,27 @@ export class SettingsService {
     // get existing settings from storage or default one
     storage.get(this.storageKey, (error, settings) => {
       // if empty object
-      if (Object.keys(settings).length === 0 && settings.constructor === Object) {
+      if (
+        Object.keys(settings).length === 0 &&
+        settings.constructor === Object
+      ) {
         // build default settings
         this.updateSettings(this.settingsSchema);
       } else {
-        this.updateSettings({ ...this.settingsSchema, ...settings });
+        this.updateSettings({
+          ...this.settingsSchema,
+          ...this.migrateSettings(settings)
+        });
       }
     });
 
     // save settings
-    this.store.select('settings').pipe(
-      filter(Boolean),
-      debounceTime(1000)
-    ).subscribe((settings) => {
-      storage.set(this.storageKey, settings);
-    });
+    this.store
+      .select('settings')
+      .pipe(filter(Boolean), debounceTime(1000))
+      .subscribe(settings => {
+        storage.set(this.storageKey, settings);
+      });
   }
 
   /**
@@ -54,5 +59,19 @@ export class SettingsService {
    */
   public updateSettings(newProperties: SettingsProperties) {
     this.store.update(updateSettingsAction(newProperties));
+  }
+
+  /**
+   * Handle the migration of some settings
+   */
+  private migrateSettings(
+    settings: Settings & { lastMigration: number }
+  ): Settings {
+    if (settings.lastMigration) {
+      this.oldLastMigration = settings.lastMigration;
+      delete settings.lastMigration;
+    }
+
+    return settings;
   }
 }

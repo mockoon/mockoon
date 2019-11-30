@@ -17,11 +17,12 @@ function generateCall(requestBody: any): HttpCall {
 }
 
 function makeString(length: number): string {
-  let result           = '';
-  const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
-  for ( let i = 0; i < length; i++ ) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
 
   return result;
@@ -38,7 +39,6 @@ describe('Settings Dialog', () => {
   });
 
   describe('Log variable size', () => {
-
     it('Set size to 100', async () => {
       await tests.helpers.openSettingsModal();
       await tests.spectron.client.element(inputBodySize).setValue('100');
@@ -79,5 +79,4 @@ describe('Settings Dialog', () => {
       await tests.helpers.requestLogBodyContains('BODY HAS BEEN TRUNCATED');
     });
   });
-
 });

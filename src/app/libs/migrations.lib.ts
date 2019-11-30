@@ -2,7 +2,10 @@ import { Environment } from 'src/app/types/environment.type';
 import { Header, Route } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
 
-export const Migrations: { id: number, migrationFunction: (environment: Environment) => void }[] = [
+export const Migrations: {
+  id: number;
+  migrationFunction: (environment: Environment) => void;
+}[] = [
   // v0.4.0beta
   {
     id: 1,
@@ -36,11 +39,17 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
 
         if (route['customHeaders']) {
           // find content type header
-          const ContentTypeHeader = route['customHeaders'].find(customHeader => customHeader.key === 'Content-Type');
+          const ContentTypeHeader = route['customHeaders'].find(
+            customHeader => customHeader.key === 'Content-Type'
+          );
 
           // add custom header only if no content type
           if (!ContentTypeHeader) {
-            route['customHeaders'].unshift({ uuid: uuid(), key: 'Content-Type', value: route['contentType'] });
+            route['customHeaders'].unshift({
+              uuid: uuid(),
+              key: 'Content-Type',
+              value: route['contentType']
+            });
           }
 
           // delete old content type
@@ -100,8 +109,8 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
 
       environment.routes.forEach((route: Route & { file: any }) => {
         // remove file object
-        route['filePath'] = (route.file) ? route.file.path : '';
-        route['sendFileAsBody'] = (route.file) ? route.file.sendAsBody : false;
+        route['filePath'] = route.file ? route.file.path : '';
+        route['sendFileAsBody'] = route.file ? route.file.sendAsBody : false;
         delete route.file;
 
         delete route['duplicates'];
@@ -116,27 +125,38 @@ export const Migrations: { id: number, migrationFunction: (environment: Environm
   {
     id: 6,
     migrationFunction: (environment: Environment) => {
-      environment.routes.forEach((route: Route & { body?: string, statusCode?: string, headers?: Header[], latency?: number, filePath?: string, sendFileAsBody?: boolean }) => {
-        route.responses = [];
-        route.responses.push({
-          uuid: uuid(),
-          statusCode: route.statusCode,
-          label: '',
-          latency: route.latency,
-          filePath: route.filePath,
-          sendFileAsBody: route.sendFileAsBody,
-          headers: route.headers,
-          body: route.body,
-          rules: []
-        });
+      environment.routes.forEach(
+        (
+          route: Route & {
+            body?: string;
+            statusCode?: string;
+            headers?: Header[];
+            latency?: number;
+            filePath?: string;
+            sendFileAsBody?: boolean;
+          }
+        ) => {
+          route.responses = [];
+          route.responses.push({
+            uuid: uuid(),
+            statusCode: route.statusCode,
+            label: '',
+            latency: route.latency,
+            filePath: route.filePath,
+            sendFileAsBody: route.sendFileAsBody,
+            headers: route.headers,
+            body: route.body,
+            rules: []
+          });
 
-        delete route.statusCode;
-        delete route.latency;
-        delete route.filePath;
-        delete route.sendFileAsBody;
-        delete route.headers;
-        delete route.body;
-      });
+          delete route.statusCode;
+          delete route.latency;
+          delete route.filePath;
+          delete route.sendFileAsBody;
+          delete route.headers;
+          delete route.body;
+        }
+      );
     }
   },
 
