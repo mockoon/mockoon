@@ -2,6 +2,7 @@ import { Header, Route } from 'src/app/types/route.type';
 
 export type Environment = {
   uuid: string;
+  lastMigration: number;
   name: string;
   port: number;
   endpointPrefix: string;
