@@ -48,17 +48,29 @@ export function environmentReducer(
     case ActionTypes.SET_INITIAL_ENVIRONMENTS: {
       const newEnvironments: Environments = action.environments;
 
+      const newEnvironmentsStatus = newEnvironments.reduce<EnvironmentsStatuses>((environmentsStatus, environment) => {
+        // create status and check if environment has not been migrated on a more recent Mockoon version
+        environmentsStatus[environment.uuid] = {
+          running: false,
+          needRestart: false,
+          disabledForIncompatibility: !!environment.lastMigration && environment.lastMigration > action.appLatestMigration
+        };
+
+        return environmentsStatus;
+      }, {});
+
+      // find first non disabled environment
+      const activeEnvironment = newEnvironments.find(environment => {
+        return !newEnvironmentsStatus[environment.uuid].disabledForIncompatibility;
+      });
+
       newState = {
         ...state,
-        activeEnvironmentUUID: (newEnvironments.length) ? newEnvironments[0].uuid : null,
-        activeRouteUUID: (newEnvironments.length && newEnvironments[0].routes.length) ? newEnvironments[0].routes[0].uuid : null,
-        activeRouteResponseUUID: (newEnvironments.length && newEnvironments[0].routes.length && newEnvironments[0].routes[0].responses.length) ? newEnvironments[0].routes[0].responses[0].uuid : null,
+        activeEnvironmentUUID: (activeEnvironment) ? activeEnvironment.uuid : null,
+        activeRouteUUID: (activeEnvironment && activeEnvironment.routes.length) ? activeEnvironment.routes[0].uuid : null,
+        activeRouteResponseUUID: (activeEnvironment && activeEnvironment.routes.length && activeEnvironment.routes[0].responses.length) ? activeEnvironment.routes[0].responses[0].uuid : null,
         environments: newEnvironments,
-        environmentsStatus: newEnvironments.reduce<EnvironmentsStatuses>((environmentsStatus, environment) => {
-          environmentsStatus[environment.uuid] = { running: false, needRestart: false };
-
-          return environmentsStatus;
-        }, {}),
+        environmentsStatus: newEnvironmentsStatus,
         environmentsLogs: newEnvironments.reduce<EnvironmentLogs>((environmentsLogs, environment) => {
           environmentsLogs[environment.uuid] = [];
 
@@ -69,7 +81,7 @@ export function environmentReducer(
     }
 
     case ActionTypes.SET_ACTIVE_ENVIRONMENT: {
-      if (action.environmentUUID !== state.activeEnvironmentUUID) {
+      if (action.environmentUUID !== state.activeEnvironmentUUID && !state.environmentsStatus[action.environmentUUID].disabledForIncompatibility) {
         const activeEnvironment = action.environmentUUID ? state.environments.find(environment => environment.uuid === action.environmentUUID) : state.environments[0];
 
         newState = {
@@ -98,6 +110,11 @@ export function environmentReducer(
       } else if (action.direction === 'previous' && activeEnvironmentIndex > 0) {
         newEnvironment = state.environments[activeEnvironmentIndex - 1];
       } else {
+        newState = state;
+        break;
+      }
+
+      if (state.environmentsStatus[newEnvironment.uuid].disabledForIncompatibility) {
         newState = state;
         break;
       }
@@ -254,7 +271,7 @@ export function environmentReducer(
         ],
         environmentsStatus: {
           ...state.environmentsStatus,
-          [newEnvironment.uuid]: { running: false, needRestart: false }
+          [newEnvironment.uuid]: { running: false, needRestart: false, disabledForIncompatibility: false }
         },
         environmentsLogs: {
           ...state.environmentsLogs,
@@ -279,7 +296,7 @@ export function environmentReducer(
       };
 
       if (state.activeEnvironmentUUID === action.environmentUUID) {
-        if (newEnvironments.length) {
+        if (newEnvironments.length && !state.environmentsStatus[newEnvironments[0].uuid].disabledForIncompatibility) {
           newState = {
             ...newState,
             activeEnvironmentUUID: newEnvironments[0].uuid,

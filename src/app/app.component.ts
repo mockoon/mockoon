@@ -512,7 +512,7 @@ export class AppComponent implements OnInit {
    */
   public navigationContextMenu(subject: DataSubjectType, subjectUUID: string, event: any) {
     // if right click display context menu
-    if (event && event.which === 3) {
+    if (event && event.which === 3 && (subject !== 'environment' || !this.store.getEnvironmentStatus()[subjectUUID].disabledForIncompatibility)) {
       const menu: ContextMenuEvent = {
         event: event,
         items: [

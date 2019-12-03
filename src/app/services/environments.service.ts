@@ -44,9 +44,9 @@ export class EnvironmentsService {
     storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
-        this.store.update(setInitialEnvironmentsAction([this.schemasBuilderService.buildDefaultEnvironment()]));
+        this.store.update(setInitialEnvironmentsAction([this.schemasBuilderService.buildDefaultEnvironment()], this.migrationService.appLatestMigration));
       } else {
-        this.store.update(setInitialEnvironmentsAction(this.migrationService.migrateEnvironments(environments)));
+        this.store.update(setInitialEnvironmentsAction(this.migrationService.migrateEnvironments(environments), this.migrationService.appLatestMigration));
       }
     });
 

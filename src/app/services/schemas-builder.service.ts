@@ -56,7 +56,7 @@ export class SchemasBuilderService {
   public buildEnvironment(): Environment {
     return {
       uuid: uuid(),
-      lastMigration: this.migrationService.latestMigration,
+      lastMigration: this.migrationService.appLatestMigration,
       name: 'New environment',
       endpointPrefix: '',
       latency: 0,

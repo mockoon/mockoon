@@ -6,15 +6,18 @@ import { Environment, Environments } from 'src/app/types/environment.type';
 
 @Injectable()
 export class MigrationService {
-  public readonly latestMigration: number;
+  public readonly appLatestMigration: number;
 
   constructor(private settingsService: SettingsService, private store: Store) {
     // get most recent migration
-    this.latestMigration = Migrations.reduce((lastMigrationId, migration) => {
-      if (migration.id > lastMigrationId) {
-        return migration.id;
-      }
-    }, 0);
+    this.appLatestMigration = Migrations.reduce(
+      (lastMigrationId, migration) => {
+        if (migration.id > lastMigrationId) {
+          return migration.id;
+        }
+      },
+      0
+    );
   }
 
   /**
@@ -58,12 +61,12 @@ export class MigrationService {
   private getMigrationStartId(environment: Environment): number {
     if (
       environment.lastMigration !== undefined &&
-      environment.lastMigration < this.latestMigration
+      environment.lastMigration < this.appLatestMigration
     ) {
       return environment.lastMigration;
     } else if (
       environment.lastMigration === undefined &&
-      this.latestMigration > this.settingsService.oldLastMigration
+      this.appLatestMigration > this.settingsService.oldLastMigration
     ) {
       return this.settingsService.oldLastMigration;
     }

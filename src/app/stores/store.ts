@@ -15,7 +15,7 @@ export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES';
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 
-export type EnvironmentStatus = { running: boolean, needRestart: boolean };
+export type EnvironmentStatus = { running: boolean, needRestart: boolean, disabledForIncompatibility: boolean };
 
 export type EnvironmentStatusProperties = { [T in keyof EnvironmentStatus]?: EnvironmentStatus[T] };
 
@@ -151,6 +151,13 @@ export class Store {
    */
   public getActiveEnvironment(): Environment {
     return this.store$.value.environments.find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID);
+  }
+
+  /**
+   * Get environments status value
+   */
+  public getEnvironmentStatus(): EnvironmentsStatuses {
+    return this.store$.value.environmentsStatus;
   }
 
   /**

@@ -526,3 +526,8 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green), ('delete', $r
   color: darken($gray-600, 20%);
   font-weight: $font-weight-light;
 }
+
+.pattern-danger {
+  position: relative;
+  background: repeating-linear-gradient(-45deg, transparent, transparent 8px, #f3362866 0px, #f3362866 16px);
+}

@@ -34,30 +34,32 @@
         <ng-container *ngIf="(environments$ | async) as environments">
           <ul class="nav flex-column flex-fill menu-list" #environmentsMenu dragula="environments"
             [dragulaModel]="environments">
-            <li class="nav-item" *ngFor="let environment of environments">
-              <a *ngIf="environmentsStatus$ | async as environmentsStatus" class="nav-link position-relative"
-                [ngClass]="{'active': (activeEnvironment$ | async)?.uuid === environment.uuid, 'running': environmentsStatus[environment.uuid].running && !environmentsStatus[environment.uuid].needRestart, 'need-restart': environmentsStatus[environment.uuid].needRestart}"
-                (click)="selectEnvironment(environment.uuid)"
-                (contextmenu)="navigationContextMenu('environment', environment.uuid, $event)">
-                <div class="ellipsis" *ngIf="duplicatedEnvironments$ | async as duplicatedEnvironments">
-                  <span class="text-warning" ngbTooltip="Port is shared with another environment"><i
-                      *ngIf="duplicatedEnvironments?.has(environment.uuid)" class="material-icons">warning</i></span>
-                  {{environment.name}}
-                </div>
-                <div class="menu-subtitle ellipsis">
-                  0.0.0.0:{{environment.port}}/{{environment.endpointPrefix}}
-                </div>
-                <div *ngIf="environment.proxyMode" class="server-icons server-icons-proxy-mode">
-                  <i class="material-icons" ngbTooltip="Proxy mode enabled">security</i>
-                </div>
-                <div *ngIf="environment.https" class="server-icons server-icons-https">
-                  <i class="material-icons" ngbTooltip="HTTPS enabled">https</i>
-                </div>
-                <div *ngIf="environment.cors" class="server-icons server-icons-cors">
-                  <i class="material-icons" ngbTooltip="CORS enabled">shuffle</i>
-                </div>
-              </a>
-            </li>
+            <ng-container *ngIf="environmentsStatus$ | async as environmentsStatus">
+              <li *ngFor="let environment of environments" class="nav-item" [ngClass]="{'pattern-danger': environmentsStatus[environment.uuid]?.disabledForIncompatibility}" [ngbTooltip]="(environmentsStatus[environment.uuid]?.disabledForIncompatibility) ? 'Environment was created with a more recent version of Mockoon. Please upgrade.' : ''">
+                <a class="nav-link position-relative"
+                  [ngClass]="{'active': (activeEnvironment$ | async)?.uuid === environment.uuid, 'running': environmentsStatus[environment.uuid].running && !environmentsStatus[environment.uuid].needRestart, 'need-restart': environmentsStatus[environment.uuid].needRestart}"
+                  (click)="selectEnvironment(environment.uuid)"
+                  (contextmenu)="navigationContextMenu('environment', environment.uuid, $event)">
+                  <div class="ellipsis" *ngIf="duplicatedEnvironments$ | async as duplicatedEnvironments">
+                    <span class="text-warning" ngbTooltip="Port is shared with another environment"><i
+                        *ngIf="duplicatedEnvironments?.has(environment.uuid)" class="material-icons">warning</i></span>
+                    {{environment.name}}
+                  </div>
+                  <div class="menu-subtitle ellipsis">
+                    0.0.0.0:{{environment.port}}/{{environment.endpointPrefix}}
+                  </div>
+                  <div *ngIf="environment.proxyMode" class="server-icons server-icons-proxy-mode">
+                    <i class="material-icons" ngbTooltip="Proxy mode enabled">security</i>
+                  </div>
+                  <div *ngIf="environment.https" class="server-icons server-icons-https">
+                    <i class="material-icons" ngbTooltip="HTTPS enabled">https</i>
+                  </div>
+                  <div *ngIf="environment.cors" class="server-icons server-icons-cors">
+                    <i class="material-icons" ngbTooltip="CORS enabled">shuffle</i>
+                  </div>
+                </a>
+              </li>
+            </ng-container>
           </ul>
         </ng-container>
       </div>

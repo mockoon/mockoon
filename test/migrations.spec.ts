@@ -4,7 +4,7 @@ import { Settings } from 'src/app/services/settings.service';
 import { Environments } from 'src/app/types/environment.type';
 import { Tests } from './lib/tests';
 
-describe('Environment migrations', () => {
+describe('Environments migrations', () => {
   describe('Pre 1.7.0', () => {
     const filesPath = 'migrations/pre-1.7.0';
     const tests = new Tests(filesPath);
