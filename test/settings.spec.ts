@@ -41,7 +41,7 @@ describe('Settings Dialog', () => {
   describe('Log variable size', () => {
     it('Set size to 100', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.spectron.client.element(inputBodySize).setValue('100');
+      await tests.app.client.element(inputBodySize).setValue('100');
       await tests.helpers.closeSettingsModal();
     });
 
@@ -61,7 +61,7 @@ describe('Settings Dialog', () => {
 
     it('Set size to 1000', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.spectron.client.element(inputBodySize).setValue('1000');
+      await tests.app.client.element(inputBodySize).setValue('1000');
       await tests.helpers.closeSettingsModal();
     });
 

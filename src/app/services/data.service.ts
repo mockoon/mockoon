@@ -1,63 +1,15 @@
 import { Injectable } from '@angular/core';
-import * as crypto from 'crypto';
-import { Config } from 'src/app/config';
 import { AscSort } from 'src/app/libs/utils.lib';
 import { Store } from 'src/app/stores/store';
-import { DataSubjectType, ExportType } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
 import { EnvironmentLog, EnvironmentLogResponse } from 'src/app/types/server.type';
 import * as url from 'url';
-const appVersion = require('../../../package.json').version;
+import * as uuid from 'uuid/v1';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DataService {
-  private exportId = 'mockoon_export';
-
   constructor(private store: Store) {}
-
-  /**
-   * Wrap data to export in Mockoon export format
-   *
-   * @param data
-   * @param subject
-   */
-  public wrapExport(
-    data: Environments | Environment | Route,
-    subject: DataSubjectType
-  ): string {
-    return JSON.stringify(
-      <ExportType>{
-        id: this.exportId,
-        appVersion: appVersion,
-        checksum: crypto
-          .createHash('md5')
-          .update(JSON.stringify(data) + Config.exportSalt)
-          .digest('hex'),
-        subject,
-        data
-      },
-      null,
-      4
-    );
-  }
-
-  /**
-   * Verify the checksum of an import
-   *
-   * @param importData
-   */
-  public verifyImportChecksum(importData: ExportType): boolean {
-    if (importData.id !== this.exportId) {
-      return false;
-    }
-    const importMD5 = crypto
-      .createHash('md5')
-      .update(JSON.stringify(importData.data) + Config.exportSalt)
-      .digest('hex');
-
-    return importMD5 === importData.checksum;
-  }
 
   /**
    * Format a request log
@@ -205,5 +157,49 @@ export class DataService {
     } while (usedPorts.includes(testSelectedPort));
 
     return testSelectedPort;
+  }
+
+  /**
+   * Renew all environments UUIDs
+   *
+   * @param environments
+   * @param subject
+   */
+  public renewEnvironmentsUUIDs(environments: Environments, erase = false) {
+    environments.forEach(environment => {
+      this.renewEnvironmentUUIDs(environment, erase);
+    });
+
+    return environments;
+  }
+
+  /**
+   * Renew one environment UUIDs
+   *
+   * @param params
+   */
+  public renewEnvironmentUUIDs(environment: Environment, erase = false) {
+    environment.uuid = erase ? '' : uuid();
+
+    environment.routes.forEach(route => {
+      this.renewRouteUUIDs(route, erase);
+    });
+
+    return environment;
+  }
+
+  /**
+   * Renew one route UUIDs
+   *
+   * @param params
+   */
+  public renewRouteUUIDs(route: Route, erase = false) {
+    route.uuid = erase ? '' : uuid();
+
+    route.responses.forEach(routeResponse => {
+      routeResponse.uuid = erase ? '' : uuid();
+    });
+
+    return route;
   }
 }

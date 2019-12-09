@@ -13,7 +13,7 @@ export type Settings = {
 
 export type SettingsProperties = { [T in keyof Settings]?: Settings[T] };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SettingsService {
   public oldLastMigration: number;
 

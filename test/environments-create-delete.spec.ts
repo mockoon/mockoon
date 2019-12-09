@@ -19,7 +19,7 @@ describe('Create and delete environments', () => {
   });
 
   it('Added environment should remain and be active', async () => {
-    await tests.spectron.client.getText('.menu-column--environments .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type').should.eventually.equal('New environment');
+    await tests.app.client.getText('.menu-column--environments .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type').should.eventually.equal('New environment');
   });
 
   it('Remove last environment, interface should be empty', async () => {
@@ -28,7 +28,7 @@ describe('Create and delete environments', () => {
     await tests.helpers.countEnvironments(0);
     await tests.helpers.countRoutes(0);
 
-    await tests.spectron.client.waitForExist('.header input[placeholder="No environment"]');
+    await tests.app.client.waitForExist('.header input[placeholder="No environment"]');
   });
 
   it('Add ten environments ever clicking in the first', async () => {

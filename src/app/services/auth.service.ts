@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { setUserIdAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor(private angularFireAuth: AngularFireAuth, private store: Store) { }
 

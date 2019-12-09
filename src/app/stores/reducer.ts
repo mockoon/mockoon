@@ -1,4 +1,5 @@
 import { Config } from 'src/app/config';
+import { HighestMigrationId } from 'src/app/libs/migrations.lib';
 import { ArrayContainsObjectKey, GetRouteResponseContentType } from 'src/app/libs/utils.lib';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions, ActionTypes } from 'src/app/stores/actions';
@@ -53,7 +54,7 @@ export function environmentReducer(
         environmentsStatus[environment.uuid] = {
           running: false,
           needRestart: false,
-          disabledForIncompatibility: !!environment.lastMigration && environment.lastMigration > action.appLatestMigration
+          disabledForIncompatibility: !!environment.lastMigration && environment.lastMigration > HighestMigrationId
         };
 
         return environmentsStatus;

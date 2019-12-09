@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
+import { HighestMigrationId } from 'src/app/libs/migrations.lib';
 import { DataService } from 'src/app/services/data.service';
-import { MigrationService } from 'src/app/services/migration.service';
 import { Environment } from 'src/app/types/environment.type';
 import { Header, Route, RouteResponse } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SchemasBuilderService {
-  constructor(
-    private dataService: DataService,
-    private migrationService: MigrationService
-  ) {}
+  constructor(private dataService: DataService) {}
 
   /**
    * Build a new environment or route response header
@@ -56,7 +53,7 @@ export class SchemasBuilderService {
   public buildEnvironment(): Environment {
     return {
       uuid: uuid(),
-      lastMigration: this.migrationService.appLatestMigration,
+      lastMigration: HighestMigrationId,
       name: 'New environment',
       endpointPrefix: '',
       latency: 0,

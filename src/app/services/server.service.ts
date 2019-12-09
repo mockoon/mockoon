@@ -30,7 +30,7 @@ const httpsConfig = {
   cert: pemFiles.cert
 };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ServerService {
   // running servers instances
   private instances: { [key: string]: any } = {};

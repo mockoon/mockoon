@@ -1,14 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import 'brace';
-import 'brace/ext/searchbox';
-import 'brace/index';
-import 'brace/mode/css';
-import 'brace/mode/html.js';
-import 'brace/mode/json.js';
-import 'brace/mode/text.js';
-import 'brace/mode/xml.js';
 import { ipcRenderer, remote, shell } from 'electron';
 import * as mimeTypes from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
@@ -23,20 +15,21 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
+import { ImportExportService } from 'src/app/services/import-export.service';
 import { ServerService } from 'src/app/services/server.service';
 import { Toast, ToastsService } from 'src/app/services/toasts.service';
 import { UpdateService } from 'src/app/services/update.service';
-import { clearLogsAction } from 'src/app/stores/actions.js';
+import { clearLogsAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { DuplicatedRoutesTypes, EnvironmentsStatuses, EnvironmentStatus, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
-import { DataSubjectType } from 'src/app/types/data.type';
+import { DataSubject } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
-import { EnvironmentLogs } from 'src/app/types/server.type.js';
-import { dragulaNamespaces as DraggableContainerNames } from 'src/app/types/ui.type.js';
-import '../assets/custom_theme.js';
-const platform = require('os').platform();
+import { EnvironmentLogs } from 'src/app/types/server.type';
+import { dragulaNamespaces as DraggableContainerNames } from 'src/app/types/ui.type';
+
 const appVersion = require('../../package.json').version;
+const platform = require('os').platform();
 
 @Component({
   selector: 'app-root',
@@ -88,7 +81,8 @@ export class AppComponent implements OnInit {
     private dragulaService: DragulaService,
     private analyticsService: AnalyticsService,
     private store: Store,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private importExportService: ImportExportService
   ) {
     // tooltip config
     this.config.container = 'body';
@@ -136,13 +130,13 @@ export class AppComponent implements OnInit {
           }
           break;
         case 'IMPORT_FILE':
-          this.environmentsService.importEnvironmentsFile();
+          this.importExportService.importFromFile();
           break;
         case 'IMPORT_CLIPBOARD':
-          this.environmentsService.importFromClipboard();
+          this.importExportService.importFromClipboard();
           break;
         case 'EXPORT_FILE':
-          this.environmentsService.exportAllEnvironments();
+          this.importExportService.exportAllEnvironments();
           break;
       }
     });
@@ -510,7 +504,7 @@ export class AppComponent implements OnInit {
    *
    * @param event - click event
    */
-  public navigationContextMenu(subject: DataSubjectType, subjectUUID: string, event: any) {
+  public navigationContextMenu(subject: DataSubject, subjectUUID: string, event: any) {
     // if right click display context menu
     if (event && event.which === 3 && (subject !== 'environment' || !this.store.getEnvironmentStatus()[subjectUUID].disabledForIncompatibility)) {
       const menu: ContextMenuEvent = {
@@ -641,11 +635,11 @@ export class AppComponent implements OnInit {
    * @param subject
    * @param subjectUUID
    */
-  public exportToClipboard(subject: DataSubjectType, subjectUUID: string) {
+  public exportToClipboard(subject: DataSubject, subjectUUID: string) {
     if (subject === 'environment') {
-      this.environmentsService.exportEnvironmentToClipboard(subjectUUID);
+      this.importExportService.exportEnvironmentToClipboard(subjectUUID);
     } else if (subject === 'route') {
-      this.environmentsService.exportRouteToClipboard(subjectUUID);
+      this.importExportService.exportRouteToClipboard(subjectUUID);
     }
   }
 

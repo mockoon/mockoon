@@ -1,9 +1,9 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
-import { DataSubjectType } from 'src/app/types/data.type';
+import { DataSubject } from 'src/app/types/data.type';
 
 export type ContextMenuItemPayload = {
-  subject: DataSubjectType;
+  subject: DataSubject;
   action: 'delete' | 'duplicate' | 'env_settings' | 'env_logs' | 'export' | 'toggle';
   subjectUUID: string;
 };

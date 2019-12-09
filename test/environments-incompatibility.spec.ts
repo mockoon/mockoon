@@ -6,7 +6,7 @@ describe('Environments incompatibility', () => {
   tests.runHooks();
 
   it('Should display the incompatible environment with special design', async () => {
-    await tests.spectron.client.waitForExist(
+    await tests.app.client.waitForExist(
       '.menu-column--environments .menu-list .nav-item:nth-child(1).pattern-danger'
     );
   });
@@ -25,7 +25,7 @@ describe('Environments incompatibility', () => {
       '.menu-column--environments .menu-list .nav-item:nth-child(1) .nav-link'
     );
 
-    await tests.spectron.client.waitForExist('.context-menu', 5000, true);
+    await tests.app.client.waitForExist('.context-menu', 5000, true);
   });
 
   it('Should not select the incompatible environment if all other environment have been deleted', async () => {

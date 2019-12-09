@@ -79,11 +79,10 @@ export function setActiveEnvironmentLogTabAction(activeTab: EnvironmentLogsTabsN
  *
  * @param environments - initial environments from storage
  */
-export function setInitialEnvironmentsAction(environments: Environments, appLatestMigration: number) {
+export function setInitialEnvironmentsAction(environments: Environments) {
   return <const>{
     type: ActionTypes.SET_INITIAL_ENVIRONMENTS,
-    environments,
-    appLatestMigration
+    environments
   };
 }
 
@@ -389,7 +388,6 @@ export function updateSettingsAction(properties: SettingsProperties) {
     properties
   };
 }
-
 
 export type Actions =
   ReturnType<typeof setActiveTabAction> |

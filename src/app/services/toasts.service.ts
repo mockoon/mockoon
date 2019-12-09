@@ -4,11 +4,11 @@ import { Store } from 'src/app/stores/store';
 import * as uuid from 'uuid/v1';
 
 export type ToastTypes = 'error' | 'success' | 'warning';
-export type Toast = { UUID: string, message: string, type: ToastTypes };
+export type Toast = { UUID: string; message: string; type: ToastTypes };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ToastsService {
-  constructor(private store: Store) { }
+  constructor(private store: Store) {}
 
   /**
    * Display a toast
@@ -17,11 +17,13 @@ export class ToastsService {
    * @param message - text message to display
    */
   public addToast(type: ToastTypes, message: string) {
-    this.store.update(addToastAction({
-      UUID: uuid(),
-      type,
-      message
-    }));
+    this.store.update(
+      addToastAction({
+        UUID: uuid(),
+        type,
+        message
+      })
+    );
   }
 
   /**

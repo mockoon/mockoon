@@ -5,6 +5,7 @@ import { shell } from 'electron';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
+
 const appVersion = require('../../../package.json').version;
 
 @Component({

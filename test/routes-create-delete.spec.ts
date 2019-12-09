@@ -22,7 +22,7 @@ describe('Create and delete routes', () => {
   });
 
   it('Last added route should remain and be active', async () => {
-    await tests.spectron.client.getText('.menu-column--routes .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child').should.eventually.equal('GET\n/');
+    await tests.app.client.getText('.menu-column--routes .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child').should.eventually.equal('GET\n/');
   });
 
   it('Remove last route, active tab should be environment settings', async () => {
@@ -30,6 +30,6 @@ describe('Create and delete routes', () => {
 
     await tests.helpers.countRoutes(0);
 
-    await tests.spectron.client.waitForExist('.header .btn[ngbTooltip="Environment settings"].active');
+    await tests.app.client.waitForExist('.header .btn[ngbTooltip="Environment settings"].active');
   });
 });

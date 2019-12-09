@@ -1,38 +1,26 @@
 
 import { Injectable } from '@angular/core';
-import { clipboard, remote } from 'electron';
 import * as storage from 'electron-json-storage';
-import * as fs from 'fs';
 import { cloneDeep } from 'lodash';
 import { debounceTime } from 'rxjs/operators';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
-import { Errors } from 'src/app/enums/errors.enum';
-import { Messages } from 'src/app/enums/messages.enum';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { MigrationService } from 'src/app/services/migration.service';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ServerService } from 'src/app/services/server.service';
-import { ToastsService } from 'src/app/services/toasts.service';
 import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
-import { DataSubjectType, ExportType } from 'src/app/types/data.type';
-import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
+import { Environment, EnvironmentProperties } from 'src/app/types/environment.type';
 import { CORSHeaders, Header, Method, Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
 import { dragulaNamespaces } from 'src/app/types/ui.type';
-import * as uuid from 'uuid/v1';
 
-const appVersion = require('../../../package.json').version;
-
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class EnvironmentsService {
-  private dialog = remote.dialog;
-  private BrowserWindow = remote.BrowserWindow;
   private storageKey = 'environments';
 
   constructor(
-    private toastService: ToastsService,
     private dataService: DataService,
     private eventsService: EventsService,
     private store: Store,
@@ -44,9 +32,9 @@ export class EnvironmentsService {
     storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
-        this.store.update(setInitialEnvironmentsAction([this.schemasBuilderService.buildDefaultEnvironment()], this.migrationService.appLatestMigration));
+        this.store.update(setInitialEnvironmentsAction([this.schemasBuilderService.buildDefaultEnvironment()]));
       } else {
-        this.store.update(setInitialEnvironmentsAction(this.migrationService.migrateEnvironments(environments), this.migrationService.appLatestMigration));
+        this.store.update(setInitialEnvironmentsAction(this.migrationService.migrateEnvironments(environments)));
       }
     });
 
@@ -112,7 +100,7 @@ export class EnvironmentsService {
         port: this.dataService.getNewEnvironmentPort()
       };
 
-      newEnvironment = this.renewUUIDs(newEnvironment, 'environment') as Environment;
+      newEnvironment = this.dataService.renewEnvironmentUUIDs(newEnvironment);
 
       this.store.update(addEnvironmentAction(newEnvironment));
 
@@ -169,7 +157,7 @@ export class EnvironmentsService {
     if (routeToDuplicate) {
       let newRoute: Route = cloneDeep(routeToDuplicate);
 
-      newRoute = this.renewUUIDs(newRoute, 'route') as Route;
+      newRoute = this.dataService.renewRouteUUIDs(newRoute);
 
       this.store.update(addRouteAction(newRoute));
 
@@ -281,32 +269,6 @@ export class EnvironmentsService {
   }
 
   /**
-   * Renew all environments UUIDs
-   *
-   * @param data
-   * @param subject
-   */
-  private renewUUIDs(data: Environments | Environment | Route, subject: DataSubjectType) {
-    if (subject === 'full') {
-      (data as Environments).forEach(environment => {
-        this.renewUUIDs(environment, 'environment');
-      });
-    } else if (subject === 'environment') {
-      (data as Environment).uuid = uuid();
-      (data as Environment).routes.forEach(route => {
-        this.renewUUIDs(route, 'route');
-      });
-    } else if (subject === 'route') {
-      (data as Route).uuid = uuid();
-      (data as Route).responses.forEach(routeResponse => {
-        routeResponse.uuid = uuid();
-      });
-    }
-
-    return data;
-  }
-
-  /**
    * Move a menu item (envs / routes)
    */
   public moveMenuItem(type: dragulaNamespaces, sourceIndex: number, targetIndex: number) {
@@ -317,172 +279,6 @@ export class EnvironmentsService {
     };
 
     this.store.update(storeActions[type]({ sourceIndex, targetIndex }));
-  }
-
-  /**
-   * Export all envs in a json file
-   */
-  public async exportAllEnvironments() {
-    const environments = this.store.get('environments');
-
-    const dialogResult = await this.dialog.showSaveDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] });
-
-    // If the user clicked 'cancel'
-    if (dialogResult.filePath === undefined) {
-      return;
-    }
-
-    // reset environments before exporting
-    const dataToExport = cloneDeep(environments);
-
-    try {
-      fs.writeFile(dialogResult.filePath, this.dataService.wrapExport(dataToExport, 'full'), (error) => {
-        if (error) {
-          this.toastService.addToast('error', Errors.EXPORT_ERROR);
-        } else {
-          this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
-
-          this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_FILE);
-        }
-      });
-    } catch (error) {
-      this.toastService.addToast('error', Errors.EXPORT_ERROR);
-    }
-  }
-
-  /**
-   * Export an environment to the clipboard
-   *
-   * @param environmentUUID
-   */
-  public exportEnvironmentToClipboard(environmentUUID: string) {
-    const environment = this.store.getEnvironmentByUUID(environmentUUID);
-
-    try {
-      // reset environment before exporting
-      clipboard.writeText(this.dataService.wrapExport(cloneDeep(environment), 'environment'));
-      this.toastService.addToast('success', Messages.EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS);
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_CLIPBOARD);
-    } catch (error) {
-      this.toastService.addToast('error', Errors.EXPORT_ENVIRONMENT_CLIPBOARD_ERROR);
-    }
-  }
-
-  /**
-   * Export a route from the active environment to the clipboard
-   *
-   * @param routeUUID
-   */
-  public exportRouteToClipboard(routeUUID: string) {
-    const environment = this.store.getActiveEnvironment();
-
-    try {
-      clipboard.writeText(this.dataService.wrapExport(environment.routes.find(route => route.uuid === routeUUID), 'route'));
-      this.toastService.addToast('success', Messages.EXPORT_ROUTE_CLIPBOARD_SUCCESS);
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_CLIPBOARD);
-    } catch (error) {
-      this.toastService.addToast('error', Errors.EXPORT_ROUTE_CLIPBOARD_ERROR);
-    }
-  }
-
-  /**
-   * Import an environment / route from clipboard
-   * Append environment, append route in currently selected environment
-   */
-  public importFromClipboard() {
-    let importData: ExportType;
-
-    try {
-      importData = JSON.parse(clipboard.readText());
-
-      // verify data checksum
-      if (!this.dataService.verifyImportChecksum(importData)) {
-        this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
-
-        return;
-      }
-
-      // verify version compatibility
-      if (importData.appVersion !== appVersion) {
-        this.toastService.addToast('error', Errors.IMPORT_WRONG_VERSION);
-
-        return;
-      }
-
-      if (importData.subject === 'environment') {
-        importData.data = this.renewUUIDs(importData.data as Environment, 'environment');
-        this.store.update(addEnvironmentAction(importData.data as Environment));
-      } else if (importData.subject === 'route') {
-        importData.data = this.renewUUIDs(importData.data as Route, 'route');
-
-        // if has a current environment append imported route
-        if (this.store.get('activeEnvironmentUUID')) {
-          this.store.update(addRouteAction(importData.data as Route));
-        } else {
-          const newEnvironment: Environment = {
-            ...this.schemasBuilderService.buildEnvironment(),
-            routes: [importData.data as Route]
-          };
-
-          this.store.update(addEnvironmentAction(newEnvironment));
-        }
-      }
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_CLIPBOARD);
-    } catch (error) {
-      if (!importData) {
-        this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_WRONG_CHECKSUM);
-
-        return;
-      }
-
-      if (importData.subject === 'environment') {
-        this.toastService.addToast('error', Errors.IMPORT_ENVIRONMENT_CLIPBOARD_ERROR);
-      } else if (importData.subject === 'route') {
-        this.toastService.addToast('error', Errors.IMPORT_ROUTE_CLIPBOARD_ERROR);
-      }
-    }
-  }
-
-  /**
-   * Import a json environments file in Mockoon's format.
-   * Verify checksum and migrate data.
-   *
-   * Append imported envs to the env array.
-   */
-  public async importEnvironmentsFile() {
-    const dialogResult = await this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), { filters: [{ name: 'JSON', extensions: ['json'] }] });
-
-    if (dialogResult.filePaths && dialogResult.filePaths[0]) {
-      fs.readFile(dialogResult.filePaths[0], 'utf-8', (error, fileContent) => {
-        if (error) {
-          this.toastService.addToast('error', Errors.IMPORT_ERROR);
-        } else {
-          const importData: ExportType = JSON.parse(fileContent);
-
-          // verify data checksum
-          if (!this.dataService.verifyImportChecksum(importData)) {
-            this.toastService.addToast('error', Errors.IMPORT_FILE_WRONG_CHECKSUM);
-
-            return;
-          }
-
-          // verify version compatibility
-          if (importData.appVersion !== appVersion) {
-            this.toastService.addToast('error', Errors.IMPORT_WRONG_VERSION);
-
-            return;
-          }
-
-          importData.data = this.renewUUIDs(importData.data as Environments, 'full');
-          (importData.data as Environments).forEach(environment => {
-            this.store.update(addEnvironmentAction(environment));
-          });
-
-          this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);
-        }
-      });
-    }
   }
 
   /**
