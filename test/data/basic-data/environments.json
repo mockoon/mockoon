@@ -91,6 +91,8 @@
         "key": "",
         "value": ""
       }
-    ]
+    ],
+    "proxyReqHeaders": [{"key": "", "value":""}],
+    "proxyResHeaders": [{"key": "", "value":""}]
   }
 ]

@@ -108,6 +108,18 @@
         "key": "Content-Type",
         "value": "application/json"
       }
+    ],
+    "proxyReqHeaders": [
+      {
+          "key": "X-Proxy-Request-Header",
+          "value": "header value"
+      }
+    ],
+    "proxyResHeaders": [
+      {
+          "key": "X-Proxy-Response-Header",
+          "value": "header value"
+      }
     ]
   }
 ]

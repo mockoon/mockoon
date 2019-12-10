@@ -273,6 +273,8 @@
         "key": "Content-Type",
         "value": "application/json"
       }
-    ]
+    ],
+    "proxyReqHeaders": [{"key": "", "value":""}],
+    "proxyResHeaders": [{"key": "", "value":""}]
   }
 ]

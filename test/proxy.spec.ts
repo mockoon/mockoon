@@ -38,6 +38,20 @@ describe('Proxy', () => {
     await tests.spectron.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`, 5000, false);
   });
 
+  it('Test proxy request headers', async () => {
+    await tests.helpers.selectEnvironment(1);
+    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchTabInEnvironmentLogs('REQUEST');
+    await tests.spectron.client.getText('.environment-logs-content-request > div:nth-child(4) > div:nth-child(4)').should.eventually.equal('X-proxy-request-header: header value')
+  });
+
+  it('Test proxy response headers', async () => {
+    await tests.helpers.selectEnvironment(2);
+    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
+    await tests.spectron.client.getText('.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(1)').should.eventually.equal('X-proxy-response-header: header value')
+  });
+
   it('Click on mock button ', async () => {
     await tests.spectron.client.element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`).click();
     await tests.helpers.restartEnvironment();
