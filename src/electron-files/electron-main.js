@@ -285,7 +285,6 @@ function createWindow() {
           shell.openExternal('https://mockoon.com/tutorials');
         }
       },
-      { type: 'separator' },
       {
         label: 'Community / Chat',
         click: function() {
@@ -299,7 +298,13 @@ function createWindow() {
           shell.openExternal('https://github.com/mockoon/mockoon/issues');
         }
       },
-      { type: 'separator' }
+      { type: 'separator' },
+      {
+        label: 'Show app data folder',
+        click: function() {
+          shell.showItemInFolder(electron.app.getPath('userData'));
+        }
+      }
     ]
   });
 
