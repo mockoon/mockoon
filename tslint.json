@@ -93,8 +93,7 @@
     ],
     "radix": true,
     "semicolon": [
-      true,
-      "always"
+      true, "always", "ignore-bound-class-methods"
     ],
     "triple-equals": [
       true,
