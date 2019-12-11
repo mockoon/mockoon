@@ -243,7 +243,7 @@ function createWindow() {
 
   // add tools menu, send action through web contents
   menu.push({
-    label: 'Tools',
+    label: 'Import/export',
     submenu: [
       {
         label: 'Import from clipboard',
@@ -262,6 +262,7 @@ function createWindow() {
       { type: 'separator' },
       {
         label: 'Export all environments to a file (JSON)',
+        accelerator: 'CmdOrCtrl+O',
         click: function() {
           mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE' });
         }
