@@ -71,7 +71,7 @@ describe('Environments import', () => {
       const tests = new Tests('import');
       tests.runHooks(true, false);
 
-      it('Should reject the export file', async () => {
+      it('Should reject the export file when version is different', async () => {
         tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
           {
             method: 'showOpenDialog',
