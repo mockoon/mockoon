@@ -169,7 +169,7 @@
                   <a class="nav-link" [ngClass]="{'active': (activeRoute$ | async)?.uuid === environmentRoute.uuid, 'route-disabled': !environmentRoute.enabled}"
                     (click)="selectRoute(environmentRoute.uuid)"
                     (contextmenu)="navigationContextMenu('route', environmentRoute.uuid, $event)">
-                    <div class="ellipsis">
+                    <div [ngClass]="{'ellipsis': ((settings$ | async)?.truncateRouteName) }">
                       <span *ngIf="duplicatedRoutes$ | async as duplicatedRoutes" class="text-warning"
                         ngbTooltip="Route is duplicated (same endpoint and method)">
                         <i *ngIf="duplicatedRoutes[activeEnvironment.uuid]?.has(environmentRoute.uuid)"

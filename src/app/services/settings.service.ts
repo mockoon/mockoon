@@ -9,6 +9,7 @@ export type Settings = {
   analytics: boolean;
   bannerDismissed: string[];
   logSizeLimit: number;
+  truncateRouteName: boolean;
 };
 
 export type SettingsProperties = { [T in keyof Settings]?: Settings[T] };
@@ -21,7 +22,8 @@ export class SettingsService {
     welcomeShown: false,
     analytics: true,
     bannerDismissed: [],
-    logSizeLimit: 10000
+    logSizeLimit: 10000,
+    truncateRouteName: true
   };
   private storageKey = 'settings';
 

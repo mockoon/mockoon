@@ -35,6 +35,8 @@ import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } f
 import { EnvironmentLogs } from 'src/app/types/server.type.js';
 import { dragulaNamespaces as DraggableContainerNames } from 'src/app/types/ui.type.js';
 import '../assets/custom_theme.js';
+import { Settings } from 'src/app/services/settings.service';
+
 const platform = require('os').platform();
 const appVersion = require('../../package.json').version;
 
@@ -46,6 +48,7 @@ const appVersion = require('../../package.json').version;
 export class AppComponent implements OnInit {
   @ViewChild('routesMenu', { static: false }) private routesMenu: ElementRef;
   @ViewChild('environmentsMenu', { static: false }) private environmentsMenu: ElementRef;
+  public settings$: Observable<Settings>;
   public methods = methods;
   public statusCodes = statusCodes;
   public updateAvailable = false;
@@ -150,6 +153,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
+
+    this.settings$ = this.store.select('settings');
 
     // auth anonymously through firebase
     this.authService.auth();

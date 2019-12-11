@@ -10,6 +10,12 @@
     <p class="text-muted"><small>We are using a basic Google Analytics setup, none of your data/content is kept anywhere and it helps us improve Mockoon :)</small></p>
 
     <div class="form-group log-body">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="truncateRouteName" name="truncateRouteName" [ngModel]="(settings$ | async)?.truncateRouteName" (ngModelChange)="settingsUpdated($event, 'truncateRouteName')">
+        <label class="custom-control-label" for="truncateRouteName">Truncate route name in route list</label>
+      </div>
+    </div>
+    <div class="form-group log-body">
       <label for="log-body-size">Log body size:</label>
       <p class="text-muted"><small>Truncate the entering requests and exiting responses bodies if bigger (characters).</small></p>
       <input type="number" class="form-control col-4" id="log-body-size"
