@@ -18,7 +18,7 @@ export const DummyJSONHelpers = (request) => {
   return {
     // get json property from body
     body: function (path: string, defaultValue: string) {
-      const requestContentType = request.header('Content-Type');
+      const requestContentType: string = request.header('Content-Type');
 
       if (typeof defaultValue === 'object') {
         defaultValue = '';
@@ -28,7 +28,7 @@ export const DummyJSONHelpers = (request) => {
       try {
         let value;
 
-        if (requestContentType === 'application/x-www-form-urlencoded') {
+        if (requestContentType.includes('application/x-www-form-urlencoded')) {
           value = queryString.parse(request.body)[path];
         } else {
           const jsonBody = JSON.parse(request.body);

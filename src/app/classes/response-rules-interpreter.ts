@@ -11,7 +11,10 @@ import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/
 export class ResponseRulesInterpreter {
   private targets: { [key in Exclude<ResponseRuleTargets, 'header'>]: any };
 
-  constructor(private routeResponses: RouteResponse[], private request: Request) {
+  constructor(
+    private routeResponses: RouteResponse[],
+    private request: Request
+  ) {
     this.extractTargets();
   }
 
@@ -20,9 +23,11 @@ export class ResponseRulesInterpreter {
    * If no rule has been fulfilled get the first route response.
    */
   public chooseResponse(): RouteResponse {
-    return this.routeResponses.find(routeResponse => {
-      return !!routeResponse.rules.find(this.isValidRule);
-    }) || this.routeResponses[0];
+    return (
+      this.routeResponses.find(routeResponse => {
+        return !!routeResponse.rules.find(this.isValidRule);
+      }) || this.routeResponses[0]
+    );
   }
 
   /**
@@ -45,7 +50,9 @@ export class ResponseRulesInterpreter {
     if (rule.isRegex) {
       regex = new RegExp(rule.value);
 
-      return Array.isArray(value) ? value.some(arrayValue => regex.test(arrayValue)) : regex.test(value);
+      return Array.isArray(value)
+        ? value.some(arrayValue => regex.test(arrayValue))
+        : regex.test(value);
     }
 
     if (Array.isArray(value)) {
@@ -53,7 +60,7 @@ export class ResponseRulesInterpreter {
     }
 
     return value === rule.value;
-  }
+  };
 
   /**
    * Extract rules targets from the request (body, headers, etc)
@@ -63,9 +70,9 @@ export class ResponseRulesInterpreter {
     let body: queryString.ParsedUrlQuery | JSON = {};
 
     try {
-      if (requestContentType === 'application/x-www-form-urlencoded') {
+      if (requestContentType.includes('application/x-www-form-urlencoded')) {
         body = queryString.parse(this.request.body);
-      } else if (requestContentType === 'application/json') {
+      } else if (requestContentType.includes('application/json')) {
         body = JSON.parse(this.request.body);
       }
     } catch (e) {

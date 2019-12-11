@@ -105,6 +105,7 @@
     "spectron": "5.0.0",
     "ts-mocha": "6.0.0",
     "tslint": "5.15.0",
+    "tslint-config-prettier": "1.18.0",
     "tslint-no-unused-expression-chai": "0.1.4",
     "typescript": "3.5.3",
     "wait-on": "3.3.0",

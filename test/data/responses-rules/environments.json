@@ -1,6 +1,6 @@
 [
   {
-    "uuid": "779707a0-ee51-40e2-9f88-3698c8c8640c",
+    "uuid": "9f3be32e-8a43-4d89-9458-9c254cdbf79e",
     "lastMigration": 9,
     "name": "FT env",
     "endpointPrefix": "",
@@ -8,14 +8,14 @@
     "port": 3000,
     "routes": [
       {
-        "uuid": "3cf6e8a5-6458-4fc6-a848-04ff8f0edc22",
+        "uuid": "f7f4ec17-b987-49e5-9dd9-05e37e780fef",
         "method": "get",
         "endpoint": "users/:userid",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "68461303-b003-475b-95aa-5f2b19252baf",
+            "uuid": "54bbe6c7-1bbe-46be-8e20-a62e6d6a1353",
             "body": "{}",
             "latency": 0,
             "statusCode": "500",
@@ -33,14 +33,14 @@
         ]
       },
       {
-        "uuid": "c82c1850-d905-4b71-891f-c094f85dea0c",
+        "uuid": "262b95f1-e0a1-4e96-b848-9c888c248d08",
         "method": "get",
         "endpoint": "rules/:id",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "0d37217f-badc-4cbd-8ec8-61d693cf91aa",
+            "uuid": "ecb665cf-50c2-4e33-a3f5-6fb9e04f4b97",
             "body": "0",
             "latency": 0,
             "statusCode": "404",
@@ -56,7 +56,7 @@
             "rules": []
           },
           {
-            "uuid": "a2749ee8-2f7b-4457-9961-1b2a49bc713b",
+            "uuid": "6d7fe805-941c-489a-b883-6de4b11b03da",
             "body": "1",
             "latency": 0,
             "statusCode": "200",
@@ -79,7 +79,7 @@
             ]
           },
           {
-            "uuid": "0d37217f-badc-4cbd-8ec8-61d693cf91aa",
+            "uuid": "f59b5907-0e61-4310-96d0-6dee5ca23585",
             "body": "2",
             "latency": 0,
             "statusCode": "200",
@@ -102,7 +102,7 @@
             ]
           },
           {
-            "uuid": "3fa96055-5fce-438d-9a97-565cc51a1537",
+            "uuid": "ef69b86d-78fa-4913-b5f8-246f4d68ec95",
             "body": "3",
             "latency": 0,
             "statusCode": "200",
@@ -125,7 +125,7 @@
             ]
           },
           {
-            "uuid": "3fa96055-5fce-438d-9a97-565cc51a1537",
+            "uuid": "ea676b0d-45f8-4a32-bc8a-e61fe545e7dd",
             "body": "4",
             "latency": 0,
             "statusCode": "200",
@@ -148,7 +148,7 @@
             ]
           },
           {
-            "uuid": "93cdabc4-5f5a-4d34-b753-01172e21745b",
+            "uuid": "479147f9-a130-40b5-8533-8dd0d2e75603",
             "body": "5",
             "latency": 0,
             "statusCode": "200",
@@ -171,7 +171,7 @@
             ]
           },
           {
-            "uuid": "b5f66551-ae59-4ce8-95da-b7bdb8ba3f14",
+            "uuid": "5568e424-cdab-495c-a4bc-9b090c70bd68",
             "body": "6",
             "latency": 0,
             "statusCode": "200",
@@ -194,7 +194,7 @@
             ]
           },
           {
-            "uuid": "d2743d98-1b99-468d-b5e3-a7be0ed7f2c5",
+            "uuid": "bd254230-37c0-4027-a070-49193baae0ca",
             "body": "7",
             "latency": 0,
             "statusCode": "200",
@@ -217,7 +217,7 @@
             ]
           },
           {
-            "uuid": "ebfce072-8a05-4856-81d1-89ee1726a9be",
+            "uuid": "75fa3d98-2cb9-4349-bbda-1c2bcec63977",
             "body": "8",
             "latency": 0,
             "statusCode": "200",
@@ -240,7 +240,7 @@
             ]
           },
           {
-            "uuid": "ebfce072-8a05-4856-81d1-89ee1726a9be",
+            "uuid": "394e2e67-c11c-410a-881a-1fcff2659420",
             "body": "9",
             "latency": 0,
             "statusCode": "200",
@@ -258,6 +258,52 @@
                 "target": "body",
                 "modifier": "users",
                 "value": "^Ric",
+                "isRegex": true
+              }
+            ]
+          },
+          {
+            "uuid": "af10eb1a-5fd6-4959-95a7-5ee5e97a785b",
+            "body": "10",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "test",
+                "value": "test",
+                "isRegex": false
+              }
+            ]
+          },
+          {
+            "uuid": "f9676b08-2f1b-49bf-90ef-05dc068bed49",
+            "body": "11",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "test",
+                "value": "1",
                 "isRegex": true
               }
             ]
