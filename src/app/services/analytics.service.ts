@@ -6,7 +6,8 @@ import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
 import { Store } from 'src/app/stores/store';
 import { environment } from 'src/environments/environment';
-const packageJSON = require('../../../package.json');
+
+const appVersion = require('../../../package.json').version;
 
 /**
  * Reference: https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
@@ -21,14 +22,14 @@ const packageJSON = require('../../../package.json');
 
 export type CollectParams = { type: 'event' | 'pageview', pageName?: string, category?: string, action?: string, label?: string };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AnalyticsService {
   private endpoint = 'https://www.google-analytics.com/collect';
   private payload = {
     v: '1',
     an: 'mockoon',
     aid: 'com.mockoon.app',
-    av: packageJSON.version,
+    av: appVersion,
     ds: 'app',
     tid: environment.analyticsID,
     dh: encodeURIComponent('https://app.mockoon.com')

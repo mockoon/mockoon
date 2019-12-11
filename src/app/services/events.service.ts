@@ -9,13 +9,16 @@ export type ContextMenuEvent = {
   items: ContextMenuItem[];
 };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class EventsService {
   public contextMenuEvents: EventEmitter<ContextMenuEvent> = new EventEmitter();
   public settingsModalEvents: EventEmitter<any> = new EventEmitter();
   public changelogModalEvents: EventEmitter<any> = new EventEmitter();
   public analyticsEvents: EventEmitter<CollectParams> = new EventEmitter();
-  public injectHeaders: EventEmitter<{ target: HeadersListType, headers: Header[] }> = new EventEmitter();
+  public injectHeaders: EventEmitter<{
+    target: HeadersListType;
+    headers: Header[];
+  }> = new EventEmitter();
 
-  constructor() { }
+  constructor() {}
 }

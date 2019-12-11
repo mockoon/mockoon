@@ -1,24 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Migrations } from 'src/app/libs/migrations.lib';
+import { HighestMigrationId, Migrations } from 'src/app/libs/migrations.lib';
 import { SettingsService } from 'src/app/services/settings.service';
-import { Store } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MigrationService {
-  public readonly appLatestMigration: number;
-
-  constructor(private settingsService: SettingsService, private store: Store) {
-    // get most recent migration
-    this.appLatestMigration = Migrations.reduce(
-      (lastMigrationId, migration) => {
-        if (migration.id > lastMigrationId) {
-          return migration.id;
-        }
-      },
-      0
-    );
-  }
+  constructor(private settingsService: SettingsService) {}
 
   /**
    * Check if each environment needs to be migrated.
@@ -27,19 +14,29 @@ export class MigrationService {
    */
   public migrateEnvironments(environments: Environments) {
     environments.forEach(environment => {
-      const migrationStartId = this.getMigrationStartId(environment);
-
-      if (migrationStartId > -1) {
-        Migrations.forEach(migration => {
-          if (migration.id > migrationStartId) {
-            migration.migrationFunction(environment);
-            environment.lastMigration = migration.id;
-          }
-        });
-      }
+      this.migrateEnvironment(environment);
     });
 
     return environments;
+  }
+
+  /**
+   * Migrate one environment.
+   * Will automatically check the last migration done on the environment and apply the most recent
+   */
+  public migrateEnvironment(environment: Environment) {
+    const migrationStartId = this.getMigrationStartId(environment);
+
+    if (migrationStartId > -1) {
+      Migrations.forEach(migration => {
+        if (migration.id > migrationStartId) {
+          migration.migrationFunction(environment);
+          environment.lastMigration = migration.id;
+        }
+      });
+    }
+
+    return environment;
   }
 
   /**
@@ -61,12 +58,12 @@ export class MigrationService {
   private getMigrationStartId(environment: Environment): number {
     if (
       environment.lastMigration !== undefined &&
-      environment.lastMigration < this.appLatestMigration
+      environment.lastMigration < HighestMigrationId
     ) {
       return environment.lastMigration;
     } else if (
       environment.lastMigration === undefined &&
-      this.appLatestMigration > this.settingsService.oldLastMigration
+      HighestMigrationId > this.settingsService.oldLastMigration
     ) {
       return this.settingsService.oldLastMigration;
     }

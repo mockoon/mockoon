@@ -4,19 +4,20 @@ import { shell } from 'electron';
 import { Subject } from 'rxjs/internal/Subject';
 import * as semver from 'semver';
 import { Config } from 'src/app/config';
+
+const appVersion = require('../../../package.json').version;
 const request = require('request');
 const fs = require('fs');
 const app = require('electron').remote.app;
 const spawn = require('child_process').spawn;
 const platform = require('os').platform();
-const packageJSON = require('../../../package.json');
 
 /**
  * Auto update for windows (with temp file and old update file deletion)
  * Download trigger for mac and linux
  *
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UpdateService {
   private tempUpdateFileName = 'update.download';
   private updateFileName = {
@@ -43,7 +44,7 @@ export class UpdateService {
       })
         .subscribe((githubRelease) => {
           // check if version is ahead and trigger something depending on platform (semver automatically strip 'v')
-          if (semver.gt(githubRelease.tag_name, packageJSON.version)) {
+          if (semver.gt(githubRelease.tag_name, appVersion)) {
             this.nextVersion = githubRelease.tag_name.replace('v', '');
 
             // only trigger download for windows, for other just inform
@@ -101,7 +102,7 @@ export class UpdateService {
    */
   private removeOldUpdate() {
     if (platform === 'win32') {
-      fs.unlink(this.userDataPath + this.updateFileName[platform].replace('%v%', packageJSON.version), () => { });
+      fs.unlink(this.userDataPath + this.updateFileName[platform].replace('%v%', appVersion), () => { });
     }
   }
 

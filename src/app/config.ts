@@ -12,7 +12,6 @@ export const Config = {
     headers: 'https://mockoon.com/tutorial/define-response-headers/',
     rules: 'https://mockoon.com/tutorial/multiple-route-responses/'
   },
-  exportSalt: '6f5h8q9z32f1d5s4z86q',
   maxLogsPerEnvironment: 50,
   firebaseConfig: {
     apiKey: 'AIzaSyCIkzTtimLebXjf-gfCQ6iwCVFsYRhCRvs',

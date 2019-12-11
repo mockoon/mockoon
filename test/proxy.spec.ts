@@ -34,12 +34,12 @@ describe('Proxy', () => {
   });
 
   it('First entry is GET /answer and was proxied by the application', async () => {
-    await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('GET\n/answer');
-    await tests.spectron.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`, 5000, false);
+    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('GET\n/answer');
+    await tests.app.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`, 5000, false);
   });
 
   it('Click on mock button ', async () => {
-    await tests.spectron.client.element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`).click();
+    await tests.app.client.element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`).click();
     await tests.helpers.restartEnvironment();
   });
 
@@ -51,8 +51,8 @@ describe('Proxy', () => {
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.helpers.countEnvironmentLogsEntries(2);
-    await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('GET\n/answer');
-    await tests.spectron.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`, 5000, true);
+    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('GET\n/answer');
+    await tests.app.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`, 5000, true);
   });
 
 });

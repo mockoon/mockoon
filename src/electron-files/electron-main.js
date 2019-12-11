@@ -12,7 +12,6 @@ const app = electron.app;
 const shell = electron.shell;
 const BrowserWindow = electron.BrowserWindow;
 
-
 // if serving enable hot reload
 const args = process.argv.slice(1);
 
@@ -28,8 +27,14 @@ if (isTesting) {
 // in dev mode add local data and enable hot reloading
 if (isDev && isServing) {
   mkdirp.sync('./tmp/storage/');
-  fs.copyFileSync(path.resolve('./test/data/dev/environments.json'), path.resolve('./tmp/storage/environments.json'));
-  fs.copyFileSync(path.resolve('./test/data/dev/settings.json'), path.resolve('./tmp/storage/settings.json'));
+  fs.copyFileSync(
+    path.resolve('./test/data/dev/environments.json'),
+    path.resolve('./tmp/storage/environments.json')
+  );
+  fs.copyFileSync(
+    path.resolve('./test/data/settings.json'),
+    path.resolve('./tmp/storage/settings.json')
+  );
 
   electron.app.setPath('userData', path.resolve('./tmp'));
   require('electron-reload')(__dirname, {});
@@ -70,11 +75,13 @@ function createWindow() {
   mainWindowState.manage(mainWindow);
 
   // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }));
+  mainWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, 'index.html'),
+      protocol: 'file:',
+      slashes: true
+    })
+  );
 
   // Open the DevTools / Redux except when running functional tests
   if (isDev && !isTesting) {
@@ -82,39 +89,20 @@ function createWindow() {
   }
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
+  mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null
+    mainWindow = null;
   });
 
   var menuApplication = {
     label: 'Application',
     submenu: [
       {
-        label: 'Mockoon website', click: function () {
-          shell.openExternal('https://mockoon.com');
-        }
-      },
-      {
-        label: 'Tutorials', click: function () {
-          shell.openExternal('https://mockoon.com/tutorials');
-        }
-      },
-      {
-        label: 'Community', click: function () {
-          shell.openExternal('https://spectrum.chat/mockoon');
-        }
-      },
-      {
-        label: 'Send feedback', click: function () {
-          shell.openExternal('https://github.com/mockoon/mockoon/issues');
-        }
-      },
-      { type: 'separator' },
-      {
-        label: 'Settings', accelerator: 'CmdOrCtrl+,', click: function () {
+        label: 'Settings',
+        accelerator: 'CmdOrCtrl+,',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
         }
       },
@@ -133,9 +121,7 @@ function createWindow() {
   menuApplication.submenu.push({ label: 'Quit', role: 'quit' });
 
   // create prod menu
-  var menu = [
-    menuApplication
-  ];
+  var menu = [menuApplication];
 
   // add edit menu for mac because needed for copy paste
   if (process.platform === 'darwin') {
@@ -148,7 +134,11 @@ function createWindow() {
         { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
         { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
         { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-        { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
+        {
+          label: 'Select All',
+          accelerator: 'CmdOrCtrl+A',
+          selector: 'selectAll:'
+        }
       ]
     });
   }
@@ -158,64 +148,96 @@ function createWindow() {
     label: 'Actions',
     submenu: [
       {
-        label: 'Add new environment', accelerator: 'Shift+CmdOrCtrl+E', click: function () {
+        label: 'Add new environment',
+        accelerator: 'Shift+CmdOrCtrl+E',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'NEW_ENVIRONMENT' });
         }
       },
       {
-        label: 'Add new route', accelerator: 'Shift+CmdOrCtrl+R', click: function () {
+        label: 'Add new route',
+        accelerator: 'Shift+CmdOrCtrl+R',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'NEW_ROUTE' });
         }
       },
       { type: 'separator' },
       {
-        label: 'Duplicate current environment', accelerator: 'CmdOrCtrl+D', click: function () {
-          mainWindow.webContents.send('keydown', { action: 'DUPLICATE_ENVIRONMENT' });
+        label: 'Duplicate current environment',
+        accelerator: 'CmdOrCtrl+D',
+        click: function() {
+          mainWindow.webContents.send('keydown', {
+            action: 'DUPLICATE_ENVIRONMENT'
+          });
         }
       },
       {
-        label: 'Duplicate current route', accelerator: 'Shift+CmdOrCtrl+D', click: function () {
+        label: 'Duplicate current route',
+        accelerator: 'Shift+CmdOrCtrl+D',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'DUPLICATE_ROUTE' });
         }
       },
       { type: 'separator' },
       {
-        label: 'Delete current environment', accelerator: 'Alt+CmdOrCtrl+U', click: function () {
-          mainWindow.webContents.send('keydown', { action: 'DELETE_ENVIRONMENT' });
+        label: 'Delete current environment',
+        accelerator: 'Alt+CmdOrCtrl+U',
+        click: function() {
+          mainWindow.webContents.send('keydown', {
+            action: 'DELETE_ENVIRONMENT'
+          });
         }
       },
       {
-        label: 'Delete current route', accelerator: 'Alt+Shift+CmdOrCtrl+U', click: function () {
+        label: 'Delete current route',
+        accelerator: 'Alt+Shift+CmdOrCtrl+U',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'DELETE_ROUTE' });
         }
       },
       { type: 'separator' },
       {
-        label: 'Start/Stop/Reload current environment', accelerator: 'Shift+CmdOrCtrl+S', click: function () {
-          mainWindow.webContents.send('keydown', { action: 'START_ENVIRONMENT' });
+        label: 'Start/Stop/Reload current environment',
+        accelerator: 'Shift+CmdOrCtrl+S',
+        click: function() {
+          mainWindow.webContents.send('keydown', {
+            action: 'START_ENVIRONMENT'
+          });
         }
       },
       { type: 'separator' },
       {
-        label: 'Select previous environment', accelerator: 'CmdOrCtrl+Up', click: function () {
-          mainWindow.webContents.send('keydown', { action: 'PREVIOUS_ENVIRONMENT' });
+        label: 'Select previous environment',
+        accelerator: 'CmdOrCtrl+Up',
+        click: function() {
+          mainWindow.webContents.send('keydown', {
+            action: 'PREVIOUS_ENVIRONMENT'
+          });
         }
       },
       {
-        label: 'Select next environment', accelerator: 'CmdOrCtrl+Down', click: function () {
-          mainWindow.webContents.send('keydown', { action: 'NEXT_ENVIRONMENT' });
+        label: 'Select next environment',
+        accelerator: 'CmdOrCtrl+Down',
+        click: function() {
+          mainWindow.webContents.send('keydown', {
+            action: 'NEXT_ENVIRONMENT'
+          });
         }
       },
       {
-        label: 'Select previous route', accelerator: 'Shift+CmdOrCtrl+Up', click: function () {
+        label: 'Select previous route',
+        accelerator: 'Shift+CmdOrCtrl+Up',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'PREVIOUS_ROUTE' });
         }
       },
       {
-        label: 'Select next route', accelerator: 'Shift+CmdOrCtrl+Down', click: function () {
+        label: 'Select next route',
+        accelerator: 'Shift+CmdOrCtrl+Down',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'NEXT_ROUTE' });
         }
-      },
+      }
     ]
   });
 
@@ -224,21 +246,59 @@ function createWindow() {
     label: 'Tools',
     submenu: [
       {
-        label: 'Import environment / route from clipboard', click: function () {
-          mainWindow.webContents.send('keydown', { action: 'IMPORT_CLIPBOARD' });
+        label: 'Import from clipboard',
+        click: function() {
+          mainWindow.webContents.send('keydown', {
+            action: 'IMPORT_CLIPBOARD'
+          });
         }
       },
       {
-        label: 'Import all environments from file', click: function () {
+        label: 'Import from a file (JSON)',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'IMPORT_FILE' });
         }
       },
       { type: 'separator' },
       {
-        label: 'Export all environments', click: function () {
+        label: 'Export all environments to a file (JSON)',
+        click: function() {
           mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE' });
         }
       }
+    ]
+  });
+
+  menu.push({
+    label: 'Help',
+    submenu: [
+      {
+        label: 'Mockoon website',
+        click: function() {
+          shell.openExternal('https://mockoon.com');
+        }
+      },
+      {
+        label: 'Tutorials',
+        click: function() {
+          shell.openExternal('https://mockoon.com/tutorials');
+        }
+      },
+      { type: 'separator' },
+      {
+        label: 'Community / Chat',
+        click: function() {
+          shell.openExternal('https://spectrum.chat/mockoon');
+        }
+      },
+      { type: 'separator' },
+      {
+        label: 'Send feedback',
+        click: function() {
+          shell.openExternal('https://github.com/mockoon/mockoon/issues');
+        }
+      },
+      { type: 'separator' }
     ]
   });
 
@@ -251,7 +311,7 @@ function createWindow() {
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function() {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
@@ -259,7 +319,7 @@ app.on('window-all-closed', function () {
   }
 });
 
-app.on('activate', function () {
+app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {

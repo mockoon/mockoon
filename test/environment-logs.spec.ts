@@ -41,32 +41,32 @@ describe('Environment logs', () => {
   }
   it('Environment logs have two entries', async () => {
     await tests.helpers.switchViewInHeader('ENV_LOGS');
-    await tests.spectron.client.elements(`${environmentLogsItemSelector}`).should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(2);
+    await tests.app.client.elements(`${environmentLogsItemSelector}`).should.eventually.have.property('value').to.be.an('Array').that.have.lengthOf(2);
   });
 
   it('First entry is GET /test and was not caught by the application', async () => {
-    await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('GET\n/test');
-    await tests.spectron.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request caught"]`, 5000, true);
+    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('GET\n/test');
+    await tests.app.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request caught"]`, 5000, true);
   });
 
   it('Second entry is GET /answer and was caught by the application', async () => {
-    await tests.spectron.client.getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link .route`).should.eventually.equal('GET\n/answer');
-    await tests.spectron.client.waitForExist(`${environmentLogsItemSelector}:nth-child(2) .nav-link i[ngbTooltip="Request caught"]`);
+    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link .route`).should.eventually.equal('GET\n/answer');
+    await tests.app.client.waitForExist(`${environmentLogsItemSelector}:nth-child(2) .nav-link i[ngbTooltip="Request caught"]`);
   });
 
   it('View response log', async () => {
-    await tests.spectron.client.element('.environment-logs-content .nav .nav-item:nth-child(2)').click();
-    await tests.spectron.client.getText('.environment-logs-content-response > div > div:nth-child(2) > div').should.eventually.equal('Status: 404');
+    await tests.app.client.element('.environment-logs-content .nav .nav-item:nth-child(2)').click();
+    await tests.app.client.getText('.environment-logs-content-response > div > div:nth-child(2) > div').should.eventually.equal('Status: 404');
   });
 
   it('View request log again', async () => {
-    await tests.spectron.client.element('.environment-logs-content .nav .nav-item:nth-child(1)').click();
-    await tests.spectron.client.getText('.environment-logs-content-request > div:nth-child(2) > div:nth-child(1)').should.eventually.equal('Request URL: /test');
+    await tests.app.client.element('.environment-logs-content .nav .nav-item:nth-child(1)').click();
+    await tests.app.client.getText('.environment-logs-content-request > div:nth-child(2) > div:nth-child(1)').should.eventually.equal('Request URL: /test');
   });
 
   it('Mock /test log', async () => {
     await tests.helpers.countRoutes(3);
-    await tests.spectron.client.element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`).click();
+    await tests.app.client.element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`).click();
     await tests.helpers.countRoutes(4);
   })
 });

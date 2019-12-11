@@ -202,3 +202,5 @@ export const Migrations: {
     }
   }
 ];
+
+export const HighestMigrationId = Migrations[Migrations.length - 1].id;
