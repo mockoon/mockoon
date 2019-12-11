@@ -31,7 +31,12 @@ describe('Responses rules', () => {
     it('Add a url params rule to response 200, if fulfilled should return 200', async () => {
       await tests.helpers.selectRouteResponse(2);
       await tests.helpers.switchTab('RULES');
-      await tests.helpers.addResponseRule({ modifier: 'userid', target: 'params', value: '10', isRegex: false });
+      await tests.helpers.addResponseRule({
+        modifier: 'userid',
+        target: 'params',
+        value: '10',
+        isRegex: false
+      });
       await tests.helpers.httpCallAsserter({
         path: '/users/10',
         method: 'GET',
@@ -44,7 +49,12 @@ describe('Responses rules', () => {
     it('Add a query string rule to response 500, both routes rules can be fulfilled but returns 500', async () => {
       await tests.helpers.selectRouteResponse(1);
       await tests.helpers.switchTab('RULES');
-      await tests.helpers.addResponseRule({ modifier: 'userid', target: 'query', value: '5', isRegex: false });
+      await tests.helpers.addResponseRule({
+        modifier: 'userid',
+        target: 'query',
+        value: '5',
+        isRegex: false
+      });
       await tests.helpers.httpCallAsserter({
         path: '/users/10?userid=5',
         method: 'GET',
@@ -56,10 +66,15 @@ describe('Responses rules', () => {
 
     it('Add a header rule to response 500, test rule', async () => {
       await tests.helpers.switchTab('RULES');
-      await tests.helpers.addResponseRule({ modifier: 'Accept', target: 'header', value: 'application/xhtml+xml', isRegex: false });
+      await tests.helpers.addResponseRule({
+        modifier: 'Accept',
+        target: 'header',
+        value: 'application/xhtml+xml',
+        isRegex: false
+      });
       await tests.helpers.httpCallAsserter({
         path: '/users/1234',
-        headers: { 'Accept': 'application/xhtml+xml' },
+        headers: { Accept: 'application/xhtml+xml' },
         method: 'GET',
         testedProperties: {
           status: 500
@@ -177,6 +192,32 @@ describe('Responses rules', () => {
         testedProperties: {
           status: 200,
           body: '9'
+        }
+      },
+      {
+        description: 'Body path when Content-Type contains more info (charset)',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        body: { test: 'test' },
+        testedProperties: {
+          status: 200,
+          body: '10'
+        }
+      },
+      {
+        description: 'Body path to number, with regex',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: { test: 1 },
+        testedProperties: {
+          status: 200,
+          body: '11'
         }
       }
     ];
