@@ -47,7 +47,10 @@ export class ImportExportService {
 
     const dialogResult = await this.dialog.showSaveDialog(
       this.BrowserWindow.getFocusedWindow(),
-      { filters: [{ name: 'JSON', extensions: ['json'] }] }
+      {
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+        title: 'Export all to JSON'
+      }
     );
 
     // If the user clicked 'cancel'
@@ -141,7 +144,7 @@ export class ImportExportService {
   public async importFromFile() {
     const dialogResult = await this.dialog.showOpenDialog(
       this.BrowserWindow.getFocusedWindow(),
-      { filters: [{ name: 'JSON', extensions: ['json'] }] }
+      { filters: [{ name: 'JSON', extensions: ['json'] }], title: 'Import from file (JSON)' }
     );
 
     if (dialogResult.filePaths && dialogResult.filePaths[0]) {

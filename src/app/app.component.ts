@@ -457,7 +457,7 @@ export class AppComponent implements OnInit {
    * Open file browsing dialog
    */
   public async browseFiles() {
-    const dialogResult = await this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), {});
+    const dialogResult = await this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), { title: 'Choose a file' });
 
     if (dialogResult.filePaths && dialogResult.filePaths[0]) {
       this.activeRouteResponseForm.get('filePath').setValue(dialogResult.filePaths[0]);
