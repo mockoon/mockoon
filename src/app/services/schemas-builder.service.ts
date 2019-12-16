@@ -63,7 +63,9 @@ export class SchemasBuilderService {
       proxyHost: '',
       https: false,
       cors: true,
-      headers: [this.buildHeader('Content-Type', 'application/json')]
+      headers: [this.buildHeader('Content-Type', 'application/json')],
+      proxyReqHeaders: [this.buildHeader()],
+      proxyResHeaders: [this.buildHeader()]
     };
   }
 

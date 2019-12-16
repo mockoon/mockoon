@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
 import { ToastTypes } from 'src/app/services/toasts.service';
-import { TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import { TabsNameType, ViewsNameType, EnvironmentLogsTabsNameType } from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
 import { ResponseRule } from 'src/app/types/route.type';
 import { HttpCall } from 'test/lib/types';
@@ -256,6 +256,15 @@ export class Helpers {
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2) .nav-link',
       RULES:
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(3) .nav-link'
+    };
+
+    await this.testsInstance.app.client.element(selectors[tabName]).click();
+  }
+
+  async switchTabInEnvironmentLogs(tabName: EnvironmentLogsTabsNameType) {
+    const selectors: { [key in typeof tabName]: string } = {
+      REQUEST: '.environment-logs-content .nav.nav-tabs .nav-item:nth-child(1) .nav-link',
+      RESPONSE: '.environment-logs-content .nav.nav-tabs .nav-item:nth-child(2) .nav-link'
     };
 
     await this.testsInstance.app.client.element(selectors[tabName]).click();

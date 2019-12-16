@@ -183,7 +183,9 @@ label {
 .mh0 {
   min-height: 0;
 }
-
+.max-h50 {
+  max-height: 50%;
+}
 // add margin to the split dropdown caret, when there is text
 .dropdown-toggle-split:not(:empty)::after, .dropup .dropdown-toggle-split:not(:empty)::after, .dropright .dropdown-toggle-split:not(:empty)::after {
   margin-left: 15px;

@@ -257,6 +257,20 @@ export class ServerService {
   }
 
   /**
+   * Calls a setterFn function on each header
+   *
+   * @param headers
+   * @param setterFn
+   */
+  private setHeadersFn(headers: Partial<Header>[], setterFn: ( header: Partial<Header> ) => any) {
+    headers.forEach((header) => {
+      if (header.key && header.value && !this.testHeaderValidity(header.key)) {
+        setterFn(header);
+      }
+    });
+  }
+
+  /**
    * Send an error with text/plain content type and the provided message.
    * Also display a toast.
    *
@@ -286,6 +300,10 @@ export class ServerService {
       const processRequest = (proxyReq, req, res, options) => {
         req.proxied = true;
 
+        this.setHeadersFn(environment.proxyReqHeaders, (header) => {
+          proxyReq.setHeader(header.key, DummyJSONParser(header.value, req));
+        });
+
         if (req.body) {
           proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
           // stream the content
@@ -308,6 +326,11 @@ export class ServerService {
           const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
           self.store.update(logResponseAction(environment.uuid, response));
         });
+
+        this.setHeadersFn(environment.proxyResHeaders, (header) => {
+          proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
+        });
+
       };
 
       const logErrorResponse = (err, req, res) => {
