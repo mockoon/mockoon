@@ -26,6 +26,7 @@ import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
 import { TruncatePipe } from 'src/app/pipes/truncate.pipe';
 import { AppComponent } from './app.component';
+import { EnvironmentsMenuModule } from './components/environments/environments-menu.module';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { AppComponent } from './app.component';
     AngularFireModule.initializeApp(Config.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    EnvironmentsMenuModule
   ],
   providers: [{ provide: FirestoreSettingsToken, useValue: {} }],
   bootstrap: [AppComponent]

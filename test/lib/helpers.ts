@@ -79,6 +79,15 @@ export class Helpers {
       .that.have.lengthOf(expected);
   }
 
+  async openEnvironmentMenu() {
+    await this.testsInstance.app.client.element('.open-environment-menu').click();
+
+  }
+
+  async closeEnvironmentMenu() {
+    await this.testsInstance.app.client.element('.close-environment-menu').click();
+  }
+
   async contextMenuOpen(targetMenuItemSelector: string) {
     await this.testsInstance.app.client
       .element(targetMenuItemSelector)

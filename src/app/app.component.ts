@@ -27,9 +27,11 @@ import { Environment, Environments } from 'src/app/types/environment.type';
 import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
 import { EnvironmentLogs } from 'src/app/types/server.type';
 import { dragulaNamespaces as DraggableContainerNames } from 'src/app/types/ui.type';
+import { Scroll } from 'src/app/types/ui.type.js';
+import '../assets/custom_theme.js';
 
-const appVersion = require('../../package.json').version;
 const platform = require('os').platform();
+const appVersion = require('../../package.json').version;
 
 @Component({
   selector: 'app-root',
@@ -306,15 +308,22 @@ export class AppComponent implements OnInit {
   }
 
   /**
+   * Listen for and do requested scrolling
+   */
+  public scrollTo({element, action, position}: Scroll) {
+    if (this[element] && this[element].nativeElement) {
+      this[element].nativeElement[action] = position;
+    }
+  }
+
+  /**
    * Set the active environment
    */
   public selectEnvironment(environmentUUIDOrDirection: string | ReducerDirectionType) {
     this.environmentsService.setActiveEnvironment(environmentUUIDOrDirection);
 
     // auto scroll routes to top when navigating environments
-    if (this.routesMenu) {
-      this.routesMenu.nativeElement.scrollTop = 0;
-    }
+    this.scrollTo({element: 'routesMenu', action: 'scrollTop', position: 0});
   }
 
   /**
