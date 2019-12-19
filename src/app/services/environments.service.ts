@@ -9,7 +9,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { MigrationService } from 'src/app/services/migration.service';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ServerService } from 'src/app/services/server.service';
-import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
+import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction, updateSettingsAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environment, EnvironmentProperties } from 'src/app/types/environment.type';
@@ -243,6 +243,13 @@ export class EnvironmentsService {
    */
   public updateActiveRouteResponse(properties: RouteResponseProperties) {
     this.store.update(updateRouteResponseAction(properties));
+  }
+
+  /**
+   * Update the environments menu expansion state
+   */
+  public updateEnvironmentsMenuState(state: boolean) {
+    this.store.update(updateSettingsAction({'environmentsMenuState': state}));
   }
 
   /**

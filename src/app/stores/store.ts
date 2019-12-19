@@ -31,6 +31,7 @@ export type StoreType = {
   activeRouteUUID: string;
   activeRouteResponseUUID: string;
   environments: Environments;
+  environmentsMenuState: boolean;
   environmentsStatus: EnvironmentsStatuses;
   bodyEditorConfig: any;
   duplicatedEnvironments: Set<string>;
@@ -51,6 +52,7 @@ export class Store {
     activeRouteUUID: null,
     activeRouteResponseUUID: null,
     environments: [],
+    environmentsMenuState: true,
     environmentsStatus: {},
     bodyEditorConfig: {
       options: {
