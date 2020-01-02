@@ -71,6 +71,7 @@ export class ServerService {
 
     // apply latency, cors, routes and proxy to express server
     this.logRequests(server, environment);
+    this.setCustomHeaders(server, environment);
     this.logResponses(server, environment);
     this.setEnvironmentLatency(server, environment.uuid);
     this.setRoutes(server, environment);
@@ -346,6 +347,23 @@ export class ServerService {
       const enhancedReq = req as IEnhancedRequest;
       enhancedReq.uuid = log.uuid;
       this.store.update(logRequestAction(environment.uuid, log));
+      next();
+    });
+  }
+
+  /**
+   * Ensure that environment headers are always set in responses
+   *
+   * @param server - the server serving responses 
+   * @param environment - the environment where the headers are configured
+   */
+  private setCustomHeaders(server: any, environment: Environment) {
+    server.use((req, res, next) => {
+      for (const header of environment.headers) {
+        if (!res.hasHeader(header.key)) {
+          res.setHeader(header.key, header.value);
+        }
+      }
       next();
     });
   }
