@@ -1,4 +1,4 @@
-<app-context-menu (itemClicked)="navigationContextMenuItemClicked($event)"></app-context-menu>
+<app-context-menu (itemClicked)="contextMenuItemClicked($event)"></app-context-menu>
 
 <app-welcome-modal></app-welcome-modal>
 <app-settings-modal (closed)="handleSettingsModalClosed()"></app-settings-modal>
@@ -19,7 +19,7 @@
 <div class="container-fluid h-100">
   <div class="d-flex flex-column h-100">
     <div class="row flex-fill mh0">
-      <app-environments-menu (scroll)="scrollTo($event)"></app-environments-menu>
+      <app-environments-menu class="environments-menu-container h-100"></app-environments-menu>
 
       <div class="col d-flex flex-column h-100">
         <!-- First row: env name +start / env port + prefix -->
@@ -27,7 +27,7 @@
           <div class="row">
             <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment; else noActiveEnvironment"
               [formGroup]="activeEnvironmentForm">
-              <div class="col-2 menu-column--width">
+              <div class="col-2 column-width">
                 <div class="input-group">
                   <span *ngIf="activeEnvironmentState$ | async as activeEnvironmentState" class="input-group-prepend">
                     <button class="btn btn-link" type="button"
@@ -56,17 +56,17 @@
                   </div>
                   <input type="text" class="form-control col-2" placeholder="port" formControlName="port"
                     [InputNumber]="{ min: 0, max: 65535 }" MousewheelUpdate>
-                  <div class="iput-group-prepend" *ngIf="duplicatedEnvironments$ | async as duplicatedEnvironments">
+                  <div class="input-group-prepend" *ngIf="duplicatedEnvironments$ | async as duplicatedEnvironments">
                     <span class="input-group-text text-warning"
                       *ngIf="duplicatedEnvironments?.has(activeEnvironment?.uuid)"
                       ngbTooltip="Port is shared with another environment"><i class="material-icons">warning</i></span>
                   </div>
-                  <div class="iput-group-prepend">
+                  <div class="input-group-prepend">
                     <span class="input-group-text">/</span>
                   </div>
                   <input type="text" class="form-control" placeholder="prefix" ValidPath
                     ngbTooltip="Environment routes prefix" formControlName="endpointPrefix">
-                  <div class="iput-group-prepend">
+                  <div class="input-group-prepend">
                     <span class="input-group-text"><i class="material-icons">access_time</i></span>
                   </div>
                   <input type="text" class="form-control col-2"
@@ -91,7 +91,7 @@
             </ng-container>
 
             <ng-template #noActiveEnvironment>
-              <div class="col-2 menu-column--width">
+              <div class="col-2 column-width">
                 <div class="input-group">
                   <span class="input-group-prepend">
                     <button class="btn btn-link text-muted" type="button">
@@ -106,44 +106,7 @@
         </div>
 
         <div class="row flex-fill mh0">
-          <!-- Routes menu (only display if there is at least one environment) -->
-          <div *ngIf="(environments$ | async)?.length"
-            class="col-2 menu-column--routes menu-column--width d-flex flex-column h-100" MousedragDeadzone>
-            <div>
-              <!-- container needed for flexboxes -->
-              <ul class="nav flex-column">
-                <li class="nav-item">
-                  <a class="nav-link text-primary" (click)="addRoute()">
-                    <i class="material-icons">add_circle</i> Add route
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
-              <ul class="nav flex-column menu-list" #routesMenu dragula="routes"
-                [dragulaModel]="activeEnvironment.routes">
-                <li class="nav-item" *ngFor="let environmentRoute of activeEnvironment.routes">
-                  <a class="nav-link" [ngClass]="{'active': (activeRoute$ | async)?.uuid === environmentRoute.uuid, 'route-disabled': !environmentRoute.enabled}"
-                    (click)="selectRoute(environmentRoute.uuid)"
-                    (contextmenu)="navigationContextMenu('route', environmentRoute.uuid, $event)">
-                    <div class="ellipsis">
-                      <span *ngIf="duplicatedRoutes$ | async as duplicatedRoutes" class="text-warning"
-                        ngbTooltip="Route is duplicated (same endpoint and method)">
-                        <i *ngIf="duplicatedRoutes[activeEnvironment.uuid]?.has(environmentRoute.uuid)"
-                          class="material-icons">warning</i>
-                      </span>
-                      <span
-                        class="badge badge-default http-method-{{environmentRoute.method}} float-right">{{environmentRoute.method | uppercase}}</span>
-                      /{{environmentRoute.endpoint}}
-                    </div>
-                    <div class="menu-subtitle ellipsis">
-                      {{environmentRoute.documentation}}
-                    </div>
-                  </a>
-                </li>
-              </ul>
-            </ng-container>
-          </div>
+          <app-routes-menu class="h-100"></app-routes-menu>
 
           <div *ngIf="activeEnvironment$ | async as activeEnvironment" class="col d-flex flex-column main-content h-100">
 

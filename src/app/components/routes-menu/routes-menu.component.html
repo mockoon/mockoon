@@ -1,0 +1,38 @@
+<!-- Routes menu (only display if there is at least one environment) -->
+<div *ngIf="(environments$ | async)?.length"
+class="routes-menu d-flex flex-column h-100" MousedragDeadzone>
+<div>
+  <!-- container needed for flexboxes -->
+  <ul class="nav menu-header d-flex justify-content-between">
+    <li class="nav-item">
+      <a class="nav-link text-primary" (click)="addRoute()" ngbTooltip="Add route">
+        <i class="material-icons">add_box</i>
+      </a>
+    </li>
+  </ul>
+</div>
+<ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
+  <ul class="nav flex-column menu-list" #routesMenu dragula="routes"
+    [dragulaModel]="activeEnvironment.routes">
+    <li class="nav-item" *ngFor="let environmentRoute of activeEnvironment.routes">
+      <a class="nav-link" [ngClass]="{'active': (activeRoute$ | async)?.uuid === environmentRoute.uuid, 'route-disabled': !environmentRoute.enabled}"
+        (click)="selectRoute(environmentRoute.uuid)"
+        (contextmenu)="openContextMenu(environmentRoute.uuid, $event)">
+        <div class="ellipsis">
+          <span *ngIf="duplicatedRoutes$ | async as duplicatedRoutes" class="text-warning"
+            ngbTooltip="Route is duplicated (same endpoint and method)">
+            <i *ngIf="duplicatedRoutes[activeEnvironment.uuid]?.has(environmentRoute.uuid)"
+              class="material-icons">warning</i>
+          </span>
+          <span
+            class="badge badge-default http-method-{{environmentRoute.method}} float-right">{{environmentRoute.method | uppercase}}</span>
+          /{{environmentRoute.endpoint}}
+        </div>
+        <div class="menu-subtitle ellipsis">
+          {{environmentRoute.documentation}}
+        </div>
+      </a>
+    </li>
+  </ul>
+</ng-container>
+</div>

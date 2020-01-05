@@ -2,7 +2,7 @@
   <ng-container *ngIf="environmentsLogs$ | async as environmentsLogs">
 
     <div class="row h-100 environment-logs" *ngIf="environmentsLogs[activeEnvironmentUUID]?.length; else empty">
-      <div class="col-4 h-100 menu-column--width environment-logs-column">
+      <div class="h-100 environment-logs-column">
         <ul class="nav flex-column menu-list">
           <li class="nav-item" *ngFor="let log of environmentsLogs[activeEnvironmentUUID]; let logIndex = index">
             <a class="nav-link" [ngClass]="{'active': logIndex === (selectedLogIndex$ | async)}"

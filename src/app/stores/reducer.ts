@@ -685,6 +685,14 @@ export function environmentReducer(
       break;
     }
 
+    case ActionTypes.UPDATE_UI_STATE: {
+      newState = {
+        ...state,
+        uiState: { ...state.uiState, ...action.properties }
+      };
+      break;
+    }
+
     default:
       newState = state;
       break;

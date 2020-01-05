@@ -1,23 +1,23 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ipcRenderer, remote, shell } from 'electron';
 import * as mimeTypes from 'mime-types';
-import { DragulaService } from 'ng2-dragula';
 import { merge, Observable } from 'rxjs';
 import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
-import { ContextMenuItemPayload } from 'src/app/components/context-menu.component';
+import { ContextMenuItemPayload } from 'src/app/components/context-menu/context-menu.component';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { GetRouteResponseContentType } from 'src/app/libs/utils.lib';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
-import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'src/app/services/events.service';
 import { ImportExportService } from 'src/app/services/import-export.service';
 import { ServerService } from 'src/app/services/server.service';
 import { Toast, ToastsService } from 'src/app/services/toasts.service';
+import { UIService } from 'src/app/services/ui.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { clearLogsAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
@@ -26,9 +26,7 @@ import { DataSubject } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
 import { EnvironmentLogs } from 'src/app/types/server.type';
-import { dragulaNamespaces as DraggableContainerNames } from 'src/app/types/ui.type';
-import { Scroll } from 'src/app/types/ui.type.js';
-import '../assets/custom_theme.js';
+import { ScrollDirection } from 'src/app/types/ui.type';
 
 const platform = require('os').platform();
 const appVersion = require('../../package.json').version;
@@ -39,8 +37,7 @@ const appVersion = require('../../package.json').version;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-  @ViewChild('routesMenu', { static: false }) private routesMenu: ElementRef;
-  @ViewChild('environmentsMenu', { static: false }) private environmentsMenu: ElementRef;
+  // @ViewChild('routesMenu', { static: false }) private routesMenu: ElementRef;
   public methods = methods;
   public statusCodes = statusCodes;
   public updateAvailable = false;
@@ -68,6 +65,7 @@ export class AppComponent implements OnInit {
   public activeRouteForm: FormGroup;
   public activeRouteResponseForm: FormGroup;
   public Infinity = Infinity;
+  public scrollToBottom = this.uiService.scrollToBottom;
   private settingsModalOpened = false;
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
@@ -80,11 +78,11 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private eventsService: EventsService,
     private config: NgbTooltipConfig,
-    private dragulaService: DragulaService,
     private analyticsService: AnalyticsService,
     private store: Store,
     private formBuilder: FormBuilder,
-    private importExportService: ImportExportService
+    private importExportService: ImportExportService,
+    private uiService: UIService
   ) {
     // tooltip config
     this.config.container = 'body';
@@ -177,8 +175,6 @@ export class AppComponent implements OnInit {
     this.updateService.updateAvailable.subscribe(() => {
       this.updateAvailable = true;
     });
-
-    this.initDragMonitoring();
   }
 
   /**
@@ -213,29 +209,35 @@ export class AppComponent implements OnInit {
     });
 
     // send new activeEnvironmentForm values to the store, one by one
-    merge(...Object.keys(this.activeEnvironmentForm.controls).map(controlName => {
-      return this.activeEnvironmentForm.get(controlName).valueChanges.pipe(
-        map(newValue => ({ [controlName]: newValue }))
-      );
-    })).subscribe(newProperty => {
+    merge(
+      ...Object.keys(this.activeEnvironmentForm.controls).map(controlName => {
+        return this.activeEnvironmentForm
+          .get(controlName)
+          .valueChanges.pipe(map(newValue => ({ [controlName]: newValue })));
+      })
+    ).subscribe(newProperty => {
       this.environmentsService.updateActiveEnvironment(newProperty);
     });
 
     // send new activeRouteForm values to the store, one by one
-    merge(...Object.keys(this.activeRouteForm.controls).map(controlName => {
-      return this.activeRouteForm.get(controlName).valueChanges.pipe(
-        map(newValue => ({ [controlName]: newValue }))
-      );
-    })).subscribe(newProperty => {
+    merge(
+      ...Object.keys(this.activeRouteForm.controls).map(controlName => {
+        return this.activeRouteForm
+          .get(controlName)
+          .valueChanges.pipe(map(newValue => ({ [controlName]: newValue })));
+      })
+    ).subscribe(newProperty => {
       this.environmentsService.updateActiveRoute(newProperty);
     });
 
     // send new activeRouteResponseForm values to the store, one by one
-    merge(...Object.keys(this.activeRouteResponseForm.controls).map(controlName => {
-      return this.activeRouteResponseForm.get(controlName).valueChanges.pipe(
-        map(newValue => ({ [controlName]: newValue }))
-      );
-    })).subscribe(newProperty => {
+    merge(
+      ...Object.keys(this.activeRouteResponseForm.controls).map(controlName => {
+        return this.activeRouteResponseForm
+          .get(controlName)
+          .valueChanges.pipe(map(newValue => ({ [controlName]: newValue })));
+      })
+    ).subscribe(newProperty => {
       this.environmentsService.updateActiveRouteResponse(newProperty);
     });
   }
@@ -245,59 +247,68 @@ export class AppComponent implements OnInit {
    */
   private initFormValues() {
     // subscribe to active environment changes to reset the form
-    this.activeEnvironment$.pipe(
-      filter(environment => !!environment),
-      distinctUntilKeyChanged('uuid')
-    ).subscribe(activeEnvironment => {
-      this.activeEnvironmentForm.setValue({
-        name: activeEnvironment.name,
-        port: activeEnvironment.port,
-        endpointPrefix: activeEnvironment.endpointPrefix,
-        latency: activeEnvironment.latency,
-        proxyMode: activeEnvironment.proxyMode,
-        proxyHost: activeEnvironment.proxyHost,
-        https: activeEnvironment.https,
-        cors: activeEnvironment.cors
-      }, { emitEvent: false });
-    });
+    this.activeEnvironment$
+      .pipe(
+        filter(environment => !!environment),
+        distinctUntilKeyChanged('uuid')
+      )
+      .subscribe(activeEnvironment => {
+        this.activeEnvironmentForm.setValue(
+          {
+            name: activeEnvironment.name,
+            port: activeEnvironment.port,
+            endpointPrefix: activeEnvironment.endpointPrefix,
+            latency: activeEnvironment.latency,
+            proxyMode: activeEnvironment.proxyMode,
+            proxyHost: activeEnvironment.proxyHost,
+            https: activeEnvironment.https,
+            cors: activeEnvironment.cors
+          },
+          { emitEvent: false }
+        );
+      });
 
     // subscribe to active route changes to reset the form
-    this.activeRoute$.pipe(
-      filter(route => !!route),
-      distinctUntilKeyChanged('uuid')
-    ).subscribe(activeRoute => {
-      this.activeRouteForm.patchValue({
-        documentation: activeRoute.documentation,
-        method: activeRoute.method,
-        endpoint: activeRoute.endpoint
-      }, { emitEvent: false });
-    });
+    this.activeRoute$
+      .pipe(
+        filter(route => !!route),
+        distinctUntilKeyChanged('uuid')
+      )
+      .subscribe(activeRoute => {
+        this.activeRouteForm.patchValue(
+          {
+            documentation: activeRoute.documentation,
+            method: activeRoute.method,
+            endpoint: activeRoute.endpoint
+          },
+          { emitEvent: false }
+        );
+      });
 
     // subscribe to active route response changes to reset the form
-    this.activeRouteResponse$.pipe(
-      filter(routeResponse => !!routeResponse),
-      // monitor changes in uuid and body (for body formatter method)
-      distinctUntilChanged((previous, next) => previous.uuid === next.uuid && previous.body === next.body)
-    ).subscribe(activeRouteResponse => {
-      this.activeRouteResponseForm.patchValue({
-        statusCode: activeRouteResponse.statusCode,
-        label: activeRouteResponse.label,
-        latency: activeRouteResponse.latency,
-        filePath: activeRouteResponse.filePath,
-        sendFileAsBody: activeRouteResponse.sendFileAsBody,
-        body: activeRouteResponse.body,
-        rules: activeRouteResponse.rules
-      }, { emitEvent: false });
-    });
-  }
-
-  /**
-   * Trigger env/route saving and re-selection when draging active route/env
-   */
-  public initDragMonitoring() {
-    this.dragulaService.dropModel().subscribe((dragResult) => {
-      this.environmentsService.moveMenuItem(dragResult.name as DraggableContainerNames, dragResult.sourceIndex, dragResult.targetIndex);
-    });
+    this.activeRouteResponse$
+      .pipe(
+        filter(routeResponse => !!routeResponse),
+        // monitor changes in uuid and body (for body formatter method)
+        distinctUntilChanged(
+          (previous, next) =>
+            previous.uuid === next.uuid && previous.body === next.body
+        )
+      )
+      .subscribe(activeRouteResponse => {
+        this.activeRouteResponseForm.patchValue(
+          {
+            statusCode: activeRouteResponse.statusCode,
+            label: activeRouteResponse.label,
+            latency: activeRouteResponse.latency,
+            filePath: activeRouteResponse.filePath,
+            sendFileAsBody: activeRouteResponse.sendFileAsBody,
+            body: activeRouteResponse.body,
+            rules: activeRouteResponse.rules
+          },
+          { emitEvent: false }
+        );
+      });
   }
 
   /**
@@ -305,25 +316,6 @@ export class AppComponent implements OnInit {
    */
   public toggleEnvironment() {
     this.environmentsService.toggleActiveEnvironment();
-  }
-
-  /**
-   * Listen for and do requested scrolling
-   */
-  public scrollTo({element, action, position}: Scroll) {
-    if (this[element] && this[element].nativeElement) {
-      this[element].nativeElement[action] = position;
-    }
-  }
-
-  /**
-   * Set the active environment
-   */
-  public selectEnvironment(environmentUUIDOrDirection: string | ReducerDirectionType) {
-    this.environmentsService.setActiveEnvironment(environmentUUIDOrDirection);
-
-    // auto scroll routes to top when navigating environments
-    this.scrollTo({element: 'routesMenu', action: 'scrollTop', position: 0});
   }
 
   /**
@@ -352,7 +344,9 @@ export class AppComponent implements OnInit {
    */
   public clearEnvironmentLogs() {
     if (this.clearEnvironmentLogsRequested$.readValue()) {
-      this.store.update(clearLogsAction(this.store.get('activeEnvironmentUUID')));
+      this.store.update(
+        clearLogsAction(this.store.get('activeEnvironmentUUID'))
+      );
     }
   }
 
@@ -366,59 +360,63 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Select a route by UUID, or the first route if no UUID is present
-   */
-  public selectRoute(routeUUIDOrDirection: string | ReducerDirectionType) {
-    this.environmentsService.setActiveRoute(routeUUIDOrDirection);
-  }
-
-  /**
-   * Create a new environment. Append at the end of the list.
-   */
-  public addEnvironment() {
-    this.environmentsService.addEnvironment();
-
-    this.scrollToBottom(this.environmentsMenu.nativeElement);
-  }
-
-  /**
-   * Duplicate an environment
-   */
-  public duplicateEnvironment(environmentUUID?: string) {
-    this.environmentsService.duplicateEnvironment(environmentUUID);
-
-    this.scrollToBottom(this.environmentsMenu.nativeElement);
-  }
-
-  /**
-   * Create a new route in the current environment. Append at the end of the list
-   */
-  public addRoute() {
-    this.environmentsService.addRoute();
-
-    if (this.routesMenu) {
-      this.scrollToBottom(this.routesMenu.nativeElement);
-    }
-  }
-
-  /**
    * Create a new route response in the current route. Append at the end of the list
    */
   public addRouteResponse() {
     this.environmentsService.addRouteResponse();
   }
 
+  public handleSettingsModalClosed() {
+    this.settingsModalOpened = false;
+  }
+
+  /**
+   * Set the active environment
+   */
+  private selectEnvironment(
+    environmentUUIDOrDirection: string | ReducerDirectionType
+  ) {
+    this.environmentsService.setActiveEnvironment(environmentUUIDOrDirection);
+  }
+
+  /**
+   * Select a route by UUID, or the first route if no UUID is present
+   */
+  private selectRoute(routeUUIDOrDirection: string | ReducerDirectionType) {
+    this.environmentsService.setActiveRoute(routeUUIDOrDirection);
+  }
+
+  /**
+   * Duplicate an environment
+   */
+  private duplicateEnvironment(environmentUUID?: string) {
+    this.environmentsService.duplicateEnvironment(environmentUUID);
+
+    this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
+  }
+
+  /**
+   * Create a new route in the current environment. Append at the end of the list
+   */
+  private addRoute() {
+    this.environmentsService.addRoute();
+    this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+  }
+
   /**
    * Duplicate a route
    */
-  public duplicateRoute(routeUUID?: string) {
+  private duplicateRoute(routeUUID?: string) {
     this.environmentsService.duplicateRoute(routeUUID);
-
-    this.scrollToBottom(this.routesMenu.nativeElement);
+    this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
   }
 
-  public handleSettingsModalClosed() {
-    this.settingsModalOpened = false;
+  /**
+   * Create a new environment. Append at the end of the list.
+   */
+  private addEnvironment() {
+    this.environmentsService.addEnvironment();
+    this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
   }
 
   /**
@@ -449,7 +447,11 @@ export class AppComponent implements OnInit {
     const activeEnvironment = this.store.getActiveEnvironment();
     const activeRoute = this.store.getActiveRoute();
 
-    let routeUrl = ((activeEnvironment.https) ? 'https://' : 'http://') + 'localhost:' + activeEnvironment.port + '/';
+    let routeUrl =
+      (activeEnvironment.https ? 'https://' : 'http://') +
+      'localhost:' +
+      activeEnvironment.port +
+      '/';
 
     if (activeEnvironment.endpointPrefix) {
       routeUrl += activeEnvironment.endpointPrefix + '/';
@@ -459,17 +461,24 @@ export class AppComponent implements OnInit {
 
     shell.openExternal(routeUrl);
 
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_ROUTE_IN_BROWSER);
+    this.eventsService.analyticsEvents.next(
+      AnalyticsEvents.LINK_ROUTE_IN_BROWSER
+    );
   }
 
   /**
    * Open file browsing dialog
    */
   public async browseFiles() {
-    const dialogResult = await this.dialog.showOpenDialog(this.BrowserWindow.getFocusedWindow(), { title: 'Choose a file' });
+    const dialogResult = await this.dialog.showOpenDialog(
+      this.BrowserWindow.getFocusedWindow(),
+      { title: 'Choose a file' }
+    );
 
     if (dialogResult.filePaths && dialogResult.filePaths[0]) {
-      this.activeRouteResponseForm.get('filePath').setValue(dialogResult.filePaths[0]);
+      this.activeRouteResponseForm
+        .get('filePath')
+        .setValue(dialogResult.filePaths[0]);
     }
   }
 
@@ -509,97 +518,11 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Show and position the context menu
-   *
-   * @param event - click event
-   */
-  public navigationContextMenu(subject: DataSubject, subjectUUID: string, event: any) {
-    // if right click display context menu
-    if (event && event.which === 3 && (subject !== 'environment' || !this.store.getEnvironmentStatus()[subjectUUID].disabledForIncompatibility)) {
-      const menu: ContextMenuEvent = {
-        event: event,
-        items: [
-          {
-            payload: {
-              subject,
-              action: 'duplicate',
-              subjectUUID
-            },
-            label: 'Duplicate ' + subject,
-            icon: 'content_copy'
-          },
-          {
-            payload: {
-              subject,
-              action: 'export',
-              subjectUUID
-            },
-            label: 'Copy to clipboard (JSON)',
-            icon: 'assignment'
-          },
-          {
-            payload: {
-              subject,
-              action: 'delete',
-              subjectUUID
-            },
-            label: 'Delete ' + subject,
-            icon: 'delete',
-            confirm: {
-              icon: 'error',
-              label: 'Confirm deletion'
-            },
-            confirmColor: 'text-danger'
-          }
-        ]
-      };
-
-      if (subject === 'route') {
-        menu.items.push(
-          {
-            payload: {
-              subject,
-              action: 'toggle',
-              subjectUUID
-            },
-            label: 'Toggle Route',
-            icon: 'power_settings_new'
-          }
-        );
-      }
-
-      if (subject === 'environment') {
-        menu.items.unshift(
-          {
-            payload: {
-              subject,
-              action: 'env_logs',
-              subjectUUID
-            },
-            label: 'Environment logs',
-            icon: 'history'
-          },
-          {
-            payload: {
-              subject,
-              action: 'env_settings',
-              subjectUUID
-            },
-            label: 'Environment settings',
-            icon: 'settings',
-            separator: true
-          });
-      }
-      this.eventsService.contextMenuEvents.emit(menu);
-    }
-  }
-
-  /**
    * Handle navigation context menu item click
    *
    * @param payload
    */
-  public navigationContextMenuItemClicked(payload: ContextMenuItemPayload) {
+  public contextMenuItemClicked(payload: ContextMenuItemPayload) {
     switch (payload.action) {
       case 'env_logs':
         if (payload.subjectUUID !== this.store.get('activeEnvironmentUUID')) {
@@ -655,7 +578,9 @@ export class AppComponent implements OnInit {
   /**
    * Get file mime type and check if supports templating
    */
-  public getFileMimeType(filePath: string): { mimeType: string, supportsTemplating: boolean } {
+  public getFileMimeType(
+    filePath: string
+  ): { mimeType: string; supportsTemplating: boolean } {
     const mimeType = mimeTypes.lookup(filePath);
 
     return {
@@ -671,23 +596,12 @@ export class AppComponent implements OnInit {
     const endpoint = this.store.getActiveRoute().endpoint;
 
     if (endpoint) {
-      const queryStringMatch = endpoint.match(/\?.*=/ig);
+      const queryStringMatch = endpoint.match(/\?.*=/gi);
 
       return queryStringMatch && queryStringMatch.length > 0;
     }
 
     return false;
-  }
-
-  /**
-   * Scroll to bottom of an element
-   *
-   * @param element
-   */
-  public scrollToBottom(element: Element) {
-    setTimeout(() => {
-      element.scrollTop = element.scrollHeight;
-    });
   }
 
   /**
@@ -703,7 +617,10 @@ export class AppComponent implements OnInit {
   public getRouteResponseContentType() {
     const activeEnvironment = this.store.getActiveEnvironment();
     const activeRouteResponse = this.store.getActiveRouteResponse();
-    const routeResponseContentType = GetRouteResponseContentType(activeEnvironment, activeRouteResponse);
+    const routeResponseContentType = GetRouteResponseContentType(
+      activeEnvironment,
+      activeRouteResponse
+    );
 
     if (routeResponseContentType) {
       return 'Content-Type ' + routeResponseContentType;
@@ -722,11 +639,18 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    const contentType = GetRouteResponseContentType(this.store.getActiveEnvironment(), activeRouteResponse);
+    const contentType = GetRouteResponseContentType(
+      this.store.getActiveEnvironment(),
+      activeRouteResponse
+    );
 
     if (contentType === 'application/json') {
       try {
-        this.activeRouteResponseForm.get('body').setValue(JSON.stringify(JSON.parse(activeRouteResponse.body), undefined, 2));
+        this.activeRouteResponseForm
+          .get('body')
+          .setValue(
+            JSON.stringify(JSON.parse(activeRouteResponse.body), undefined, 2)
+          );
       } catch (e) {
         // ignore any errors with parsing / stringifying the JSON
       }

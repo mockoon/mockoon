@@ -7,7 +7,7 @@ describe('Environments incompatibility', () => {
 
   it('Should display the incompatible environment with special design', async () => {
     await tests.app.client.waitForExist(
-      '.menu-column--environments .menu-list .nav-item:nth-child(1).pattern-danger'
+      '.environments-menu .menu-list .nav-item:nth-child(1).pattern-danger'
     );
   });
 
@@ -22,7 +22,7 @@ describe('Environments incompatibility', () => {
 
   it('Should disable the context menu', async () => {
     await tests.helpers.contextMenuOpen(
-      '.menu-column--environments .menu-list .nav-item:nth-child(1) .nav-link'
+      '.environments-menu .menu-list .nav-item:nth-child(1) .nav-link'
     );
 
     await tests.app.client.waitForExist('.context-menu', 5000, true);

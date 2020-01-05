@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ContextMenuItem } from 'src/app/components/context-menu.component';
+import { ContextMenuItem } from 'src/app/components/context-menu/context-menu.component';
 import { HeadersListType } from 'src/app/components/headers-list.component';
 import { CollectParams } from 'src/app/services/analytics.service';
 import { Header } from 'src/app/types/route.type';

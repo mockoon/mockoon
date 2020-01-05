@@ -1,0 +1,85 @@
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
+import { RoutesContextMenu } from 'src/app/components/context-menu/context-menus';
+import { EnvironmentsService } from 'src/app/services/environments.service';
+import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
+import { UIService } from 'src/app/services/ui.service';
+import { DuplicatedRoutesTypes, EnvironmentsStatuses, Store } from 'src/app/stores/store';
+import { Environment, Environments } from 'src/app/types/environment.type';
+import { Route } from 'src/app/types/route.type';
+
+@Component({
+  selector: 'app-routes-menu',
+  templateUrl: './routes-menu.component.html',
+  styleUrls: ['./routes-menu.component.scss']
+})
+export class RoutesMenuComponent implements OnInit {
+  @ViewChild('routesMenu', { static: false })
+  private routesMenu: ElementRef;
+
+  public activeEnvironment$: Observable<Environment>;
+  public activeRoute$: Observable<Route>;
+  public environments$: Observable<Environments>;
+  public environmentsStatus$: Observable<EnvironmentsStatuses>;
+  public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
+
+  constructor(
+    private environmentsService: EnvironmentsService,
+    private store: Store,
+    private eventsService: EventsService,
+    private uiService: UIService
+  ) {}
+
+  ngOnInit() {
+    this.activeEnvironment$ = this.store.selectActiveEnvironment();
+    this.activeRoute$ = this.store.selectActiveRoute();
+    this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
+    this.environments$ = this.store.select('environments');
+    this.environmentsStatus$ = this.store.select('environmentsStatus');
+
+    this.uiService.scrollRoutesMenu.subscribe(scrollDirection => {
+      this.uiService.scroll(
+        this.routesMenu.nativeElement,
+        scrollDirection
+      );
+    });
+  }
+
+  /**
+   * Create a new route in the current environment. Append at the end of the list
+   */
+  public addRoute() {
+    this.environmentsService.addRoute();
+
+    if (this.routesMenu) {
+      this.uiService.scrollToBottom(this.routesMenu.nativeElement);
+    }
+  }
+
+  /**
+   * Select a route by UUID, or the first route if no UUID is present
+   */
+  public selectRoute(routeUUID: string) {
+    this.environmentsService.setActiveRoute(routeUUID);
+  }
+
+  /**
+   * Show and position the context menu
+   *
+   * @param event - click event
+   */
+  public openContextMenu(routeUUID: string, event: MouseEvent) {
+    // if right click display context menu
+    if (
+      event &&
+      event.which === 3
+    ) {
+      const menu: ContextMenuEvent = {
+        event: event,
+        items: RoutesContextMenu(routeUUID)
+      };
+
+      this.eventsService.contextMenuEvents.emit(menu);
+    }
+  }
+}
