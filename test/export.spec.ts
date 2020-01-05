@@ -54,7 +54,7 @@ describe('Environments export', () => {
 
     it('Should copy environment to clipboard wrapped with export info', async () => {
       await tests.helpers.contextMenuClick(
-        '.menu-column--environments .menu-list .nav-item:first-of-type',
+        '.environments-menu .menu-list .nav-item:first-of-type',
         4
       );
 
@@ -79,7 +79,7 @@ describe('Environments export', () => {
 
     it('Should copy route to clipboard wrapped with export info', async () => {
       await tests.helpers.contextMenuClick(
-        '.menu-column--routes .menu-list .nav-item:first-of-type',
+        '.routes-menu .menu-list .nav-item:first-of-type',
         2
       );
 

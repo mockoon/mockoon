@@ -15,21 +15,21 @@ export class Helpers {
   async addEnvironment() {
     await this.testsInstance.app.client
       .element(
-        '.menu-column--environments .nav:first-of-type .nav-item .nav-link'
+        '.environments-menu .nav:first-of-type .nav-item .nav-link.add-environment'
       )
       .click();
   }
 
   async removeEnvironment(index: number) {
     await this.contextMenuClickAndConfirm(
-      `.menu-column--environments .menu-list .nav-item:nth-child(${index}) .nav-link`,
+      `.environments-menu .menu-list .nav-item:nth-child(${index}) .nav-link`,
       5
     );
   }
 
   async addRoute() {
     await this.testsInstance.app.client
-      .element('.menu-column--routes .nav:first-of-type .nav-item .nav-link')
+      .element('.routes-menu .nav:first-of-type .nav-item .nav-link')
       .click();
   }
 
@@ -49,7 +49,7 @@ export class Helpers {
 
   async countEnvironments(expected: number) {
     await this.testsInstance.app.client
-      .elements('.menu-column--environments .menu-list .nav-item')
+      .elements('.environments-menu .menu-list .nav-item')
       .should.eventually.have.property('value')
       .to.be.an('Array')
       .that.have.lengthOf(expected);
@@ -57,7 +57,7 @@ export class Helpers {
 
   async countRoutes(expected: number) {
     await this.testsInstance.app.client
-      .elements('.menu-column--routes .menu-list .nav-item')
+      .elements('.routes-menu .menu-list .nav-item')
       .should.eventually.have.property('value')
       .to.be.an('Array')
       .that.have.lengthOf(expected);
@@ -77,6 +77,12 @@ export class Helpers {
       .should.eventually.have.property('value')
       .to.be.an('Array')
       .that.have.lengthOf(expected);
+  }
+
+  async toggleEnvironmentMenu() {
+    await this.testsInstance.app.client.element('.environments-menu .nav:first-of-type .nav-item .nav-link.toggle-environments-menu').click();
+    // wait for environment menu to open/close
+    await this.testsInstance.app.client.pause(310);
   }
 
   async contextMenuOpen(targetMenuItemSelector: string) {
@@ -126,7 +132,7 @@ export class Helpers {
       .element('.btn i[ngbtooltip="Start server"]')
       .click();
     await this.testsInstance.app.client.waitForExist(
-      `.menu-column--environments .menu-list .nav-item .nav-link.active.running`
+      `.environments-menu .menu-list .nav-item .nav-link.active.running`
     );
   }
 
@@ -135,7 +141,7 @@ export class Helpers {
       .element('.btn i[ngbtooltip="Stop server"]')
       .click();
     await this.testsInstance.app.client.waitForExist(
-      `.menu-column--environments .menu-list .nav-item .nav-link.active.running`,
+      `.environments-menu .menu-list .nav-item .nav-link.active.running`,
       1000,
       true
     );
@@ -146,12 +152,17 @@ export class Helpers {
       .element('.btn i[ngbtooltip="Server needs restart"]')
       .click();
     await this.testsInstance.app.client.waitForExist(
-      `.menu-column--environments .menu-list .nav-item .nav-link.active.running`
+      `.environments-menu .menu-list .nav-item .nav-link.active.running`
     );
   }
 
-  async checkHasActiveEnvironment(name?: string, reverse = false) {
-    const selector = '.menu-column--environments .nav-item .nav-link.active';
+  async assertEnvironmentServerIconsExists(index: number, iconName: 'cors' | 'https' | 'proxy-mode') {
+    const selector = `.environments-menu .nav-item:nth-child(${index}) .nav-link.active .server-icons-${iconName}`;
+    await this.testsInstance.app.client.waitForExist(selector);
+  }
+
+  async assertHasActiveEnvironment(name?: string, reverse = false) {
+    const selector = '.environments-menu .nav-item .nav-link.active';
     await this.testsInstance.app.client.waitForExist(selector, 5000, reverse);
 
     if (name) {
@@ -163,19 +174,19 @@ export class Helpers {
 
   async checkEnvironmentNeedsRestart() {
     await this.testsInstance.app.client.waitForExist(
-      `.menu-column--environments .menu-list .nav-item .nav-link.active.need-restart`
+      `.environments-menu .menu-list .nav-item .nav-link.active.need-restart`
     );
   }
 
   async checkEnvironmentSelected(index: number) {
     await this.testsInstance.app.client.waitForExist(
-      `.menu-column--environments .menu-list .nav-item:nth-child(${index}) .nav-link.active`
+      `.environments-menu .menu-list .nav-item:nth-child(${index}) .nav-link.active`
     );
   }
 
   async checkNoEnvironmentSelected() {
     await this.testsInstance.app.client.waitForExist(
-      `.menu-column--environments .menu-list .nav-item .nav-link.active`,
+      `.environments-menu .menu-list .nav-item .nav-link.active`,
       5000,
       true
     );
@@ -184,13 +195,13 @@ export class Helpers {
   async selectEnvironment(index: number) {
     await this.testsInstance.app.client
       .element(
-        `.menu-column--environments .menu-list .nav-item:nth-child(${index}) .nav-link`
+        `.environments-menu .menu-list .nav-item:nth-child(${index}) .nav-link`
       )
       .click();
   }
 
   async checkActiveRoute(name?: string, reverse = false) {
-    const selector = '.menu-column--routes .nav-item .nav-link.active';
+    const selector = '.routes-menu .nav-item .nav-link.active';
     await this.testsInstance.app.client.waitForExist(selector, 5000, reverse);
 
     if (name) {
@@ -209,7 +220,7 @@ export class Helpers {
   async selectRoute(index: number) {
     await this.testsInstance.app.client
       .element(
-        `.menu-column--routes .nav.menu-list .nav-item:nth-child(${index})`
+        `.routes-menu .nav.menu-list .nav-item:nth-child(${index})`
       )
       .click();
   }
@@ -314,6 +325,13 @@ export class Helpers {
     await port.should.be.equals(expectedPort.toString());
   }
 
+  async assertActiveEnvironmentName(expectedName: string) {
+    const environmentName: String = await this.testsInstance.app.client
+      .element('input[formcontrolname="name"]')
+      .getAttribute('value');
+    await environmentName.should.be.equals(expectedName.toString());
+  }
+
   async openSettingsModal() {
     await this.sendWebContentsAction('OPEN_SETTINGS');
     await this.testsInstance.app.client.waitForExist(`.modal-dialog`);
@@ -343,8 +361,8 @@ export class Helpers {
 
   async disableRoute() {
     await this.contextMenuClick(
-      '.menu-column--routes .menu-list .nav-item .nav-link.active',
-      4
+      '.routes-menu .menu-list .nav-item .nav-link.active',
+      3
     );
   }
 
