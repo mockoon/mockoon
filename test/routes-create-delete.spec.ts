@@ -12,21 +12,21 @@ describe('Create and delete routes', () => {
   });
 
   it('Remove 3 routes over 4', async () => {
-    const menuTarget = '.menu-column--routes .menu-list .nav-item:first-of-type';
+    const menuTarget = '.routes-menu .menu-list .nav-item:first-of-type';
 
-    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 3);
-    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 3);
-    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 3);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 4);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 4);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 4);
 
     await tests.helpers.countRoutes(1);
   });
 
   it('Last added route should remain and be active', async () => {
-    await tests.app.client.getText('.menu-column--routes .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child').should.eventually.equal('GET\n/');
+    await tests.app.client.getText('.routes-menu .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child').should.eventually.equal('GET\n/');
   });
 
   it('Remove last route, active tab should be environment settings', async () => {
-    await tests.helpers.contextMenuClickAndConfirm('.menu-column--routes .menu-list .nav-item:first-of-type', 3);
+    await tests.helpers.contextMenuClickAndConfirm('.routes-menu .menu-list .nav-item:first-of-type', 4);
 
     await tests.helpers.countRoutes(0);
 

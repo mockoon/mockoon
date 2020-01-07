@@ -6,7 +6,6 @@ import { SelectOptionsList } from 'src/app/models/common.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/route.type';
 
-
 @Component({
   selector: 'app-route-response-rules',
   templateUrl: 'route-response-rules.component.html'

@@ -23,6 +23,10 @@ export type EnvironmentsStatuses = { [key: string]: EnvironmentStatus };
 
 export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
 
+export type UIState = { environmentsMenuOpened: boolean };
+
+export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
+
 export type StoreType = {
   activeTab: TabsNameType;
   activeView: ViewsNameType;
@@ -38,6 +42,7 @@ export type StoreType = {
   environmentsLogs: EnvironmentLogs;
   toasts: Toast[];
   userId: string;
+  uiState: UIState;
   settings: Settings;
 };
 
@@ -68,6 +73,9 @@ export class Store {
     environmentsLogs: {},
     toasts: [],
     userId: null,
+    uiState: {
+      environmentsMenuOpened: false
+    },
     settings: null
   });
 

@@ -49,7 +49,8 @@ describe('Environments import', () => {
 
           tests.helpers.sendWebContentsAction('IMPORT_FILE');
 
-          await tests.helpers.checkHasActiveEnvironment(
+          await tests.helpers.assertHasActiveEnvironment();
+          await tests.helpers.assertActiveEnvironmentName(
             testCase.environmentTitle
           );
 
@@ -118,7 +119,8 @@ describe('Environments import', () => {
 
         tests.helpers.sendWebContentsAction('IMPORT_FILE');
 
-        await tests.helpers.checkHasActiveEnvironment('Import new format');
+        await tests.helpers.assertHasActiveEnvironment();
+        await tests.helpers.assertActiveEnvironmentName('Import new format');
 
         await tests.helpers.startEnvironment();
       });
@@ -137,7 +139,8 @@ describe('Environments import', () => {
 
         tests.helpers.sendWebContentsAction('IMPORT_CLIPBOARD');
 
-        await tests.helpers.checkHasActiveEnvironment('Import new format');
+        await tests.helpers.assertHasActiveEnvironment();
+        await tests.helpers.assertActiveEnvironmentName('Import new format');
 
         await tests.helpers.startEnvironment();
       });
@@ -159,7 +162,8 @@ describe('Environments import', () => {
 
         tests.helpers.sendWebContentsAction('IMPORT_CLIPBOARD');
 
-        await tests.helpers.checkHasActiveEnvironment('New environment');
+        await tests.helpers.assertHasActiveEnvironment();
+        await tests.helpers.assertActiveEnvironmentName('New environment');
         await tests.helpers.checkActiveRoute('GET\n/answer');
         await tests.helpers.startEnvironment();
       });

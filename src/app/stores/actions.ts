@@ -1,7 +1,7 @@
 import { SettingsProperties } from 'src/app/services/settings.service';
 import { Toast } from 'src/app/services/toasts.service';
 import { ReducerDirectionType, ReducerIndexes } from 'src/app/stores/reducer';
-import { EnvironmentLogsTabsNameType, EnvironmentStatusProperties, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import { EnvironmentLogsTabsNameType, EnvironmentStatusProperties, TabsNameType, UIStateProperties, ViewsNameType } from 'src/app/stores/store';
 import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
 import { Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
 import { EnvironmentLog, EnvironmentLogResponse } from 'src/app/types/server.type';
@@ -35,7 +35,8 @@ export const enum ActionTypes {
   ADD_TOAST,
   REMOVE_TOAST,
   SET_USER_ID,
-  UPDATE_SETTINGS
+  UPDATE_SETTINGS,
+  UPDATE_UI_STATE
 }
 
 /**
@@ -67,7 +68,9 @@ export function setActiveViewAction(activeView: ViewsNameType) {
  *
  * @param activeTab - id of the tab to set as active
  */
-export function setActiveEnvironmentLogTabAction(activeTab: EnvironmentLogsTabsNameType) {
+export function setActiveEnvironmentLogTabAction(
+  activeTab: EnvironmentLogsTabsNameType
+) {
   return <const>{
     type: ActionTypes.SET_ACTIVE_ENVIRONMENT_LOG_TAB,
     activeTab
@@ -187,7 +190,9 @@ export function updateEnvironmentAction(properties: EnvironmentProperties) {
  *
  * @param properties - properties to update
  */
-export function updateEnvironmentStatusAction(properties: EnvironmentStatusProperties) {
+export function updateEnvironmentStatusAction(
+  properties: EnvironmentStatusProperties
+) {
   return <const>{
     type: ActionTypes.UPDATE_ENVIRONMENT_STATUS,
     properties
@@ -306,7 +311,10 @@ export function updateRouteResponseAction(properties: RouteResponseProperties) {
  *
  * @param logItem - logged request
  */
-export function logRequestAction(environmentUUID: string, logItem: EnvironmentLog) {
+export function logRequestAction(
+  environmentUUID: string,
+  logItem: EnvironmentLog
+) {
   return <const>{
     type: ActionTypes.LOG_REQUEST,
     environmentUUID,
@@ -321,7 +329,10 @@ export function logRequestAction(environmentUUID: string, logItem: EnvironmentLo
  *
  * @param logItem - logged response
  */
-export function logResponseAction(environmentUUID: string, logItem: EnvironmentLogResponse) {
+export function logResponseAction(
+  environmentUUID: string,
+  logItem: EnvironmentLogResponse
+) {
   return <const>{
     type: ActionTypes.LOG_RESPONSE,
     environmentUUID,
@@ -389,33 +400,46 @@ export function updateSettingsAction(properties: SettingsProperties) {
   };
 }
 
+/**
+ * Update UI state
+ *
+ * @param properties - properties to update
+ */
+export function updateUIStateAction(properties: UIStateProperties) {
+  return <const>{
+    type: ActionTypes.UPDATE_UI_STATE,
+    properties
+  };
+}
+
 export type Actions =
-  ReturnType<typeof setActiveTabAction> |
-  ReturnType<typeof setActiveViewAction> |
-  ReturnType<typeof setInitialEnvironmentsAction> |
-  ReturnType<typeof setActiveEnvironmentLogTabAction> |
-  ReturnType<typeof setActiveEnvironmentAction> |
-  ReturnType<typeof navigateEnvironmentsAction> |
-  ReturnType<typeof moveEnvironmentsAction> |
-  ReturnType<typeof moveRoutesAction> |
-  ReturnType<typeof moveRouteResponsesAction> |
-  ReturnType<typeof addEnvironmentAction> |
-  ReturnType<typeof removeEnvironmentAction> |
-  ReturnType<typeof updateEnvironmentAction> |
-  ReturnType<typeof updateEnvironmentStatusAction> |
-  ReturnType<typeof setActiveRouteAction> |
-  ReturnType<typeof navigateRoutesAction> |
-  ReturnType<typeof addRouteAction> |
-  ReturnType<typeof removeRouteAction> |
-  ReturnType<typeof removeRouteResponseAction> |
-  ReturnType<typeof updateRouteAction> |
-  ReturnType<typeof setActiveRouteResponseAction> |
-  ReturnType<typeof addRouteResponseAction> |
-  ReturnType<typeof updateRouteResponseAction> |
-  ReturnType<typeof logRequestAction> |
-  ReturnType<typeof logResponseAction> |
-  ReturnType<typeof clearLogsAction> |
-  ReturnType<typeof addToastAction> |
-  ReturnType<typeof removeToastAction> |
-  ReturnType<typeof setUserIdAction> |
-  ReturnType<typeof updateSettingsAction>;
+  | ReturnType<typeof setActiveTabAction>
+  | ReturnType<typeof setActiveViewAction>
+  | ReturnType<typeof setInitialEnvironmentsAction>
+  | ReturnType<typeof setActiveEnvironmentLogTabAction>
+  | ReturnType<typeof setActiveEnvironmentAction>
+  | ReturnType<typeof navigateEnvironmentsAction>
+  | ReturnType<typeof moveEnvironmentsAction>
+  | ReturnType<typeof moveRoutesAction>
+  | ReturnType<typeof moveRouteResponsesAction>
+  | ReturnType<typeof addEnvironmentAction>
+  | ReturnType<typeof removeEnvironmentAction>
+  | ReturnType<typeof updateEnvironmentAction>
+  | ReturnType<typeof updateEnvironmentStatusAction>
+  | ReturnType<typeof setActiveRouteAction>
+  | ReturnType<typeof navigateRoutesAction>
+  | ReturnType<typeof addRouteAction>
+  | ReturnType<typeof removeRouteAction>
+  | ReturnType<typeof removeRouteResponseAction>
+  | ReturnType<typeof updateRouteAction>
+  | ReturnType<typeof setActiveRouteResponseAction>
+  | ReturnType<typeof addRouteResponseAction>
+  | ReturnType<typeof updateRouteResponseAction>
+  | ReturnType<typeof logRequestAction>
+  | ReturnType<typeof logResponseAction>
+  | ReturnType<typeof clearLogsAction>
+  | ReturnType<typeof addToastAction>
+  | ReturnType<typeof removeToastAction>
+  | ReturnType<typeof setUserIdAction>
+  | ReturnType<typeof updateUIStateAction>
+  | ReturnType<typeof updateSettingsAction>;

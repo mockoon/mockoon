@@ -94,7 +94,7 @@ export class Tests {
    */
   public waitForEnvironmentLoaded() {
     it('Should load the environment', async () => {
-      await this.helpers.checkHasActiveEnvironment();
+      await this.helpers.assertHasActiveEnvironment();
     });
   }
 }
