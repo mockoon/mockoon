@@ -131,10 +131,10 @@ export class ServerService {
       server.options('/*', (req, res) => {
         const environmentSelected = this.store.getEnvironmentByUUID(environment.uuid);
 
-        this.setHeaders(CORSHeaders, req, res);
-
         // override default CORS headers with environment's headers
-        this.setHeaders(environmentSelected.headers, req, res);
+        this.setHeaders([...CORSHeaders, ...environmentSelected.headers], (header) => {
+          res.set(header.key, DummyJSONParser(header.value, req));
+        });
 
         res.send(200);
       });
@@ -167,8 +167,9 @@ export class ServerService {
               // set http code
               res.status(enabledRouteResponse.statusCode as unknown as number);
 
-              this.setHeaders(currentEnvironment.headers, req, res);
-              this.setHeaders(enabledRouteResponse.headers, req, res);
+              this.setHeaders([...currentEnvironment.headers, ...enabledRouteResponse.headers], (header) => {
+                res.set(header.key, DummyJSONParser(header.value, req));
+              });
 
               // send the file
               if (enabledRouteResponse.filePath) {
@@ -242,27 +243,12 @@ export class ServerService {
   }
 
   /**
-   * Apply each header to the response
-   *
-   * @param headers
-   * @param req
-   * @param res
-   */
-  private setHeaders(headers: Partial<Header>[], req, res) {
-    headers.forEach((header) => {
-      if (header.key && header.value && !this.testHeaderValidity(header.key)) {
-        res.set(header.key, DummyJSONParser(header.value, req));
-      }
-    });
-  }
-
-  /**
    * Calls a setterFn function on each header
    *
    * @param headers
    * @param setterFn
    */
-  private setHeadersFn(headers: Partial<Header>[], setterFn: ( header: Partial<Header> ) => any) {
+  private setHeaders(headers: Partial<Header>[], setterFn: ( header: Partial<Header> ) => any) {
     headers.forEach((header) => {
       if (header.key && header.value && !this.testHeaderValidity(header.key)) {
         setterFn(header);
@@ -300,7 +286,7 @@ export class ServerService {
       const processRequest = (proxyReq, req, res, options) => {
         req.proxied = true;
 
-        this.setHeadersFn(environment.proxyReqHeaders, (header) => {
+        this.setHeaders(environment.proxyReqHeaders, (header) => {
           proxyReq.setHeader(header.key, DummyJSONParser(header.value, req));
         });
 
@@ -313,7 +299,7 @@ export class ServerService {
 
       // logging the proxied response
       const self = this;
-      const logResponse = (proxyRes, req, res) => {
+      const processResponse = (proxyRes, req, res) => {
         let body = '';
         proxyRes.on('data', (chunk) => {
           body += chunk;
@@ -327,10 +313,9 @@ export class ServerService {
           self.store.update(logResponseAction(environment.uuid, response));
         });
 
-        this.setHeadersFn(environment.proxyResHeaders, (header) => {
+        this.setHeaders(environment.proxyResHeaders, (header) => {
           proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
         });
-
       };
 
       const logErrorResponse = (err, req, res) => {
@@ -344,7 +329,7 @@ export class ServerService {
         changeOrigin: true,
         ssl: { ...httpsConfig, agent: false },
         onProxyReq: processRequest,
-        onProxyRes: logResponse,
+        onProxyRes: processResponse,
         onError: logErrorResponse
       }));
     } else {
