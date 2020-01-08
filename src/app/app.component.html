@@ -136,12 +136,12 @@
                 <!-- ENVIRONMENT SETTINGS VIEW -->
                 <div *ngIf="activeView === 'ENV_SETTINGS'" class="d-flex flex-column h-100 m-2"
                   [formGroup]="activeEnvironmentForm">
-                  <div class="row">
-                    <div class="col">
+                  <div class="row h-35">
+                    <div class="col d-flex flex-column h-100">
                       <div class="title-separator is-first has-icon">
                         <div class="title-separator-icon text-primary"><i class="material-icons">security</i></div>
                         <div class="title-separator-text">
-                          <div>Proxy mode </div>
+                          <div>Proxy mode</div>
                           <div>Non defined routes will be forwarded to the specified host<span
                               (click)="openWikiLink('proxy')" class="pl-2 btn btn-link text-primary cp doc-link"><i
                                 class="material-icons">info</i></span></div>
@@ -162,6 +162,30 @@
                           </div>
                         </div>
                       </div>
+                      <!-- custom proxy headers -->
+                      <ng-container *ngIf="activeEnvironment.proxyMode">
+                        <div class="row pl-4">
+                          <div class="col-6">
+                            <div class="mt-2 mb-2">Proxy request headers <i
+                              class="material-icons" ngbTooltip="Headers will be added to the request sent to the proxied server">info</i></div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mt-2 mb-2 pl-2">Proxy response headers <i
+                              class="material-icons" ngbTooltip="Headers will be added to the response received from the proxied server">info</i></div>
+                          </div>
+                        </div>
+                        <div class="row pl-4 h-100">
+                          <div class="col-6 h-100 scroll-content" #environmentProxyReqHeadersContainer>
+                            <app-headers-list [data$]="activeEnvironment$" headers="proxyReqHeaders" type="environmentHeaders"
+                              (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
+                          </div>
+                          <div class="col-6 h-100 pl-2 scroll-content" #environmentProxyResHeadersContainer>
+                            <app-headers-list [data$]="activeEnvironment$" headers="proxyResHeaders" type="environmentHeaders"
+                              (headerAdded)="scrollToBottom(environmentProxyResHeadersContainer)"></app-headers-list>
+                          </div>
+                        </div>
+                      </ng-container>
+
                     </div>
                   </div>
 

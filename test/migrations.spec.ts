@@ -17,7 +17,7 @@ describe('Environments migrations', () => {
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/environments.json',
         '0.lastMigration',
-        9
+        10
       );
 
       const settingsFile = await fs.readFile('./tmp/storage/settings.json');
@@ -42,6 +42,25 @@ describe('Environments migrations', () => {
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/environments.json',
         '0.routes.0.responses.0.label',
+        null,
+        true
+      );
+    });
+  });
+
+  describe('No. 10', () => {
+    const filesPath = 'migrations/10';
+    const tests = new Tests(filesPath);
+
+    tests.runHooks();
+
+    it('Should add "proxyReqHeaders" and "proxyResHeaders" headers properties to environments', async () => {
+      // wait for post migration autosave
+      await tests.app.client.pause(4000);
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.proxyReqHeaders.0.key', '0.proxyResHeaders.0.key'],
         null,
         true
       );

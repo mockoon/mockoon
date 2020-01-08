@@ -1,7 +1,7 @@
 [
   {
     "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-    "lastMigration": 9,
+    "lastMigration": 10,
     "name": "Export env",
     "endpointPrefix": "",
     "latency": 0,
@@ -32,6 +32,8 @@
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [{ "key": "", "value": "" }]
+    "headers": [{ "key": "", "value": "" }],
+    "proxyReqHeaders": [{"key": "", "value":""}],
+    "proxyResHeaders": [{"key": "", "value":""}]
   }
 ]

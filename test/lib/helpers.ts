@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
 import { ToastTypes } from 'src/app/services/toasts.service';
-import { TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import { EnvironmentLogsTabsNameType, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
 import { ResponseRule } from 'src/app/types/route.type';
 import { HttpCall } from 'test/lib/types';
@@ -80,7 +80,11 @@ export class Helpers {
   }
 
   async toggleEnvironmentMenu() {
-    await this.testsInstance.app.client.element('.environments-menu .nav:first-of-type .nav-item .nav-link.toggle-environments-menu').click();
+    await this.testsInstance.app.client
+      .element(
+        '.environments-menu .nav:first-of-type .nav-item .nav-link.toggle-environments-menu'
+      )
+      .click();
     // wait for environment menu to open/close
     await this.testsInstance.app.client.pause(310);
   }
@@ -156,7 +160,10 @@ export class Helpers {
     );
   }
 
-  async assertEnvironmentServerIconsExists(index: number, iconName: 'cors' | 'https' | 'proxy-mode') {
+  async assertEnvironmentServerIconsExists(
+    index: number,
+    iconName: 'cors' | 'https' | 'proxy-mode'
+  ) {
     const selector = `.environments-menu .nav-item:nth-child(${index}) .nav-link.active .server-icons-${iconName}`;
     await this.testsInstance.app.client.waitForExist(selector);
   }
@@ -219,9 +226,7 @@ export class Helpers {
 
   async selectRoute(index: number) {
     await this.testsInstance.app.client
-      .element(
-        `.routes-menu .nav.menu-list .nav-item:nth-child(${index})`
-      )
+      .element(`.routes-menu .nav.menu-list .nav-item:nth-child(${index})`)
       .click();
   }
 
@@ -267,6 +272,17 @@ export class Helpers {
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2) .nav-link',
       RULES:
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(3) .nav-link'
+    };
+
+    await this.testsInstance.app.client.element(selectors[tabName]).click();
+  }
+
+  async switchTabInEnvironmentLogs(tabName: EnvironmentLogsTabsNameType) {
+    const selectors: { [key in typeof tabName]: string } = {
+      REQUEST:
+        '.environment-logs-content .nav.nav-tabs .nav-item:nth-child(1) .nav-link',
+      RESPONSE:
+        '.environment-logs-content .nav.nav-tabs .nav-item:nth-child(2) .nav-link'
     };
 
     await this.testsInstance.app.client.element(selectors[tabName]).click();

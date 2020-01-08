@@ -200,6 +200,22 @@ export const Migrations: {
         });
       });
     }
+  },
+
+  /**
+   * Add proxy request/response headers
+   */
+  {
+    id: 10,
+    migrationFunction: (environment: Environment) => {
+      // add new proxy request/response headers property to environments
+      if (!environment.proxyReqHeaders) {
+        environment.proxyReqHeaders = [{ key: '', value: '' }];
+      }
+      if (!environment.proxyResHeaders) {
+        environment.proxyResHeaders = [{ key: '', value: '' }];
+      }
+    }
   }
 ];
 

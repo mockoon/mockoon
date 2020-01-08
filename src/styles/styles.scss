@@ -50,6 +50,10 @@ input,
   transition: all ease-in-out 100ms;
 }
 
+.h-35 {
+  max-height: 35%;
+}
+
 .main-content {
   background-color: darken($gray-900, 2%);
 }

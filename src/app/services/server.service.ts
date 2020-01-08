@@ -131,10 +131,10 @@ export class ServerService {
       server.options('/*', (req, res) => {
         const environmentSelected = this.store.getEnvironmentByUUID(environment.uuid);
 
-        this.setHeaders(CORSHeaders, req, res);
-
         // override default CORS headers with environment's headers
-        this.setHeaders(environmentSelected.headers, req, res);
+        this.setHeaders([...CORSHeaders, ...environmentSelected.headers], (header) => {
+          res.set(header.key, DummyJSONParser(header.value, req));
+        });
 
         res.send(200);
       });
@@ -167,8 +167,9 @@ export class ServerService {
               // set http code
               res.status(enabledRouteResponse.statusCode as unknown as number);
 
-              this.setHeaders(currentEnvironment.headers, req, res);
-              this.setHeaders(enabledRouteResponse.headers, req, res);
+              this.setHeaders([...currentEnvironment.headers, ...enabledRouteResponse.headers], (header) => {
+                res.set(header.key, DummyJSONParser(header.value, req));
+              });
 
               // send the file
               if (enabledRouteResponse.filePath) {
@@ -242,16 +243,15 @@ export class ServerService {
   }
 
   /**
-   * Apply each header to the response
+   * Calls a setterFn function on each header
    *
    * @param headers
-   * @param req
-   * @param res
+   * @param setterFn
    */
-  private setHeaders(headers: Partial<Header>[], req, res) {
+  private setHeaders(headers: Partial<Header>[], setterFn: ( header: Partial<Header> ) => any) {
     headers.forEach((header) => {
       if (header.key && header.value && !this.testHeaderValidity(header.key)) {
-        res.set(header.key, DummyJSONParser(header.value, req));
+        setterFn(header);
       }
     });
   }
@@ -286,6 +286,10 @@ export class ServerService {
       const processRequest = (proxyReq, req, res, options) => {
         req.proxied = true;
 
+        this.setHeaders(environment.proxyReqHeaders, (header) => {
+          proxyReq.setHeader(header.key, DummyJSONParser(header.value, req));
+        });
+
         if (req.body) {
           proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
           // stream the content
@@ -295,7 +299,7 @@ export class ServerService {
 
       // logging the proxied response
       const self = this;
-      const logResponse = (proxyRes, req, res) => {
+      const processResponse = (proxyRes, req, res) => {
         let body = '';
         proxyRes.on('data', (chunk) => {
           body += chunk;
@@ -307,6 +311,10 @@ export class ServerService {
           const enhancedReq = req as IEnhancedRequest;
           const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
           self.store.update(logResponseAction(environment.uuid, response));
+        });
+
+        this.setHeaders(environment.proxyResHeaders, (header) => {
+          proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
         });
       };
 
@@ -321,7 +329,7 @@ export class ServerService {
         changeOrigin: true,
         ssl: { ...httpsConfig, agent: false },
         onProxyReq: processRequest,
-        onProxyRes: logResponse,
+        onProxyRes: processResponse,
         onError: logErrorResponse
       }));
     } else {
