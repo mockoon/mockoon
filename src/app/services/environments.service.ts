@@ -9,12 +9,13 @@ import { EventsService } from 'src/app/services/events.service';
 import { MigrationService } from 'src/app/services/migration.service';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ServerService } from 'src/app/services/server.service';
+import { UIService } from 'src/app/services/ui.service';
 import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environment, EnvironmentProperties } from 'src/app/types/environment.type';
 import { CORSHeaders, Header, Method, Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
-import { dragulaNamespaces } from 'src/app/types/ui.type';
+import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
 
 @Injectable({ providedIn: 'root' })
 export class EnvironmentsService {
@@ -26,7 +27,8 @@ export class EnvironmentsService {
     private store: Store,
     private serverService: ServerService,
     private migrationService: MigrationService,
-    private schemasBuilderService: SchemasBuilderService
+    private schemasBuilderService: SchemasBuilderService,
+    private uiService: UIService
   ) {
     // get existing environments from storage or default one
     storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
@@ -63,7 +65,9 @@ export class EnvironmentsService {
    * Set active route by UUID or navigation
    */
   public setActiveRoute(routeUUIDOrDirection: string | ReducerDirectionType) {
-    if (this.store.get('activeRouteUUID') !== routeUUIDOrDirection) {
+    const activeRouteUUID = this.store.get('activeRouteUUID');
+
+    if (activeRouteUUID && activeRouteUUID !== routeUUIDOrDirection) {
       if (routeUUIDOrDirection === 'next' || routeUUIDOrDirection === 'previous') {
         this.store.update(navigateRoutesAction(routeUUIDOrDirection));
       } else {
@@ -105,35 +109,32 @@ export class EnvironmentsService {
       this.store.update(addEnvironmentAction(newEnvironment));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
+
+      this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
     }
   }
 
   /**
    * Remove an environment or the current one if not environmentUUID is provided
    */
-  public removeEnvironment(environmentUUID?: string) {
-    const currentEnvironmentUUID = this.store.get('activeEnvironmentUUID');
+  public removeEnvironment(environmentUUID: string = this.store.get('activeEnvironmentUUID')) {
+    if (environmentUUID) {
+      this.serverService.stop(environmentUUID);
 
-    if (!environmentUUID) {
-      if (!currentEnvironmentUUID) {
-        return;
-      }
-      environmentUUID = this.store.get('activeEnvironmentUUID');
+      this.store.update(removeEnvironmentAction(environmentUUID));
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ENVIRONMENT);
     }
-
-    this.serverService.stop(environmentUUID);
-
-    this.store.update(removeEnvironmentAction(environmentUUID));
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ENVIRONMENT);
   }
 
   /**
    * Add a new route and save it in the store
    */
   public addRoute() {
-    this.store.update(addRouteAction(this.schemasBuilderService.buildRoute()));
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
+    if (this.store.getActiveEnvironment()) {
+      this.store.update(addRouteAction(this.schemasBuilderService.buildRoute()));
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
+      this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+    }
   }
 
   /**
@@ -162,6 +163,7 @@ export class EnvironmentsService {
       this.store.update(addRouteAction(newRoute));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ROUTE);
+      this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
     }
   }
 
@@ -169,9 +171,11 @@ export class EnvironmentsService {
    * Remove a route and save
    */
   public removeRoute(routeUUID: string = this.store.get('activeRouteUUID')) {
-    this.store.update(removeRouteAction(routeUUID));
+    if (routeUUID) {
+      this.store.update(removeRouteAction(routeUUID));
 
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE);
+      this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE);
+    }
   }
 
   /**
@@ -250,6 +254,11 @@ export class EnvironmentsService {
    */
   public toggleActiveEnvironment() {
     const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (!activeEnvironment) {
+      return;
+    }
+
     const environmentsStatus = this.store.get('environmentsStatus');
     const activeEnvironmentState = environmentsStatus[activeEnvironment.uuid];
 
@@ -271,7 +280,7 @@ export class EnvironmentsService {
   /**
    * Move a menu item (envs / routes)
    */
-  public moveMenuItem(type: dragulaNamespaces, sourceIndex: number, targetIndex: number) {
+  public moveMenuItem(type: DraggableContainerNames, sourceIndex: number, targetIndex: number) {
     const storeActions = {
       routes: moveRoutesAction,
       environments: moveEnvironmentsAction,
