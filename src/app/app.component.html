@@ -136,8 +136,8 @@
                 <!-- ENVIRONMENT SETTINGS VIEW -->
                 <div *ngIf="activeView === 'ENV_SETTINGS'" class="d-flex flex-column h-100 m-2"
                   [formGroup]="activeEnvironmentForm">
-                  <div class="row">
-                    <div class="col">
+                  <div class="row max-h50">
+                    <div class="col d-flex flex-column h-100">
                       <div class="title-separator is-first has-icon">
                         <div class="title-separator-icon text-primary"><i class="material-icons">security</i></div>
                         <div class="title-separator-text">
@@ -162,6 +162,26 @@
                           </div>
                         </div>
                       </div>
+                      <!-- custom proxy headers -->
+                      <div class="row pl-4">
+                        <div class="col-6">
+                          <div class="mt-2 mb-2">Proxy request headers </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="mt-2 mb-2">Proxy response headers </div>
+                        </div>
+                      </div>
+                      <div class="row pl-4 h-100">
+                        <div class="col-6 h-100 scroll-content" #environmentProxyReqHeadersContainer>
+                          <app-headers-list [data$]="activeEnvironment$" headers="proxyReqHeaders" type="environmentHeaders"
+                            (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
+                        </div>
+                        <div class="col-6 h-100 scroll-content" #environmentProxyResHeadersContainer>
+                          <app-headers-list [data$]="activeEnvironment$"  headers="proxyResHeaders" type="environmentHeaders"
+                            (headerAdded)="scrollToBottom(environmentProxyResHeadersContainer)"></app-headers-list>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
 

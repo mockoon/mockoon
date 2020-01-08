@@ -1,7 +1,7 @@
 [
   {
     "uuid": "d609f7f1-6bb5-4253-9d2b-89379f06eba6",
-    "lastMigration": 9,
+    "lastMigration": 10,
     "name": "Dev env",
     "endpointPrefix": "",
     "latency": 0,
@@ -92,6 +92,9 @@
         "key": "",
         "value": ""
       }
-    ]
+    ],
+    "proxyReqHeaders": [{"key": "", "value":""}],
+    "proxyResHeaders": [{"key": "", "value":""}]
+
   }
 ]

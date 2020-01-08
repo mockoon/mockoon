@@ -17,6 +17,7 @@ export type HeadersListType = 'routeResponseHeaders' | 'environmentHeaders';
 export class HeadersListComponent implements OnInit {
   @Input() data$: Observable<Environment | RouteResponse>;
   @Input() type: HeadersListType;
+  @Input() headers = 'headers';
   @Output() headerAdded: EventEmitter<any> = new EventEmitter();
   public form: FormGroup;
   public headersFormChanges: Subscription;
@@ -37,7 +38,7 @@ export class HeadersListComponent implements OnInit {
     // subscribe to header injection events
     this.eventsService.injectHeaders.pipe(
       filter(data => data.target === this.type),
-      map(data => data.headers)
+      map(data => data[this.headers] || [])
     ).subscribe(headers => this.injectHeaders(headers));
 
     // subscribe to headers changes to reset the form
@@ -50,11 +51,11 @@ export class HeadersListComponent implements OnInit {
         this.headersFormChanges.unsubscribe();
       }
 
-      this.replaceHeaders(data.headers);
+      this.replaceHeaders(data[this.headers]);
 
       // subscribe to changes and send new headers values to the store
       this.headersFormChanges = this.form.get('headers').valueChanges.pipe(
-        map(newValue => ({ headers: newValue }))
+        map(newValue => ({ [this.headers]: newValue }))
       ).subscribe(newProperty => {
         if (this.type === 'environmentHeaders') {
           this.environmentsService.updateActiveEnvironment(newProperty);
@@ -135,7 +136,7 @@ export class HeadersListComponent implements OnInit {
   /**
    * Remove a header from the list
    *
-   * @param headerUUID
+   * @param headerIndex
    */
   public removeHeader(headerIndex: number) {
     (this.form.get('headers') as FormArray).removeAt(headerIndex);
