@@ -172,9 +172,15 @@ export class Store {
    * Get active route observable
    */
   public getActiveRoute(): Route {
-    return this.store$.value.environments
-      .find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID).routes
-      .find(route => route.uuid === this.store$.value.activeRouteUUID);
+    const activeEnvironment = this.store$.value.environments
+      .find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID);
+
+    if (!activeEnvironment) {
+      return null;
+    }
+
+    return activeEnvironment.routes
+    .find(route => route.uuid === this.store$.value.activeRouteUUID);
   }
 
   /**

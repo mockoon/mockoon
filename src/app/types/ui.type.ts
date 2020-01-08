@@ -1,4 +1,4 @@
-export type dragulaNamespaces = 'routes' | 'environments' | 'routeResponses';
+export type DraggableContainerNames = 'routes' | 'environments' | 'routeResponses';
 
 export enum ScrollDirection {
   TOP = 'TOP',

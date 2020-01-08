@@ -1,36 +1,15 @@
 import { Injectable } from '@angular/core';
-import { DragulaService } from 'ng2-dragula';
 import { Subject } from 'rxjs';
-import { EnvironmentsService } from 'src/app/services/environments.service';
 import { updateUIStateAction } from 'src/app/stores/actions';
 import { Store, UIStateProperties } from 'src/app/stores/store';
-import { dragulaNamespaces as DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
+import { ScrollDirection } from 'src/app/types/ui.type';
 
 @Injectable({ providedIn: 'root' })
 export class UIService {
   public scrollEnvironmentsMenu: Subject<ScrollDirection> = new Subject();
   public scrollRoutesMenu: Subject<ScrollDirection> = new Subject();
 
-  constructor(
-    private store: Store,
-    private dragulaService: DragulaService,
-    private environmentsService: EnvironmentsService
-  ) {
-    this.initDragMonitoring();
-  }
-
-  /**
-   * Trigger env/route saving and re-selection when draging active route/env
-   */
-  public initDragMonitoring() {
-    this.dragulaService.dropModel().subscribe(dragResult => {
-      this.environmentsService.moveMenuItem(
-        dragResult.name as DraggableContainerNames,
-        dragResult.sourceIndex,
-        dragResult.targetIndex
-      );
-    });
-  }
+  constructor(private store: Store) {}
 
   /**
    * Scroll to bottom of an element

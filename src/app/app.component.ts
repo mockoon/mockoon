@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ipcRenderer, remote, shell } from 'electron';
 import * as mimeTypes from 'mime-types';
+import { DragulaService } from 'ng2-dragula';
 import { merge, Observable } from 'rxjs';
 import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
@@ -26,7 +27,7 @@ import { DataSubject } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
 import { EnvironmentLogs } from 'src/app/types/server.type';
-import { ScrollDirection } from 'src/app/types/ui.type';
+import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
 
 const platform = require('os').platform();
 const appVersion = require('../../package.json').version;
@@ -82,7 +83,8 @@ export class AppComponent implements OnInit {
     private store: Store,
     private formBuilder: FormBuilder,
     private importExportService: ImportExportService,
-    private uiService: UIService
+    private uiService: UIService,
+    private dragulaService: DragulaService
   ) {
     // tooltip config
     this.config.container = 'body';
@@ -94,22 +96,22 @@ export class AppComponent implements OnInit {
           this.addEnvironment();
           break;
         case 'NEW_ROUTE':
-          this.addRoute();
+          this.environmentsService.addRoute();
           break;
         case 'START_ENVIRONMENT':
           this.toggleEnvironment();
           break;
         case 'DUPLICATE_ENVIRONMENT':
-          this.duplicateEnvironment();
+          this.environmentsService.duplicateEnvironment();
           break;
         case 'DUPLICATE_ROUTE':
-          this.duplicateRoute();
+          this.environmentsService.duplicateRoute();
           break;
         case 'DELETE_ENVIRONMENT':
-          this.removeEnvironment();
+          this.environmentsService.removeEnvironment();
           break;
         case 'DELETE_ROUTE':
-          this.removeRoute();
+          this.environmentsService.removeRoute();
           break;
         case 'PREVIOUS_ENVIRONMENT':
           this.selectEnvironment('previous');
@@ -118,10 +120,10 @@ export class AppComponent implements OnInit {
           this.selectEnvironment('next');
           break;
         case 'PREVIOUS_ROUTE':
-          this.selectRoute('previous');
+          this.environmentsService.setActiveRoute('previous');
           break;
         case 'NEXT_ROUTE':
-          this.selectRoute('next');
+          this.environmentsService.setActiveRoute('next');
           break;
         case 'OPEN_SETTINGS':
           if (!this.settingsModalOpened) {
@@ -143,6 +145,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.dragulaService.dropModel().subscribe(dragResult => {
+      this.environmentsService.moveMenuItem(
+        dragResult.name as DraggableContainerNames,
+        dragResult.sourceIndex,
+        dragResult.targetIndex
+      );
+    });
     this.initForms();
 
     // auth anonymously through firebase
@@ -380,38 +389,6 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Select a route by UUID, or the first route if no UUID is present
-   */
-  private selectRoute(routeUUIDOrDirection: string | ReducerDirectionType) {
-    this.environmentsService.setActiveRoute(routeUUIDOrDirection);
-  }
-
-  /**
-   * Duplicate an environment
-   */
-  private duplicateEnvironment(environmentUUID?: string) {
-    this.environmentsService.duplicateEnvironment(environmentUUID);
-
-    this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
-  }
-
-  /**
-   * Create a new route in the current environment. Append at the end of the list
-   */
-  private addRoute() {
-    this.environmentsService.addRoute();
-    this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
-  }
-
-  /**
-   * Duplicate a route
-   */
-  private duplicateRoute(routeUUID?: string) {
-    this.environmentsService.duplicateRoute(routeUUID);
-    this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
-  }
-
-  /**
    * Create a new environment. Append at the end of the list.
    */
   private addEnvironment() {
@@ -420,24 +397,10 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Remove route and navigate depending on remaining routes
-   */
-  private removeRoute(routeUUID?: string) {
-    this.environmentsService.removeRoute(routeUUID);
-  }
-
-  /**
    * Enable/disable a route
    */
   private toggleRoute(routeUUID?: string) {
     this.environmentsService.toggleRoute(routeUUID);
-  }
-
-  /**
-   * Remove environment and navigate depending on remaining environments
-   */
-  private removeEnvironment(environmentUUID?: string) {
-    this.environmentsService.removeEnvironment(environmentUUID);
   }
 
   /**
@@ -538,9 +501,9 @@ export class AppComponent implements OnInit {
         break;
       case 'duplicate':
         if (payload.subject === 'route') {
-          this.duplicateRoute(payload.subjectUUID);
+          this.environmentsService.duplicateRoute(payload.subjectUUID);
         } else if (payload.subject === 'environment') {
-          this.duplicateEnvironment(payload.subjectUUID);
+          this.environmentsService.duplicateEnvironment(payload.subjectUUID);
         }
         break;
       case 'export':
@@ -548,9 +511,9 @@ export class AppComponent implements OnInit {
         break;
       case 'delete':
         if (payload.subject === 'route') {
-          this.removeRoute(payload.subjectUUID);
+          this.environmentsService.removeRoute(payload.subjectUUID);
         } else if (payload.subject === 'environment') {
-          this.removeEnvironment(payload.subjectUUID);
+          this.environmentsService.removeEnvironment(payload.subjectUUID);
         }
         break;
       case 'toggle':
