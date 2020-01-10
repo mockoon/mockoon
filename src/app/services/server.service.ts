@@ -73,6 +73,7 @@ export class ServerService {
     this.logRequests(server, environment);
     this.logResponses(server, environment);
     this.setEnvironmentLatency(server, environment.uuid);
+    this.setResponseHeaders(server, environment);
     this.setRoutes(server, environment);
     this.setCors(server, environment);
     this.enableProxy(server, environment);
@@ -167,7 +168,7 @@ export class ServerService {
               // set http code
               res.status(enabledRouteResponse.statusCode as unknown as number);
 
-              this.setHeaders([...currentEnvironment.headers, ...enabledRouteResponse.headers], (header) => {
+              this.setHeaders(enabledRouteResponse.headers, (header) => {
                 res.set(header.key, DummyJSONParser(header.value, req));
               });
 
@@ -242,6 +243,23 @@ export class ServerService {
     });
   }
 
+    /**
+   * Ensure that environment headers & proxy headers are returned in response headers
+   *
+   * @param server - the server serving responses
+   * @param environment - the environment where the headers are configured
+   */
+  private setResponseHeaders(server: any, environment: Environment) {
+    server.use((req, res, next) => {
+      const headers = [...environment.headers, ...environment.proxyResHeaders];
+      this.setHeaders(headers, (header) => {
+        res.setHeader(header.key, DummyJSONParser(header.value, req));
+      });
+
+      next();
+    });
+  }
+
   /**
    * Calls a setterFn function on each header
    *
@@ -311,10 +329,6 @@ export class ServerService {
           const enhancedReq = req as IEnhancedRequest;
           const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
           self.store.update(logResponseAction(environment.uuid, response));
-        });
-
-        this.setHeaders(environment.proxyResHeaders, (header) => {
-          proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
         });
       };
 
