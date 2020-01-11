@@ -7,5 +7,6 @@ export type HttpCall = {
   testedProperties: {
     body?: string;
     status?: number;
+    headers?: object;
   };
 };

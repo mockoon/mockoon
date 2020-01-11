@@ -3,20 +3,38 @@ import { HttpCall } from './lib/types';
 
 const tests = new Tests('proxy');
 
-const getAnswerCall: HttpCall = {
-  description: 'Call GET answer',
-  path: '/answer',
-  method: 'GET',
-  testedProperties: {
-    body: '42',
-    status: 200
+const cases: HttpCall[] = [
+  {
+    description: 'Call GET answer',
+    path: '/answer',
+    method: 'GET',
+    testedProperties: {
+      body: '42',
+      status: 200,
+      headers: {
+        'x-custom-header': 'value',
+        'x-proxy-response-header': 'header value'
+      }
+    }
+  },
+  {
+    description: 'Call GET answer',
+    path: '/invalid-path',
+    method: 'GET',
+    testedProperties: {
+      status: 404,
+      headers: {
+        'x-custom-header': 'value',
+        'x-proxy-response-header': 'header value'
+      }
+    }
   }
-};
+];
 
 const environmentLogsItemSelector =
   '.environment-logs-column:nth-child(1) .menu-list .nav-item';
 
-describe('Proxy', () => {
+describe.only('ProxyClass', () => {
   tests.runHooks();
 
   it('Start environments', async () => {
@@ -25,8 +43,10 @@ describe('Proxy', () => {
     await tests.helpers.startEnvironment();
   });
 
-  it('Call /anwser', async () => {
-    await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
+  it('Call endpoints', async () => {
+    for (const endpointCall of cases) {
+      await tests.helpers.httpCallAsserterWithPort(endpointCall, 3001);
+    }
   });
 
   it('Environment logs have one entry', async () => {
@@ -79,7 +99,7 @@ describe('Proxy', () => {
   });
 
   it('Test new mock', async () => {
-    await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
+    await tests.helpers.httpCallAsserterWithPort(cases[0], 3001);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.helpers.countEnvironmentLogsEntries(2);
     await tests.app.client
