@@ -71,9 +71,9 @@ export class ServerService {
 
     // apply latency, cors, routes and proxy to express server
     this.logRequests(server, environment);
-    this.logResponses(server, environment);
     this.setEnvironmentLatency(server, environment.uuid);
     this.setResponseHeaders(server, environment);
+    this.logResponses(server, environment);
     this.setRoutes(server, environment);
     this.setCors(server, environment);
     this.enableProxy(server, environment);
@@ -318,13 +318,15 @@ export class ServerService {
       // logging the proxied response
       const self = this;
       const processResponse = (proxyRes, req, res) => {
+        const combinedHeaders = {...res.getHeaders(), ...proxyRes.headers};
+
         let body = '';
         proxyRes.on('data', (chunk) => {
           body += chunk;
         });
         proxyRes.on('end', () => {
           proxyRes.getHeaders = function () {
-            return proxyRes.headers;
+            return combinedHeaders;
           };
           const enhancedReq = req as IEnhancedRequest;
           const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
