@@ -1,24 +1,32 @@
 <ng-template #modal let-close="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Settings</h4>
-  </div>
-  <div class="modal-body">
-    <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" id="analytics" name="analytics" [ngModel]="(settings$ | async)?.analytics" (ngModelChange)="settingsUpdated($event, 'analytics')">
-      <label class="custom-control-label" for="analytics">I agree to share anonymous usage data</label>
+  <ng-container *ngIf="settings$ | async as settings">
+    <div class="modal-header">
+      <h4 class="modal-title">Settings</h4>
     </div>
-    <p class="text-muted"><small>We are using a basic Google Analytics setup, none of your data/content is kept anywhere and it helps us improve Mockoon :)</small></p>
+    <div class="modal-body">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="analytics" name="analytics" [ngModel]="settings.analytics" (ngModelChange)="settingsUpdated($event, 'analytics')">
+        <label class="custom-control-label" for="analytics">I agree to share anonymous usage data</label>
+      </div>
+      <p class="text-muted"><small>We are using a basic Google Analytics setup, none of your data/content is kept anywhere and it helps us improve Mockoon :)</small></p>
 
-    <div class="form-group log-body">
-      <label for="log-body-size">Log body size:</label>
-      <p class="text-muted"><small>Truncate the entering requests and exiting responses bodies if bigger (characters).</small></p>
-      <input type="number" class="form-control col-4" id="log-body-size"
-          ngbTooltip="Log's body size" min="1"
-          placeholder="10000 (default)" digitOnly 
-          [ngModel]="(settings$ | async)?.logSizeLimit" (ngModelChange)="settingsUpdated($event, 'logSizeLimit')">
+      <div class="form-group log-body">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="truncateRouteName" name="truncateRouteName" [ngModel]="settings.truncateRouteName" (ngModelChange)="settingsUpdated($event, 'truncateRouteName')">
+          <label class="custom-control-label" for="truncateRouteName">Truncate route name in route list</label>
+        </div>
+      </div>
+      <div class="form-group log-body">
+        <label for="log-body-size">Log body size:</label>
+        <p class="text-muted"><small>Truncate the entering requests and exiting responses bodies if bigger (characters).</small></p>
+        <input type="number" class="form-control col-4" id="log-body-size"
+            ngbTooltip="Log's body size" min="1"
+            placeholder="10000 (default)" digitOnly
+            [ngModel]="settings.logSizeLimit" (ngModelChange)="settingsUpdated($event, 'logSizeLimit')">
+      </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="close()">Close</button>
-  </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="close()">Close</button>
+    </div>
+  </ng-container>
 </ng-template>
