@@ -17,7 +17,7 @@ const getAnswerCall: HttpCall = {
 const environmentLogsItemSelector =
   '.environment-logs-column:nth-child(1) .menu-list .nav-item';
 
-describe.only('ProxyClass', () => {
+describe('Proxy', () => {
   tests.runHooks();
 
   it('Start environments', async () => {
