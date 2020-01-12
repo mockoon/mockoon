@@ -3,33 +3,16 @@ import { HttpCall } from './lib/types';
 
 const tests = new Tests('proxy');
 
-const cases: HttpCall[] = [
-  {
-    description: 'Call GET answer',
-    path: '/answer',
-    method: 'GET',
-    testedProperties: {
-      body: '42',
-      status: 200,
-      headers: {
-        'x-custom-header': 'value',
-        'x-proxy-response-header': 'header value'
-      }
-    }
-  },
-  {
-    description: 'Call GET answer',
-    path: '/invalid-path',
-    method: 'GET',
-    testedProperties: {
-      status: 404,
-      headers: {
-        'x-custom-header': 'value',
-        'x-proxy-response-header': 'header value'
-      }
-    }
+const getAnswerCall: HttpCall = {
+  description: 'Call GET answer',
+  path: '/answer',
+  method: 'GET',
+  testedProperties: {
+    body: '42',
+    status: 200,
+    headers: {'X-custom-header': 'header value', 'X-proxy-response-header': 'header-value'}
   }
-];
+};
 
 const environmentLogsItemSelector =
   '.environment-logs-column:nth-child(1) .menu-list .nav-item';
@@ -43,10 +26,8 @@ describe.only('ProxyClass', () => {
     await tests.helpers.startEnvironment();
   });
 
-  it('Call endpoints', async () => {
-    for (const endpointCall of cases) {
-      await tests.helpers.httpCallAsserterWithPort(endpointCall, 3001);
-    }
+  it('Call /anwser', async () => {
+    await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
   });
 
   it('Environment logs have one entry', async () => {
@@ -76,15 +57,26 @@ describe.only('ProxyClass', () => {
       .should.eventually.equal('X-proxy-request-header: header value');
   });
 
-  it('Should display custom response header in environment logs', async () => {
+  it('Should display custom proxied response header in environment logs', async () => {
     await tests.helpers.selectEnvironment(2);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
     await tests.app.client
       .getText(
-        '.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(1)'
+        '.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(8)'
       )
       .should.eventually.equal('X-proxy-response-header: header value');
+  });
+
+  it('Should display custom environment response header in environment logs', async () => {
+    await tests.helpers.selectEnvironment(2);
+    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
+    await tests.app.client
+      .getText(
+        '.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(6)'
+      )
+      .should.eventually.equal('X-custom-header: header value');
   });
 
   it('Click on mock button ', async () => {
@@ -99,7 +91,7 @@ describe.only('ProxyClass', () => {
   });
 
   it('Test new mock', async () => {
-    await tests.helpers.httpCallAsserterWithPort(cases[0], 3001);
+    await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.helpers.countEnvironmentLogsEntries(2);
     await tests.app.client
