@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { RoutesContextMenu } from 'src/app/components/context-menu/context-menus';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
+import { Settings } from 'src/app/services/settings.service';
 import { UIService } from 'src/app/services/ui.service';
 import { DuplicatedRoutesTypes, EnvironmentsStatuses, Store } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
@@ -14,9 +15,8 @@ import { Route } from 'src/app/types/route.type';
   styleUrls: ['./routes-menu.component.scss']
 })
 export class RoutesMenuComponent implements OnInit {
-  @ViewChild('routesMenu', { static: false })
-  private routesMenu: ElementRef;
-
+  @ViewChild('routesMenu', { static: false }) private routesMenu: ElementRef;
+  public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public activeRoute$: Observable<Route>;
   public environments$: Observable<Environments>;
@@ -36,12 +36,10 @@ export class RoutesMenuComponent implements OnInit {
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
     this.environments$ = this.store.select('environments');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
+    this.settings$ = this.store.select('settings');
 
     this.uiService.scrollRoutesMenu.subscribe(scrollDirection => {
-      this.uiService.scroll(
-        this.routesMenu.nativeElement,
-        scrollDirection
-      );
+      this.uiService.scroll(this.routesMenu.nativeElement, scrollDirection);
     });
   }
 
@@ -70,10 +68,7 @@ export class RoutesMenuComponent implements OnInit {
    */
   public openContextMenu(routeUUID: string, event: MouseEvent) {
     // if right click display context menu
-    if (
-      event &&
-      event.which === 3
-    ) {
+    if (event && event.which === 3) {
       const menu: ContextMenuEvent = {
         event: event,
         items: RoutesContextMenu(routeUUID)
