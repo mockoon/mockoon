@@ -3,7 +3,6 @@ import * as DummyJSON from 'dummy-json';
 import random from 'lodash/random';
 import * as objectPath from 'object-path';
 import * as queryString from 'querystring';
-import * as cookie from 'cookie';
 
 /**
  * Prevents insertion of Dummy-JSON own object (last argument) when no default value is provided:
@@ -66,14 +65,12 @@ export const DummyJSONHelpers = (request) => {
       return request.get(headerName) || defaultValue;
     },
     // use value of cookie
-    cookie: function(key: String, defaultValue: string) {
+    cookie: function(key: string, defaultValue: string) {
       if (typeof defaultValue === 'object') {
         defaultValue = '';
       }
 
-      const cookies = request.get('Cookie') || '';
-
-      return cookie.parse(cookies)[key] || defaultValue;
+      return request.cookies[key] || defaultValue;
     },
     // use request hostname
     hostname: function () {
