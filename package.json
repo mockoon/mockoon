@@ -45,6 +45,7 @@
     "@ng-bootstrap/ng-bootstrap": "5.1.1",
     "bootstrap": "4.3.1",
     "brace": "0.11.1",
+    "cookie": "^0.4.0",
     "dummy-json": "2.0.0",
     "electron-is-dev": "1.1.0",
     "electron-json-storage": "4.1.0",
