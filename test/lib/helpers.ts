@@ -316,7 +316,8 @@ export class Helpers {
       path: httpCall.path,
       method: httpCall.method,
       headers: httpCall.headers,
-      body: httpCall.body
+      body: httpCall.body,
+      cookie: httpCall.cookie
     }).should.eventually.deep.include(
       Object.keys(httpCall.testedProperties).reduce(
         (propertiesToTest, propertyName) => {
