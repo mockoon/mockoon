@@ -18,13 +18,13 @@ export const ArrayContainsObjectKey = (obj: { [key: string]: any }, arr: string[
 };
 
 export const GetRouteResponseContentType = (environment: Environment, routeResponse: RouteResponse) => {
-  const routeResponseContentType = routeResponse.headers.find(header => header.key === 'Content-Type');
+  const routeResponseContentType = routeResponse.headers.find(header => header.key.toLowerCase() === 'content-type');
 
   if (routeResponseContentType && routeResponseContentType.value) {
     return routeResponseContentType.value;
   }
 
-  const environmentContentType = environment.headers.find(header => header.key === 'Content-Type');
+  const environmentContentType = environment.headers.find(header => header.key.toLowerCase() === 'content-type');
 
   if (environmentContentType && environmentContentType.value) {
     return environmentContentType.value;
