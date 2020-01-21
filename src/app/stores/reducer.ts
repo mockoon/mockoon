@@ -739,13 +739,13 @@ function getBodyEditorMode(state: StoreType) {
 
   const routeResponseContentType = GetRouteResponseContentType(currentEnvironment, currentRouteResponse);
 
-  if (routeResponseContentType === 'application/json') {
+  if (routeResponseContentType.includes('application/json')) {
     return 'json';
-  } else if (routeResponseContentType === 'text/html' || routeResponseContentType === 'application/xhtml+xml') {
+  } else if (routeResponseContentType.includes('text/html') || routeResponseContentType.includes('application/xhtml+xml')) {
     return 'html';
-  } else if (routeResponseContentType === 'application/xml') {
+  } else if (routeResponseContentType.includes('application/xml')) {
     return 'xml';
-  } else if (routeResponseContentType === 'text/css') {
+  } else if (routeResponseContentType.includes('text/css')) {
     return 'css';
   } else {
     return 'text';
