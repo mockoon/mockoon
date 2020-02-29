@@ -45,12 +45,14 @@ describe('Environment logs', () => {
   });
 
   it('First entry is GET /test and was not caught by the application', async () => {
-    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('GET\n/test');
+    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route-method`).should.eventually.equal('GET');
+    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`).should.eventually.equal('/test');
     await tests.app.client.waitForExist(`${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request caught"]`, 5000, true);
   });
 
   it('Second entry is GET /answer and was caught by the application', async () => {
-    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link .route`).should.eventually.equal('GET\n/answer');
+    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link .route-method`).should.eventually.equal('GET');
+    await tests.app.client.getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link .route`).should.eventually.equal('/answer');
     await tests.app.client.waitForExist(`${environmentLogsItemSelector}:nth-child(2) .nav-link i[ngbTooltip="Request caught"]`);
   });
 

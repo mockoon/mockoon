@@ -36,8 +36,11 @@ describe('Proxy', () => {
 
   it('First entry is GET /answer and was proxied by the application', async () => {
     await tests.app.client
+      .getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route-method`)
+      .should.eventually.equal('GET');
+    await tests.app.client
       .getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`)
-      .should.eventually.equal('GET\n/answer');
+      .should.eventually.equal('/answer');
     await tests.app.client.waitForExist(
       `${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`,
       5000,
@@ -83,8 +86,11 @@ describe('Proxy', () => {
     await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.helpers.countEnvironmentLogsEntries(2);
     await tests.app.client
+      .getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route-method`)
+      .should.eventually.equal('GET');
+    await tests.app.client
       .getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`)
-      .should.eventually.equal('GET\n/answer');
+      .should.eventually.equal('/answer');
     await tests.app.client.waitForExist(
       `${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`,
       5000,

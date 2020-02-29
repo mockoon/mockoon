@@ -8,13 +8,11 @@
             <a class="nav-link" [ngClass]="{'active': logIndex === (selectedLogIndex$ | async)}"
               (click)="showLogDetails(logIndex)">
               <div class="d-flex flex-column">
-                <div class="d-flex flex-row">
-                  <div class="d-flex flex-row w-100 route">
-                    <div>
-                      <span class="badge badge-default ml-0 mr-3 http-method-{{log.method | lowercase}}">{{log.method | uppercase}}</span>
-                    </div>
-                    <div class="ellipsis">{{log.url}}</div>
+                <div class="d-flex flex-row ">
+                  <div>
+                    <span class="badge badge-default ml-0 mr-3 http-method-{{log.method | lowercase}} route-method">{{log.method | uppercase}}</span>
                   </div>
+                  <div class="ellipsis route">{{log.url}}</div>
                   <div>
                     <button type="button" class="btn btn-link btn-icon btn-mock" (click)="createRouteFromLog(log.uuid)">
                       <i class="material-icons" ngbTooltip="Mock">control_point_duplicate</i>
