@@ -18,6 +18,8 @@ $logs-border: 1px solid lighten($gray-900, 1%);
     &:last-of-type {
       border-left: $logs-border;
     }
+
+    position: relative; // we need this for the resize-column
   }
 
   &-content {

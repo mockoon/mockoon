@@ -25,7 +25,7 @@
             </span>
             <span
               class="badge badge-default http-method-{{environmentRoute.method}} float-right">{{environmentRoute.method | uppercase}}</span>
-            /{{environmentRoute.endpoint}}
+            <span ngbTooltip="{{environmentRoute.endpoint}}">/{{environmentRoute.endpoint}}</span>
           </div>
           <div class="menu-subtitle ellipsis">
             {{environmentRoute.documentation}}
@@ -33,5 +33,6 @@
         </a>
       </li>
     </ul>
+    <resize-column></resize-column>
   </div>
 </ng-container>
