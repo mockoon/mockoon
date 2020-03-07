@@ -612,7 +612,7 @@ export class AppComponent implements OnInit {
       activeRouteResponse
     );
 
-    if (contentType === 'application/json') {
+    if (contentType.includes('application/json')) {
       try {
         this.activeRouteResponseForm
           .get('body')
