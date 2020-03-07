@@ -56,8 +56,7 @@ describe('Environments import', () => {
 
           await tests.helpers.startEnvironment();
 
-          // wait for post migration autosave
-          await tests.app.client.pause(4000);
+          await tests.helpers.waitForAutosave();
 
           await tests.helpers.verifyObjectPropertyInFile(
             './tmp/storage/environments.json',
@@ -92,8 +91,7 @@ describe('Environments import', () => {
           'Some routes were not imported'
         );
 
-        // wait for post migration autosave
-        await tests.app.client.pause(4000);
+        await tests.helpers.waitForAutosave();
 
         await tests.helpers.verifyObjectPropertyInFile(
           './tmp/storage/environments.json',

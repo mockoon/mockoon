@@ -36,13 +36,13 @@ export class SchemasBuilderService {
   /**
    * Build a new route
    */
-  public buildRoute(): Route {
+  public buildRoute(hasDefaultRouteResponse = true): Route {
     return {
       uuid: uuid(),
       documentation: '',
       method: 'get',
       endpoint: '',
-      responses: [this.buildRouteResponse()],
+      responses: hasDefaultRouteResponse ? [this.buildRouteResponse()] : [],
       enabled: true
     };
   }
@@ -50,7 +50,10 @@ export class SchemasBuilderService {
   /**
    * Build a new environment
    */
-  public buildEnvironment(): Environment {
+  public buildEnvironment(
+    hasDefaultRoute = true,
+    hasDefaultHeader = true
+  ): Environment {
     return {
       uuid: uuid(),
       lastMigration: HighestMigrationId,
@@ -58,12 +61,14 @@ export class SchemasBuilderService {
       endpointPrefix: '',
       latency: 0,
       port: this.dataService.getNewEnvironmentPort(),
-      routes: [this.buildRoute()],
+      routes: hasDefaultRoute ? [this.buildRoute()] : [],
       proxyMode: false,
       proxyHost: '',
       https: false,
       cors: true,
-      headers: [this.buildHeader('Content-Type', 'application/json')],
+      headers: hasDefaultHeader
+        ? [this.buildHeader('Content-Type', 'application/json')]
+        : [],
       proxyReqHeaders: [this.buildHeader()],
       proxyResHeaders: [this.buildHeader()]
     };
