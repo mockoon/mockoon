@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.0",
+  "info": { "title": "Demo users API V2", "version": "1.0.0" },
+  "servers": [{ "url": "https://localhost:3000/v2" }],
+  "paths": {
+    "/users": {
+      "get": {
+        "description": "Get all users",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": { "text/plain": {} },
+            "headers": {
+              "Global-Header": {
+                "schema": { "type": "string" },
+                "example": "global-header"
+              },
+              "Route-Header": {
+                "schema": { "type": "string" },
+                "example": "route-header"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a user",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": { "application/json": {} },
+            "headers": {
+              "Global-Header": {
+                "schema": { "type": "string" },
+                "example": "global-header"
+              }
+            }
+          },
+          "400": {
+            "description": "Missing data",
+            "content": { "application/json": {} },
+            "headers": {
+              "Global-Header": {
+                "schema": { "type": "string" },
+                "example": "global-header"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "description": "Get a user",
+        "responses": {
+          "200": {
+            "description": "Get userId 2",
+            "content": { "application/json": {} },
+            "headers": {
+              "Global-Header": {
+                "schema": { "type": "string" },
+                "example": "global-header"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": { "type": "string" },
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "description": "Delete a user",
+        "responses": {
+          "204": {
+            "description": "User deleted",
+            "content": { "application/json": {} },
+            "headers": {
+              "Global-Header": {
+                "schema": { "type": "string" },
+                "example": "global-header"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": { "type": "string" },
+            "required": true
+          }
+        ]
+      }
+    },
+    "/users/{id}/status/{status}": {
+      "put": {
+        "description": "Set user status",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": { "application/json": {} },
+            "headers": {
+              "Global-Header": {
+                "schema": { "type": "string" },
+                "example": "global-header"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": { "type": "string" },
+            "required": true
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "schema": { "type": "string" },
+            "required": true
+          }
+        ]
+      }
+    }
+  }
+}

@@ -4,6 +4,7 @@ import { copyFile } from 'fs';
 import * as path from 'path';
 import { Application } from 'spectron';
 import { Helpers } from './helpers';
+import chaiExclude from 'chai-exclude';
 
 const electronPath: any = require('electron');
 const mkdirp = require('mkdirp');
@@ -16,6 +17,7 @@ export class Tests {
     this.helpers = new Helpers(this);
     chai.should();
     chai.use(chaiAsPromised);
+    chai.use(chaiExclude);
   }
 
   /**
@@ -35,7 +37,9 @@ export class Tests {
           './tmp/storage/environments.json',
           () => {
             copyFile(
-              './test/data/' + (this.customSettings ? this.dataFileName + '/' : '') + 'settings.json',
+              './test/data/' +
+                (this.customSettings ? this.dataFileName + '/' : '') +
+                'settings.json',
               './tmp/storage/settings.json',
               () => {
                 resolve();

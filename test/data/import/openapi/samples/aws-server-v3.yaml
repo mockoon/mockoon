@@ -1,0 +1,3110 @@
+openapi: 3.0.0
+info:
+  version: '2016-10-24'
+  x-release: v4
+  title: AWS Server Migration Service
+  description: '<fullname>AAWS Sever Migration Service</fullname> <p>This is the <i>AWS Sever Migration Service API Reference</i>. It provides descriptions, syntax, and usage examples for each of the actions and data types for the AWS Sever Migration Service (AWS SMS). The topic for each action shows the Query API request parameters and the XML response. You can also view the XML request elements in the WSDL.</p> <p>Alternatively, you can use one of the AWS SDKs to access an API that''s tailored to the programming language or platform that you''re using. For more information, see <a href="http://aws.amazon.com/tools/#SDKs">AWS SDKs</a>.</p> <p>To learn more about the Server Migration Service, see the following resources:</p> <ul> <li> <p> <a href="https://aws.amazon.com/server-migration-service/">AWS Sever Migration Service product page</a> </p> </li> <li> <p> <a href="https://docs.aws.amazon.com/server-migration-service/latest/userguide/server-migration.html">AWS Sever Migration Service User Guide</a> </p> </li> </ul>'
+  x-logo:
+    url: 'https://twitter.com/awscloud/profile_image?size=original'
+    backgroundColor: '#FFFFFF'
+  termsOfService: 'https://aws.amazon.com/service-terms/'
+  contact:
+    name: Mike Ralphson
+    email: mike.ralphson@gmail.com
+    url: 'https://github.com/mermade/aws2openapi'
+    x-twitter: PermittedSoc
+  license:
+    name: Apache 2.0 License
+    url: 'http://www.apache.org/licenses/'
+  x-providerName: amazonaws.com
+  x-serviceName: sms
+  x-origin:
+    - contentType: application/json
+      url: 'https://raw.githubusercontent.com/aws/aws-sdk-js/master/apis/sms-2016-10-24.normal.json'
+      converter:
+        url: 'https://github.com/mermade/aws2openapi'
+        version: 1.0.0
+      x-apisguru-driver: external
+  x-apiClientRegistration:
+    url: 'https://portal.aws.amazon.com/gp/aws/developer/registration/index.html?nc2=h_ct'
+  x-apisguru-categories:
+    - cloud
+  x-preferred: true
+externalDocs:
+  description: Amazon Web Services documentation
+  url: 'https://docs.aws.amazon.com/sms/'
+servers:
+  - url: 'http://sms.{region}.amazonaws.com'
+    variables:
+      region:
+        description: The AWS region
+        enum:
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - us-gov-west-1
+          - us-gov-east-1
+          - ca-central-1
+          - eu-north-1
+          - eu-west-1
+          - eu-west-2
+          - eu-west-3
+          - eu-central-1
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-south-1
+          - sa-east-1
+        default: us-east-1
+    description: The SMS multi-region endpoint
+  - url: 'https://sms.{region}.amazonaws.com'
+    variables:
+      region:
+        description: The AWS region
+        enum:
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - us-gov-west-1
+          - us-gov-east-1
+          - ca-central-1
+          - eu-north-1
+          - eu-west-1
+          - eu-west-2
+          - eu-west-3
+          - eu-central-1
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-south-1
+          - sa-east-1
+        default: us-east-1
+    description: The SMS multi-region endpoint
+  - url: 'http://sms.{region}.amazonaws.com.cn'
+    variables:
+      region:
+        description: The AWS region
+        enum:
+          - cn-north-1
+          - cn-northwest-1
+        default: cn-north-1
+    description: The SMS endpoint for China (Beijing) and China (Ningxia)
+  - url: 'https://sms.{region}.amazonaws.com.cn'
+    variables:
+      region:
+        description: The AWS region
+        enum:
+          - cn-north-1
+          - cn-northwest-1
+        default: cn-north-1
+    description: The SMS endpoint for China (Beijing) and China (Ningxia)
+x-hasEquivalentPaths: true
+paths:
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.CreateApp':
+    post:
+      operationId: CreateApp
+      description: Creates an application. An application consists of one or more server groups. Each server group contain one or more servers.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAppResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.CreateApp
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.CreateReplicationJob':
+    post:
+      operationId: CreateReplicationJob
+      description: Creates a replication job. The replication job schedules periodic replication runs to replicate your server to AWS. Each replication run creates an Amazon Machine Image (AMI).
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateReplicationJobResponse'
+        '480':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '481':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '482':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '483':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+        '484':
+          description: ServerCannotBeReplicatedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerCannotBeReplicatedException'
+        '485':
+          description: ReplicationJobAlreadyExistsException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplicationJobAlreadyExistsException'
+        '486':
+          description: NoConnectorsAvailableException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoConnectorsAvailableException'
+        '487':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '488':
+          description: TemporarilyUnavailableException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemporarilyUnavailableException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReplicationJobRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.CreateReplicationJob
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteApp':
+    post:
+      operationId: DeleteApp
+      description: Deletes an existing application. Optionally deletes the launched stack associated with the application and all AWS SMS replication jobs for servers in the application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAppResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteAppRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.DeleteApp
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteAppLaunchConfiguration':
+    post:
+      operationId: DeleteAppLaunchConfiguration
+      description: Deletes existing launch configuration for an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAppLaunchConfigurationResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteAppLaunchConfigurationRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.DeleteAppLaunchConfiguration
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteAppReplicationConfiguration':
+    post:
+      operationId: DeleteAppReplicationConfiguration
+      description: Deletes existing replication configuration for an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAppReplicationConfigurationResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteAppReplicationConfigurationRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.DeleteAppReplicationConfiguration
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteReplicationJob':
+    post:
+      operationId: DeleteReplicationJob
+      description: '<p>Deletes the specified replication job.</p> <p>After you delete a replication job, there are no further replication runs. AWS deletes the contents of the Amazon S3 bucket used to store AWS SMS artifacts. The AMIs created by the replication runs are not deleted.</p>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteReplicationJobResponse'
+        '480':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '481':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '482':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '483':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+        '484':
+          description: ReplicationJobNotFoundException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplicationJobNotFoundException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteReplicationJobRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.DeleteReplicationJob
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteServerCatalog':
+    post:
+      operationId: DeleteServerCatalog
+      description: Deletes all servers from your server catalog.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteServerCatalogResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+        '482':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '483':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteServerCatalogRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.DeleteServerCatalog
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DisassociateConnector':
+    post:
+      operationId: DisassociateConnector
+      description: '<p>Disassociates the specified connector from AWS SMS.</p> <p>After you disassociate a connector, it is no longer available to support replication jobs.</p>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisassociateConnectorResponse'
+        '480':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '481':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '482':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+        '483':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisassociateConnectorRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.DisassociateConnector
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GenerateChangeSet':
+    post:
+      operationId: GenerateChangeSet
+      description: Generates a target change set for a currently launched stack and writes it to an Amazon S3 object in the customer’s Amazon S3 bucket.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateChangeSetResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateChangeSetRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GenerateChangeSet
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GenerateTemplate':
+    post:
+      operationId: GenerateTemplate
+      description: Generates an Amazon CloudFormation template based on the current launch configuration and writes it to an Amazon S3 object in the customer’s Amazon S3 bucket.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateTemplateResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateTemplateRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GenerateTemplate
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetApp':
+    post:
+      operationId: GetApp
+      description: Retrieve information about an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAppResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAppRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GetApp
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetAppLaunchConfiguration':
+    post:
+      operationId: GetAppLaunchConfiguration
+      description: Retrieves the application launch configuration associated with an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAppLaunchConfigurationResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAppLaunchConfigurationRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GetAppLaunchConfiguration
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetAppReplicationConfiguration':
+    post:
+      operationId: GetAppReplicationConfiguration
+      description: Retrieves an application replication configuration associatd with an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAppReplicationConfigurationResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetAppReplicationConfigurationRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GetAppReplicationConfiguration
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetConnectors':
+    post:
+      operationId: GetConnectors
+      description: Describes the connectors registered with the AWS SMS.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetConnectorsResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetConnectorsRequest'
+      parameters:
+        - name: maxResults
+          in: query
+          schema:
+            type: string
+          description: Pagination limit
+          required: false
+        - name: nextToken
+          in: query
+          schema:
+            type: string
+          description: Pagination token
+          required: false
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GetConnectors
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetReplicationJobs':
+    post:
+      operationId: GetReplicationJobs
+      description: Describes the specified replication job or all of your replication jobs.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReplicationJobsResponse'
+        '480':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '481':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '482':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetReplicationJobsRequest'
+      parameters:
+        - name: maxResults
+          in: query
+          schema:
+            type: string
+          description: Pagination limit
+          required: false
+        - name: nextToken
+          in: query
+          schema:
+            type: string
+          description: Pagination token
+          required: false
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GetReplicationJobs
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetReplicationRuns':
+    post:
+      operationId: GetReplicationRuns
+      description: Describes the replication runs for the specified replication job.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReplicationRunsResponse'
+        '480':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '481':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '482':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetReplicationRunsRequest'
+      parameters:
+        - name: maxResults
+          in: query
+          schema:
+            type: string
+          description: Pagination limit
+          required: false
+        - name: nextToken
+          in: query
+          schema:
+            type: string
+          description: Pagination token
+          required: false
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GetReplicationRuns
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetServers':
+    post:
+      operationId: GetServers
+      description: '<p>Describes the servers in your server catalog.</p> <p>Before you can describe your servers, you must import them using <a>ImportServerCatalog</a>.</p>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetServersResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetServersRequest'
+      parameters:
+        - name: maxResults
+          in: query
+          schema:
+            type: string
+          description: Pagination limit
+          required: false
+        - name: nextToken
+          in: query
+          schema:
+            type: string
+          description: Pagination token
+          required: false
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.GetServers
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.ImportServerCatalog':
+    post:
+      operationId: ImportServerCatalog
+      description: '<p>Gathers a complete list of on-premises servers. Connectors must be installed and monitoring all servers that you want to import.</p> <p>This call returns immediately, but might take additional time to retrieve all the servers.</p>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportServerCatalogResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+        '482':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '483':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '484':
+          description: NoConnectorsAvailableException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoConnectorsAvailableException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportServerCatalogRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.ImportServerCatalog
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.LaunchApp':
+    post:
+      operationId: LaunchApp
+      description: Launches an application stack.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LaunchAppResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LaunchAppRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.LaunchApp
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.ListApps':
+    post:
+      operationId: ListApps
+      description: Returns a list of summaries for all applications.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAppsResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListAppsRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.ListApps
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.PutAppLaunchConfiguration':
+    post:
+      operationId: PutAppLaunchConfiguration
+      description: Creates a launch configuration for an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutAppLaunchConfigurationResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutAppLaunchConfigurationRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.PutAppLaunchConfiguration
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.PutAppReplicationConfiguration':
+    post:
+      operationId: PutAppReplicationConfiguration
+      description: Creates or updates a replication configuration for an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutAppReplicationConfigurationResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutAppReplicationConfigurationRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.PutAppReplicationConfiguration
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StartAppReplication':
+    post:
+      operationId: StartAppReplication
+      description: Starts replicating an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartAppReplicationResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartAppReplicationRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.StartAppReplication
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StartOnDemandReplicationRun':
+    post:
+      operationId: StartOnDemandReplicationRun
+      description: <p>Starts an on-demand replication run for the specified replication job. This replication run starts immediately. This replication run is in addition to the ones already scheduled.</p> <p>There is a limit on the number of on-demand replications runs you can request in a 24-hour period.</p>
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartOnDemandReplicationRunResponse'
+        '480':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '481':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '482':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '483':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+        '484':
+          description: ReplicationRunLimitExceededException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplicationRunLimitExceededException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartOnDemandReplicationRunRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.StartOnDemandReplicationRun
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StopAppReplication':
+    post:
+      operationId: StopAppReplication
+      description: Stops replicating an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopAppReplicationResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopAppReplicationRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.StopAppReplication
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.TerminateApp':
+    post:
+      operationId: TerminateApp
+      description: Terminates the stack for an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerminateAppResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminateAppRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.TerminateApp
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.UpdateApp':
+    post:
+      operationId: UpdateApp
+      description: Updates an application.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAppResponse'
+        '480':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '481':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '482':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '483':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '484':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAppRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.UpdateApp
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+  '/#X-Amz-Target=AWSServerMigrationService_V2016_10_24.UpdateReplicationJob':
+    post:
+      operationId: UpdateReplicationJob
+      description: Updates the specified settings for the specified replication job.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateReplicationJobResponse'
+        '480':
+          description: InvalidParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidParameterException'
+        '481':
+          description: MissingRequiredParameterException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MissingRequiredParameterException'
+        '482':
+          description: OperationNotPermittedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationNotPermittedException'
+        '483':
+          description: UnauthorizedOperationException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedOperationException'
+        '484':
+          description: ServerCannotBeReplicatedException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerCannotBeReplicatedException'
+        '485':
+          description: ReplicationJobNotFoundException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplicationJobNotFoundException'
+        '486':
+          description: InternalError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+        '487':
+          description: TemporarilyUnavailableException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemporarilyUnavailableException'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReplicationJobRequest'
+      parameters:
+        - name: X-Amz-Target
+          in: header
+          required: true
+          schema:
+            type: string
+            enum:
+              - AWSServerMigrationService_V2016_10_24.UpdateReplicationJob
+    parameters:
+      - $ref: '#/components/parameters/X-Amz-Content-Sha256'
+      - $ref: '#/components/parameters/X-Amz-Date'
+      - $ref: '#/components/parameters/X-Amz-Algorithm'
+      - $ref: '#/components/parameters/X-Amz-Credential'
+      - $ref: '#/components/parameters/X-Amz-Security-Token'
+      - $ref: '#/components/parameters/X-Amz-Signature'
+      - $ref: '#/components/parameters/X-Amz-SignedHeaders'
+components:
+  parameters:
+    X-Amz-Content-Sha256:
+      name: X-Amz-Content-Sha256
+      in: header
+      schema:
+        type: string
+      required: false
+    X-Amz-Date:
+      name: X-Amz-Date
+      in: header
+      schema:
+        type: string
+      required: false
+    X-Amz-Algorithm:
+      name: X-Amz-Algorithm
+      in: header
+      schema:
+        type: string
+      required: false
+    X-Amz-Credential:
+      name: X-Amz-Credential
+      in: header
+      schema:
+        type: string
+      required: false
+    X-Amz-Security-Token:
+      name: X-Amz-Security-Token
+      in: header
+      schema:
+        type: string
+      required: false
+    X-Amz-Signature:
+      name: X-Amz-Signature
+      in: header
+      schema:
+        type: string
+      required: false
+    X-Amz-SignedHeaders:
+      name: X-Amz-SignedHeaders
+      in: header
+      schema:
+        type: string
+      required: false
+  securitySchemes:
+    hmac:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: Amazon Signature authorization v4
+      x-amazon-apigateway-authtype: awsSigv4
+  schemas:
+    CreateAppResponse:
+      type: object
+      properties:
+        appSummary:
+          $ref: '#/components/schemas/AppSummary'
+          description: Summary description of the application.
+        serverGroups:
+          $ref: '#/components/schemas/ServerGroups'
+          description: List of server groups included in the application.
+        tags:
+          $ref: '#/components/schemas/Tags'
+          description: List of taags associated with the application.
+    CreateAppRequest:
+      type: object
+      title: CreateAppRequest
+      properties:
+        name:
+          $ref: '#/components/schemas/AppName'
+          description: Name of the new application.
+        description:
+          $ref: '#/components/schemas/AppDescription'
+          description: Description of the new application
+        roleName:
+          $ref: '#/components/schemas/RoleName'
+          description: Name of service role in customer's account to be used by AWS SMS.
+        clientToken:
+          $ref: '#/components/schemas/ClientToken'
+          description: 'A unique, case-sensitive identifier you provide to ensure idempotency of application creation.'
+        serverGroups:
+          $ref: '#/components/schemas/ServerGroups'
+          description: List of server groups to include in the application.
+        tags:
+          $ref: '#/components/schemas/Tags'
+          description: List of tags to be associated with the application.
+    UnauthorizedOperationException: {}
+    InvalidParameterException: {}
+    MissingRequiredParameterException: {}
+    InternalError: {}
+    OperationNotPermittedException: {}
+    CreateReplicationJobResponse:
+      type: object
+      properties:
+        replicationJobId:
+          $ref: '#/components/schemas/ReplicationJobId'
+          description: The unique identifier of the replication job.
+    CreateReplicationJobRequest:
+      type: object
+      required:
+        - serverId
+        - seedReplicationTime
+      title: CreateReplicationJobRequest
+      properties:
+        serverId:
+          $ref: '#/components/schemas/ServerId'
+          description: The identifier of the server.
+        seedReplicationTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: The seed replication time.
+        frequency:
+          $ref: '#/components/schemas/Frequency'
+          description: 'The time between consecutive replication runs, in hours.'
+        runOnce:
+          $ref: '#/components/schemas/RunOnce'
+          description: <p/>
+        licenseType:
+          $ref: '#/components/schemas/LicenseType'
+          description: The license type to be used for the AMI created by a successful replication run.
+        roleName:
+          $ref: '#/components/schemas/RoleName'
+          description: The name of the IAM role to be used by the AWS SMS.
+        description:
+          $ref: '#/components/schemas/Description'
+          description: The description of the replication job.
+        numberOfRecentAmisToKeep:
+          $ref: '#/components/schemas/NumberOfRecentAmisToKeep'
+          description: The maximum number of SMS-created AMIs to retain. The oldest will be deleted once the maximum number is reached and a new AMI is created.
+        encrypted:
+          $ref: '#/components/schemas/Encrypted'
+          description: 'When <i>true</i>, the replication job produces encrypted AMIs. See also <code>KmsKeyId</code> below.'
+        kmsKeyId:
+          $ref: '#/components/schemas/KmsKeyId'
+          description: '<p>KMS key ID for replication jobs that produce encrypted AMIs. Can be any of the following: </p> <ul> <li> <p>KMS key ID</p> </li> <li> <p>KMS key alias</p> </li> <li> <p>ARN referring to KMS key ID</p> </li> <li> <p>ARN referring to KMS key alias</p> </li> </ul> <p> If encrypted is <i>true</i> but a KMS key id is not specified, the customer''s default KMS key for EBS is used. </p>'
+    ServerCannotBeReplicatedException: {}
+    ReplicationJobAlreadyExistsException: {}
+    NoConnectorsAvailableException: {}
+    TemporarilyUnavailableException: {}
+    DeleteAppResponse:
+      type: object
+      properties: {}
+    DeleteAppRequest:
+      type: object
+      title: DeleteAppRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application to delete.
+        forceStopAppReplication:
+          $ref: '#/components/schemas/ForceStopAppReplication'
+          description: 'While deleting the application, stop all replication jobs corresponding to the servers in the application.'
+        forceTerminateApp:
+          $ref: '#/components/schemas/ForceTerminateApp'
+          description: 'While deleting the application, terminate the stack corresponding to the application.'
+    DeleteAppLaunchConfigurationResponse:
+      type: object
+      properties: {}
+    DeleteAppLaunchConfigurationRequest:
+      type: object
+      title: DeleteAppLaunchConfigurationRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application associated with the launch configuration.
+    DeleteAppReplicationConfigurationResponse:
+      type: object
+      properties: {}
+    DeleteAppReplicationConfigurationRequest:
+      type: object
+      title: DeleteAppReplicationConfigurationRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application associated with the replication configuration.
+    DeleteReplicationJobResponse:
+      type: object
+      properties: {}
+    DeleteReplicationJobRequest:
+      type: object
+      required:
+        - replicationJobId
+      title: DeleteReplicationJobRequest
+      properties:
+        replicationJobId:
+          $ref: '#/components/schemas/ReplicationJobId'
+          description: The identifier of the replication job.
+    ReplicationJobNotFoundException: {}
+    DeleteServerCatalogResponse:
+      type: object
+      properties: {}
+    DeleteServerCatalogRequest:
+      type: object
+      title: DeleteServerCatalogRequest
+      properties: {}
+    DisassociateConnectorResponse:
+      type: object
+      properties: {}
+    DisassociateConnectorRequest:
+      type: object
+      required:
+        - connectorId
+      title: DisassociateConnectorRequest
+      properties:
+        connectorId:
+          $ref: '#/components/schemas/ConnectorId'
+          description: The identifier of the connector.
+    GenerateChangeSetResponse:
+      type: object
+      properties:
+        s3Location:
+          $ref: '#/components/schemas/S3Location'
+          description: Location of the Amazon S3 object.
+    GenerateChangeSetRequest:
+      type: object
+      title: GenerateChangeSetRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application associated with the change set.
+        changesetFormat:
+          $ref: '#/components/schemas/OutputFormat'
+          description: Format for the change set.
+    GenerateTemplateResponse:
+      type: object
+      properties:
+        s3Location:
+          $ref: '#/components/schemas/S3Location'
+          description: Location of the Amazon S3 object.
+    GenerateTemplateRequest:
+      type: object
+      title: GenerateTemplateRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application associated with the Amazon CloudFormation template.
+        templateFormat:
+          $ref: '#/components/schemas/OutputFormat'
+          description: Format for generating the Amazon CloudFormation template.
+    GetAppResponse:
+      type: object
+      properties:
+        appSummary:
+          $ref: '#/components/schemas/AppSummary'
+          description: Information about the application.
+        serverGroups:
+          $ref: '#/components/schemas/ServerGroups'
+          description: List of server groups belonging to the application.
+        tags:
+          $ref: '#/components/schemas/Tags'
+          description: List of tags associated with the application.
+    GetAppRequest:
+      type: object
+      title: GetAppRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application whose information is being retrieved.
+    GetAppLaunchConfigurationResponse:
+      type: object
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application associated with the launch configuration.
+        roleName:
+          $ref: '#/components/schemas/RoleName'
+          description: Name of the service role in the customer's account that Amazon CloudFormation uses to launch the application.
+        serverGroupLaunchConfigurations:
+          $ref: '#/components/schemas/ServerGroupLaunchConfigurations'
+          description: List of launch configurations for server groups in this application.
+    GetAppLaunchConfigurationRequest:
+      type: object
+      title: GetAppLaunchConfigurationRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application launch configuration.
+    GetAppReplicationConfigurationResponse:
+      type: object
+      properties:
+        serverGroupReplicationConfigurations:
+          $ref: '#/components/schemas/ServerGroupReplicationConfigurations'
+          description: Replication configurations associated with server groups in this application.
+    GetAppReplicationConfigurationRequest:
+      type: object
+      title: GetAppReplicationConfigurationRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application associated with the replication configuration.
+    GetConnectorsResponse:
+      type: object
+      properties:
+        connectorList:
+          $ref: '#/components/schemas/ConnectorList'
+          description: Information about the registered connectors.
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token required to retrieve the next set of results. This value is null when there are no more results to return.
+    GetConnectorsRequest:
+      type: object
+      title: GetConnectorsRequest
+      properties:
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token for the next set of results.
+        maxResults:
+          $ref: '#/components/schemas/MaxResults'
+          description: 'The maximum number of results to return in a single call. The default value is 50. To retrieve the remaining results, make another call with the returned <code>NextToken</code> value.'
+    GetReplicationJobsResponse:
+      type: object
+      properties:
+        replicationJobList:
+          $ref: '#/components/schemas/ReplicationJobList'
+          description: Information about the replication jobs.
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token required to retrieve the next set of results. This value is null when there are no more results to return.
+    GetReplicationJobsRequest:
+      type: object
+      title: GetReplicationJobsRequest
+      properties:
+        replicationJobId:
+          $ref: '#/components/schemas/ReplicationJobId'
+          description: The identifier of the replication job.
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token for the next set of results.
+        maxResults:
+          $ref: '#/components/schemas/MaxResults'
+          description: 'The maximum number of results to return in a single call. The default value is 50. To retrieve the remaining results, make another call with the returned <code>NextToken</code> value.'
+    GetReplicationRunsResponse:
+      type: object
+      properties:
+        replicationJob:
+          $ref: '#/components/schemas/ReplicationJob'
+          description: Information about the replication job.
+        replicationRunList:
+          $ref: '#/components/schemas/ReplicationRunList'
+          description: Information about the replication runs.
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token required to retrieve the next set of results. This value is null when there are no more results to return.
+    GetReplicationRunsRequest:
+      type: object
+      required:
+        - replicationJobId
+      title: GetReplicationRunsRequest
+      properties:
+        replicationJobId:
+          $ref: '#/components/schemas/ReplicationJobId'
+          description: The identifier of the replication job.
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token for the next set of results.
+        maxResults:
+          $ref: '#/components/schemas/MaxResults'
+          description: 'The maximum number of results to return in a single call. The default value is 50. To retrieve the remaining results, make another call with the returned <code>NextToken</code> value.'
+    GetServersResponse:
+      type: object
+      properties:
+        lastModifiedOn:
+          $ref: '#/components/schemas/Timestamp'
+          description: The time when the server was last modified.
+        serverCatalogStatus:
+          $ref: '#/components/schemas/ServerCatalogStatus'
+          description: The status of the server catalog.
+        serverList:
+          $ref: '#/components/schemas/ServerList'
+          description: Information about the servers.
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token required to retrieve the next set of results. This value is null when there are no more results to return.
+    GetServersRequest:
+      type: object
+      title: GetServersRequest
+      properties:
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token for the next set of results.
+        maxResults:
+          $ref: '#/components/schemas/MaxResults'
+          description: 'The maximum number of results to return in a single call. The default value is 50. To retrieve the remaining results, make another call with the returned <code>NextToken</code> value.'
+        vmServerAddressList:
+          $ref: '#/components/schemas/VmServerAddressList'
+          description: List of <code>VmServerAddress</code> objects
+    ImportServerCatalogResponse:
+      type: object
+      properties: {}
+    ImportServerCatalogRequest:
+      type: object
+      title: ImportServerCatalogRequest
+      properties: {}
+    LaunchAppResponse:
+      type: object
+      properties: {}
+    LaunchAppRequest:
+      type: object
+      title: LaunchAppRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application to launch.
+    ListAppsResponse:
+      type: object
+      properties:
+        apps:
+          $ref: '#/components/schemas/Apps'
+          description: A list of application summaries.
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token required to retrieve the next set of results. This value is null when there are no more results to return.
+    ListAppsRequest:
+      type: object
+      title: ListAppsRequest
+      properties:
+        appIds:
+          $ref: '#/components/schemas/AppIds'
+          description: <p/>
+        nextToken:
+          $ref: '#/components/schemas/NextToken'
+          description: The token for the next set of results.
+        maxResults:
+          $ref: '#/components/schemas/MaxResults'
+          description: 'The maximum number of results to return in a single call. The default value is 50. To retrieve the remaining results, make another call with the returned <code>NextToken</code> value. '
+    PutAppLaunchConfigurationResponse:
+      type: object
+      properties: {}
+    PutAppLaunchConfigurationRequest:
+      type: object
+      title: PutAppLaunchConfigurationRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application associated with the launch configuration.
+        roleName:
+          $ref: '#/components/schemas/RoleName'
+          description: Name of service role in the customer's account that Amazon CloudFormation uses to launch the application.
+        serverGroupLaunchConfigurations:
+          $ref: '#/components/schemas/ServerGroupLaunchConfigurations'
+          description: Launch configurations for server groups in the application.
+    PutAppReplicationConfigurationResponse:
+      type: object
+      properties: {}
+    PutAppReplicationConfigurationRequest:
+      type: object
+      title: PutAppReplicationConfigurationRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application tassociated with the replication configuration.
+        serverGroupReplicationConfigurations:
+          $ref: '#/components/schemas/ServerGroupReplicationConfigurations'
+          description: Replication configurations for server groups in the application.
+    StartAppReplicationResponse:
+      type: object
+      properties: {}
+    StartAppReplicationRequest:
+      type: object
+      title: StartAppReplicationRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application to replicate.
+    StartOnDemandReplicationRunResponse:
+      type: object
+      properties:
+        replicationRunId:
+          $ref: '#/components/schemas/ReplicationRunId'
+          description: The identifier of the replication run.
+    StartOnDemandReplicationRunRequest:
+      type: object
+      required:
+        - replicationJobId
+      title: StartOnDemandReplicationRunRequest
+      properties:
+        replicationJobId:
+          $ref: '#/components/schemas/ReplicationJobId'
+          description: The identifier of the replication job.
+        description:
+          $ref: '#/components/schemas/Description'
+          description: The description of the replication run.
+    ReplicationRunLimitExceededException: {}
+    StopAppReplicationResponse:
+      type: object
+      properties: {}
+    StopAppReplicationRequest:
+      type: object
+      title: StopAppReplicationRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application to stop replicating.
+    TerminateAppResponse:
+      type: object
+      properties: {}
+    TerminateAppRequest:
+      type: object
+      title: TerminateAppRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application to terminate.
+    UpdateAppResponse:
+      type: object
+      properties:
+        appSummary:
+          $ref: '#/components/schemas/AppSummary'
+          description: Summary description of the application.
+        serverGroups:
+          $ref: '#/components/schemas/ServerGroups'
+          description: List of updated server groups in the application.
+        tags:
+          $ref: '#/components/schemas/Tags'
+          description: List of tags associated with the application.
+    UpdateAppRequest:
+      type: object
+      title: UpdateAppRequest
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: ID of the application to update.
+        name:
+          $ref: '#/components/schemas/AppName'
+          description: New name of the application.
+        description:
+          $ref: '#/components/schemas/AppDescription'
+          description: New description of the application.
+        roleName:
+          $ref: '#/components/schemas/RoleName'
+          description: Name of the service role in the customer's account used by AWS SMS.
+        serverGroups:
+          $ref: '#/components/schemas/ServerGroups'
+          description: List of server groups in the application to update.
+        tags:
+          $ref: '#/components/schemas/Tags'
+          description: List of tags to associate with the application.
+    UpdateReplicationJobResponse:
+      type: object
+      properties: {}
+    UpdateReplicationJobRequest:
+      type: object
+      required:
+        - replicationJobId
+      title: UpdateReplicationJobRequest
+      properties:
+        replicationJobId:
+          $ref: '#/components/schemas/ReplicationJobId'
+          description: The identifier of the replication job.
+        frequency:
+          $ref: '#/components/schemas/Frequency'
+          description: 'The time between consecutive replication runs, in hours.'
+        nextReplicationRunStartTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: The start time of the next replication run.
+        licenseType:
+          $ref: '#/components/schemas/LicenseType'
+          description: The license type to be used for the AMI created by a successful replication run.
+        roleName:
+          $ref: '#/components/schemas/RoleName'
+          description: The name of the IAM role to be used by AWS SMS.
+        description:
+          $ref: '#/components/schemas/Description'
+          description: The description of the replication job.
+        numberOfRecentAmisToKeep:
+          $ref: '#/components/schemas/NumberOfRecentAmisToKeep'
+          description: The maximum number of SMS-created AMIs to retain. The oldest will be deleted once the maximum number is reached and a new AMI is created.
+        encrypted:
+          $ref: '#/components/schemas/Encrypted'
+          description: 'When true, the replication job produces encrypted AMIs . See also <code>KmsKeyId</code> below.'
+        kmsKeyId:
+          $ref: '#/components/schemas/KmsKeyId'
+          description: '<p/> <p>KMS key ID for replication jobs that produce encrypted AMIs. Can be any of the following: </p> <ul> <li> <p>KMS key ID</p> </li> <li> <p>KMS key alias</p> </li> <li> <p>ARN referring to KMS key ID</p> </li> <li> <p>ARN referring to KMS key alias</p> </li> </ul> <p> If encrypted is <i>true</i> but a KMS key id is not specified, the customer''s default KMS key for EBS is used. </p>'
+    AmiId:
+      type: string
+    AppDescription:
+      type: string
+    AppId:
+      type: string
+    AppIds:
+      type: array
+      items:
+        $ref: '#/components/schemas/AppId'
+    AppLaunchStatus:
+      type: string
+      enum:
+        - READY_FOR_CONFIGURATION
+        - CONFIGURATION_IN_PROGRESS
+        - CONFIGURATION_INVALID
+        - READY_FOR_LAUNCH
+        - VALIDATION_IN_PROGRESS
+        - LAUNCH_PENDING
+        - LAUNCH_IN_PROGRESS
+        - LAUNCHED
+        - DELTA_LAUNCH_IN_PROGRESS
+        - DELTA_LAUNCH_FAILED
+        - LAUNCH_FAILED
+        - TERMINATE_IN_PROGRESS
+        - TERMINATE_FAILED
+        - TERMINATED
+    AppLaunchStatusMessage:
+      type: string
+    AppName:
+      type: string
+    AppReplicationStatus:
+      type: string
+      enum:
+        - READY_FOR_CONFIGURATION
+        - CONFIGURATION_IN_PROGRESS
+        - CONFIGURATION_INVALID
+        - READY_FOR_REPLICATION
+        - VALIDATION_IN_PROGRESS
+        - REPLICATION_PENDING
+        - REPLICATION_IN_PROGRESS
+        - REPLICATED
+        - DELTA_REPLICATION_IN_PROGRESS
+        - DELTA_REPLICATED
+        - DELTA_REPLICATION_FAILED
+        - REPLICATION_FAILED
+        - REPLICATION_STOPPING
+        - REPLICATION_STOP_FAILED
+        - REPLICATION_STOPPED
+    AppReplicationStatusMessage:
+      type: string
+    AppStatus:
+      type: string
+      enum:
+        - CREATING
+        - ACTIVE
+        - UPDATING
+        - DELETING
+        - DELETED
+        - DELETE_FAILED
+    AppStatusMessage:
+      type: string
+    Timestamp:
+      type: string
+      format: date-time
+    LaunchDetails:
+      type: object
+      properties:
+        latestLaunchTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: Latest time this application was launched successfully.
+        stackName:
+          $ref: '#/components/schemas/StackName'
+          description: Name of the latest stack launched for this application.
+        stackId:
+          $ref: '#/components/schemas/StackId'
+          description: Identifier of the latest stack launched for this application.
+      description: Details about the latest launch of an application.
+    RoleName:
+      type: string
+    TotalServerGroups:
+      type: integer
+    TotalServers:
+      type: integer
+    AppSummary:
+      type: object
+      properties:
+        appId:
+          $ref: '#/components/schemas/AppId'
+          description: Unique ID of the application.
+        name:
+          $ref: '#/components/schemas/AppName'
+          description: Name of the application.
+        description:
+          $ref: '#/components/schemas/AppDescription'
+          description: Description of the application.
+        status:
+          $ref: '#/components/schemas/AppStatus'
+          description: Status of the application.
+        statusMessage:
+          $ref: '#/components/schemas/AppStatusMessage'
+          description: A message related to the status of the application
+        replicationStatus:
+          $ref: '#/components/schemas/AppReplicationStatus'
+          description: Replication status of the application.
+        replicationStatusMessage:
+          $ref: '#/components/schemas/AppReplicationStatusMessage'
+          description: A message related to the replication status of the application.
+        latestReplicationTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: Timestamp of the application's most recent successful replication.
+        launchStatus:
+          $ref: '#/components/schemas/AppLaunchStatus'
+          description: Launch status of the application.
+        launchStatusMessage:
+          $ref: '#/components/schemas/AppLaunchStatusMessage'
+          description: A message related to the launch status of the application.
+        launchDetails:
+          $ref: '#/components/schemas/LaunchDetails'
+          description: Details about the latest launch of the application.
+        creationTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: Time of creation of this application.
+        lastModified:
+          $ref: '#/components/schemas/Timestamp'
+          description: Timestamp of the application's creation.
+        roleName:
+          $ref: '#/components/schemas/RoleName'
+          description: Name of the service role in the customer's account used by AWS SMS.
+        totalServerGroups:
+          $ref: '#/components/schemas/TotalServerGroups'
+          description: Number of server groups present in the application.
+        totalServers:
+          $ref: '#/components/schemas/TotalServers'
+          description: Number of servers present in the application.
+      description: Information about the application.
+    Apps:
+      type: array
+      items:
+        $ref: '#/components/schemas/AppSummary'
+    AssociatePublicIpAddress:
+      type: boolean
+    BucketName:
+      type: string
+    ClientToken:
+      type: string
+    ConnectorId:
+      type: string
+    ConnectorVersion:
+      type: string
+    ConnectorStatus:
+      type: string
+      enum:
+        - HEALTHY
+        - UNHEALTHY
+    ConnectorCapabilityList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ConnectorCapability'
+    VmManagerName:
+      type: string
+    VmManagerType:
+      type: string
+      enum:
+        - VSPHERE
+        - SCVMM
+        - HYPERV-MANAGER
+    VmManagerId:
+      type: string
+    IpAddress:
+      type: string
+    MacAddress:
+      type: string
+    Connector:
+      type: object
+      properties:
+        connectorId:
+          $ref: '#/components/schemas/ConnectorId'
+          description: The identifier of the connector.
+        version:
+          $ref: '#/components/schemas/ConnectorVersion'
+          description: The connector version.
+        status:
+          $ref: '#/components/schemas/ConnectorStatus'
+          description: The status of the connector.
+        capabilityList:
+          $ref: '#/components/schemas/ConnectorCapabilityList'
+          description: The capabilities of the connector.
+        vmManagerName:
+          $ref: '#/components/schemas/VmManagerName'
+          description: The name of the VM manager.
+        vmManagerType:
+          $ref: '#/components/schemas/VmManagerType'
+          description: The VM management product.
+        vmManagerId:
+          $ref: '#/components/schemas/VmManagerId'
+          description: The identifier of the VM manager.
+        ipAddress:
+          $ref: '#/components/schemas/IpAddress'
+          description: The IP address of the connector.
+        macAddress:
+          $ref: '#/components/schemas/MacAddress'
+          description: The MAC address of the connector.
+        associatedOn:
+          $ref: '#/components/schemas/Timestamp'
+          description: The time the connector was associated.
+      description: Represents a connector.
+    ConnectorCapability:
+      type: string
+      enum:
+        - VSPHERE
+        - SCVMM
+        - HYPERV-MANAGER
+        - SNAPSHOT_BATCHING
+    ConnectorList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Connector'
+    ServerGroups:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServerGroup'
+    Tags:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tag'
+    ServerId:
+      type: string
+    Frequency:
+      type: integer
+    RunOnce:
+      type: boolean
+    LicenseType:
+      type: string
+      enum:
+        - AWS
+        - BYOL
+    Description:
+      type: string
+    NumberOfRecentAmisToKeep:
+      type: integer
+    Encrypted:
+      type: boolean
+    KmsKeyId:
+      type: string
+    ReplicationJobId:
+      type: string
+    ForceStopAppReplication:
+      type: boolean
+    ForceTerminateApp:
+      type: boolean
+    EC2KeyName:
+      type: string
+    OutputFormat:
+      type: string
+      enum:
+        - JSON
+        - YAML
+    S3Location:
+      type: object
+      properties:
+        bucket:
+          $ref: '#/components/schemas/BucketName'
+          description: Amazon S3 bucket name.
+        key:
+          $ref: '#/components/schemas/KeyName'
+          description: Amazon S3 bucket key.
+      description: Location of the Amazon S3 object in the customer's account.
+    ServerGroupLaunchConfigurations:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServerGroupLaunchConfiguration'
+    ServerGroupReplicationConfigurations:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServerGroupReplicationConfiguration'
+    NextToken:
+      type: string
+    MaxResults:
+      type: integer
+    ReplicationJobList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ReplicationJob'
+    ReplicationJob:
+      type: object
+      properties:
+        replicationJobId:
+          $ref: '#/components/schemas/ReplicationJobId'
+          description: The identifier of the replication job.
+        serverId:
+          $ref: '#/components/schemas/ServerId'
+          description: The identifier of the server.
+        serverType:
+          $ref: '#/components/schemas/ServerType'
+          description: The type of server.
+        vmServer:
+          $ref: '#/components/schemas/VmServer'
+          description: Information about the VM server.
+        seedReplicationTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: The seed replication time.
+        frequency:
+          $ref: '#/components/schemas/Frequency'
+          description: 'The time between consecutive replication runs, in hours.'
+        runOnce:
+          $ref: '#/components/schemas/RunOnce'
+          description: <p/>
+        nextReplicationRunStartTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: The start time of the next replication run.
+        licenseType:
+          $ref: '#/components/schemas/LicenseType'
+          description: The license type to be used for the AMI created by a successful replication run.
+        roleName:
+          $ref: '#/components/schemas/RoleName'
+          description: The name of the IAM role to be used by the Server Migration Service.
+        latestAmiId:
+          $ref: '#/components/schemas/AmiId'
+          description: The ID of the latest Amazon Machine Image (AMI).
+        state:
+          $ref: '#/components/schemas/ReplicationJobState'
+          description: The state of the replication job.
+        statusMessage:
+          $ref: '#/components/schemas/ReplicationJobStatusMessage'
+          description: The description of the current status of the replication job.
+        description:
+          $ref: '#/components/schemas/Description'
+          description: The description of the replication job.
+        numberOfRecentAmisToKeep:
+          $ref: '#/components/schemas/NumberOfRecentAmisToKeep'
+          description: 'Number of recent AMIs to keep in the customer''s account for a replication job. By default the value is set to zero, meaning that all AMIs are kept.'
+        encrypted:
+          $ref: '#/components/schemas/Encrypted'
+          description: Whether the replication job should produce encrypted AMIs or not. See also <code>KmsKeyId</code> below.
+        kmsKeyId:
+          $ref: '#/components/schemas/KmsKeyId'
+          description: '<p>KMS key ID for replication jobs that produce encrypted AMIs. Can be any of the following: </p> <ul> <li> <p>KMS key ID</p> </li> <li> <p>KMS key alias</p> </li> <li> <p>ARN referring to KMS key ID</p> </li> <li> <p>ARN referring to KMS key alias</p> </li> </ul> <p> If encrypted is <i>true</i> but a KMS key id is not specified, the customer''s default KMS key for EBS is used. </p>'
+        replicationRunList:
+          $ref: '#/components/schemas/ReplicationRunList'
+          description: Information about the replication runs.
+      description: Represents a replication job.
+    ReplicationRunList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ReplicationRun'
+    VmServerAddressList:
+      type: array
+      items:
+        $ref: '#/components/schemas/VmServerAddress'
+    ServerCatalogStatus:
+      type: string
+      enum:
+        - NOT_IMPORTED
+        - IMPORTING
+        - AVAILABLE
+        - DELETED
+        - EXPIRED
+    ServerList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Server'
+    InstanceType:
+      type: string
+    KeyName:
+      type: string
+    StackName:
+      type: string
+    StackId:
+      type: string
+    LaunchOrder:
+      type: integer
+    LogicalId:
+      type: string
+    ServerType:
+      type: string
+      enum:
+        - VIRTUAL_MACHINE
+    VmServer:
+      type: object
+      properties:
+        vmServerAddress:
+          $ref: '#/components/schemas/VmServerAddress'
+          description: Information about the VM server location.
+        vmName:
+          $ref: '#/components/schemas/VmName'
+          description: The name of the VM.
+        vmManagerName:
+          $ref: '#/components/schemas/VmManagerName'
+          description: The name of the VM manager.
+        vmManagerType:
+          $ref: '#/components/schemas/VmManagerType'
+          description: The type of VM management product.
+        vmPath:
+          $ref: '#/components/schemas/VmPath'
+          description: The VM folder path in the vCenter Server virtual machine inventory tree.
+      description: Represents a VM server.
+    ReplicationJobState:
+      type: string
+      enum:
+        - PENDING
+        - ACTIVE
+        - FAILED
+        - DELETING
+        - DELETED
+        - COMPLETED
+        - PAUSED_ON_FAILURE
+        - FAILING
+    ReplicationJobStatusMessage:
+      type: string
+    ReplicationJobTerminated:
+      type: boolean
+    ReplicationRunId:
+      type: string
+    ReplicationRunState:
+      type: string
+      enum:
+        - PENDING
+        - MISSED
+        - ACTIVE
+        - FAILED
+        - COMPLETED
+        - DELETING
+        - DELETED
+    ReplicationRunType:
+      type: string
+      enum:
+        - ON_DEMAND
+        - AUTOMATIC
+    ReplicationRunStageDetails:
+      type: object
+      properties:
+        stage:
+          $ref: '#/components/schemas/ReplicationRunStage'
+          description: String describing the current stage of a replication run.
+        stageProgress:
+          $ref: '#/components/schemas/ReplicationRunStageProgress'
+          description: String describing the progress of the current stage of a replication run.
+      description: Details of the current stage of a replication run.
+    ReplicationRunStatusMessage:
+      type: string
+    ReplicationRun:
+      type: object
+      properties:
+        replicationRunId:
+          $ref: '#/components/schemas/ReplicationRunId'
+          description: The identifier of the replication run.
+        state:
+          $ref: '#/components/schemas/ReplicationRunState'
+          description: The state of the replication run.
+        type:
+          $ref: '#/components/schemas/ReplicationRunType'
+          description: The type of replication run.
+        stageDetails:
+          $ref: '#/components/schemas/ReplicationRunStageDetails'
+          description: Details of the current stage of the replication run.
+        statusMessage:
+          $ref: '#/components/schemas/ReplicationRunStatusMessage'
+          description: The description of the current status of the replication job.
+        amiId:
+          $ref: '#/components/schemas/AmiId'
+          description: The identifier of the Amazon Machine Image (AMI) from the replication run.
+        scheduledStartTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: The start time of the next replication run.
+        completedTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: The completion time of the last replication run.
+        description:
+          $ref: '#/components/schemas/Description'
+          description: The description of the replication run.
+        encrypted:
+          $ref: '#/components/schemas/Encrypted'
+          description: Whether the replication run should produce encrypted AMI or not. See also <code>KmsKeyId</code> below.
+        kmsKeyId:
+          $ref: '#/components/schemas/KmsKeyId'
+          description: '<p>KMS key ID for replication jobs that produce encrypted AMIs. Can be any of the following: </p> <ul> <li> <p>KMS key ID</p> </li> <li> <p>KMS key alias</p> </li> <li> <p>ARN referring to KMS key ID</p> </li> <li> <p>ARN referring to KMS key alias</p> </li> </ul> <p> If encrypted is <i>true</i> but a KMS key id is not specified, the customer''s default KMS key for EBS is used. </p>'
+      description: Represents a replication run.
+    ReplicationRunStage:
+      type: string
+    ReplicationRunStageProgress:
+      type: string
+    SecurityGroup:
+      type: string
+    Server:
+      type: object
+      properties:
+        serverId:
+          $ref: '#/components/schemas/ServerId'
+          description: The identifier of the server.
+        serverType:
+          $ref: '#/components/schemas/ServerType'
+          description: The type of server.
+        vmServer:
+          $ref: '#/components/schemas/VmServer'
+          description: Information about the VM server.
+        replicationJobId:
+          $ref: '#/components/schemas/ReplicationJobId'
+          description: The identifier of the replication job.
+        replicationJobTerminated:
+          $ref: '#/components/schemas/ReplicationJobTerminated'
+          description: Indicates whether the replication job is deleted or failed.
+      description: Represents a server.
+    ServerGroupId:
+      type: string
+    ServerGroupName:
+      type: string
+    ServerGroup:
+      type: object
+      properties:
+        serverGroupId:
+          $ref: '#/components/schemas/ServerGroupId'
+          description: Identifier of a server group.
+        name:
+          $ref: '#/components/schemas/ServerGroupName'
+          description: Name of a server group.
+        serverList:
+          $ref: '#/components/schemas/ServerList'
+          description: List of servers belonging to a server group.
+      description: A logical grouping of servers.
+    ServerLaunchConfigurations:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServerLaunchConfiguration'
+    ServerGroupLaunchConfiguration:
+      type: object
+      properties:
+        serverGroupId:
+          $ref: '#/components/schemas/ServerGroupId'
+          description: Identifier of the server group the launch configuration is associated with.
+        launchOrder:
+          $ref: '#/components/schemas/LaunchOrder'
+          description: Launch order of servers in the server group.
+        serverLaunchConfigurations:
+          $ref: '#/components/schemas/ServerLaunchConfigurations'
+          description: Launch configuration for servers in the server group.
+      description: Launch configuration for a server group.
+    ServerReplicationConfigurations:
+      type: array
+      items:
+        $ref: '#/components/schemas/ServerReplicationConfiguration'
+    ServerGroupReplicationConfiguration:
+      type: object
+      properties:
+        serverGroupId:
+          $ref: '#/components/schemas/ServerGroupId'
+          description: Identifier of the server group this replication configuration is associated with.
+        serverReplicationConfigurations:
+          $ref: '#/components/schemas/ServerReplicationConfigurations'
+          description: Replication configuration for servers in the server group.
+      description: Replication configuration for a server group.
+    VPC:
+      type: string
+    Subnet:
+      type: string
+    UserData:
+      type: object
+      properties:
+        s3Location:
+          $ref: '#/components/schemas/S3Location'
+          description: Amazon S3 location of the user-data script.
+      description: A script that runs on first launch of an Amazon EC2 instance. Used for configuring the server during launch.
+    ServerLaunchConfiguration:
+      type: object
+      properties:
+        server:
+          $ref: '#/components/schemas/Server'
+          description: Identifier of the server the launch configuration is associated with.
+        logicalId:
+          $ref: '#/components/schemas/LogicalId'
+          description: Logical ID of the server in the Amazon CloudFormation template.
+        vpc:
+          $ref: '#/components/schemas/VPC'
+          description: Identifier of the VPC the server should be launched into.
+        subnet:
+          $ref: '#/components/schemas/Subnet'
+          description: Identifier of the subnet the server should be launched into.
+        securityGroup:
+          $ref: '#/components/schemas/SecurityGroup'
+          description: Identifier of the security group that applies to the launched server.
+        ec2KeyName:
+          $ref: '#/components/schemas/EC2KeyName'
+          description: Name of the EC2 SSH Key to be used for connecting to the launched server.
+        userData:
+          $ref: '#/components/schemas/UserData'
+          description: Location of the user-data script to be executed when launching the server.
+        instanceType:
+          $ref: '#/components/schemas/InstanceType'
+          description: Instance type to be used for launching the server.
+        associatePublicIpAddress:
+          $ref: '#/components/schemas/AssociatePublicIpAddress'
+          description: 'If true, a publicly accessible IP address is created when launching the server.'
+      description: Launch configuration for a server.
+    ServerReplicationParameters:
+      type: object
+      properties:
+        seedTime:
+          $ref: '#/components/schemas/Timestamp'
+          description: Seed time for creating a replication job for the server.
+        frequency:
+          $ref: '#/components/schemas/Frequency'
+          description: Frequency of creating replication jobs for the server.
+        runOnce:
+          $ref: '#/components/schemas/RunOnce'
+          description: <p/>
+        licenseType:
+          $ref: '#/components/schemas/LicenseType'
+          description: License type for creating a replication job for the server.
+        numberOfRecentAmisToKeep:
+          $ref: '#/components/schemas/NumberOfRecentAmisToKeep'
+          description: Number of recent AMIs to keep when creating a replication job for this server.
+        encrypted:
+          $ref: '#/components/schemas/Encrypted'
+          description: 'When true, the replication job produces encrypted AMIs. See also <code>KmsKeyId</code> below.'
+        kmsKeyId:
+          $ref: '#/components/schemas/KmsKeyId'
+          description: '<p/> <p>KMS key ID for replication jobs that produce encrypted AMIs. Can be any of the following: </p> <ul> <li> <p>KMS key ID</p> </li> <li> <p>KMS key alias</p> </li> <li> <p>ARN referring to KMS key ID</p> </li> <li> <p>ARN referring to KMS key alias</p> </li> </ul> <p> If encrypted is <i>true</i> but a KMS key id is not specified, the customer''s default KMS key for EBS is used. </p>'
+      description: Replication parameters for replicating a server.
+    ServerReplicationConfiguration:
+      type: object
+      properties:
+        server:
+          $ref: '#/components/schemas/Server'
+          description: Identifier of the server this replication configuration is associated with.
+        serverReplicationParameters:
+          $ref: '#/components/schemas/ServerReplicationParameters'
+          description: Parameters for replicating the server.
+      description: Replication configuration of a server.
+    TagKey:
+      type: string
+    TagValue:
+      type: string
+    Tag:
+      type: object
+      properties:
+        key:
+          $ref: '#/components/schemas/TagKey'
+          description: Tag key.
+        value:
+          $ref: '#/components/schemas/TagValue'
+          description: Tag value.
+      description: A label that can be assigned to an application.
+    VmId:
+      type: string
+    VmName:
+      type: string
+    VmPath:
+      type: string
+    VmServerAddress:
+      type: object
+      properties:
+        vmManagerId:
+          $ref: '#/components/schemas/VmManagerId'
+          description: The identifier of the VM manager.
+        vmId:
+          $ref: '#/components/schemas/VmId'
+          description: The identifier of the VM.
+      description: Represents a VM server location.
+security:
+  - hmac: []

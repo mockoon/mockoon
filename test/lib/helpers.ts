@@ -2,7 +2,11 @@ import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
 import { ToastTypes } from 'src/app/services/toasts.service';
-import { EnvironmentLogsTabsNameType, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import {
+  EnvironmentLogsTabsNameType,
+  TabsNameType,
+  ViewsNameType
+} from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
 import { ResponseRule } from 'src/app/types/route.type';
 import { HttpCall } from 'test/lib/types';
@@ -381,6 +385,13 @@ export class Helpers {
       '.routes-menu .menu-list .nav-item .nav-link.active',
       3
     );
+  }
+
+  /**
+   * Wait for data autosave
+   */
+  async waitForAutosave() {
+    await this.testsInstance.app.client.pause(4000);
   }
 
   async verifyObjectPropertyInFile(
