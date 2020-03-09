@@ -86,11 +86,6 @@ describe('Environments import', () => {
         await tests.helpers.countEnvironments(0);
         await tests.helpers.countRoutes(0);
 
-        await tests.helpers.checkToastDisplayed(
-          'warning',
-          'Some routes were not imported'
-        );
-
         await tests.helpers.waitForAutosave();
 
         await tests.helpers.verifyObjectPropertyInFile(
