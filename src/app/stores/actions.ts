@@ -154,10 +154,11 @@ export function moveRouteResponsesAction(indexes: ReducerIndexes) {
  *
  * @param environment - environment to add
  */
-export function addEnvironmentAction(environment: Environment) {
+export function addEnvironmentAction(environment: Environment, afterUUID?: string) {
   return <const>{
     type: ActionTypes.ADD_ENVIRONMENT,
-    environment
+    environment,
+    afterUUID
   };
 }
 
@@ -228,10 +229,11 @@ export function navigateRoutesAction(direction: ReducerDirectionType) {
  *
  * @param route - route to add
  */
-export function addRouteAction(route: Route) {
+export function addRouteAction(route: Route, afterUUID?: string) {
   return <const>{
     type: ActionTypes.ADD_ROUTE,
-    route
+    route,
+    afterUUID
   };
 }
 
