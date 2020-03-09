@@ -11,8 +11,7 @@ describe('Environments migrations', () => {
     tests.runHooks();
 
     it('Should add "lastMigration" property to the environment and remove it from the settings', async () => {
-      // wait for post migration autosave
-      await tests.app.client.pause(4000);
+      await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/environments.json',
@@ -36,8 +35,7 @@ describe('Environments migrations', () => {
     tests.runHooks();
 
     it('Should add "label" property to route responses', async () => {
-      // wait for post migration autosave
-      await tests.app.client.pause(4000);
+      await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/environments.json',
@@ -55,8 +53,7 @@ describe('Environments migrations', () => {
     tests.runHooks();
 
     it('Should add "proxyReqHeaders" and "proxyResHeaders" headers properties to environments', async () => {
-      // wait for post migration autosave
-      await tests.app.client.pause(4000);
+      await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/environments.json',

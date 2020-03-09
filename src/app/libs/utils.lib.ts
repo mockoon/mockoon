@@ -9,7 +9,10 @@ export const AscSort = (a, b) => {
   }
 };
 
-export const ArrayContainsObjectKey = (obj: { [key: string]: any }, arr: string[]) => {
+export const ArrayContainsObjectKey = (
+  obj: { [key: string]: any },
+  arr: string[]
+) => {
   if (obj && arr) {
     return !!Object.keys(obj).find(key => arr.includes(key));
   }
@@ -17,18 +20,29 @@ export const ArrayContainsObjectKey = (obj: { [key: string]: any }, arr: string[
   return false;
 };
 
-export const GetRouteResponseContentType = (environment: Environment, routeResponse: RouteResponse) => {
-  const routeResponseContentType = routeResponse.headers.find(header => header.key.toLowerCase() === 'content-type');
+export const GetRouteResponseContentType = (
+  environment: Environment,
+  routeResponse: RouteResponse
+) => {
+  const routeResponseContentType = routeResponse.headers.find(
+    header => header.key.toLowerCase() === 'content-type'
+  );
 
   if (routeResponseContentType && routeResponseContentType.value) {
     return routeResponseContentType.value;
   }
 
-  const environmentContentType = environment.headers.find(header => header.key.toLowerCase() === 'content-type');
+  const environmentContentType = environment.headers.find(
+    header => header.key.toLowerCase() === 'content-type'
+  );
 
   if (environmentContentType && environmentContentType.value) {
     return environmentContentType.value;
   }
 
   return '';
+};
+
+export const RemoveLeadingSlash = (str: string) => {
+  return str.replace(/^\//g, '');
 };

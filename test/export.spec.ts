@@ -8,15 +8,14 @@ describe('Environments export', () => {
   describe('Export all environments to a file (JSON)', () => {
     const tests = new Tests('export');
     tests.runHooks(true, true);
+
     const filePath = `./tmp/storage/${uuid()}.json`;
 
     it('Should create an export file with content', async () => {
       tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
         {
           method: 'showSaveDialog',
-          value: {
-            filePath
-          }
+          value: { filePath }
         }
       ]);
 

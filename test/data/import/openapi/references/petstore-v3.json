@@ -1,0 +1,103 @@
+[
+  {
+    "uuid": "6e3bac30-5b05-11ea-a005-35ade7bcb066",
+    "lastMigration": 10,
+    "name": "Swagger Petstore v3",
+    "endpointPrefix": "v2",
+    "latency": 0,
+    "port": 3000,
+    "routes": [
+      {
+        "uuid": "6e3bd341-5b05-11ea-a005-35ade7bcb066",
+        "documentation": "Returns all pets from the system that the user has access to\n",
+        "method": "get",
+        "endpoint": "pets",
+        "responses": [
+          {
+            "uuid": "6e3bd340-5b05-11ea-a005-35ade7bcb066",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "pet response",
+            "headers": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Rate-Limit", "value": "" },
+              { "key": "X-Expires-After", "value": "" }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "uuid": "6e3bd343-5b05-11ea-a005-35ade7bcb066",
+        "documentation": "Creates a new pet in the store.  Duplicates are allowed",
+        "method": "post",
+        "endpoint": "pets",
+        "responses": [
+          {
+            "uuid": "6e3bd342-5b05-11ea-a005-35ade7bcb066",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "pet response",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "uuid": "6e3bd345-5b05-11ea-a005-35ade7bcb066",
+        "documentation": "Returns a user based on a single ID, if the user does not have access to the pet",
+        "method": "get",
+        "endpoint": "pets/:id",
+        "responses": [
+          {
+            "uuid": "6e3bd344-5b05-11ea-a005-35ade7bcb066",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "pet response",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "uuid": "6e3bd347-5b05-11ea-a005-35ade7bcb066",
+        "documentation": "deletes a single pet based on the ID supplied",
+        "method": "delete",
+        "endpoint": "pets/:id",
+        "responses": [
+          {
+            "uuid": "6e3bd346-5b05-11ea-a005-35ade7bcb066",
+            "body": "",
+            "latency": 0,
+            "statusCode": "204",
+            "label": "pet deleted",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ],
+        "enabled": true
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [],
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
+  }
+]

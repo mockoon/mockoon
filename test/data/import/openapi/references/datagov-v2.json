@@ -1,0 +1,145 @@
+[
+  {
+    "uuid": "500ea6c0-5d91-11ea-b15f-91b10dfe38f8",
+    "lastMigration": 10,
+    "name": "Regulations.gov",
+    "endpointPrefix": "regulations/v3",
+    "latency": 0,
+    "port": 3000,
+    "routes": [
+      {
+        "uuid": "500ea6c4-5d91-11ea-b15f-91b10dfe38f8",
+        "documentation": "Returns Docket information",
+        "method": "get",
+        "endpoint": "docket.:response_format",
+        "responses": [
+          {
+            "uuid": "500ea6c1-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "No response was specified",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          },
+          {
+            "uuid": "500ea6c2-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "400",
+            "label": "Bad request. The content is either empty or has been withdrawn.",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          },
+          {
+            "uuid": "500ea6c3-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "404",
+            "label": "File not found.",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "uuid": "500ea6c8-5d91-11ea-b15f-91b10dfe38f8",
+        "documentation": "Returns Document information",
+        "method": "get",
+        "endpoint": "document.:response_format",
+        "responses": [
+          {
+            "uuid": "500ea6c5-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "No response was specified",
+            "headers": [{ "key": "Content-Type", "value": "*/*" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          },
+          {
+            "uuid": "500ea6c6-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "400",
+            "label": "Bad request. The document is only available for comment via Regulations.gov.",
+            "headers": [{ "key": "Content-Type", "value": "*/*" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          },
+          {
+            "uuid": "500ea6c7-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "404",
+            "label": "File not found.",
+            "headers": [{ "key": "Content-Type", "value": "*/*" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "uuid": "500ea6cc-5d91-11ea-b15f-91b10dfe38f8",
+        "documentation": "Search for Documents",
+        "method": "get",
+        "endpoint": "documents.:response_format",
+        "responses": [
+          {
+            "uuid": "500ea6c9-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "No response was specified",
+            "headers": [{ "key": "Content-Type", "value": "*/*" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          },
+          {
+            "uuid": "500ea6ca-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "400",
+            "label": "Bad request. The document is only available for comment via Regulations.gov.",
+            "headers": [{ "key": "Content-Type", "value": "*/*" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          },
+          {
+            "uuid": "500ea6cb-5d91-11ea-b15f-91b10dfe38f8",
+            "body": "",
+            "latency": 0,
+            "statusCode": "404",
+            "label": "File not found.",
+            "headers": [{ "key": "Content-Type", "value": "*/*" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ],
+        "enabled": true
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [],
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
+  }
+]

@@ -2,8 +2,8 @@
   {
     "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
     "lastMigration": 10,
-    "name": "Demo users API",
-    "endpointPrefix": "",
+    "name": "Demo users API V2",
+    "endpointPrefix": "v2",
     "latency": 0,
     "port": 3000,
     "routes": [
@@ -19,7 +19,10 @@
             "latency": 50,
             "statusCode": "200",
             "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "headers": [
+              { "key": "Route-Header", "value": "route-header" },
+              { "key": "Content-Type", "value": "text/plain" }
+            ],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": []
@@ -39,7 +42,7 @@
             "latency": 0,
             "statusCode": "200",
             "label": "Get userId 1",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "headers": [],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [
@@ -84,7 +87,7 @@
             "latency": 0,
             "statusCode": "201",
             "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "headers": [],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [
@@ -129,7 +132,7 @@
             "latency": 0,
             "statusCode": "204",
             "label": "User deleted",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "headers": [],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [
@@ -143,13 +146,36 @@
           }
         ],
         "enabled": true
+      },
+      {
+        "uuid": "27dbe8b0-60b2-11ea-9b62-4340c341e0a1",
+        "documentation": "Set user status",
+        "method": "put",
+        "endpoint": "users/:id/status/:status",
+        "responses": [
+          {
+            "uuid": "27dbe8b1-60b2-11ea-9b62-4340c341e0a1",
+            "body": "{}",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ],
+        "enabled": true
       }
     ],
     "proxyMode": false,
     "proxyHost": "",
-    "https": false,
+    "https": true,
     "cors": true,
-    "headers": [{ "key": "Content-Type", "value": "application/json" }],
+    "headers": [
+      { "key": "Global-Header", "value": "global-header" },
+      { "key": "Content-Type", "value": "application/json" }
+    ],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }]
   }
