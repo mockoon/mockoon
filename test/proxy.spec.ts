@@ -9,7 +9,8 @@ const getAnswerCall: HttpCall = {
   method: 'GET',
   testedProperties: {
     body: '42',
-    status: 200
+    status: 200,
+    headers: {'X-custom-header': 'header value', 'X-proxy-response-header': 'header-value'}
   }
 };
 
@@ -59,15 +60,26 @@ describe('Proxy', () => {
       .should.eventually.equal('X-proxy-request-header: header value');
   });
 
-  it('Should display custom response header in environment logs', async () => {
+  it('Should display custom proxied response header in environment logs', async () => {
     await tests.helpers.selectEnvironment(2);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
     await tests.app.client
       .getText(
-        '.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(1)'
+        '.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(8)'
       )
       .should.eventually.equal('X-proxy-response-header: header value');
+  });
+
+  it('Should display custom environment response header in environment logs', async () => {
+    await tests.helpers.selectEnvironment(2);
+    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
+    await tests.app.client
+      .getText(
+        '.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(6)'
+      )
+      .should.eventually.equal('X-custom-header: header value');
   });
 
   it('Click on mock button ', async () => {
