@@ -207,7 +207,7 @@ export class ServerService {
                 }
               } else {
                 // detect if content type is json in order to parse
-                if (routeContentType === 'application/json') {
+                if (routeContentType.includes('application/json')) {
                   try {
                     res.json(JSON.parse(DummyJSONParser(enabledRouteResponse.body, req)));
                   } catch (error) {

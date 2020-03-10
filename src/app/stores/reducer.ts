@@ -258,6 +258,18 @@ export function environmentReducer(
 
     case ActionTypes.ADD_ENVIRONMENT: {
       const newEnvironment: Environment = action.environment;
+      const afterUUID = action.afterUUID;
+
+      const environments = [...state.environments];
+
+      let afterIndex = environments.length;
+      if (afterUUID) {
+          afterIndex = environments.findIndex(environment => environment.uuid === afterUUID);
+          if (afterIndex === -1) {
+              afterIndex = environments.length;
+          }
+      }
+      environments.splice(afterIndex + 1, 0, newEnvironment);
 
       newState = {
         ...state,
@@ -266,10 +278,7 @@ export function environmentReducer(
         activeRouteResponseUUID: newEnvironment.routes[0].responses[0].uuid,
         activeTab: 'RESPONSE',
         activeView: 'ROUTE',
-        environments: [
-          ...state.environments,
-          newEnvironment
-        ],
+        environments,
         environmentsStatus: {
           ...state.environmentsStatus,
           [newEnvironment.uuid]: { running: false, needRestart: false, disabledForIncompatibility: false }
@@ -451,6 +460,7 @@ export function environmentReducer(
         }
 
         const newRoute = action.route;
+        const afterUUID = action.afterUUID;
 
         newState = {
           ...state,
@@ -460,9 +470,21 @@ export function environmentReducer(
           activeView: 'ROUTE',
           environments: state.environments.map(environment => {
             if (environment.uuid === state.activeEnvironmentUUID) {
+
+              const routes = [...environment.routes];
+
+              let afterIndex = routes.length;
+              if (afterUUID) {
+                afterIndex = environment.routes.findIndex(route => route.uuid === afterUUID);
+                if (afterIndex === -1) {
+                  afterIndex = routes.length;
+                }
+              }
+              routes.splice(afterIndex + 1, 0, newRoute);
+
               return {
                 ...environment,
-                routes: [...environment.routes, newRoute]
+                routes
               };
             }
 
@@ -739,13 +761,13 @@ function getBodyEditorMode(state: StoreType) {
 
   const routeResponseContentType = GetRouteResponseContentType(currentEnvironment, currentRouteResponse);
 
-  if (routeResponseContentType === 'application/json') {
+  if (routeResponseContentType.includes('application/json')) {
     return 'json';
-  } else if (routeResponseContentType === 'text/html' || routeResponseContentType === 'application/xhtml+xml') {
+  } else if (routeResponseContentType.includes('text/html') || routeResponseContentType.includes('application/xhtml+xml')) {
     return 'html';
-  } else if (routeResponseContentType === 'application/xml') {
+  } else if (routeResponseContentType.includes('application/xml')) {
     return 'xml';
-  } else if (routeResponseContentType === 'text/css') {
+  } else if (routeResponseContentType.includes('text/css')) {
     return 'css';
   } else {
     return 'text';

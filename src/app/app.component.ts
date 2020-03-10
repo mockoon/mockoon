@@ -133,6 +133,12 @@ export class AppComponent implements OnInit {
         case 'IMPORT_FILE':
           this.importExportService.importFromFile();
           break;
+        case 'IMPORT_OPENAPI_FILE':
+          this.importExportService.importOpenAPIFile();
+          break;
+        case 'EXPORT_OPENAPI_FILE':
+          this.importExportService.exportOpenAPIFile();
+          break;
         case 'IMPORT_CLIPBOARD':
           this.importExportService.importFromClipboard();
           break;
@@ -606,7 +612,7 @@ export class AppComponent implements OnInit {
       activeRouteResponse
     );
 
-    if (contentType === 'application/json') {
+    if (contentType.includes('application/json')) {
       try {
         this.activeRouteResponseForm
           .get('body')

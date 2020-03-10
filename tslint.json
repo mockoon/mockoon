@@ -27,13 +27,6 @@
     ],
     "interface-over-type-literal": false,
     "label-position": true,
-    "max-line-length": [
-      true,
-      {
-        "limit": 200,
-        "ignore-pattern": "^import"
-      }
-    ],
     "member-access": false,
     "member-ordering": [
       true,

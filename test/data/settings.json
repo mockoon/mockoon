@@ -2,5 +2,6 @@
   "welcomeShown": true,
   "analytics": true,
   "bannerDismissed": [],
-  "logSizeLimit": 10000
+  "logSizeLimit": 10000,
+  "truncateRouteName": true
 }

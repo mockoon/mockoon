@@ -246,26 +246,52 @@ function createWindow() {
     label: 'Import/export',
     submenu: [
       {
-        label: 'Import from clipboard',
-        click: function() {
-          mainWindow.webContents.send('keydown', {
-            action: 'IMPORT_CLIPBOARD'
-          });
-        }
-      },
-      {
-        label: 'Import from a file (JSON)',
-        click: function() {
-          mainWindow.webContents.send('keydown', { action: 'IMPORT_FILE' });
-        }
+        label: "Mockoon's format",
+        submenu: [
+          {
+            label: 'Import from clipboard',
+            click: function() {
+              mainWindow.webContents.send('keydown', {
+                action: 'IMPORT_CLIPBOARD'
+              });
+            }
+          },
+          {
+            label: 'Import from a file (JSON)',
+            click: function() {
+              mainWindow.webContents.send('keydown', { action: 'IMPORT_FILE' });
+            }
+          },
+          {
+            label: 'Export all environments to a file (JSON)',
+            accelerator: 'CmdOrCtrl+O',
+            click: function() {
+              mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE' });
+            }
+          }
+        ]
       },
       { type: 'separator' },
       {
-        label: 'Export all environments to a file (JSON)',
-        accelerator: 'CmdOrCtrl+O',
-        click: function() {
-          mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE' });
-        }
+        label: 'Swagger/OpenAPI',
+        submenu: [
+          {
+            label: 'Import Swagger v2/OpenAPI v3 (JSON or YAML)',
+            click: function() {
+              mainWindow.webContents.send('keydown', {
+                action: 'IMPORT_OPENAPI_FILE'
+              });
+            }
+          },
+          {
+            label: 'Export to OpenAPI file (JSON)',
+            click: function() {
+              mainWindow.webContents.send('keydown', {
+                action: 'EXPORT_OPENAPI_FILE'
+              });
+            }
+          }
+        ]
       }
     ]
   });

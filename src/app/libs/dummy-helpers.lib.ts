@@ -64,6 +64,14 @@ export const DummyJSONHelpers = (request) => {
 
       return request.get(headerName) || defaultValue;
     },
+    // use value of cookie
+    cookie: function(key: string, defaultValue: string) {
+      if (typeof defaultValue === 'object') {
+        defaultValue = '';
+      }
+
+      return request.cookies[key] || defaultValue;
+    },
     // use request hostname
     hostname: function () {
       return request.hostname;

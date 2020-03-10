@@ -126,6 +126,7 @@ $custom-control-indicator-bg: $custom-gray;
 
 $modal-content-bg: lighten($gray-900, 2%);
 $modal-content-border-color: lighten($gray-900, 4%);
+$modal-content-border-radius: none;
 $modal-content-box-shadow-xs: none;
 $modal-content-box-shadow-sm-up: none;
 $modal-backdrop-opacity: .8;

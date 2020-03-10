@@ -1,99 +1,156 @@
 [
   {
-    "uuid": "d609f7f1-6bb5-4253-9d2b-89379f06eba6",
+    "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
     "lastMigration": 10,
-    "name": "Dev env",
+    "name": "Demo users API",
     "endpointPrefix": "",
     "latency": 0,
     "port": 3000,
     "routes": [
       {
-        "uuid": "7919e716-8e59-4dc4-a993-561dbd9129ac",
+        "uuid": "e84c9923-6047-11ea-b4a3-058bbf68d234",
+        "documentation": "Get all users",
         "method": "get",
-        "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
-        "documentation": "Test documentation",
-        "enabled": true,
+        "endpoint": "users",
         "responses": [
           {
-            "uuid": "a6092eb3-5e0c-42f1-beb3-a545056c070d",
-            "body": "{\"response\": \"{{urlParam 'var'}}\"}",
-            "latency": 0,
+            "uuid": "e84c9925-6047-11ea-b4a3-058bbf68d234",
+            "body": "[\n  {\n    \"id\": 1,\n    \"firstname\": \"John\",\n    \"Lastname\": \"Snow\",\n    \"status\": \"Learning things\"\n  },\n  {\n    \"id\": 2,\n    \"firstname\": \"Daenerys\",\n    \"Lastname\": \"Targaryen\",\n    \"status\": \"Riding a dragon\"\n  }\n]",
+            "latency": 50,
             "statusCode": "200",
-            "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": []
           }
-        ]
+        ],
+        "enabled": true
       },
       {
-        "uuid": "3dae1543-f2d8-4110-a930-3cac6af90b11",
+        "uuid": "e84c9926-6047-11ea-b4a3-058bbf68d234",
+        "documentation": "Get a user",
         "method": "get",
-        "endpoint": "answer",
-        "documentation": "",
-        "enabled": true,
+        "endpoint": "users/:id",
         "responses": [
           {
-            "uuid": "184a72a5-06d8-4875-b2a5-64977e1669ad",
-            "body": "42",
+            "uuid": "e84c9928-6047-11ea-b4a3-058bbf68d234",
+            "body": "{\n  \"id\": 1,\n  \"firstname\": \"John\",\n  \"Lastname\": \"Snow\",\n  \"status\": \"Learning things\"\n}",
             "latency": 0,
             "statusCode": "200",
-            "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "label": "Get userId 1",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "rules": []
+            "rules": [
+              {
+                "target": "params",
+                "modifier": "id",
+                "value": "1",
+                "isRegex": false
+              }
+            ]
+          },
+          {
+            "uuid": "e84c9929-6047-11ea-b4a3-058bbf68d234",
+            "body": "{\n  \"id\": 2,\n  \"firstname\": \"Daenerys\",\n  \"Lastname\": \"Targaryen\",\n  \"status\": \"Riding a dragon\"\n}",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "Get userId 2",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "params",
+                "modifier": "id",
+                "value": "2",
+                "isRegex": false
+              }
+            ]
           }
-        ]
+        ],
+        "enabled": true
       },
       {
-        "uuid": "4e4bd5d7-bb2c-4ed4-8795-8b90b132c8f7",
+        "uuid": "e84c992a-6047-11ea-b4a3-058bbf68d234",
+        "documentation": "Create a user",
         "method": "post",
-        "endpoint": "dolphins",
-        "documentation": "",
-        "enabled": true,
+        "endpoint": "users",
         "responses": [
           {
-            "uuid": "cea5910c-068f-4418-9162-f94097a17987",
-            "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
+            "uuid": "e84c992c-6047-11ea-b4a3-058bbf68d234",
+            "body": "{\n  \"firstname\": \"{{body 'firstname'}}\",\n  \"lastname\": \"{{body 'lastname'}}\",\n  \"status\": \"{{body 'status'}}\"\n}",
             "latency": 0,
-            "statusCode": "200",
-            "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "statusCode": "201",
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "rules": []
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "firstname",
+                "value": ".+",
+                "isRegex": true
+              }
+            ]
+          },
+          {
+            "uuid": "e84c992d-6047-11ea-b4a3-058bbf68d234",
+            "body": "{\n  \"Error\": \"firstname is required\"\n}",
+            "latency": 0,
+            "statusCode": "400",
+            "label": "Missing data",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "firstname",
+                "value": "^$",
+                "isRegex": true
+              }
+            ]
           }
-        ]
+        ],
+        "enabled": true
+      },
+      {
+        "uuid": "e84c992e-6047-11ea-b4a3-058bbf68d234",
+        "documentation": "Delete a user",
+        "method": "delete",
+        "endpoint": "users/:id",
+        "responses": [
+          {
+            "uuid": "e84c9930-6047-11ea-b4a3-058bbf68d234",
+            "body": "",
+            "latency": 0,
+            "statusCode": "204",
+            "label": "User deleted",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "firstname",
+                "value": ".*",
+                "isRegex": true
+              }
+            ]
+          }
+        ],
+        "enabled": true
       }
     ],
     "proxyMode": false,
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [
-      {
-        "key": "",
-        "value": ""
-      }
-    ],
-    "proxyReqHeaders": [{"key": "", "value":""}],
-    "proxyResHeaders": [{"key": "", "value":""}]
+    "headers": [{ "key": "Content-Type", "value": "application/json" }],
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
   }
 ]

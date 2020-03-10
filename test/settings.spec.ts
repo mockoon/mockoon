@@ -1,8 +1,6 @@
 import { Tests } from './lib/tests';
 import { HttpCall } from './lib/types';
 
-const tests = new Tests('basic-data');
-
 function generateCall(requestBody: any): HttpCall {
   return {
     description: 'Call POST dolphins',
@@ -28,51 +26,120 @@ function makeString(length: number): string {
   return result;
 }
 
-const inputBodySize = `.modal-dialog input[ngbTooltip="Log's body size"]`;
+const truncateRoutePathCheckbox = '.modal-dialog input#truncate-route-name ~ .custom-control-label';
+const analyticsCheckbox = '.modal-dialog input#analytics ~ .custom-control-label';
+const bodySizeInput = '.modal-dialog input#log-body-size';
 
-describe('Settings Dialog', () => {
-  tests.runHooks();
+describe('Settings', () => {
+  describe('Route path truncate', () => {
+    const tests = new Tests('settings');
+    tests.runHooks();
 
-  it('Start the environment', async () => {
-    await tests.helpers.startEnvironment();
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
-  });
-
-  describe('Log variable size', () => {
-    it('Set size to 100', async () => {
-      await tests.helpers.openSettingsModal();
-      await tests.app.client.element(inputBodySize).setValue('100');
-      await tests.helpers.closeSettingsModal();
+    it('Path should be truncated by default', async () => {
+      await tests.app.client.waitForExist(
+        '.routes-menu .nav.menu-list .nav-item:nth-child(2) .route-path.ellipsis'
+      );
     });
 
-    it('The size is 100, do not truncate on 99', async () => {
+    it('Disable route path truncate in settings and verify persistence', async () => {
+      await tests.helpers.openSettingsModal();
+      await tests.app.client.element(truncateRoutePathCheckbox).click();
+      await tests.helpers.closeSettingsModal();
+
+      // wait for settings save
+      await tests.app.client.pause(1000);
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'truncateRouteName',
+        false
+      );
+    });
+
+    it('Path should not be truncated after setting update', async () => {
+      await tests.app.client.waitForExist(
+        '.routes-menu .nav.menu-list .nav-item:nth-child(2) .route-path.text-break'
+      );
+    });
+  });
+
+  describe('Analytics disable', () => {
+    const tests = new Tests('settings');
+    tests.runHooks();
+
+    it('Disable analytics in settings and verify persistence', async () => {
+      await tests.helpers.openSettingsModal();
+      await tests.app.client.element(analyticsCheckbox).click();
+      await tests.helpers.closeSettingsModal();
+
+      // wait for settings save
+      await tests.app.client.pause(1000);
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'analytics',
+        false
+      );
+    });
+  });
+
+  describe('Log body truncate', () => {
+    const tests = new Tests('settings');
+    tests.runHooks();
+
+    it('Start the environment', async () => {
+      await tests.helpers.startEnvironment();
+      await tests.helpers.switchViewInHeader('ENV_LOGS');
+    });
+
+    it('Set log body size to 100', async () => {
+      await tests.helpers.openSettingsModal();
+      await tests.app.client.element(bodySizeInput).setValue('100');
+      await tests.helpers.closeSettingsModal();
+
+      // wait for settings save
+      await tests.app.client.pause(1000);
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'logSizeLimit',
+        100
+      );
+    });
+
+    it('Log request full body of 99 characters', async () => {
       const str = makeString(99);
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(1);
       await tests.helpers.requestLogBodyContains(str);
     });
 
-    it('The default size is 100, do truncate on 100', async () => {
+    it('Truncate request body of 100 characters', async () => {
       const str = makeString(100);
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(2);
       await tests.helpers.requestLogBodyContains('BODY HAS BEEN TRUNCATED');
     });
 
-    it('Set size to 1000', async () => {
+    it('Set log body size to 1000', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.app.client.element(inputBodySize).setValue('1000');
+      await tests.app.client.element(bodySizeInput).setValue('1000');
       await tests.helpers.closeSettingsModal();
+
+      // wait for settings save
+      await tests.app.client.pause(1000);
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'logSizeLimit',
+        1000
+      );
     });
 
-    it('The size is 1000, do not truncate on 999', async () => {
+    it('Log request full body of 999 characters', async () => {
       const str = makeString(999);
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(3);
       await tests.helpers.requestLogBodyContains(str);
     });
 
-    it('The default size is 1000, do truncate on 1000', async () => {
+    it('Truncate request body of 1000 characters', async () => {
       const str = makeString(1000);
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(4);

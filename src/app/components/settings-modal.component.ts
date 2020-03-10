@@ -19,7 +19,8 @@ export class SettingsModalComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private settingsService: SettingsService,
     private eventsService: EventsService,
-    private store: Store) { }
+    private store: Store
+  ) {}
 
   ngOnInit() {
     this.settings$ = this.store.select('settings');
@@ -27,9 +28,14 @@ export class SettingsModalComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.eventsService.settingsModalEvents.subscribe(() => {
-      this.modalService.open(this.modal, { backdrop: 'static', centered: true }).result.then(() => {
-        this.closed.emit();
-      }, () => { });
+      this.modalService
+        .open(this.modal, { backdrop: 'static', centered: true, size: 'lg' })
+        .result.then(
+          () => {
+            this.closed.emit();
+          },
+          () => {}
+        );
     });
   }
 

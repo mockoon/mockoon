@@ -8,11 +8,18 @@ import { Messages } from 'src/app/enums/messages.enum';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { MigrationService } from 'src/app/services/migration.service';
+import { OpenAPIConverterService } from 'src/app/services/openapi-converter.service';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { addEnvironmentAction, addRouteAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
-import { Export, ExportData, ExportDataEnvironment, ExportDataRoute, OldExport } from 'src/app/types/data.type';
+import {
+  Export,
+  ExportData,
+  ExportDataEnvironment,
+  ExportDataRoute,
+  OldExport
+} from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
 
@@ -36,7 +43,8 @@ export class ImportExportService {
     private eventsService: EventsService,
     private dataService: DataService,
     private migrationService: MigrationService,
-    private schemasBuilderService: SchemasBuilderService
+    private schemasBuilderService: SchemasBuilderService,
+    private openAPIConverterService: OpenAPIConverterService
   ) {}
 
   /**
@@ -45,25 +53,14 @@ export class ImportExportService {
   public async exportAllEnvironments() {
     const environments = this.store.get('environments');
 
-    const dialogResult = await this.dialog.showSaveDialog(
-      this.BrowserWindow.getFocusedWindow(),
-      {
-        filters: [{ name: 'JSON', extensions: ['json'] }],
-        title: 'Export all to JSON'
-      }
-    );
-
-    // If the user clicked 'cancel'
-    if (dialogResult.filePath === undefined) {
-      return;
-    }
+    const filePath = await this.openSaveDialog('Export all to JSON');
 
     // clone environments before exporting
     const dataToExport = cloneDeep(environments);
 
     try {
       fs.writeFile(
-        dialogResult.filePath,
+        filePath,
         this.prepareExport({ data: dataToExport, subject: 'environment' }),
         error => {
           if (error) {
@@ -144,7 +141,10 @@ export class ImportExportService {
   public async importFromFile() {
     const dialogResult = await this.dialog.showOpenDialog(
       this.BrowserWindow.getFocusedWindow(),
-      { filters: [{ name: 'JSON', extensions: ['json'] }], title: 'Import from file (JSON)' }
+      {
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+        title: 'Import from file (JSON)'
+      }
     );
 
     if (dialogResult.filePaths && dialogResult.filePaths[0]) {
@@ -174,6 +174,56 @@ export class ImportExportService {
       this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_CLIPBOARD);
     } catch (error) {
       this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_ERROR);
+    }
+  }
+
+  /**
+   * Import an OpenAPI (v2/v3) file in Mockoon's format.
+   * Append imported envs to the env array.
+   */
+  public async importOpenAPIFile() {
+    const dialogResult = await this.dialog.showOpenDialog(
+      this.BrowserWindow.getFocusedWindow(),
+      { filters: [{ name: 'OpenAPI v2/v3', extensions: ['yaml', 'json'] }] }
+    );
+
+    if (dialogResult.filePaths && dialogResult.filePaths[0]) {
+      const environment = await this.openAPIConverterService.import(
+        dialogResult.filePaths[0]
+      );
+
+      if (environment) {
+        this.store.update(addEnvironmentAction(environment));
+
+        this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);
+      }
+    }
+  }
+
+  /**
+   * Export all environments to an OpenAPI v3 file
+   */
+  public async exportOpenAPIFile() {
+    const filePath = await this.openSaveDialog('Export all to JSON');
+
+    try {
+      fs.writeFile(
+        filePath,
+        this.openAPIConverterService.export(this.store.getActiveEnvironment()),
+        error => {
+          if (error) {
+            this.toastService.addToast('error', Errors.EXPORT_ERROR);
+          } else {
+            this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
+
+            this.eventsService.analyticsEvents.next(
+              AnalyticsEvents.EXPORT_FILE
+            );
+          }
+        }
+      );
+    } catch (error) {
+      this.toastService.addToast('error', Errors.EXPORT_ERROR);
     }
   }
 
@@ -317,5 +367,24 @@ export class ImportExportService {
     } else {
       return importedData as Export;
     }
+  }
+
+  /**
+   * Open the save dialog
+   */
+  private async openSaveDialog(title: string): Promise<string | null> {
+    const dialogResult = await this.dialog.showSaveDialog(
+      this.BrowserWindow.getFocusedWindow(),
+      {
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+        title: title
+      }
+    );
+
+    if (dialogResult.canceled) {
+      return null;
+    }
+
+    return dialogResult.filePath;
   }
 }

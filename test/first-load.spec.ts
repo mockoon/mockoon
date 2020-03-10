@@ -11,10 +11,21 @@ describe('First load', () => {
   });
 
   it('Show welcome modal', async () => {
-    await tests.app.client.waitUntilTextExists('.modal-title', 'Welcome new Mockoon user!');
+    await tests.app.client.waitUntilTextExists(
+      '.modal-title',
+      'Welcome new Mockoon user!'
+    );
   });
 
-  it('Close welcome modal', async () => {
+  it('Close welcome modal, check for persistence', async () => {
     await tests.app.client.element('.modal-footer .btn').click();
+
+    // wait for settings save
+    await tests.app.client.pause(1000);
+    await tests.helpers.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      'welcomeShown',
+      true
+    );
   });
 });

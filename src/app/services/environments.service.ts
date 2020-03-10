@@ -106,7 +106,7 @@ export class EnvironmentsService {
 
       newEnvironment = this.dataService.renewEnvironmentUUIDs(newEnvironment);
 
-      this.store.update(addEnvironmentAction(newEnvironment));
+      this.store.update(addEnvironmentAction(newEnvironment, environmentToDuplicate.uuid));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
 
@@ -160,7 +160,7 @@ export class EnvironmentsService {
 
       newRoute = this.dataService.renewRouteUUIDs(newRoute);
 
-      this.store.update(addRouteAction(newRoute));
+      this.store.update(addRouteAction(newRoute, routeToDuplicate.uuid));
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ROUTE);
       this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
