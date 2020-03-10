@@ -314,7 +314,7 @@ export class Helpers {
   }
 
   async httpCallAsserterWithPort(httpCall: HttpCall, port: number) {
-    await fetch({
+    const response = await fetch({
       protocol: 'http',
       port: port,
       path: httpCall.path,
@@ -322,17 +322,23 @@ export class Helpers {
       headers: httpCall.headers,
       body: httpCall.body,
       cookie: httpCall.cookie
-    }).should.eventually.deep.include(
-      Object.keys(httpCall.testedProperties).reduce(
-        (propertiesToTest, propertyName) => {
-          return {
-            ...propertiesToTest,
-            [propertyName]: httpCall.testedProperties[propertyName]
-          };
-        },
-        {}
-      )
-    );
+    });
+
+    if (httpCall.testedResponse) {
+      Object.keys(httpCall.testedResponse).forEach(propertyName => {
+        if (propertyName === 'headers') {
+          expect(response[propertyName]).to.include(
+            httpCall.testedResponse[propertyName]
+          );
+        } else {
+          expect(response[propertyName]).to.equal(
+            httpCall.testedResponse[propertyName]
+          );
+        }
+      });
+    } else {
+      return response;
+    }
   }
 
   async httpCallAsserter(httpCall: HttpCall) {

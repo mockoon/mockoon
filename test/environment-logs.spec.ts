@@ -9,7 +9,7 @@ const cases: HttpCall[] = [
     description: 'Call GET answer',
     path: '/answer',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       body: '42',
       status: 200
     }
@@ -19,7 +19,7 @@ const cases: HttpCall[] = [
     description: 'Call GET test',
     path: '/test',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 404
     }
   }

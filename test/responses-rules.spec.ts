@@ -22,7 +22,7 @@ describe('Responses rules', () => {
       await tests.helpers.httpCallAsserter({
         path: '/users/1',
         method: 'GET',
-        testedProperties: {
+        testedResponse: {
           status: 500
         }
       });
@@ -40,7 +40,7 @@ describe('Responses rules', () => {
       await tests.helpers.httpCallAsserter({
         path: '/users/10',
         method: 'GET',
-        testedProperties: {
+        testedResponse: {
           status: 200
         }
       });
@@ -58,7 +58,7 @@ describe('Responses rules', () => {
       await tests.helpers.httpCallAsserter({
         path: '/users/10?userid=5',
         method: 'GET',
-        testedProperties: {
+        testedResponse: {
           status: 500
         }
       });
@@ -76,7 +76,7 @@ describe('Responses rules', () => {
         path: '/users/1234',
         headers: { Accept: 'application/xhtml+xml' },
         method: 'GET',
-        testedProperties: {
+        testedResponse: {
           status: 500
         }
       });
@@ -95,7 +95,7 @@ describe('Responses rules', () => {
         description: 'Query string object with regex',
         path: '/rules/query?obj[prop1]=value1&obj[prop2]=value2',
         method: 'GET',
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '1'
         }
@@ -104,7 +104,7 @@ describe('Responses rules', () => {
         description: 'Query string array with regex',
         path: '/rules/query?array[]=test1&array[]=test2',
         method: 'GET',
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '2'
         }
@@ -113,7 +113,7 @@ describe('Responses rules', () => {
         description: 'Route param with regex',
         path: '/rules/100',
         method: 'GET',
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '3'
         }
@@ -125,7 +125,7 @@ describe('Responses rules', () => {
         headers: {
           'Accept-Charset': 'UTF-8'
         },
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '4'
         }
@@ -137,7 +137,7 @@ describe('Responses rules', () => {
         headers: {
           'Accept-Charset': 'UTF-16'
         },
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '5'
         }
@@ -150,7 +150,7 @@ describe('Responses rules', () => {
           'Content-Type': 'application/json'
         },
         body: { name: 'john' },
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '6'
         }
@@ -163,7 +163,7 @@ describe('Responses rules', () => {
           'Content-Type': 'application/json'
         },
         body: { user: [{ name: 'John' }] },
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '7'
         }
@@ -176,7 +176,7 @@ describe('Responses rules', () => {
           'Content-Type': 'application/json'
         },
         body: { users: ['John', 'Johnny', 'Paul'] },
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '8'
         }
@@ -189,7 +189,7 @@ describe('Responses rules', () => {
           'Content-Type': 'application/json'
         },
         body: { users: ['Bob', 'Rick', 'Richard'] },
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '9'
         }
@@ -202,7 +202,7 @@ describe('Responses rules', () => {
           'Content-Type': 'application/json;charset=UTF-8'
         },
         body: { test: 'test' },
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '10'
         }
@@ -215,7 +215,7 @@ describe('Responses rules', () => {
           'Content-Type': 'application/json'
         },
         body: { test: 1 },
-        testedProperties: {
+        testedResponse: {
           status: 200,
           body: '11'
         }

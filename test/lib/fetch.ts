@@ -1,3 +1,5 @@
+import { HttpCallResponse } from 'test/lib/types';
+
 export const fetch = (params: {
   protocol: 'http' | 'https';
   port: number;
@@ -6,7 +8,7 @@ export const fetch = (params: {
   headers: { [key in string]: string };
   body: any;
   cookie: string;
-}) => {
+}): Promise<HttpCallResponse> => {
   const data = JSON.stringify(params.body || {});
 
   return new Promise((resolve, reject) => {

@@ -17,10 +17,19 @@ import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
-import { logRequestAction, logResponseAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
+import {
+  logRequestAction,
+  logResponseAction,
+  updateEnvironmentStatusAction
+} from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
-import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
+import {
+  CORSHeaders,
+  Header,
+  mimeTypesWithTemplating,
+  Route
+} from 'src/app/types/route.type';
 import { URL } from 'url';
 import * as uuid from 'uuid/v1';
 import { IEnhancedRequest } from '../types/misc.type';
@@ -40,7 +49,7 @@ export class ServerService {
     private dataService: DataService,
     private store: Store,
     private eventsService: EventsService
-  ) { }
+  ) {}
 
   /**
    * Start an environment / server
@@ -49,6 +58,9 @@ export class ServerService {
    */
   public start(environment: Environment) {
     const server = express();
+    server.disable('x-powered-by');
+    server.disable('etag');
+
     let serverInstance;
 
     // create https or http server instance
@@ -61,7 +73,9 @@ export class ServerService {
     // listen to port
     serverInstance.listen(environment.port, () => {
       this.instances[environment.uuid] = serverInstance;
-      this.store.update(updateEnvironmentStatusAction({ running: true, needRestart: false }));
+      this.store.update(
+        updateEnvironmentStatusAction({ running: true, needRestart: false })
+      );
     });
 
     // apply middlewares
@@ -102,7 +116,9 @@ export class ServerService {
     if (instance) {
       instance.kill(() => {
         delete this.instances[environmentUUID];
-        this.store.update(updateEnvironmentStatusAction({ running: false, needRestart: false }));
+        this.store.update(
+          updateEnvironmentStatusAction({ running: false, needRestart: false })
+        );
       });
     }
   }
@@ -113,7 +129,10 @@ export class ServerService {
    * @param headerName
    */
   public testHeaderValidity(headerName: string) {
-    if (headerName && headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)) {
+    if (
+      headerName &&
+      headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)
+    ) {
       return true;
     }
 
@@ -130,12 +149,17 @@ export class ServerService {
   private setCors(server: Application, environment: Environment) {
     if (environment.cors) {
       server.options('/*', (req, res) => {
-        const environmentSelected = this.store.getEnvironmentByUUID(environment.uuid);
+        const environmentSelected = this.store.getEnvironmentByUUID(
+          environment.uuid
+        );
 
         // override default CORS headers with environment's headers
-        this.setHeaders([...CORSHeaders, ...environmentSelected.headers], (header) => {
-          res.set(header.key, DummyJSONParser(header.value, req));
-        });
+        this.setHeaders(
+          [...CORSHeaders, ...environmentSelected.headers],
+          header => {
+            res.set(header.key, DummyJSONParser(header.value, req));
+          }
+        );
 
         res.send(200);
       });
@@ -150,100 +174,154 @@ export class ServerService {
    */
   private setRoutes(server: Application, environment: Environment) {
     environment.routes.forEach((declaredRoute: Route) => {
-      const duplicatedRoutes = this.store.get('duplicatedRoutes')[environment.uuid];
+      const duplicatedRoutes = this.store.get('duplicatedRoutes')[
+        environment.uuid
+      ];
 
       // only launch non duplicated routes
-      if ((!duplicatedRoutes || !duplicatedRoutes.has(declaredRoute.uuid)) && declaredRoute.enabled) {
+      if (
+        (!duplicatedRoutes || !duplicatedRoutes.has(declaredRoute.uuid)) &&
+        declaredRoute.enabled
+      ) {
         try {
           // create route
-          server[declaredRoute.method]('/' + ((environment.endpointPrefix) ? environment.endpointPrefix + '/' : '') + declaredRoute.endpoint.replace(/ /g, '%20'), (req, res) => {
-            const currentEnvironment = this.store.getEnvironmentByUUID(environment.uuid);
-            const currentRoute = currentEnvironment.routes.find(route => route.uuid === declaredRoute.uuid);
-            const enabledRouteResponse = new ResponseRulesInterpreter(currentRoute.responses, req).chooseResponse();
+          server[declaredRoute.method](
+            '/' +
+              (environment.endpointPrefix
+                ? environment.endpointPrefix + '/'
+                : '') +
+              declaredRoute.endpoint.replace(/ /g, '%20'),
+            (req, res) => {
+              const currentEnvironment = this.store.getEnvironmentByUUID(
+                environment.uuid
+              );
+              const currentRoute = currentEnvironment.routes.find(
+                route => route.uuid === declaredRoute.uuid
+              );
+              const enabledRouteResponse = new ResponseRulesInterpreter(
+                currentRoute.responses,
+                req
+              ).chooseResponse();
 
-            // add route latency if any
-            setTimeout(() => {
-              const routeContentType = GetRouteResponseContentType(currentEnvironment, enabledRouteResponse);
+              // add route latency if any
+              setTimeout(() => {
+                const routeContentType = GetRouteResponseContentType(
+                  currentEnvironment,
+                  enabledRouteResponse
+                );
 
-              // set http code
-              res.status(enabledRouteResponse.statusCode as unknown as number);
+                // set http code
+                res.status(
+                  (enabledRouteResponse.statusCode as unknown) as number
+                );
 
-              this.setHeaders(enabledRouteResponse.headers, (header) => {
-                res.set(header.key, DummyJSONParser(header.value, req));
-              });
+                this.setHeaders(enabledRouteResponse.headers, header => {
+                  res.set(header.key, DummyJSONParser(header.value, req));
+                });
 
-              // send the file
-              if (enabledRouteResponse.filePath) {
-                let filePath: string;
+                // send the file
+                if (enabledRouteResponse.filePath) {
+                  let filePath: string;
 
-                // throw error or serve file
-                try {
-                  filePath = DummyJSONParser(enabledRouteResponse.filePath, req);
-                  const fileMimeType = mimeTypes.lookup(enabledRouteResponse.filePath);
-
-                  // if no route content type set to the one detected
-                  if (!routeContentType) {
-                    res.set('Content-Type', fileMimeType);
-                  }
-
-                  let fileContent: Buffer | string = fs.readFileSync(filePath);
-
-                  // parse templating for a limited list of mime types
-                  if (mimeTypesWithTemplating.indexOf(fileMimeType) > -1) {
-                    fileContent = DummyJSONParser(fileContent.toString('utf-8', 0, fileContent.length), req);
-                  }
-
-                  if (!enabledRouteResponse.sendFileAsBody) {
-                    res.set('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
-                  }
-                  res.send(fileContent);
-                } catch (error) {
-                  if (error.code === 'ENOENT') {
-                    this.sendError(res, Errors.FILE_NOT_EXISTS + filePath, false);
-                  } else if (error.message.indexOf('Parse error') > -1) {
-                    this.sendError(res, Errors.TEMPLATE_PARSE, false);
-                  }
-                  res.end();
-                }
-              } else {
-                // detect if content type is json in order to parse
-                if (routeContentType.includes('application/json')) {
+                  // throw error or serve file
                   try {
-                    res.json(JSON.parse(DummyJSONParser(enabledRouteResponse.body, req)));
+                    filePath = DummyJSONParser(
+                      enabledRouteResponse.filePath,
+                      req
+                    );
+                    const fileMimeType = mimeTypes.lookup(
+                      enabledRouteResponse.filePath
+                    );
+
+                    // if no route content type set to the one detected
+                    if (!routeContentType) {
+                      res.set('Content-Type', fileMimeType);
+                    }
+
+                    let fileContent: Buffer | string = fs.readFileSync(
+                      filePath
+                    );
+
+                    // parse templating for a limited list of mime types
+                    if (mimeTypesWithTemplating.indexOf(fileMimeType) > -1) {
+                      fileContent = DummyJSONParser(
+                        fileContent.toString('utf-8', 0, fileContent.length),
+                        req
+                      );
+                    }
+
+                    if (!enabledRouteResponse.sendFileAsBody) {
+                      res.set(
+                        'Content-Disposition',
+                        `attachment; filename="${path.basename(filePath)}"`
+                      );
+                    }
+                    res.send(fileContent);
                   } catch (error) {
-                    // if JSON parsing error send plain text error
-                    if (error.message.indexOf('Unexpected token') > -1 || error.message.indexOf('Parse error') > -1) {
-                      this.sendError(res, Errors.JSON_PARSE);
-                    } else if (error.message.indexOf('Missing helper') > -1) {
-                      this.sendError(res, Errors.MISSING_HELPER + error.message.split('"')[1]);
+                    if (error.code === 'ENOENT') {
+                      this.sendError(
+                        res,
+                        Errors.FILE_NOT_EXISTS + filePath,
+                        false
+                      );
+                    } else if (error.message.indexOf('Parse error') > -1) {
+                      this.sendError(res, Errors.TEMPLATE_PARSE, false);
                     }
                     res.end();
                   }
                 } else {
-                  try {
-                    res.send(DummyJSONParser(enabledRouteResponse.body, req));
-                  } catch (error) {
-                    // if invalid Content-Type provided
-                    if (error.message.indexOf('invalid media type') > -1) {
-                      this.sendError(res, Errors.INVALID_CONTENT_TYPE);
+                  // detect if content type is json in order to parse
+                  if (routeContentType.includes('application/json')) {
+                    try {
+                      res.json(
+                        JSON.parse(
+                          DummyJSONParser(enabledRouteResponse.body, req)
+                        )
+                      );
+                    } catch (error) {
+                      // if JSON parsing error send plain text error
+                      if (
+                        error.message.indexOf('Unexpected token') > -1 ||
+                        error.message.indexOf('Parse error') > -1
+                      ) {
+                        this.sendError(res, Errors.JSON_PARSE);
+                      } else if (error.message.indexOf('Missing helper') > -1) {
+                        this.sendError(
+                          res,
+                          Errors.MISSING_HELPER + error.message.split('"')[1]
+                        );
+                      }
+                      res.end();
                     }
-                    res.end();
+                  } else {
+                    try {
+                      res.send(DummyJSONParser(enabledRouteResponse.body, req));
+                    } catch (error) {
+                      // if invalid Content-Type provided
+                      if (error.message.indexOf('invalid media type') > -1) {
+                        this.sendError(res, Errors.INVALID_CONTENT_TYPE);
+                      }
+                      res.end();
+                    }
                   }
                 }
-              }
-            }, enabledRouteResponse.latency);
-          });
+              }, enabledRouteResponse.latency);
+            }
+          );
         } catch (error) {
           // if invalid regex defined
           if (error.message.indexOf('Invalid regular expression') > -1) {
-            this.toastService.addToast('error', Errors.INVALID_ROUTE_REGEX + declaredRoute.endpoint);
+            this.toastService.addToast(
+              'error',
+              Errors.INVALID_ROUTE_REGEX + declaredRoute.endpoint
+            );
           }
         }
       }
     });
   }
 
-    /**
+  /**
    * Ensure that environment headers & proxy headers are returned in response headers
    *
    * @param server - the server serving responses
@@ -251,8 +329,7 @@ export class ServerService {
    */
   private setResponseHeaders(server: any, environment: Environment) {
     server.use((req, res, next) => {
-      const headers = [...environment.headers, ...environment.proxyResHeaders];
-      this.setHeaders(headers, (header) => {
+      this.setHeaders(environment.headers, header => {
         res.setHeader(header.key, DummyJSONParser(header.value, req));
       });
 
@@ -266,8 +343,11 @@ export class ServerService {
    * @param headers
    * @param setterFn
    */
-  private setHeaders(headers: Partial<Header>[], setterFn: ( header: Partial<Header> ) => any) {
-    headers.forEach((header) => {
+  private setHeaders(
+    headers: Partial<Header>[],
+    setterFn: (header: Partial<Header>) => any
+  ) {
+    headers.forEach(header => {
       if (header.key && header.value && !this.testHeaderValidity(header.key)) {
         setterFn(header);
       }
@@ -299,12 +379,16 @@ export class ServerService {
    */
   private enableProxy(server: Application, environment: Environment) {
     // Add catch all proxy if enabled
-    if (environment.proxyMode && environment.proxyHost && this.isValidURL(environment.proxyHost)) {
+    if (
+      environment.proxyMode &&
+      environment.proxyHost &&
+      this.isValidURL(environment.proxyHost)
+    ) {
       // res-stream the body (intercepted by body parser method) and mark as proxied
       const processRequest = (proxyReq, req, res, options) => {
         req.proxied = true;
 
-        this.setHeaders(environment.proxyReqHeaders, (header) => {
+        this.setHeaders(environment.proxyReqHeaders, header => {
           proxyReq.setHeader(header.key, DummyJSONParser(header.value, req));
         });
 
@@ -318,39 +402,66 @@ export class ServerService {
       // logging the proxied response
       const self = this;
       const processResponse = (proxyRes, req, res) => {
-        const combinedHeaders = {...res.getHeaders(), ...proxyRes.headers};
+        const combinedHeaders = {
+          ...res.getHeaders(),
+          ...proxyRes.headers,
+          ...environment.proxyResHeaders.reduce(
+            (headers, proxyResHeader) => ({
+              ...headers,
+              [proxyResHeader.key]: proxyResHeader.value
+            }),
+            {}
+          )
+        };
 
         let body = '';
-        proxyRes.on('data', (chunk) => {
+        proxyRes.on('data', chunk => {
           body += chunk;
         });
         proxyRes.on('end', () => {
-          proxyRes.getHeaders = function () {
+          proxyRes.getHeaders = function() {
             return combinedHeaders;
           };
           const enhancedReq = req as IEnhancedRequest;
-          const response = self.dataService.formatResponseLog(proxyRes, body, enhancedReq.uuid);
+          const response = self.dataService.formatResponseLog(
+            proxyRes,
+            body,
+            enhancedReq.uuid
+          );
           self.store.update(logResponseAction(environment.uuid, response));
+        });
+
+        this.setHeaders(environment.proxyResHeaders, header => {
+          proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
         });
       };
 
       const logErrorResponse = (err, req, res) => {
         // the response is logged by the overrided function
-        res.status(504).send('Error occured while trying to proxy to: ' + req.url);
+        res
+          .status(504)
+          .send('Error occured while trying to proxy to: ' + req.url);
       };
 
-      server.use('*', proxy({
-        target: environment.proxyHost,
-        secure: false,
-        changeOrigin: true,
-        ssl: { ...httpsConfig, agent: false },
-        onProxyReq: processRequest,
-        onProxyRes: processResponse,
-        onError: logErrorResponse
-      }));
+      server.use(
+        '*',
+        proxy({
+          target: environment.proxyHost,
+          secure: false,
+          changeOrigin: true,
+          ssl: { ...httpsConfig, agent: false },
+          onProxyReq: processRequest,
+          onProxyRes: processResponse,
+          onError: logErrorResponse
+        })
+      );
     } else {
       // if not proxy, log the 404 response
-      server.use(function (req, res, next) {
+      server.use((req, res, next) => {
+        this.setHeaders(environment.headers, header => {
+          res.setHeader(header.key, DummyJSONParser(header.value, req));
+        });
+
         // the send function is logging the response
         return res.status(404).send('Cannot ' + req.method + ' ' + req.url);
       });
@@ -385,10 +496,14 @@ export class ServerService {
       const oldSend = res.send;
 
       const self = this;
-      res.send = function (body) {
+      res.send = function(body) {
         oldSend.apply(res, arguments);
         const enhancedReq = this.req as IEnhancedRequest;
-        const responseLog = self.dataService.formatResponseLog(this, body, enhancedReq.uuid);
+        const responseLog = self.dataService.formatResponseLog(
+          this,
+          body,
+          enhancedReq.uuid
+        );
         self.store.update(logResponseAction(environment.uuid, responseLog));
       };
 
@@ -418,7 +533,9 @@ export class ServerService {
    */
   private setEnvironmentLatency(server: Application, environmentUUID: string) {
     server.use((req, res, next) => {
-      const environmentSelected = this.store.getEnvironmentByUUID(environmentUUID);
+      const environmentSelected = this.store.getEnvironmentByUUID(
+        environmentUUID
+      );
       setTimeout(next, environmentSelected.latency);
     });
   }

@@ -1,0 +1,57 @@
+[
+  {
+    "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
+    "lastMigration": 10,
+    "name": "FT env",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3000,
+    "routes": [
+      {
+        "uuid": "9e7d8774-a720-4178-889c-75c5b004dec5",
+        "method": "get",
+        "endpoint": "headers",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "ed529d3c-c546-4939-b672-810e2d25427d",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "route-header",
+                "value": "route-header"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "text/plain"
+      },
+      {
+        "key": "global-header",
+        "value": "global-header"
+      }
+    ],
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
+  }
+]

@@ -8,7 +8,7 @@ const cases: HttpCall[] = [
     description: 'Call GET /answer',
     path: '/answer',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: '42'
     }
@@ -17,7 +17,7 @@ const cases: HttpCall[] = [
     description: 'Call GET /abc/testvar/ac/1234',
     path: '/abc/testvar/ac/1234',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: '{"response":"testvar"}'
     }
@@ -26,7 +26,7 @@ const cases: HttpCall[] = [
     description: 'Call GET /ac/hello/abc/0',
     path: '/ac/hello/abc/0',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: '{"response":"hello"}'
     }
@@ -35,7 +35,7 @@ const cases: HttpCall[] = [
     description: 'Call POST /dolphins',
     path: '/dolphins',
     method: 'POST',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: '{"response":"So Long, and Thanks for All the Fish"}'
     }
