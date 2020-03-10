@@ -9,7 +9,7 @@ const cases: HttpCall[] = [
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     body: { test: { paths: [{ item: 'testitem' }] } },
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'testitem'
     }
@@ -20,7 +20,7 @@ const cases: HttpCall[] = [
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     body: { test: { paths: [{ item1: 'testitem' }] } },
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'defaultitem'
     }
@@ -31,7 +31,7 @@ const cases: HttpCall[] = [
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     body: { param1: 'testparam1' },
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'testparam1'
     }
@@ -40,7 +40,7 @@ const cases: HttpCall[] = [
     description: 'Helper: urlParam',
     path: '/urlparam/testurlparam1',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'testurlparam1'
     }
@@ -49,7 +49,7 @@ const cases: HttpCall[] = [
     description: 'Helper: queryParam',
     path: '/queryparam?queryparam1=testqueryparam1',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'testqueryparam1'
     }
@@ -58,7 +58,7 @@ const cases: HttpCall[] = [
     description: 'Helper: queryParam (default value)',
     path: '/queryparam?queryparam2=testqueryparam2',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'defaultqueryparam'
     }
@@ -68,7 +68,7 @@ const cases: HttpCall[] = [
     path: '/header',
     headers: { header1: 'testheader1' },
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'testheader1'
     }
@@ -78,7 +78,7 @@ const cases: HttpCall[] = [
     path: '/header',
     headers: { header2: 'testheader2' },
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'defaultheader'
     }
@@ -88,7 +88,7 @@ const cases: HttpCall[] = [
     path: '/cookie',
     method: 'GET',
     cookie: 'cookie1=testcookie1',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'testcookie1'
     }
@@ -98,7 +98,7 @@ const cases: HttpCall[] = [
     path: '/cookie',
     method: 'GET',
     cookie: 'cookie2=testcookie2',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'defaultcookie'
     }
@@ -107,7 +107,7 @@ const cases: HttpCall[] = [
     description: 'Helper: hostname',
     path: '/hostname',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'localhost'
     }
@@ -116,7 +116,7 @@ const cases: HttpCall[] = [
     description: 'Helper: ip',
     path: '/ip',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: '::ffff:127.0.0.1'
     }
@@ -125,7 +125,7 @@ const cases: HttpCall[] = [
     description: 'Helper: method',
     path: '/method',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'GET'
     }
@@ -134,7 +134,7 @@ const cases: HttpCall[] = [
     description: 'Helper: oneOf',
     path: '/oneof',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'testitem1'
     }
@@ -143,7 +143,7 @@ const cases: HttpCall[] = [
     description: 'Helper: someOf',
     path: '/someof',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: 'testitem,testitem'
     }
@@ -152,7 +152,7 @@ const cases: HttpCall[] = [
     description: 'Helper: someOf (as array)',
     path: '/someofarray',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: '[&quot;testitem&quot;,&quot;testitem&quot;]'
     }
@@ -161,7 +161,7 @@ const cases: HttpCall[] = [
     description: 'Helper: now',
     path: '/now',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       status: 200,
       body: dateFormat(new Date(), 'YYYY-MM-DD')
     }
