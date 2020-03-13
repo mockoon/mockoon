@@ -59,7 +59,7 @@ export class EnvironmentLogsComponent implements OnInit {
     this.headersCollapsed = false;
     this.routeParamsCollapsed = false;
     this.queryParamsCollapsed = false;
-    this.bodyCollapsed = true;
+    this.bodyCollapsed = false;
     this.responseGeneralCollapsed = false;
     this.responseHeadersCollapsed = false;
     this.responseBodyCollapsed = false;
