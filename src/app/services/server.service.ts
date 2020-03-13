@@ -61,7 +61,7 @@ export class ServerService {
     server.disable('x-powered-by');
     server.disable('etag');
 
-    let serverInstance;
+    let serverInstance: http.Server | https.Server;
 
     // create https or http server instance
     if (environment.https) {
@@ -69,6 +69,9 @@ export class ServerService {
     } else {
       serverInstance = http.createServer(server);
     }
+
+    // set timeout long enough to allow long latencies
+    serverInstance.setTimeout(3_600_000);
 
     // listen to port
     serverInstance.listen(environment.port, () => {
