@@ -1,7 +1,11 @@
 import { Request } from 'express';
 import * as objectPath from 'object-path';
 import * as queryString from 'querystring';
-import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/route.type';
+import {
+  ResponseRule,
+  ResponseRuleTargets,
+  RouteResponse
+} from 'src/app/types/route.type';
 
 /**
  * Interpretor for the route response rules.
@@ -44,6 +48,10 @@ export class ResponseRulesInterpreter {
       value = this.request.header(rule.modifier);
     } else {
       value = objectPath.ensureExists(this.targets[rule.target], rule.modifier);
+    }
+
+    if (value === undefined) {
+      return false;
     }
 
     let regex: RegExp;
