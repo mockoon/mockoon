@@ -1,6 +1,6 @@
 [
   {
-    "uuid": "9f3be32e-8a43-4d89-9458-9c254cdbf79e",
+    "uuid": "e8463b18-ef78-46ec-b288-a7ee23e892ec",
     "lastMigration": 10,
     "name": "FT env",
     "endpointPrefix": "",
@@ -8,14 +8,14 @@
     "port": 3000,
     "routes": [
       {
-        "uuid": "f7f4ec17-b987-49e5-9dd9-05e37e780fef",
+        "uuid": "798b0686-59a2-4d0d-8920-8a97f90c9d53",
         "method": "get",
         "endpoint": "users/:userid",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "54bbe6c7-1bbe-46be-8e20-a62e6d6a1353",
+            "uuid": "c47c898e-d11b-45ef-aa89-a9e35966781a",
             "body": "{}",
             "latency": 0,
             "statusCode": "500",
@@ -33,14 +33,14 @@
         ]
       },
       {
-        "uuid": "262b95f1-e0a1-4e96-b848-9c888c248d08",
+        "uuid": "29c06e19-f13b-47f7-af0f-c3606ec4ad27",
         "method": "get",
         "endpoint": "rules/:id",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "ecb665cf-50c2-4e33-a3f5-6fb9e04f4b97",
+            "uuid": "7b619bca-4cf6-4802-8ad6-e079b25b02f9",
             "body": "0",
             "latency": 0,
             "statusCode": "404",
@@ -56,7 +56,7 @@
             "rules": []
           },
           {
-            "uuid": "6d7fe805-941c-489a-b883-6de4b11b03da",
+            "uuid": "41ee0b64-8b28-42bf-a8a9-636377d1f7e1",
             "body": "1",
             "latency": 0,
             "statusCode": "200",
@@ -79,7 +79,7 @@
             ]
           },
           {
-            "uuid": "f59b5907-0e61-4310-96d0-6dee5ca23585",
+            "uuid": "326174f3-7ef8-4f33-a1f7-bd560f16b44b",
             "body": "2",
             "latency": 0,
             "statusCode": "200",
@@ -102,7 +102,7 @@
             ]
           },
           {
-            "uuid": "ef69b86d-78fa-4913-b5f8-246f4d68ec95",
+            "uuid": "6882c03e-3b42-447e-b4bd-3eba324bddae",
             "body": "3",
             "latency": 0,
             "statusCode": "200",
@@ -125,7 +125,7 @@
             ]
           },
           {
-            "uuid": "ea676b0d-45f8-4a32-bc8a-e61fe545e7dd",
+            "uuid": "b0aa0a5e-f7bb-4cb5-961e-42b41d0c0bcd",
             "body": "4",
             "latency": 0,
             "statusCode": "200",
@@ -148,7 +148,7 @@
             ]
           },
           {
-            "uuid": "479147f9-a130-40b5-8533-8dd0d2e75603",
+            "uuid": "9611a47d-0cbe-4ffb-954a-a085cca8c238",
             "body": "5",
             "latency": 0,
             "statusCode": "200",
@@ -171,7 +171,7 @@
             ]
           },
           {
-            "uuid": "5568e424-cdab-495c-a4bc-9b090c70bd68",
+            "uuid": "d490d66e-d47b-4ea8-81a8-dd4d04f8a74e",
             "body": "6",
             "latency": 0,
             "statusCode": "200",
@@ -194,7 +194,7 @@
             ]
           },
           {
-            "uuid": "bd254230-37c0-4027-a070-49193baae0ca",
+            "uuid": "039cd461-a162-490e-817e-eb3ec0775529",
             "body": "7",
             "latency": 0,
             "statusCode": "200",
@@ -217,7 +217,7 @@
             ]
           },
           {
-            "uuid": "75fa3d98-2cb9-4349-bbda-1c2bcec63977",
+            "uuid": "5fc6c3d5-ac7a-4f02-9b11-57e9b54eba06",
             "body": "8",
             "latency": 0,
             "statusCode": "200",
@@ -240,8 +240,31 @@
             ]
           },
           {
-            "uuid": "394e2e67-c11c-410a-881a-1fcff2659420",
+            "uuid": "43a4cc0d-9f58-4bf2-95a7-43ee715b1ad6",
             "body": "9",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "user",
+                "value": "^Ric",
+                "isRegex": true
+              }
+            ]
+          },
+          {
+            "uuid": "15b8cbc8-52bb-42e9-9898-de5523c2baff",
+            "body": "10",
             "latency": 0,
             "statusCode": "200",
             "label": "",
@@ -263,8 +286,8 @@
             ]
           },
           {
-            "uuid": "af10eb1a-5fd6-4959-95a7-5ee5e97a785b",
-            "body": "10",
+            "uuid": "2f56e45b-e5fa-4bcc-ac9c-fbb9fe7971b0",
+            "body": "11",
             "latency": 0,
             "statusCode": "200",
             "label": "",
@@ -286,8 +309,8 @@
             ]
           },
           {
-            "uuid": "f9676b08-2f1b-49bf-90ef-05dc068bed49",
-            "body": "11",
+            "uuid": "8b2ac231-1d0e-4d83-be14-fd825c01f928",
+            "body": "12",
             "latency": 0,
             "statusCode": "200",
             "label": "",

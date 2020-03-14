@@ -182,6 +182,32 @@ describe('Responses rules', () => {
         }
       },
       {
+        description: 'Body property with regex',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: { user: 'Richard' },
+        testedResponse: {
+          status: 200,
+          body: '9'
+        }
+      },
+      {
+        description: 'Body path to non existing property with regex',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: {},
+        testedResponse: {
+          status: 404,
+          body: '0'
+        }
+      },
+      {
         description: 'Body path to array with regex',
         path: '/rules/2',
         method: 'GET',
@@ -191,7 +217,7 @@ describe('Responses rules', () => {
         body: { users: ['Bob', 'Rick', 'Richard'] },
         testedResponse: {
           status: 200,
-          body: '9'
+          body: '10'
         }
       },
       {
@@ -204,7 +230,7 @@ describe('Responses rules', () => {
         body: { test: 'test' },
         testedResponse: {
           status: 200,
-          body: '10'
+          body: '11'
         }
       },
       {
@@ -217,7 +243,7 @@ describe('Responses rules', () => {
         body: { test: 1 },
         testedResponse: {
           status: 200,
-          body: '11'
+          body: '12'
         }
       }
     ];
