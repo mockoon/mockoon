@@ -47,7 +47,7 @@ export class ResponseRulesInterpreter {
     if (rule.target === 'header') {
       value = this.request.header(rule.modifier);
     } else {
-      value = objectPath.ensureExists(this.targets[rule.target], rule.modifier);
+      value = objectPath.get(this.targets[rule.target], rule.modifier);
     }
 
     if (value === undefined) {
