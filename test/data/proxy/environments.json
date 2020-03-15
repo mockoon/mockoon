@@ -49,6 +49,10 @@
               {
                 "key": "Content-Type",
                 "value": "text/plain"
+              },
+              {
+                "key": "Set-Cookie",
+                "value": "cookie1=test; expires:Wed, 01-Jan-2020 12:12:12 GMT; path=/;"
               }
             ],
             "filePath": "",
