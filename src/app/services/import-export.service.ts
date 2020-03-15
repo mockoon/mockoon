@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { clipboard, remote } from 'electron';
 import * as fs from 'fs';
 import { cloneDeep } from 'lodash';
+import { Logger } from 'src/app/classes/logger.js';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
 import { Messages } from 'src/app/enums/messages.enum';
@@ -13,13 +14,7 @@ import { SchemasBuilderService } from 'src/app/services/schemas-builder.service'
 import { ToastsService } from 'src/app/services/toasts.service';
 import { addEnvironmentAction, addRouteAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
-import {
-  Export,
-  ExportData,
-  ExportDataEnvironment,
-  ExportDataRoute,
-  OldExport
-} from 'src/app/types/data.type';
+import { Export, ExportData, ExportDataEnvironment, ExportDataRoute, OldExport } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
 
@@ -36,6 +31,7 @@ const oldVersionsMigrationTable = {
 export class ImportExportService {
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
+  private logger = new Logger('[SERVICE][IMPORT-EXPORT]');
 
   constructor(
     private store: Store,
@@ -51,6 +47,8 @@ export class ImportExportService {
    * Export all envs in a json file
    */
   public async exportAllEnvironments() {
+    this.logger.info(`Exporting all environments to a file`);
+
     const environments = this.store.get('environments');
 
     const filePath = await this.openSaveDialog('Export all to JSON');
@@ -75,6 +73,8 @@ export class ImportExportService {
         }
       );
     } catch (error) {
+      this.logger.error(`Error while exporting environments: ${error.message}`);
+
       this.toastService.addToast('error', Errors.EXPORT_ERROR);
     }
   }
@@ -85,6 +85,10 @@ export class ImportExportService {
    * @param environmentUUID
    */
   public exportEnvironmentToClipboard(environmentUUID: string) {
+    this.logger.info(
+      `Exporting environment ${environmentUUID} to the clipboard`
+    );
+
     const environment = this.store.getEnvironmentByUUID(environmentUUID);
 
     try {
@@ -95,12 +99,18 @@ export class ImportExportService {
           subject: 'environment'
         })
       );
+
       this.toastService.addToast(
         'success',
         Messages.EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS
       );
+
       this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_CLIPBOARD);
     } catch (error) {
+      this.logger.error(
+        `Error while exporting environment ${environmentUUID} to the clipboard: ${error.message}`
+      );
+
       this.toastService.addToast(
         'error',
         Errors.EXPORT_ENVIRONMENT_CLIPBOARD_ERROR
@@ -114,6 +124,8 @@ export class ImportExportService {
    * @param routeUUID
    */
   public exportRouteToClipboard(routeUUID: string) {
+    this.logger.info(`Exporting route ${routeUUID} to the clipboard`);
+
     const environment = this.store.getActiveEnvironment();
 
     try {
@@ -131,6 +143,10 @@ export class ImportExportService {
       );
       this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_CLIPBOARD);
     } catch (error) {
+      this.logger.error(
+        `Error while exporting route ${routeUUID} to the clipboard: ${error.message}`
+      );
+
       this.toastService.addToast('error', Errors.EXPORT_ROUTE_CLIPBOARD_ERROR);
     }
   }
@@ -139,6 +155,8 @@ export class ImportExportService {
    * Load data from JSON file and import
    */
   public async importFromFile() {
+    this.logger.info(`Importing from file`);
+
     const dialogResult = await this.dialog.showOpenDialog(
       this.BrowserWindow.getFocusedWindow(),
       {
@@ -148,17 +166,27 @@ export class ImportExportService {
     );
 
     if (dialogResult.filePaths && dialogResult.filePaths[0]) {
-      fs.readFile(dialogResult.filePaths[0], 'utf-8', (error, fileContent) => {
-        if (error) {
-          this.toastService.addToast('error', Errors.IMPORT_ERROR);
-        } else {
-          const importedData: Export & OldExport = JSON.parse(fileContent);
+      try {
+        fs.readFile(
+          dialogResult.filePaths[0],
+          'utf-8',
+          (error, fileContent) => {
+            if (error) {
+              this.toastService.addToast('error', Errors.IMPORT_ERROR);
+            } else {
+              const importedData: Export & OldExport = JSON.parse(fileContent);
 
-          this.import(importedData);
+              this.import(importedData);
 
-          this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);
-        }
-      });
+              this.eventsService.analyticsEvents.next(
+                AnalyticsEvents.IMPORT_FILE
+              );
+            }
+          }
+        );
+      } catch (error) {
+        this.logger.error(`Error while importing from file: ${error.message}`);
+      }
     }
   }
 
@@ -166,6 +194,8 @@ export class ImportExportService {
    * Load data from clipboard and import
    */
   public importFromClipboard() {
+    this.logger.info(`Importing from clipboard`);
+
     try {
       const importedData: Export & OldExport = JSON.parse(clipboard.readText());
 
@@ -173,6 +203,10 @@ export class ImportExportService {
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_CLIPBOARD);
     } catch (error) {
+      this.logger.info(
+        `Error while importing from clipboard: ${error.message}`
+      );
+
       this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_ERROR);
     }
   }
@@ -182,6 +216,8 @@ export class ImportExportService {
    * Append imported envs to the env array.
    */
   public async importOpenAPIFile() {
+    this.logger.info(`Importing OpenAPI file`);
+
     const dialogResult = await this.dialog.showOpenDialog(
       this.BrowserWindow.getFocusedWindow(),
       { filters: [{ name: 'OpenAPI v2/v3', extensions: ['yaml', 'json'] }] }
@@ -204,6 +240,8 @@ export class ImportExportService {
    * Export all environments to an OpenAPI v3 file
    */
   public async exportOpenAPIFile() {
+    this.logger.info(`Exporting to OpenAPI file`);
+
     const filePath = await this.openSaveDialog('Export all to JSON');
 
     try {
@@ -223,6 +261,10 @@ export class ImportExportService {
         }
       );
     } catch (error) {
+      this.logger.info(
+        `Error while exporting to OpenAPI file: ${error.message}`
+      );
+
       this.toastService.addToast('error', Errors.EXPORT_ERROR);
     }
   }
@@ -293,6 +335,8 @@ export class ImportExportService {
         data.item = this.migrationService.migrateEnvironment(data.item);
         data.item = this.dataService.renewEnvironmentUUIDs(data.item);
 
+        this.logger.info(`Importing environment ${data.item.uuid}`);
+
         this.store.update(addEnvironmentAction(data.item));
       } else if (
         // routes cannot be migrated yet so we check the appVersion
@@ -300,6 +344,8 @@ export class ImportExportService {
         dataToImportVersion === appVersion
       ) {
         data.item = this.dataService.renewRouteUUIDs(data.item);
+
+        this.logger.info(`Importing route ${data.item.uuid}`);
 
         // if has a current environment append imported route
         if (this.store.get('activeEnvironmentUUID')) {
@@ -313,6 +359,10 @@ export class ImportExportService {
           this.store.update(addEnvironmentAction(newEnvironment));
         }
       } else if (dataToImportVersion !== appVersion) {
+        this.logger.info(
+          `Route ${data.item.uuid} has incorrect version ${dataToImportVersion} and cannot be imported`
+        );
+
         this.toastService.addToast(
           'warning',
           Errors.IMPORT_INCOMPATIBLE_VERSION.replace(
