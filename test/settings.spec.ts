@@ -7,7 +7,7 @@ function generateCall(requestBody: any): HttpCall {
     path: '/dolphins',
     method: 'POST',
     body: requestBody,
-    testedProperties: {
+    testedResponse: {
       body: '{"response":"So Long, and Thanks for All the Fish"}',
       status: 200
     }

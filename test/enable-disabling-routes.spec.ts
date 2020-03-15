@@ -8,7 +8,7 @@ const getAnswerCall: HttpCall[] = [
     description: 'Call GET answer',
     path: '/answer',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       body: '42',
       status: 200
     }
@@ -16,7 +16,7 @@ const getAnswerCall: HttpCall[] = [
     description: 'Call GET answer',
     path: '/answer',
     method: 'GET',
-    testedProperties: {
+    testedResponse: {
       body: 'Cannot GET /answer',
       status: 404
     }
