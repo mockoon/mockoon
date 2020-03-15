@@ -46,3 +46,34 @@ export const GetRouteResponseContentType = (
 export const RemoveLeadingSlash = (str: string) => {
   return str.replace(/^\//g, '');
 };
+
+/**
+ * Test a header validity
+ *
+ * @param headerName
+ */
+export const TestHeaderValidity = (headerName: string) => {
+  if (
+    headerName &&
+    headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * Test if URL is valid
+ *
+ * @param URL
+ */
+export const IsValidURL = (address: string): boolean => {
+  try {
+    const myURL = new URL(address);
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+};

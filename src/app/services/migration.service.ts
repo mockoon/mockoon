@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Logger } from 'src/app/classes/logger';
 import { HighestMigrationId, Migrations } from 'src/app/libs/migrations.lib';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Environment, Environments } from 'src/app/types/environment.type';
 
 @Injectable({ providedIn: 'root' })
 export class MigrationService {
+  private logger = new Logger('[SERVICE][MIGRATION]');
+
   constructor(private settingsService: SettingsService) {}
 
   /**
@@ -13,6 +16,8 @@ export class MigrationService {
    * @param environments - environments to migrate
    */
   public migrateEnvironments(environments: Environments) {
+    this.logger.info(`Migrating all environments`);
+
     environments.forEach(environment => {
       this.migrateEnvironment(environment);
     });
@@ -28,6 +33,10 @@ export class MigrationService {
     const migrationStartId = this.getMigrationStartId(environment);
 
     if (migrationStartId > -1) {
+      this.logger.info(
+        `Migrating environment ${environment.uuid} starting at ${migrationStartId}`
+      );
+
       Migrations.forEach(migration => {
         if (migration.id > migrationStartId) {
           migration.migrationFunction(environment);
@@ -37,17 +46,6 @@ export class MigrationService {
     }
 
     return environment;
-  }
-
-  /**
-   * Get the migration with the highest Id (most recent one)
-   */
-  public getLatestMigration(): number {
-    return Migrations.reduce((lastMigrationId, migration) => {
-      if (migration.id > lastMigrationId) {
-        return migration.id;
-      }
-    }, 0);
   }
 
   /**
