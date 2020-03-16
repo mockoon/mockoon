@@ -325,9 +325,9 @@ export class EnvironmentsService {
 
       if (log.response) {
         const headers: Header[] = [];
-        log.response.headers.forEach(element => {
+        log.response.headers.forEach(header => {
           headers.push(
-            this.schemasBuilderService.buildHeader(element.name, element.value)
+            this.schemasBuilderService.buildHeader(header.name, header.value)
           );
         });
 

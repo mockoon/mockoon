@@ -13,7 +13,7 @@ import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpr
 import { Errors } from 'src/app/enums/errors.enum';
 import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
 import { ExpressMiddlewares } from 'src/app/libs/express-middlewares.lib';
-import { GetRouteResponseContentType, IsValidURL, TestHeaderValidity } from 'src/app/libs/utils.lib';
+import { GetRouteResponseContentType, HeadersArrayToObject, IsValidURL, ObjectValuesFlatten, TestHeaderValidity } from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
@@ -394,7 +394,7 @@ export class ServerService {
       IsValidURL(environment.proxyHost)
     ) {
       // res-stream the body (intercepted by body parser method) and mark as proxied
-      const processRequest = (proxyReq, req, res, options) => {
+      const processRequest = (proxyReq, req, res) => {
         req.proxied = true;
 
         this.setHeaders(environment.proxyReqHeaders, header => {
@@ -411,17 +411,12 @@ export class ServerService {
       // logging the proxied response
       const self = this;
       const processResponse = (proxyRes, req, res) => {
-        const combinedHeaders = {
+        // flatten headers as proxy might return Set-Cookie header(s) values in an array
+        const combinedHeaders = ObjectValuesFlatten({
           ...res.getHeaders(),
           ...proxyRes.headers,
-          ...environment.proxyResHeaders.reduce(
-            (headers, proxyResHeader) => ({
-              ...headers,
-              [proxyResHeader.key]: proxyResHeader.value
-            }),
-            {}
-          )
-        };
+          ...HeadersArrayToObject(environment.proxyResHeaders)
+        });
 
         let body = '';
         proxyRes.on('data', chunk => {
@@ -454,7 +449,7 @@ export class ServerService {
 
       server.use(
         '*',
-        proxy({
+        proxy(<proxy.Config>{
           target: environment.proxyHost,
           secure: false,
           changeOrigin: true,
