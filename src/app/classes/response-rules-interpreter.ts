@@ -29,6 +29,7 @@ export class ResponseRulesInterpreter {
   public chooseResponse(): RouteResponse {
     let response = this.routeResponses.find(routeResponse => {
       const andRules = routeResponse.rules[0].andRules;
+
       return andRules
         ? !!routeResponse.rules.every(this.isValidRule)
         : !!routeResponse.rules.find(this.isValidRule);
