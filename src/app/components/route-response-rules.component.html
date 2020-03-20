@@ -23,6 +23,19 @@
         <div class="input-group-prepend clickable ml-4">
           <span class="input-group-text p-1 text-danger" (click)="removeRule(ruleIndex)" ngbTooltip="Remove"><i class="material-icons">delete</i></span>
         </div>
+
+        <div *ngIf="ruleCount > 1 && ruleIndex===0" class="input-group-prepend clickable ml-4">
+          <div class="form-inline">
+            <div class="custom-control custom-radio">
+              <input class="custom-control-input" formControlName="andRules" id="orRules" type="radio" name="andRules" [value]="false">
+              <label class="custom-control-label" for="orRules">OR</label>
+            </div>
+            <div class="custom-control custom-radio ml-4">
+              <input class="custom-control-input" formControlName="andRules" id="andRules" type="radio" name="andRules" [value]="true">
+              <label class="custom-control-label" for="andRules">AND</label>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <button type="button" class="btn btn-link btn-icon mt-2" (click)="addRule()">

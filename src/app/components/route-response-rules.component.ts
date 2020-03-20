@@ -22,6 +22,10 @@ export class RouteResponseRulesComponent implements OnInit {
     { code: 'params', text: 'Route params' }
   ];
 
+  public get ruleCount(): number {
+    return this.form.get('rules')['controls'].length;
+  }
+
   constructor(
     private environmentsService: EnvironmentsService,
     private formBuilder: FormBuilder
@@ -65,7 +69,12 @@ export class RouteResponseRulesComponent implements OnInit {
     }
 
     newRules.forEach(rule => {
-      formRulesArray.push(this.formBuilder.group(<ResponseRule>{ ...rule }));
+      formRulesArray.push(
+        this.formBuilder.group(<ResponseRule>{
+          ...rule,
+          andRules: rule.andRules || false
+        })
+      );
     });
   }
 
@@ -78,7 +87,8 @@ export class RouteResponseRulesComponent implements OnInit {
         target: null,
         modifier: null,
         value: null,
-        isRegex: false
+        isRegex: false,
+        andRules: false
       })
     );
 
