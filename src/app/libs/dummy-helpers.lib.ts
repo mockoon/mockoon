@@ -3,6 +3,9 @@ import * as DummyJSON from 'dummy-json';
 import random from 'lodash/random';
 import * as objectPath from 'object-path';
 import * as queryString from 'querystring';
+import { Logger } from 'src/app/classes/logger';
+
+const logger = new Logger('[LIB][DUMMY]');
 
 /**
  * Prevents insertion of Dummy-JSON own object (last argument) when no default value is provided:
@@ -144,5 +147,9 @@ export const DummyJSONHelpers = (request) => {
  * @param request
  */
 export const DummyJSONParser = (text: string, request: any): string => {
-  return DummyJSON.parse(text, { helpers: DummyJSONHelpers(request) });
+  try {
+    return DummyJSON.parse(text, { helpers: DummyJSONHelpers(request) });
+  } catch (error) {
+    logger.error(`Error while parsing the template: ${error.message}`);
+  }
 };

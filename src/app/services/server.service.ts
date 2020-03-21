@@ -8,31 +8,22 @@ import * as https from 'https';
 import * as killable from 'killable';
 import * as mimeTypes from 'mime-types';
 import * as path from 'path';
+import { Logger } from 'src/app/classes/logger';
 import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpreter';
 import { Errors } from 'src/app/enums/errors.enum';
 import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
 import { ExpressMiddlewares } from 'src/app/libs/express-middlewares.lib';
-import { GetRouteResponseContentType } from 'src/app/libs/utils.lib';
+import { GetRouteResponseContentType, HeadersArrayToObject, IsValidURL, ObjectValuesFlatten, TestHeaderValidity } from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
-import {
-  logRequestAction,
-  logResponseAction,
-  updateEnvironmentStatusAction
-} from 'src/app/stores/actions';
+import { logRequestAction, logResponseAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
-import {
-  CORSHeaders,
-  Header,
-  mimeTypesWithTemplating,
-  Route
-} from 'src/app/types/route.type';
-import { URL } from 'url';
+import { IEnhancedRequest } from 'src/app/types/misc.type';
+import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
 import * as uuid from 'uuid/v1';
-import { IEnhancedRequest } from '../types/misc.type';
 
 const httpsConfig = {
   key: pemFiles.key,
@@ -43,6 +34,7 @@ const httpsConfig = {
 export class ServerService {
   // running servers instances
   private instances: { [key: string]: any } = {};
+  private logger = new Logger('[SERVICE][SERVER]');
 
   constructor(
     private toastService: ToastsService,
@@ -64,6 +56,10 @@ export class ServerService {
     let serverInstance: http.Server | https.Server;
 
     // create https or http server instance
+    this.logger.info(
+      `Creating ${environment.https ? 'https' : 'http'} server instance`
+    );
+
     if (environment.https) {
       serverInstance = https.createServer(httpsConfig, server);
     } else {
@@ -73,15 +69,18 @@ export class ServerService {
     // set timeout long enough to allow long latencies
     serverInstance.setTimeout(3_600_000);
 
-    // listen to port
+    this.logger.info(`Starting server on port ${environment.port}`);
     serverInstance.listen(environment.port, () => {
+      this.logger.info(
+        `Server was started successfully on port ${environment.port}`
+      );
+
       this.instances[environment.uuid] = serverInstance;
       this.store.update(
         updateEnvironmentStatusAction({ running: true, needRestart: false })
       );
     });
 
-    // apply middlewares
     ExpressMiddlewares(this.eventsService).forEach(expressMiddleware => {
       server.use(expressMiddleware);
     });
@@ -98,6 +97,10 @@ export class ServerService {
 
     // handle server errors
     serverInstance.on('error', (error: any) => {
+      this.logger.error(
+        `Error when starting the server ${environment.uuid}: ${error.message}`
+      );
+
       if (error.code === 'EADDRINUSE') {
         this.toastService.addToast('error', Errors.PORT_ALREADY_USED);
       } else if (error.code === 'EACCES') {
@@ -118,28 +121,14 @@ export class ServerService {
 
     if (instance) {
       instance.kill(() => {
+        this.logger.info(`Server ${environmentUUID} has been stopped`);
+
         delete this.instances[environmentUUID];
         this.store.update(
           updateEnvironmentStatusAction({ running: false, needRestart: false })
         );
       });
     }
-  }
-
-  /**
-   * Test a header validity
-   *
-   * @param headerName
-   */
-  public testHeaderValidity(headerName: string) {
-    if (
-      headerName &&
-      headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)
-    ) {
-      return true;
-    }
-
-    return false;
   }
 
   /**
@@ -261,6 +250,10 @@ export class ServerService {
                     }
                     res.send(fileContent);
                   } catch (error) {
+                    this.logger.error(
+                      `Error while serving the file: ${error.message}`
+                    );
+
                     if (error.code === 'ENOENT') {
                       this.sendError(
                         res,
@@ -270,6 +263,7 @@ export class ServerService {
                     } else if (error.message.indexOf('Parse error') > -1) {
                       this.sendError(res, Errors.TEMPLATE_PARSE, false);
                     }
+
                     res.end();
                   }
                 } else {
@@ -282,6 +276,10 @@ export class ServerService {
                         )
                       );
                     } catch (error) {
+                      this.logger.error(
+                        `Error while serving the JSON: ${error.message}`
+                      );
+
                       // if JSON parsing error send plain text error
                       if (
                         error.message.indexOf('Unexpected token') > -1 ||
@@ -294,16 +292,22 @@ export class ServerService {
                           Errors.MISSING_HELPER + error.message.split('"')[1]
                         );
                       }
+
                       res.end();
                     }
                   } else {
                     try {
                       res.send(DummyJSONParser(enabledRouteResponse.body, req));
                     } catch (error) {
+                      this.logger.error(
+                        `Error while serving the content: ${error.message}`
+                      );
+
                       // if invalid Content-Type provided
                       if (error.message.indexOf('invalid media type') > -1) {
                         this.sendError(res, Errors.INVALID_CONTENT_TYPE);
                       }
+
                       res.end();
                     }
                   }
@@ -312,6 +316,8 @@ export class ServerService {
             }
           );
         } catch (error) {
+          this.logger.error(`Error while creating the route: ${error.message}`);
+
           // if invalid regex defined
           if (error.message.indexOf('Invalid regular expression') > -1) {
             this.toastService.addToast(
@@ -351,7 +357,7 @@ export class ServerService {
     setterFn: (header: Partial<Header>) => any
   ) {
     headers.forEach(header => {
-      if (header.key && header.value && !this.testHeaderValidity(header.key)) {
+      if (header.key && header.value && !TestHeaderValidity(header.key)) {
         setterFn(header);
       }
     });
@@ -385,10 +391,10 @@ export class ServerService {
     if (
       environment.proxyMode &&
       environment.proxyHost &&
-      this.isValidURL(environment.proxyHost)
+      IsValidURL(environment.proxyHost)
     ) {
       // res-stream the body (intercepted by body parser method) and mark as proxied
-      const processRequest = (proxyReq, req, res, options) => {
+      const processRequest = (proxyReq, req, res) => {
         req.proxied = true;
 
         this.setHeaders(environment.proxyReqHeaders, header => {
@@ -405,17 +411,12 @@ export class ServerService {
       // logging the proxied response
       const self = this;
       const processResponse = (proxyRes, req, res) => {
-        const combinedHeaders = {
+        // flatten headers as proxy might return Set-Cookie header(s) values in an array
+        const combinedHeaders = ObjectValuesFlatten({
           ...res.getHeaders(),
           ...proxyRes.headers,
-          ...environment.proxyResHeaders.reduce(
-            (headers, proxyResHeader) => ({
-              ...headers,
-              [proxyResHeader.key]: proxyResHeader.value
-            }),
-            {}
-          )
-        };
+          ...HeadersArrayToObject(environment.proxyResHeaders)
+        });
 
         let body = '';
         proxyRes.on('data', chunk => {
@@ -440,7 +441,7 @@ export class ServerService {
       };
 
       const logErrorResponse = (err, req, res) => {
-        // the response is logged by the overrided function
+        // the response is logged by the overriden function
         res
           .status(504)
           .send('Error occured while trying to proxy to: ' + req.url);
@@ -448,7 +449,7 @@ export class ServerService {
 
       server.use(
         '*',
-        proxy({
+        proxy(<proxy.Config>{
           target: environment.proxyHost,
           secure: false,
           changeOrigin: true,
@@ -541,20 +542,5 @@ export class ServerService {
       );
       setTimeout(next, environmentSelected.latency);
     });
-  }
-
-  /**
-   * Test if URL is valid
-   *
-   * @param URL
-   */
-  public isValidURL(address: string): boolean {
-    try {
-      const myURL = new URL(address);
-
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 }

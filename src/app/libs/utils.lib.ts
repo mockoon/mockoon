@@ -1,5 +1,5 @@
 import { Environment } from 'src/app/types/environment.type';
-import { RouteResponse } from 'src/app/types/route.type';
+import { Header, RouteResponse } from 'src/app/types/route.type';
 
 export const AscSort = (a, b) => {
   if (a.name < b.name) {
@@ -45,4 +45,78 @@ export const GetRouteResponseContentType = (
 
 export const RemoveLeadingSlash = (str: string) => {
   return str.replace(/^\//g, '');
+};
+
+/**
+ * Test a header validity
+ *
+ * @param headerName
+ */
+export const TestHeaderValidity = (headerName: string) => {
+  if (
+    headerName &&
+    headerName.match(/[^A-Za-z0-9\-\!\#\$\%\&\'\*\+\.\^\_\`\|\~]/g)
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * Test if URL is valid
+ *
+ * @param URL
+ */
+export const IsValidURL = (address: string): boolean => {
+  try {
+    const myURL = new URL(address);
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+/**
+ * Transform an headers Array into an object {key: value}
+ *
+ * @param headers
+ */
+export const HeadersArrayToObject = (
+  headers: Header[]
+): { [key in string]: any } => {
+  if (!headers.length) {
+    return {};
+  }
+
+  return headers.reduce((headersObject, header) => {
+    if (header.key) {
+      headersObject[header.key] = header.value;
+    }
+
+    return headersObject;
+  }, {});
+};
+
+/**
+ * Join each object value when encountering an array.
+ *
+ * @param object
+ */
+export const ObjectValuesFlatten = (
+  object: { [key in string]: String[] | string }
+): { [key in string]: string } => {
+  return Object.keys(object).reduce<{ [key in string]: string }>(
+    (newObject, key) => {
+      if (Array.isArray(object[key])) {
+        newObject[key] = (object[key] as String[]).join(',');
+      } else {
+        newObject[key] = object[key] as string;
+      }
+
+      return newObject;
+    },
+    {}
+  );
 };
