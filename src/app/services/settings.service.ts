@@ -10,6 +10,8 @@ export type Settings = {
   bannerDismissed: string[];
   logSizeLimit: number;
   truncateRouteName: boolean;
+  routeMenuSize: number;
+  envLogsSize: number;
 };
 
 export type SettingsProperties = { [T in keyof Settings]?: Settings[T] };
@@ -23,7 +25,9 @@ export class SettingsService {
     analytics: true,
     bannerDismissed: [],
     logSizeLimit: 10000,
-    truncateRouteName: true
+    truncateRouteName: true,
+    routeMenuSize: undefined,
+    envLogsSize: undefined
   };
   private storageKey = 'settings';
 

@@ -38,7 +38,7 @@
             </a>
           </li>
         </ul>
-        <resize-column></resize-column>
+        <resize-column [type]="'envLogs'" [minWidth]="200" [minWidthFromRight]="500"></resize-column>
       </div>
       <div class="col h-100 environment-logs-column">
         <div *ngIf="environmentsLogs[activeEnvironmentUUID][(selectedLogIndex$ | async)] as selectedLog"
