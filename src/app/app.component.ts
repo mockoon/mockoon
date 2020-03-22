@@ -6,17 +6,17 @@ import * as mimeTypes from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
 import { merge, Observable } from 'rxjs';
 import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
 import { ContextMenuItemPayload } from 'src/app/components/context-menu/context-menu.component';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
-import { GetRouteResponseContentType } from 'src/app/libs/utils.lib';
+import { GetRouteResponseContentType, IsValidURL } from 'src/app/libs/utils.lib';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ImportExportService } from 'src/app/services/import-export.service';
-import { ServerService } from 'src/app/services/server.service';
 import { Toast, ToastsService } from 'src/app/services/toasts.service';
 import { UIService } from 'src/app/services/ui.service';
 import { UpdateService } from 'src/app/services/update.service';
@@ -38,52 +38,53 @@ const appVersion = require('../../package.json').version;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-  public methods = methods;
-  public statusCodes = statusCodes;
-  public updateAvailable = false;
-  public platform = platform;
-  public hasEnvironmentHeaders = this.environmentsService.hasEnvironmentHeaders;
-  public clearEnvironmentLogsRequested$ = new TimedBoolean(false, 4000);
-  public deleteCurrentRouteResponseRequested$ = new TimedBoolean(false, 4000);
-  public appVersion = appVersion;
-  public environments$: Observable<Environments>;
   public activeEnvironment$: Observable<Environment>;
+  public activeEnvironmentForm: FormGroup;
+  public activeEnvironmentState$: Observable<EnvironmentStatus>;
   public activeEnvironmentUUID$: Observable<string>;
   public activeRoute$: Observable<Route>;
+  public activeRouteForm: FormGroup;
   public activeRouteResponse$: Observable<RouteResponse>;
+  public activeRouteResponseForm: FormGroup;
   public activeRouteResponseIndex$: Observable<number>;
-  public activeView$: Observable<ViewsNameType>;
   public activeTab$: Observable<TabsNameType>;
-  public activeEnvironmentState$: Observable<EnvironmentStatus>;
-  public environmentsStatus$: Observable<EnvironmentsStatuses>;
+  public activeView$: Observable<ViewsNameType>;
+  public appVersion = appVersion;
+  public bodyEditorConfig$: Observable<any>;
+  public clearEnvironmentLogsRequested$ = new TimedBoolean(false, 4000);
+  public deleteCurrentRouteResponseRequested$ = new TimedBoolean(false, 4000);
   public duplicatedEnvironments$: Observable<Set<string>>;
   public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
-  public bodyEditorConfig$: Observable<any>;
+  public environments$: Observable<Environments>;
   public environmentsLogs$: Observable<EnvironmentLogs>;
-  public toasts$: Observable<Toast[]>;
-  public activeEnvironmentForm: FormGroup;
-  public activeRouteForm: FormGroup;
-  public activeRouteResponseForm: FormGroup;
+  public environmentsStatus$: Observable<EnvironmentsStatuses>;
+  public hasEnvironmentHeaders = this.environmentsService.hasEnvironmentHeaders;
   public Infinity = Infinity;
+  public isValidURL = IsValidURL;
+  public methods = methods;
+  public platform = platform;
   public scrollToBottom = this.uiService.scrollToBottom;
-  private settingsModalOpened = false;
-  private dialog = remote.dialog;
+  public statusCodes = statusCodes;
+  public toasts$: Observable<Toast[]>;
+  public updateAvailable = false;
   private BrowserWindow = remote.BrowserWindow;
+  private dialog = remote.dialog;
+  private logger = new Logger('[COMPONENT][APP]');
+  private settingsModalOpened = false;
 
   constructor(
-    private environmentsService: EnvironmentsService,
-    private serverService: ServerService,
-    private toastService: ToastsService,
-    private updateService: UpdateService,
-    private authService: AuthService,
-    private eventsService: EventsService,
-    private config: NgbTooltipConfig,
     private analyticsService: AnalyticsService,
-    private store: Store,
+    private authService: AuthService,
+    private config: NgbTooltipConfig,
+    private dragulaService: DragulaService,
+    private environmentsService: EnvironmentsService,
+    private eventsService: EventsService,
     private formBuilder: FormBuilder,
     private importExportService: ImportExportService,
+    private store: Store,
+    private toastService: ToastsService,
     private uiService: UIService,
-    private dragulaService: DragulaService
+    private updateService: UpdateService
   ) {
     // tooltip config
     this.config.container = 'body';
@@ -150,6 +151,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.logger.info(`Initializing application`);
+
     this.dragulaService.dropModel().subscribe(dragResult => {
       this.environmentsService.moveMenuItem(
         dragResult.name as DraggableContainerNames,
@@ -157,6 +160,7 @@ export class AppComponent implements OnInit {
         dragResult.targetIndex
       );
     });
+
     this.initForms();
 
     // auth anonymously through firebase
@@ -455,10 +459,6 @@ export class AppComponent implements OnInit {
    */
   public removeToast(toastUUID: string) {
     this.toastService.removeToast(toastUUID);
-  }
-
-  public isValidURL(URL: string) {
-    return this.serverService.isValidURL(URL);
   }
 
   public openFeedbackLink() {

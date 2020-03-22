@@ -1,23 +1,14 @@
 import { Injectable } from '@angular/core';
 import { OpenAPIV2, OpenAPIV3 } from 'openapi-types';
-import {
-  RemoveLeadingSlash,
-  GetRouteResponseContentType
-} from 'src/app/libs/utils.lib';
-import { Environment } from 'src/app/types/environment.type';
-import {
-  methods,
-  Route,
-  RouteResponse,
-  statusCodes,
-  Method,
-  Header
-} from 'src/app/types/route.type';
-import * as SwaggerParser from 'swagger-parser';
-import { parse as urlParse } from 'url';
+import { Logger } from 'src/app/classes/logger';
+import { Errors } from 'src/app/enums/errors.enum';
+import { GetRouteResponseContentType, RemoveLeadingSlash } from 'src/app/libs/utils.lib';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ToastsService } from 'src/app/services/toasts.service';
-import { Errors } from 'src/app/enums/errors.enum';
+import { Environment } from 'src/app/types/environment.type';
+import { Header, Method, methods, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
+import * as SwaggerParser from 'swagger-parser';
+import { parse as urlParse } from 'url';
 
 type ParametersTypes = 'PATH_PARAMETERS' | 'SERVER_VARIABLES';
 type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';
@@ -30,6 +21,8 @@ type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';
  */
 @Injectable({ providedIn: 'root' })
 export class OpenAPIConverterService {
+  private logger = new Logger('[SERVICE][OPENAPI-CONVERTER]');
+
   constructor(
     private schemasBuilderService: SchemasBuilderService,
     private toastsService: ToastsService
@@ -41,6 +34,8 @@ export class OpenAPIConverterService {
    * @param filePath
    */
   public async import(filePath: string) {
+    this.logger.info(`Starting OpenAPI file '${filePath}' import`);
+
     try {
       const parsedAPI:
         | OpenAPIV2.Document
@@ -54,8 +49,7 @@ export class OpenAPIConverterService {
         this.toastsService.addToast('warning', Errors.IMPORT_WRONG_VERSION);
       }
     } catch (error) {
-      // TODO add real logs
-      console.log(error);
+      this.logger.error(`Error while importing OpenAPI file: ${error.message}`);
     }
   }
 
@@ -65,11 +59,14 @@ export class OpenAPIConverterService {
    * @param environment
    */
   public export(environment: Environment): string {
+    this.logger.info(
+      `Starting environment ${environment.uuid} export to OpenAPI file`
+    );
+
     try {
       return this.convertToOpenAPIV3(environment);
     } catch (error) {
-      // TODO add real logs
-      console.log(error);
+      this.logger.error(`Error while exporting OpenAPI file: ${error.message}`);
     }
   }
 
@@ -224,7 +221,9 @@ export class OpenAPIConverterService {
     try {
       SwaggerParser.validate(openAPIEnvironment);
     } catch (error) {
-      console.log(error);
+      this.logger.error(
+        `Error while validating OpenAPI export object: ${error.message}`
+      );
     }
 
     return JSON.stringify(openAPIEnvironment);

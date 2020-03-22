@@ -7,6 +7,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
 import { Environment } from 'src/app/types/environment.type';
 import { Header, headerNames, headerValues, RouteResponse } from 'src/app/types/route.type';
+import { TestHeaderValidity } from 'src/app/libs/utils.lib';
 
 export type HeadersListType = 'routeResponseHeaders' | 'environmentHeaders';
 
@@ -22,7 +23,7 @@ export class HeadersListComponent implements OnInit {
   @Output() headerAdded: EventEmitter<any> = new EventEmitter();
   public form: FormGroup;
   public headersFormChanges: Subscription;
-  public testHeaderValidity = this.serverService.testHeaderValidity;
+  public testHeaderValidity = TestHeaderValidity;
 
   constructor(
     private serverService: ServerService,

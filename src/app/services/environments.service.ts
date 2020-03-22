@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as storage from 'electron-json-storage';
 import { cloneDeep } from 'lodash';
 import { debounceTime } from 'rxjs/operators';
+import { Logger } from 'src/app/classes/logger';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
@@ -20,6 +21,7 @@ import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type'
 @Injectable({ providedIn: 'root' })
 export class EnvironmentsService {
   private storageKey = 'environments';
+  private logger = new Logger('[SERVICE][ENVIRONMENTS]');
 
   constructor(
     private dataService: DataService,
@@ -34,6 +36,8 @@ export class EnvironmentsService {
     storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
+        this.logger.info(`No Data, building default environment`);
+
         this.store.update(setInitialEnvironmentsAction([this.schemasBuilderService.buildDefaultEnvironment()]));
       } else {
         this.store.update(setInitialEnvironmentsAction(this.migrationService.migrateEnvironments(environments)));
@@ -42,6 +46,8 @@ export class EnvironmentsService {
 
     // subscribe to environments update to save
     this.store.select('environments').pipe(debounceTime(2000)).subscribe((environments) => {
+      this.logger.info(`Saving environments`);
+
       storage.set(this.storageKey, environments);
     });
   }
@@ -319,9 +325,9 @@ export class EnvironmentsService {
 
       if (log.response) {
         const headers: Header[] = [];
-        log.response.headers.forEach(element => {
+        log.response.headers.forEach(header => {
           headers.push(
-            this.schemasBuilderService.buildHeader(element.name, element.value)
+            this.schemasBuilderService.buildHeader(header.name, header.value)
           );
         });
 
