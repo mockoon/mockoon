@@ -14,7 +14,7 @@ jobs:
       run: |
         npm ci
         npm run lint
-        npm run build:dev
+        npm run build:ci
     - name: Run tests
       uses: mujo-code/puppeteer-headful@master
       with:

@@ -1,57 +1,59 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { shell } from 'electron';
-import { combineLatest } from 'rxjs';
-import { filter, first, take, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, first, mergeMap } from 'rxjs/operators';
+import { Banner } from 'src/app/models/remote-config.model';
+import { RemoteConfigService } from 'src/app/services/remote-config.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Store } from 'src/app/stores/store';
-import { BannerConfigType } from 'src/app/types/misc.type';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-banner',
-  templateUrl: 'banner.component.html'
+  templateUrl: 'banner.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BannerComponent implements OnInit {
-  public bannerData: BannerConfigType;
+  public banner$: Observable<Banner>;
 
   constructor(
-    private firestore: AngularFirestore,
     private settingsService: SettingsService,
-    private store: Store
-  ) { }
+    private store: Store,
+    private remoteConfigService: RemoteConfigService
+  ) {}
 
   ngOnInit() {
-    combineLatest(
-      this.store.select('userId'),
-      this.store.select('settings')
-    ).pipe(
-      filter(result => !!result[0] && !!result[1]),
-      first()
-    ).subscribe(() => {
-      this.firestore.collection(environment.remoteConfigCollection).doc('banner').valueChanges().pipe(
-        take(1),
-        filter((bannerData: BannerConfigType) => bannerData.enabled && !this.store.get('settings').bannerDismissed.includes(bannerData.id)),
-        tap((bannerData: BannerConfigType) => {
-          this.bannerData = bannerData;
-        })
-      ).subscribe();
-    });
+    this.banner$ = this.store.select('settings').pipe(
+      filter(Boolean),
+      first(),
+      mergeMap(() => {
+        return this.remoteConfigService.get('banner');
+      }),
+      filter(
+        banner =>
+          banner.enabled &&
+          !this.store.get('settings').bannerDismissed.includes(banner.id)
+      )
+    );
   }
 
   /**
    * Open banner link
    */
-  public openLink() {
-    shell.openExternal(this.bannerData.link);
+  public openLink(banner: Banner) {
+    shell.openExternal(banner.link);
   }
 
   /**
    * Dismiss banner and save it to the settings
    */
-  public dismissBanner() {
-    this.bannerData.enabled = false;
+  public dismissBanner(banner: Banner) {
+    banner.enabled = false;
 
-    this.settingsService.updateSettings({ bannerDismissed: [...this.store.get('settings').bannerDismissed, this.bannerData.id] });
+    this.settingsService.updateSettings({
+      bannerDismissed: [
+        ...this.store.get('settings').bannerDismissed,
+        banner.id
+      ]
+    });
   }
 }

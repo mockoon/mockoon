@@ -14,6 +14,7 @@ export class SettingsModalComponent implements OnInit, AfterViewInit {
   @ViewChild('modal', { static: false }) modal: ElementRef;
   @Output() closed: EventEmitter<any> = new EventEmitter();
   public settings$: Observable<Settings>;
+  public Infinity = Infinity;
 
   constructor(
     private modalService: NgbModal,

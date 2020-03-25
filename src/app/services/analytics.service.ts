@@ -20,7 +20,12 @@ const appVersion = require('../../../package.json').version;
  *
  */
 
-export type CollectParams = { type: 'event' | 'pageview', pageName?: string, category?: string, action?: string, label?: string };
+export type CollectParams = {
+  type: 'event' | 'pageview';
+  pageName?: string;
+  category?: string;
+  action?: string;
+};
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
@@ -41,41 +46,46 @@ export class AnalyticsService {
     private http: HttpClient,
     private eventsService: EventsService,
     private store: Store
-  ) { }
+  ) {}
 
   public init() {
-    combineLatest(
-      this.store.select('userId'),
-      this.store.select('settings')
-    ).pipe(
-      filter(result => !!result[0] && !!result[1])
-    ).subscribe(() => {
-      this.servicesReady = true;
+    combineLatest(this.store.select('userId'), this.store.select('settings'))
+      .pipe(filter(([userId, settings]) => !!userId && !!settings))
+      .subscribe(([userId, settings]) => {
+        this.servicesReady = true;
 
-      this.queue.forEach((item) => {
-        this.makeRequest(item);
+        this.queue.forEach(item => {
+          this.makeRequest(item);
+        });
+
+        this.queue = [];
       });
 
-      this.queue = [];
-    });
-
     const allEventsObservable = this.eventsService.analyticsEvents.pipe(
-      filter((collectParams) => {
-        return collectParams.action !== AnalyticsEvents.SERVER_ENTERING_REQUEST.action;
+      filter(collectParams => {
+        return (
+          collectParams.action !==
+          AnalyticsEvents.SERVER_ENTERING_REQUEST.action
+        );
       })
     );
 
     // debounce entering request events every 2mn
     const enteringRequestEventsbservable = this.eventsService.analyticsEvents.pipe(
-      filter((collectParams) => {
-        return collectParams.action === AnalyticsEvents.SERVER_ENTERING_REQUEST.action;
+      filter(collectParams => {
+        return (
+          collectParams.action ===
+          AnalyticsEvents.SERVER_ENTERING_REQUEST.action
+        );
       }),
       debounceTime(120000)
     );
 
-    merge(allEventsObservable, enteringRequestEventsbservable).subscribe((event) => {
-      this.collect(event);
-    });
+    merge(allEventsObservable, enteringRequestEventsbservable).subscribe(
+      event => {
+        this.collect(event);
+      }
+    );
   }
 
   /**
@@ -99,17 +109,21 @@ export class AnalyticsService {
     let payload;
 
     if (params.type === 'event') {
-      payload = this.getPayload() + `&t=event&ec=${encodeURIComponent(params.category)}&ea=${encodeURIComponent(params.action)}`;
-
-      if (params.label) {
-        payload += `&el=${encodeURIComponent(params.label)}`;
-      }
+      payload =
+        this.getPayload() +
+        `&t=event&ec=${encodeURIComponent(
+          params.category
+        )}&ea=${encodeURIComponent(params.action)}`;
     } else if (params.type === 'pageview') {
-      payload = this.getPayload() + `&t=pageview&dp=${encodeURIComponent(params.pageName)}`;
+      payload =
+        this.getPayload() +
+        `&t=pageview&dp=${encodeURIComponent(params.pageName)}`;
     }
 
     if (this.store.get('settings').analytics) {
-      this.http.post(this.endpoint, payload, { responseType: 'text' }).subscribe();
+      this.http
+        .post(this.endpoint, payload, { responseType: 'text' })
+        .subscribe();
     }
   }
 
