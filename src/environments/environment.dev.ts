@@ -1,5 +1,8 @@
-export const environment = {
+import { AppEnvironment } from 'src/app/models/app-environment.model';
+
+export const environment: AppEnvironment = {
   production: false,
   analyticsID: 'xxxxxx',
-  remoteConfigCollection: 'config_dev'
+  firebaseMeasurementId: 'xxxxxx',
+  remoteConfig: 'dev'
 };

@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
+import { AngularFireRemoteConfigModule } from '@angular/fire/remote-config';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -65,11 +65,10 @@ import { AppComponent } from './app.component';
     }),
     AngularFireModule.initializeApp(Config.firebaseConfig),
     AngularFireAuthModule,
-    AngularFirestoreModule,
+    AngularFireRemoteConfigModule,
     ReactiveFormsModule
   ],
   providers: [
-    { provide: FirestoreSettingsToken, useValue: {} },
     { provide: ErrorHandler, useClass: GlobalErrorHandler }
   ],
   bootstrap: [AppComponent]

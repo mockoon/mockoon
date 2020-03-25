@@ -1,16 +1,23 @@
+import { environment } from 'src/environments/environment';
+
+const tutorialURL = 'https://mockoon.com/tutorial/';
+
 export const Config = {
   feedbackLink: 'https://github.com/mockoon/mockoon/issues',
-  githubLatestReleaseUrl: 'https://api.github.com/repos/mockoon/mockoon/releases/latest',
+  githubLatestReleaseUrl:
+    'https://api.github.com/repos/mockoon/mockoon/releases/latest',
   githubTagReleaseUrl: 'https://github.com/mockoon/mockoon/releases/tag/v',
-  githubAPITagReleaseUrl: 'https://api.github.com/repos/mockoon/mockoon/releases/tags/v',
-  githubBinaryDownloadUrl: 'https://github.com/mockoon/mockoon/releases/download/',
+  githubAPITagReleaseUrl:
+    'https://api.github.com/repos/mockoon/mockoon/releases/tags/v',
+  githubBinaryDownloadUrl:
+    'https://github.com/mockoon/mockoon/releases/download/',
   wikiLinks: {
-    templating: 'https://mockoon.com/tutorial/dynamic-response-with-templating/',
-    proxy: 'https://mockoon.com/tutorial/api-mocking-proxy-mode/',
-    cors: 'https://mockoon.com/tutorial/automatic-handling-preflight-requests/',
-    https: 'https://mockoon.com/tutorial/serve-mock-api-tls/',
-    headers: 'https://mockoon.com/tutorial/define-response-headers/',
-    rules: 'https://mockoon.com/tutorial/multiple-route-responses/'
+    templating: tutorialURL + 'dynamic-response-with-templating/',
+    proxy: tutorialURL + 'api-mocking-proxy-mode/',
+    cors: tutorialURL + 'automatic-handling-preflight-requests/',
+    https: tutorialURL + 'serve-mock-api-tls/',
+    headers: tutorialURL + 'define-response-headers/',
+    rules: tutorialURL + 'multiple-route-responses/'
   },
   maxLogsPerEnvironment: 50,
   firebaseConfig: {
@@ -19,6 +26,8 @@ export const Config = {
     databaseURL: 'https://mockoon-ba3e2.firebaseio.com',
     projectId: 'mockoon-ba3e2',
     storageBucket: 'mockoon-ba3e2.appspot.com',
-    messagingSenderId: '902702764744'
+    messagingSenderId: '902702764744',
+    appId: '1:902702764744:web:599e8dc8d6a1ef6542cbfd',
+    measurementId: environment.firebaseMeasurementId
   }
 };
