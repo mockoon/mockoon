@@ -14,7 +14,7 @@
     "url": "https://github.com/mockoon/mockoon/issues"
   },
   "browserslist": [
-    "Electron >= 6.0"
+    "Chrome >= 80"
   ],
   "scripts": {
     "lint": "ng lint --type-check",
