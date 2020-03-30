@@ -326,7 +326,7 @@ export function environmentReducer(
     }
 
     case ActionTypes.UPDATE_ENVIRONMENT: {
-      const propertiesNeedingRestart: (keyof Environment)[] = ['port', 'endpointPrefix', 'proxyMode', 'proxyHost', 'https', 'cors', 'proxyReqHeaders', 'proxyResHeaders'];
+      const propertiesNeedingRestart: (keyof Environment)[] = ['port', 'endpointPrefix', 'proxyMode', 'proxyHost', 'https', 'cors', 'headers', 'proxyReqHeaders', 'proxyResHeaders'];
       const activeEnvironmentStatus = state.environmentsStatus[state.activeEnvironmentUUID];
 
       let needRestart: boolean;
