@@ -1,4 +1,4 @@
-import { Tests } from './lib/tests';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
 
@@ -16,13 +16,18 @@ describe('Duplicate an environment', () => {
   });
 
   it('Duplicate first environment', async () => {
-    await tests.helpers.contextMenuClick('.environments-menu .menu-list .nav-item:nth-of-type(1)', 3)
+    await tests.helpers.contextMenuClick(
+      '.environments-menu .menu-list .nav-item:nth-of-type(1)',
+      3
+    );
 
     await tests.helpers.countEnvironments(3);
   });
 
   it('Select second environment', async () => {
-    await tests.app.client.element('.environments-menu .menu-list .nav-item:nth-of-type(2)').click();
+    await tests.app.client
+      .element('.environments-menu .menu-list .nav-item:nth-of-type(2)')
+      .click();
   });
 
   it('Verify duplicated environment selected', async () => {

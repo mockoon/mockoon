@@ -29,12 +29,12 @@
               "src/assets",
               {
                 "glob": "electron-main.js",
-                "input": "src/electron-files",
+                "input": "src",
                 "output": "/"
               },
               {
                 "glob": "package.json",
-                "input": "src/electron-files",
+                "input": ".",
                 "output": "/"
               },
               {

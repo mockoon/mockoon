@@ -2,16 +2,12 @@ import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
 import { ToastTypes } from 'src/app/services/toasts.service';
-import {
-  EnvironmentLogsTabsNameType,
-  TabsNameType,
-  ViewsNameType
-} from 'src/app/stores/store';
+import { EnvironmentLogsTabsNameType, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
 import { ResponseRule } from 'src/app/types/route.type';
-import { HttpCall } from 'test/lib/types';
-import { fetch } from './fetch';
-import { Tests } from './tests';
+import { fetch } from 'test/lib/fetch';
+import { HttpCall } from 'test/lib/models';
+import { Tests } from 'test/lib/tests';
 
 export class Helpers {
   constructor(private testsInstance: Tests) {}
@@ -325,7 +321,7 @@ export class Helpers {
     });
 
     if (httpCall.testedResponse) {
-      Object.keys(httpCall.testedResponse).forEach(propertyName => {
+      Object.keys(httpCall.testedResponse).forEach((propertyName) => {
         if (propertyName === 'headers') {
           expect(response[propertyName]).to.include(
             httpCall.testedResponse[propertyName]

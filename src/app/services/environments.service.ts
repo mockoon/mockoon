@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import * as storage from 'electron-json-storage';
+import { get as storageGet, set as storageSet } from 'electron-json-storage';
 import { cloneDeep } from 'lodash';
 import { debounceTime } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
@@ -33,7 +33,7 @@ export class EnvironmentsService {
     private uiService: UIService
   ) {
     // get existing environments from storage or default one
-    storage.get(this.storageKey, (_error: any, environments: Environment[]) => {
+    storageGet(this.storageKey, (_error: any, environments: Environment[]) => {
       // if empty object build default starting env
       if (Object.keys(environments).length === 0 && environments.constructor === Object) {
         this.logger.info(`No Data, building default environment`);
@@ -48,7 +48,7 @@ export class EnvironmentsService {
     this.store.select('environments').pipe(debounceTime(2000)).subscribe((environments) => {
       this.logger.info(`Saving environments`);
 
-      storage.set(this.storageKey, environments);
+      storageSet(this.storageKey, environments, () => {});
     });
   }
 

@@ -1,8 +1,7 @@
 import { promises as fs } from 'fs';
-import { HighestMigrationId } from '../src/app/libs/migrations.lib';
-import { Tests } from './lib/tests';
-
-const appVersion = require('../package.json').version;
+import { Config } from 'src/app/config';
+import { HighestMigrationId } from 'src/app/libs/migrations.lib';
+import { Tests } from 'test/lib/tests';
 
 const oldImportCases = [
   {
@@ -34,7 +33,7 @@ const oldImportCases = [
 
 describe('Environments import', () => {
   describe('Import from older version', () => {
-    oldImportCases.forEach(testCase => {
+    oldImportCases.forEach((testCase) => {
       describe(testCase.desc, () => {
         const tests = new Tests('import');
         tests.runHooks(true, false);
@@ -150,7 +149,7 @@ describe('Environments import', () => {
         );
 
         tests.app.electron.clipboard.writeText(
-          fileContent.replace('##appVersion##', appVersion)
+          fileContent.replace('##appVersion##', Config.appVersion)
         );
 
         tests.helpers.sendWebContentsAction('IMPORT_CLIPBOARD');

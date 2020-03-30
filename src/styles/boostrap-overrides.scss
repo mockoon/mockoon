@@ -1,5 +1,5 @@
 /* Bootstrap imports */
-@import './bootstrap-custom-variables.scss';
+@import './bootstrap-variables.scss';
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
 @import '../../node_modules/dragula/dist/dragula.css';
 
@@ -166,6 +166,8 @@ label {
   &:focus {
     color: $gray-200;
   }
+
+  -webkit-appearance: none;
 }
 
 // fix bootstrap flexfill which is incompatible with ace editor

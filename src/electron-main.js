@@ -1,5 +1,8 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
+const logs = require('electron-log');
+logs.catchErrors();
+
 const electron = require('electron');
 const windowState = require('electron-window-state');
 const fs = require('fs');

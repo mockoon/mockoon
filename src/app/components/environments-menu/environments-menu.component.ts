@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
+import { EnvironmentsContextMenu } from 'src/app/components/context-menu/context-menus';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
 import { UIService } from 'src/app/services/ui.service';
 import { EnvironmentsStatuses, Store, UIState } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { ScrollDirection } from 'src/app/types/ui.type';
-import { EnvironmentsContextMenu } from '../context-menu/context-menus';
 
 @Component({
   selector: 'app-environments-menu',

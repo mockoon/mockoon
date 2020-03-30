@@ -1,6 +1,6 @@
-import { Tests } from './lib/tests';
-import { HttpCall } from './lib/types';
 import { expect } from 'chai';
+import { HttpCall } from 'test/lib/models';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('proxy');
 
@@ -139,10 +139,7 @@ describe('Proxy', () => {
   });
 
   it('Call to non existing route (in proxy and proxied env) should return 404 with all global headers (proxy + proxied envs) and proxy response headers', async () => {
-    await tests.helpers.httpCallAsserterWithPort(
-      get404Call,
-      3001
-    );
+    await tests.helpers.httpCallAsserterWithPort(get404Call, 3001);
   });
 
   it('Disabled proxy with proxy response headers should not send them on its own routes', async () => {

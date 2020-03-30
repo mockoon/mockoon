@@ -4,8 +4,8 @@ import { Store } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
 import { EnvironmentLog, EnvironmentLogResponse } from 'src/app/types/server.type';
-import * as url from 'url';
-import * as uuid from 'uuid/v1';
+import { parse as urlParse } from 'url';
+import { v1 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -27,7 +27,7 @@ export class DataService {
       },
       method: request.method,
       protocol: request.protocol,
-      url: url.parse(request.originalUrl).pathname,
+      url: urlParse(request.originalUrl).pathname,
       headers: [],
       get proxied() {
         return request.proxied;

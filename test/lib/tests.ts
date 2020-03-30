@@ -1,13 +1,13 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
+import chaiExclude from 'chai-exclude';
 import { copyFile } from 'fs';
+import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import { Application } from 'spectron';
-import { Helpers } from './helpers';
-import chaiExclude from 'chai-exclude';
+import { Helpers } from 'test/lib/helpers';
 
 const electronPath: any = require('electron');
-const mkdirp = require('mkdirp');
 
 export class Tests {
   public app: Application;
@@ -29,8 +29,8 @@ export class Tests {
   ) {
     // copy data files before starting tests
     before(() => {
-      return new Promise(resolve => {
-        mkdirp.sync('./tmp/storage/');
+      return new Promise(async (resolve) => {
+        await mkdirp('./tmp/storage/');
 
         copyFile(
           './test/data/' + this.dataFileName + '/environments.json',

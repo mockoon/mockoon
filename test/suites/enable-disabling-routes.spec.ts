@@ -1,5 +1,5 @@
-import { Tests } from './lib/tests';
-import { HttpCall } from './lib/types';
+import { HttpCall } from 'test/lib/models';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
 
@@ -12,7 +12,8 @@ const getAnswerCall: HttpCall[] = [
       body: '42',
       status: 200
     }
-  }, {
+  },
+  {
     description: 'Call GET answer',
     path: '/answer',
     method: 'GET',
@@ -32,13 +33,19 @@ describe('Enable/disable routes', () => {
 
   it('Call untouched route', async () => {
     await tests.helpers.selectRoute(2);
-    await tests.app.client.waitForExist('.routes-menu .menu-list .nav-item .nav-link.active.route-disabled', null, true);
+    await tests.app.client.waitForExist(
+      '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled',
+      null,
+      true
+    );
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall[0], 3000);
   });
 
   it('Disabling route /answer', async () => {
     await tests.helpers.disableRoute();
-    await tests.app.client.waitForExist('.routes-menu .menu-list .nav-item .nav-link.active.route-disabled');
+    await tests.app.client.waitForExist(
+      '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled'
+    );
     await tests.helpers.restartEnvironment();
   });
 
@@ -48,7 +55,11 @@ describe('Enable/disable routes', () => {
 
   it('Re-enable route', async () => {
     await tests.helpers.disableRoute();
-    await tests.app.client.waitForExist('.routes-menu .menu-list .nav-item .nav-link.active.route-disabled', null, true);
+    await tests.app.client.waitForExist(
+      '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled',
+      null,
+      true
+    );
     await tests.helpers.restartEnvironment();
   });
 

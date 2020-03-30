@@ -3,7 +3,7 @@ import { HighestMigrationId } from 'src/app/libs/migrations.lib';
 import { DataService } from 'src/app/services/data.service';
 import { Environment } from 'src/app/types/environment.type';
 import { Header, Route, RouteResponse } from 'src/app/types/route.type';
-import * as uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class SchemasBuilderService {

@@ -1,7 +1,7 @@
-import { Tests } from './lib/tests';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
-import * as uuid from 'uuid/v1';
+import { Tests } from 'test/lib/tests';
+import { v1 as uuid } from 'uuid';
 
 describe('OpenAPI export', () => {
   const tests = new Tests('export-openapi');

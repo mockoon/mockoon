@@ -2,7 +2,7 @@ export type HttpCallResponse = {
   body?: string;
   status?: number;
   headers?: {
-    [key in string]: string;
+    [key in string]: string | string[];
   };
 };
 
