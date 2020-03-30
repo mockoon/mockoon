@@ -3,7 +3,6 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Vie
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { shell } from 'electron';
 import { Config } from 'src/app/config';
-import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
 
 @Component({
@@ -34,7 +33,5 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
 
   public openReleaseLink() {
     shell.openExternal(Config.githubTagReleaseUrl + Config.appVersion);
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_RELEASE);
   }
 }
