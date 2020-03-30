@@ -1,5 +1,5 @@
-import { Tests } from './lib/tests';
-import { HttpCall } from './lib/types';
+import { HttpCall } from 'test/lib/models';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('responses-rules');
 

@@ -1,5 +1,5 @@
-import { Tests } from './lib/tests';
-import { HttpCall } from './lib/types';
+import { HttpCall } from 'test/lib/models';
+import { Tests } from 'test/lib/tests';
 
 function generateCall(requestBody: any): HttpCall {
   return {
@@ -26,8 +26,10 @@ function makeString(length: number): string {
   return result;
 }
 
-const truncateRoutePathCheckbox = '.modal-dialog input#truncate-route-name ~ .custom-control-label';
-const analyticsCheckbox = '.modal-dialog input#analytics ~ .custom-control-label';
+const truncateRoutePathCheckbox =
+  '.modal-dialog input#truncate-route-name ~ .custom-control-label';
+const analyticsCheckbox =
+  '.modal-dialog input#analytics ~ .custom-control-label';
 const bodySizeInput = '.modal-dialog input#log-body-size';
 
 describe('Settings', () => {

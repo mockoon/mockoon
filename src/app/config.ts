@@ -1,8 +1,10 @@
 import { environment } from 'src/environments/environment';
 
+const appVersion = require('../../package.json').version;
 const tutorialURL = 'https://mockoon.com/tutorial/';
 
 export const Config = {
+  appVersion,
   feedbackLink: 'https://github.com/mockoon/mockoon/issues',
   githubLatestReleaseUrl:
     'https://api.github.com/repos/mockoon/mockoon/releases/latest',

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as SwaggerParser from '@apidevtools/swagger-parser';
 import { OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { Logger } from 'src/app/classes/logger';
 import { Errors } from 'src/app/enums/errors.enum';
@@ -7,7 +8,6 @@ import { SchemasBuilderService } from 'src/app/services/schemas-builder.service'
 import { ToastsService } from 'src/app/services/toasts.service';
 import { Environment } from 'src/app/types/environment.type';
 import { Header, Method, methods, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
-import * as SwaggerParser from 'swagger-parser';
 import { parse as urlParse } from 'url';
 
 type ParametersTypes = 'PATH_PARAMETERS' | 'SERVER_VARIABLES';

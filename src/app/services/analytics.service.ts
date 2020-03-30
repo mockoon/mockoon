@@ -2,12 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { combineLatest, merge } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
+import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
 import { Store } from 'src/app/stores/store';
 import { environment } from 'src/environments/environment';
-
-const appVersion = require('../../../package.json').version;
 
 /**
  * Reference: https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
@@ -34,7 +33,7 @@ export class AnalyticsService {
     v: '1',
     an: 'mockoon',
     aid: 'com.mockoon.app',
-    av: appVersion,
+    av: Config.appVersion,
     ds: 'app',
     tid: environment.analyticsID,
     dh: encodeURIComponent('https://app.mockoon.com')
@@ -54,7 +53,7 @@ export class AnalyticsService {
       .subscribe(([userId, settings]) => {
         this.servicesReady = true;
 
-        this.queue.forEach(item => {
+        this.queue.forEach((item) => {
           this.makeRequest(item);
         });
 
@@ -62,7 +61,7 @@ export class AnalyticsService {
       });
 
     const allEventsObservable = this.eventsService.analyticsEvents.pipe(
-      filter(collectParams => {
+      filter((collectParams) => {
         return (
           collectParams.action !==
           AnalyticsEvents.SERVER_ENTERING_REQUEST.action
@@ -72,7 +71,7 @@ export class AnalyticsService {
 
     // debounce entering request events every 2mn
     const enteringRequestEventsbservable = this.eventsService.analyticsEvents.pipe(
-      filter(collectParams => {
+      filter((collectParams) => {
         return (
           collectParams.action ===
           AnalyticsEvents.SERVER_ENTERING_REQUEST.action
@@ -82,7 +81,7 @@ export class AnalyticsService {
     );
 
     merge(allEventsObservable, enteringRequestEventsbservable).subscribe(
-      event => {
+      (event) => {
         this.collect(event);
       }
     );

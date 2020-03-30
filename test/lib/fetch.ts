@@ -1,4 +1,11 @@
-import { HttpCallResponse } from 'test/lib/types';
+import { request as httpRequest } from 'http';
+import { request as httpsRequest } from 'https';
+import { HttpCallResponse } from 'test/lib/models';
+
+const RequestsLibraries = {
+  http: httpRequest,
+  https: httpsRequest
+};
 
 export const fetch = (params: {
   protocol: 'http' | 'https';
@@ -23,7 +30,7 @@ export const fetch = (params: {
       )}`;
     }
 
-    const request = require(params.protocol).request(
+    const request = RequestsLibraries[params.protocol](
       {
         hostname: `localhost`,
         port: params.port,
@@ -31,9 +38,9 @@ export const fetch = (params: {
         method: params.method.toUpperCase(),
         headers
       },
-      response => {
+      (response) => {
         let body = '';
-        response.on('data', chunk => (body += chunk));
+        response.on('data', (chunk) => (body += chunk));
         response.on('end', () =>
           resolve({
             status: response.statusCode,
@@ -44,7 +51,7 @@ export const fetch = (params: {
       }
     );
 
-    request.on('error', err => reject(err));
+    request.on('error', (err) => reject(err));
 
     request.write(data);
     request.end();

@@ -1,8 +1,7 @@
+import { Config } from 'src/app/config';
 import { Export } from 'src/app/types/data.type';
-import * as uuid from 'uuid/v1';
-import { Tests } from './lib/tests';
-
-const appVersion = require('../package.json').version;
+import { Tests } from 'test/lib/tests';
+import { v1 as uuid } from 'uuid';
 
 describe('Environments export', () => {
   describe('Export all environments to a file (JSON)', () => {
@@ -30,7 +29,7 @@ describe('Environments export', () => {
       await tests.helpers.verifyObjectPropertyInFile(
         filePath,
         ['source', 'data.0.type', 'data.0.item.name'],
-        [`mockoon:${appVersion}`, 'environment', 'Export env']
+        [`mockoon:${Config.appVersion}`, 'environment', 'Export env']
       );
     });
 
@@ -67,7 +66,7 @@ describe('Environments export', () => {
       await tests.helpers.verifyObjectProperty(
         importedData,
         ['source', 'data.0.type', 'data.0.item.name'],
-        [`mockoon:${appVersion}`, 'environment', 'Export env']
+        [`mockoon:${Config.appVersion}`, 'environment', 'Export env']
       );
     });
   });
@@ -92,7 +91,7 @@ describe('Environments export', () => {
       await tests.helpers.verifyObjectProperty(
         importedData,
         ['source', 'data.0.type', 'data.0.item.method', 'data.0.item.endpoint'],
-        [`mockoon:${appVersion}`, 'route', 'get', 'answer']
+        [`mockoon:${Config.appVersion}`, 'route', 'get', 'answer']
       );
     });
   });

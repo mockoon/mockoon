@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ipcRenderer, remote, shell } from 'electron';
-import * as mimeTypes from 'mime-types';
+import { lookup as mimeTypeLookup } from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
+import { platform } from 'os';
 import { merge, Observable } from 'rxjs';
 import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
@@ -29,9 +30,6 @@ import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } f
 import { EnvironmentLogs } from 'src/app/types/server.type';
 import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
 
-const platform = require('os').platform();
-const appVersion = require('../../package.json').version;
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -49,7 +47,7 @@ export class AppComponent implements OnInit {
   public activeRouteResponseIndex$: Observable<number>;
   public activeTab$: Observable<TabsNameType>;
   public activeView$: Observable<ViewsNameType>;
-  public appVersion = appVersion;
+  public appVersion = Config.appVersion;
   public bodyEditorConfig$: Observable<any>;
   public clearEnvironmentLogsRequested$ = new TimedBoolean(false, 4000);
   public deleteCurrentRouteResponseRequested$ = new TimedBoolean(false, 4000);
@@ -62,7 +60,7 @@ export class AppComponent implements OnInit {
   public Infinity = Infinity;
   public isValidURL = IsValidURL;
   public methods = methods;
-  public platform = platform;
+  public platform = platform();
   public scrollToBottom = this.uiService.scrollToBottom;
   public statusCodes = statusCodes;
   public toasts$: Observable<Toast[]>;
@@ -432,10 +430,6 @@ export class AppComponent implements OnInit {
     routeUrl += activeRoute.endpoint;
 
     shell.openExternal(routeUrl);
-
-    this.eventsService.analyticsEvents.next(
-      AnalyticsEvents.LINK_ROUTE_IN_BROWSER
-    );
   }
 
   /**
@@ -463,26 +457,18 @@ export class AppComponent implements OnInit {
 
   public openFeedbackLink() {
     shell.openExternal(Config.feedbackLink);
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_FEEDBACK);
   }
 
   public openChangelogModal() {
     this.eventsService.changelogModalEvents.next(true);
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_RELEASE);
   }
 
   public openWikiLink(linkName: string) {
     shell.openExternal(Config.wikiLinks[linkName]);
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_WIKI);
   }
 
   public applyUpdate() {
     this.updateService.applyUpdate();
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_APPLY_UPDATE);
   }
 
   /**
@@ -549,7 +535,7 @@ export class AppComponent implements OnInit {
   public getFileMimeType(
     filePath: string
   ): { mimeType: string; supportsTemplating: boolean } {
-    const mimeType = mimeTypes.lookup(filePath);
+    const mimeType = mimeTypeLookup(filePath) || 'none';
 
     return {
       mimeType,

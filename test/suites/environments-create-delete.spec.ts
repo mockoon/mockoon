@@ -1,4 +1,4 @@
-import { Tests } from './lib/tests';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
 
@@ -16,21 +16,33 @@ describe('Create and delete environments', () => {
   });
 
   it('Remove first environment', async () => {
-    await tests.helpers.contextMenuClickAndConfirm('.environments-menu .menu-list .nav-item:first-of-type', 5);
+    await tests.helpers.contextMenuClickAndConfirm(
+      '.environments-menu .menu-list .nav-item:first-of-type',
+      5
+    );
     await tests.helpers.countEnvironments(1);
   });
 
   it('Added environment should remain and be active', async () => {
-    await tests.app.client.getText('.environments-menu .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type').should.eventually.equal('New environment');
+    await tests.app.client
+      .getText(
+        '.environments-menu .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type'
+      )
+      .should.eventually.equal('New environment');
   });
 
   it('Remove last environment, interface should be empty', async () => {
-    await tests.helpers.contextMenuClickAndConfirm('.environments-menu .menu-list .nav-item:first-of-type', 5);
+    await tests.helpers.contextMenuClickAndConfirm(
+      '.environments-menu .menu-list .nav-item:first-of-type',
+      5
+    );
 
     await tests.helpers.countEnvironments(0);
     await tests.helpers.countRoutes(0);
 
-    await tests.app.client.waitForExist('.header input[placeholder="No environment"]');
+    await tests.app.client.waitForExist(
+      '.header input[placeholder="No environment"]'
+    );
   });
 
   it('Add ten environments, assert that port number is increased automatically', async () => {

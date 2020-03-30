@@ -1,8 +1,8 @@
 import { format as dateFormat } from 'date-fns';
 import * as DummyJSON from 'dummy-json';
-import random from 'lodash/random';
-import * as objectPath from 'object-path';
-import * as queryString from 'querystring';
+import { random } from 'lodash';
+import { ensureExists } from 'object-path';
+import { parse as qsParse } from 'querystring';
 import { Logger } from 'src/app/classes/logger';
 
 const logger = new Logger('[LIB][DUMMY]');
@@ -17,10 +17,10 @@ const logger = new Logger('[LIB][DUMMY]');
  * /!\ Do not use () => {} for custom helpers in order to keep DummyJSON `this`
  *
  */
-export const DummyJSONHelpers = (request) => {
+export const DummyJSONHelpers = request => {
   return {
     // get json property from body
-    body: function (path: string, defaultValue: string) {
+    body: function(path: string, defaultValue: string) {
       const requestContentType: string = request.header('Content-Type');
 
       if (typeof defaultValue === 'object') {
@@ -32,10 +32,10 @@ export const DummyJSONHelpers = (request) => {
         let value;
 
         if (requestContentType.includes('application/x-www-form-urlencoded')) {
-          value = queryString.parse(request.body)[path];
+          value = qsParse(request.body)[path];
         } else {
           const jsonBody = JSON.parse(request.body);
-          value = objectPath.ensureExists(jsonBody, path);
+          value = ensureExists(jsonBody, path);
         }
 
         if (value !== undefined) {
@@ -48,11 +48,11 @@ export const DummyJSONHelpers = (request) => {
       }
     },
     // use params from url /:param1/:param2
-    urlParam: function (paramName: string) {
+    urlParam: function(paramName: string) {
       return request.params[paramName];
     },
     // use params from query string ?param1=xxx&param2=yyy
-    queryParam: function (paramName: string, defaultValue: string) {
+    queryParam: function(paramName: string, defaultValue: string) {
       if (typeof defaultValue === 'object') {
         defaultValue = '';
       }
@@ -60,7 +60,7 @@ export const DummyJSONHelpers = (request) => {
       return request.query[paramName] || defaultValue;
     },
     // use content from request header
-    header: function (headerName: string, defaultValue: string) {
+    header: function(headerName: string, defaultValue: string) {
       if (typeof defaultValue === 'object') {
         defaultValue = '';
       }
@@ -76,24 +76,31 @@ export const DummyJSONHelpers = (request) => {
       return request.cookies[key] || defaultValue;
     },
     // use request hostname
-    hostname: function () {
+    hostname: function() {
       return request.hostname;
     },
     // use request ip
-    ip: function () {
+    ip: function() {
       return request.ip;
     },
     // use request method
-    method: function () {
+    method: function() {
       return request.method;
     },
     // return one random item
-    oneOf: function (itemList: string[]) {
+    oneOf: function(itemList: string[]) {
       return DummyJSON.utils.randomArrayItem(itemList);
     },
     // return some random item as an array (to be used in triple braces) or as a string
-    someOf: function (itemList: string[], min: number, max: number, asArray = false) {
-      const randomItems = itemList.sort(() => .5 - Math.random()).slice(0, random(min, max));
+    someOf: function(
+      itemList: string[],
+      min: number,
+      max: number,
+      asArray = false
+    ) {
+      const randomItems = itemList
+        .sort(() => 0.5 - Math.random())
+        .slice(0, random(min, max));
 
       if (asArray === true) {
         return `["${randomItems.join('","')}"]`;
@@ -102,12 +109,12 @@ export const DummyJSONHelpers = (request) => {
       return randomItems;
     },
     // create an array
-    array: function (...args: any[]) {
+    array: function(...args: any[]) {
       // remove last item (dummy json options argument)
       return args.slice(0, args.length - 1);
     },
     // switch cases
-    switch: function (value, options) {
+    switch: function(value, options) {
       this.found = false;
 
       this.switchValue = value;
@@ -116,7 +123,7 @@ export const DummyJSONHelpers = (request) => {
       return htmlContent;
     },
     // case helper for switch
-    case: function (value, options) {
+    case: function(value, options) {
       // check switch value to simulate break
       if (value === this.switchValue && !this.found) {
         this.found = true;
@@ -125,7 +132,7 @@ export const DummyJSONHelpers = (request) => {
       }
     },
     // default helper for switch
-    default: function (options) {
+    default: function(options) {
       // if there is still a switch value show default content
       if (!this.found) {
         delete this.switchValue;
@@ -134,8 +141,15 @@ export const DummyJSONHelpers = (request) => {
       }
     },
     // provide current time with format
-    now: function (format) {
-      return dateFormat(new Date(), (typeof format === 'string') ? format : '');
+    now: function(format) {
+      return dateFormat(
+        new Date(),
+        typeof format === 'string' ? format : "yyyy-MM-dd'T'HH:mm:ss.SSSxxx",
+        {
+          useAdditionalWeekYearTokens: true,
+          useAdditionalDayOfYearTokens: true
+        }
+      );
     }
   };
 };

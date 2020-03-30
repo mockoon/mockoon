@@ -1,4 +1,4 @@
-import { Tests } from './lib/tests';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
 
@@ -19,8 +19,7 @@ describe('Environment restart triggers', () => {
     });
 
     it('Remove a route and check that a restart is needed', async () => {
-      const menuTarget =
-        '.routes-menu .menu-list .nav-item:first-of-type';
+      const menuTarget = '.routes-menu .menu-list .nav-item:first-of-type';
       await tests.helpers.contextMenuClickAndConfirm(menuTarget, 4);
 
       await tests.helpers.checkEnvironmentNeedsRestart();

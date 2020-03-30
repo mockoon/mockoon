@@ -1,4 +1,4 @@
-import { Tests } from './lib/tests';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
 
@@ -22,14 +22,23 @@ describe('Create and delete routes', () => {
   });
 
   it('Last added route should remain and be active', async () => {
-    await tests.app.client.getText('.routes-menu .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child').should.eventually.equal('GET\n/');
+    await tests.app.client
+      .getText(
+        '.routes-menu .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child'
+      )
+      .should.eventually.equal('GET\n/');
   });
 
   it('Remove last route, active tab should be environment settings', async () => {
-    await tests.helpers.contextMenuClickAndConfirm('.routes-menu .menu-list .nav-item:first-of-type', 4);
+    await tests.helpers.contextMenuClickAndConfirm(
+      '.routes-menu .menu-list .nav-item:first-of-type',
+      4
+    );
 
     await tests.helpers.countRoutes(0);
 
-    await tests.app.client.waitForExist('.header .btn[ngbTooltip="Environment settings"].active');
+    await tests.app.client.waitForExist(
+      '.header .btn[ngbTooltip="Environment settings"].active'
+    );
   });
 });

@@ -1,6 +1,6 @@
 import { format as dateFormat } from 'date-fns';
-import { Tests } from './lib/tests';
-import { HttpCall } from './lib/types';
+import { HttpCall } from 'test/lib/models';
+import { Tests } from 'test/lib/tests';
 
 const cases: HttpCall[] = [
   {
@@ -163,7 +163,10 @@ const cases: HttpCall[] = [
     method: 'GET',
     testedResponse: {
       status: 200,
-      body: dateFormat(new Date(), 'YYYY-MM-DD')
+      body: dateFormat(new Date(), 'YYYY-MM-DD', {
+        useAdditionalWeekYearTokens: true,
+        useAdditionalDayOfYearTokens: true
+      })
     }
   }
 ];

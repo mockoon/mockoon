@@ -1,4 +1,4 @@
-import { Tests } from './lib/tests';
+import { Tests } from 'test/lib/tests';
 
 describe('UI interactions', () => {
   const tests = new Tests('ui');

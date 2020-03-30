@@ -1,4 +1,4 @@
-import { Tests } from './lib/tests';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
 

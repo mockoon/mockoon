@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { Settings } from 'src/app/services/settings.service';
-import { Tests } from './lib/tests';
+import { Tests } from 'test/lib/tests';
 
 describe('Environments migrations', () => {
   describe('Pre 1.7.0', () => {

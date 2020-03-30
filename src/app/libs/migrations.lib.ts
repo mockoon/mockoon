@@ -1,6 +1,6 @@
 import { Environment } from 'src/app/types/environment.type';
 import { Header, Route } from 'src/app/types/route.type';
-import * as uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 
 export const Migrations: {
   id: number;

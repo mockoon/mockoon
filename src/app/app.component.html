@@ -134,7 +134,7 @@
                 </div>
 
                 <!-- ENVIRONMENT SETTINGS VIEW -->
-                <div *ngIf="activeView === 'ENV_SETTINGS'" class="d-flex flex-column h-100 m-2"
+                <div *ngIf="activeView === 'ENV_SETTINGS'" class="d-flex flex-column flex-fill mh0 h-100 m-2"
                   [formGroup]="activeEnvironmentForm">
                   <div class="row h-35">
                     <div class="col d-flex flex-column h-100">
@@ -174,7 +174,7 @@
                               class="material-icons" ngbTooltip="Headers will be added to the response received from the proxied server">info</i></div>
                           </div>
                         </div>
-                        <div class="row pl-4 h-100">
+                        <div class="row pl-4 flex-fill mh0">
                           <div class="col-6 h-100 scroll-content" #environmentProxyReqHeadersContainer>
                             <app-headers-list [data$]="activeEnvironment$" headers="proxyReqHeaders" type="environmentHeaders"
                               (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
@@ -442,7 +442,7 @@
                         <div class="col">
                           <div>
                             &nbsp;<small *ngIf="activeRouteResponse.filePath" class="text-muted">Detected MIME type:
-                              {{getFileMimeType(activeRouteResponse.filePath).mimeType || 'none'}} <span
+                              {{getFileMimeType(activeRouteResponse.filePath).mimeType}} <span
                                 *ngIf="getFileMimeType(activeRouteResponse.filePath).supportsTemplating"> - Supports
                                 templating
                                 <span (click)="openWikiLink('templating')"

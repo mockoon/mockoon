@@ -3,7 +3,7 @@ const dialog = electron.dialog;
 const ipcMain = electron.ipcMain;
 
 function mock(options) {
-  options.forEach(option => {
+  options.forEach((option) => {
     if (dialog[option.method]) {
       dialog[option.method] = option.method.toLowerCase().endsWith('sync')
         ? () => option.value

@@ -1,4 +1,4 @@
-import { Tests } from './lib/tests';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
 
@@ -11,11 +11,13 @@ describe('Duplicate a route', () => {
 
   it('Duplicate first route ', async () => {
     const menuTarget = '.routes-menu .menu-list .nav-item:first-of-type';
-    await tests.helpers.contextMenuClick(menuTarget, 1)
+    await tests.helpers.contextMenuClick(menuTarget, 1);
     await tests.helpers.countRoutes(4);
   });
 
   it('Verify duplicated environment in second slot', async () => {
-    await tests.app.client.waitForExist('.routes-menu .menu-list .nav-item:nth-of-type(2) .text-warning');
+    await tests.app.client.waitForExist(
+      '.routes-menu .menu-list .nav-item:nth-of-type(2) .text-warning'
+    );
   });
 });
