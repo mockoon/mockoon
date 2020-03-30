@@ -49,6 +49,7 @@ export class OpenAPIConverterService {
         this.toastsService.addToast('warning', Errors.IMPORT_WRONG_VERSION);
       }
     } catch (error) {
+      this.toastsService.addToast('error', `${Errors.IMPORT_ERROR}: ${error.message}`);
       this.logger.error(`Error while importing OpenAPI file: ${error.message}`);
     }
   }
@@ -66,6 +67,7 @@ export class OpenAPIConverterService {
     try {
       return this.convertToOpenAPIV3(environment);
     } catch (error) {
+      this.toastsService.addToast('error', `${Errors.EXPORT_ERROR}: ${error.message}`);
       this.logger.error(`Error while exporting OpenAPI file: ${error.message}`);
     }
   }
