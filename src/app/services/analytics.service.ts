@@ -77,7 +77,7 @@ export class AnalyticsService {
           AnalyticsEvents.SERVER_ENTERING_REQUEST.action
         );
       }),
-      debounceTime(120000)
+      debounceTime(29 * 60 * 1000)
     );
 
     merge(allEventsObservable, enteringRequestEventsbservable).subscribe(

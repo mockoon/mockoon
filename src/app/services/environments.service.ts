@@ -62,8 +62,6 @@ export class EnvironmentsService {
       } else {
         this.store.update(setActiveEnvironmentAction(environmentUUIDOrDirection));
       }
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.NAVIGATE_ENVIRONMENT);
     }
   }
 
@@ -79,8 +77,6 @@ export class EnvironmentsService {
       } else {
         this.store.update(setActiveRouteAction(routeUUIDOrDirection));
       }
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.NAVIGATE_ROUTE);
     }
   }
 
@@ -113,9 +109,6 @@ export class EnvironmentsService {
       newEnvironment = this.dataService.renewEnvironmentUUIDs(newEnvironment);
 
       this.store.update(addEnvironmentAction(newEnvironment, environmentToDuplicate.uuid));
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ENVIRONMENT);
-
       this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
     }
   }
@@ -128,7 +121,6 @@ export class EnvironmentsService {
       this.serverService.stop(environmentUUID);
 
       this.store.update(removeEnvironmentAction(environmentUUID));
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ENVIRONMENT);
     }
   }
 
@@ -148,7 +140,6 @@ export class EnvironmentsService {
    */
   public addRouteResponse() {
     this.store.update(addRouteResponseAction(this.schemasBuilderService.buildRouteResponse()));
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE_RESPONSE);
   }
 
   /**
@@ -168,7 +159,6 @@ export class EnvironmentsService {
 
       this.store.update(addRouteAction(newRoute, routeToDuplicate.uuid));
 
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.DUPLICATE_ROUTE);
       this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
     }
   }
@@ -179,8 +169,6 @@ export class EnvironmentsService {
   public removeRoute(routeUUID: string = this.store.get('activeRouteUUID')) {
     if (routeUUID) {
       this.store.update(removeRouteAction(routeUUID));
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE);
     }
   }
 
@@ -189,8 +177,6 @@ export class EnvironmentsService {
    */
   public removeRouteResponse() {
     this.store.update(removeRouteResponseAction());
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.DELETE_ROUTE_RESPONSE);
   }
 
   /**
@@ -271,11 +257,8 @@ export class EnvironmentsService {
     if (activeEnvironmentState.running) {
       this.serverService.stop(activeEnvironment.uuid);
 
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_STOP);
-
       if (activeEnvironmentState.needRestart) {
         this.serverService.start(activeEnvironment);
-        this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_RESTART);
       }
     } else {
       this.serverService.start(activeEnvironment);
