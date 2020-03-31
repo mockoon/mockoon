@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EnvironmentsContextMenu } from 'src/app/components/context-menu/context-menus';
 import { EnvironmentsService } from 'src/app/services/environments.service';
@@ -11,7 +11,8 @@ import { ScrollDirection } from 'src/app/types/ui.type';
 @Component({
   selector: 'app-environments-menu',
   templateUrl: './environments-menu.component.html',
-  styleUrls: ['./environments-menu.component.scss']
+  styleUrls: ['./environments-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentsMenuComponent implements OnInit {
   @ViewChild('environmentsMenu', { static: false })

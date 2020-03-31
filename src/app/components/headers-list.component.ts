@@ -1,19 +1,20 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import { TestHeaderValidity } from 'src/app/libs/utils.lib';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ServerService } from 'src/app/services/server.service';
 import { Environment } from 'src/app/types/environment.type';
 import { Header, headerNames, headerValues, RouteResponse } from 'src/app/types/route.type';
-import { TestHeaderValidity } from 'src/app/libs/utils.lib';
 
 export type HeadersListType = 'routeResponseHeaders' | 'environmentHeaders';
 
 @Component({
   selector: 'app-headers-list',
-  templateUrl: 'headers-list.component.html'
+  templateUrl: 'headers-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeadersListComponent implements OnInit {
   @Input() data$: Observable<Environment | RouteResponse>;
