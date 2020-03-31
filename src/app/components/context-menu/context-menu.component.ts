@@ -1,26 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
-import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
-import { DataSubject } from 'src/app/types/data.type';
-
-export type ContextMenuItemPayload = {
-  subject: DataSubject;
-  action: 'delete' | 'duplicate' | 'env_settings' | 'env_logs' | 'export' | 'toggle';
-  subjectUUID: string;
-};
-
-export type ContextMenuItem = {
-  label: string;
-  payload?: ContextMenuItemPayload;
-  icon: string;
-  confirmColor?: string;
-  confirm?: ContextMenuItem;
-  separator?: boolean;
-};
-
-export type ContextMenuPosition = {
-  left: string;
-  top: string;
-};
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ContentMenuState, ContextMenuItem, ContextMenuItemPayload } from 'src/app/models/context-menu.model';
+import { EventsService } from 'src/app/services/events.service';
 
 @Component({
   selector: 'app-context-menu',
@@ -29,54 +11,57 @@ export type ContextMenuPosition = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContextMenuComponent implements OnInit {
-  @Output() itemClicked: EventEmitter<ContextMenuItemPayload> = new EventEmitter();
-  public show = false;
-  public position: ContextMenuPosition;
-  public items: ContextMenuItem[];
-  public confirmIndex: number;
+  @Output() itemClicked: EventEmitter<
+    ContextMenuItemPayload
+  > = new EventEmitter();
+  public menuState$: Observable<ContentMenuState>;
   private timeout: NodeJS.Timer;
 
-  constructor(private eventsService: EventsService) { }
+  constructor(private eventsService: EventsService) {}
 
   ngOnInit() {
-    this.eventsService.contextMenuEvents.subscribe((contextMenuEvent: ContextMenuEvent) => {
-      this.position = {
-        left: contextMenuEvent.event.clientX + 'px',
-        top: contextMenuEvent.event.clientY + 'px'
-      };
+    this.menuState$ = this.eventsService.contextMenuEvents.pipe(
+      map((contextMenuEvent) => {
+        if (!contextMenuEvent) {
+          return null;
+        }
 
-      // if risk of going outside window (100px safe zone), move from item height
-      if ((contextMenuEvent.event.clientY + 100) > contextMenuEvent.event.view.innerHeight) {
-        const menu = document.querySelector('.context-menu');
-        // hardcode 65 in case menu is not yet visible
-        const menuHeight = (menu && menu['offsetHeight']) || 65;
-        this.position.top = (contextMenuEvent.event.clientY - menuHeight) + 'px';
-      }
+        const menuState = {
+          position: {
+            left: contextMenuEvent.event.clientX + 'px',
+            top: contextMenuEvent.event.clientY + 'px'
+          },
+          items: contextMenuEvent.items,
+          show: true,
+          confirmIndex: undefined
+        };
+        const menuHeight = this.calculateMenuHeight(contextMenuEvent.items);
 
-      this.items = contextMenuEvent.items;
-      this.show = true;
-      this.confirmIndex = undefined;
+        // if risk of going outside window, move top from menu height
+        if (
+          contextMenuEvent.event.clientY + menuHeight >
+          contextMenuEvent.event.view.innerHeight
+        ) {
+          menuState.position.top =
+            contextMenuEvent.event.clientY - menuHeight + 'px';
+        }
 
-      clearTimeout(this.timeout);
+        this.restartTimeout();
 
-      this.timeout = setTimeout(() => {
-        this.reset();
-      }, 4000);
-    });
+        return menuState;
+      })
+    );
   }
 
   // close on click outside
-  @HostListener('window:click', ['$event']) onInputChange(event) {
+  @HostListener('window:click') onInputChange() {
     this.reset();
   }
 
   public mouseLeave() {
-    clearTimeout(this.timeout);
-
-    this.timeout = setTimeout(() => {
-      this.reset();
-    }, 4000);
+    this.restartTimeout();
   }
+
   public mouseEnter() {
     clearTimeout(this.timeout);
   }
@@ -85,24 +70,47 @@ export class ContextMenuComponent implements OnInit {
    * Handle menu items clicks.
    * Stop propagation to avoid triggering window:click
    *
+   * @param item
    * @param event
    */
-  public action(item: ContextMenuItem, itemIndex: number, event: any) {
+  public action(item: ContextMenuItem, event: any) {
     event.stopPropagation();
 
-    if (item.confirm && this.confirmIndex !== itemIndex) {
-      this.confirmIndex = itemIndex;
-    } else if (!item.confirm || this.confirmIndex === itemIndex) {
+    if (item.confirm && !item.needConfirm) {
+      item.needConfirm = true;
+    } else if (!item.confirm || item.needConfirm) {
       this.itemClicked.emit(item.payload);
 
       this.reset();
     }
   }
 
+  /**
+   * Reset the menu state
+   */
   private reset() {
-    this.show = false;
-    this.confirmIndex = undefined;
+    this.eventsService.contextMenuEvents.next(null);
 
     clearTimeout(this.timeout);
+  }
+
+  /**
+   * Calculate the menu height depending on number of items
+   *
+   * @param items
+   */
+  private calculateMenuHeight(items: ContextMenuItem[]): number {
+    return items.length * 35;
+  }
+
+  /**
+   * Restart the closing timeout
+   */
+  private restartTimeout() {
+    clearTimeout(this.timeout);
+
+    this.timeout = setTimeout(() => {
+      this.reset();
+    }, 4000);
   }
 }

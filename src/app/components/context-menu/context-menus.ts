@@ -1,4 +1,4 @@
-import { ContextMenuItem } from 'src/app/components/context-menu/context-menu.component';
+import { ContextMenuItem } from 'src/app/models/context-menu.model';
 
 export const EnvironmentsContextMenu = (
   environmentUUID: string

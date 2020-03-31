@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EnvironmentsContextMenu } from 'src/app/components/context-menu/context-menus';
+import { ContextMenuEvent } from 'src/app/models/context-menu.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
-import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'src/app/services/events.service';
 import { UIService } from 'src/app/services/ui.service';
 import { EnvironmentsStatuses, Store, UIState } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
@@ -106,7 +107,7 @@ export class EnvironmentsMenuComponent implements OnInit {
         items: EnvironmentsContextMenu(environmentUUID)
       };
 
-      this.eventsService.contextMenuEvents.emit(menu);
+      this.eventsService.contextMenuEvents.next(menu);
     }
   }
 
