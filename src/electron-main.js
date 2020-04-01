@@ -287,7 +287,7 @@ function createWindow() {
             }
           },
           {
-            label: 'Export to OpenAPI file (JSON)',
+            label: 'Export current environment to OpenAPI v3 (JSON)',
             click: function() {
               mainWindow.webContents.send('keydown', {
                 action: 'EXPORT_OPENAPI_FILE'
