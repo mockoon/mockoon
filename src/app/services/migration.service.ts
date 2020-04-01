@@ -16,8 +16,6 @@ export class MigrationService {
    * @param environments - environments to migrate
    */
   public migrateEnvironments(environments: Environments) {
-    this.logger.info(`Migrating all environments`);
-
     environments.forEach(environment => {
       this.migrateEnvironment(environment);
     });

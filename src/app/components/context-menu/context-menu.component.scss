@@ -1,4 +1,4 @@
-@import "src/styles/bootstrap-variables.scss";
+@import 'src/styles/bootstrap-variables.scss';
 
 .context-menu {
   z-index: 5000;
@@ -6,6 +6,7 @@
   background-color: rgba(lighten($gray-900, 9%), 0.95);
   border: 1px solid lighten($gray-900, 10%);
   min-width: 180px;
+  box-shadow: 0 0 3px 1px darken($gray-900, 5%);
 
   &-item {
     transition: all ease-in-out 200ms;

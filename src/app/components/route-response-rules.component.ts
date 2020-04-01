@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
@@ -8,7 +8,8 @@ import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/
 
 @Component({
   selector: 'app-route-response-rules',
-  templateUrl: 'route-response-rules.component.html'
+  templateUrl: 'route-response-rules.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RouteResponseRulesComponent implements OnInit {
   @Input() data$: Observable<RouteResponse>;

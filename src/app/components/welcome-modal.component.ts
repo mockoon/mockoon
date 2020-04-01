@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
@@ -9,7 +9,8 @@ import { Store } from 'src/app/stores/store';
 
 @Component({
   selector: 'app-welcome-modal',
-  templateUrl: './welcome-modal.component.html'
+  templateUrl: './welcome-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WelcomeModalComponent implements OnInit, AfterViewInit {
   @ViewChild('modal', { static: false }) modal: ElementRef;

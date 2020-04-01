@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RoutesContextMenu } from 'src/app/components/context-menu/context-menus';
+import { ContextMenuEvent } from 'src/app/models/context-menu.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
-import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'src/app/services/events.service';
 import { Settings } from 'src/app/services/settings.service';
 import { UIService } from 'src/app/services/ui.service';
 import { DuplicatedRoutesTypes, EnvironmentsStatuses, Store } from 'src/app/stores/store';
@@ -12,7 +13,8 @@ import { Route } from 'src/app/types/route.type';
 @Component({
   selector: 'app-routes-menu',
   templateUrl: './routes-menu.component.html',
-  styleUrls: ['./routes-menu.component.scss']
+  styleUrls: ['./routes-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoutesMenuComponent implements OnInit {
   @ViewChild('routesMenu', { static: false }) private routesMenu: ElementRef;
@@ -74,7 +76,7 @@ export class RoutesMenuComponent implements OnInit {
         items: RoutesContextMenu(routeUUID)
       };
 
-      this.eventsService.contextMenuEvents.emit(menu);
+      this.eventsService.contextMenuEvents.next(menu);
     }
   }
 }

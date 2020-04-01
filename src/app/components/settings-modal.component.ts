@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
@@ -8,7 +8,8 @@ import { Store } from 'src/app/stores/store';
 @Component({
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
-  styleUrls: ['settings-modal.component.scss']
+  styleUrls: ['settings-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsModalComponent implements OnInit, AfterViewInit {
   @ViewChild('modal', { static: false }) modal: ElementRef;
