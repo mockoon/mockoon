@@ -20,7 +20,6 @@
   "scripts": {
     "lint": "ng lint --type-check",
     "test": "xvfb-maybe ts-mocha --paths -p test/tsconfig.spec.json --timeout 10000 test/suites/**/*.spec.ts",
-    "setversion": "node ./scripts/version-bump.js",
     "serve": "concurrently \"npm run serve:app\" \"wait-on -d 10000 ./dist && npm run serve:electron\"",
     "serve:app": "ng build --configuration=development --watch --output-hashing=all",
     "serve:electron": "electron ./dist --serve --remote-debugging-port=8888",
