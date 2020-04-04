@@ -10,7 +10,7 @@
 }
 .nav-link {
   cursor: pointer;
-  transition: all ease-in-out 150ms;
+  transition: all ease-in-out 150ms, box-shadow 1ms;
 }
 .nav-tabs {
   .nav-link {
