@@ -68,7 +68,9 @@ export class ServerService {
     // set timeout long enough to allow long latencies
     serverInstance.setTimeout(3_600_000);
 
-    this.logger.info(`Starting server ${environment.uuid} on port ${environment.port}`);
+    this.logger.info(
+      `Starting server ${environment.uuid} on port ${environment.port}`
+    );
     serverInstance.listen(environment.port, () => {
       this.logger.info(
         `Server ${environment.uuid} was started successfully on port ${environment.port}`

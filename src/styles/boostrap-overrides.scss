@@ -87,7 +87,8 @@
 label {
   color: $gray-400;
 }
-.input-group-prepend, .input-group-append {
+.input-group-prepend,
+.input-group-append {
   i {
     font-size: 1.2rem;
     line-height: 1.5rem;
@@ -119,7 +120,8 @@ label {
   }
   color: $gray-500;
 
-  &:hover, &:active {
+  &:hover,
+  &:active {
     color: $body-color;
     text-decoration: none;
   }
@@ -132,24 +134,40 @@ label {
 }
 
 .btn-custom {
-  @include button-variant($custom-gray, $custom-gray, $custom-gray, $custom-gray, $custom-gray, $gray-800);
+  @include button-variant(
+    $custom-gray,
+    $custom-gray,
+    $custom-gray,
+    $custom-gray,
+    $custom-gray,
+    $gray-800
+  );
   color: $gray-500;
   border-width: $btn-border-width;
 
-  &:hover, &.dropdown-toggle {
+  &:hover,
+  &.dropdown-toggle {
     color: $gray-100;
   }
 
   &:focus,
   &.focus,
-  &:not(:disabled):not(.disabled):active:focus, &:not(:disabled):not(.disabled).active:focus, .show > &.dropdown-toggle:focus {
+  &:not(:disabled):not(.disabled):active:focus,
+  &:not(:disabled):not(.disabled).active:focus,
+  .show > &.dropdown-toggle:focus {
     box-shadow: none;
   }
 }
 
 .btn-xs {
   // line-height: ensure proper height of button next to small input
-  @include button-size($input-btn-padding-y-xs, $input-btn-padding-x-xs, $font-size-xs, $input-btn-line-height-xs, $btn-border-radius-xs);
+  @include button-size(
+    $input-btn-padding-y-xs,
+    $input-btn-padding-x-xs,
+    $font-size-xs,
+    $input-btn-line-height-xs,
+    $btn-border-radius-xs
+  );
 }
 
 .btn-group {
@@ -180,16 +198,24 @@ label {
 }
 
 // add margin to the split dropdown caret, when there is text
-.dropdown-toggle-split:not(:empty)::after, .dropup .dropdown-toggle-split:not(:empty)::after, .dropright .dropdown-toggle-split:not(:empty)::after {
+.dropdown-toggle-split:not(:empty)::after,
+.dropup .dropdown-toggle-split:not(:empty)::after,
+.dropright .dropdown-toggle-split:not(:empty)::after {
   margin-left: 15px;
 }
-.route-responses-dropdown-content {
-  display: inline-block;
-  width: 140px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  vertical-align: bottom;
-  text-align: left;
+.route-responses-dropdown {
+  &-content {
+    display: inline-block;
+    width: 140px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: bottom;
+    text-align: left;
+  }
+
+  &-menu {
+    max-width: 350px;
+  }
 }
 
 a:not([href]):not([tabindex]) {

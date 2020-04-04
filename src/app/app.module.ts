@@ -26,7 +26,6 @@ import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzon
 import { MousewheelUpdateDirective } from 'src/app/directives/mousewheel-update.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
-import { TruncatePipe } from 'src/app/pipes/truncate.pipe';
 import { GlobalErrorHandler } from 'src/app/services/error-handler';
 import { AppComponent } from './app.component';
 
@@ -46,8 +45,7 @@ import { AppComponent } from './app.component';
     BannerComponent,
     RouteResponseRulesComponent,
     EnvironmentsMenuComponent,
-    RoutesMenuComponent,
-    TruncatePipe
+    RoutesMenuComponent
   ],
   imports: [
     AceEditorModule,
