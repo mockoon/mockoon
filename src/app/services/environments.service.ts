@@ -46,8 +46,6 @@ export class EnvironmentsService {
 
     // subscribe to environments update to save
     this.store.select('environments').pipe(debounceTime(2000)).subscribe((environments) => {
-      this.logger.info(`Saving environments`);
-
       storageSet(this.storageKey, environments, () => {});
     });
   }

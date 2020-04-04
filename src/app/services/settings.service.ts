@@ -58,8 +58,6 @@ export class SettingsService {
       .select('settings')
       .pipe(filter(Boolean), debounceTime(1000))
       .subscribe((settings: Settings) => {
-        this.logger.info(`Saving settings`);
-
         storageSet(this.storageKey, settings, () => {});
       });
   }
@@ -70,8 +68,6 @@ export class SettingsService {
    * @param newProperties
    */
   public updateSettings(newProperties: SettingsProperties) {
-    this.logger.info(`Updating settings in the store`);
-
     this.store.update(updateSettingsAction(newProperties));
   }
 

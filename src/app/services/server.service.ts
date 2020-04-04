@@ -68,10 +68,10 @@ export class ServerService {
     // set timeout long enough to allow long latencies
     serverInstance.setTimeout(3_600_000);
 
-    this.logger.info(`Starting server on port ${environment.port}`);
+    this.logger.info(`Starting server ${environment.uuid} on port ${environment.port}`);
     serverInstance.listen(environment.port, () => {
       this.logger.info(
-        `Server was started successfully on port ${environment.port}`
+        `Server ${environment.uuid} was started successfully on port ${environment.port}`
       );
 
       this.instances[environment.uuid] = serverInstance;
@@ -80,7 +80,7 @@ export class ServerService {
       );
     });
 
-    ExpressMiddlewares(this.eventsService).forEach(expressMiddleware => {
+    ExpressMiddlewares(this.eventsService).forEach((expressMiddleware) => {
       server.use(expressMiddleware);
     });
 
@@ -147,7 +147,7 @@ export class ServerService {
         // override default CORS headers with environment's headers
         this.setHeaders(
           [...CORSHeaders, ...environmentSelected.headers],
-          header => {
+          (header) => {
             res.set(header.key, DummyJSONParser(header.value, req));
           }
         );
@@ -187,7 +187,7 @@ export class ServerService {
                 environment.uuid
               );
               const currentRoute = currentEnvironment.routes.find(
-                route => route.uuid === declaredRoute.uuid
+                (route) => route.uuid === declaredRoute.uuid
               );
               const enabledRouteResponse = new ResponseRulesInterpreter(
                 currentRoute.responses,
@@ -206,7 +206,7 @@ export class ServerService {
                   (enabledRouteResponse.statusCode as unknown) as number
                 );
 
-                this.setHeaders(enabledRouteResponse.headers, header => {
+                this.setHeaders(enabledRouteResponse.headers, (header) => {
                   res.set(header.key, DummyJSONParser(header.value, req));
                 });
 
@@ -220,18 +220,15 @@ export class ServerService {
                       enabledRouteResponse.filePath,
                       req
                     );
-                    const fileMimeType = mimeTypeLookup(
-                      enabledRouteResponse.filePath
-                    ) || '';
+                    const fileMimeType =
+                      mimeTypeLookup(enabledRouteResponse.filePath) || '';
 
                     // if no route content type set to the one detected
                     if (!routeContentType) {
                       res.set('Content-Type', fileMimeType);
                     }
 
-                    let fileContent: Buffer | string = readFileSync(
-                      filePath
-                    );
+                    let fileContent: Buffer | string = readFileSync(filePath);
 
                     // parse templating for a limited list of mime types
                     if (mimeTypesWithTemplating.indexOf(fileMimeType) > -1) {
@@ -337,7 +334,7 @@ export class ServerService {
    */
   private setResponseHeaders(server: any, environment: Environment) {
     server.use((req, res, next) => {
-      this.setHeaders(environment.headers, header => {
+      this.setHeaders(environment.headers, (header) => {
         res.setHeader(header.key, DummyJSONParser(header.value, req));
       });
 
@@ -355,7 +352,7 @@ export class ServerService {
     headers: Partial<Header>[],
     setterFn: (header: Partial<Header>) => any
   ) {
-    headers.forEach(header => {
+    headers.forEach((header) => {
       if (header.key && header.value && !TestHeaderValidity(header.key)) {
         setterFn(header);
       }
@@ -396,7 +393,7 @@ export class ServerService {
       const processRequest = (proxyReq, req, res) => {
         req.proxied = true;
 
-        this.setHeaders(environment.proxyReqHeaders, header => {
+        this.setHeaders(environment.proxyReqHeaders, (header) => {
           proxyReq.setHeader(header.key, DummyJSONParser(header.value, req));
         });
 
@@ -418,11 +415,11 @@ export class ServerService {
         });
 
         let body = '';
-        proxyRes.on('data', chunk => {
+        proxyRes.on('data', (chunk) => {
           body += chunk;
         });
         proxyRes.on('end', () => {
-          proxyRes.getHeaders = function() {
+          proxyRes.getHeaders = function () {
             return combinedHeaders;
           };
           const enhancedReq = req as IEnhancedRequest;
@@ -434,7 +431,7 @@ export class ServerService {
           self.store.update(logResponseAction(environment.uuid, response));
         });
 
-        this.setHeaders(environment.proxyResHeaders, header => {
+        this.setHeaders(environment.proxyResHeaders, (header) => {
           proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
         });
       };
@@ -445,6 +442,10 @@ export class ServerService {
           .status(504)
           .send('Error occured while trying to proxy to: ' + req.url);
       };
+
+      this.logger.info(
+        `Creating proxy between localhost:${environment.port} and ${environment.proxyHost}`
+      );
 
       server.use(
         '*',
@@ -461,7 +462,7 @@ export class ServerService {
     } else {
       // if not proxy, log the 404 response
       server.use((req, res, next) => {
-        this.setHeaders(environment.headers, header => {
+        this.setHeaders(environment.headers, (header) => {
           res.setHeader(header.key, DummyJSONParser(header.value, req));
         });
 
@@ -499,7 +500,7 @@ export class ServerService {
       const oldSend = res.send;
 
       const self = this;
-      res.send = function(body) {
+      res.send = function (body) {
         oldSend.apply(res, arguments);
         const enhancedReq = this.req as IEnhancedRequest;
         const responseLog = self.dataService.formatResponseLog(
@@ -534,7 +535,10 @@ export class ServerService {
    * @param server - server instance
    * @param environmentUUID - environment UUID
    */
-  private setEnvironmentLatency(server: express.Application, environmentUUID: string) {
+  private setEnvironmentLatency(
+    server: express.Application,
+    environmentUUID: string
+  ) {
     server.use((req, res, next) => {
       const environmentSelected = this.store.getEnvironmentByUUID(
         environmentUUID
