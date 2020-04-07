@@ -42,7 +42,12 @@
     ],
     "category": "Development",
     "icon": "build",
-    "artifactName": "mockoon-${version}.${ext}"
+    "artifactName": "mockoon-${version}.${ext}",
+    "desktop": {
+      "Name": "Mockoon",
+      "Type": "Application",
+      "Categories": "Development"
+    }
   },
   "afterSign": "scripts/notarize.js"
 }
