@@ -27,9 +27,9 @@
     "build:ci": "rm -rf ./dist && ng build --prod --configuration=ci",
     "build:prod": "rm -rf ./dist && ng build --prod --configuration=production",
     "clean-packages": "rm -rf ./packages",
-    "package:win": "npm run clean-packages && electron-builder --win --config electron-builder.json",
-    "package:linux": "npm run clean-packages && electron-builder --linux --config electron-builder.json",
-    "package:mac": "npm run clean-packages && electron-builder --mac --config electron-builder.json"
+    "package:win": "npm run clean-packages && electron-builder --publish never --win --config electron-builder.json",
+    "package:linux": "npm run clean-packages && electron-builder --publish never --linux --config electron-builder.json",
+    "package:mac": "npm run clean-packages && electron-builder --publish never --mac --config electron-builder.json"
   },
   "prettier": {
     "singleQuote": true,
