@@ -89,8 +89,8 @@
     "cors": true,
     "headers": [
       {
-        "key": "",
-        "value": ""
+        "key": "Content-Type",
+        "value": "application/xml"
       }
     ],
     "proxyReqHeaders": [{"key": "", "value":""}],

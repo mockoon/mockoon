@@ -1,5 +1,4 @@
 import { Tests } from 'test/lib/tests';
-
 const tests = new Tests('first-load', true);
 
 describe('First load', () => {
@@ -15,13 +14,13 @@ describe('First load', () => {
       '.modal-title',
       'Welcome new Mockoon user!'
     );
+
+    // wait for settings save
+    await tests.app.client.pause(2000);
   });
 
   it('Close welcome modal, check for persistence', async () => {
     await tests.app.client.element('.modal-footer .btn').click();
-
-    // wait for settings save
-    await tests.app.client.pause(1000);
     await tests.helpers.verifyObjectPropertyInFile(
       './tmp/storage/settings.json',
       'welcomeShown',

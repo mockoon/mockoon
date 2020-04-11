@@ -49,7 +49,7 @@ describe('Settings', () => {
       await tests.helpers.closeSettingsModal();
 
       // wait for settings save
-      await tests.app.client.pause(1000);
+      await tests.app.client.pause(2000);
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'truncateRouteName',
@@ -74,7 +74,7 @@ describe('Settings', () => {
       await tests.helpers.closeSettingsModal();
 
       // wait for settings save
-      await tests.app.client.pause(1000);
+      await tests.app.client.pause(2000);
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'analytics',
@@ -98,7 +98,7 @@ describe('Settings', () => {
       await tests.helpers.closeSettingsModal();
 
       // wait for settings save
-      await tests.app.client.pause(1000);
+      await tests.app.client.pause(2000);
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'logSizeLimit',
@@ -126,7 +126,7 @@ describe('Settings', () => {
       await tests.helpers.closeSettingsModal();
 
       // wait for settings save
-      await tests.app.client.pause(1000);
+      await tests.app.client.pause(2000);
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'logSizeLimit',
