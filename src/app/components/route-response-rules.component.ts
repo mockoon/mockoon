@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
-import { distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilKeyChanged, filter, map, takeUntil, tap } from 'rxjs/operators';
 import { SelectOptionsList } from 'src/app/models/common.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/route.type';
@@ -11,22 +11,25 @@ import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/
   templateUrl: 'route-response-rules.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RouteResponseRulesComponent implements OnInit {
-  @Input() data$: Observable<RouteResponse>;
+export class RouteResponseRulesComponent implements OnInit, OnDestroy {
+  @Input() activeRouteResponse$: Observable<RouteResponse>;
   @Output() ruleAdded: EventEmitter<any> = new EventEmitter();
+  public rules$: Observable<ResponseRule[]>;
   public form: FormGroup;
-  public rulesFormChanges: Subscription;
   public responseRuleTargets: SelectOptionsList<ResponseRuleTargets> = [
     { code: 'body', text: 'Body path (JSON / form data)' },
     { code: 'query', text: 'Query string' },
     { code: 'header', text: 'Header' },
     { code: 'params', text: 'Route params' }
   ];
+  private listenToChanges = true;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder
-  ) { }
+    private formBuilder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -34,40 +37,52 @@ export class RouteResponseRulesComponent implements OnInit {
     });
 
     // subscribe to rules changes to reset the form
-    this.data$.pipe(
-      filter(data => !!data),
-      distinctUntilKeyChanged('uuid')
-    ).subscribe(data => {
-      // unsubscribe to prevent emitting when clearing the FormArray
-      if (this.rulesFormChanges) {
-        this.rulesFormChanges.unsubscribe();
-      }
+    this.rules$ = this.activeRouteResponse$.pipe(
+      filter((activeRouteResponse) => !!activeRouteResponse),
+      distinctUntilKeyChanged('uuid'),
+      map((activeRouteResponse) => activeRouteResponse.rules),
+      tap((rules) => {
+        this.replaceRules(rules, false);
+      })
+    );
 
-      this.replaceRules(data.rules);
+    // subscribe to changes and send new rules values to the store
+    this.form
+      .get('rules')
+      .valueChanges.pipe(
+        filter(() => this.listenToChanges),
+        debounceTime(100),
+        tap((newRules) => {
+          this.environmentsService.updateActiveRouteResponse({
+            rules: newRules
+          });
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
+  }
 
-      // subscribe to changes and send new rules values to the store
-      this.rulesFormChanges = this.form.get('rules').valueChanges.pipe(
-        map(newValue => ({ rules: newValue }))
-      ).subscribe(newProperty => {
-        this.environmentsService.updateActiveRouteResponse(newProperty);
-      });
-    });
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
   }
 
   /**
    * Replace all rules in the FormArray
    */
-  private replaceRules(newRules: ResponseRule[]) {
-    const formRulesArray = (this.form.get('rules') as FormArray);
+  private replaceRules(newRules: ResponseRule[], listenToChanges = true) {
+    this.listenToChanges = listenToChanges;
+    const formRulesArray = this.form.get('rules') as FormArray;
 
-    // clear formArray (with Angular 8 use .clear())
-    while (formRulesArray.length !== 0) {
-      formRulesArray.removeAt(0);
-    }
+    formRulesArray.clear();
 
-    newRules.forEach(rule => {
+    newRules.forEach((rule) => {
       formRulesArray.push(this.formBuilder.group(<ResponseRule>{ ...rule }));
     });
+
+    this.changeDetectorRef.markForCheck();
+
+    this.listenToChanges = true;
   }
 
   /**

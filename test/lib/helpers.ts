@@ -338,18 +338,19 @@ export class Helpers {
   }
 
   async httpCallAsserter(httpCall: HttpCall) {
+    await this.testsInstance.app.client.pause(100);
     await this.httpCallAsserterWithPort(httpCall, 3000);
   }
 
   async assertActiveEnvironmentPort(expectedPort: number) {
-    const port: String = await this.testsInstance.app.client
+    const port: string = await this.testsInstance.app.client
       .element('input[formcontrolname="port"]')
       .getAttribute('value');
     await port.should.be.equals(expectedPort.toString());
   }
 
   async assertActiveEnvironmentName(expectedName: string) {
-    const environmentName: String = await this.testsInstance.app.client
+    const environmentName: string = await this.testsInstance.app.client
       .element('input[formcontrolname="name"]')
       .getAttribute('value');
     await environmentName.should.be.equals(expectedName.toString());
@@ -408,7 +409,7 @@ export class Helpers {
     this.verifyObjectProperty(environments, objectPaths, values, exists);
   }
 
-  async verifyObjectProperty(
+  verifyObjectProperty(
     object: any,
     objectPaths: string | string[],
     values: any | any[],

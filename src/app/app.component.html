@@ -176,11 +176,11 @@
                         </div>
                         <div class="row pl-4 flex-fill mh0">
                           <div class="col-6 h-100 scroll-content" #environmentProxyReqHeadersContainer>
-                            <app-headers-list [data$]="activeEnvironment$" headers="proxyReqHeaders" type="environmentHeaders"
+                            <app-headers-list [activeItem$]="activeEnvironment$" headers="proxyReqHeaders" type="environmentHeaders"
                               (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
                           </div>
                           <div class="col-6 h-100 pl-2 scroll-content" #environmentProxyResHeadersContainer>
-                            <app-headers-list [data$]="activeEnvironment$" headers="proxyResHeaders" type="environmentHeaders"
+                            <app-headers-list [activeItem$]="activeEnvironment$" headers="proxyResHeaders" type="environmentHeaders"
                               (headerAdded)="scrollToBottom(environmentProxyResHeadersContainer)"></app-headers-list>
                           </div>
                         </div>
@@ -225,7 +225,7 @@
                           <input type="checkbox" class="custom-control-input" id="CORS" formControlName="cors">
                           <label class="custom-control-label" for="CORS">Enable</label>
                         </div>
-                        <button class="btn btn-link btn-icon text-primary form-right" type="button"
+                        <button class="btn btn-link btn-icon text-primary form-right settings-add-cors" type="button"
                           (click)="addCORSHeadersToEnvironment()">Add CORS headers to environment headers
                           below</button>
                       </div>
@@ -246,7 +246,7 @@
                       </div>
 
                       <div class="scroll-content flex-fill" #environmentHeadersContainer>
-                        <app-headers-list [data$]="activeEnvironment$" type="environmentHeaders"
+                        <app-headers-list id="environment-headers" [activeItem$]="activeEnvironment$" type="environmentHeaders"
                           (headerAdded)="scrollToBottom(environmentHeadersContainer)"></app-headers-list>
                       </div>
                     </div>
@@ -491,7 +491,7 @@
 
                       <div class="row flex-fill mh0">
                         <div class="col scroll-content h-100" #routeHeadersContainer>
-                          <app-headers-list [data$]="activeRouteResponse$" type="routeResponseHeaders"
+                          <app-headers-list [activeItem$]="activeRouteResponse$" type="routeResponseHeaders"
                             (headerAdded)="scrollToBottom(routeHeadersContainer)"></app-headers-list>
                         </div>
                       </div>
@@ -501,7 +501,7 @@
                     <ng-container *ngIf="(activeTab$ | async) === 'RULES'">
                       <div class="row flex-fill mh0">
                         <div class="col scroll-content h-100" #routeResponseRulesContainer>
-                          <app-route-response-rules [data$]="activeRouteResponse$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
+                          <app-route-response-rules [activeRouteResponse$]="activeRouteResponse$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
                         </div>
                       </div>
                     </ng-container>

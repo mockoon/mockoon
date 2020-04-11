@@ -29,7 +29,7 @@ const getDoNotExists: HttpCall = {
   }
 };
 
-describe('Headers a', () => {
+describe('Headers', () => {
   tests.runHooks();
 
   it('Call /headers, route header should override global headers', async () => {
