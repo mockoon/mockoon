@@ -394,7 +394,7 @@ export class Helpers {
    * Wait for data autosave
    */
   async waitForAutosave() {
-    await this.testsInstance.app.client.pause(4500);
+    await this.testsInstance.app.client.pause(2500);
   }
 
   async verifyObjectPropertyInFile(

@@ -31,7 +31,7 @@ export const Migrations: {
         environment.cors = true;
       }
 
-      environment.routes.forEach(route => {
+      environment.routes.forEach((route) => {
         // add uuid
         if (!route.uuid) {
           route.uuid = uuid();
@@ -40,7 +40,7 @@ export const Migrations: {
         if (route['customHeaders']) {
           // find content type header
           const ContentTypeHeader = route['customHeaders'].find(
-            customHeader => customHeader.key === 'Content-Type'
+            (customHeader) => customHeader.key === 'Content-Type'
           );
 
           // add custom header only if no content type
@@ -63,7 +63,7 @@ export const Migrations: {
   {
     id: 3,
     migrationFunction: (environment: Environment) => {
-      environment.routes.forEach(route => {
+      environment.routes.forEach((route) => {
         // add missing uuid
         if (!route.uuid) {
           route.uuid = uuid();
@@ -167,7 +167,7 @@ export const Migrations: {
     id: 7,
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
-        route.responses.forEach(routeResponse => {
+        route.responses.forEach((routeResponse) => {
           routeResponse.uuid = uuid();
         });
       });
@@ -193,7 +193,7 @@ export const Migrations: {
     id: 9,
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
-        route.responses.forEach(routeResponse => {
+        route.responses.forEach((routeResponse) => {
           if (!routeResponse.label) {
             routeResponse.label = '';
           }

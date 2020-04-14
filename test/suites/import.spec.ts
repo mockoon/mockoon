@@ -3,6 +3,11 @@ import { Config } from 'src/app/config';
 import { HighestMigrationId } from 'src/app/libs/migrations.lib';
 import { Tests } from 'test/lib/tests';
 
+/**
+ * These test cases covers imports from old exported files < 1.7.0, and import of data exported with the new system > 1.7.0
+ * New cases should only be added if the import system evolve, not if new migrations are added. Use migrations specs for this case.
+ */
+
 const oldImportCases = [
   {
     desc: 'v1.4.0',
@@ -32,7 +37,7 @@ const oldImportCases = [
 ];
 
 describe('Environments import', () => {
-  describe('Import from older version', () => {
+  describe('Import from older version (< 1.7.0)', () => {
     oldImportCases.forEach((testCase) => {
       describe(testCase.desc, () => {
         const tests = new Tests('import');
@@ -96,12 +101,12 @@ describe('Environments import', () => {
     });
   });
 
-  describe('Import new format', () => {
+  describe('Import new format (>= 1.7.0)', () => {
     describe('Environment import from file', () => {
       const tests = new Tests('import');
       tests.runHooks(true, false);
 
-      it('Should import an environment from file', async () => {
+      it('Should be able to import multiple environments from the same file and migrate them', async () => {
         tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
           {
             method: 'showOpenDialog',
@@ -112,13 +117,24 @@ describe('Environments import', () => {
         tests.helpers.sendWebContentsAction('IMPORT_FILE');
 
         await tests.helpers.assertHasActiveEnvironment();
-        await tests.helpers.assertActiveEnvironmentName('Import new format');
-
+        await tests.helpers.countEnvironments(2);
+        await tests.helpers.assertActiveEnvironmentName('Import new format 2');
         await tests.helpers.startEnvironment();
+        await tests.helpers.selectEnvironment(1);
+        await tests.helpers.assertActiveEnvironmentName('Import new format 1');
+        await tests.helpers.startEnvironment();
+
+        await tests.helpers.waitForAutosave();
+        await tests.helpers.verifyObjectPropertyInFile(
+          './tmp/storage/environments.json',
+          ['0.lastMigration', '1.lastMigration'],
+          [HighestMigrationId, HighestMigrationId]
+        );
+
       });
     });
 
-    describe('Environment import from clipboard', () => {
+    describe('Multiple environments import from clipboard', () => {
       const tests = new Tests('import');
       tests.runHooks(true, false);
 
@@ -132,7 +148,7 @@ describe('Environments import', () => {
         tests.helpers.sendWebContentsAction('IMPORT_CLIPBOARD');
 
         await tests.helpers.assertHasActiveEnvironment();
-        await tests.helpers.assertActiveEnvironmentName('Import new format');
+        await tests.helpers.assertActiveEnvironmentName('Import new format 2');
 
         await tests.helpers.startEnvironment();
       });

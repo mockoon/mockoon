@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
+import { HighestMigrationId } from 'src/app/libs/migrations.lib';
 import { Settings } from 'src/app/services/settings.service';
 import { Tests } from 'test/lib/tests';
 
@@ -16,7 +17,7 @@ describe('Environments migrations', () => {
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/environments.json',
         '0.lastMigration',
-        10
+        HighestMigrationId
       );
 
       const settingsFile = await fs.readFile('./tmp/storage/settings.json');
