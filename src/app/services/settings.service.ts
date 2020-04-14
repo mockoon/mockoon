@@ -36,6 +36,12 @@ export class SettingsService {
   constructor(private store: Store) {
     // get existing settings from storage or default one
     storageGet(this.storageKey, (error, settings: PreMigrationSettings) => {
+      if (error) {
+        this.logger.error(`Error while loading the settings: ${error.message}`);
+
+        return;
+      }
+
       // if empty object
       if (
         Object.keys(settings).length === 0 &&
@@ -58,7 +64,13 @@ export class SettingsService {
       .select('settings')
       .pipe(filter(Boolean), debounceTime(1000))
       .subscribe((settings: Settings) => {
-        storageSet(this.storageKey, settings, () => {});
+        storageSet(this.storageKey, settings, (error) => {
+          if (error) {
+            this.logger.error(
+              `Error while loading the settings: ${error.code} ${error.message}`
+            );
+          }
+        });
       });
   }
 

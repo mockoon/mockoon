@@ -8,7 +8,7 @@ on:
 jobs:
   build-macos:
     name: Build macOS binary (dmg)
-    runs-on: macOS-latest
+    runs-on: macos-latest
 
     env:
       APPLEID: ${{secrets.APPLEID}}
@@ -18,71 +18,71 @@ jobs:
       CSC_KEY_PASSWORD: ${{secrets.MACOS_CSC_KEY_PASSWORD}}
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1.2.0
-      with:
-        node-version: '12.x'
-    - name: Get version from package.json
-      run: |
-        PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-        echo $PACKAGE_VERSION
-        echo ::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION
-    - name: Bundle Angular and package application
-      run: |
-        npm ci
-        npm run build:prod
-        npm run package:mac
-    - name: Verify notarization
-      run: |
-        codesign --verify --deep --strict --verbose=2 ./packages/mac/mockoon.app
-    - name: Get binary shasum
-      run: |
-        shasum -a 256 ./packages/mockoon.setup.${PACKAGE_VERSION}.dmg
-    - name: Upload macOS dmg
-      uses: actions/upload-artifact@v1
-      with:
-        name: dmg
-        path: ./packages/mockoon.setup.${{env.PACKAGE_VERSION}}.dmg
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1.2.0
+        with:
+          node-version: '12.x'
+      - name: Get version from package.json
+        run: |
+          PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+          echo $PACKAGE_VERSION
+          echo ::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION
+      - name: Bundle Angular and package application
+        run: |
+          npm ci
+          npm run build:prod
+          npm run package:mac
+      - name: Verify notarization
+        run: |
+          codesign --verify --deep --strict --verbose=2 ./packages/mac/mockoon.app
+      - name: Get binary shasum
+        run: |
+          shasum -a 256 ./packages/mockoon.setup.${PACKAGE_VERSION}.dmg
+      - name: Upload macOS dmg
+        uses: actions/upload-artifact@v1
+        with:
+          name: dmg
+          path: ./packages/mockoon.setup.${{env.PACKAGE_VERSION}}.dmg
 
   build-linux:
     name: Build Linux binaries (deb, rpm, snap, AppImage)
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1.2.0
-      with:
-        node-version: '12.x'
-    - name: Get version from package.json
-      run: |
-        PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-        echo $PACKAGE_VERSION
-        echo ::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION
-    - name: Bundle Angular and package application
-      run: |
-        npm ci
-        npm run build:prod
-        npm run package:linux
-    - name: Upload Linux AppImage
-      uses: actions/upload-artifact@v1
-      with:
-        name: appimage
-        path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.AppImage
-    - name: Upload Linux deb
-      uses: actions/upload-artifact@v1
-      with:
-        name: deb
-        path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.deb
-    - name: Upload Linux rpm
-      uses: actions/upload-artifact@v1
-      with:
-        name: rpm
-        path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.rpm
-    - name: Upload Linux snap
-      uses: actions/upload-artifact@v1
-      with:
-        name: snap
-        path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.snap
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1.2.0
+        with:
+          node-version: '12.x'
+      - name: Get version from package.json
+        run: |
+          PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+          echo $PACKAGE_VERSION
+          echo ::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION
+      - name: Bundle Angular and package application
+        run: |
+          npm ci
+          npm run build:prod
+          npm run package:linux
+      - name: Upload Linux AppImage
+        uses: actions/upload-artifact@v1
+        with:
+          name: appimage
+          path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.AppImage
+      - name: Upload Linux deb
+        uses: actions/upload-artifact@v1
+        with:
+          name: deb
+          path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.deb
+      - name: Upload Linux rpm
+        uses: actions/upload-artifact@v1
+        with:
+          name: rpm
+          path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.rpm
+      - name: Upload Linux snap
+        uses: actions/upload-artifact@v1
+        with:
+          name: snap
+          path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.snap
 
   build-windows:
     name: Build Windows binary (exe)
@@ -92,24 +92,24 @@ jobs:
       CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1.2.0
-      with:
-        node-version: '12.x'
-    - name: Get version from package.json
-      run: |
-        $PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-        echo $PACKAGE_VERSION
-        echo "::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION"
-      shell: pwsh
-    - name: Bundle Angular and package application
-      run: |
-        npm ci
-        npm run build:prod
-        npm run package:win
-      shell: pwsh
-    - name: Upload Windows exe
-      uses: actions/upload-artifact@v1
-      with:
-        name: exe
-        path: ./packages/mockoon.setup.${{env.PACKAGE_VERSION}}.exe
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1.2.0
+        with:
+          node-version: '12.x'
+      - name: Get version from package.json
+        run: |
+          $PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+          echo $PACKAGE_VERSION
+          echo "::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION"
+        shell: pwsh
+      - name: Bundle Angular and package application
+        run: |
+          npm ci
+          npm run build:prod
+          npm run package:win
+        shell: pwsh
+      - name: Upload Windows exe
+        uses: actions/upload-artifact@v1
+        with:
+          name: exe
+          path: ./packages/mockoon.setup.${{env.PACKAGE_VERSION}}.exe

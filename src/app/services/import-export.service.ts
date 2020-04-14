@@ -302,14 +302,14 @@ export class ImportExportService {
 
       return <ExportDataRoute | ExportDataEnvironment>{
         type: params.subject,
-        item: dataItem,
+        item: dataItem
       };
     });
 
     return JSON.stringify(
       <Export>{
         source: `mockoon:${Config.appVersion}`,
-        data: dataToExport,
+        data: dataToExport
       },
       null,
       4
@@ -333,12 +333,18 @@ export class ImportExportService {
 
     dataToImport.data.forEach((data) => {
       if (data.type === 'environment') {
-        data.item = this.migrationService.migrateEnvironment(data.item);
-        data.item = this.dataService.renewEnvironmentUUIDs(data.item);
+        this.migrationService
+          .migrateEnvironments([data.item])
+          .subscribe(([migratedEnvironment]) => {
+            migratedEnvironment = this.dataService.renewEnvironmentUUIDs(
+              migratedEnvironment
+            );
+            this.logger.info(
+              `Importing environment ${migratedEnvironment.uuid}`
+            );
 
-        this.logger.info(`Importing environment ${data.item.uuid}`);
-
-        this.store.update(addEnvironmentAction(data.item));
+            this.store.update(addEnvironmentAction(migratedEnvironment));
+          });
       } else if (
         // routes cannot be migrated yet so we check the appVersion
         data.type === 'route' &&

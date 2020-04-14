@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import chaiExclude from 'chai-exclude';
-import { copyFile } from 'fs';
+import { promises as fs } from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import { Application } from 'spectron';
@@ -28,29 +28,20 @@ export class Tests {
     waitUntilEnvironmentLoaded = true
   ) {
     // copy data files before starting tests
-    before(() => {
-      return new Promise(async (resolve) => {
-        await mkdirp('./tmp/storage/');
+    before(async () => {
+      await mkdirp('./tmp/storage/');
 
-        copyFile(
-          './test/data/' + this.dataFileName + '/environments.json',
-          './tmp/storage/environments.json',
-          () => {
-            copyFile(
-              './test/data/' +
-                (this.customSettings ? this.dataFileName + '/' : '') +
-                'settings.json',
-              './tmp/storage/settings.json',
-              () => {
-                resolve();
-              }
-            );
-          }
-        );
-      });
-    });
+      await fs.copyFile(
+        './test/data/' + this.dataFileName + '/environments.json',
+        './tmp/storage/environments.json'
+      );
+      await fs.copyFile(
+        './test/data/' +
+          (this.customSettings ? this.dataFileName + '/' : '') +
+          'settings.json',
+        './tmp/storage/settings.json'
+      );
 
-    before(() => {
       this.app = new Application({
         path: electronPath,
         args: [
@@ -64,15 +55,13 @@ export class Tests {
         }
       });
 
-      return this.app.start();
+      await this.app.start();
     });
 
-    after(() => {
+    after(async () => {
       if (this.app && this.app.isRunning()) {
-        return this.app.stop();
+        await this.app.stop();
       }
-
-      return undefined;
     });
 
     if (waitUntilWindowReady) {
