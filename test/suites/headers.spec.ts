@@ -29,8 +29,26 @@ const getDoNotExists: HttpCall = {
   }
 };
 
-describe('Headers', () => {
+describe('Global headers', () => {
   tests.runHooks();
+
+  it('Add header on route', async () => {
+    await tests.helpers.switchTab('HEADERS');
+
+    await tests.helpers.addHeader('route-response-headers', {
+      key: 'route-header',
+      value: 'route-header'
+    });
+  });
+
+  it('Add header on environment', async () => {
+    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+
+    await tests.helpers.addHeader('environment-headers', {
+      key: 'global-header',
+      value: 'global-header'
+    });
+  });
 
   it('Call /headers, route header should override global headers', async () => {
     await tests.helpers.startEnvironment();

@@ -91,12 +91,7 @@
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [
-      {
-        "key": "env-header",
-        "value": "env-header"
-      }
-    ],
+    "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }]
   },
@@ -116,24 +111,10 @@
       {
         "key": "Content-Type",
         "value": "application/json"
-      },
-      {
-        "key": "x-custom-header",
-        "value": "header value"
       }
     ],
-    "proxyReqHeaders": [
-      {
-        "key": "x-proxy-request-header",
-        "value": "header value"
-      }
-    ],
-    "proxyResHeaders": [
-      {
-        "key": "x-proxy-response-header",
-        "value": "header value"
-      }
-    ]
+    "proxyReqHeaders": [],
+    "proxyResHeaders": []
   },
   {
     "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",

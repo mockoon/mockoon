@@ -24,10 +24,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "route-header",
-                "value": "route-header"
               }
             ],
             "filePath": "",
@@ -45,10 +41,6 @@
       {
         "key": "Content-Type",
         "value": "text/plain"
-      },
-      {
-        "key": "global-header",
-        "value": "global-header"
       }
     ],
     "proxyReqHeaders": [{ "key": "", "value": "" }],

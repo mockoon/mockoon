@@ -14,7 +14,7 @@ import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvir
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environment, EnvironmentProperties } from 'src/app/types/environment.type';
-import { CORSHeaders, Header, Method, Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
+import { Header, Method, Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
 import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
 
 @Injectable({ providedIn: 'root' })
@@ -352,16 +352,6 @@ export class EnvironmentsService {
       activeEnvironment &&
       activeEnvironment.headers.some((header) => !!header.key)
     );
-  }
-
-  /**
-   * Emit an headers injection event in order to add CORS headers to the headers list component
-   */
-  public setEnvironmentCORSHeaders() {
-    this.eventsService.injectHeaders.emit({
-      target: 'environmentHeaders',
-      headers: CORSHeaders
-    });
   }
 
   /**
