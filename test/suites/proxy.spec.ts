@@ -44,7 +44,34 @@ const environmentLogsItemSelector =
 describe('Proxy', () => {
   tests.runHooks();
 
+  it('Add headers', async () => {
+    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+    await tests.helpers.addHeader('environment-headers', {
+      key: 'env-header',
+      value: 'env-header'
+    });
+
+    await tests.helpers.selectEnvironment(2);
+    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+
+    await tests.helpers.addHeader('environment-headers', {
+      key: 'x-custom-header',
+      value: 'header value'
+    });
+
+    await tests.helpers.addHeader('proxy-req-headers', {
+      key: 'x-proxy-request-header',
+      value: 'header value'
+    });
+
+    await tests.helpers.addHeader('proxy-res-headers', {
+      key: 'x-proxy-response-header',
+      value: 'header value'
+    });
+  });
+
   it('Start environments', async () => {
+    await tests.helpers.selectEnvironment(1);
     await tests.helpers.startEnvironment();
     await tests.helpers.selectEnvironment(2);
     await tests.helpers.startEnvironment();

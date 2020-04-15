@@ -4,7 +4,7 @@ import { get as objectGetPath } from 'object-path';
 import { ToastTypes } from 'src/app/services/toasts.service';
 import { EnvironmentLogsTabsNameType, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
-import { ResponseRule } from 'src/app/types/route.type';
+import { Header, ResponseRule } from 'src/app/types/route.type';
 import { fetch } from 'test/lib/fetch';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
@@ -427,5 +427,27 @@ export class Helpers {
         );
       }
     }
+  }
+
+  async addHeader(
+    location:
+      | 'route-response-headers'
+      | 'environment-headers'
+      | 'proxy-req-headers'
+      | 'proxy-res-headers',
+    header: Header
+  ) {
+    const headersComponentSelector = `app-headers-list#${location}`;
+    const inputsSelector = `${headersComponentSelector} .row.headers-list:last-of-type input:nth-of-type`;
+
+    await this.testsInstance.app.client
+      .element(`${headersComponentSelector} button`)
+      .click();
+    await this.testsInstance.app.client
+      .element(`${inputsSelector}(1)`)
+      .setValue(header.key);
+    await this.testsInstance.app.client
+      .element(`${inputsSelector}(2)`)
+      .setValue(header.value);
   }
 }

@@ -1,4 +1,4 @@
-<ng-container *ngIf="headers$ | async">
+<ng-container *ngIf="_headers$ | async">
   <ng-container [formGroup]="form">
     <ng-container formArrayName="headers">
       <div class="row headers-list" *ngFor="let header of form.get('headers')['controls']; index as headerIndex" [formGroupName]="headerIndex">

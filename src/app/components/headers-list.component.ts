@@ -1,14 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, mergeMap, take, takeUntil, tap } from 'rxjs/operators';
 import { TestHeaderValidity } from 'src/app/libs/utils.lib';
-import { EnvironmentsService } from 'src/app/services/environments.service';
-import { EventsService } from 'src/app/services/events.service';
-import { Environment } from 'src/app/types/environment.type';
-import { Header, headerNames, headerValues, RouteResponse } from 'src/app/types/route.type';
-
-export type HeadersListType = 'routeResponseHeaders' | 'environmentHeaders';
+import { Header, headerNames, headerValues } from 'src/app/types/route.type';
 
 @Component({
   selector: 'app-headers-list',
@@ -16,22 +11,19 @@ export type HeadersListType = 'routeResponseHeaders' | 'environmentHeaders';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeadersListComponent implements OnInit, OnDestroy {
-  @Input() activeItem$: Observable<Environment | RouteResponse>;
-  @Input() type: HeadersListType;
-  @Input() headers: 'headers' | 'proxyReqHeaders' | 'proxyResHeaders' =
-    'headers';
-  @Output() headerAdded: EventEmitter<any> = new EventEmitter();
-  public headers$: Observable<Header[]>;
+  @Input() dataSubjectUUID$: Observable<string>;
+  @Input() headers$: Observable<Header[]>;
+  @Input() injectedHeaders$: Observable<Header[]>;
+  @Output() headerAdded = new EventEmitter<any>();
+  @Output() headersUpdated = new EventEmitter<Header[]>();
   public form: FormGroup;
-  public headersFormChanges: Subscription;
   public testHeaderValidity = TestHeaderValidity;
+  public _headers$: Observable<Header[]>;
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
   constructor(
-    private environmentsService: EnvironmentsService,
     private formBuilder: FormBuilder,
-    private eventsService: EventsService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -41,40 +33,37 @@ export class HeadersListComponent implements OnInit, OnDestroy {
     });
 
     // observe initial state of the activeItem
-    this.headers$ = this.activeItem$.pipe(
-      filter((data) => !!data),
-      distinctUntilKeyChanged('uuid'),
-      map((activeItem) => activeItem.headers),
+    this._headers$ = this.dataSubjectUUID$.pipe(
+      filter((uuid) => !!uuid),
+      distinctUntilChanged(),
+      mergeMap(() => {
+        return this.headers$.pipe(take(1));
+      }),
       tap((headers) => {
         this.replaceHeaders(headers, false);
       })
     );
 
-    // subscribe to header injection event
-    this.eventsService.injectHeaders
-      .pipe(
-        filter((data) => data.target === this.type),
-        map((data) => data[this.headers] || []),
-        tap((headers) => {
-          this.injectHeaders(headers);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
+    // subscribe to header injection observable
+    if (this.injectedHeaders$) {
+      this.injectedHeaders$
+        .pipe(
+          filter((headers) => !!headers && headers.length > 0),
+          tap((headers) => {
+            this.injectHeaders(headers);
+          }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe();
+    }
 
     // subscribe to changes and send new headers values to the store
     this.form
       .get('headers')
       .valueChanges.pipe(
         filter(() => this.listenToChanges),
-        debounceTime(100),
-        map((newHeaders) => ({ [this.headers]: newHeaders })),
-        tap((newProperty) => {
-          if (this.type === 'environmentHeaders') {
-            this.environmentsService.updateActiveEnvironment(newProperty);
-          } else if (this.type === 'routeResponseHeaders') {
-            this.environmentsService.updateActiveRouteResponse(newProperty);
-          }
+        tap((newHeaders) => {
+          this.headersUpdated.emit(newHeaders);
         }),
         takeUntil(this.destroy$)
       )
@@ -156,7 +145,7 @@ export class HeadersListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Add a new header to the list if possible
+   * Add a new header to the list
    */
   public addHeader() {
     (this.form.get('headers') as FormArray).push(

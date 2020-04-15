@@ -176,12 +176,12 @@
                         </div>
                         <div class="row pl-4 flex-fill mh0">
                           <div class="col-6 h-100 scroll-content" #environmentProxyReqHeadersContainer>
-                            <app-headers-list [activeItem$]="activeEnvironment$" headers="proxyReqHeaders" type="environmentHeaders"
-                              (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
+                            <app-headers-list id="proxy-req-headers" [dataSubjectUUID$]="activeEnvironmentUUID$" [headers$]="activeEnvironmentProxyReqHeader$"
+                              (headersUpdated)="headersUpdated('environment', 'proxyReqHeaders', $event)" (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
                           </div>
                           <div class="col-6 h-100 pl-2 scroll-content" #environmentProxyResHeadersContainer>
-                            <app-headers-list [activeItem$]="activeEnvironment$" headers="proxyResHeaders" type="environmentHeaders"
-                              (headerAdded)="scrollToBottom(environmentProxyResHeadersContainer)"></app-headers-list>
+                            <app-headers-list id="proxy-res-headers" [dataSubjectUUID$]="activeEnvironmentUUID$" [headers$]="activeEnvironmentProxyResHeader$"
+                            (headersUpdated)="headersUpdated('environment', 'proxyResHeaders', $event)" (headerAdded)="scrollToBottom(environmentProxyResHeadersContainer)"></app-headers-list>
                           </div>
                         </div>
                       </ng-container>
@@ -246,8 +246,8 @@
                       </div>
 
                       <div class="scroll-content flex-fill" #environmentHeadersContainer>
-                        <app-headers-list id="environment-headers" [activeItem$]="activeEnvironment$" type="environmentHeaders"
-                          (headerAdded)="scrollToBottom(environmentHeadersContainer)"></app-headers-list>
+                        <app-headers-list id="environment-headers" [dataSubjectUUID$]="activeEnvironmentUUID$" [headers$]="activeEnvironmentHeaders$" [injectedHeaders$]="injectedHeaders$"
+                          (headersUpdated)="headersUpdated('environment', 'headers', $event)" (headerAdded)="scrollToBottom(environmentHeadersContainer)"></app-headers-list>
                       </div>
                     </div>
                   </div>
@@ -491,8 +491,8 @@
 
                       <div class="row flex-fill mh0">
                         <div class="col scroll-content h-100" #routeHeadersContainer>
-                          <app-headers-list [activeItem$]="activeRouteResponse$" type="routeResponseHeaders"
-                            (headerAdded)="scrollToBottom(routeHeadersContainer)"></app-headers-list>
+                          <app-headers-list id="route-response-headers" [dataSubjectUUID$]="activeRouteResponseUUID$" [headers$]="activeRouteResponseHeaders$"
+                          (headersUpdated)="headersUpdated('routeResponse', 'headers', $event)" (headerAdded)="scrollToBottom(routeHeadersContainer)"></app-headers-list>
                         </div>
                       </div>
                     </ng-container>
