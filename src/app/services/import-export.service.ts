@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { clipboard, remote } from 'electron';
-import * as fs from 'fs';
+import { readFile, writeFile } from 'fs';
 import { cloneDeep } from 'lodash';
 import { Logger } from 'src/app/classes/logger.js';
+import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
 import { Messages } from 'src/app/enums/messages.enum';
@@ -18,7 +19,6 @@ import { Export, ExportData, ExportDataEnvironment, ExportDataRoute, OldExport }
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
 
-const appVersion = require('../../../package.json').version;
 // Last migration done for each version
 const oldVersionsMigrationTable = {
   '1.4.0': 5,
@@ -57,10 +57,10 @@ export class ImportExportService {
     const dataToExport = cloneDeep(environments);
 
     try {
-      fs.writeFile(
+      writeFile(
         filePath,
         this.prepareExport({ data: dataToExport, subject: 'environment' }),
-        error => {
+        (error) => {
           if (error) {
             this.toastService.addToast('error', Errors.EXPORT_ERROR);
           } else {
@@ -132,7 +132,7 @@ export class ImportExportService {
       clipboard.writeText(
         this.prepareExport({
           data: cloneDeep(
-            environment.routes.find(route => route.uuid === routeUUID)
+            environment.routes.find((route) => route.uuid === routeUUID)
           ),
           subject: 'route'
         })
@@ -167,23 +167,19 @@ export class ImportExportService {
 
     if (dialogResult.filePaths && dialogResult.filePaths[0]) {
       try {
-        fs.readFile(
-          dialogResult.filePaths[0],
-          'utf-8',
-          (error, fileContent) => {
-            if (error) {
-              this.toastService.addToast('error', Errors.IMPORT_ERROR);
-            } else {
-              const importedData: Export & OldExport = JSON.parse(fileContent);
+        readFile(dialogResult.filePaths[0], 'utf-8', (error, fileContent) => {
+          if (error) {
+            this.toastService.addToast('error', Errors.IMPORT_ERROR);
+          } else {
+            const importedData: Export & OldExport = JSON.parse(fileContent);
 
-              this.import(importedData);
+            this.import(importedData);
 
-              this.eventsService.analyticsEvents.next(
-                AnalyticsEvents.IMPORT_FILE
-              );
-            }
+            this.eventsService.analyticsEvents.next(
+              AnalyticsEvents.IMPORT_FILE
+            );
           }
-        );
+        });
       } catch (error) {
         this.logger.error(`Error while importing from file: ${error.message}`);
       }
@@ -244,28 +240,33 @@ export class ImportExportService {
 
     const filePath = await this.openSaveDialog('Export all to JSON');
 
-    try {
-      fs.writeFile(
-        filePath,
-        this.openAPIConverterService.export(this.store.getActiveEnvironment()),
-        error => {
-          if (error) {
-            this.toastService.addToast('error', Errors.EXPORT_ERROR);
-          } else {
-            this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
+    // dialog not cancelled
+    if (filePath) {
+      try {
+        writeFile(
+          filePath,
+          this.openAPIConverterService.export(
+            this.store.getActiveEnvironment()
+          ),
+          (error) => {
+            if (error) {
+              this.toastService.addToast('error', Errors.EXPORT_ERROR);
+            } else {
+              this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
 
-            this.eventsService.analyticsEvents.next(
-              AnalyticsEvents.EXPORT_FILE
-            );
+              this.eventsService.analyticsEvents.next(
+                AnalyticsEvents.EXPORT_FILE
+              );
+            }
           }
-        }
-      );
-    } catch (error) {
-      this.logger.info(
-        `Error while exporting to OpenAPI file: ${error.message}`
-      );
+        );
+      } catch (error) {
+        this.logger.info(
+          `Error while exporting to OpenAPI file: ${error.message}`
+        );
 
-      this.toastService.addToast('error', Errors.EXPORT_ERROR);
+        this.toastService.addToast('error', Errors.EXPORT_ERROR);
+      }
     }
   }
 
@@ -278,7 +279,7 @@ export class ImportExportService {
   private prepareExport(
     params:
       | {
-          data: Environment;
+          data: Environment | Environments;
           subject: 'environment';
         }
       | {
@@ -292,7 +293,7 @@ export class ImportExportService {
       ? params.data
       : [params.data];
 
-    dataToExport = data.map(dataItem => {
+    dataToExport = data.map((dataItem) => {
       // erase UUID to easier sharing
       dataItem =
         params.subject === 'environment'
@@ -307,7 +308,7 @@ export class ImportExportService {
 
     return JSON.stringify(
       <Export>{
-        source: `mockoon:${appVersion}`,
+        source: `mockoon:${Config.appVersion}`,
         data: dataToExport
       },
       null,
@@ -330,18 +331,24 @@ export class ImportExportService {
 
     const dataToImportVersion: string = dataToImport.source.split(':')[1];
 
-    dataToImport.data.forEach(data => {
+    dataToImport.data.forEach((data) => {
       if (data.type === 'environment') {
-        data.item = this.migrationService.migrateEnvironment(data.item);
-        data.item = this.dataService.renewEnvironmentUUIDs(data.item);
+        this.migrationService
+          .migrateEnvironments([data.item])
+          .subscribe(([migratedEnvironment]) => {
+            migratedEnvironment = this.dataService.renewEnvironmentUUIDs(
+              migratedEnvironment
+            );
+            this.logger.info(
+              `Importing environment ${migratedEnvironment.uuid}`
+            );
 
-        this.logger.info(`Importing environment ${data.item.uuid}`);
-
-        this.store.update(addEnvironmentAction(data.item));
+            this.store.update(addEnvironmentAction(migratedEnvironment));
+          });
       } else if (
         // routes cannot be migrated yet so we check the appVersion
         data.type === 'route' &&
-        dataToImportVersion === appVersion
+        dataToImportVersion === Config.appVersion
       ) {
         data.item = this.dataService.renewRouteUUIDs(data.item);
 
@@ -358,7 +365,7 @@ export class ImportExportService {
 
           this.store.update(addEnvironmentAction(newEnvironment));
         }
-      } else if (dataToImportVersion !== appVersion) {
+      } else if (dataToImportVersion !== Config.appVersion) {
         this.logger.info(
           `Route ${data.item.uuid} has incorrect version ${dataToImportVersion} and cannot be imported`
         );
@@ -404,7 +411,7 @@ export class ImportExportService {
         ];
       } else {
         convertedData.data = (oldImportedData.data as Environments).map(
-          importedItem => {
+          (importedItem) => {
             importedItem.lastMigration =
               oldVersionsMigrationTable[oldImportedData.appVersion];
 

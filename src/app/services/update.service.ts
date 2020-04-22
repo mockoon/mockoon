@@ -1,17 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { shell } from 'electron';
+import { spawn } from 'child_process';
+import { remote, shell } from 'electron';
+import { createWriteStream, existsSync, NoParamCallback, rename, unlink } from 'fs';
+import { platform } from 'os';
+import { get as requestGet } from 'request';
 import { Subject } from 'rxjs/internal/Subject';
-import * as semver from 'semver';
+import { gt as semverGt } from 'semver';
 import { Logger } from 'src/app/classes/logger';
 import { Config } from 'src/app/config';
-
-const appVersion = require('../../../package.json').version;
-const request = require('request');
-const fs = require('fs');
-const app = require('electron').remote.app;
-const spawn = require('child_process').spawn;
-const platform = require('os').platform();
 
 /**
  * Auto update for windows (with temp file and old update file deletion)
@@ -29,14 +26,19 @@ export class UpdateService {
   public updateAvailable: Subject<any> = new Subject();
   private nextVersion: string;
   private nextVersionFileName: string;
-  private userDataPath = app.getPath('userData') + '/';
+  private userDataPath = remote.app.getPath('userData') + '/';
   private logger = new Logger('[SERVICE][UPDATE]');
+  private platform = platform();
 
   constructor(private http: HttpClient) {
     // always remove temp file
     this.removeTempFile();
 
-    if (platform === 'darwin' || platform === 'linux' || platform === 'win32') {
+    if (
+      this.platform === 'darwin' ||
+      this.platform === 'linux' ||
+      this.platform === 'win32'
+    ) {
       // request Github latest release data (avoid cache with headers)
       this.http
         .get<any>(Config.githubLatestReleaseUrl, {
@@ -45,19 +47,18 @@ export class UpdateService {
             Pragma: 'no-cache'
           })
         })
-        .subscribe(githubRelease => {
+        .subscribe((githubRelease) => {
           // check if version is ahead and trigger something depending on platform (semver automatically strip 'v')
-          if (semver.gt(githubRelease.tag_name, appVersion)) {
+          if (semverGt(githubRelease.tag_name, Config.appVersion)) {
             this.nextVersion = githubRelease.tag_name.replace('v', '');
 
             // only trigger download for windows, for other just inform
-            if (platform === 'win32') {
-              this.nextVersionFileName = this.updateFileName[platform].replace(
-                '%v%',
-                this.nextVersion
-              );
+            if (this.platform === 'win32') {
+              this.nextVersionFileName = this.updateFileName[
+                this.platform
+              ].replace('%v%', this.nextVersion);
               // if already have an update file
-              if (fs.existsSync(this.userDataPath + this.nextVersionFileName)) {
+              if (existsSync(this.userDataPath + this.nextVersionFileName)) {
                 this.updateAvailable.next();
               } else {
                 this.fileDownload(
@@ -87,13 +88,13 @@ export class UpdateService {
   public applyUpdate() {
     if (this.nextVersion) {
       // launch exe detached and close app
-      if (platform === 'win32') {
+      if (this.platform === 'win32') {
         spawn(this.userDataPath + this.nextVersionFileName, ['--updated'], {
           detached: true,
           stdio: 'ignore'
         }).unref();
-        app.quit();
-      } else if (platform === 'darwin' || platform === 'linux') {
+        remote.app.quit();
+      } else if (this.platform === 'darwin' || this.platform === 'linux') {
         shell.openExternal(`${Config.githubTagReleaseUrl}${this.nextVersion}`);
       }
     }
@@ -106,19 +107,18 @@ export class UpdateService {
     url: string,
     destination: string,
     filename: string,
-    callback: Function
+    callback: NoParamCallback
   ) {
-    const file = fs.createWriteStream(destination + this.tempUpdateFileName);
+    const file = createWriteStream(destination + this.tempUpdateFileName);
 
-    request
-      .get(url)
+    requestGet(url)
       .pipe(file)
       .on('error', () => {
-        fs.unlink(destination + this.tempUpdateFileName);
+        unlink(destination + this.tempUpdateFileName, () => {});
       })
       .on('finish', () => {
         // rename when successful
-        fs.rename(
+        rename(
           destination + this.tempUpdateFileName,
           destination + filename,
           callback
@@ -130,10 +130,10 @@ export class UpdateService {
    * Remove update file corresponding to current version (for win only)
    */
   private removeOldUpdate() {
-    if (platform === 'win32') {
-      fs.unlink(
+    if (this.platform === 'win32') {
+      unlink(
         this.userDataPath +
-          this.updateFileName[platform].replace('%v%', appVersion),
+          this.updateFileName[this.platform].replace('%v%', Config.appVersion),
         () => {}
       );
     }
@@ -143,8 +143,8 @@ export class UpdateService {
    * Remove the temporary update.download file (for win only)
    */
   private removeTempFile() {
-    if (platform === 'win32') {
-      fs.unlink(this.userDataPath + this.tempUpdateFileName, () => {});
+    if (this.platform === 'win32') {
+      unlink(this.userDataPath + this.tempUpdateFileName, () => {});
     }
   }
 }

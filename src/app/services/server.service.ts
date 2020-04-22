@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import * as express from 'express';
-import { Application } from 'express';
-import * as fs from 'fs';
-import * as http from 'http';
-import * as proxy from 'http-proxy-middleware';
-import * as https from 'https';
+import { readFileSync } from 'fs';
+import { createServer as httpCreateServer, Server as httpServer } from 'http';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import { createServer as httpsCreateServer, Server as httpsServer } from 'https';
 import * as killable from 'killable';
-import * as mimeTypes from 'mime-types';
-import * as path from 'path';
+import { lookup as mimeTypeLookup } from 'mime-types';
+import { basename } from 'path';
 import { Logger } from 'src/app/classes/logger';
 import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpreter';
 import { Errors } from 'src/app/enums/errors.enum';
@@ -23,7 +22,7 @@ import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
 import { IEnhancedRequest } from 'src/app/types/misc.type';
 import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
-import * as uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 
 const httpsConfig = {
   key: pemFiles.key,
@@ -53,7 +52,7 @@ export class ServerService {
     server.disable('x-powered-by');
     server.disable('etag');
 
-    let serverInstance: http.Server | https.Server;
+    let serverInstance: httpServer | httpsServer;
 
     // create https or http server instance
     this.logger.info(
@@ -61,18 +60,20 @@ export class ServerService {
     );
 
     if (environment.https) {
-      serverInstance = https.createServer(httpsConfig, server);
+      serverInstance = httpsCreateServer(httpsConfig, server);
     } else {
-      serverInstance = http.createServer(server);
+      serverInstance = httpCreateServer(server);
     }
 
     // set timeout long enough to allow long latencies
     serverInstance.setTimeout(3_600_000);
 
-    this.logger.info(`Starting server on port ${environment.port}`);
+    this.logger.info(
+      `Starting server ${environment.uuid} on port ${environment.port}`
+    );
     serverInstance.listen(environment.port, () => {
       this.logger.info(
-        `Server was started successfully on port ${environment.port}`
+        `Server ${environment.uuid} was started successfully on port ${environment.port}`
       );
 
       this.instances[environment.uuid] = serverInstance;
@@ -81,7 +82,7 @@ export class ServerService {
       );
     });
 
-    ExpressMiddlewares(this.eventsService).forEach(expressMiddleware => {
+    ExpressMiddlewares(this.eventsService).forEach((expressMiddleware) => {
       server.use(expressMiddleware);
     });
 
@@ -138,7 +139,7 @@ export class ServerService {
    * @param server - express instance
    * @param environment - environment to be started
    */
-  private setCors(server: Application, environment: Environment) {
+  private setCors(server: express.Application, environment: Environment) {
     if (environment.cors) {
       server.options('/*', (req, res) => {
         const environmentSelected = this.store.getEnvironmentByUUID(
@@ -148,7 +149,7 @@ export class ServerService {
         // override default CORS headers with environment's headers
         this.setHeaders(
           [...CORSHeaders, ...environmentSelected.headers],
-          header => {
+          (header) => {
             res.set(header.key, DummyJSONParser(header.value, req));
           }
         );
@@ -164,7 +165,7 @@ export class ServerService {
    * @param server - server on which attach routes
    * @param environment - environment to get route schema from
    */
-  private setRoutes(server: Application, environment: Environment) {
+  private setRoutes(server: express.Application, environment: Environment) {
     environment.routes.forEach((declaredRoute: Route) => {
       const duplicatedRoutes = this.store.get('duplicatedRoutes')[
         environment.uuid
@@ -188,7 +189,7 @@ export class ServerService {
                 environment.uuid
               );
               const currentRoute = currentEnvironment.routes.find(
-                route => route.uuid === declaredRoute.uuid
+                (route) => route.uuid === declaredRoute.uuid
               );
               const enabledRouteResponse = new ResponseRulesInterpreter(
                 currentRoute.responses,
@@ -207,7 +208,7 @@ export class ServerService {
                   (enabledRouteResponse.statusCode as unknown) as number
                 );
 
-                this.setHeaders(enabledRouteResponse.headers, header => {
+                this.setHeaders(enabledRouteResponse.headers, (header) => {
                   res.set(header.key, DummyJSONParser(header.value, req));
                 });
 
@@ -221,18 +222,15 @@ export class ServerService {
                       enabledRouteResponse.filePath,
                       req
                     );
-                    const fileMimeType = mimeTypes.lookup(
-                      enabledRouteResponse.filePath
-                    );
+                    const fileMimeType =
+                      mimeTypeLookup(enabledRouteResponse.filePath) || '';
 
                     // if no route content type set to the one detected
                     if (!routeContentType) {
                       res.set('Content-Type', fileMimeType);
                     }
 
-                    let fileContent: Buffer | string = fs.readFileSync(
-                      filePath
-                    );
+                    let fileContent: Buffer | string = readFileSync(filePath);
 
                     // parse templating for a limited list of mime types
                     if (mimeTypesWithTemplating.indexOf(fileMimeType) > -1) {
@@ -245,7 +243,7 @@ export class ServerService {
                     if (!enabledRouteResponse.sendFileAsBody) {
                       res.set(
                         'Content-Disposition',
-                        `attachment; filename="${path.basename(filePath)}"`
+                        `attachment; filename="${basename(filePath)}"`
                       );
                     }
                     res.send(fileContent);
@@ -338,7 +336,7 @@ export class ServerService {
    */
   private setResponseHeaders(server: any, environment: Environment) {
     server.use((req, res, next) => {
-      this.setHeaders(environment.headers, header => {
+      this.setHeaders(environment.headers, (header) => {
         res.setHeader(header.key, DummyJSONParser(header.value, req));
       });
 
@@ -356,7 +354,7 @@ export class ServerService {
     headers: Partial<Header>[],
     setterFn: (header: Partial<Header>) => any
   ) {
-    headers.forEach(header => {
+    headers.forEach((header) => {
       if (header.key && header.value && !TestHeaderValidity(header.key)) {
         setterFn(header);
       }
@@ -386,7 +384,7 @@ export class ServerService {
    * @param server - server on which to launch the proxy
    * @param environment - environment to get proxy settings from
    */
-  private enableProxy(server: Application, environment: Environment) {
+  private enableProxy(server: express.Application, environment: Environment) {
     // Add catch all proxy if enabled
     if (
       environment.proxyMode &&
@@ -397,7 +395,7 @@ export class ServerService {
       const processRequest = (proxyReq, req, res) => {
         req.proxied = true;
 
-        this.setHeaders(environment.proxyReqHeaders, header => {
+        this.setHeaders(environment.proxyReqHeaders, (header) => {
           proxyReq.setHeader(header.key, DummyJSONParser(header.value, req));
         });
 
@@ -419,11 +417,11 @@ export class ServerService {
         });
 
         let body = '';
-        proxyRes.on('data', chunk => {
+        proxyRes.on('data', (chunk) => {
           body += chunk;
         });
         proxyRes.on('end', () => {
-          proxyRes.getHeaders = function() {
+          proxyRes.getHeaders = function () {
             return combinedHeaders;
           };
           const enhancedReq = req as IEnhancedRequest;
@@ -435,7 +433,7 @@ export class ServerService {
           self.store.update(logResponseAction(environment.uuid, response));
         });
 
-        this.setHeaders(environment.proxyResHeaders, header => {
+        this.setHeaders(environment.proxyResHeaders, (header) => {
           proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
         });
       };
@@ -447,9 +445,13 @@ export class ServerService {
           .send('Error occured while trying to proxy to: ' + req.url);
       };
 
+      this.logger.info(
+        `Creating proxy between localhost:${environment.port} and ${environment.proxyHost}`
+      );
+
       server.use(
         '*',
-        proxy(<proxy.Config>{
+        createProxyMiddleware({
           target: environment.proxyHost,
           secure: false,
           changeOrigin: true,
@@ -462,7 +464,7 @@ export class ServerService {
     } else {
       // if not proxy, log the 404 response
       server.use((req, res, next) => {
-        this.setHeaders(environment.headers, header => {
+        this.setHeaders(environment.headers, (header) => {
           res.setHeader(header.key, DummyJSONParser(header.value, req));
         });
 
@@ -478,7 +480,7 @@ export class ServerService {
    * @param server - server on which to log the request
    * @param environment - environment to link log to
    */
-  private logRequests(server: Application, environment: Environment) {
+  private logRequests(server: express.Application, environment: Environment) {
     server.use((req, res, next) => {
       const log = this.dataService.formatRequestLog(req);
       log.uuid = uuid();
@@ -500,7 +502,7 @@ export class ServerService {
       const oldSend = res.send;
 
       const self = this;
-      res.send = function(body) {
+      res.send = function (body) {
         oldSend.apply(res, arguments);
         const enhancedReq = this.req as IEnhancedRequest;
         const responseLog = self.dataService.formatResponseLog(
@@ -535,7 +537,10 @@ export class ServerService {
    * @param server - server instance
    * @param environmentUUID - environment UUID
    */
-  private setEnvironmentLatency(server: Application, environmentUUID: string) {
+  private setEnvironmentLatency(
+    server: express.Application,
+    environmentUUID: string
+  ) {
     server.use((req, res, next) => {
       const environmentSelected = this.store.getEnvironmentByUUID(
         environmentUUID

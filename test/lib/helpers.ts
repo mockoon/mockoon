@@ -2,16 +2,12 @@ import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
 import { ToastTypes } from 'src/app/services/toasts.service';
-import {
-  EnvironmentLogsTabsNameType,
-  TabsNameType,
-  ViewsNameType
-} from 'src/app/stores/store';
+import { EnvironmentLogsTabsNameType, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
-import { ResponseRule } from 'src/app/types/route.type';
-import { HttpCall } from 'test/lib/types';
-import { fetch } from './fetch';
-import { Tests } from './tests';
+import { Header, ResponseRule } from 'src/app/types/route.type';
+import { fetch } from 'test/lib/fetch';
+import { HttpCall } from 'test/lib/models';
+import { Tests } from 'test/lib/tests';
 
 export class Helpers {
   constructor(private testsInstance: Tests) {}
@@ -325,7 +321,7 @@ export class Helpers {
     });
 
     if (httpCall.testedResponse) {
-      Object.keys(httpCall.testedResponse).forEach(propertyName => {
+      Object.keys(httpCall.testedResponse).forEach((propertyName) => {
         if (propertyName === 'headers') {
           expect(response[propertyName]).to.include(
             httpCall.testedResponse[propertyName]
@@ -342,18 +338,19 @@ export class Helpers {
   }
 
   async httpCallAsserter(httpCall: HttpCall) {
+    await this.testsInstance.app.client.pause(100);
     await this.httpCallAsserterWithPort(httpCall, 3000);
   }
 
   async assertActiveEnvironmentPort(expectedPort: number) {
-    const port: String = await this.testsInstance.app.client
+    const port: string = await this.testsInstance.app.client
       .element('input[formcontrolname="port"]')
       .getAttribute('value');
     await port.should.be.equals(expectedPort.toString());
   }
 
   async assertActiveEnvironmentName(expectedName: string) {
-    const environmentName: String = await this.testsInstance.app.client
+    const environmentName: string = await this.testsInstance.app.client
       .element('input[formcontrolname="name"]')
       .getAttribute('value');
     await environmentName.should.be.equals(expectedName.toString());
@@ -397,7 +394,7 @@ export class Helpers {
    * Wait for data autosave
    */
   async waitForAutosave() {
-    await this.testsInstance.app.client.pause(4000);
+    await this.testsInstance.app.client.pause(2500);
   }
 
   async verifyObjectPropertyInFile(
@@ -412,7 +409,7 @@ export class Helpers {
     this.verifyObjectProperty(environments, objectPaths, values, exists);
   }
 
-  async verifyObjectProperty(
+  verifyObjectProperty(
     object: any,
     objectPaths: string | string[],
     values: any | any[],
@@ -430,5 +427,27 @@ export class Helpers {
         );
       }
     }
+  }
+
+  async addHeader(
+    location:
+      | 'route-response-headers'
+      | 'environment-headers'
+      | 'proxy-req-headers'
+      | 'proxy-res-headers',
+    header: Header
+  ) {
+    const headersComponentSelector = `app-headers-list#${location}`;
+    const inputsSelector = `${headersComponentSelector} .row.headers-list:last-of-type input:nth-of-type`;
+
+    await this.testsInstance.app.client
+      .element(`${headersComponentSelector} button`)
+      .click();
+    await this.testsInstance.app.client
+      .element(`${inputsSelector}(1)`)
+      .setValue(header.key);
+    await this.testsInstance.app.client
+      .element(`${inputsSelector}(2)`)
+      .setValue(header.value);
   }
 }

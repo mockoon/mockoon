@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
+import { AngularFireRemoteConfigModule } from '@angular/fire/remote-config';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -27,7 +27,6 @@ import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzon
 import { MousewheelUpdateDirective } from 'src/app/directives/mousewheel-update.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
-import { TruncatePipe } from 'src/app/pipes/truncate.pipe';
 import { GlobalErrorHandler } from 'src/app/services/error-handler';
 import { AppComponent } from './app.component';
 
@@ -48,8 +47,7 @@ import { AppComponent } from './app.component';
     BannerComponent,
     RouteResponseRulesComponent,
     EnvironmentsMenuComponent,
-    RoutesMenuComponent,
-    TruncatePipe
+    RoutesMenuComponent
   ],
   imports: [
     AceEditorModule,
@@ -67,11 +65,10 @@ import { AppComponent } from './app.component';
     }),
     AngularFireModule.initializeApp(Config.firebaseConfig),
     AngularFireAuthModule,
-    AngularFirestoreModule,
+    AngularFireRemoteConfigModule,
     ReactiveFormsModule
   ],
   providers: [
-    { provide: FirestoreSettingsToken, useValue: {} },
     { provide: ErrorHandler, useClass: GlobalErrorHandler }
   ],
   bootstrap: [AppComponent]

@@ -54,7 +54,7 @@ Ask maintainers to review the code and be prepared to rework your code if it doe
 
 ### **[Maintainers only]** Build and package the application for production
 
-- Increment the version in package.json files. Use `npm run setversion x.x.x` and follow [semver](https://semver.org/).
+- Increment the version (which follows [semver](https://semver.org/)) in package.json file.
 - Push.
 - Create a release in GitHub 'mockoon' repository with a new tag. Respect the releases tag format `vx.x.x`.
 
@@ -76,7 +76,7 @@ Only maintainers (@255kb) are entitled to build and package the application with
 
 Some manual steps are required in order to properly distribute the application:
 
-- A pull request must be created to update Homebrew cask repository.
+- A pull request must be created to update Homebrew cask repository (update the `version` and the `sha256` hash in the `Casks/mockoon.rb` file).
 - Binary must be uploaded to the Snap store manually.
-- Arch Linux repository must be updated.
-- Chocolatey package should be automatically updated.
+- Arch Linux repository must be updated (Docker image and script can be used in `./scripts/aur-version-bump`).
+- Chocolatey package should be automatically updated after some days.

@@ -1,11 +1,7 @@
 import { Request } from 'express';
-import * as objectPath from 'object-path';
-import * as queryString from 'querystring';
-import {
-  ResponseRule,
-  ResponseRuleTargets,
-  RouteResponse
-} from 'src/app/types/route.type';
+import { get as objectPathGet } from 'object-path';
+import { parse as qsParse, ParsedUrlQuery } from 'querystring';
+import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/route.type';
 
 /**
  * Interpretor for the route response rules.
@@ -47,7 +43,7 @@ export class ResponseRulesInterpreter {
     if (rule.target === 'header') {
       value = this.request.header(rule.modifier);
     } else {
-      value = objectPath.get(this.targets[rule.target], rule.modifier);
+      value = objectPathGet(this.targets[rule.target], rule.modifier);
     }
 
     if (value === undefined) {
@@ -75,11 +71,11 @@ export class ResponseRulesInterpreter {
    */
   private extractTargets() {
     const requestContentType = this.request.header('Content-Type');
-    let body: queryString.ParsedUrlQuery | JSON = {};
+    let body: ParsedUrlQuery | JSON = {};
 
     try {
       if (requestContentType.includes('application/x-www-form-urlencoded')) {
-        body = queryString.parse(this.request.body);
+        body = qsParse(this.request.body);
       } else if (requestContentType.includes('application/json')) {
         body = JSON.parse(this.request.body);
       }

@@ -134,7 +134,7 @@
                 </div>
 
                 <!-- ENVIRONMENT SETTINGS VIEW -->
-                <div *ngIf="activeView === 'ENV_SETTINGS'" class="d-flex flex-column h-100 m-2"
+                <div *ngIf="activeView === 'ENV_SETTINGS'" class="d-flex flex-column flex-fill mh0 h-100 m-2"
                   [formGroup]="activeEnvironmentForm">
                   <div class="row h-35">
                     <div class="col d-flex flex-column h-100">
@@ -174,14 +174,14 @@
                               class="material-icons" ngbTooltip="Headers will be added to the response received from the proxied server">info</i></div>
                           </div>
                         </div>
-                        <div class="row pl-4 h-100">
+                        <div class="row pl-4 flex-fill mh0">
                           <div class="col-6 h-100 scroll-content" #environmentProxyReqHeadersContainer>
-                            <app-headers-list [data$]="activeEnvironment$" headers="proxyReqHeaders" type="environmentHeaders"
-                              (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
+                            <app-headers-list id="proxy-req-headers" [dataSubjectUUID$]="activeEnvironmentUUID$" [headers$]="activeEnvironmentProxyReqHeader$"
+                              (headersUpdated)="headersUpdated('environment', 'proxyReqHeaders', $event)" (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
                           </div>
                           <div class="col-6 h-100 pl-2 scroll-content" #environmentProxyResHeadersContainer>
-                            <app-headers-list [data$]="activeEnvironment$" headers="proxyResHeaders" type="environmentHeaders"
-                              (headerAdded)="scrollToBottom(environmentProxyResHeadersContainer)"></app-headers-list>
+                            <app-headers-list id="proxy-res-headers" [dataSubjectUUID$]="activeEnvironmentUUID$" [headers$]="activeEnvironmentProxyResHeader$"
+                            (headersUpdated)="headersUpdated('environment', 'proxyResHeaders', $event)" (headerAdded)="scrollToBottom(environmentProxyResHeadersContainer)"></app-headers-list>
                           </div>
                         </div>
                       </ng-container>
@@ -225,7 +225,7 @@
                           <input type="checkbox" class="custom-control-input" id="CORS" formControlName="cors">
                           <label class="custom-control-label" for="CORS">Enable</label>
                         </div>
-                        <button class="btn btn-link btn-icon text-primary form-right" type="button"
+                        <button class="btn btn-link btn-icon text-primary form-right settings-add-cors" type="button"
                           (click)="addCORSHeadersToEnvironment()">Add CORS headers to environment headers
                           below</button>
                       </div>
@@ -246,8 +246,8 @@
                       </div>
 
                       <div class="scroll-content flex-fill" #environmentHeadersContainer>
-                        <app-headers-list [data$]="activeEnvironment$" type="environmentHeaders"
-                          (headerAdded)="scrollToBottom(environmentHeadersContainer)"></app-headers-list>
+                        <app-headers-list id="environment-headers" [dataSubjectUUID$]="activeEnvironmentUUID$" [headers$]="activeEnvironmentHeaders$" [injectedHeaders$]="injectedHeaders$"
+                          (headersUpdated)="headersUpdated('environment', 'headers', $event)" (headerAdded)="scrollToBottom(environmentHeadersContainer)"></app-headers-list>
                       </div>
                     </div>
                   </div>
@@ -320,17 +320,18 @@
                               role="button" id="route-responses-dropdown" aria-haspopup="true" aria-expanded="false"
                               ngbDropdownToggle>
                                 <div class="route-responses-dropdown-content">
-                                  <span class="pr-2">{{activeRouteResponseIndex$ | async}}: {{activeRouteResponse?.statusCode}}</span> {{activeRouteResponse?.label}}</div>
+                                  <span class="pr-2">{{activeRouteResponseIndex$ | async}}: {{activeRouteResponse?.statusCode}}</span> {{activeRouteResponse?.label}}
+                                </div>
                             </button>
 
-                            <div class="dropdown-menu" aria-labelledby="route-responses-dropdown" ngbDropdownMenu MousedragDeadzone dragula="routeResponses"
+                            <div class="dropdown-menu route-responses-dropdown-menu" aria-labelledby="route-responses-dropdown" ngbDropdownMenu MousedragDeadzone dragula="routeResponses"
                             [dragulaModel]="activeRoute.responses">
                               <button type="button" *ngFor="let routeResponse of activeRoute.responses; index as routeResponseIndex"
                                 class="btn dropdown-item d-flex"
                                 [ngClass]="{'active': activeRouteResponse?.uuid === routeResponse.uuid}"
                                 ngbDropdownItem
                                 (click)="setActiveRouteResponse(routeResponse.uuid)">
-                                <span class="flex-grow-1 mr-2">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}} {{routeResponse.label | truncate: 20}}</span>
+                                <span class="flex-grow-1 mr-2 ellipsis">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}} {{routeResponse.label}}</span>
                                 <span><i *ngIf="routeResponseIndex === 0" class="material-icons text-primary" ngbTooltip="Default response served if no rule matches">flag</i></span>
                               </button>
                             </div>
@@ -442,7 +443,7 @@
                         <div class="col">
                           <div>
                             &nbsp;<small *ngIf="activeRouteResponse.filePath" class="text-muted">Detected MIME type:
-                              {{getFileMimeType(activeRouteResponse.filePath).mimeType || 'none'}} <span
+                              {{getFileMimeType(activeRouteResponse.filePath).mimeType}} <span
                                 *ngIf="getFileMimeType(activeRouteResponse.filePath).supportsTemplating"> - Supports
                                 templating
                                 <span (click)="openWikiLink('templating')"
@@ -490,8 +491,8 @@
 
                       <div class="row flex-fill mh0">
                         <div class="col scroll-content h-100" #routeHeadersContainer>
-                          <app-headers-list [data$]="activeRouteResponse$" type="routeResponseHeaders"
-                            (headerAdded)="scrollToBottom(routeHeadersContainer)"></app-headers-list>
+                          <app-headers-list id="route-response-headers" [dataSubjectUUID$]="activeRouteResponseUUID$" [headers$]="activeRouteResponseHeaders$"
+                          (headersUpdated)="headersUpdated('routeResponse', 'headers', $event)" (headerAdded)="scrollToBottom(routeHeadersContainer)"></app-headers-list>
                         </div>
                       </div>
                     </ng-container>
@@ -500,7 +501,7 @@
                     <ng-container *ngIf="(activeTab$ | async) === 'RULES'">
                       <div class="row flex-fill mh0">
                         <div class="col scroll-content h-100" #routeResponseRulesContainer>
-                          <app-route-response-rules [data$]="activeRouteResponse$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
+                          <app-route-response-rules [activeRouteResponse$]="activeRouteResponse$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
                         </div>
                       </div>
                     </ng-container>

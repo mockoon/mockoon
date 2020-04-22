@@ -1,17 +1,19 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
+import { EnvironmentsContextMenu } from 'src/app/components/context-menu/context-menus';
+import { ContextMenuEvent } from 'src/app/models/context-menu.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
-import { ContextMenuEvent, EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'src/app/services/events.service';
 import { UIService } from 'src/app/services/ui.service';
 import { EnvironmentsStatuses, Store, UIState } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { ScrollDirection } from 'src/app/types/ui.type';
-import { EnvironmentsContextMenu } from '../context-menu/context-menus';
 
 @Component({
   selector: 'app-environments-menu',
   templateUrl: './environments-menu.component.html',
-  styleUrls: ['./environments-menu.component.scss']
+  styleUrls: ['./environments-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentsMenuComponent implements OnInit {
   @ViewChild('environmentsMenu', { static: false })
@@ -22,6 +24,7 @@ export class EnvironmentsMenuComponent implements OnInit {
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedEnvironments$: Observable<Set<string>>;
   public uiState$: Observable<UIState>;
+  private clickOnMenu = false;
 
   constructor(
     private environmentsService: EnvironmentsService,
@@ -37,12 +40,30 @@ export class EnvironmentsMenuComponent implements OnInit {
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.uiState$ = this.store.select('uiState');
 
-    this.uiService.scrollEnvironmentsMenu.subscribe(scrollDirection => {
+    this.uiService.scrollEnvironmentsMenu.subscribe((scrollDirection) => {
       this.uiService.scroll(
         this.environmentsMenu.nativeElement,
         scrollDirection
       );
     });
+  }
+
+  /**
+   * Detect clicks inside component to avoid closing
+   * Used together with document:click listener
+   */
+  @HostListener('click') clickInsideMenu() {
+    this.clickOnMenu = true;
+  }
+
+  /**
+   * Listen on document's click to close the menu if user click outside
+   */
+  @HostListener('document:click') clickOutsideMenu() {
+    if (!this.clickOnMenu) {
+      this.closeIfOpen();
+    }
+    this.clickOnMenu = false;
   }
 
   /**
@@ -54,6 +75,9 @@ export class EnvironmentsMenuComponent implements OnInit {
     this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
   }
 
+  /**
+   * Select the active environment
+   */
   public selectEnvironment(environmentUUID: string) {
     if (
       !this.store.getEnvironmentStatus()[environmentUUID]
@@ -83,7 +107,7 @@ export class EnvironmentsMenuComponent implements OnInit {
         items: EnvironmentsContextMenu(environmentUUID)
       };
 
-      this.eventsService.contextMenuEvents.emit(menu);
+      this.eventsService.contextMenuEvents.next(menu);
     }
   }
 
@@ -96,5 +120,16 @@ export class EnvironmentsMenuComponent implements OnInit {
     this.uiService.updateUIState({
       environmentsMenuOpened: !uiState.environmentsMenuOpened
     });
+  }
+
+  /**
+   * Close the environments menu if already opened
+   */
+  private closeIfOpen() {
+    const uiState = this.store.get('uiState');
+
+    if (uiState.environmentsMenuOpened) {
+      this.uiService.updateUIState({ environmentsMenuOpened: false });
+    }
   }
 }

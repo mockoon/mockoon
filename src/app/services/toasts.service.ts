@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { addToastAction, removeToastAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
-import * as uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 
 export type ToastTypes = 'error' | 'success' | 'warning';
 export type Toast = { UUID: string; message: string; type: ToastTypes };
