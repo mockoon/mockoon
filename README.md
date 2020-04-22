@@ -1,18 +1,18 @@
 ![Mockoon logo](https://mockoon.com/images/logo.png)
 
-*Mock API in seconds*
-
 [![Download app](https://img.shields.io/badge/Download%20app-Go-green.svg?style=flat-square&colorB=1997c6)](https://mockoon.com/#download) [![Website](https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6)](https://mockoon.com/) [![Newsletter](https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square)](http://eepurl.com/dskB2X) [![Twitter](https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2)](https://twitter.com/GetMockoon) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/mockoon)
-
-**If you like Mockoon, you can support me with a one-time donation or [sponsor me on GitHub](https://github.com/users/255kb/sponsorship)**
-[![Paypal](https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png)](https://paypal.me/255kb) <a href="https://www.buymeacoffee.com/255kb" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-## What is it?
 
 Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.
 It has been built with Electron and can be used on Windows (exe), Linux (deb, rpm, Appimage and Snap) and MacOS (dmg or brew). You can download it here: [mockoon.com](https://mockoon.com)
 
 ![screenshot](https://mockoon.com/images/screenshot-repo.png)
+
+## Sponsors
+
+If you like Mockoon, you can support the project with a one-time donation:
+[![Paypal](https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png)](https://paypal.me/255kb) <a href="https://www.buymeacoffee.com/255kb" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+
+You can also  [sponsor the maintainer (255kb) on GitHub](https://github.com/sponsors/255kb) and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/master/backers.md) who helped this project over time!
 
 ## Features
 
