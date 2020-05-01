@@ -1,10 +1,11 @@
 import * as cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import { RequestHandlerParams } from 'express-serve-static-core';
+import { parse as qsParse } from 'qs';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
 
-export const ExpressMiddlewares = function(
+export const ExpressMiddlewares = function (
   eventsService: EventsService
 ): RequestHandlerParams[] {
   return [
@@ -16,17 +17,29 @@ export const ExpressMiddlewares = function(
     },
     // parse cookies
     cookieParser(),
-    // Parse body as a raw string
+    // Parse body as a raw string and JSON/form if applicable
     (request: Request, response: Response, next: NextFunction) => {
       try {
+        const requestContentType: string = request.header('Content-Type');
+
         request.setEncoding('utf8');
         request.body = '';
 
-        request.on('data', chunk => {
+        request.on('data', (chunk) => {
           request.body += chunk;
         });
 
         request.on('end', () => {
+          if (requestContentType) {
+            if (requestContentType.includes('application/json')) {
+              request.bodyJSON = JSON.parse(request.body);
+            } else if (
+              requestContentType.includes('application/x-www-form-urlencoded')
+            ) {
+              request.bodyForm = qsParse(request.body, { depth: 10 });
+            }
+          }
+
           next();
         });
       } catch (error) {}

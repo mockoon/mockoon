@@ -326,6 +326,13 @@ export class Helpers {
           expect(response[propertyName]).to.include(
             httpCall.testedResponse[propertyName]
           );
+        } else if (
+          propertyName === 'body' &&
+          typeof httpCall.testedResponse[propertyName] === 'string'
+        ) {
+          expect(response[propertyName]).to.have.string(
+            httpCall.testedResponse[propertyName]
+          );
         } else {
           expect(response[propertyName]).to.equal(
             httpCall.testedResponse[propertyName]

@@ -10,8 +10,8 @@ import { basename } from 'path';
 import { Logger } from 'src/app/classes/logger';
 import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpreter';
 import { Errors } from 'src/app/enums/errors.enum';
-import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
 import { ExpressMiddlewares } from 'src/app/libs/express-middlewares.lib';
+import { TemplateParser } from 'src/app/libs/template-parser.lib';
 import { GetRouteResponseContentType, HeadersArrayToObject, IsValidURL, ObjectValuesFlatten, TestHeaderValidity } from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
@@ -94,7 +94,7 @@ export class ServerService {
     this.setRoutes(server, environment);
     this.setCors(server, environment);
     this.enableProxy(server, environment);
-    this.logErrorResponses(server, environment);
+    this.logErrorResponses(server);
 
     // handle server errors
     serverInstance.on('error', (error: any) => {
@@ -149,9 +149,8 @@ export class ServerService {
         // override default CORS headers with environment's headers
         this.setHeaders(
           [...CORSHeaders, ...environmentSelected.headers],
-          (header) => {
-            res.set(header.key, DummyJSONParser(header.value, req));
-          }
+          res,
+          req
         );
 
         res.send(200);
@@ -208,9 +207,7 @@ export class ServerService {
                   (enabledRouteResponse.statusCode as unknown) as number
                 );
 
-                this.setHeaders(enabledRouteResponse.headers, (header) => {
-                  res.set(header.key, DummyJSONParser(header.value, req));
-                });
+                this.setHeaders(enabledRouteResponse.headers, res, req);
 
                 // send the file
                 if (enabledRouteResponse.filePath) {
@@ -218,7 +215,7 @@ export class ServerService {
 
                   // throw error or serve file
                   try {
-                    filePath = DummyJSONParser(
+                    filePath = TemplateParser(
                       enabledRouteResponse.filePath,
                       req
                     );
@@ -234,7 +231,7 @@ export class ServerService {
 
                     // parse templating for a limited list of mime types
                     if (mimeTypesWithTemplating.indexOf(fileMimeType) > -1) {
-                      fileContent = DummyJSONParser(
+                      fileContent = TemplateParser(
                         fileContent.toString('utf-8', 0, fileContent.length),
                         req
                       );
@@ -248,66 +245,23 @@ export class ServerService {
                     }
                     res.send(fileContent);
                   } catch (error) {
-                    this.logger.error(
-                      `Error while serving the file: ${error.message}`
-                    );
+                    const errorMessage = `Error while serving the file: ${error.message}`;
 
-                    if (error.code === 'ENOENT') {
-                      this.sendError(
-                        res,
-                        Errors.FILE_NOT_EXISTS + filePath,
-                        false
-                      );
-                    } else if (error.message.indexOf('Parse error') > -1) {
-                      this.sendError(res, Errors.TEMPLATE_PARSE, false);
-                    }
-
-                    res.end();
+                    this.logger.error(errorMessage);
+                    this.sendError(res, errorMessage);
                   }
                 } else {
-                  // detect if content type is json in order to parse
-                  if (routeContentType.includes('application/json')) {
-                    try {
-                      res.json(
-                        JSON.parse(
-                          DummyJSONParser(enabledRouteResponse.body, req)
-                        )
-                      );
-                    } catch (error) {
-                      this.logger.error(
-                        `Error while serving the JSON: ${error.message}`
-                      );
-
-                      // if JSON parsing error send plain text error
-                      if (
-                        error.message.indexOf('Unexpected token') > -1 ||
-                        error.message.indexOf('Parse error') > -1
-                      ) {
-                        this.sendError(res, Errors.JSON_PARSE);
-                      } else if (error.message.indexOf('Missing helper') > -1) {
-                        this.sendError(
-                          res,
-                          Errors.MISSING_HELPER + error.message.split('"')[1]
-                        );
-                      }
-
-                      res.end();
+                  try {
+                    if (routeContentType.includes('application/json')) {
+                      res.set('Content-Type', 'application/json');
                     }
-                  } else {
-                    try {
-                      res.send(DummyJSONParser(enabledRouteResponse.body, req));
-                    } catch (error) {
-                      this.logger.error(
-                        `Error while serving the content: ${error.message}`
-                      );
 
-                      // if invalid Content-Type provided
-                      if (error.message.indexOf('invalid media type') > -1) {
-                        this.sendError(res, Errors.INVALID_CONTENT_TYPE);
-                      }
+                    res.send(TemplateParser(enabledRouteResponse.body, req));
+                  } catch (error) {
+                    const errorMessage = `Error while serving the content: ${error.message}`;
+                    this.logger.error(errorMessage);
 
-                      res.end();
-                    }
+                    this.sendError(res, errorMessage);
                   }
                 }
               }, enabledRouteResponse.latency);
@@ -336,27 +290,44 @@ export class ServerService {
    */
   private setResponseHeaders(server: any, environment: Environment) {
     server.use((req, res, next) => {
-      this.setHeaders(environment.headers, (header) => {
-        res.setHeader(header.key, DummyJSONParser(header.value, req));
-      });
+      this.setHeaders(environment.headers, res, req);
 
       next();
     });
   }
 
   /**
-   * Calls a setterFn function on each header
+   * Set the provided headers on the target. Use different headers accessors
+   * depending on the type of target:
+   * express.Response/http.OutgoingMessage/http.IncomingMessage
+   * Use the source in the template parsing of each header value.
    *
    * @param headers
-   * @param setterFn
+   * @param target
+   * @param source
    */
-  private setHeaders(
-    headers: Partial<Header>[],
-    setterFn: (header: Partial<Header>) => any
-  ) {
+  private setHeaders(headers: Partial<Header>[], target: any, source: any) {
     headers.forEach((header) => {
       if (header.key && header.value && !TestHeaderValidity(header.key)) {
-        setterFn(header);
+        let parsedHeaderValue: string;
+        try {
+          parsedHeaderValue = TemplateParser(header.value, source);
+        } catch (error) {
+          const errorMessage = `-- Parsing error. Check logs for more information --`;
+          this.logger.error(errorMessage);
+          parsedHeaderValue = errorMessage;
+        }
+
+        if (target.set) {
+          // for express.Response
+          target.set(header.key, parsedHeaderValue);
+        } else if (target.setHeader) {
+          // for proxy http.OutgoingMessage
+          target.setHeader(header.key, parsedHeaderValue);
+        } else {
+          // for http.IncomingMessage
+          target.headers[header.key] = parsedHeaderValue;
+        }
       }
     });
   }
@@ -391,13 +362,11 @@ export class ServerService {
       environment.proxyHost &&
       IsValidURL(environment.proxyHost)
     ) {
-      // res-stream the body (intercepted by body parser method) and mark as proxied
+      // re-stream the body (intercepted by body parser method) and mark as proxied
       const processRequest = (proxyReq, req, res) => {
         req.proxied = true;
 
-        this.setHeaders(environment.proxyReqHeaders, (header) => {
-          proxyReq.setHeader(header.key, DummyJSONParser(header.value, req));
-        });
+        this.setHeaders(environment.proxyReqHeaders, proxyReq, req);
 
         if (req.body) {
           proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
@@ -433,9 +402,7 @@ export class ServerService {
           self.store.update(logResponseAction(environment.uuid, response));
         });
 
-        this.setHeaders(environment.proxyResHeaders, (header) => {
-          proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
-        });
+        this.setHeaders(environment.proxyResHeaders, proxyRes, req);
       };
 
       const logErrorResponse = (err, req, res) => {
@@ -464,9 +431,7 @@ export class ServerService {
     } else {
       // if not proxy, log the 404 response
       server.use((req, res, next) => {
-        this.setHeaders(environment.headers, (header) => {
-          res.setHeader(header.key, DummyJSONParser(header.value, req));
-        });
+        this.setHeaders(environment.headers, res, req);
 
         // the send function is logging the response
         return res.status(404).send('Cannot ' + req.method + ' ' + req.url);
@@ -521,10 +486,8 @@ export class ServerService {
    * Log all error responses made by the environment
    *
    * @param server - server on which to log the response
-   * @param environment - environment to link log to
    */
-  private logErrorResponses(server: any, environment: Environment) {
-    const self = this;
+  private logErrorResponses(server: any) {
     server.use((err, req, res, next) => {
       // the response is logged by the overrided function
       return res.status(500).send(err);

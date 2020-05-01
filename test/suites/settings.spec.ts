@@ -8,7 +8,7 @@ function generateCall(requestBody: any): HttpCall {
     method: 'POST',
     body: requestBody,
     testedResponse: {
-      body: '{"response":"So Long, and Thanks for All the Fish"}',
+      body: '{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}',
       status: 200
     }
   };
