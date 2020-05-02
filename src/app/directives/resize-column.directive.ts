@@ -1,6 +1,7 @@
 import {ElementRef, Renderer2, HostListener, Directive, AfterViewInit, Input} from '@angular/core';
-import {SettingsService, SettingsProperties} from '../services/settings.service';
+import {SettingsService, SettingsProperties} from 'src/app/services/settings.service';
 import {Store} from 'src/app/stores/store';
+import {filter, first} from 'rxjs/operators';
 
 export type ColumnType = 'routeMenu' | 'envLogs';
 
@@ -23,13 +24,9 @@ export class ResizeColumnDirective implements AfterViewInit {
               private renderer: Renderer2) {
     elementRef.nativeElement.style.cursor = 'col-resize';
   }
-
-  // Max factor to calculate max width based on body width
-  private static readonly MAX_WIDTH_FACTOR = 0.8;
-
   @Input() type: ColumnType;
   @Input() minWidth = 100; // min width in pixels
-  @Input() minWidthFromRight: number; // max width that should remain
+  @Input() maxWidthFactor = 0.2; // max width based on body width percentage
 
   // Event removers for mousemove / mouseup events to body
   private mouseMoveRemover: Function;
@@ -42,19 +39,21 @@ export class ResizeColumnDirective implements AfterViewInit {
 
   ngAfterViewInit() {
     // Init and set size from settings - if that exists
-    const settings = this.store.get('settings');
-    if (typeof settings !== 'undefined') {
-      let width;
-      if (this.type === 'routeMenu') {
-        width = settings.routeMenuSize;
-      } else {
-        width = settings.envLogsSize;
+    this.store.select('settings').pipe(
+      filter(settings => !!settings),
+      first()
+    ).subscribe((settings) => {
+        let width;
+        if (this.type === 'routeMenu') {
+          width = settings.routeMenuSize;
+        } else {
+          width = settings.logsMenuSize;
+        }
+        if (typeof width !== 'undefined') { // finally update width if needed
+          this.applyWidthCss(width);
+        }
       }
-
-      if (typeof width !== 'undefined') { // finally update width if needed
-        this.applyWidthCss(width);
-      }
-    }
+    );
   }
 
   @HostListener('mousedown', ['$event']) onMouseDown(event) {
@@ -65,6 +64,10 @@ export class ResizeColumnDirective implements AfterViewInit {
     this.initResizableColumns();
   }
 
+  // Listen on widow size changes and apply max width
+  @HostListener('window:resize', ['$event']) onWindowResize(event) {
+    this.applyLimits(this.elementRef.nativeElement.parentElement.offsetWidth);
+  }
 
   /**
    * Registers event handlers to body
@@ -72,12 +75,11 @@ export class ResizeColumnDirective implements AfterViewInit {
    * - mouseup: mark as non-pressed
    */
   private initResizableColumns() {
-    // this.renderer.listen('body', 'mousemove', (event) => {this.handleMouseMoveEvent(event)});
     this.mouseMoveRemover = this.renderer.listen('body', 'mousemove', this.handleMouseMoveEvent.bind(this));
     this.mouseUpRemover = this.renderer.listen('body', 'mouseup', this.handleMouseUp.bind(this));
   }
 
-  private handleMouseUp(event) {
+  private handleMouseUp() {
     if (this.pressed) {
       this.pressed = false;
     }
@@ -89,34 +91,35 @@ export class ResizeColumnDirective implements AfterViewInit {
   private handleMouseMoveEvent(event) {
     if (this.pressed) {
       // Calc now width
-      let width = this.startWidth + (event.x - this.startX);
-
-      // Calc max limit and apply them, if needed
-      let maxWidth;
-      if (typeof this.minWidthFromRight !== 'undefined') {
-        maxWidth = document.body.offsetWidth - this.minWidthFromRight
-          - this.elementRef.nativeElement.parentElement.getBoundingClientRect().x;
-      } else {
-        // Use max size factor
-        maxWidth = document.body.offsetWidth * ResizeColumnDirective.MAX_WIDTH_FACTOR;
-      }
-
-      // Max width should never be less that minWidth
-      if (maxWidth < this.minWidth) {
-        maxWidth = this.minWidth;
-      }
-
-      // Apply limits if needed
-      if (width < this.minWidth) {
-        width = this.minWidth;
-      } else if (width > maxWidth) {
-        width = maxWidth;
-      }
-
-      // Apply the new width
-      this.applyWidthCss(width);
-      this.saveSettings(width);
+      const width = this.startWidth + (event.x - this.startX);
+      this.applyLimits(width);
     }
+  }
+
+  /**
+   * Apply limits width to parent element.
+   *
+   * @param width
+   */
+  private applyLimits(width) {
+    // Calc max limit and apply them, if needed
+    let maxWidth = document.body.offsetWidth * this.maxWidthFactor;
+
+    // Max width should never be less that minWidth - edge case
+    if (maxWidth < this.minWidth) {
+      maxWidth = this.minWidth;
+    }
+
+    // Apply limits if needed
+    if (width < this.minWidth) {
+      width = this.minWidth;
+    } else if (width > maxWidth) {
+      width = maxWidth;
+    }
+
+    // Apply the new width
+    this.applyWidthCss(width);
+    this.saveSettings(width);
   }
 
   private saveSettings(width: number) {
@@ -124,7 +127,7 @@ export class ResizeColumnDirective implements AfterViewInit {
     if (this.type === 'routeMenu') {
       settingsProperties = {routeMenuSize: width};
     } else {
-      settingsProperties = {envLogsSize: width};
+      settingsProperties = {logsMenuSize: width};
     }
 
     this.settingsService.updateSettings(settingsProperties);

@@ -12,7 +12,7 @@ export type Settings = {
   logSizeLimit: number;
   truncateRouteName: boolean;
   routeMenuSize: number;
-  envLogsSize: number;
+  logsMenuSize: number;
 };
 
 export interface PreMigrationSettings extends Settings {
@@ -33,7 +33,7 @@ export class SettingsService {
     logSizeLimit: 10000,
     truncateRouteName: true,
     routeMenuSize: undefined,
-    envLogsSize: undefined
+    logsMenuSize: undefined
   };
   private storageKey = 'settings';
 

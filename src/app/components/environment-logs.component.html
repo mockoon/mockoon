@@ -12,7 +12,7 @@
                   <div>
                     <span class="badge badge-default ml-0 mr-3 http-method-{{log.method | lowercase}} route-method">{{log.method | uppercase}}</span>
                   </div>
-                  <div class="ellipsis route" ngbTooltip="{{log.url}}">{{log.url}}</div>
+                  <div class="ellipsis route">{{log.url}}</div>
                   <div class="ml-auto pl-1 d-flex flex-row">
                     <div>
                       <button type="button" class="btn btn-link btn-icon btn-mock" (click)="createRouteFromLog(log.uuid)">
@@ -38,7 +38,7 @@
             </a>
           </li>
         </ul>
-        <resize-column [type]="'envLogs'" [minWidth]="200" [minWidthFromRight]="500"></resize-column>
+        <resize-column [type]="'envLogs'" [minWidth]="200" [maxWidthFactor]="0.3"></resize-column>
       </div>
       <div class="col h-100 environment-logs-column">
         <div *ngIf="environmentsLogs[activeEnvironmentUUID][(selectedLogIndex$ | async)] as selectedLog"
