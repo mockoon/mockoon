@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AscSort } from 'src/app/libs/utils.lib';
+import { Response } from 'express';
+import { AscSort, ObjectValuesFlatten } from 'src/app/libs/utils.lib';
+import { EnvironmentLog } from 'src/app/models/environment-logs.model';
 import { Store } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
-import { EnvironmentLog, EnvironmentLogResponse } from 'src/app/types/server.type';
 import { parse as urlParse } from 'url';
 import { v1 as uuid } from 'uuid';
 
@@ -12,119 +13,58 @@ export class DataService {
   constructor(private store: Store) {}
 
   /**
-   * Format a request log
-   *
-   * @param request
-   */
-  public formatRequestLog(request: any): EnvironmentLog {
-    // use some getter to keep the scope because some request properties are being defined later by express (route, params, etc)
-    const maxLength = this.store.get('settings').logSizeLimit;
-    const requestLog: EnvironmentLog = {
-      uuid: request.uuid,
-      timestamp: new Date(),
-      get route() {
-        return request.route ? request.route.path : null;
-      },
-      method: request.method,
-      protocol: request.protocol,
-      url: urlParse(request.originalUrl).pathname,
-      headers: [],
-      get proxied() {
-        return request.proxied;
-      },
-      get params() {
-        if (request.params) {
-          return Object.keys(request.params).map(paramName => {
-            return { name: paramName, value: request.params[paramName] };
-          });
-        }
-
-        return [];
-      },
-      get queryParams() {
-        if (request.query) {
-          return Object.keys(request.query).map(queryParamName => {
-            return {
-              name: queryParamName,
-              value: request.query[queryParamName]
-            };
-          });
-        }
-
-        return [];
-      },
-      get body() {
-        let truncatedBody: string = request.body;
-
-        // truncate
-        if (truncatedBody.length > maxLength) {
-          truncatedBody =
-            truncatedBody.substring(0, maxLength) +
-            '\n\n-------- BODY HAS BEEN TRUNCATED --------';
-        }
-
-        return truncatedBody;
-      },
-      response: null
-    };
-
-    // get and sort headers
-    requestLog.headers = Object.keys(request.headers)
-      .map(headerName => {
-        return { name: headerName, value: request.headers[headerName] };
-      })
-      .sort(AscSort);
-
-    return requestLog;
-  }
-
-  /**
-   * Format a response log
+   * Format request/response to EnvironmentLog to be consumed by the UI
    *
    * @param response
-   * @param body
-   * @param requestUUID
    */
-  public formatResponseLog(
-    response: any,
-    body: string,
-    requestUUID: string
-  ): EnvironmentLogResponse {
-    // if don't have uuid it can't be found, so let's return null and consider this an error
-    if (requestUUID == null) {
-      return null;
-    }
+  public formatLog(response: Response): EnvironmentLog {
+    const request = response.req;
+    const flattenedRequestHeaders = ObjectValuesFlatten(request.headers);
+    const flattenedResponseHeaders = ObjectValuesFlatten(response.getHeaders());
 
-    // use some getter to keep the scope because some request properties are being defined later by express (route, params, etc)
-    const responseLog: EnvironmentLogResponse = {
-      requestUUID: requestUUID,
-      status: response.statusCode,
-      headers: [],
-      body: ''
-    };
-    // get and sort headers
-    const headers = response.getHeaders();
-    responseLog.headers = Object.keys(headers)
-      .map(headerName => {
-        return { name: headerName, value: headers[headerName] };
-      })
-      .sort(AscSort);
-
-    const maxLength = this.store.get('settings').logSizeLimit;
-    responseLog.body = (function() {
-      let truncatedBody: string = body;
-
-      // truncate
-      if (truncatedBody.length > maxLength) {
-        truncatedBody =
-          truncatedBody.substring(0, maxLength) +
-          '\n\n-------- BODY HAS BEEN TRUNCATED --------';
+    return {
+      uuid: uuid(),
+      timestamp: new Date(),
+      method: request.method,
+      route: request.route ? request.route.path : null,
+      url: urlParse(request.originalUrl).pathname,
+      request: {
+        params: request.params
+          ? Object.keys(request.params).map((paramName) => ({
+              name: paramName,
+              value: request.params[paramName]
+            }))
+          : [],
+        queryParams: request.query
+          ? Object.keys(request.query).map((queryParamName) => ({
+              name: queryParamName,
+              value: request.query[queryParamName]
+            }))
+          : [],
+        body: request.body,
+        headers: Object.keys(flattenedRequestHeaders)
+          .map((headerName) => {
+            return {
+              name: headerName,
+              value: flattenedRequestHeaders[headerName]
+            };
+          })
+          .sort(AscSort)
+      },
+      proxied: request.proxied || false,
+      response: {
+        status: response.statusCode,
+        headers: Object.keys(flattenedResponseHeaders)
+          .map((headerName) => {
+            return {
+              name: headerName,
+              value: flattenedResponseHeaders[headerName]
+            };
+          })
+          .sort(AscSort),
+        body: response.body
       }
-
-      return truncatedBody;
-    })();
-
-    return responseLog;
+    };
   }
 
   /**
@@ -166,7 +106,7 @@ export class DataService {
    * @param subject
    */
   public renewEnvironmentsUUIDs(environments: Environments, erase = false) {
-    environments.forEach(environment => {
+    environments.forEach((environment) => {
       this.renewEnvironmentUUIDs(environment, erase);
     });
 
@@ -181,7 +121,7 @@ export class DataService {
   public renewEnvironmentUUIDs(environment: Environment, erase = false) {
     environment.uuid = erase ? '' : uuid();
 
-    environment.routes.forEach(route => {
+    environment.routes.forEach((route) => {
       this.renewRouteUUIDs(route, erase);
     });
 
@@ -196,10 +136,27 @@ export class DataService {
   public renewRouteUUIDs(route: Route, erase = false) {
     route.uuid = erase ? '' : uuid();
 
-    route.responses.forEach(routeResponse => {
+    route.responses.forEach((routeResponse) => {
       routeResponse.uuid = erase ? '' : uuid();
     });
 
     return route;
+  }
+
+  /**
+   * Truncate the body to the maximum length defined in the settings
+   *
+   * @param body
+   */
+  public truncateBody(body: string) {
+    const logSizeLimit = this.store.get('settings').logSizeLimit;
+
+    if (body.length > logSizeLimit) {
+      body =
+        body.substring(0, logSizeLimit) +
+        '\n\n-------- BODY HAS BEEN TRUNCATED --------';
+    }
+
+    return body;
   }
 }

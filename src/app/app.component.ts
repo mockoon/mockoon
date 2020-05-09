@@ -14,6 +14,7 @@ import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { GetRouteResponseContentType, IsValidURL } from 'src/app/libs/utils.lib';
 import { HeadersProperties } from 'src/app/models/common.model';
 import { ContextMenuItemPayload } from 'src/app/models/context-menu.model';
+import { EnvironmentLogs } from 'src/app/models/environment-logs.model';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
@@ -28,7 +29,6 @@ import { DuplicatedRoutesTypes, EnvironmentsStatuses, EnvironmentStatus, Store, 
 import { DataSubject } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { CORSHeaders, Header, methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
-import { EnvironmentLogs } from 'src/app/types/server.type';
 import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
 
 @Component({

@@ -1,12 +1,12 @@
 import { Config } from 'src/app/config';
 import { HighestMigrationId } from 'src/app/libs/migrations.lib';
 import { ArrayContainsObjectKey, GetRouteResponseContentType } from 'src/app/libs/utils.lib';
+import { EnvironmentLogs } from 'src/app/models/environment-logs.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions, ActionTypes } from 'src/app/stores/actions';
 import { DuplicatedRoutesTypes, EnvironmentsStatuses, StoreType } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
-import { EnvironmentLogs } from 'src/app/types/server.type';
 
 export type ReducerDirectionType = 'next' | 'previous';
 export type ReducerIndexes = { sourceIndex: number, targetIndex: number };
@@ -638,23 +638,6 @@ export function environmentReducer(
         newEnvironmentsLogs[action.environmentUUID].pop();
       }
 
-      newState = {
-        ...state,
-        environmentsLogs: newEnvironmentsLogs
-      };
-      break;
-    }
-
-    case ActionTypes.LOG_RESPONSE: {
-      const requestUuid = action.logItem.requestUUID;
-      const newEnvironmentsLogs = { ...state.environmentsLogs };
-
-      for (const item of newEnvironmentsLogs[action.environmentUUID]) {
-        if (item.uuid === requestUuid) {
-          item.response = action.logItem;
-          break;
-        }
-      }
       newState = {
         ...state,
         environmentsLogs: newEnvironmentsLogs

@@ -1,10 +1,10 @@
+import { EnvironmentLog } from 'src/app/models/environment-logs.model';
 import { SettingsProperties } from 'src/app/services/settings.service';
 import { Toast } from 'src/app/services/toasts.service';
 import { ReducerDirectionType, ReducerIndexes } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, EnvironmentStatusProperties, TabsNameType, UIStateProperties, ViewsNameType } from 'src/app/stores/store';
 import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
 import { Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
-import { EnvironmentLog, EnvironmentLogResponse } from 'src/app/types/server.type';
 
 export const enum ActionTypes {
   SET_ACTIVE_TAB,
@@ -30,7 +30,6 @@ export const enum ActionTypes {
   ADD_ROUTE_RESPONSE,
   UPDATE_ROUTE_RESPONSE,
   LOG_REQUEST,
-  LOG_RESPONSE,
   CLEAR_LOGS,
   ADD_TOAST,
   REMOVE_TOAST,
@@ -154,7 +153,10 @@ export function moveRouteResponsesAction(indexes: ReducerIndexes) {
  *
  * @param environment - environment to add
  */
-export function addEnvironmentAction(environment: Environment, afterUUID?: string) {
+export function addEnvironmentAction(
+  environment: Environment,
+  afterUUID?: string
+) {
   return <const>{
     type: ActionTypes.ADD_ENVIRONMENT,
     environment,
@@ -307,11 +309,11 @@ export function updateRouteResponseAction(properties: RouteResponseProperties) {
 }
 
 /**
- * Log an entering request
+ * Log the request (request and response)
  *
  * @param environmentUUID - environment UUID to which the request is linked to
  *
- * @param logItem - logged request
+ * @param logItem - environment log object
  */
 export function logRequestAction(
   environmentUUID: string,
@@ -319,24 +321,6 @@ export function logRequestAction(
 ) {
   return <const>{
     type: ActionTypes.LOG_REQUEST,
-    environmentUUID,
-    logItem
-  };
-}
-
-/**
- * Log an outgoing response
- *
- * @param environmentUUID - environment UUID to which the response is linked to
- *
- * @param logItem - logged response
- */
-export function logResponseAction(
-  environmentUUID: string,
-  logItem: EnvironmentLogResponse
-) {
-  return <const>{
-    type: ActionTypes.LOG_RESPONSE,
     environmentUUID,
     logItem
   };
@@ -438,7 +422,6 @@ export type Actions =
   | ReturnType<typeof addRouteResponseAction>
   | ReturnType<typeof updateRouteResponseAction>
   | ReturnType<typeof logRequestAction>
-  | ReturnType<typeof logResponseAction>
   | ReturnType<typeof clearLogsAction>
   | ReturnType<typeof addToastAction>
   | ReturnType<typeof removeToastAction>

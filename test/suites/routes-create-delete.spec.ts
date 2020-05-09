@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
@@ -22,11 +23,10 @@ describe('Create and delete routes', () => {
   });
 
   it('Last added route should remain and be active', async () => {
-    await tests.app.client
-      .getText(
-        '.routes-menu .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child'
-      )
-      .should.eventually.equal('GET\n/');
+    const routeMethod = await tests.app.client.getText(
+      '.routes-menu .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child'
+    );
+    expect(routeMethod).to.equal('GET\n/');
   });
 
   it('Remove last route, active tab should be environment settings', async () => {

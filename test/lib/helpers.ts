@@ -173,9 +173,10 @@ export class Helpers {
     await this.testsInstance.app.client.waitForExist(selector, 5000, reverse);
 
     if (name) {
-      await this.testsInstance.app.client
-        .getText(selector + ' > div:first-of-type')
-        .should.eventually.equal(name);
+      const text = await this.testsInstance.app.client.getText(
+        selector + ' > div:first-of-type'
+      );
+      expect(text).to.equal(name);
     }
   }
 
@@ -212,9 +213,10 @@ export class Helpers {
     await this.testsInstance.app.client.waitForExist(selector, 5000, reverse);
 
     if (name) {
-      await this.testsInstance.app.client
-        .getText(selector + ' > div:first-of-type')
-        .should.eventually.equal(name);
+      const text = await this.testsInstance.app.client.getText(
+        selector + ' > div:first-of-type'
+      );
+      expect(text).to.equal(name);
     }
   }
 
@@ -247,9 +249,10 @@ export class Helpers {
     await this.testsInstance.app.client.waitForExist(toastSelector);
 
     if (text) {
-      await this.testsInstance.app.client
-        .getText(`${toastSelector} .toast-body`)
-        .should.eventually.contain(text);
+      const elementText = await this.testsInstance.app.client.getText(
+        `${toastSelector} .toast-body`
+      );
+      expect(elementText).to.contain(text);
     }
   }
 
@@ -380,7 +383,7 @@ export class Helpers {
       .click();
   }
 
-  async requestLogBodyContains(str: string) {
+  async environmentLogBodyContains(str: string) {
     await this.testsInstance.app.client
       .element(`div.environment-logs-content-title:nth-child(9)`)
       .click();
@@ -388,6 +391,65 @@ export class Helpers {
       .element(`div.environment-logs-content-item.pre`)
       .getHTML()
       .should.eventually.contain(str);
+  }
+
+  /**
+   * Assert text in environment logs
+   *
+   * @param text
+   * @param tab
+   * @param sectionIndex - includes the titles (General, Headers, etc)
+   * @param itemIndex
+   */
+  async environmentLogItemEqual(
+    text: string,
+    tab: 'request' | 'response',
+    sectionIndex: number,
+    itemIndex: number
+  ) {
+    const selector = `.environment-logs-content-${tab} div:nth-child(${sectionIndex}) div.environment-logs-content-item:nth-child(${itemIndex})`;
+
+    await this.testsInstance.app.client.waitForExist(selector);
+    const elementText = await this.testsInstance.app.client.getText(selector);
+    expect(elementText).to.equal(text);
+  }
+
+  async environmentLogMenuMethodEqual(method: string, logIndex: number) {
+    const selector = `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link .route-method`;
+
+    await this.testsInstance.app.client.waitForExist(selector);
+    const methodText = await this.testsInstance.app.client.getText(selector);
+    expect(methodText).to.equals(method);
+  }
+
+  async environmentLogMenuPathEqual(method: string, logIndex: number) {
+    const selector = `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link .route`;
+
+    await this.testsInstance.app.client.waitForExist(selector);
+    const elementText = await this.testsInstance.app.client.getText(selector);
+    expect(elementText).to.equals(method);
+  }
+
+  async environmentLogMenuCheckIcon(
+    icon: 'PROXY' | 'CAUGHT',
+    logIndex: number,
+    inverted = false
+  ) {
+    await this.testsInstance.app.client.waitForExist(
+      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link i[ngbTooltip="${
+        icon === 'PROXY' ? 'Request proxied' : 'Request caught'
+      }"]`,
+      5000,
+      inverted
+    );
+  }
+
+  async environmentLogClickMockButton(logIndex: number) {
+    await this.testsInstance.app.client
+      .element(
+        `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .btn-mock`
+      )
+      .click();
   }
 
   async disableRoute() {

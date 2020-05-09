@@ -110,14 +110,14 @@ describe('Settings', () => {
       const str = makeString(99);
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(1);
-      await tests.helpers.requestLogBodyContains(str);
+      await tests.helpers.environmentLogBodyContains(str);
     });
 
     it('Truncate request body of 100 characters', async () => {
       const str = makeString(100);
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(2);
-      await tests.helpers.requestLogBodyContains('BODY HAS BEEN TRUNCATED');
+      await tests.helpers.environmentLogBodyContains('BODY HAS BEEN TRUNCATED');
     });
 
     it('Set log body size to 1000', async () => {
@@ -138,14 +138,14 @@ describe('Settings', () => {
       const str = makeString(999);
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(3);
-      await tests.helpers.requestLogBodyContains(str);
+      await tests.helpers.environmentLogBodyContains(str);
     });
 
     it('Truncate request body of 1000 characters', async () => {
       const str = makeString(1000);
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(4);
-      await tests.helpers.requestLogBodyContains('BODY HAS BEEN TRUNCATED');
+      await tests.helpers.environmentLogBodyContains('BODY HAS BEEN TRUNCATED');
     });
   });
 });

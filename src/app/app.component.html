@@ -256,8 +256,7 @@
                 <!-- ENVIRONMENT LOGS VIEW -->
                 <div *ngIf="activeView === 'ENV_LOGS'" class="row flex-fill mh0">
                   <div class="col h-100">
-                    <app-environment-logs [activeEnvironmentUUID$]="activeEnvironmentUUID$"
-                      [environmentsLogs$]="environmentsLogs$"></app-environment-logs>
+                    <app-environment-logs></app-environment-logs>
                   </div>
                 </div>
               </ng-container>

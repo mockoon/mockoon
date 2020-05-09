@@ -5,20 +5,36 @@ import { parse as qsParse } from 'qs';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
 
-export const ExpressMiddlewares = function (
-  eventsService: EventsService
+export const Middlewares = function (
+  eventsService: EventsService,
+  getDelayResponseDuration: () => number
 ): RequestHandlerParams[] {
   return [
-    // Remove multiple slash and replace by single slash
-    (request: Request, response: Response, next: NextFunction) => {
+    function delayResponse(
+      request: Request,
+      response: Response,
+      next: NextFunction
+    ) {
+      setTimeout(next, getDelayResponseDuration());
+    },
+    function deduplicateSlashes(
+      request: Request,
+      response: Response,
+      next: NextFunction
+    ) {
+      // Remove multiple slash and replace by single slash
       request.url = request.url.replace(/\/{2,}/g, '/');
 
       next();
     },
     // parse cookies
     cookieParser(),
-    // Parse body as a raw string and JSON/form if applicable
-    (request: Request, response: Response, next: NextFunction) => {
+    function parseBody(
+      request: Request,
+      response: Response,
+      next: NextFunction
+    ) {
+      // Parse body as a raw string and JSON/form if applicable
       try {
         const requestContentType: string = request.header('Content-Type');
 
@@ -44,8 +60,11 @@ export const ExpressMiddlewares = function (
         });
       } catch (error) {}
     },
-    // send entering request analytics event
-    (request: Request, response: Response, next: NextFunction) => {
+    function logAnalyticsEvent(
+      request: Request,
+      response: Response,
+      next: NextFunction
+    ) {
       eventsService.analyticsEvents.next(
         AnalyticsEvents.SERVER_ENTERING_REQUEST
       );

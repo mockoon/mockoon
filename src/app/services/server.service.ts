@@ -10,19 +10,17 @@ import { basename } from 'path';
 import { Logger } from 'src/app/classes/logger';
 import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpreter';
 import { Errors } from 'src/app/enums/errors.enum';
-import { ExpressMiddlewares } from 'src/app/libs/express-middlewares.lib';
+import { Middlewares } from 'src/app/libs/express-middlewares.lib';
 import { TemplateParser } from 'src/app/libs/template-parser.lib';
-import { GetRouteResponseContentType, HeadersArrayToObject, IsValidURL, ObjectValuesFlatten, TestHeaderValidity } from 'src/app/libs/utils.lib';
+import { GetRouteResponseContentType, IsValidURL, TestHeaderValidity } from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
-import { logRequestAction, logResponseAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
+import { logRequestAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
-import { IEnhancedRequest } from 'src/app/types/misc.type';
 import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
-import { v1 as uuid } from 'uuid';
 
 const httpsConfig = {
   key: pemFiles.key,
@@ -82,19 +80,20 @@ export class ServerService {
       );
     });
 
-    ExpressMiddlewares(this.eventsService).forEach((expressMiddleware) => {
+    Middlewares(
+      this.eventsService,
+      () => this.store.getEnvironmentByUUID(environment.uuid).latency
+    ).forEach((expressMiddleware) => {
       server.use(expressMiddleware);
     });
 
     // apply latency, cors, routes and proxy to express server
-    this.logRequests(server, environment);
-    this.setEnvironmentLatency(server, environment.uuid);
+    this.logRequest(server, environment);
     this.setResponseHeaders(server, environment);
-    this.logResponses(server, environment);
     this.setRoutes(server, environment);
     this.setCors(server, environment);
     this.enableProxy(server, environment);
-    this.logErrorResponses(server);
+    this.errorHandler(server);
 
     // handle server errors
     serverInstance.on('error', (error: any) => {
@@ -153,7 +152,7 @@ export class ServerService {
           req
         );
 
-        res.send(200);
+        res.status(200).end();
       });
     }
   }
@@ -243,6 +242,9 @@ export class ServerService {
                         `attachment; filename="${basename(filePath)}"`
                       );
                     }
+
+                    this.saveResponseBody(res, fileContent.toString());
+
                     res.send(fileContent);
                   } catch (error) {
                     const errorMessage = `Error while serving the file: ${error.message}`;
@@ -256,7 +258,11 @@ export class ServerService {
                       res.set('Content-Type', 'application/json');
                     }
 
-                    res.send(TemplateParser(enabledRouteResponse.body, req));
+                    const body = TemplateParser(enabledRouteResponse.body, req);
+
+                    this.saveResponseBody(res, body);
+
+                    res.send(body);
                   } catch (error) {
                     const errorMessage = `Error while serving the content: ${error.message}`;
                     this.logger.error(errorMessage);
@@ -340,78 +346,39 @@ export class ServerService {
    * @param errorMessage
    * @param showToast
    */
-  private sendError(res: any, errorMessage: string, showToast = true) {
+  private sendError(
+    res: express.Response,
+    errorMessage: string,
+    showToast = true,
+    status: number = null
+  ) {
     if (showToast) {
       this.toastService.addToast('error', errorMessage);
     }
     res.set('Content-Type', 'text/plain');
+    this.saveResponseBody(res, errorMessage);
+
+    if (status !== null) {
+      res.status(status);
+    }
+
     res.send(errorMessage);
   }
 
   /**
-   * Enable catch all proxy.
-   * Restream the body to the proxied API because it already has been intercepted by body parser
+   * Add catch-all proxy if enabled.
+   * Restream the body to the proxied API because it already has been
+   * intercepted by the body parser.
    *
    * @param server - server on which to launch the proxy
    * @param environment - environment to get proxy settings from
    */
   private enableProxy(server: express.Application, environment: Environment) {
-    // Add catch all proxy if enabled
     if (
       environment.proxyMode &&
       environment.proxyHost &&
       IsValidURL(environment.proxyHost)
     ) {
-      // re-stream the body (intercepted by body parser method) and mark as proxied
-      const processRequest = (proxyReq, req, res) => {
-        req.proxied = true;
-
-        this.setHeaders(environment.proxyReqHeaders, proxyReq, req);
-
-        if (req.body) {
-          proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
-          // stream the content
-          proxyReq.write(req.body);
-        }
-      };
-
-      // logging the proxied response
-      const self = this;
-      const processResponse = (proxyRes, req, res) => {
-        // flatten headers as proxy might return Set-Cookie header(s) values in an array
-        const combinedHeaders = ObjectValuesFlatten({
-          ...res.getHeaders(),
-          ...proxyRes.headers,
-          ...HeadersArrayToObject(environment.proxyResHeaders)
-        });
-
-        let body = '';
-        proxyRes.on('data', (chunk) => {
-          body += chunk;
-        });
-        proxyRes.on('end', () => {
-          proxyRes.getHeaders = function () {
-            return combinedHeaders;
-          };
-          const enhancedReq = req as IEnhancedRequest;
-          const response = self.dataService.formatResponseLog(
-            proxyRes,
-            body,
-            enhancedReq.uuid
-          );
-          self.store.update(logResponseAction(environment.uuid, response));
-        });
-
-        this.setHeaders(environment.proxyResHeaders, proxyRes, req);
-      };
-
-      const logErrorResponse = (err, req, res) => {
-        // the response is logged by the overriden function
-        res
-          .status(504)
-          .send('Error occured while trying to proxy to: ' + req.url);
-      };
-
       this.logger.info(
         `Creating proxy between localhost:${environment.port} and ${environment.proxyHost}`
       );
@@ -423,92 +390,78 @@ export class ServerService {
           secure: false,
           changeOrigin: true,
           ssl: { ...httpsConfig, agent: false },
-          onProxyReq: processRequest,
-          onProxyRes: processResponse,
-          onError: logErrorResponse
+          onProxyReq: (proxyReq, req, res) => {
+            req.proxied = true;
+
+            this.setHeaders(environment.proxyReqHeaders, proxyReq, req);
+
+            if (req.body) {
+              proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
+
+              // re-stream the body (intercepted by body parser method) and mark as proxied
+              proxyReq.write(req.body);
+            }
+          },
+          onProxyRes: (proxyRes, req, res) => {
+            let body = '';
+            proxyRes.on('data', (chunk) => {
+              body += chunk;
+            });
+            proxyRes.on('end', () => {
+              this.saveResponseBody(res, body);
+            });
+
+            this.setHeaders(environment.proxyResHeaders, proxyRes, req);
+          },
+          onError: (err, req, res) => {
+            this.sendError(
+              res,
+              `An error occured while trying to proxy to ${environment.proxyHost}${req.url}: ${err}`,
+              false,
+              504
+            );
+          }
         })
       );
-    } else {
-      // if not proxy, log the 404 response
-      server.use((req, res, next) => {
-        this.setHeaders(environment.headers, res, req);
-
-        // the send function is logging the response
-        return res.status(404).send('Cannot ' + req.method + ' ' + req.url);
-      });
     }
   }
 
   /**
-   * Logs all request made to the environment
+   * Logs all request made to the environment when response is sent ('close' event)
    *
    * @param server - server on which to log the request
    * @param environment - environment to link log to
    */
-  private logRequests(server: express.Application, environment: Environment) {
+  private logRequest(server: express.Application, environment: Environment) {
     server.use((req, res, next) => {
-      const log = this.dataService.formatRequestLog(req);
-      log.uuid = uuid();
-      const enhancedReq = req as IEnhancedRequest;
-      enhancedReq.uuid = log.uuid;
-      this.store.update(logRequestAction(environment.uuid, log));
-      next();
-    });
-  }
-
-  /**
-   * Log all response made by the environment
-   *
-   * @param server - server on which to log the response
-   * @param environment - environment to link log to
-   */
-  private logResponses(server: any, environment: Environment) {
-    server.use((req, res, next) => {
-      const oldSend = res.send;
-
-      const self = this;
-      res.send = function (body) {
-        oldSend.apply(res, arguments);
-        const enhancedReq = this.req as IEnhancedRequest;
-        const responseLog = self.dataService.formatResponseLog(
-          this,
-          body,
-          enhancedReq.uuid
+      res.on('close', () => {
+        this.store.update(
+          logRequestAction(environment.uuid, this.dataService.formatLog(res))
         );
-        self.store.update(logResponseAction(environment.uuid, responseLog));
-      };
+      });
 
       next();
     });
   }
 
   /**
-   * Log all error responses made by the environment
+   * Catch all error handler
+   * http://expressjs.com/en/guide/error-handling.html#catching-errors
    *
    * @param server - server on which to log the response
    */
-  private logErrorResponses(server: any) {
+  private errorHandler(server: express.Application) {
     server.use((err, req, res, next) => {
-      // the response is logged by the overrided function
-      return res.status(500).send(err);
+      this.sendError(res, err, false, 500);
     });
   }
 
   /**
-   * Set the environment latency if any
+   * Store the request's body in the Express request object
    *
-   * @param server - server instance
-   * @param environmentUUID - environment UUID
+   * @param res
    */
-  private setEnvironmentLatency(
-    server: express.Application,
-    environmentUUID: string
-  ) {
-    server.use((req, res, next) => {
-      const environmentSelected = this.store.getEnvironmentByUUID(
-        environmentUUID
-      );
-      setTimeout(next, environmentSelected.latency);
-    });
+  private saveResponseBody(res: express.Response, body: string) {
+    res.body = this.dataService.truncateBody(body);
   }
 }

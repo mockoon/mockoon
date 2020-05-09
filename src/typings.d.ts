@@ -9,5 +9,9 @@ declare namespace Express {
   export interface Request {
     bodyJSON: any;
     bodyForm: any;
+    proxied: boolean;
+  }
+  export interface Response {
+    body: any;
   }
 }

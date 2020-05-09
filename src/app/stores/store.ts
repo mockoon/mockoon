@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
+import { EnvironmentLog, EnvironmentLogs } from 'src/app/models/environment-logs.model';
 import { Settings } from 'src/app/services/settings.service';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions } from 'src/app/stores/actions';
 import { environmentReducer } from 'src/app/stores/reducer';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
-import { EnvironmentLogs } from 'src/app/types/server.type';
 
 export type ViewsNameType = 'ROUTE' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
@@ -136,6 +136,20 @@ export class Store {
         map(
           (store) =>
             store.environmentsStatus[this.store$.value.activeEnvironmentUUID]
+        )
+      );
+  }
+
+  /**
+   * Select active environment logs
+   */
+  public selectActiveEnvironmentLogs(): Observable<EnvironmentLog[]> {
+    return this.store$
+      .asObservable()
+      .pipe(
+        map(
+          (store) =>
+            store.environmentsLogs[this.store$.value.activeEnvironmentUUID]
         )
       );
   }

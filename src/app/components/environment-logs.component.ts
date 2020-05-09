@@ -1,68 +1,57 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { EnvironmentLog } from 'src/app/models/environment-logs.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EnvironmentLogsTabsNameType, Store } from 'src/app/stores/store';
-import { EnvironmentLogs } from 'src/app/types/server.type';
+
+type CollapseStates = {
+  'request.general': boolean;
+  'request.headers': boolean;
+  'request.routeParams': boolean;
+  'request.queryParams': boolean;
+  'request.body': boolean;
+  'response.general': boolean;
+  'response.headers': boolean;
+  'response.body': boolean;
+};
 
 @Component({
   selector: 'app-environment-logs',
   templateUrl: 'environment-logs.component.html',
-  styleUrls: ['environment-logs.component.scss']
+  styleUrls: ['environment-logs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentLogsComponent implements OnInit {
-  @Input() activeEnvironmentUUID$: Observable<string>;
-  @Input() environmentsLogs$: Observable<EnvironmentLogs>;
-  public generalCollapsed: boolean;
-  public headersCollapsed: boolean;
-  public routeParamsCollapsed: boolean;
-  public queryParamsCollapsed: boolean;
-  public bodyCollapsed: boolean;
-  public responseGeneralCollapsed: boolean;
-  public responseHeadersCollapsed: boolean;
-  public responseBodyCollapsed: boolean;
-  public selectedLogIndex = new BehaviorSubject<number>(0);
-  public selectedLogIndex$: Observable<number>;
+  public environmentLogs$: Observable<EnvironmentLog[]>;
   public activeEnvironmentLogsTab$: Observable<EnvironmentLogsTabsNameType>;
+  public selectedLogIndex$ = new BehaviorSubject<number>(0);
+  public collapseStates: CollapseStates;
 
-  constructor(private store: Store, private environmentsService: EnvironmentsService) { }
+  constructor(
+    private store: Store,
+    private environmentsService: EnvironmentsService
+  ) {}
 
   ngOnInit() {
-    this.selectedLogIndex$ = this.selectedLogIndex.asObservable();
-
-    this.activeEnvironmentLogsTab$ = this.store.select('activeEnvironmentLogsTab');
-
-    const environmentsLogs = this.store.get('environmentsLogs');
-    this.activeEnvironmentUUID$.pipe(
-      distinctUntilChanged()
-    ).subscribe((activeEnvironmentUUID) => {
-      if (environmentsLogs[activeEnvironmentUUID] && environmentsLogs[activeEnvironmentUUID].length) {
-        this.showLogDetails(0);
-      } else {
-        this.initCollapse();
-        this.selectedLogIndex.next(0);
-      }
-    });
+    this.environmentLogs$ = this.store.selectActiveEnvironmentLogs().pipe(
+      tap(() => {
+        this.resetCollapseStates();
+        this.selectLog(0);
+      })
+    );
+    this.activeEnvironmentLogsTab$ = this.store.select(
+      'activeEnvironmentLogsTab'
+    );
   }
 
   /**
    * Select environment logs details at specified index
+   *
    * @param logIndex
    */
-  public showLogDetails(logIndex: number) {
-    this.initCollapse();
-    this.selectedLogIndex.next(logIndex);
-  }
-
-  private initCollapse() {
-    this.generalCollapsed = false;
-    this.headersCollapsed = false;
-    this.routeParamsCollapsed = false;
-    this.queryParamsCollapsed = false;
-    this.bodyCollapsed = false;
-    this.responseGeneralCollapsed = false;
-    this.responseHeadersCollapsed = false;
-    this.responseBodyCollapsed = false;
+  public selectLog(logIndex: number) {
+    this.selectedLogIndex$.next(logIndex);
   }
 
   /**
@@ -72,7 +61,25 @@ export class EnvironmentLogsComponent implements OnInit {
     this.environmentsService.setActiveEnvironmentLogTab(tabName);
   }
 
+  /**
+   * Call the environment service to create a route from the logs
+   *
+   * @param logUuid
+   */
   public createRouteFromLog(logUuid: string) {
     this.environmentsService.createRouteFromLog(logUuid);
+  }
+
+  private resetCollapseStates() {
+    this.collapseStates = {
+      'request.general': false,
+      'request.headers': false,
+      'request.routeParams': false,
+      'request.queryParams': false,
+      'request.body': false,
+      'response.general': false,
+      'response.headers': false,
+      'response.body': false
+    };
   }
 }
