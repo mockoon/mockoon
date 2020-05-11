@@ -280,6 +280,20 @@ export class Helpers {
     await this.testsInstance.app.client.element(selectors[tabName]).click();
   }
 
+  async selectEnvironmentLogEntry(index: number) {
+    await this.testsInstance.app.client
+      .element(
+        `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${index})`
+      )
+      .click();
+  }
+
+  async assertEnvironmentLogEntryActive(index: number) {
+    await this.testsInstance.app.client.waitForExist(
+      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${index}) .nav-link.active`
+    );
+  }
+
   async switchTabInEnvironmentLogs(tabName: EnvironmentLogsTabsNameType) {
     const selectors: { [key in typeof tabName]: string } = {
       REQUEST:
@@ -377,20 +391,56 @@ export class Helpers {
     });
   }
 
-  async closeSettingsModal() {
+  async closeModal() {
     await this.testsInstance.app.client
       .element(`.modal-dialog .modal-footer button`)
       .click();
   }
 
+  async assertViewBodyLogButtonPresence(inverted = false) {
+    await this.testsInstance.app.client.waitForExist(
+      '.view-body-link',
+      5000,
+      inverted
+    );
+  }
+
+  async clickViewBodyLogButton() {
+    await this.testsInstance.app.client.element('.view-body-link').click();
+  }
+
+  async assertPresenceOnLogsPage() {
+    await this.testsInstance.app.client.waitForExist('.environment-logs');
+  }
+
+  async assertLogsEmpty() {
+    const messageText = await this.testsInstance.app.client.getText(
+      '.environment-logs-column:nth-child(2) .message'
+    );
+    expect(messageText).to.equal('No records yet');
+  }
+
+  async assertNoLogEntrySelected() {
+    const messageText = await this.testsInstance.app.client.getText(
+      '.environment-logs-column:nth-child(2) .message'
+    );
+    expect(messageText).to.equal('Please select a record');
+  }
+
   async environmentLogBodyContains(str: string) {
-    await this.testsInstance.app.client
-      .element(`div.environment-logs-content-title:nth-child(9)`)
-      .click();
-    await this.testsInstance.app.client
+    const elementText = await this.testsInstance.app.client
       .element(`div.environment-logs-content-item.pre`)
-      .getHTML()
-      .should.eventually.contain(str);
+      .getText();
+    expect(elementText).to.equal(str);
+  }
+
+  async clearEnvironmentLogs() {
+    await this.switchViewInHeader('ENV_LOGS');
+    const selector =
+      '.main-content > .row >.col .btn.btn-link.btn-icon:last-of-type';
+    // click twice to confirm (cannot double click)
+    await this.testsInstance.app.client.element(selector).click();
+    await this.testsInstance.app.client.element(selector).click();
   }
 
   /**

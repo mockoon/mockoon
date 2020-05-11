@@ -23,7 +23,9 @@ export class DataService {
     const flattenedResponseHeaders = ObjectValuesFlatten(response.getHeaders());
 
     return {
-      uuid: uuid(),
+      UUID: uuid(),
+      routeUUID: response.routeUUID,
+      routeResponseUUID: response.routeResponseUUID,
       timestamp: new Date(),
       method: request.method,
       route: request.route ? request.route.path : null,
@@ -45,7 +47,7 @@ export class DataService {
         headers: Object.keys(flattenedRequestHeaders)
           .map((headerName) => {
             return {
-              name: headerName,
+              key: headerName,
               value: flattenedRequestHeaders[headerName]
             };
           })
@@ -57,7 +59,7 @@ export class DataService {
         headers: Object.keys(flattenedResponseHeaders)
           .map((headerName) => {
             return {
-              name: headerName,
+              key: headerName,
               value: flattenedResponseHeaders[headerName]
             };
           })

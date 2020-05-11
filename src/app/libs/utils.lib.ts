@@ -1,8 +1,9 @@
+import { EditorModes } from 'src/app/models/editor.model';
 import { Environment } from 'src/app/types/environment.type';
 import { Header, RouteResponse } from 'src/app/types/route.type';
 
 export const AscSort = (a, b) => {
-  if (a.name < b.name) {
+  if (a.key < b.key) {
     return -1;
   } else {
     return 1;
@@ -107,12 +108,12 @@ export const HeadersArrayToObject = (
  * @param object
  */
 export const ObjectValuesFlatten = (
-  object: { [key in string]: String[] | string | number }
+  object: { [key in string]: string[] | string | number }
 ): { [key in string]: string } => {
   return Object.keys(object).reduce<{ [key in string]: string }>(
     (newObject, key) => {
       if (Array.isArray(object[key])) {
-        newObject[key] = (object[key] as String[]).join(',');
+        newObject[key] = (object[key] as string[]).join(',');
       } else {
         newObject[key] = object[key].toString();
       }
@@ -121,4 +122,28 @@ export const ObjectValuesFlatten = (
     },
     {}
   );
+};
+
+/**
+ * Retrieve the editor mode (Ace editor) from a content type
+ *
+ * @param contentType
+ */
+export const GetEditorModeFromContentType = (
+  contentType: string
+): EditorModes => {
+  if (contentType.includes('application/json')) {
+    return 'json';
+  } else if (
+    contentType.includes('text/html') ||
+    contentType.includes('application/xhtml+xml')
+  ) {
+    return 'html';
+  } else if (contentType.includes('application/xml')) {
+    return 'xml';
+  } else if (contentType.includes('text/css')) {
+    return 'css';
+  } else {
+    return 'text';
+  }
 };

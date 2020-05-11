@@ -1,20 +1,26 @@
+import { Header } from 'src/app/types/route.type';
+
 export type EnvironmentLogs = { [key: string]: EnvironmentLog[] };
 
 export type EnvironmentLogRequest = {
-  headers: { name: string; value: string }[];
+  headers: Header[];
   params: { name: string; value: string }[];
   queryParams: { name: string; value: string }[];
   body: string;
+  truncatedBody?: string;
 };
 
 export type EnvironmentLogResponse = {
   status: number;
-  headers: { name: string; value: string }[];
+  headers: Header[];
   body: string;
+  truncatedBody?: string;
 };
 
 export type EnvironmentLog = {
-  uuid: string;
+  UUID: string;
+  routeUUID: string;
+  routeResponseUUID: string;
   timestamp: Date;
   // full URL called
   url: string;
@@ -24,4 +30,8 @@ export type EnvironmentLog = {
   proxied: boolean;
   request: EnvironmentLogRequest;
   response: EnvironmentLogResponse;
+};
+
+export type ActiveEnvironmentsLogUUIDs = {
+  [key: string]: string;
 };

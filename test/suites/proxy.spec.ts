@@ -92,6 +92,7 @@ describe('Proxy', () => {
   it('Should display custom request header in environment logs', async () => {
     await tests.helpers.selectEnvironment(1);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.selectEnvironmentLogEntry(1);
     await tests.helpers.switchTabInEnvironmentLogs('REQUEST');
     await tests.helpers.environmentLogItemEqual(
       'X-proxy-request-header: header value',
@@ -104,6 +105,7 @@ describe('Proxy', () => {
   it('Should display custom proxied response header in environment logs', async () => {
     await tests.helpers.selectEnvironment(2);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.selectEnvironmentLogEntry(1);
     await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
     await tests.helpers.environmentLogItemEqual(
       'X-proxy-response-header: header value',
@@ -114,9 +116,6 @@ describe('Proxy', () => {
   });
 
   it('Should display custom environment response header in environment logs', async () => {
-    await tests.helpers.selectEnvironment(2);
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
-    await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
     await tests.helpers.environmentLogItemEqual(
       'X-custom-header: header value',
       'response',

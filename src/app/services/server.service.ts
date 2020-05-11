@@ -194,6 +194,10 @@ export class ServerService {
                 req
               ).chooseResponse();
 
+              // save route and response UUIDs for logs
+              res.routeUUID = declaredRoute.uuid;
+              res.routeResponseUUID = enabledRouteResponse.uuid;
+
               // add route latency if any
               setTimeout(() => {
                 const routeContentType = GetRouteResponseContentType(
@@ -243,7 +247,7 @@ export class ServerService {
                       );
                     }
 
-                    this.saveResponseBody(res, fileContent.toString());
+                    res.body = fileContent.toString();
 
                     res.send(fileContent);
                   } catch (error) {
@@ -260,7 +264,7 @@ export class ServerService {
 
                     const body = TemplateParser(enabledRouteResponse.body, req);
 
-                    this.saveResponseBody(res, body);
+                    res.body = body;
 
                     res.send(body);
                   } catch (error) {
@@ -356,7 +360,7 @@ export class ServerService {
       this.toastService.addToast('error', errorMessage);
     }
     res.set('Content-Type', 'text/plain');
-    this.saveResponseBody(res, errorMessage);
+    res.body = errorMessage;
 
     if (status !== null) {
       res.status(status);
@@ -408,7 +412,7 @@ export class ServerService {
               body += chunk;
             });
             proxyRes.on('end', () => {
-              this.saveResponseBody(res, body);
+              res.body = body;
             });
 
             this.setHeaders(environment.proxyResHeaders, proxyRes, req);
@@ -454,14 +458,5 @@ export class ServerService {
     server.use((err, req, res, next) => {
       this.sendError(res, err, false, 500);
     });
-  }
-
-  /**
-   * Store the request's body in the Express request object
-   *
-   * @param res
-   */
-  private saveResponseBody(res: express.Response, body: string) {
-    res.body = this.dataService.truncateBody(body);
   }
 }

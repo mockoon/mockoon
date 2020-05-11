@@ -13,5 +13,7 @@ declare namespace Express {
   }
   export interface Response {
     body: any;
+    routeUUID: string;
+    routeResponseUUID: string
   }
 }

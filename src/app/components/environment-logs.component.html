@@ -1,10 +1,10 @@
-<ng-container *ngIf="environmentLogs$ | async as environmentLogs ">
-  <div class="row h-100 environment-logs" *ngIf="environmentLogs?.length; else empty">
+<ng-container *ngIf="environmentLogs$ | async as environmentLogs">
+  <div class="row h-100 environment-logs">
     <div class="h-100 environment-logs-column">
       <ul class="nav flex-column menu-list">
-        <li class="nav-item" *ngFor="let log of environmentLogs; let logIndex = index">
-          <a class="nav-link" [ngClass]="{'active': logIndex === (selectedLogIndex$ | async)}"
-            (click)="selectLog(logIndex)">
+        <li class="nav-item" *ngFor="let log of environmentLogs">
+          <a class="nav-link" [ngClass]="{'active': log.UUID === (activeEnvironmentLogUUID$ | async)}"
+            (click)="selectLog(log.UUID)">
             <div class="d-flex flex-column">
               <div class="d-flex flex-row ">
                 <div>
@@ -13,7 +13,7 @@
                 <div class="ellipsis route">{{log.url}}</div>
                 <div class="ml-auto pl-1 d-flex flex-row">
                   <div>
-                    <button type="button" class="btn btn-link btn-icon btn-mock" (click)="createRouteFromLog(log.uuid)">
+                    <button type="button" class="btn btn-link btn-icon btn-mock" (click)="createRouteFromLog(log.UUID)">
                       <i class="material-icons" ngbTooltip="Mock">control_point_duplicate</i>
                     </button>
                   </div>
@@ -37,8 +37,11 @@
         </li>
       </ul>
     </div>
+
     <div class="col h-100 environment-logs-column">
-      <div *ngIf="environmentLogs[(selectedLogIndex$ | async)] as selectedLog"
+      <p *ngIf="!environmentLogs?.length" class="message mt-4">No records yet</p>
+
+      <div *ngIf="activeEnvironmentLog$ | async as selectedLog; else pleaseSelect"
         class="environment-logs-content">
         <ng-container *ngIf="activeEnvironmentLogsTab$ | async as activeEnvironmentLogsTab">
           <ul class="nav nav-tabs flex-grow-1">
@@ -79,7 +82,7 @@
               </div>
               <div [ngbCollapse]="collapseStates['request.headers']">
                 <div class="environment-logs-content-item" *ngFor="let header of selectedLog?.request?.headers">
-                  <strong>{{header.name | titlecase}}:</strong> {{header.value}}
+                  <strong>{{header.key | titlecase}}:</strong> {{header.value}}
                 </div>
               </div>
 
@@ -108,13 +111,18 @@
               </div>
 
               <!-- Body -->
-              <div class="environment-logs-content-title" (click)="collapseStates['request.body'] = !collapseStates['request.body']">
-                <i *ngIf="selectedLog?.request?.body && !collapseStates['request.body']" class="material-icons">unfold_less</i>
-                <i *ngIf="selectedLog?.request?.body && collapseStates['request.body']" class="material-icons">unfold_more</i>
-                Body ({{(!selectedLog?.request?.body)?'none': 'raw'}})
+              <div class="environment-logs-content-title d-flex">
+                <div (click)="collapseStates['request.body'] = !collapseStates['request.body']">
+                  <i *ngIf="selectedLog?.request?.body && !collapseStates['request.body']" class="material-icons">unfold_less</i>
+                  <i *ngIf="selectedLog?.request?.body && collapseStates['request.body']" class="material-icons">unfold_more</i>
+                  Body ({{(!selectedLog?.request?.body)?'none': 'raw'}})
+                </div>
+                <div class="ml-auto">
+                  <span *ngIf="selectedLog?.request?.truncatedBody" class="btn btn-link btn-icon text-primary p-0" (click)="viewBodyInEditor(selectedLog.request, 'request')">View full body in editor</span>
+                </div>
               </div>
               <div [ngbCollapse]="collapseStates['request.body']">
-                <div class="environment-logs-content-item pre">{{selectedLog?.request?.body}}</div>
+                <div class="environment-logs-content-item pre">{{selectedLog?.request?.truncatedBody}}</div>
               </div>
             </div>
           </ng-container>
@@ -141,18 +149,23 @@
               </div>
               <div [ngbCollapse]="collapseStates['response.headers']">
                 <div class="environment-logs-content-item" *ngFor="let header of selectedLog?.response?.headers">
-                  <strong>{{header.name | titlecase}}:</strong> {{header.value}}
+                  <strong>{{header.key | titlecase}}:</strong> {{header.value}}
                 </div>
               </div>
 
               <!-- Response Body -->
-              <div class="environment-logs-content-title" (click)="collapseStates['response.body'] = !collapseStates['response.body']">
-                <i *ngIf="selectedLog.response?.body && !collapseStates['response.body']" class="material-icons">unfold_less</i>
-                <i *ngIf="selectedLog.response?.body && collapseStates['response.body']" class="material-icons">unfold_more</i>
-                Body ({{(!selectedLog.response?.body)?'none': 'raw'}})
+              <div class="environment-logs-content-title d-flex">
+                <div (click)="collapseStates['response.body'] = !collapseStates['response.body']">
+                  <i *ngIf="selectedLog.response?.body && !collapseStates['response.body']" class="material-icons">unfold_less</i>
+                  <i *ngIf="selectedLog.response?.body && collapseStates['response.body']" class="material-icons">unfold_more</i>
+                  Body ({{(!selectedLog.response?.body)?'none': 'raw'}})
+                </div>
+                <div class="ml-auto">
+                  <span *ngIf="selectedLog?.response?.truncatedBody" class="btn btn-link btn-icon text-primary p-0" (click)="viewBodyInEditor(selectedLog.response, 'response')">View full body in editor</span>
+                </div>
               </div>
               <div [ngbCollapse]="collapseStates['response.body']">
-                <div class="environment-logs-content-item pre">{{selectedLog.response?.body}}</div>
+                <div class="environment-logs-content-item pre">{{selectedLog.response?.truncatedBody}}</div>
               </div>
             </div>
           </ng-container>
@@ -161,7 +174,7 @@
     </div>
   </div>
 
-  <ng-template #empty>
-    <p class="message">No records yet</p>
+  <ng-template #pleaseSelect>
+    <p *ngIf="environmentLogs?.length" class="message mt-4">Please select a record</p>
   </ng-template>
 </ng-container>

@@ -14,7 +14,7 @@ import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { GetRouteResponseContentType, IsValidURL } from 'src/app/libs/utils.lib';
 import { HeadersProperties } from 'src/app/models/common.model';
 import { ContextMenuItemPayload } from 'src/app/models/context-menu.model';
-import { EnvironmentLogs } from 'src/app/models/environment-logs.model';
+import { EnvironmentLog, EnvironmentLogs } from 'src/app/models/environment-logs.model';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
@@ -51,6 +51,7 @@ export class AppComponent implements OnInit {
   public activeRouteResponseHeaders$: Observable<Header[]>;
   public activeRouteResponseForm: FormGroup;
   public activeRouteResponseIndex$: Observable<number>;
+  public activeRouteResponseLastLog$: Observable<EnvironmentLog>;
   public injectedHeaders$: Observable<Header[]>;
   public activeTab$: Observable<TabsNameType>;
   public activeView$: Observable<ViewsNameType>;
@@ -208,6 +209,7 @@ export class AppComponent implements OnInit {
     this.duplicatedEnvironments$ = this.store.select('duplicatedEnvironments');
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
     this.environmentsLogs$ = this.store.select('environmentsLogs');
+    this.activeRouteResponseLastLog$ = this.store.selectActiveRouteResponseLastLog();
     this.toasts$ = this.store.select('toasts');
 
     this.initFormValues();
@@ -657,5 +659,14 @@ export class AppComponent implements OnInit {
         [targetHeaders]: headers
       });
     }
+  }
+
+  /**
+   * Navigate to the logs with route response's log selected
+   */
+  public goToRouteResponseLog(lastLogUUID: string) {
+    this.environmentsService.setActiveEnvironmentActiveLog(lastLogUUID);
+    this.environmentsService.setActiveView('ENV_LOGS');
+    this.environmentsService.setActiveEnvironmentLogTab('RESPONSE');
   }
 }

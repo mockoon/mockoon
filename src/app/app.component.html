@@ -3,6 +3,7 @@
 <app-welcome-modal></app-welcome-modal>
 <app-settings-modal (closed)="handleSettingsModalClosed()"></app-settings-modal>
 <app-changelog-modal></app-changelog-modal>
+<app-editor-modal></app-editor-modal>
 
 <div class="toasts-container">
   <ngb-toast
@@ -460,13 +461,17 @@
                               <span class="clickable" (click)="formatBody()" ngbTooltip="Format body"><i class="material-icons">subject</i></span>
                             </div>
                             <div class="title-separator-text">
-                              <div>Body </div>
+                              <div>Body <small>({{getRouteResponseContentType()}}) </small>
+                                <span
+                                (click)="openWikiLink('templating')"
+                                class="btn btn-link text-primary cp doc-link" ngbTooltip="Open templating documentation"><i
+                                  class="material-icons">info</i></span>
+                              </div>
                               <div *ngIf="activeRouteResponse.filePath" class="text-warning">A file is selected, this
                                 body will not be served</div>
-                              <div *ngIf="!activeRouteResponse.filePath">{{getRouteResponseContentType()}} <span
-                                  (click)="openWikiLink('templating')"
-                                  class="btn btn-link text-primary cp doc-link"><i
-                                    class="material-icons">info</i></span></div>
+                              <div *ngIf="!activeRouteResponse.filePath">
+                                <span *ngIf="activeRouteResponseLastLog$ | async as activeRouteResponseLastLog" class="btn btn-link btn-icon text-primary view-body-link" (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)">View last body sent</span>
+                              </div>
                             </div>
                           </div>
                           <div class="flex-fill" *ngIf="bodyEditorConfig$ | async as bodyEditorConfig">

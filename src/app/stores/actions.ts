@@ -31,6 +31,7 @@ export const enum ActionTypes {
   UPDATE_ROUTE_RESPONSE,
   LOG_REQUEST,
   CLEAR_LOGS,
+  SET_ACTIVE_ENVIRONMENT_LOG,
   ADD_TOAST,
   REMOVE_TOAST,
   SET_USER_ID,
@@ -339,6 +340,23 @@ export function clearLogsAction(environmentUUID: string) {
 }
 
 /**
+ * Set the active environment log UUID for a given environment
+ *
+ * @param environmentUUID - logs environment UUID
+ * @param activeEnvironmentLogUUID - environment log UUID to set as active
+ */
+export function setActiveEnvironmentLogUUIDAction(
+  environmentUUID: string,
+  activeEnvironmentLogUUID: string
+) {
+  return <const>{
+    type: ActionTypes.SET_ACTIVE_ENVIRONMENT_LOG,
+    environmentUUID,
+    activeEnvironmentLogUUID
+  };
+}
+
+/**
  * Add a toast
  *
  * @param toast - toast to add
@@ -423,6 +441,7 @@ export type Actions =
   | ReturnType<typeof updateRouteResponseAction>
   | ReturnType<typeof logRequestAction>
   | ReturnType<typeof clearLogsAction>
+  | ReturnType<typeof setActiveEnvironmentLogUUIDAction>
   | ReturnType<typeof addToastAction>
   | ReturnType<typeof removeToastAction>
   | ReturnType<typeof setUserIdAction>
