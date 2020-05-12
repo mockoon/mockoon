@@ -8,7 +8,7 @@ function generateCall(requestBody: any): HttpCall {
     method: 'POST',
     body: requestBody,
     testedResponse: {
-      body: '{"response":"So Long, and Thanks for All the Fish"}',
+      body: '{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}',
       status: 200
     }
   };
@@ -46,7 +46,7 @@ describe('Settings', () => {
     it('Disable route path truncate in settings and verify persistence', async () => {
       await tests.helpers.openSettingsModal();
       await tests.app.client.element(truncateRoutePathCheckbox).click();
-      await tests.helpers.closeSettingsModal();
+      await tests.helpers.closeModal();
 
       // wait for settings save
       await tests.app.client.pause(2000);
@@ -71,7 +71,7 @@ describe('Settings', () => {
     it('Disable analytics in settings and verify persistence', async () => {
       await tests.helpers.openSettingsModal();
       await tests.app.client.element(analyticsCheckbox).click();
-      await tests.helpers.closeSettingsModal();
+      await tests.helpers.closeModal();
 
       // wait for settings save
       await tests.app.client.pause(2000);
@@ -95,7 +95,7 @@ describe('Settings', () => {
     it('Set log body size to 100', async () => {
       await tests.helpers.openSettingsModal();
       await tests.app.client.element(bodySizeInput).setValue('100');
-      await tests.helpers.closeSettingsModal();
+      await tests.helpers.closeModal();
 
       // wait for settings save
       await tests.app.client.pause(2000);
@@ -106,24 +106,26 @@ describe('Settings', () => {
       );
     });
 
-    it('Log request full body of 99 characters', async () => {
-      const str = makeString(99);
-      await tests.helpers.httpCallAsserter(generateCall(str));
-      await tests.helpers.countEnvironmentLogsEntries(1);
-      await tests.helpers.requestLogBodyContains(str);
-    });
-
-    it('Truncate request body of 100 characters', async () => {
+    it('Log request full body of 100 characters', async () => {
       const str = makeString(100);
       await tests.helpers.httpCallAsserter(generateCall(str));
+      await tests.helpers.countEnvironmentLogsEntries(1);
+      await tests.helpers.selectEnvironmentLogEntry(1);
+      await tests.helpers.environmentLogBodyContains(str);
+    });
+
+    it('Truncate request body of 101 characters', async () => {
+      const str = makeString(101);
+      await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(2);
-      await tests.helpers.requestLogBodyContains('BODY HAS BEEN TRUNCATED');
+      await tests.helpers.selectEnvironmentLogEntry(1);
+      await tests.helpers.environmentLogBodyContains(`${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED --------`);
     });
 
     it('Set log body size to 1000', async () => {
       await tests.helpers.openSettingsModal();
       await tests.app.client.element(bodySizeInput).setValue('1000');
-      await tests.helpers.closeSettingsModal();
+      await tests.helpers.closeModal();
 
       // wait for settings save
       await tests.app.client.pause(2000);
@@ -134,18 +136,20 @@ describe('Settings', () => {
       );
     });
 
-    it('Log request full body of 999 characters', async () => {
-      const str = makeString(999);
-      await tests.helpers.httpCallAsserter(generateCall(str));
-      await tests.helpers.countEnvironmentLogsEntries(3);
-      await tests.helpers.requestLogBodyContains(str);
-    });
-
-    it('Truncate request body of 1000 characters', async () => {
+    it('Log request full body of 1000 characters', async () => {
       const str = makeString(1000);
       await tests.helpers.httpCallAsserter(generateCall(str));
+      await tests.helpers.countEnvironmentLogsEntries(3);
+      await tests.helpers.selectEnvironmentLogEntry(1);
+      await tests.helpers.environmentLogBodyContains(str);
+    });
+
+    it('Truncate request body of 1001 characters', async () => {
+      const str = makeString(1001);
+      await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(4);
-      await tests.helpers.requestLogBodyContains('BODY HAS BEEN TRUNCATED');
+      await tests.helpers.selectEnvironmentLogEntry(1);
+      await tests.helpers.environmentLogBodyContains(`${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED --------`);
     });
   });
 });

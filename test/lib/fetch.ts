@@ -12,11 +12,14 @@ export const fetch = (params: {
   port: number;
   path: string;
   method: 'GET' | 'POST' | 'PUT' | 'HEAD' | 'OPTIONS';
-  headers: { [key in string]: string };
+  headers: { [key in string]: string | number };
   body: any;
   cookie: string;
 }): Promise<HttpCallResponse> => {
-  const data = JSON.stringify(params.body || {});
+  const data =
+    typeof params.body === 'string'
+      ? params.body
+      : JSON.stringify(params.body || {});
 
   return new Promise((resolve, reject) => {
     const headers = {

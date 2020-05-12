@@ -10,7 +10,7 @@ import { MigrationService } from 'src/app/services/migration.service';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ServerService } from 'src/app/services/server.service';
 import { UIService } from 'src/app/services/ui.service';
-import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
+import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveEnvironmentLogUUIDAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environment, EnvironmentProperties } from 'src/app/types/environment.type';
@@ -273,10 +273,22 @@ export class EnvironmentsService {
   }
 
   /**
-   * Set active view
+   * Set active route response
    */
   public setActiveRouteResponse(routeResponseUUID: string) {
     this.store.update(setActiveRouteResponseAction(routeResponseUUID));
+  }
+
+  /**
+   * Set active environment log for a given environment
+   */
+  public setActiveEnvironmentActiveLog(environmentLogUUID: string) {
+    this.store.update(
+      setActiveEnvironmentLogUUIDAction(
+        this.store.get('activeEnvironmentUUID'),
+        environmentLogUUID
+      )
+    );
   }
 
   /**
@@ -361,7 +373,7 @@ export class EnvironmentsService {
     const environmentsLogs = this.store.get('environmentsLogs');
     const uuidEnvironment = this.store.get('activeEnvironmentUUID');
     const log = environmentsLogs[uuidEnvironment].find(
-      (environmentLog) => environmentLog.uuid === logUUID
+      (environmentLog) => environmentLog.UUID === logUUID
     );
 
     if (log) {
@@ -371,7 +383,7 @@ export class EnvironmentsService {
         const headers: Header[] = [];
         log.response.headers.forEach((header) => {
           headers.push(
-            this.schemasBuilderService.buildHeader(header.name, header.value)
+            this.schemasBuilderService.buildHeader(header.key, header.value)
           );
         });
 

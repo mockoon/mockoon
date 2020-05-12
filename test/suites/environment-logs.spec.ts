@@ -1,109 +1,379 @@
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('basic-data');
-
-const cases: HttpCall[] = [
-  {
-    description: 'Call GET answer',
-    path: '/answer',
-    method: 'GET',
-    testedResponse: {
-      body: '42',
-      status: 200
-    }
-  },
-  {
-    description: 'Call GET test',
-    path: '/test',
-    method: 'GET',
-    testedResponse: {
-      status: 404
-    }
+const endpointCall: HttpCall = {
+  description: 'Call GET /endpoint/1',
+  path: '/endpoint/1?qp1=qp1test',
+  method: 'GET',
+  body: 'requestbody',
+  testedResponse: {
+    body: 'responsebody',
+    status: 200
   }
-];
+};
 
-const environmentLogsItemSelector =
-  '.environment-logs-column:nth-child(1) .menu-list .nav-item';
+const endpointCall2: HttpCall = {
+  description: 'Call GET /endpoint/2',
+  path: '/endpoint/2',
+  method: 'GET',
+  testedResponse: {
+    body: 'created',
+    status: 201
+  }
+};
+
+const errorCall: HttpCall = {
+  description: 'Call GET /test',
+  path: '/test',
+  method: 'GET',
+  testedResponse: {
+    status: 404
+  }
+};
 
 describe('Environment logs', () => {
-  tests.runHooks();
+  describe('Verify environment logs content', () => {
+    const tests = new Tests('environment-logs');
+    tests.runHooks();
 
-  it('Start default environment', async () => {
-    await tests.helpers.startEnvironment();
-  });
-
-  for (let index = 0; index < cases.length; index++) {
-    it(cases[index].description, async () => {
-      await tests.helpers.httpCallAsserter(cases[index]);
+    it('Start first environment', async () => {
+      await tests.helpers.startEnvironment();
     });
-  }
-  it('Environment logs have two entries', async () => {
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
-    await tests.app.client
-      .elements(`${environmentLogsItemSelector}`)
-      .should.eventually.have.property('value')
-      .to.be.an('Array')
-      .that.have.lengthOf(2);
+
+    describe('Verify environment logs after GET call to /endpoint', () => {
+      it(endpointCall.description, async () => {
+        await tests.helpers.httpCallAsserter(endpointCall);
+        await tests.helpers.switchViewInHeader('ENV_LOGS');
+      });
+
+      it('Environment logs menu shows a call that was caught by the application', async () => {
+        await tests.helpers.selectEnvironmentLogEntry(1);
+        await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
+        await tests.helpers.environmentLogMenuPathEqual('/endpoint/1', 1);
+        await tests.helpers.environmentLogMenuCheckIcon('CAUGHT', 1);
+      });
+
+      it('Verify request tab content', async () => {
+        await tests.helpers.environmentLogItemEqual(
+          'Request URL: /endpoint/1',
+          'request',
+          2,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Method: GET',
+          'request',
+          2,
+          2
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Caught by route: /endpoint/:param1',
+          'request',
+          2,
+          3
+        );
+
+        await tests.helpers.environmentLogItemEqual(
+          'Connection: close',
+          'request',
+          4,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Content-length: 11',
+          'request',
+          4,
+          2
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Host: localhost:3000',
+          'request',
+          4,
+          3
+        );
+
+        await tests.helpers.environmentLogItemEqual(
+          'param1: 1',
+          'request',
+          6,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'qp1: qp1test',
+          'request',
+          8,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'requestbody',
+          'request',
+          10,
+          1
+        );
+      });
+
+      it('Verify response tab content', async () => {
+        await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
+        await tests.helpers.environmentLogItemEqual(
+          'Status: 200',
+          'response',
+          2,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Content-length: 12',
+          'response',
+          4,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Content-type: text/plain; charset=utf-8',
+          'response',
+          4,
+          2
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Global-header: global-header',
+          'response',
+          4,
+          3
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Route-header: route-header',
+          'response',
+          4,
+          4
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'responsebody',
+          'response',
+          6,
+          1
+        );
+      });
+    });
+
+    describe('Verify environment logs after GET call to /test (404)', () => {
+      it(errorCall.description, async () => {
+        await tests.helpers.httpCallAsserter(errorCall);
+      });
+
+      it('Environment logs have two entries', async () => {
+        await tests.helpers.countEnvironmentLogsEntries(2);
+      });
+
+      it('First entry is GET /test and was not caught by the application', async () => {
+        await tests.helpers.selectEnvironmentLogEntry(1);
+        await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
+        await tests.helpers.environmentLogMenuPathEqual('/test', 1);
+        await tests.helpers.environmentLogMenuCheckIcon('CAUGHT', 1, true);
+      });
+
+      it('Verify response tab content', async () => {
+        await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
+        await tests.helpers.environmentLogItemEqual(
+          'Status: 404',
+          'response',
+          2,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Content-length: 143',
+          'response',
+          4,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          "Content-security-policy: default-src 'none'",
+          'response',
+          4,
+          2
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Content-type: text/html; charset=utf-8',
+          'response',
+          4,
+          3
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Global-header: global-header',
+          'response',
+          4,
+          4
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'X-content-type-options: nosniff',
+          'response',
+          4,
+          5
+        );
+      });
+
+      it('Mock /test log', async () => {
+        await tests.helpers.countRoutes(1);
+        await tests.helpers.environmentLogClickMockButton(1);
+        await tests.helpers.countRoutes(2);
+      });
+    });
   });
 
-  it('First entry is GET /test and was not caught by the application', async () => {
-    await tests.app.client
-      .getText(
-        `${environmentLogsItemSelector}:nth-child(1) .nav-link .route-method`
-      )
-      .should.eventually.equal('GET');
-    await tests.app.client
-      .getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`)
-      .should.eventually.equal('/test');
-    await tests.app.client.waitForExist(
-      `${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request caught"]`,
-      5000,
-      true
-    );
+  describe('Verify "view last body sent" link behavior', () => {
+    const tests = new Tests('environment-logs');
+    tests.runHooks();
+
+    it('Start first environment', async () => {
+      await tests.helpers.startEnvironment();
+    });
+
+    it(endpointCall.description, async () => {
+      await tests.helpers.httpCallAsserter(endpointCall);
+    });
+
+    it(endpointCall2.description, async () => {
+      await tests.helpers.httpCallAsserter(endpointCall2);
+    });
+
+    it('"view last body sent" link is displayed on first route response', async () => {
+      await tests.helpers.assertViewBodyLogButtonPresence();
+    });
+
+    it('Switch to second route response and verify that "view last body sent" link is displayed', async () => {
+      await tests.helpers.selectRouteResponse(2);
+      await tests.helpers.assertViewBodyLogButtonPresence();
+    });
+
+    it('Switch to third route response and verify that "view last body sent" link is not displayed', async () => {
+      await tests.helpers.selectRouteResponse(3);
+      await tests.helpers.assertViewBodyLogButtonPresence(true);
+    });
+
+    it('Switch back to first route response and click on the link', async () => {
+      await tests.helpers.selectRouteResponse(1);
+      await tests.helpers.clickViewBodyLogButton();
+    });
+
+    it('Assert presence on log page and verify selected entry', async () => {
+      await tests.helpers.assertPresenceOnLogsPage();
+      await tests.helpers.assertEnvironmentLogEntryActive(2);
+      await tests.helpers.environmentLogItemEqual(
+        'Status: 200',
+        'response',
+        2,
+        1
+      );
+      await tests.helpers.environmentLogItemEqual(
+        'responsebody',
+        'response',
+        6,
+        1
+      );
+    });
   });
 
-  it('Second entry is GET /answer and was caught by the application', async () => {
-    await tests.app.client
-      .getText(
-        `${environmentLogsItemSelector}:nth-child(2) .nav-link .route-method`
-      )
-      .should.eventually.equal('GET');
-    await tests.app.client
-      .getText(`${environmentLogsItemSelector}:nth-child(2) .nav-link .route`)
-      .should.eventually.equal('/answer');
-    await tests.app.client.waitForExist(
-      `${environmentLogsItemSelector}:nth-child(2) .nav-link i[ngbTooltip="Request caught"]`
-    );
+  describe('Environments logs UI behavior', () => {
+    describe('Navigate in environments logs', () => {
+      const tests = new Tests('environment-logs');
+      tests.runHooks();
+
+      it('Start first environment', async () => {
+        await tests.helpers.startEnvironment();
+      });
+
+      it('Verify "no records" message presence', async () => {
+        await tests.helpers.switchViewInHeader('ENV_LOGS');
+        await tests.helpers.assertLogsEmpty();
+      });
+
+      it(endpointCall.description, async () => {
+        await tests.helpers.httpCallAsserter(endpointCall);
+      });
+
+      it('Verify "no entry selected" message presence before an entry is selected', async () => {
+        await tests.helpers.assertNoLogEntrySelected();
+      });
+
+      it('Select entry and verify that it is displayed on the right', async () => {
+        await tests.helpers.selectEnvironmentLogEntry(1);
+        await tests.helpers.environmentLogItemEqual(
+          'Request URL: /endpoint/1',
+          'request',
+          2,
+          1
+        );
+      });
+
+      it('Open request body in editor', async () => {
+        await tests.app.client
+          .element(
+            '.environment-logs-content-request .environment-logs-content-title .btn.btn-link'
+          )
+          .click();
+        await tests.app.client.waitForExist(
+          `.modal-dialog .modal-body .editor`
+        );
+        await tests.helpers.closeModal();
+      });
+
+      it('Open response body in editor', async () => {
+        await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
+        await tests.app.client
+          .element(
+            '.environment-logs-content-response .environment-logs-content-title .btn.btn-link'
+          )
+          .click();
+        await tests.app.client.waitForExist(
+          `.modal-dialog .modal-body .editor`
+        );
+        await tests.helpers.closeModal();
+      });
+
+      it('Clear logs and verify message presence', async () => {
+        await tests.helpers.clearEnvironmentLogs();
+        await tests.helpers.assertLogsEmpty();
+      });
+    });
   });
 
-  it('View response log', async () => {
-    await tests.app.client
-      .element('.environment-logs-content .nav .nav-item:nth-child(2)')
-      .click();
-    await tests.app.client
-      .getText(
-        '.environment-logs-content-response > div > div:nth-child(2) > div'
-      )
-      .should.eventually.equal('Status: 404');
-  });
+  describe('Select different log items in different environments', () => {
+    const tests = new Tests('environment-logs');
+    tests.runHooks();
 
-  it('View request log again', async () => {
-    await tests.app.client
-      .element('.environment-logs-content .nav .nav-item:nth-child(1)')
-      .click();
-    await tests.app.client
-      .getText(
-        '.environment-logs-content-request > div:nth-child(2) > div:nth-child(1)'
-      )
-      .should.eventually.equal('Request URL: /test');
-  });
+    it('Start first environment', async () => {
+      await tests.helpers.startEnvironment();
+    });
 
-  it('Mock /test log', async () => {
-    await tests.helpers.countRoutes(3);
-    await tests.app.client
-      .element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`)
-      .click();
-    await tests.helpers.countRoutes(4);
+    it(endpointCall.description, async () => {
+      await tests.helpers.httpCallAsserter(endpointCall);
+      await tests.helpers.httpCallAsserter(endpointCall);
+    });
+
+    it('Select second log entry', async () => {
+      await tests.helpers.switchViewInHeader('ENV_LOGS');
+      await tests.helpers.selectEnvironmentLogEntry(2);
+      await tests.helpers.assertEnvironmentLogEntryActive(2);
+    });
+
+    it('Stop first environment and start second one', async () => {
+      await tests.helpers.stopEnvironment();
+      await tests.helpers.selectEnvironment(2);
+      await tests.helpers.startEnvironment();
+    });
+
+    it(endpointCall.description, async () => {
+      await tests.helpers.httpCallAsserter(endpointCall);
+      await tests.helpers.httpCallAsserter(endpointCall);
+    });
+
+    it('Select first log entry', async () => {
+      await tests.helpers.switchViewInHeader('ENV_LOGS');
+      await tests.helpers.selectEnvironmentLogEntry(1);
+      await tests.helpers.assertEnvironmentLogEntryActive(1);
+    });
+
+    it('Go back to first environment logs and verify that second entry is active', async () => {
+      await tests.helpers.selectEnvironment(1);
+      await tests.helpers.switchViewInHeader('ENV_LOGS');
+      await tests.helpers.assertEnvironmentLogEntryActive(2);
+    });
   });
 });

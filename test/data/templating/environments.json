@@ -1,6 +1,6 @@
 [
   {
-    "uuid": "d30545d0-c78d-4d7c-9703-6b1c4eebdc00",
+    "uuid": "8e1ca6fc-97bb-4190-bcb4-ea38dfbc811e",
     "lastMigration": 10,
     "name": "FT env",
     "endpointPrefix": "",
@@ -8,15 +8,15 @@
     "port": 3000,
     "routes": [
       {
-        "uuid": "a2a4f1f1-6b77-45a2-8f8a-e4de3f7910f2",
-        "method": "get",
-        "endpoint": "bodyjson",
+        "uuid": "417bcb11-a4a7-4174-ae84-8bc7d00b5b59",
+        "method": "post",
+        "endpoint": "bodyjson-rootlvl",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "ee0d4a66-ae2d-4705-a10f-0fad8d290f7c",
-            "body": "{{body 'test.paths.0.item' 'defaultitem'}}",
+            "uuid": "021ba4dc-231e-4a85-b96e-9c0f31f10019",
+            "body": "{{body 'property1' 'defaultvalue'}}",
             "latency": 0,
             "statusCode": "200",
             "label": "",
@@ -33,14 +33,114 @@
         ]
       },
       {
-        "uuid": "fa778224-b4c2-4aba-8a8f-f23fb97ac553",
-        "method": "get",
-        "endpoint": "bodyform",
+        "uuid": "fdb96279-302b-4447-8012-cbcecf36a540",
+        "method": "post",
+        "endpoint": "bodyjson-rootlvl-nodefault",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "d0eba485-da4d-41a1-8294-28e50279c812",
+            "uuid": "4f59c910-c7e5-4206-a7ca-84292abdde2d",
+            "body": "{{body 'property1'}}",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "5a65ff7e-c442-4765-8c83-c306bd6202d6",
+        "method": "post",
+        "endpoint": "bodyjson",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "7156db5b-67ee-4fe6-bb95-31c5407c0981",
+            "body": "{ \"response\": {{body 'property1' 'defaultvalue'}} }",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "3e13ff0c-37c4-4adc-839b-bacad7fed7da",
+        "method": "post",
+        "endpoint": "bodyjson-path",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "4c408655-7f91-4a96-a474-ed4c69789d42",
+            "body": "{ \"response\": \"{{body 'root.array.2.property1'}}\" }",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "497e9c1c-d4dc-4589-9e7a-9927399324e8",
+        "method": "post",
+        "endpoint": "bodyform-rootlvl",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "e1a9f3cc-2ab0-4321-a2f5-c0222d675767",
+            "body": "{{body 'param1' 'defaultvalue'}}",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "7dc1b0a7-6272-47c9-ad10-7bb2a63e20c8",
+        "method": "post",
+        "endpoint": "bodyform-rootlvl-nodefault",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "626f9314-c68d-4b7e-bb72-c825e879b57c",
             "body": "{{body 'param1'}}",
             "latency": 0,
             "statusCode": "200",
@@ -58,14 +158,243 @@
         ]
       },
       {
-        "uuid": "97ec07ae-122e-4dda-bf73-90f757186102",
+        "uuid": "398d29a8-6286-4fcc-bbb0-626d54c37eae",
+        "method": "post",
+        "endpoint": "bodyform",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "f28646f8-93b3-45e9-939c-a5016568a2f2",
+            "body": "{ \"response\": {{body 'param1' 'defaultvalue'}} }",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "1975ec57-c7aa-4f59-a862-8992a8ef4ffa",
+        "method": "post",
+        "endpoint": "bodyform-path",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "11e8af6b-c856-4eef-aff0-e970a13b7453",
+            "body": "{ \"response\": {{body 'param1.part1' 'defaultvalue'}} }",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "d9a5c7b1-36c5-4df1-b774-659a2cb852f3",
+        "method": "get",
+        "endpoint": "bad-helper",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "134cc797-45fd-45c9-b6d9-218315a70e5b",
+            "body": "start{{nonexistinghelpername}}end",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "ff6797dc-7e1d-49b5-95a0-c8f953531873",
+        "method": "get",
+        "endpoint": "templating-syntax-error-body",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "b827f6ce-56eb-40c1-be68-12cf0278b60d",
+            "body": "start{{body 'test'}}}end",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "c6360fd4-df3b-4ad4-b54b-3228a56b5516",
+        "method": "get",
+        "endpoint": "templating-syntax-error-header",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "acb0da00-df9e-435a-bd08-97fd42da8ec1",
+            "body": "body",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              },
+              {
+                "key": "test-header",
+                "value": "{{body 'test'}}}"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "626951aa-e052-4c08-b335-fad920878dd8",
+        "method": "get",
+        "endpoint": "templating-syntax-error-filepath",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "b6011279-9f85-487d-bd24-9795d1777ab3",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "c:/test/{{body 'test'}}}.txt",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "9f7f1f47-0092-4a58-bc03-39cbda8ec924",
+        "method": "get",
+        "endpoint": "templating-syntax-error-file",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "eb6409bc-b0ca-4139-8849-c27eabfcb039",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "./test/data/templating/file-templating-error.txt",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "0b3475d6-3d52-447a-acdb-0201b63dbdad",
+        "method": "get",
+        "endpoint": "filepath",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "a16f4d2a-b4fa-414c-8661-574b1b86139b",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "./test/data/templating/{{body 'test'}}.txt",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "d4905f05-19d4-4b84-9841-d0bff96af155",
+        "method": "get",
+        "endpoint": "file-templating",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "aeaaba0b-1fb0-4bce-ab73-6c9316c24eca",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "./test/data/templating/file-templating.txt",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "83e8b818-8a2c-4fe5-846c-278218368227",
         "method": "get",
         "endpoint": "urlparam/:urlparam1",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "238d001f-d745-44b2-a18e-3b263eaa66ca",
+            "uuid": "f24f36b4-b94b-4264-8fde-6608c2c64cf3",
             "body": "{{urlParam 'urlparam1'}}",
             "latency": 0,
             "statusCode": "200",
@@ -83,14 +412,14 @@
         ]
       },
       {
-        "uuid": "1f216cc8-b4c4-47be-9925-77a9f13c4851",
+        "uuid": "ba548767-b429-45a9-9206-511dae42cfaf",
         "method": "get",
         "endpoint": "queryparam",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "d546ada6-7c78-4ec5-b8fe-20797ab44379",
+            "uuid": "c295550c-6bf0-49db-ac78-0af21db8f717",
             "body": "{{queryParam 'queryparam1' 'defaultqueryparam'}}",
             "latency": 0,
             "statusCode": "200",
@@ -108,14 +437,14 @@
         ]
       },
       {
-        "uuid": "0a5a1797-0658-4789-a980-d6dfbe14a723",
+        "uuid": "97313498-198b-4e55-b9f6-3159883fb587",
         "method": "get",
         "endpoint": "header",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "f16fc718-ffc6-44bc-a523-5a1c3ee6aa56",
+            "uuid": "2f3e131a-1231-47fb-8d88-5618c1498dba",
             "body": "{{header 'header1' 'defaultheader'}}",
             "latency": 0,
             "statusCode": "200",
@@ -133,14 +462,14 @@
         ]
       },
       {
-        "uuid": "28ab4445-31b7-4b8b-a084-b1fe6bee93f3",
+        "uuid": "cb76478a-0fa5-4f10-b18c-aa9ae73b1147",
         "method": "get",
         "endpoint": "cookie",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "66ae7f1f-33f7-41bc-9464-806930eee09b",
+            "uuid": "888e4a22-79e4-42b2-9082-971cb48adc73",
             "body": "{{cookie 'cookie1' 'defaultcookie'}}",
             "latency": 0,
             "statusCode": "200",
@@ -158,14 +487,14 @@
         ]
       },
       {
-        "uuid": "ef664c82-7e22-440b-b7ee-c7a075840ef5",
+        "uuid": "ba9b0403-31c9-48b4-9ccc-98f06948e71d",
         "method": "get",
         "endpoint": "hostname",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "449e99d7-71e4-4602-9141-7b93218cfc42",
+            "uuid": "e2950892-f551-4d86-8600-a2aeff99e1d7",
             "body": "{{hostname}}",
             "latency": 0,
             "statusCode": "200",
@@ -183,14 +512,14 @@
         ]
       },
       {
-        "uuid": "375fbe45-9378-47e8-83f6-da0a196edc76",
+        "uuid": "bd42cf05-3d15-45ae-bfcd-f2147cfaafbf",
         "method": "get",
         "endpoint": "ip",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "ea4e2af8-a11a-4518-a18f-c5be1c74e392",
+            "uuid": "7a71c130-2a40-4ef2-b222-0d61cc954e0e",
             "body": "{{ip}}",
             "latency": 0,
             "statusCode": "200",
@@ -208,14 +537,14 @@
         ]
       },
       {
-        "uuid": "bcb114fd-0931-467d-9a4f-5d264f422959",
+        "uuid": "75ed8f3a-2b0f-46d1-83fd-867db3175dfa",
         "method": "get",
         "endpoint": "method",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "59ef84df-a482-47eb-a7a9-d9a201f101e5",
+            "uuid": "9d0f2a3d-d049-4c3a-9d59-6422b2fd24d8",
             "body": "{{method}}",
             "latency": 0,
             "statusCode": "200",
@@ -233,14 +562,14 @@
         ]
       },
       {
-        "uuid": "85a825bc-0f7f-4a78-8039-ca3f4b92a4a5",
+        "uuid": "fb288144-7691-4afa-b527-b71f657ad096",
         "method": "get",
         "endpoint": "oneof",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "bfe6246d-0a03-406d-82f3-239326d4978f",
+            "uuid": "cd20b468-f909-4ad1-aebb-f37b9b7421e7",
             "body": "{{oneOf (array 'testitem1')}}",
             "latency": 0,
             "statusCode": "200",
@@ -258,14 +587,14 @@
         ]
       },
       {
-        "uuid": "4a12e5db-4fbb-40cb-beb8-0029803c36fc",
+        "uuid": "e6ee6ffd-49f9-4294-a28a-789f6f53ca80",
         "method": "get",
         "endpoint": "someof",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "afcb4d63-57aa-4d8f-9194-9ff5a8fe9c64",
+            "uuid": "53fd3783-fb3f-436b-aad7-85434a39eb3c",
             "body": "{{someOf (array 'testitem' 'testitem') 2 2}}",
             "latency": 0,
             "statusCode": "200",
@@ -283,14 +612,14 @@
         ]
       },
       {
-        "uuid": "774ae5cb-3d80-4208-ac14-904775b7a468",
+        "uuid": "ae345207-60ad-4691-8d4b-b5c1919903cd",
         "method": "get",
         "endpoint": "someofarray",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "d02ad67a-4eeb-4086-b8ec-d2dab1f30b36",
+            "uuid": "63466afa-365b-46e0-99b4-0365ac58784a",
             "body": "{{someOf (array 'testitem' 'testitem') 2 2 true}}",
             "latency": 0,
             "statusCode": "200",
@@ -308,14 +637,14 @@
         ]
       },
       {
-        "uuid": "2011b3ef-79e9-42c7-ad57-284ecd354992",
+        "uuid": "b1a27446-e72c-4d6b-a0a4-c4422a1bb91e",
         "method": "get",
         "endpoint": "now",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "c211b096-6f1d-4bb5-a340-7f4eb7b3f20c",
+            "uuid": "bf35b95a-70e0-445d-b725-8a5776b10291",
             "body": "{{now 'YYYY-MM-DD'}}",
             "latency": 0,
             "statusCode": "200",
