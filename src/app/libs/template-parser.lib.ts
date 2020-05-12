@@ -1,6 +1,7 @@
 import { format as dateFormat } from 'date-fns';
+import * as DummyJSON from 'dummy-json';
 import { Request } from 'express';
-import { compile as hbsCompile, SafeString } from 'handlebars';
+import { SafeString } from 'handlebars';
 import { random } from 'lodash';
 import { get as objectGet } from 'object-path';
 import { Logger } from 'src/app/classes/logger';
@@ -87,8 +88,7 @@ const TemplateParserHelpers = (request: Request) => {
     },
     // return one random item
     oneOf: function (itemList: string[]) {
-      // TODO replace
-      // return DummyJSON.utils.randomArrayItem(itemList);
+      return DummyJSON.utils.randomArrayItem(itemList);
     },
     // return some random item as an array (to be used in triple braces) or as a string
     someOf: function (
@@ -109,7 +109,7 @@ const TemplateParserHelpers = (request: Request) => {
     },
     // create an array
     array: function (...args: any[]) {
-      // remove last item (dummy json options argument)
+      // remove last item (handlebars options argument)
       return args.slice(0, args.length - 1);
     },
     // switch cases
@@ -165,9 +165,12 @@ const TemplateParserHelpers = (request: Request) => {
  */
 export const TemplateParser = (content: string, request: Request): string => {
   try {
-    return hbsCompile(content)(null, {
+    return DummyJSON.parse(content, {
       helpers: TemplateParserHelpers(request)
     });
+    /* return hbsCompile(content)(null, {
+      helpers: TemplateParserHelpers(request)
+    }); */
   } catch (error) {
     logger.error(`Error while parsing the template: ${error.message}`);
 
