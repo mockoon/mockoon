@@ -56,7 +56,7 @@ export class ResizeColumnDirective implements AfterViewInit {
 
         if (typeof width !== 'undefined') {
           // finally update width if needed
-          this.applyWidthCss(width);
+          this.applyLimits(width);
         }
       });
   }
