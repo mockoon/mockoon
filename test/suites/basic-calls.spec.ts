@@ -19,7 +19,7 @@ const cases: HttpCall[] = [
     method: 'GET',
     testedResponse: {
       status: 200,
-      body: '{"response":"testvar"}'
+      body: '{"response": "testvar"}'
     }
   },
   {
@@ -28,7 +28,7 @@ const cases: HttpCall[] = [
     method: 'GET',
     testedResponse: {
       status: 200,
-      body: '{"response":"hello"}'
+      body: '{"response": "hello"}'
     }
   },
   {
@@ -37,7 +37,7 @@ const cases: HttpCall[] = [
     method: 'POST',
     testedResponse: {
       status: 200,
-      body: '{"response":"So Long, and Thanks for All the Fish"}'
+      body: '{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}'
     }
   }
 ];

@@ -13,6 +13,7 @@ import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { BannerComponent } from 'src/app/components/banner.component';
 import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
 import { ContextMenuComponent } from 'src/app/components/context-menu/context-menu.component';
+import { EditorModalComponent } from 'src/app/components/editor-modal/editor-modal.component';
 import { EnvironmentLogsComponent } from 'src/app/components/environment-logs.component';
 import { EnvironmentsMenuComponent } from 'src/app/components/environments-menu/environments-menu.component';
 import { HeadersListComponent } from 'src/app/components/headers-list.component';
@@ -42,6 +43,7 @@ import { AppComponent } from './app.component';
     WelcomeModalComponent,
     SettingsModalComponent,
     ChangelogModalComponent,
+    EditorModalComponent,
     EnvironmentLogsComponent,
     HeadersListComponent,
     BannerComponent,
@@ -68,9 +70,7 @@ import { AppComponent } from './app.component';
     AngularFireRemoteConfigModule,
     ReactiveFormsModule
   ],
-  providers: [
-    { provide: ErrorHandler, useClass: GlobalErrorHandler }
-  ],
+  providers: [{ provide: ErrorHandler, useClass: GlobalErrorHandler }],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
@@ -24,11 +25,10 @@ describe('Create and delete environments', () => {
   });
 
   it('Added environment should remain and be active', async () => {
-    await tests.app.client
-      .getText(
-        '.environments-menu .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type'
-      )
-      .should.eventually.equal('New environment');
+    const envName = await tests.app.client.getText(
+      '.environments-menu .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type'
+    );
+    expect(envName).to.equal('New environment');
   });
 
   it('Remove last environment, interface should be empty', async () => {

@@ -38,9 +38,6 @@ const getDisabledProxyCall: HttpCall = {
   method: 'GET'
 };
 
-const environmentLogsItemSelector =
-  '.environment-logs-column:nth-child(1) .menu-list .nav-item';
-
 describe('Proxy', () => {
   tests.runHooks();
 
@@ -87,58 +84,48 @@ describe('Proxy', () => {
   });
 
   it('First entry is GET /answer and was proxied by the application', async () => {
-    await tests.app.client
-      .getText(
-        `${environmentLogsItemSelector}:nth-child(1) .nav-link .route-method`
-      )
-      .should.eventually.equal('GET');
-    await tests.app.client
-      .getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`)
-      .should.eventually.equal('/answer');
-    await tests.app.client.waitForExist(
-      `${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`,
-      5000,
-      false
-    );
+    await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
+    await tests.helpers.environmentLogMenuPathEqual('/answer', 1);
+    await tests.helpers.environmentLogMenuCheckIcon('PROXY', 1);
   });
 
   it('Should display custom request header in environment logs', async () => {
     await tests.helpers.selectEnvironment(1);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.selectEnvironmentLogEntry(1);
     await tests.helpers.switchTabInEnvironmentLogs('REQUEST');
-    await tests.app.client
-      .getText(
-        '.environment-logs-content-request > div:nth-child(4) > div:nth-child(4)'
-      )
-      .should.eventually.equal('X-proxy-request-header: header value');
+    await tests.helpers.environmentLogItemEqual(
+      'X-proxy-request-header: header value',
+      'request',
+      4,
+      4
+    );
   });
 
   it('Should display custom proxied response header in environment logs', async () => {
     await tests.helpers.selectEnvironment(2);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.selectEnvironmentLogEntry(1);
     await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
-    await tests.app.client
-      .getText(
-        '.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(8)'
-      )
-      .should.eventually.equal('X-proxy-response-header: header value');
+    await tests.helpers.environmentLogItemEqual(
+      'X-proxy-response-header: header value',
+      'response',
+      4,
+      8
+    );
   });
 
   it('Should display custom environment response header in environment logs', async () => {
-    await tests.helpers.selectEnvironment(2);
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
-    await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
-    await tests.app.client
-      .getText(
-        '.environment-logs-content-response > div > div:nth-child(4) > div:nth-child(6)'
-      )
-      .should.eventually.equal('X-custom-header: header value');
+    await tests.helpers.environmentLogItemEqual(
+      'X-custom-header: header value',
+      'response',
+      4,
+      7
+    );
   });
 
   it('Click on mock button', async () => {
-    await tests.app.client
-      .element(`${environmentLogsItemSelector}:nth-child(1) .btn-mock`)
-      .click();
+    await tests.helpers.environmentLogClickMockButton(1);
     await tests.helpers.restartEnvironment();
   });
 
@@ -150,19 +137,9 @@ describe('Proxy', () => {
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
     await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.helpers.countEnvironmentLogsEntries(2);
-    await tests.app.client
-      .getText(
-        `${environmentLogsItemSelector}:nth-child(1) .nav-link .route-method`
-      )
-      .should.eventually.equal('GET');
-    await tests.app.client
-      .getText(`${environmentLogsItemSelector}:nth-child(1) .nav-link .route`)
-      .should.eventually.equal('/answer');
-    await tests.app.client.waitForExist(
-      `${environmentLogsItemSelector}:nth-child(1) .nav-link i[ngbTooltip="Request proxied"]`,
-      5000,
-      true
-    );
+    await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
+    await tests.helpers.environmentLogMenuPathEqual('/answer', 1);
+    await tests.helpers.environmentLogMenuCheckIcon('PROXY', 1, true);
   });
 
   it('Call to non existing route (in proxy and proxied env) should return 404 with all global headers (proxy + proxied envs) and proxy response headers', async () => {
