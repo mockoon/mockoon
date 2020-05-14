@@ -11,6 +11,8 @@ export type Settings = {
   bannerDismissed: string[];
   logSizeLimit: number;
   truncateRouteName: boolean;
+  routeMenuSize: number;
+  logsMenuSize: number;
 };
 
 export interface PreMigrationSettings extends Settings {
@@ -29,7 +31,9 @@ export class SettingsService {
     analytics: true,
     bannerDismissed: [],
     logSizeLimit: 10000,
-    truncateRouteName: true
+    truncateRouteName: true,
+    routeMenuSize: undefined,
+    logsMenuSize: undefined
   };
   private storageKey = 'settings';
 

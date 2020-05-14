@@ -23,6 +23,7 @@ import { SettingsModalComponent } from 'src/app/components/settings-modal.compon
 import { WelcomeModalComponent } from 'src/app/components/welcome-modal.component';
 import { Config } from 'src/app/config';
 import { InputNumberDirective } from 'src/app/directives/input-number.directive';
+import { ResizeColumnDirective } from 'src/app/directives/resize-column.directive';
 import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzone.directive';
 import { MousewheelUpdateDirective } from 'src/app/directives/mousewheel-update.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
@@ -34,6 +35,7 @@ import { AppComponent } from './app.component';
   declarations: [
     AppComponent,
     InputNumberDirective,
+    ResizeColumnDirective,
     ValidPathDirective,
     MousewheelUpdateDirective,
     MousedragDeadzoneDirective,

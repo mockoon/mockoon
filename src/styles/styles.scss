@@ -310,3 +310,13 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green),
     #f3362866 16px
   );
 }
+
+
+resize-column {
+  position: absolute;
+  width: $resize-separator-width;
+  height: 100%;
+  right: 0;
+  top: 0;
+  cursor: col-resize;
+}
