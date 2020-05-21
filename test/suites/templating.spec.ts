@@ -54,6 +54,28 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
+        description: 'Invalid body',
+        path: '/bodyjson-rootlvl',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{"test":"invalid}',
+        testedResponse: {
+          status: 200,
+          body: 'defaultvalue'
+        }
+      },
+      {
+        description: 'Invalid body, no default value',
+        path: '/bodyjson-rootlvl-nodefault',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{"test":"invalid}',
+        testedResponse: {
+          status: 200,
+          body: ''
+        }
+      },
+      {
         description: 'Root level string',
         path: '/bodyjson-rootlvl',
         method: 'POST',

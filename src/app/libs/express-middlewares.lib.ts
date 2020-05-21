@@ -2,8 +2,11 @@ import * as cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import { RequestHandlerParams } from 'express-serve-static-core';
 import { parse as qsParse } from 'qs';
+import { Logger } from 'src/app/classes/logger';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { EventsService } from 'src/app/services/events.service';
+
+const logger = new Logger('[LIB][EXPRESS-MIDDLEWARES]');
 
 export const Middlewares = function (
   eventsService: EventsService,
@@ -35,17 +38,17 @@ export const Middlewares = function (
       next: NextFunction
     ) {
       // Parse body as a raw string and JSON/form if applicable
-      try {
-        const requestContentType: string = request.header('Content-Type');
+      const requestContentType: string = request.header('Content-Type');
 
-        request.setEncoding('utf8');
-        request.body = '';
+      request.setEncoding('utf8');
+      request.body = '';
 
-        request.on('data', (chunk) => {
-          request.body += chunk;
-        });
+      request.on('data', (chunk) => {
+        request.body += chunk;
+      });
 
-        request.on('end', () => {
+      request.on('end', () => {
+        try {
           if (requestContentType) {
             if (requestContentType.includes('application/json')) {
               request.bodyJSON = JSON.parse(request.body);
@@ -57,8 +60,13 @@ export const Middlewares = function (
           }
 
           next();
-        });
-      } catch (error) {}
+        } catch (error) {
+          const errorMessage = `Error while parsing entering body: ${error.message}`;
+
+          logger.error(errorMessage);
+          next();
+        }
+      });
     },
     function logAnalyticsEvent(
       request: Request,
