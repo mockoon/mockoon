@@ -1,6 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
 import { filter, first } from 'rxjs/operators';
-import { SettingsProperties, SettingsService } from 'src/app/services/settings.service';
+import { SettingsProperties } from 'src/app/models/settings.model';
+import { SettingsService } from 'src/app/services/settings.service';
 import { Store } from 'src/app/stores/store';
 
 export type ColumnType = 'routeMenu' | 'envLogs';
