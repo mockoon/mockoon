@@ -345,10 +345,11 @@ export class Helpers {
           );
         } else if (
           propertyName === 'body' &&
-          typeof httpCall.testedResponse[propertyName] === 'string'
+          typeof httpCall.testedResponse[propertyName] === 'object'
         ) {
           expect(response[propertyName]).to.have.string(
-            httpCall.testedResponse[propertyName]
+            (httpCall.testedResponse[propertyName] as { contains: string })
+              .contains
           );
         } else {
           expect(response[propertyName]).to.equal(

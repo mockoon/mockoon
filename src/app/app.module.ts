@@ -24,7 +24,6 @@ import { WelcomeModalComponent } from 'src/app/components/welcome-modal.componen
 import { Config } from 'src/app/config';
 import { InputNumberDirective } from 'src/app/directives/input-number.directive';
 import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzone.directive';
-import { MousewheelUpdateDirective } from 'src/app/directives/mousewheel-update.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
 import { GlobalErrorHandler } from 'src/app/services/error-handler';
@@ -35,7 +34,6 @@ import { AppComponent } from './app.component';
     AppComponent,
     InputNumberDirective,
     ValidPathDirective,
-    MousewheelUpdateDirective,
     MousedragDeadzoneDirective,
     ContextMenuComponent,
     WelcomeModalComponent,

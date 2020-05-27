@@ -3,8 +3,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
+import { Settings } from 'src/app/models/settings.model';
 import { EventsService } from 'src/app/services/events.service';
-import { Settings, SettingsService } from 'src/app/services/settings.service';
+import { SettingsService } from 'src/app/services/settings.service';
 import { Store } from 'src/app/stores/store';
 
 @Component({
@@ -20,24 +21,29 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private settingsService: SettingsService,
     private eventsService: EventsService,
-    private store: Store) { }
+    private store: Store
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.settings$ = this.store.select('settings');
 
     // wait for settings to be ready and check if display needed
-    this.settings$.pipe(
-      filter<Settings>(Boolean),
-      first()
-    ).subscribe(settings => {
-      if (!settings.welcomeShown) {
-        this.settingsService.updateSettings({ welcomeShown: true });
+    this.settings$
+      .pipe(filter<Settings>(Boolean), first())
+      .subscribe((settings) => {
+        if (!settings.welcomeShown) {
+          this.settingsService.updateSettings({ welcomeShown: true });
 
-        this.modalService.open(this.modal, { backdrop: 'static', centered: true }).result.then(() => { }, () => { });
-      }
-    });
+          this.modalService
+            .open(this.modal, { backdrop: 'static', centered: true })
+            .result.then(
+              () => {},
+              () => {}
+            );
+        }
+      });
   }
 
   /**
@@ -52,6 +58,8 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
 
   public closeModal() {
     this.modalService.dismissAll();
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.APPLICATION_FIRST_LOAD);
+    this.eventsService.analyticsEvents.next(
+      AnalyticsEvents.APPLICATION_FIRST_LOAD
+    );
   }
 }

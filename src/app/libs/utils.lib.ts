@@ -147,3 +147,15 @@ export const GetEditorModeFromContentType = (
     return 'text';
   }
 };
+
+/**
+ * Check if an Object or Array is empty
+ *
+ * @param obj
+ */
+export const IsEmpty = (obj) => {
+  return (
+    [Object, Array].includes((obj || {}).constructor) &&
+    !Object.entries(obj || {}).length
+  );
+};

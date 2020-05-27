@@ -1,9 +1,9 @@
 {
-  "welcomeShown": false,
+  "welcomeShown": true,
   "analytics": true,
   "bannerDismissed": [],
   "logSizeLimit": 10000,
   "truncateRouteName": true,
   "fakerLocale": "en",
-  "fakerSeed": null
+  "fakerSeed": 1
 }

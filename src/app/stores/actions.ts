@@ -1,5 +1,5 @@
 import { EnvironmentLog } from 'src/app/models/environment-logs.model';
-import { SettingsProperties } from 'src/app/services/settings.service';
+import { SettingsProperties } from 'src/app/models/settings.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { ReducerDirectionType, ReducerIndexes } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, EnvironmentStatusProperties, TabsNameType, UIStateProperties, ViewsNameType } from 'src/app/stores/store';

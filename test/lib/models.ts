@@ -1,5 +1,5 @@
 export type HttpCallResponse = {
-  body?: string;
+  body?: string | { contains: string };
   status?: number;
   headers?: {
     [key in string]: string | string[];

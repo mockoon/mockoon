@@ -3,5 +3,7 @@
   "analytics": true,
   "bannerDismissed": [],
   "logSizeLimit": 10000,
-  "truncateRouteName": true
+  "truncateRouteName": true,
+  "fakerLocale": "en",
+  "fakerSeed": null
 }
