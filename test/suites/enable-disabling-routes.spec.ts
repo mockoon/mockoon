@@ -18,7 +18,7 @@ const getAnswerCall: HttpCall[] = [
     path: '/answer',
     method: 'GET',
     testedResponse: {
-      body: 'Cannot GET /answer',
+      body: { contains: 'Cannot GET /answer' },
       status: 404
     }
   }

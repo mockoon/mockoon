@@ -1,25 +1,11 @@
 import { Injectable } from '@angular/core';
 import { get as storageGet, set as storageSet } from 'electron-json-storage';
-import { debounceTime, filter } from 'rxjs/operators';
+import * as faker from 'faker';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
+import { PreMigrationSettings, Settings, SettingsProperties } from 'src/app/models/settings.model';
 import { updateSettingsAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
-
-export type Settings = {
-  welcomeShown: boolean;
-  analytics: boolean;
-  bannerDismissed: string[];
-  logSizeLimit: number;
-  truncateRouteName: boolean;
-  routeMenuSize: number;
-  logsMenuSize: number;
-};
-
-export interface PreMigrationSettings extends Settings {
-  lastMigration: number;
-}
-
-export type SettingsProperties = { [T in keyof Settings]?: Settings[T] };
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -33,7 +19,9 @@ export class SettingsService {
     logSizeLimit: 10000,
     truncateRouteName: true,
     routeMenuSize: undefined,
-    logsMenuSize: undefined
+    logsMenuSize: undefined,
+    fakerLocale: 'en',
+    fakerSeed: null
   };
   private storageKey = 'settings';
 
@@ -76,6 +64,24 @@ export class SettingsService {
           }
         });
       });
+
+    // switch Faker locale
+    this.store
+      .select('settings')
+      .pipe(
+        filter((settings) => !!settings),
+        distinctUntilChanged(
+          (previous, current) =>
+            previous.fakerLocale === current.fakerLocale &&
+            previous.fakerSeed === current.fakerSeed
+        ),
+        tap((settings) => {
+          // @ts-ignore
+          faker.locale = settings.fakerLocale;
+          faker.seed(settings.fakerSeed);
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -91,9 +97,20 @@ export class SettingsService {
    * Handle the migration of some settings
    */
   private migrateSettings(settings: PreMigrationSettings): Settings {
+    // remove lastMigration from settings
     if (settings.lastMigration) {
       this.oldLastMigration = settings.lastMigration;
       delete settings.lastMigration;
+    }
+
+    // add Faker default locale
+    if (settings.fakerLocale === undefined) {
+      settings.fakerLocale = 'en';
+    }
+
+    // add Faker default seed
+    if (settings.fakerLocale === undefined) {
+      settings.fakerSeed = null;
     }
 
     return settings;

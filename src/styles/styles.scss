@@ -17,6 +17,12 @@
   border-radius: 20px;
 }
 
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 // ace editor custom scrollbar
 .ace_scrollbar.ace_scrollbar-v::-webkit-scrollbar-thumb {
   background: lighten($gray-900, 5%);

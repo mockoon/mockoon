@@ -1,8 +1,12 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { shell } from 'electron';
 import { Observable } from 'rxjs';
+import { Config } from 'src/app/config';
+import { FakerLocales } from 'src/app/enums/faker.enum';
+import { Settings } from 'src/app/models/settings.model';
 import { EventsService } from 'src/app/services/events.service';
-import { Settings, SettingsService } from 'src/app/services/settings.service';
+import { SettingsService } from 'src/app/services/settings.service';
 import { Store } from 'src/app/stores/store';
 
 @Component({
@@ -16,6 +20,7 @@ export class SettingsModalComponent implements OnInit, AfterViewInit {
   @Output() closed: EventEmitter<any> = new EventEmitter();
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
+  public fakerLocales = FakerLocales;
 
   constructor(
     private modalService: NgbModal,
@@ -47,7 +52,14 @@ export class SettingsModalComponent implements OnInit, AfterViewInit {
    * @param newValue
    * @param settingName
    */
-  public settingsUpdated(settingNewValue: string, settingName: string) {
+  public settingsUpdated(settingNewValue: string, settingName: keyof Settings) {
     this.settingsService.updateSettings({ [settingName]: settingNewValue });
+  }
+
+  /**
+   * Open the templating documentation
+   */
+  public openTemplatingDoc() {
+    shell.openExternal(Config.wikiLinks.templating);
   }
 }

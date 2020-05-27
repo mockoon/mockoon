@@ -25,7 +25,6 @@ import { Config } from 'src/app/config';
 import { InputNumberDirective } from 'src/app/directives/input-number.directive';
 import { ResizeColumnDirective } from 'src/app/directives/resize-column.directive';
 import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzone.directive';
-import { MousewheelUpdateDirective } from 'src/app/directives/mousewheel-update.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
 import { GlobalErrorHandler } from 'src/app/services/error-handler';
@@ -37,7 +36,6 @@ import { AppComponent } from './app.component';
     InputNumberDirective,
     ResizeColumnDirective,
     ValidPathDirective,
-    MousewheelUpdateDirective,
     MousedragDeadzoneDirective,
     ContextMenuComponent,
     WelcomeModalComponent,

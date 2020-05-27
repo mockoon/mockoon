@@ -1,25 +1,87 @@
 import { format as dateFormat } from 'date-fns';
-import * as DummyJSON from 'dummy-json';
 import { Request } from 'express';
-import { SafeString } from 'handlebars';
+import * as faker from 'faker';
+import { compile as hbsCompile, HelperOptions, SafeString } from 'handlebars';
 import { random } from 'lodash';
 import { get as objectGet } from 'object-path';
 import { Logger } from 'src/app/classes/logger';
+import { OldTemplatingHelpers } from 'src/app/libs/old-templating-helpers';
+import { IsEmpty } from 'src/app/libs/utils.lib';
 
 const logger = new Logger('[LIB][TEMPLATE-PARSER]');
 
 /**
- * Prevents insertion of Handlebars own object (last argument) when no default value is provided:
+ * Handlebars may insert its own `options` object as the last argument.
+ * Be careful when retrieving `defaultValue` or any other last param.
  *
+ * use:
  * if (typeof defaultValue === 'object') {
  *   defaultValue = '';
  * }
  *
- * /!\ Do not use () => {} for custom helpers in order to keep Handlebars scope
- *
+ * or:
+ * args[args.length - 1]
  */
-const TemplateParserHelpers = (request: Request) => {
+const TemplateParserHelpers = function (request: Request) {
   return {
+    ...OldTemplatingHelpers,
+    // faker wrapper
+    faker: function (...args) {
+      const hbsOptions: HelperOptions & hbs.AST.Node = args[args.length - 1];
+
+      let fakerName: string;
+
+      if (args.length === 1) {
+        fakerName = '';
+      } else {
+        fakerName = args[0];
+      }
+
+      const [fakerPrimaryMethod, fakerSecondaryMethod] = fakerName.split('.');
+      let errorMessage = `${fakerName} is not a valid Faker method`;
+      // check faker helper name pattern
+      if (
+        !fakerName ||
+        !fakerName.match(/^[a-z]+\.[a-z]+$/i) ||
+        !fakerPrimaryMethod ||
+        !fakerSecondaryMethod ||
+        !faker[fakerPrimaryMethod] ||
+        !faker[fakerPrimaryMethod][fakerSecondaryMethod]
+      ) {
+        if (!fakerName) {
+          errorMessage = 'Faker method name is missing';
+        }
+
+        throw new Error(
+          `${errorMessage} (valid: "address.zipCode", "date.past", etc) line ${
+            hbsOptions.loc &&
+            hbsOptions.loc &&
+            hbsOptions.loc.start &&
+            hbsOptions.loc.start.line
+          }`
+        );
+      }
+
+      const fakerFunction = faker[fakerPrimaryMethod][fakerSecondaryMethod];
+      const fakerArgs = args.slice(1, args.length - 1);
+
+      // push hbs named parameters (https://handlebarsjs.com/guide/block-helpers.html#hash-arguments) to Faker
+      if (!IsEmpty(hbsOptions.hash)) {
+        fakerArgs.push(hbsOptions.hash);
+      }
+
+      let fakedContent = fakerFunction(...fakerArgs);
+
+      // do not stringify Date coming from Faker.js
+      if (
+        (Array.isArray(fakedContent) || typeof fakedContent === 'object') &&
+        !(fakedContent instanceof Date)
+      ) {
+        fakedContent = JSON.stringify(fakedContent);
+      }
+
+      return new SafeString(fakedContent);
+    },
     // get json property from body
     body: function (path: string, defaultValue: string) {
       if (typeof defaultValue === 'object') {
@@ -87,8 +149,8 @@ const TemplateParserHelpers = (request: Request) => {
       return request.method;
     },
     // return one random item
-    oneOf: function (itemList: string[]) {
-      return DummyJSON.utils.randomArrayItem(itemList);
+    oneOf: function (itemList: string[], ...args) {
+      return faker.random.arrayElement(itemList);
     },
     // return some random item as an array (to be used in triple braces) or as a string
     someOf: function (
@@ -163,14 +225,14 @@ const TemplateParserHelpers = (request: Request) => {
  * @param content
  * @param request
  */
-export const TemplateParser = (content: string, request: Request): string => {
+export const TemplateParser = function (
+  content: string,
+  request: Request
+): string {
   try {
-    return DummyJSON.parse(content, {
+    return hbsCompile(content)(null, {
       helpers: TemplateParserHelpers(request)
     });
-    /* return hbsCompile(content)(null, {
-      helpers: TemplateParserHelpers(request)
-    }); */
   } catch (error) {
     logger.error(`Error while parsing the template: ${error.message}`);
 

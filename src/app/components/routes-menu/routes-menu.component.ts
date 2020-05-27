@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } fro
 import { Observable } from 'rxjs';
 import { RoutesContextMenu } from 'src/app/components/context-menu/context-menus';
 import { ContextMenuEvent } from 'src/app/models/context-menu.model';
+import { Settings } from 'src/app/models/settings.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
-import { Settings } from 'src/app/services/settings.service';
 import { UIService } from 'src/app/services/ui.service';
 import { DuplicatedRoutesTypes, EnvironmentsStatuses, Store } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
@@ -40,7 +40,7 @@ export class RoutesMenuComponent implements OnInit {
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.settings$ = this.store.select('settings');
 
-    this.uiService.scrollRoutesMenu.subscribe(scrollDirection => {
+    this.uiService.scrollRoutesMenu.subscribe((scrollDirection) => {
       this.uiService.scroll(this.routesMenu.nativeElement, scrollDirection);
     });
   }

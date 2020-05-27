@@ -55,8 +55,8 @@
                         ngbTooltip="Server available on all network interfaces (localhost, 127.0.0.1, etc)">power</i>
                       0.0.0.0 :</span>
                   </div>
-                  <input type="text" class="form-control col-2" placeholder="port" formControlName="port"
-                    [InputNumber]="{ min: 0, max: 65535 }" MousewheelUpdate>
+                  <input type="number" class="form-control col-2" placeholder="port" formControlName="port"
+                    [InputNumber]="{ min: 0, max: 65535 }">
                   <div class="input-group-prepend" *ngIf="duplicatedEnvironments$ | async as duplicatedEnvironments">
                     <span class="input-group-text text-warning"
                       *ngIf="duplicatedEnvironments?.has(activeEnvironment?.uuid)"
@@ -70,9 +70,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="material-icons">access_time</i></span>
                   </div>
-                  <input type="text" class="form-control col-2"
+                  <input type="number" class="form-control col-2"
                     ngbTooltip="Global environment latency applied to all routes (ms)" formControlName="latency"
-                    [InputNumber]="{ min: 0, max: Infinity }" MousewheelUpdate>
+                    [InputNumber]="{ min: 0, max: Infinity }">
                 </div>
               </div>
 
@@ -389,8 +389,8 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="material-icons">access_time</i></span>
                             </div>
-                            <input type="text" class="form-control col-1" ngbTooltip="Route specific latency (ms)"
-                              [InputNumber]="{min: 0, max: Infinity}" MousewheelUpdate formControlName="latency">
+                            <input type="number" class="form-control col-1" ngbTooltip="Route specific latency (ms)"
+                              [InputNumber]="{min: 0, max: Infinity}" formControlName="latency">
                             <input type="text" class="form-control ml-1" formControlName="label" placeholder="Add label or notes">
                           </div>
                         </div>

@@ -8,7 +8,7 @@ function generateCall(requestBody: any): HttpCall {
     method: 'POST',
     body: requestBody,
     testedResponse: {
-      body: '{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}',
+      body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}',
       status: 200
     }
   };
@@ -31,6 +31,8 @@ const truncateRoutePathCheckbox =
 const analyticsCheckbox =
   '.modal-dialog input#analytics ~ .custom-control-label';
 const bodySizeInput = '.modal-dialog input#log-body-size';
+const fakerSeedInput = '.modal-dialog input#faker-seed';
+const fakerLocaleSelect = '.modal-dialog select#faker-locale';
 
 describe('Settings', () => {
   describe('Route path truncate', () => {
@@ -119,7 +121,9 @@ describe('Settings', () => {
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(2);
       await tests.helpers.selectEnvironmentLogEntry(1);
-      await tests.helpers.environmentLogBodyContains(`${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED --------`);
+      await tests.helpers.environmentLogBodyContains(
+        `${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED --------`
+      );
     });
 
     it('Set log body size to 1000', async () => {
@@ -149,7 +153,49 @@ describe('Settings', () => {
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(4);
       await tests.helpers.selectEnvironmentLogEntry(1);
-      await tests.helpers.environmentLogBodyContains(`${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED --------`);
+      await tests.helpers.environmentLogBodyContains(
+        `${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED --------`
+      );
+    });
+  });
+
+  describe('Faker.js', () => {
+    const tests = new Tests('settings');
+    tests.runHooks();
+
+    it('Verify Faker.js initial settings', async () => {
+      // wait for settings save
+      await tests.app.client.pause(2000);
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'fakerSeed',
+        null
+      );
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'fakerLocale',
+        'en'
+      );
+    });
+
+    it('Change Faker.js settings and verify persistence', async () => {
+      await tests.helpers.openSettingsModal();
+      await tests.app.client.element(fakerSeedInput).setValue('1234');
+      await tests.app.client.selectByValue(fakerLocaleSelect, 'en_US');
+      await tests.helpers.closeModal();
+
+      // wait for settings save
+      await tests.app.client.pause(2000);
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'fakerLocale',
+        'en_US'
+      );
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'fakerSeed',
+        1234
+      );
     });
   });
 });

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { ActiveEnvironmentsLogUUIDs, EnvironmentLog, EnvironmentLogs } from 'src/app/models/environment-logs.model';
-import { Settings } from 'src/app/services/settings.service';
+import { Settings } from 'src/app/models/settings.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions } from 'src/app/stores/actions';
 import { environmentReducer } from 'src/app/stores/reducer';
@@ -157,7 +157,10 @@ export class Store {
     return this.store$
       .asObservable()
       .pipe(
-        map((store) => store.activeEnvironmentLogsUUID[store.activeEnvironmentUUID])
+        map(
+          (store) =>
+            store.activeEnvironmentLogsUUID[store.activeEnvironmentUUID]
+        )
       );
   }
 
