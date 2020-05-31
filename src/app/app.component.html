@@ -358,6 +358,12 @@
                             </li>
                           </ul>
 
+                          <!-- Response duplication button -->
+                          <button *ngIf="activeRoute?.responses.length > 1" type="button" class="btn btn-link btn-icon">
+                            <span ngbTooltip="Duplicate response">
+                              <i class="material-icons">content_copy</i></span>
+                          </button>
+
                           <!-- Response delete button -->
                           <button *ngIf="activeRoute?.responses.length > 1" type="button" class="btn btn-link btn-icon"
                             (click)="deleteCurrentRouteResponse()">
