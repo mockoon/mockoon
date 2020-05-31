@@ -7,7 +7,8 @@ import { v1 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class SchemasBuilderService {
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService) {
+  }
 
   /**
    * Build a new environment or route response header
@@ -30,6 +31,16 @@ export class SchemasBuilderService {
       filePath: '',
       sendFileAsBody: false,
       rules: []
+    };
+  }
+
+  /**
+   * Clone a new route response with a fresh UUID
+   */
+  public cloneRouteResponse(routeResponse: RouteResponse): RouteResponse {
+    return {
+      ...routeResponse,
+      uuid: uuid()
     };
   }
 

@@ -10,11 +10,41 @@ import { MigrationService } from 'src/app/services/migration.service';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ServerService } from 'src/app/services/server.service';
 import { UIService } from 'src/app/services/ui.service';
-import { addEnvironmentAction, addRouteAction, addRouteResponseAction, moveEnvironmentsAction, moveRouteResponsesAction, moveRoutesAction, navigateEnvironmentsAction, navigateRoutesAction, removeEnvironmentAction, removeRouteAction, removeRouteResponseAction, setActiveEnvironmentAction, setActiveEnvironmentLogTabAction, setActiveEnvironmentLogUUIDAction, setActiveRouteAction, setActiveRouteResponseAction, setActiveTabAction, setActiveViewAction, setInitialEnvironmentsAction, updateEnvironmentAction, updateRouteAction, updateRouteResponseAction } from 'src/app/stores/actions';
+import {
+  addEnvironmentAction,
+  addRouteAction,
+  addRouteResponseAction,
+  moveEnvironmentsAction,
+  moveRouteResponsesAction,
+  moveRoutesAction,
+  navigateEnvironmentsAction,
+  navigateRoutesAction,
+  removeEnvironmentAction,
+  removeRouteAction,
+  removeRouteResponseAction,
+  setActiveEnvironmentAction,
+  setActiveEnvironmentLogTabAction,
+  setActiveEnvironmentLogUUIDAction,
+  setActiveRouteAction,
+  setActiveRouteResponseAction,
+  setActiveTabAction,
+  setActiveViewAction,
+  setInitialEnvironmentsAction,
+  updateEnvironmentAction,
+  updateRouteAction,
+  updateRouteResponseAction
+} from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
 import { Environment, EnvironmentProperties } from 'src/app/types/environment.type';
-import { Header, Method, Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
+import {
+  Header,
+  Method,
+  Route,
+  RouteProperties,
+  RouteResponse,
+  RouteResponseProperties
+} from 'src/app/types/route.type';
 import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
 
 @Injectable({ providedIn: 'root' })
@@ -192,6 +222,15 @@ export class EnvironmentsService {
   public addRouteResponse() {
     this.store.update(
       addRouteResponseAction(this.schemasBuilderService.buildRouteResponse())
+    );
+  }
+
+  /**
+   * Duplicate the given route response and save it in the store
+   */
+  public duplicateRouteResponse(routeResponse: RouteResponse) {
+    this.store.update(
+      addRouteResponseAction(this.schemasBuilderService.cloneRouteResponse(routeResponse))
     );
   }
 

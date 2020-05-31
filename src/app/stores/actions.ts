@@ -2,7 +2,13 @@ import { EnvironmentLog } from 'src/app/models/environment-logs.model';
 import { SettingsProperties } from 'src/app/models/settings.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { ReducerDirectionType, ReducerIndexes } from 'src/app/stores/reducer';
-import { EnvironmentLogsTabsNameType, EnvironmentStatusProperties, TabsNameType, UIStateProperties, ViewsNameType } from 'src/app/stores/store';
+import {
+  EnvironmentLogsTabsNameType,
+  EnvironmentStatusProperties,
+  TabsNameType,
+  UIStateProperties,
+  ViewsNameType
+} from 'src/app/stores/store';
 import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
 import { Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
 
@@ -28,6 +34,7 @@ export const enum ActionTypes {
   UPDATE_ROUTE,
   SET_ACTIVE_ROUTE_RESPONSE,
   ADD_ROUTE_RESPONSE,
+  DUPLICATE_ROUTE_RESPONSE,
   UPDATE_ROUTE_RESPONSE,
   LOG_REQUEST,
   CLEAR_LOGS,
@@ -294,6 +301,18 @@ export function addRouteResponseAction(routeReponse: RouteResponse) {
   return <const>{
     type: ActionTypes.ADD_ROUTE_RESPONSE,
     routeReponse
+  };
+}
+
+/**
+ * Add a new route response
+ *
+ * @param routeResponse - route response to add
+ */
+export function duplicateRouteResponseAction(routeResponse: RouteResponse) {
+  return <const>{
+    type: ActionTypes.DUPLICATE_ROUTE_RESPONSE,
+    routeResponse
   };
 }
 

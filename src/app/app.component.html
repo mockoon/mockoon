@@ -359,7 +359,10 @@
                           </ul>
 
                           <!-- Response duplication button -->
-                          <button *ngIf="activeRoute?.responses.length > 1" type="button" class="btn btn-link btn-icon">
+                          <button
+                            *ngIf="!(deleteCurrentRouteResponseRequested$ | async)"
+                            type="button" class="btn btn-link btn-icon"
+                            (click)="duplicateRouteResponse()">
                             <span ngbTooltip="Duplicate response">
                               <i class="material-icons">content_copy</i></span>
                           </button>

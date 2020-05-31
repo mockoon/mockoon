@@ -6,7 +6,7 @@ import { lookup as mimeTypeLookup } from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
 import { platform } from 'os';
 import { merge, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, distinctUntilKeyChanged, filter, first, map } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
 import { Config } from 'src/app/config';
@@ -25,10 +25,25 @@ import { UIService } from 'src/app/services/ui.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { clearLogsAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { DuplicatedRoutesTypes, EnvironmentsStatuses, EnvironmentStatus, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import {
+  DuplicatedRoutesTypes,
+  EnvironmentsStatuses,
+  EnvironmentStatus,
+  Store,
+  TabsNameType,
+  ViewsNameType
+} from 'src/app/stores/store';
 import { DataSubject } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
-import { CORSHeaders, Header, methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
+import {
+  CORSHeaders,
+  Header,
+  methods,
+  mimeTypesWithTemplating,
+  Route,
+  RouteResponse,
+  statusCodes
+} from 'src/app/types/route.type';
 import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
 
 @Component({
@@ -668,5 +683,15 @@ export class AppComponent implements OnInit {
     this.environmentsService.setActiveEnvironmentActiveLog(lastLogUUID);
     this.environmentsService.setActiveView('ENV_LOGS');
     this.environmentsService.setActiveEnvironmentLogTab('RESPONSE');
+  }
+
+  /**
+   * Duplicate the active route response
+   */
+  public duplicateRouteResponse() {
+    this.store.selectActiveRouteResponse().pipe(first())
+      .subscribe((activeRouteResponse: RouteResponse) => {
+        this.environmentsService.duplicateRouteResponse(activeRouteResponse);
+      });
   }
 }
