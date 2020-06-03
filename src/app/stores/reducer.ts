@@ -1,12 +1,17 @@
 import { Config } from 'src/app/config';
 import { HighestMigrationId } from 'src/app/libs/migrations.lib';
-import { ArrayContainsObjectKey, GetEditorModeFromContentType, GetRouteResponseContentType } from 'src/app/libs/utils.lib';
+import {
+  ArrayContainsObjectKey,
+  GetEditorModeFromContentType,
+  GetRouteResponseContentType
+} from 'src/app/libs/utils.lib';
 import { ActiveEnvironmentsLogUUIDs, EnvironmentLogs } from 'src/app/models/environment-logs.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions, ActionTypes } from 'src/app/stores/actions';
 import { DuplicatedRoutesTypes, EnvironmentsStatuses, StoreType } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
+import { v1 as uuid } from 'uuid';
 
 export type ReducerDirectionType = 'next' | 'previous';
 export type ReducerIndexes = { sourceIndex: number; targetIndex: number };
@@ -48,9 +53,7 @@ export function environmentReducer(
     case ActionTypes.SET_INITIAL_ENVIRONMENTS: {
       const newEnvironments: Environments = action.environments;
 
-      const newEnvironmentsStatus = newEnvironments.reduce<
-        EnvironmentsStatuses
-      >((environmentsStatus, environment) => {
+      const newEnvironmentsStatus = newEnvironments.reduce<EnvironmentsStatuses>((environmentsStatus, environment) => {
         // create status and check if environment has not been migrated on a more recent Mockoon version
         environmentsStatus[environment.uuid] = {
           running: false,
@@ -94,9 +97,7 @@ export function environmentReducer(
           },
           {}
         ),
-        activeEnvironmentLogsUUID: newEnvironments.reduce<
-          ActiveEnvironmentsLogUUIDs
-        >((activeEnvironmentLogsUUID, environment) => {
+        activeEnvironmentLogsUUID: newEnvironments.reduce<ActiveEnvironmentsLogUUIDs>((activeEnvironmentLogsUUID, environment) => {
           activeEnvironmentLogsUUID[environment.uuid] = null;
 
           return activeEnvironmentLogsUUID;
@@ -113,8 +114,8 @@ export function environmentReducer(
       ) {
         const activeEnvironment = action.environmentUUID
           ? state.environments.find(
-              (environment) => environment.uuid === action.environmentUUID
-            )
+            (environment) => environment.uuid === action.environmentUUID
+          )
           : state.environments[0];
 
         newState = {
@@ -728,10 +729,12 @@ export function environmentReducer(
 
     case ActionTypes.ADD_ROUTE_RESPONSE: {
       const newRouteResponse: RouteResponse = action.routeReponse;
-
+      const newUUID = uuid();
+      const activeRouteResponseUUID = state.activeRouteResponseUUID === newRouteResponse.uuid ?
+        newUUID : newRouteResponse.uuid;
       newState = {
         ...state,
-        activeRouteResponseUUID: newRouteResponse.uuid,
+        activeRouteResponseUUID,
         activeTab: 'RESPONSE',
         environments: state.environments.map((environment) => {
           if (environment.uuid === state.activeEnvironmentUUID) {
@@ -739,10 +742,19 @@ export function environmentReducer(
               ...environment,
               routes: environment.routes.map((route) => {
                 if (route.uuid === state.activeRouteUUID) {
-                  return {
-                    ...route,
-                    responses: [...route.responses, newRouteResponse]
-                  };
+                  let responses = [...route.responses];
+                  if (state.activeRouteResponseUUID === newRouteResponse.uuid) {
+                    const activeRouteResponseIndex = route.responses.findIndex(
+                      (routeResponse: RouteResponse) => {
+                        return routeResponse.uuid === state.activeRouteResponseUUID;
+                      }
+                    );
+                    newRouteResponse.uuid = newUUID;
+                    responses.splice(activeRouteResponseIndex + 1, 0, newRouteResponse);
+                  } else {
+                    responses.push(newRouteResponse);
+                  }
+                  return { ...route, responses };
                 }
 
                 return route;

@@ -40,7 +40,7 @@ export class SchemasBuilderService {
   public cloneRouteResponse(routeResponse: RouteResponse): RouteResponse {
     return {
       ...routeResponse,
-      uuid: uuid()
+      label: routeResponse.label + ' (copy)'
     };
   }
 

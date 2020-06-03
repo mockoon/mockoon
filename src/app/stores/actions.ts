@@ -305,18 +305,6 @@ export function addRouteResponseAction(routeReponse: RouteResponse) {
 }
 
 /**
- * Add a new route response
- *
- * @param routeResponse - route response to add
- */
-export function duplicateRouteResponseAction(routeResponse: RouteResponse) {
-  return <const>{
-    type: ActionTypes.DUPLICATE_ROUTE_RESPONSE,
-    routeResponse
-  };
-}
-
-/**
  * Update a route response
  *
  * @param properties - properties to update
