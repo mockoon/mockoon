@@ -41,7 +41,7 @@ export class Helpers {
 
   async removeRouteResponse() {
     const deleteButtonSelector =
-      '#route-responses-menu .btn-link:not(.doc-link)';
+      '#route-responses-menu .btn-link:not(.doc-link):not(#duplication-button)';
 
     await this.testsInstance.app.client.element(deleteButtonSelector).click();
     await this.testsInstance.app.client.element(deleteButtonSelector).click();
