@@ -5,28 +5,51 @@ import { Tests } from 'test/lib/tests';
 
 const testSuites: { name: string; tests: HttpCall[] }[] = [
   {
-    name: 'Body helper: no Content-Type',
+    name:
+      'Body helper: text/plain Content-Type (incompatible with path search)',
     tests: [
       {
-        description: 'Body, no content type',
+        description: 'Body path, default value',
         path: '/bodyjson-rootlvl',
         method: 'POST',
-        headers: {},
-        body: { property1: 'stringcontent' },
+        headers: { 'Content-Type': 'text/plain' },
+        body: '{"property1":"stringcontent"}',
         testedResponse: {
           status: 200,
           body: 'defaultvalue'
         }
       },
       {
-        description: 'Body, no content type, no default value',
+        description: 'Body path, no default value',
         path: '/bodyjson-rootlvl-nodefault',
         method: 'POST',
-        headers: {},
-        body: { property1: 'stringcontent' },
+        headers: { 'Content-Type': 'text/plain' },
+        body: '{"property1":"stringcontent"}',
         testedResponse: {
           status: 200,
           body: ''
+        }
+      },
+      {
+        description: 'Full body, no path param provided',
+        path: '/bodyjson-full-noparam',
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: '{"property1":"stringcontent"}',
+        testedResponse: {
+          status: 200,
+          body: '{"property1":"stringcontent"}'
+        }
+      },
+      {
+        description: 'Full body, empty path param',
+        path: '/bodyjson-full-emptyparam',
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: '{"property1":"stringcontent"}',
+        testedResponse: {
+          status: 200,
+          body: '{"property1":"stringcontent"}'
         }
       }
     ]
@@ -74,6 +97,28 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         testedResponse: {
           status: 200,
           body: ''
+        }
+      },
+      {
+        description: 'Full body, no path parameter provided',
+        path: '/bodyjson-full-noparam',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{"test": "testcontent"}',
+        testedResponse: {
+          status: 200,
+          body: '{"test": "testcontent"}'
+        }
+      },
+      {
+        description: 'Full body, empty path parameter',
+        path: '/bodyjson-full-emptyparam',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{"test": "testcontent"}',
+        testedResponse: {
+          status: 200,
+          body: '{"test": "testcontent"}'
         }
       },
       {
@@ -278,6 +323,28 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         testedResponse: {
           status: 200,
           body: ''
+        }
+      },
+      {
+        description: 'Full body, no path parameter provided',
+        path: '/bodyform-full-noparam',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'param1=stringcontent',
+        testedResponse: {
+          status: 200,
+          body: 'param1=stringcontent'
+        }
+      },
+      {
+        description: 'Full body, empty path parameter',
+        path: '/bodyform-full-emptyparam',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'param1=stringcontent',
+        testedResponse: {
+          status: 200,
+          body: 'param1=stringcontent'
         }
       },
       {
