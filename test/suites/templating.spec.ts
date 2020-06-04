@@ -513,8 +513,26 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
-        description: 'Helper: queryParam',
-        path: '/queryparam?queryparam1=testqueryparam1',
+        description: 'Helper: queryParam, empty, no default value',
+        path: '/queryparam-rootlvl-nodefault',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: ''
+        }
+      },
+      {
+        description: 'Helper: queryParam, empty, with default value',
+        path: '/queryparam-rootlvl',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'defaultqueryparam'
+        }
+      },
+      {
+        description: 'Helper: queryParam property, root level',
+        path: '/queryparam-rootlvl?param1=testqueryparam1',
         method: 'GET',
         testedResponse: {
           status: 200,
@@ -522,12 +540,85 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
-        description: 'Helper: queryParam (default value)',
-        path: '/queryparam?queryparam2=testqueryparam2',
+        description:
+          'Helper: queryParam missing property, root level (default value)',
+        path: '/queryparam-rootlvl?param2=testqueryparam2',
         method: 'GET',
         testedResponse: {
           status: 200,
           body: 'defaultqueryparam'
+        }
+      },
+      {
+        description: 'Helper: queryParam item in array, root level',
+        path:
+          '/queryparam-rootlvl-arrayitem?paramarray[]=test1&paramarray[]=test2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'test2'
+        }
+      },
+      {
+        description: 'Helper: queryParam property in object, root level',
+        path:
+          '/queryparam-rootlvl-objectproperty?paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'testprop2'
+        }
+      },
+      {
+        description: 'Helper: queryParam sub array, root level',
+        path: '/queryparam-rootlvl-array?paramarray[]=test1&paramarray[]=test2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: '["test1","test2"]'
+        }
+      },
+      {
+        description: 'Helper: queryParam sub object, root level',
+        path:
+          '/queryparam-rootlvl-object?paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: '{"prop1":"testprop1","prop2":"testprop2"}'
+        }
+      },
+      {
+        description: 'Helper: queryParam multiple fetch, deep level',
+        path:
+          '/queryparam-multiple?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body:
+            '{ "param1": "param1value","arrayitem": "test2","objprop": "testprop2","fullarray": ["test1","test2"],"fullobj": {"prop1":"testprop1","prop2":"testprop2"} }'
+        }
+      },
+      {
+        description: 'Helper: queryParam full object with empty path param',
+        path:
+          '/queryparam-full-emptypath?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body:
+            '{"param1":"param1value","paramarray":["test1","test2"],"paramobj":{"prop1":"testprop1","prop2":"testprop2"}}'
+        }
+      },
+      {
+        description: 'Helper: queryParam full object with no path param',
+        path:
+          '/queryparam-full-nopath?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body:
+            '{"param1":"param1value","paramarray":["test1","test2"],"paramobj":{"prop1":"testprop1","prop2":"testprop2"}}'
         }
       },
       {
