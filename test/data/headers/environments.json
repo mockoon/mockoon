@@ -31,6 +31,51 @@
             "rules": []
           }
         ]
+      },
+      {
+        "uuid": "101957a1-2557-41ff-a42c-00af00f7ad66",
+        "method": "get",
+        "endpoint": "file",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "c8563856-fe44-4970-825e-58cb6f4e7ae9",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              }
+            ],
+            "filePath": "./test/data/headers/test.pdf",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
+      },
+      {
+        "uuid": "c2f80546-b6ea-44bd-9748-9dd923653f3a",
+        "method": "get",
+        "endpoint": "file-noheader",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "d1454fdf-6bc3-420e-b255-2693b3ace28d",
+            "body": "",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [],
+            "filePath": "./test/data/headers/test.pdf",
+            "sendFileAsBody": false,
+            "rules": []
+          }
+        ]
       }
     ],
     "proxyMode": false,

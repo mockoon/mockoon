@@ -12,7 +12,7 @@ import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpr
 import { Errors } from 'src/app/enums/errors.enum';
 import { Middlewares } from 'src/app/libs/express-middlewares.lib';
 import { TemplateParser } from 'src/app/libs/template-parser.lib';
-import { GetRouteResponseContentType, IsValidURL, TestHeaderValidity } from 'src/app/libs/utils.lib';
+import { GetContentType, GetRouteResponseContentType, IsValidURL, TestHeaderValidity } from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
@@ -200,10 +200,11 @@ export class ServerService {
 
               // add route latency if any
               setTimeout(() => {
-                const routeContentType = GetRouteResponseContentType(
+                const contentType = GetRouteResponseContentType(
                   currentEnvironment,
                   enabledRouteResponse
                 );
+                const routeContentType = GetContentType(enabledRouteResponse.headers);
 
                 // set http code
                 res.status(
@@ -225,7 +226,7 @@ export class ServerService {
                     const fileMimeType =
                       mimeTypeLookup(enabledRouteResponse.filePath) || '';
 
-                    // if no route content type set to the one detected
+                    // set content-type to route response's one or the detected mime type if none
                     if (!routeContentType) {
                       res.set('Content-Type', fileMimeType);
                     }
@@ -258,7 +259,7 @@ export class ServerService {
                   }
                 } else {
                   try {
-                    if (routeContentType.includes('application/json')) {
+                    if (contentType.includes('application/json')) {
                       res.set('Content-Type', 'application/json');
                     }
 
