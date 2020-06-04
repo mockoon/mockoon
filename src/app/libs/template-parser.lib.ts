@@ -84,8 +84,19 @@ const TemplateParserHelpers = function (request: Request) {
     },
     // get json property from body
     body: function (path: string, defaultValue: string) {
+      // no path provided
+      if (typeof path === 'object') {
+        path = '';
+      }
+
+      // no default value provided
       if (typeof defaultValue === 'object') {
         defaultValue = '';
+      }
+
+      // if no path has been provided we want the full raw body as is
+      if (!path) {
+        return new SafeString(request.body);
       }
 
       let requestToParse;
