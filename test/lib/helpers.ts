@@ -10,7 +10,8 @@ import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
 export class Helpers {
-  constructor(private testsInstance: Tests) {}
+  constructor(private testsInstance: Tests) {
+  }
 
   async addEnvironment() {
     await this.testsInstance.app.client
@@ -45,6 +46,16 @@ export class Helpers {
 
     await this.testsInstance.app.client.element(deleteButtonSelector).click();
     await this.testsInstance.app.client.element(deleteButtonSelector).click();
+  }
+
+  async duplicateRouteResponse() {
+    const duplicationButtonSelector = '#route-responses-menu #duplication-button';
+    await this.testsInstance.app.client.element(duplicationButtonSelector).click();
+  }
+
+  async removeDuplicatedRouteResponse() {
+    await this.selectRouteResponse(1);
+    await this.removeRouteResponse();
   }
 
   async countEnvironments(expected: number) {
