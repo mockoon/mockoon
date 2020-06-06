@@ -84,8 +84,19 @@ const TemplateParserHelpers = function (request: Request) {
     },
     // get json property from body
     body: function (path: string, defaultValue: string) {
+      // no path provided
+      if (typeof path === 'object') {
+        path = '';
+      }
+
+      // no default value provided
       if (typeof defaultValue === 'object') {
         defaultValue = '';
+      }
+
+      // if no path has been provided we want the full raw body as is
+      if (!path) {
+        return new SafeString(request.body);
       }
 
       let requestToParse;
@@ -113,12 +124,33 @@ const TemplateParserHelpers = function (request: Request) {
       return request.params[paramName];
     },
     // use params from query string ?param1=xxx&param2=yyy
-    queryParam: function (paramName: string, defaultValue: string) {
-      if (typeof defaultValue === 'object') {
+    queryParam: function (path: string, defaultValue: string) {
+      // no path provided
+      if (typeof path === 'object') {
+        path = '';
+      }
+
+      // no default value provided
+      if (typeof defaultValue === 'object' || !defaultValue) {
         defaultValue = '';
       }
 
-      return request.query[paramName] || defaultValue;
+      if (!request.query) {
+        return defaultValue;
+      }
+
+      // if no path has been provided we want the full query string object as is
+      if (!path) {
+        return new SafeString(JSON.stringify(request.query));
+      }
+
+      let value = objectGet(request.query, path);
+
+      if (Array.isArray(value) || typeof value === 'object') {
+        value = JSON.stringify(value);
+      }
+
+      return value !== undefined ? new SafeString(value) : defaultValue;
     },
     // use content from request header
     header: function (headerName: string, defaultValue: string) {
@@ -149,7 +181,7 @@ const TemplateParserHelpers = function (request: Request) {
       return request.method;
     },
     // return one random item
-    oneOf: function (itemList: string[], ...args) {
+    oneOf: function (itemList: string[]) {
       return faker.random.arrayElement(itemList);
     },
     // return some random item as an array (to be used in triple braces) or as a string

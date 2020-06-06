@@ -186,7 +186,6 @@ export class EnvironmentsService {
       this.store.update(
         addEnvironmentAction(newEnvironment, environmentToDuplicate.uuid)
       );
-      this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
     }
   }
 
@@ -252,8 +251,6 @@ export class EnvironmentsService {
       newRoute = this.dataService.renewRouteUUIDs(newRoute);
 
       this.store.update(addRouteAction(newRoute, routeToDuplicate.uuid));
-
-      this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
     }
   }
 

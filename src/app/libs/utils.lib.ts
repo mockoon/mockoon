@@ -21,27 +21,38 @@ export const ArrayContainsObjectKey = (
   return false;
 };
 
+/**
+ * Extract the content-type from an array of headers
+ *
+ * @param headers
+ */
+export const GetContentType = (headers: Header[]): string => {
+  const contentTypeHeader = headers.find(
+    (header) => header.key.toLowerCase() === 'content-type'
+  );
+
+  if (contentTypeHeader) {
+    return contentTypeHeader.value;
+  }
+
+  return null;
+};
+
+/**
+ * Return a route response's content-type.
+ * Environment's content-type is overridden by route's content-type
+ *
+ * @param environment
+ * @param routeResponse
+ */
 export const GetRouteResponseContentType = (
   environment: Environment,
   routeResponse: RouteResponse
 ) => {
-  const routeResponseContentType = routeResponse.headers.find(
-    (header) => header.key.toLowerCase() === 'content-type'
-  );
+  const routeResponseContentType = GetContentType(routeResponse.headers);
+  const environmentContentType = GetContentType(environment.headers);
 
-  if (routeResponseContentType && routeResponseContentType.value) {
-    return routeResponseContentType.value;
-  }
-
-  const environmentContentType = environment.headers.find(
-    (header) => header.key.toLowerCase() === 'content-type'
-  );
-
-  if (environmentContentType && environmentContentType.value) {
-    return environmentContentType.value;
-  }
-
-  return '';
+  return routeResponseContentType || environmentContentType || '';
 };
 
 export const RemoveLeadingSlash = (str: string) => {
