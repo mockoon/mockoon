@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { HighestMigrationId } from 'src/app/libs/migrations.lib';
-import { Settings } from 'src/app/services/settings.service';
+import { Settings } from 'src/app/models/settings.model';
 import { Tests } from 'test/lib/tests';
 
 describe('Environments migrations', () => {

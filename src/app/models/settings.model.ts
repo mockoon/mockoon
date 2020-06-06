@@ -10,6 +10,7 @@ export type Settings = {
   logsMenuSize: number;
   fakerLocale: FakerAvailableLocales;
   fakerSeed: number;
+  lastChangelog: string;
 };
 
 export interface PreMigrationSettings extends Settings {

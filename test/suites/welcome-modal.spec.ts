@@ -1,7 +1,7 @@
 import { Tests } from 'test/lib/tests';
-const tests = new Tests('first-load', true);
+const tests = new Tests('welcome-modal', true);
 
-describe('First load', () => {
+describe('Welcome modal', () => {
   tests.runHooks(false, false);
   tests.waitForWindowReady();
 
@@ -20,7 +20,7 @@ describe('First load', () => {
   });
 
   it('Close welcome modal, check for persistence', async () => {
-    await tests.app.client.element('.modal-footer .btn').click();
+    await tests.helpers.closeModal();
     await tests.helpers.verifyObjectPropertyInFile(
       './tmp/storage/settings.json',
       'welcomeShown',

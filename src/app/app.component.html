@@ -1,8 +1,8 @@
 <app-context-menu (itemClicked)="contextMenuItemClicked($event)"></app-context-menu>
 
 <app-welcome-modal></app-welcome-modal>
-<app-settings-modal (closed)="handleSettingsModalClosed()"></app-settings-modal>
-<app-changelog-modal></app-changelog-modal>
+<app-settings-modal #settingsModal></app-settings-modal>
+<app-changelog-modal #changelogModal></app-changelog-modal>
 <app-editor-modal></app-editor-modal>
 
 <div class="toasts-container">
@@ -524,8 +524,6 @@
     <div class="footer">
       <div class="row">
         <div class="col pl-0 pr-0">
-          <div class="footer-item with-border-right" (click)="openChangelogModal()" ngbTooltip="View changelog">
-            v{{appVersion}}</div>
           <div class="footer-item with-border-right" *ngIf="updateAvailable">
             <button class="btn btn-xs btn-success" (click)="applyUpdate()"><i
                 class="material-icons material-icons-xs">update</i> New version available, click to
@@ -534,8 +532,8 @@
           <div class="footer-item with-border-right">
             <app-banner></app-banner>
           </div>
-          <div class="footer-item float-right with-border-left" (click)="openFeedbackLink()"><i
-              class="material-icons">feedback</i> Send feedback</div>
+          <div class="footer-item float-right with-border-left" (click)="openFeedbackLink()" ngbTooltip="Send feedback"><i
+              class="material-icons">feedback</i></div>
         </div>
       </div>
     </div>
