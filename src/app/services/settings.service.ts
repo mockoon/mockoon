@@ -3,6 +3,7 @@ import { get as storageGet, set as storageSet } from 'electron-json-storage';
 import * as faker from 'faker';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
+import { Config } from 'src/app/config';
 import { PreMigrationSettings, Settings, SettingsProperties } from 'src/app/models/settings.model';
 import { updateSettingsAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
@@ -21,7 +22,8 @@ export class SettingsService {
     routeMenuSize: undefined,
     logsMenuSize: undefined,
     fakerLocale: 'en',
-    fakerSeed: null
+    fakerSeed: null,
+    lastChangelog: null
   };
   private storageKey = 'settings';
 
@@ -41,8 +43,11 @@ export class SettingsService {
       ) {
         this.logger.info(`No Settings, building default settings`);
 
-        // build default settings
-        this.updateSettings(this.settingsSchema);
+        // build default settings (we do not need to show the changelog on a fresh install)
+        this.updateSettings({
+          ...this.settingsSchema,
+          lastChangelog: Config.appVersion
+        });
       } else {
         this.updateSettings({
           ...this.settingsSchema,
@@ -94,23 +99,15 @@ export class SettingsService {
   }
 
   /**
-   * Handle the migration of some settings
+   * Handle the migration of some settings.
+   * Adding new default settings is not needed and handled at
+   * load time.
    */
   private migrateSettings(settings: PreMigrationSettings): Settings {
     // remove lastMigration from settings
     if (settings.lastMigration) {
       this.oldLastMigration = settings.lastMigration;
       delete settings.lastMigration;
-    }
-
-    // add Faker default locale
-    if (settings.fakerLocale === undefined) {
-      settings.fakerLocale = 'en';
-    }
-
-    // add Faker default seed
-    if (settings.fakerLocale === undefined) {
-      settings.fakerSeed = null;
     }
 
     return settings;

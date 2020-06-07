@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ipcRenderer, remote, shell } from 'electron';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
@@ -9,6 +9,8 @@ import { merge, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
+import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
+import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { GetRouteResponseContentType, IsValidURL } from 'src/app/libs/utils.lib';
@@ -37,6 +39,10 @@ import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
+  @ViewChild('changelogModal', { static: false })
+  changelogModal: ChangelogModalComponent;
+  @ViewChild('settingsModal', { static: false })
+  settingsModal: SettingsModalComponent;
   public activeEnvironment$: Observable<Environment>;
   public activeEnvironmentForm: FormGroup;
   public activeEnvironmentState$: Observable<EnvironmentStatus>;
@@ -55,7 +61,6 @@ export class AppComponent implements OnInit {
   public injectedHeaders$: Observable<Header[]>;
   public activeTab$: Observable<TabsNameType>;
   public activeView$: Observable<ViewsNameType>;
-  public appVersion = Config.appVersion;
   public bodyEditorConfig$: Observable<any>;
   public clearEnvironmentLogsRequested$ = new TimedBoolean(false, 4000);
   public deleteCurrentRouteResponseRequested$ = new TimedBoolean(false, 4000);
@@ -77,7 +82,6 @@ export class AppComponent implements OnInit {
   private BrowserWindow = remote.BrowserWindow;
   private dialog = remote.dialog;
   private logger = new Logger('[COMPONENT][APP]');
-  private settingsModalOpened = false;
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -91,7 +95,8 @@ export class AppComponent implements OnInit {
     private store: Store,
     private toastService: ToastsService,
     private uiService: UIService,
-    private updateService: UpdateService
+    private updateService: UpdateService,
+    private modalService: NgbModal
   ) {
     this.injectedHeaders$ = this.injectHeaders$.asObservable();
 
@@ -135,10 +140,12 @@ export class AppComponent implements OnInit {
           this.environmentsService.setActiveRoute('next');
           break;
         case 'OPEN_SETTINGS':
-          if (!this.settingsModalOpened) {
-            this.settingsModalOpened = true;
-            this.eventsService.settingsModalEvents.emit(true);
-          }
+          this.modalService.dismissAll();
+          this.settingsModal.showModal();
+          break;
+        case 'OPEN_CHANGELOG':
+          this.modalService.dismissAll();
+          this.changelogModal.showModal();
           break;
         case 'IMPORT_FILE':
           this.importExportService.importFromFile();
@@ -413,10 +420,6 @@ export class AppComponent implements OnInit {
     this.environmentsService.addRouteResponse();
   }
 
-  public handleSettingsModalClosed() {
-    this.settingsModalOpened = false;
-  }
-
   /**
    * Set the active environment
    */
@@ -488,10 +491,6 @@ export class AppComponent implements OnInit {
 
   public openFeedbackLink() {
     shell.openExternal(Config.feedbackLink);
-  }
-
-  public openChangelogModal() {
-    this.eventsService.changelogModalEvents.next(true);
   }
 
   public openWikiLink(linkName: string) {

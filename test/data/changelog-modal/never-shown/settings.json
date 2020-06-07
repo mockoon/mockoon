@@ -5,6 +5,5 @@
   "logSizeLimit": 10000,
   "truncateRouteName": true,
   "fakerLocale": "en",
-  "fakerSeed": 1,
-  "lastChangelog": "9999.9.9"
+  "fakerSeed": null
 }

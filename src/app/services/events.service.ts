@@ -7,8 +7,6 @@ import { CollectParams } from 'src/app/services/analytics.service';
 @Injectable({ providedIn: 'root' })
 export class EventsService {
   public contextMenuEvents = new Subject<ContextMenuEvent>();
-  public settingsModalEvents: EventEmitter<any> = new EventEmitter();
-  public changelogModalEvents: EventEmitter<any> = new EventEmitter();
   public editorModalEvents: EventEmitter<EditorModalEvent> = new EventEmitter();
   public analyticsEvents: EventEmitter<CollectParams> = new EventEmitter();
 
