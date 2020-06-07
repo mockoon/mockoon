@@ -55,6 +55,17 @@ input,
 .dropdown-item {
   transition: all ease-in-out 100ms;
 }
+.dropdown-menu {
+  height: 300px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar-track {
+    background-color: $custom-gray;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: lighten($gray-900, 10%);
+  }
+}
 
 .h-35 {
   max-height: 35%;
@@ -316,7 +327,6 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green),
     #f3362866 16px
   );
 }
-
 
 resize-column {
   position: absolute;
