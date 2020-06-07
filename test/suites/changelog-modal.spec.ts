@@ -2,7 +2,7 @@ import { Config } from 'src/app/config';
 import { Tests } from 'test/lib/tests';
 
 describe('Changelog modal', () => {
-  describe('Show changelog modal if never shown (migration / new install)', () => {
+  describe('Show changelog modal if never shown (software update)', () => {
     const tests = new Tests('changelog-modal/never-shown', true);
     tests.runHooks(true, false);
 
@@ -42,6 +42,35 @@ describe('Changelog modal', () => {
 
     it('Should save the current version as the last shown', async () => {
       await tests.helpers.closeModal();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'lastChangelog',
+        Config.appVersion
+      );
+    });
+  });
+
+  describe('Do not show changelog modal if it is a fresh install', () => {
+    const tests = new Tests('changelog-modal/fresh-install', true);
+    tests.runHooks(true, false);
+
+    it('Should show the welcome modal only', async () => {
+      await tests.app.client
+        .elements('.modal-dialog')
+        .should.eventually.have.property('value')
+        .to.be.an('Array')
+        .that.have.lengthOf(1);
+
+      await tests.app.client.waitUntilTextExists(
+        '.modal-title',
+        'Welcome new Mockoon user!'
+      );
+
+      // wait for settings save (does not happen here)
+      await tests.app.client.pause(2000);
+    });
+
+    it('Should have the current version as the last shown', async () => {
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'lastChangelog',
