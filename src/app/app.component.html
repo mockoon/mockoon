@@ -282,11 +282,12 @@
                           <input type="text" class="form-control"
                             placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" ValidPath
                             formControlName="endpoint">
-                          <div class="input-group-prepend">
-                            <span
-                              *ngIf="(environmentsStatus$ | async)[activeEnvironment.uuid].running && activeRoute.method === 'get'"
-                              class="input-group-text text-primary" ngbTooltip="Open route in browser"
-                              (click)="openRouteInBrowser()"><i class="material-icons">open_in_new</i></span>
+                          <div *ngIf="environmentsStatus$ | async as environmentsStatus" class="input-group-prepend" ngbTooltip="Open route in browser (GET methods only)">
+                            <button
+                              class="btn btn-link" [ngClass]="{'is-primary': !environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'}"
+                              (click)="openRouteInBrowser()" [disabled]="!environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'">
+                              <i class="material-icons">open_in_new</i>
+                            </button>
                           </div>
                           <div class="input-group-prepend">
                             <span *ngIf="routeHasQueryParams()" class="input-group-text text-warning"
