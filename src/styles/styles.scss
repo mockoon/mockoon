@@ -56,7 +56,8 @@ input,
   transition: all ease-in-out 100ms;
 }
 .dropdown-menu {
-  height: 300px;
+  max-height: 300px;
+  min-width: 180px;
   overflow-y: auto;
 
   &::-webkit-scrollbar-track {
