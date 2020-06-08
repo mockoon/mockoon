@@ -418,14 +418,15 @@
                           <div class="form-inline">
                             <div class="input-group col-9">
                               <div class="input-group-prepend">
-                                <button class="btn btn-link" (click)="browseFiles()"><i
-                                    class="material-icons">find_in_page</i></button>
+                                <button class="btn btn-link" (click)="browseFiles()" ngbTooltip="Browse files">
+                                  <i class="material-icons">find_in_page</i>
+                                </button>
                               </div>
                               <input type="text" class="form-control" formControlName="filePath">
                               <div class="input-group-prepend">
                                 <span *ngIf="activeRouteResponse.filePath" class="input-group-text text-danger"
                                   (click)="activeRouteResponseForm.get('filePath').setValue('')"
-                                  ngbTooltip="Remove file serving">
+                                  ngbTooltip="Remove file">
                                   <i class="material-icons">delete</i>
                                 </span>
                               </div>
