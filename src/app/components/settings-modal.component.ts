@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { shell } from 'electron';
 import { Observable } from 'rxjs';
-import { Config } from 'src/app/config';
 import { FakerLocales } from 'src/app/enums/faker.enum';
 import { Settings } from 'src/app/models/settings.model';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -38,13 +36,6 @@ export class SettingsModalComponent implements OnInit {
    */
   public settingsUpdated(settingNewValue: string, settingName: keyof Settings) {
     this.settingsService.updateSettings({ [settingName]: settingNewValue });
-  }
-
-  /**
-   * Open the templating documentation
-   */
-  public openTemplatingDoc() {
-    shell.openExternal(Config.wikiLinks.templating);
   }
 
   public showModal() {

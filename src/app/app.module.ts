@@ -20,11 +20,12 @@ import { HeadersListComponent } from 'src/app/components/headers-list.component'
 import { RouteResponseRulesComponent } from 'src/app/components/route-response-rules.component';
 import { RoutesMenuComponent } from 'src/app/components/routes-menu/routes-menu.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
+import { TitleSeparatorComponent } from 'src/app/components/title-separator/title-separator.component';
 import { WelcomeModalComponent } from 'src/app/components/welcome-modal.component';
 import { Config } from 'src/app/config';
 import { InputNumberDirective } from 'src/app/directives/input-number.directive';
-import { ResizeColumnDirective } from 'src/app/directives/resize-column.directive';
 import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzone.directive';
+import { ResizeColumnDirective } from 'src/app/directives/resize-column.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
 import { GlobalErrorHandler } from 'src/app/services/error-handler';
@@ -47,7 +48,8 @@ import { AppComponent } from './app.component';
     BannerComponent,
     RouteResponseRulesComponent,
     EnvironmentsMenuComponent,
-    RoutesMenuComponent
+    RoutesMenuComponent,
+    TitleSeparatorComponent
   ],
   imports: [
     AceEditorModule,

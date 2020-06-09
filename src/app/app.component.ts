@@ -428,7 +428,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   public openWikiLink(linkName: string) {
-    shell.openExternal(Config.wikiLinks[linkName]);
+    shell.openExternal(Config.docs[linkName]);
   }
 
   public applyUpdate() {
