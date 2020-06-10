@@ -7,7 +7,7 @@ import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { UIService } from 'src/app/services/ui.service';
 import { DuplicatedRoutesTypes, EnvironmentsStatuses, Store } from 'src/app/stores/store';
-import { Environment, Environments } from 'src/app/types/environment.type';
+import { Environment } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
 
 @Component({
@@ -21,7 +21,6 @@ export class RoutesMenuComponent implements OnInit {
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public activeRoute$: Observable<Route>;
-  public environments$: Observable<Environments>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
 
@@ -36,7 +35,6 @@ export class RoutesMenuComponent implements OnInit {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeRoute$ = this.store.selectActiveRoute();
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
-    this.environments$ = this.store.select('environments');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.settings$ = this.store.select('settings');
 
