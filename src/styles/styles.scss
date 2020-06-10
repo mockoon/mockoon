@@ -293,4 +293,8 @@ resize-column {
   right: 0;
   top: 0;
   cursor: col-resize;
+
+  &:hover {
+    box-shadow: inset -3px 0 0 0 rgba($blue, 0.1);
+  }
 }
