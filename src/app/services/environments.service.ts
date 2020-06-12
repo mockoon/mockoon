@@ -230,7 +230,10 @@ export class EnvironmentsService {
   public duplicateRouteResponse() {
     const activeRouteResponse = this.store.getActiveRouteResponse();
     this.store.update(
-      addRouteResponseAction(this.schemasBuilderService.cloneRouteResponse(activeRouteResponse))
+      addRouteResponseAction(
+        this.schemasBuilderService.cloneRouteResponse(activeRouteResponse),
+        1
+      )
     );
   }
 

@@ -296,11 +296,14 @@ export function setActiveRouteResponseAction(routeResponseUUID: string) {
  * Add a new route response
  *
  * @param routeReponse - route response to add
+ * @param relativeIndexInList - (optional) indicates where to put the new
+ * route response with relativity to active route response.
  */
-export function addRouteResponseAction(routeReponse: RouteResponse) {
+export function addRouteResponseAction(routeReponse: RouteResponse, relativeIndexInList?: number) {
   return <const>{
     type: ActionTypes.ADD_ROUTE_RESPONSE,
-    routeReponse
+    routeReponse,
+    relativeIndexInList
   };
 }
 

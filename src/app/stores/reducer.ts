@@ -729,12 +729,9 @@ export function environmentReducer(
 
     case ActionTypes.ADD_ROUTE_RESPONSE: {
       const newRouteResponse: RouteResponse = action.routeReponse;
-      const newUUID = uuid();
-      const activeRouteResponseUUID = state.activeRouteResponseUUID === newRouteResponse.uuid ?
-        newUUID : newRouteResponse.uuid;
       newState = {
         ...state,
-        activeRouteResponseUUID,
+        activeRouteResponseUUID: newRouteResponse.uuid,
         activeTab: 'RESPONSE',
         environments: state.environments.map((environment) => {
           if (environment.uuid === state.activeEnvironmentUUID) {
@@ -742,18 +739,22 @@ export function environmentReducer(
               ...environment,
               routes: environment.routes.map((route) => {
                 if (route.uuid === state.activeRouteUUID) {
-                  let responses = [...route.responses];
-                  if (state.activeRouteResponseUUID === newRouteResponse.uuid) {
+                  const responses = [...route.responses];
+                  if (![undefined, null].includes(action.relativeIndexInList)) {
                     const activeRouteResponseIndex = route.responses.findIndex(
                       (routeResponse: RouteResponse) => {
                         return routeResponse.uuid === state.activeRouteResponseUUID;
                       }
                     );
-                    newRouteResponse.uuid = newUUID;
-                    responses.splice(activeRouteResponseIndex + 1, 0, newRouteResponse);
+                    responses.splice(
+                      activeRouteResponseIndex + action.relativeIndexInList,
+                      0,
+                      newRouteResponse
+                    );
                   } else {
                     responses.push(newRouteResponse);
                   }
+
                   return { ...route, responses };
                 }
 
