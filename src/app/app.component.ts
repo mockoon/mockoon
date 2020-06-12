@@ -689,9 +689,6 @@ export class AppComponent implements OnInit {
    * Duplicate the active route response
    */
   public duplicateRouteResponse() {
-    this.store.selectActiveRouteResponse().pipe(first())
-      .subscribe((activeRouteResponse: RouteResponse) => {
-        this.environmentsService.duplicateRouteResponse(activeRouteResponse);
-      });
+    this.environmentsService.duplicateRouteResponse();
   }
 }

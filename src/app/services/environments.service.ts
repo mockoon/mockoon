@@ -227,9 +227,10 @@ export class EnvironmentsService {
   /**
    * Duplicate the given route response and save it in the store
    */
-  public duplicateRouteResponse(routeResponse: RouteResponse) {
+  public duplicateRouteResponse() {
+    const activeRouteResponse = this.store.getActiveRouteResponse();
     this.store.update(
-      addRouteResponseAction(this.schemasBuilderService.cloneRouteResponse(routeResponse))
+      addRouteResponseAction(this.schemasBuilderService.cloneRouteResponse(activeRouteResponse))
     );
   }
 
