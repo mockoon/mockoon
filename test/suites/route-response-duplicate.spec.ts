@@ -3,12 +3,8 @@ import { expect } from 'chai';
 
 const tests = new Tests('basic-data');
 
-describe('Duplicate a route response', async () => {
+describe.only('Duplicate a route response', async () => {
   tests.runHooks();
-
-  it('Verify single route response', async () => {
-    await tests.helpers.countRouteResponses(1);
-  });
 
   it('Duplicate first route response', async () => {
     await tests.helpers.countRouteResponses(1);
@@ -21,7 +17,8 @@ describe('Duplicate a route response', async () => {
     const labelToCompare = 'Test (copy)';
     const routeResponseLabelInputSelector = '.input-group .form-control[formcontrolname="label"]';
 
-    await tests.helpers.removeDuplicatedRouteResponse();
+    await tests.helpers.selectRouteResponse(1);
+    await tests.helpers.removeRouteResponse();
     await tests.app.client.element(routeResponseLabelInputSelector).setValue(label);
     await tests.helpers.duplicateRouteResponse();
 
@@ -33,7 +30,8 @@ describe('Duplicate a route response', async () => {
     const routeResponseStatusCodeSelectSelector = '.input-group .custom-select[formcontrolname="statusCode"]';
     const statusCode = '400';
 
-    await tests.helpers.removeDuplicatedRouteResponse();
+    await tests.helpers.selectRouteResponse(1);
+    await tests.helpers.removeRouteResponse();
     await tests.app.client.element(routeResponseStatusCodeSelectSelector).selectByValue(statusCode);
     await tests.helpers.duplicateRouteResponse();
 
@@ -44,7 +42,8 @@ describe('Duplicate a route response', async () => {
   it('Verify duplicated route response has the same body with the original response', async () => {
     const routeResponseAceContentSelector = '.ace_content';
 
-    await tests.helpers.removeDuplicatedRouteResponse();
+    await tests.helpers.selectRouteResponse(1);
+    await tests.helpers.removeRouteResponse();
     const originalBodyText = await tests.app.client.getText(routeResponseAceContentSelector);
     await tests.helpers.duplicateRouteResponse();
 
@@ -55,7 +54,8 @@ describe('Duplicate a route response', async () => {
   it('Verify duplicated route response has the same headers with the original response', async () => {
 
 
-    await tests.helpers.removeDuplicatedRouteResponse();
+    await tests.helpers.selectRouteResponse(1);
+    await tests.helpers.removeRouteResponse();
     await tests.helpers.switchTab('HEADERS');
     await tests.helpers.addHeader(
       'route-response-headers',
@@ -69,22 +69,22 @@ describe('Duplicate a route response', async () => {
       .to.be.an('Array')
       .that.have.lengthOf(2);
 
-    const firstRowFirstControlSelector = '#route-response-headers .row.headers-list:first-child .form-control:first-child';
-    const firstRowSecondControlSelector = '#route-response-headers .row.headers-list:first-child .form-control:nth-child(2)';
-    const secondRowFirstControlSelector = '#route-response-headers .row.headers-list:nth-child(2) .form-control:first-child';
-    const secondRowSecondControlSelector = '#route-response-headers .row.headers-list:nth-child(2) .form-control:nth-child(2)';
-    expect(await tests.app.client.getValue(firstRowFirstControlSelector))
-      .to.equal('Content-Type');
-    expect(await tests.app.client.getValue(firstRowSecondControlSelector))
-      .to.equal('application/json');
-    expect(await tests.app.client.getValue(secondRowFirstControlSelector))
-      .to.equal('test');
-    expect(await tests.app.client.getValue(secondRowSecondControlSelector))
-      .to.equal('test');
+    const selectorAndValueAssertionPairs = {
+      '#route-response-headers .row.headers-list:first-child .form-control:first-child': 'Content-Type',
+      '#route-response-headers .row.headers-list:first-child .form-control:nth-child(2)': 'application/json',
+      '#route-response-headers .row.headers-list:nth-child(2) .form-control:first-child': 'test',
+      '#route-response-headers .row.headers-list:nth-child(2) .form-control:nth-child(2)': 'test'
+    };
+
+    Object.keys(selectorAndValueAssertionPairs).forEach((selector: string) => {
+      const valueToCompare = selectorAndValueAssertionPairs[selector];
+      tests.helpers.assertElementValue(selector, valueToCompare);
+    });
   });
 
   it('Verify duplicated route response has the same rules with the original response', async () => {
-    await tests.helpers.removeDuplicatedRouteResponse();
+    await tests.helpers.selectRouteResponse(1);
+    await tests.helpers.removeRouteResponse();
     await tests.helpers.switchTab('RULES');
     await tests.helpers.addResponseRule({ target: 'body', isRegex: false, modifier: 'test', value: 'test' });
     await tests.app.client.pause(100);
@@ -96,12 +96,16 @@ describe('Duplicate a route response', async () => {
       .to.be.an('Array')
       .that.have.lengthOf(1);
 
-    const ruleTargetSelectSelector = 'app-route-response-rules .row select[formcontrolname="target"]';
-    const ruleModifierInputSelector = 'app-route-response-rules .row input[formcontrolname="modifier"]';
-    const ruleValueInputSelector = 'app-route-response-rules .row input[formcontrolname="value"]';
-    expect(await tests.app.client.getValue(ruleTargetSelectSelector)).to.equal('body');
-    expect(await tests.app.client.getValue(ruleModifierInputSelector)).to.equal('test');
-    expect(await tests.app.client.getValue(ruleValueInputSelector)).to.equal('test');
+    const selectorAndValueAssertionPairs = {
+      'app-route-response-rules .row select[formcontrolname="target"]': 'body',
+      'app-route-response-rules .row input[formcontrolname="modifier"]': 'test',
+      'app-route-response-rules .row input[formcontrolname="value"]': 'test'
+    };
+
+    Object.keys(selectorAndValueAssertionPairs).forEach((selector: string) => {
+      const valueToCompare = selectorAndValueAssertionPairs[selector];
+      tests.helpers.assertElementValue(selector, valueToCompare);
+    });
   });
 
 });

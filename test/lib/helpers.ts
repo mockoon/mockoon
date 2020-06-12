@@ -42,20 +42,15 @@ export class Helpers {
 
   async removeRouteResponse() {
     const deleteButtonSelector =
-      '#route-responses-menu .btn-link:not(.doc-link):not(#duplication-button)';
+      '#route-responses-menu #route-response-removal-button';
 
     await this.testsInstance.app.client.element(deleteButtonSelector).click();
     await this.testsInstance.app.client.element(deleteButtonSelector).click();
   }
 
   async duplicateRouteResponse() {
-    const duplicationButtonSelector = '#route-responses-menu #duplication-button';
+    const duplicationButtonSelector = '#route-responses-menu #route-response-duplication-button';
     await this.testsInstance.app.client.element(duplicationButtonSelector).click();
-  }
-
-  async removeDuplicatedRouteResponse() {
-    await this.selectRouteResponse(1);
-    await this.removeRouteResponse();
   }
 
   async countEnvironments(expected: number) {
@@ -376,6 +371,10 @@ export class Helpers {
   async httpCallAsserter(httpCall: HttpCall) {
     await this.testsInstance.app.client.pause(100);
     await this.httpCallAsserterWithPort(httpCall, 3000);
+  }
+
+  async assertElementValue(selector: string, valueToCompare: string) {
+    expect(await this.testsInstance.app.client.getValue(selector)).to.equal(valueToCompare);
   }
 
   async assertActiveEnvironmentPort(expectedPort: number) {
