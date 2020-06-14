@@ -4,14 +4,12 @@
       <h4 class="modal-title">Settings</h4>
     </div>
     <div class="modal-body">
-      <div class="title-separator has-icon is-first">
-        <div class="title-separator-icon text-primary">
-          <i class="material-icons">subject</i>
-        </div>
-        <div class="title-separator-text">
-          <div>Text truncation</div>
-        </div>
-      </div>
+      <app-title-separator
+        heading="Text truncation"
+        [isFirst]="true"
+        icon="subject"
+        iconClasses="text-primary"
+      ></app-title-separator>
 
       <div class="pl-3">
         <div class="form-group">
@@ -57,23 +55,13 @@
         </div>
       </div>
 
-      <div class="title-separator has-icon">
-        <div class="title-separator-icon text-primary">
-          <i class="material-icons">code</i>
-        </div>
-        <div class="title-separator-text">
-          <div>Faker.js</div>
-          <div>
-            Templating system supports Faker.js
-            <span
-              (click)="openTemplatingDoc()"
-              class="pl-2 btn btn-link text-primary cp doc-link"
-            >
-              <i class="material-icons">info</i>
-            </span>
-          </div>
-        </div>
-      </div>
+      <app-title-separator
+        heading="Faker.js"
+        subheading="Templating system supports Faker.js"
+        icon="code"
+        iconClasses="text-primary"
+        docLink="templating"
+      ></app-title-separator>
 
       <div class="pl-3">
         <div class="form-group">
@@ -128,14 +116,11 @@
         </div>
       </div>
 
-      <div class="title-separator has-icon">
-        <div class="title-separator-icon text-primary">
-          <i class="material-icons">show_chart</i>
-        </div>
-        <div class="title-separator-text">
-          <div>Analytics</div>
-        </div>
-      </div>
+      <app-title-separator
+        heading="Analytics"
+        icon="show_chart"
+        iconClasses="text-primary"
+      ></app-title-separator>
 
       <div class="pl-3">
         <div class="form-group">

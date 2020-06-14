@@ -1,16 +1,14 @@
+<!-- Only display the routes menu if there is at least a selected environment -->
 <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
-  <!-- Routes menu (only display if there is at least one environment) -->
-  <div *ngIf="(environments$ | async)?.length" class="routes-menu d-flex flex-column h-100" MousedragDeadzone>
-    <!-- container needed for flexboxes -->
-    <div *ngIf="activeEnvironment">
-      <ul class="nav menu-header d-flex justify-content-between">
-        <li class="nav-item">
-          <a class="nav-link text-primary" (click)="addRoute()" ngbTooltip="Add route">
-            <i class="material-icons">add_box</i>
-          </a>
-        </li>
-      </ul>
-    </div>
+  <div class="routes-menu d-flex flex-column h-100" MousedragDeadzone>
+    <ul class="nav menu-header d-flex justify-content-between">
+      <li class="nav-item">
+        <a class="nav-link text-primary" (click)="addRoute()" ngbTooltip="Add route">
+          <i class="material-icons">add_box</i>
+        </a>
+      </li>
+    </ul>
+
     <ul class="nav flex-column menu-list" #routesMenu dragula="routes"
       [dragulaModel]="activeEnvironment.routes">
       <li class="nav-item" *ngFor="let environmentRoute of activeEnvironment.routes">
@@ -33,6 +31,7 @@
         </a>
       </li>
     </ul>
+
     <resize-column type="routeMenu" [minWidth]="200" [maxWidthFactor]="0.3"></resize-column>
   </div>
 </ng-container>

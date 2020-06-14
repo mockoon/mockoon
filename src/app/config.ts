@@ -13,7 +13,7 @@ export const Config = {
     'https://api.github.com/repos/mockoon/mockoon/releases/tags/v',
   githubBinaryDownloadUrl:
     'https://github.com/mockoon/mockoon/releases/download/',
-  wikiLinks: {
+  docs: {
     templating: tutorialURL + 'dynamic-response-with-templating/',
     proxy: tutorialURL + 'api-mocking-proxy-mode/',
     cors: tutorialURL + 'automatic-handling-preflight-requests/',

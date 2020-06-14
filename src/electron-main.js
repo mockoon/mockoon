@@ -19,8 +19,8 @@ const BrowserWindow = electron.BrowserWindow;
 const args = process.argv.slice(1);
 
 // init CMD flags
-const isServing = args.some(val => val === '--serve');
-const isTesting = args.some(val => val === '--tests');
+const isServing = args.some((val) => val === '--serve');
+const isTesting = args.some((val) => val === '--tests');
 
 // set test folder when testing
 if (isTesting) {
@@ -91,8 +91,17 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
   }
 
+  // intercept all links and open in a new window
+  mainWindow.webContents.on('new-window', (event, url) => {
+    event.preventDefault();
+
+    if (url.includes('openexternal::')) {
+      shell.openExternal(url.split('::')[1]);
+    }
+  });
+
   // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -105,8 +114,14 @@ function createWindow() {
       {
         label: 'Settings',
         accelerator: 'CmdOrCtrl+,',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
+        }
+      },
+      {
+        label: 'Release notes',
+        click: function () {
+          mainWindow.webContents.send('keydown', { action: 'OPEN_CHANGELOG' });
         }
       },
       { type: 'separator' }
@@ -153,14 +168,14 @@ function createWindow() {
       {
         label: 'Add new environment',
         accelerator: 'Shift+CmdOrCtrl+E',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', { action: 'NEW_ENVIRONMENT' });
         }
       },
       {
         label: 'Add new route',
         accelerator: 'Shift+CmdOrCtrl+R',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', { action: 'NEW_ROUTE' });
         }
       },
@@ -168,7 +183,7 @@ function createWindow() {
       {
         label: 'Duplicate current environment',
         accelerator: 'CmdOrCtrl+D',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', {
             action: 'DUPLICATE_ENVIRONMENT'
           });
@@ -177,7 +192,7 @@ function createWindow() {
       {
         label: 'Duplicate current route',
         accelerator: 'Shift+CmdOrCtrl+D',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', { action: 'DUPLICATE_ROUTE' });
         }
       },
@@ -185,7 +200,7 @@ function createWindow() {
       {
         label: 'Delete current environment',
         accelerator: 'Alt+CmdOrCtrl+U',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', {
             action: 'DELETE_ENVIRONMENT'
           });
@@ -194,7 +209,7 @@ function createWindow() {
       {
         label: 'Delete current route',
         accelerator: 'Alt+Shift+CmdOrCtrl+U',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', { action: 'DELETE_ROUTE' });
         }
       },
@@ -202,7 +217,7 @@ function createWindow() {
       {
         label: 'Start/Stop/Reload current environment',
         accelerator: 'Shift+CmdOrCtrl+S',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', {
             action: 'START_ENVIRONMENT'
           });
@@ -212,7 +227,7 @@ function createWindow() {
       {
         label: 'Select previous environment',
         accelerator: 'CmdOrCtrl+Up',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', {
             action: 'PREVIOUS_ENVIRONMENT'
           });
@@ -221,7 +236,7 @@ function createWindow() {
       {
         label: 'Select next environment',
         accelerator: 'CmdOrCtrl+Down',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', {
             action: 'NEXT_ENVIRONMENT'
           });
@@ -230,14 +245,14 @@ function createWindow() {
       {
         label: 'Select previous route',
         accelerator: 'Shift+CmdOrCtrl+Up',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', { action: 'PREVIOUS_ROUTE' });
         }
       },
       {
         label: 'Select next route',
         accelerator: 'Shift+CmdOrCtrl+Down',
-        click: function() {
+        click: function () {
           mainWindow.webContents.send('keydown', { action: 'NEXT_ROUTE' });
         }
       }
@@ -253,7 +268,7 @@ function createWindow() {
         submenu: [
           {
             label: 'Import from clipboard',
-            click: function() {
+            click: function () {
               mainWindow.webContents.send('keydown', {
                 action: 'IMPORT_CLIPBOARD'
               });
@@ -261,14 +276,14 @@ function createWindow() {
           },
           {
             label: 'Import from a file (JSON)',
-            click: function() {
+            click: function () {
               mainWindow.webContents.send('keydown', { action: 'IMPORT_FILE' });
             }
           },
           {
             label: 'Export all environments to a file (JSON)',
             accelerator: 'CmdOrCtrl+O',
-            click: function() {
+            click: function () {
               mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE' });
             }
           }
@@ -280,7 +295,7 @@ function createWindow() {
         submenu: [
           {
             label: 'Import Swagger v2/OpenAPI v3 (JSON or YAML)',
-            click: function() {
+            click: function () {
               mainWindow.webContents.send('keydown', {
                 action: 'IMPORT_OPENAPI_FILE'
               });
@@ -288,7 +303,7 @@ function createWindow() {
           },
           {
             label: 'Export current environment to OpenAPI v3 (JSON)',
-            click: function() {
+            click: function () {
               mainWindow.webContents.send('keydown', {
                 action: 'EXPORT_OPENAPI_FILE'
               });
@@ -303,34 +318,34 @@ function createWindow() {
     label: 'Help',
     submenu: [
       {
-        label: 'Mockoon website',
-        click: function() {
+        label: 'Official website',
+        click: function () {
           shell.openExternal('https://mockoon.com');
         }
       },
       {
         label: 'Tutorials',
-        click: function() {
+        click: function () {
           shell.openExternal('https://mockoon.com/tutorials');
         }
       },
       {
         label: 'Community / Chat',
-        click: function() {
+        click: function () {
           shell.openExternal('https://spectrum.chat/mockoon');
         }
       },
       { type: 'separator' },
       {
         label: 'Send feedback',
-        click: function() {
+        click: function () {
           shell.openExternal('https://github.com/mockoon/mockoon/issues');
         }
       },
       { type: 'separator' },
       {
         label: 'Show app data folder',
-        click: function() {
+        click: function () {
           shell.showItemInFolder(electron.app.getPath('userData'));
         }
       }
@@ -346,7 +361,7 @@ function createWindow() {
 app.on('ready', createWindow);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
@@ -354,7 +369,7 @@ app.on('window-all-closed', function() {
   }
 });
 
-app.on('activate', function() {
+app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {

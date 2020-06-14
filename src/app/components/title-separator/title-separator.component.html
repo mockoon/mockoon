@@ -1,0 +1,27 @@
+<div class="title-separator has-icon" [ngClass]="{ 'is-first': isFirst }">
+  <div
+    class="title-separator-icon"
+    [ngClass]="iconClasses + (iconClickable ? ' clickable' : '')"
+    [ngbTooltip]="iconTooltip"
+    (click)="iconClick()"
+  >
+    <i class="material-icons">{{ icon }}</i>
+  </div>
+  <div class="title-separator-text">
+    <div>
+      {{ heading }}
+      <ng-content select="[heading]"></ng-content>
+    </div>
+    <div>
+      {{ subheading }}
+      <ng-content select="[subheading]"></ng-content>
+      <span
+        *ngIf="docLink"
+        class="pl-2 btn btn-link text-primary cp doc-link"
+        (click)="linkClick()"
+      >
+        <i class="material-icons">info</i>
+      </span>
+    </div>
+  </div>
+</div>

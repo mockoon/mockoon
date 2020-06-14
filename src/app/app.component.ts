@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import { ipcRenderer, remote, shell } from 'electron';
+import { remote, shell } from 'electron';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
 import { platform } from 'os';
@@ -14,6 +14,8 @@ import {
 } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
+import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
+import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import {
@@ -31,6 +33,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ImportExportService } from 'src/app/services/import-export.service';
+import { IpcService } from 'src/app/services/ipc.service';
 import { Toast, ToastsService } from 'src/app/services/toasts.service';
 import { UIService } from 'src/app/services/ui.service';
 import { UpdateService } from 'src/app/services/update.service';
@@ -56,8 +59,7 @@ import {
   statusCodes
 } from 'src/app/types/route.type';
 import {
-  DraggableContainerNames,
-  ScrollDirection
+  DraggableContainerNames
 } from 'src/app/types/ui.type';
 
 @Component({
@@ -65,7 +67,11 @@ import {
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
+  @ViewChild('changelogModal', { static: false })
+  changelogModal: ChangelogModalComponent;
+  @ViewChild('settingsModal', { static: false })
+  settingsModal: SettingsModalComponent;
   public activeEnvironment$: Observable<Environment>;
   public activeEnvironmentForm: FormGroup;
   public activeEnvironmentState$: Observable<EnvironmentStatus>;
@@ -84,7 +90,6 @@ export class AppComponent implements OnInit {
   public injectedHeaders$: Observable<Header[]>;
   public activeTab$: Observable<TabsNameType>;
   public activeView$: Observable<ViewsNameType>;
-  public appVersion = Config.appVersion;
   public bodyEditorConfig$: Observable<any>;
   public clearEnvironmentLogsRequested$ = new TimedBoolean(false, 4000);
   public deleteCurrentRouteResponseRequested$ = new TimedBoolean(false, 4000);
@@ -106,7 +111,6 @@ export class AppComponent implements OnInit {
   private BrowserWindow = remote.BrowserWindow;
   private dialog = remote.dialog;
   private logger = new Logger('[COMPONENT][APP]');
-  private settingsModalOpened = false;
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -120,75 +124,16 @@ export class AppComponent implements OnInit {
     private store: Store,
     private toastService: ToastsService,
     private uiService: UIService,
-    private updateService: UpdateService
-  ) {
+    private updateService: UpdateService,
+    private ipcService: IpcService
+  ) {}
+
+  ngOnInit() {
     this.injectedHeaders$ = this.injectHeaders$.asObservable();
 
     // tooltip config
     this.config.container = 'body';
 
-    // set listeners on main process messages
-    ipcRenderer.on('keydown', (event, data) => {
-      switch (data.action) {
-        case 'NEW_ENVIRONMENT':
-          this.addEnvironment();
-          break;
-        case 'NEW_ROUTE':
-          this.environmentsService.addRoute();
-          break;
-        case 'START_ENVIRONMENT':
-          this.toggleEnvironment();
-          break;
-        case 'DUPLICATE_ENVIRONMENT':
-          this.environmentsService.duplicateEnvironment();
-          break;
-        case 'DUPLICATE_ROUTE':
-          this.environmentsService.duplicateRoute();
-          break;
-        case 'DELETE_ENVIRONMENT':
-          this.environmentsService.removeEnvironment();
-          break;
-        case 'DELETE_ROUTE':
-          this.environmentsService.removeRoute();
-          break;
-        case 'PREVIOUS_ENVIRONMENT':
-          this.selectEnvironment('previous');
-          break;
-        case 'NEXT_ENVIRONMENT':
-          this.selectEnvironment('next');
-          break;
-        case 'PREVIOUS_ROUTE':
-          this.environmentsService.setActiveRoute('previous');
-          break;
-        case 'NEXT_ROUTE':
-          this.environmentsService.setActiveRoute('next');
-          break;
-        case 'OPEN_SETTINGS':
-          if (!this.settingsModalOpened) {
-            this.settingsModalOpened = true;
-            this.eventsService.settingsModalEvents.emit(true);
-          }
-          break;
-        case 'IMPORT_FILE':
-          this.importExportService.importFromFile();
-          break;
-        case 'IMPORT_OPENAPI_FILE':
-          this.importExportService.importOpenAPIFile();
-          break;
-        case 'EXPORT_OPENAPI_FILE':
-          this.importExportService.exportOpenAPIFile();
-          break;
-        case 'IMPORT_CLIPBOARD':
-          this.importExportService.importFromClipboard();
-          break;
-        case 'EXPORT_FILE':
-          this.importExportService.exportAllEnvironments();
-          break;
-      }
-    });
-  }
-
-  ngOnInit() {
     this.logger.info(`Initializing application`);
 
     this.dragulaService.dropModel().subscribe((dragResult) => {
@@ -249,6 +194,9 @@ export class AppComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.ipcService.init(this.changelogModal, this.settingsModal);
+  }
   /**
    * Init active environment and route forms, and subscribe to changes
    */
@@ -442,10 +390,6 @@ export class AppComponent implements OnInit {
     this.environmentsService.addRouteResponse();
   }
 
-  public handleSettingsModalClosed() {
-    this.settingsModalOpened = false;
-  }
-
   /**
    * Set the active environment
    */
@@ -453,14 +397,6 @@ export class AppComponent implements OnInit {
     environmentUUIDOrDirection: string | ReducerDirectionType
   ) {
     this.environmentsService.setActiveEnvironment(environmentUUIDOrDirection);
-  }
-
-  /**
-   * Create a new environment. Append at the end of the list.
-   */
-  private addEnvironment() {
-    this.environmentsService.addEnvironment();
-    this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
   }
 
   /**
@@ -519,12 +455,8 @@ export class AppComponent implements OnInit {
     shell.openExternal(Config.feedbackLink);
   }
 
-  public openChangelogModal() {
-    this.eventsService.changelogModalEvents.next(true);
-  }
-
   public openWikiLink(linkName: string) {
-    shell.openExternal(Config.wikiLinks[linkName]);
+    shell.openExternal(Config.docs[linkName]);
   }
 
   public applyUpdate() {

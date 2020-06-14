@@ -172,11 +172,14 @@ export class Store {
       .asObservable()
       .pipe(
         map((store) =>
-          store.environmentsLogs[store.activeEnvironmentUUID].find(
-            (environmentLog) =>
-              environmentLog.routeUUID === store.activeRouteUUID &&
-              environmentLog.routeResponseUUID === store.activeRouteResponseUUID
-          )
+          store.activeEnvironmentUUID
+            ? store.environmentsLogs[store.activeEnvironmentUUID].find(
+                (environmentLog) =>
+                  environmentLog.routeUUID === store.activeRouteUUID &&
+                  environmentLog.routeResponseUUID ===
+                    store.activeRouteResponseUUID
+              )
+            : null
         )
       );
   }

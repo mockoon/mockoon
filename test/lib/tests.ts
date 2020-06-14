@@ -5,6 +5,7 @@ import { promises as fs } from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import { Application } from 'spectron';
+import { Settings } from 'src/app/models/settings.model';
 import { Helpers } from 'test/lib/helpers';
 
 const electronPath: any = require('electron');
@@ -25,10 +26,12 @@ export class Tests {
    */
   public runHooks(
     waitUntilWindowReady = true,
-    waitUntilEnvironmentLoaded = true
+    waitUntilEnvironmentLoaded = true,
+    alterSettings = null
   ) {
     // copy data files before starting tests
     before(async () => {
+      const settingsFilePath = './tmp/storage/settings.json';
       await mkdirp('./tmp/storage/');
 
       await fs.copyFile(
@@ -39,8 +42,15 @@ export class Tests {
         './test/data/' +
           (this.customSettings ? this.dataFileName + '/' : '') +
           'settings.json',
-        './tmp/storage/settings.json'
+        settingsFilePath
       );
+
+      if (alterSettings) {
+        const settingsFile = await fs.readFile(settingsFilePath, 'utf-8');
+        let settings: Settings = JSON.parse(settingsFile);
+        settings = { ...settings, ...alterSettings };
+        await fs.writeFile(settingsFilePath, JSON.stringify(settings));
+      }
 
       this.app = new Application({
         path: electronPath,

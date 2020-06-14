@@ -1,8 +1,8 @@
 <app-context-menu (itemClicked)="contextMenuItemClicked($event)"></app-context-menu>
 
 <app-welcome-modal></app-welcome-modal>
-<app-settings-modal (closed)="handleSettingsModalClosed()"></app-settings-modal>
-<app-changelog-modal></app-changelog-modal>
+<app-settings-modal #settingsModal></app-settings-modal>
+<app-changelog-modal #changelogModal></app-changelog-modal>
 <app-editor-modal></app-editor-modal>
 
 <div class="toasts-container">
@@ -139,15 +139,8 @@
                   [formGroup]="activeEnvironmentForm">
                   <div class="row h-35">
                     <div class="col d-flex flex-column h-100">
-                      <div class="title-separator is-first has-icon">
-                        <div class="title-separator-icon text-primary"><i class="material-icons">security</i></div>
-                        <div class="title-separator-text">
-                          <div>Proxy mode</div>
-                          <div>Non defined routes will be forwarded to the specified host<span
-                              (click)="openWikiLink('proxy')" class="pl-2 btn btn-link text-primary cp doc-link"><i
-                                class="material-icons">info</i></span></div>
-                        </div>
-                      </div>
+                      <app-title-separator heading="Proxy mode" subheading="Non defined routes will be forwarded to the specified host" icon="security" iconClasses="text-primary" [isFirst]="true" docLink="proxy"></app-title-separator>
+
                       <div class="form-inline pl-4">
                         <div class="custom-control custom-checkbox mr-4">
                           <input type="checkbox" class="custom-control-input" id="proxyMode"
@@ -192,15 +185,8 @@
 
                   <div class="row">
                     <div class="col">
-                      <div class="title-separator has-icon">
-                        <div class="title-separator-icon text-warning"><i class="material-icons">https</i></div>
-                        <div class="title-separator-text">
-                          <div>HTTPS </div>
-                          <div><span (click)="openWikiLink('https')"
-                              class="pl-2 btn btn-link text-primary cp doc-link"><i
-                                class="material-icons">info</i></span></div>
-                        </div>
-                      </div>
+                      <app-title-separator heading="HTTPS" icon="https" iconClasses="text-warning" docLink="https"></app-title-separator>
+
                       <div class="form-inline pl-4">
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="HTTPS" formControlName="https">
@@ -212,15 +198,8 @@
 
                   <div class="row">
                     <div class="col">
-                      <div class="title-separator has-icon">
-                        <div class="title-separator-icon text-info"><i class="material-icons">shuffle</i></div>
-                        <div class="title-separator-text">
-                          <div>CORS </div>
-                          <div>Automatically handle OPTIONS requests<span (click)="openWikiLink('cors')"
-                              class="pl-2 btn btn-link text-primary cp doc-link"><i
-                                class="material-icons">info</i></span></div>
-                        </div>
-                      </div>
+                      <app-title-separator heading="CORS" subheading="Automatically handle OPTIONS requests" icon="shuffle" iconClasses="text-info" docLink="cors"></app-title-separator>
+
                       <div class="form-inline pl-4">
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="CORS" formControlName="cors">
@@ -235,16 +214,7 @@
 
                   <div class="row flex-fill mh0">
                     <div class="col d-flex flex-column h-100">
-                      <div class="title-separator has-icon">
-                        <div class="title-separator-icon"><i class="material-icons text-purple">featured_play_list</i>
-                        </div>
-                        <div class="title-separator-text">
-                          <div>Environment headers </div>
-                          <div>Headers will be added to all routes of this environment<span
-                              (click)="openWikiLink('headers')" class="pl-2 btn btn-link text-primary cp doc-link"><i
-                                class="material-icons">info</i></span></div>
-                        </div>
-                      </div>
+                      <app-title-separator heading="Environment headers" subheading="Headers will be added to all routes of this environment" icon="featured_play_list" iconClasses="text-purple" docLink="headers"></app-title-separator>
 
                       <div class="scroll-content flex-fill" #environmentHeadersContainer>
                         <app-headers-list id="environment-headers" [dataSubjectUUID$]="activeEnvironmentUUID$" [headers$]="activeEnvironmentHeaders$" [injectedHeaders$]="injectedHeaders$"
@@ -282,11 +252,12 @@
                           <input type="text" class="form-control"
                             placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" ValidPath
                             formControlName="endpoint">
-                          <div class="input-group-prepend">
-                            <span
-                              *ngIf="(environmentsStatus$ | async)[activeEnvironment.uuid].running && activeRoute.method === 'get'"
-                              class="input-group-text text-primary" ngbTooltip="Open route in browser"
-                              (click)="openRouteInBrowser()"><i class="material-icons">open_in_new</i></span>
+                          <div *ngIf="environmentsStatus$ | async as environmentsStatus" class="input-group-prepend" ngbTooltip="Open route in browser (GET methods only)">
+                            <button
+                              class="btn btn-link" [ngClass]="{'is-primary': !environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'}"
+                              (click)="openRouteInBrowser()" [disabled]="!environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'">
+                              <i class="material-icons">open_in_new</i>
+                            </button>
                           </div>
                           <div class="input-group-prepend">
                             <span *ngIf="routeHasQueryParams()" class="input-group-text text-warning"
@@ -407,16 +378,7 @@
 
                       <div class="row">
                         <div class="col">
-                          <div class="title-separator has-icon">
-                            <div class="title-separator-icon text-secondary"><i
-                                class="material-icons">insert_drive_file</i></div>
-                            <div class="title-separator-text">
-                              <div>File </div>
-                              <div>Selecting a file will automatically serve its content with the detected
-                                Content-Type
-                              </div>
-                            </div>
-                          </div>
+                          <app-title-separator heading="File" subheading="Selecting a file will automatically serve its content with the detected Content-Type" icon="insert_drive_file" iconClasses="text-secondary"></app-title-separator>
                         </div>
                       </div>
 
@@ -426,14 +388,15 @@
                           <div class="form-inline">
                             <div class="input-group col-9">
                               <div class="input-group-prepend">
-                                <button class="btn btn-link" (click)="browseFiles()"><i
-                                    class="material-icons">find_in_page</i></button>
+                                <button class="btn btn-link" (click)="browseFiles()" ngbTooltip="Browse files">
+                                  <i class="material-icons">find_in_page</i>
+                                </button>
                               </div>
                               <input type="text" class="form-control" formControlName="filePath">
                               <div class="input-group-prepend">
                                 <span *ngIf="activeRouteResponse.filePath" class="input-group-text text-danger"
                                   (click)="activeRouteResponseForm.get('filePath').setValue('')"
-                                  ngbTooltip="Remove file serving">
+                                  ngbTooltip="Remove file">
                                   <i class="material-icons">delete</i>
                                 </span>
                               </div>
@@ -465,24 +428,23 @@
                       <!-- body: custom content -->
                       <div class="row transition flex-fill" [ngClass]="{'dimmed': activeRouteResponse.filePath}">
                         <div class="col d-flex flex-column">
-                          <div class="title-separator has-icon">
-                            <div class="title-separator-icon text-secondary">
-                              <span class="clickable" (click)="formatBody()" ngbTooltip="Format body"><i class="material-icons">subject</i></span>
-                            </div>
-                            <div class="title-separator-text">
-                              <div>Body <small>({{getRouteResponseContentType()}}) </small>
-                                <span
+                          <app-title-separator icon="subject" iconClasses="text-secondary" iconTooltip="Format body" [iconClickable]="true" (iconClicked)="formatBody()">
+                            <ng-container heading>
+                              Body <small>({{getRouteResponseContentType()}}) </small>
+                              <span
                                 (click)="openWikiLink('templating')"
                                 class="btn btn-link text-primary cp doc-link" ngbTooltip="Open templating documentation"><i
                                   class="material-icons">info</i></span>
-                              </div>
-                              <div *ngIf="activeRouteResponse.filePath" class="text-warning">A file is selected, this
-                                body will not be served</div>
-                              <div *ngIf="!activeRouteResponse.filePath">
+                            </ng-container>
+                            <ng-container subheading>
+                              <ng-container *ngIf="activeRouteResponse.filePath"><span class="text-warning">A file is selected, this
+                                body will not be served</span></ng-container>
+                              <ng-container *ngIf="!activeRouteResponse.filePath">
                                 <span *ngIf="activeRouteResponseLastLog$ | async as activeRouteResponseLastLog" class="btn btn-link btn-icon text-primary view-body-link" (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)">View last body sent</span>
-                              </div>
-                            </div>
-                          </div>
+                              </ng-container>
+                            </ng-container>
+                          </app-title-separator>
+
                           <div class="flex-fill" *ngIf="bodyEditorConfig$ | async as bodyEditorConfig">
                             <ace-editor class="h-100" [options]="bodyEditorConfig?.options"
                               [mode]="bodyEditorConfig?.mode" [theme]="bodyEditorConfig?.theme"
@@ -533,8 +495,6 @@
     <div class="footer">
       <div class="row">
         <div class="col pl-0 pr-0">
-          <div class="footer-item with-border-right" (click)="openChangelogModal()" ngbTooltip="View changelog">
-            v{{appVersion}}</div>
           <div class="footer-item with-border-right" *ngIf="updateAvailable">
             <button class="btn btn-xs btn-success" (click)="applyUpdate()"><i
                 class="material-icons material-icons-xs">update</i> New version available, click to
@@ -543,8 +503,8 @@
           <div class="footer-item with-border-right">
             <app-banner></app-banner>
           </div>
-          <div class="footer-item float-right with-border-left" (click)="openFeedbackLink()"><i
-              class="material-icons">feedback</i> Send feedback</div>
+          <div class="footer-item float-right with-border-left" (click)="openFeedbackLink()" ngbTooltip="Send feedback"><i
+              class="material-icons">feedback</i></div>
         </div>
       </div>
     </div>

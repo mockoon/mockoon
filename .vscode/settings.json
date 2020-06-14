@@ -1,5 +1,4 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": { "source.organizeImports": true }
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

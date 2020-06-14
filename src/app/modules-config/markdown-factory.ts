@@ -3,8 +3,12 @@ import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 export function MarkedOptionsFactory(): MarkedOptions {
   const renderer = new MarkedRenderer();
 
-  // override markdown links to only show text
-  renderer.link = (_href: string, _title: string, text: string) => {
+  // Whitelist links domains
+  renderer.link = (href: string, title: string, text: string) => {
+    if (href.match(/mockoon\.com|github\.com/i)) {
+      return `<a href="openexternal::${href}" target="_blank">${text}</a>`;
+    }
+
     return text;
   };
 
@@ -14,8 +18,7 @@ export function MarkedOptionsFactory(): MarkedOptions {
     tables: true,
     breaks: false,
     pedantic: false,
-    sanitize: true,
     smartLists: true,
-    smartypants: false,
+    smartypants: false
   };
 }
