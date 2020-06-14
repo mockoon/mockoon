@@ -5,13 +5,19 @@ import {
   GetEditorModeFromContentType,
   GetRouteResponseContentType
 } from 'src/app/libs/utils.lib';
-import { ActiveEnvironmentsLogUUIDs, EnvironmentLogs } from 'src/app/models/environment-logs.model';
+import {
+  ActiveEnvironmentsLogUUIDs,
+  EnvironmentLogs
+} from 'src/app/models/environment-logs.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions, ActionTypes } from 'src/app/stores/actions';
-import { DuplicatedRoutesTypes, EnvironmentsStatuses, StoreType } from 'src/app/stores/store';
+import {
+  DuplicatedRoutesTypes,
+  EnvironmentsStatuses,
+  StoreType
+} from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
-import { v1 as uuid } from 'uuid';
 
 export type ReducerDirectionType = 'next' | 'previous';
 export type ReducerIndexes = { sourceIndex: number; targetIndex: number };
@@ -53,7 +59,9 @@ export function environmentReducer(
     case ActionTypes.SET_INITIAL_ENVIRONMENTS: {
       const newEnvironments: Environments = action.environments;
 
-      const newEnvironmentsStatus = newEnvironments.reduce<EnvironmentsStatuses>((environmentsStatus, environment) => {
+      const newEnvironmentsStatus = newEnvironments.reduce<
+        EnvironmentsStatuses
+      >((environmentsStatus, environment) => {
         // create status and check if environment has not been migrated on a more recent Mockoon version
         environmentsStatus[environment.uuid] = {
           running: false,
@@ -97,7 +105,9 @@ export function environmentReducer(
           },
           {}
         ),
-        activeEnvironmentLogsUUID: newEnvironments.reduce<ActiveEnvironmentsLogUUIDs>((activeEnvironmentLogsUUID, environment) => {
+        activeEnvironmentLogsUUID: newEnvironments.reduce<
+          ActiveEnvironmentsLogUUIDs
+        >((activeEnvironmentLogsUUID, environment) => {
           activeEnvironmentLogsUUID[environment.uuid] = null;
 
           return activeEnvironmentLogsUUID;
@@ -114,8 +124,8 @@ export function environmentReducer(
       ) {
         const activeEnvironment = action.environmentUUID
           ? state.environments.find(
-            (environment) => environment.uuid === action.environmentUUID
-          )
+              (environment) => environment.uuid === action.environmentUUID
+            )
           : state.environments[0];
 
         newState = {
@@ -743,7 +753,9 @@ export function environmentReducer(
                   if (![undefined, null].includes(action.relativeIndexInList)) {
                     const activeRouteResponseIndex = route.responses.findIndex(
                       (routeResponse: RouteResponse) => {
-                        return routeResponse.uuid === state.activeRouteResponseUUID;
+                        return (
+                          routeResponse.uuid === state.activeRouteResponseUUID
+                        );
                       }
                     );
                     responses.splice(

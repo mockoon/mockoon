@@ -35,8 +35,16 @@ import {
   updateRouteResponseAction
 } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
-import { Environment, EnvironmentProperties } from 'src/app/types/environment.type';
+import {
+  EnvironmentLogsTabsNameType,
+  Store,
+  TabsNameType,
+  ViewsNameType
+} from 'src/app/stores/store';
+import {
+  Environment,
+  EnvironmentProperties
+} from 'src/app/types/environment.type';
 import {
   Header,
   Method,
@@ -45,7 +53,10 @@ import {
   RouteResponse,
   RouteResponseProperties
 } from 'src/app/types/route.type';
-import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
+import {
+  DraggableContainerNames,
+  ScrollDirection
+} from 'src/app/types/ui.type';
 
 @Injectable({ providedIn: 'root' })
 export class EnvironmentsService {

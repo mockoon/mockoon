@@ -9,8 +9,17 @@ import {
   UIStateProperties,
   ViewsNameType
 } from 'src/app/stores/store';
-import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
-import { Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
+import {
+  Environment,
+  EnvironmentProperties,
+  Environments
+} from 'src/app/types/environment.type';
+import {
+  Route,
+  RouteProperties,
+  RouteResponse,
+  RouteResponseProperties
+} from 'src/app/types/route.type';
 
 export const enum ActionTypes {
   SET_ACTIVE_TAB,
@@ -299,7 +308,10 @@ export function setActiveRouteResponseAction(routeResponseUUID: string) {
  * @param relativeIndexInList - (optional) indicates where to put the new
  * route response with relativity to active route response.
  */
-export function addRouteResponseAction(routeReponse: RouteResponse, relativeIndexInList?: number) {
+export function addRouteResponseAction(
+  routeReponse: RouteResponse,
+  relativeIndexInList?: number
+) {
   return <const>{
     type: ActionTypes.ADD_ROUTE_RESPONSE,
     routeReponse,

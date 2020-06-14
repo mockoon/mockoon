@@ -7,8 +7,7 @@ import { v1 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class SchemasBuilderService {
-  constructor(private dataService: DataService) {
-  }
+  constructor(private dataService: DataService) {}
 
   /**
    * Build a new environment or route response header

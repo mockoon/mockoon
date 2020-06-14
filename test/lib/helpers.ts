@@ -2,7 +2,11 @@ import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
 import { ToastTypes } from 'src/app/services/toasts.service';
-import { EnvironmentLogsTabsNameType, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import {
+  EnvironmentLogsTabsNameType,
+  TabsNameType,
+  ViewsNameType
+} from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
 import { Header, ResponseRule } from 'src/app/types/route.type';
 import { fetch } from 'test/lib/fetch';
@@ -10,8 +14,7 @@ import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
 export class Helpers {
-  constructor(private testsInstance: Tests) {
-  }
+  constructor(private testsInstance: Tests) {}
 
   async addEnvironment() {
     await this.testsInstance.app.client
@@ -49,8 +52,11 @@ export class Helpers {
   }
 
   async duplicateRouteResponse() {
-    const duplicationButtonSelector = '#route-responses-menu #route-response-duplication-button';
-    await this.testsInstance.app.client.element(duplicationButtonSelector).click();
+    const duplicationButtonSelector =
+      '#route-responses-menu #route-response-duplication-button';
+    await this.testsInstance.app.client
+      .element(duplicationButtonSelector)
+      .click();
   }
 
   async countEnvironments(expected: number) {
@@ -374,7 +380,9 @@ export class Helpers {
   }
 
   async assertElementValue(selector: string, valueToCompare: string) {
-    expect(await this.testsInstance.app.client.getValue(selector)).to.equal(valueToCompare);
+    expect(await this.testsInstance.app.client.getValue(selector)).to.equal(
+      valueToCompare
+    );
   }
 
   async assertActiveEnvironmentPort(expectedPort: number) {

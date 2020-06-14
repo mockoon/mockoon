@@ -6,15 +6,26 @@ import { lookup as mimeTypeLookup } from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
 import { platform } from 'os';
 import { merge, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, distinctUntilKeyChanged, filter, first, map } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  distinctUntilKeyChanged,
+  filter,
+  map
+} from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
-import { GetRouteResponseContentType, IsValidURL } from 'src/app/libs/utils.lib';
+import {
+  GetRouteResponseContentType,
+  IsValidURL
+} from 'src/app/libs/utils.lib';
 import { HeadersProperties } from 'src/app/models/common.model';
 import { ContextMenuItemPayload } from 'src/app/models/context-menu.model';
-import { EnvironmentLog, EnvironmentLogs } from 'src/app/models/environment-logs.model';
+import {
+  EnvironmentLog,
+  EnvironmentLogs
+} from 'src/app/models/environment-logs.model';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
@@ -44,7 +55,10 @@ import {
   RouteResponse,
   statusCodes
 } from 'src/app/types/route.type';
-import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
+import {
+  DraggableContainerNames,
+  ScrollDirection
+} from 'src/app/types/ui.type';
 
 @Component({
   selector: 'app-root',
