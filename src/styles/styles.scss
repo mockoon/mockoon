@@ -4,7 +4,7 @@
 
 // custom scrollbar
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -295,6 +295,6 @@ resize-column {
   cursor: col-resize;
 
   &:hover {
-    box-shadow: inset -3px 0 0 0 rgba($blue, 0.1);
+    box-shadow: inset -2px 0 0 0 rgba($blue, 0.1);
   }
 }

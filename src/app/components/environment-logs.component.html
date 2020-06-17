@@ -1,7 +1,7 @@
 <ng-container *ngIf="environmentLogs$ | async as environmentLogs">
   <div class="row h-100 environment-logs">
     <div class="h-100 environment-logs-column">
-      <ul class="nav flex-column menu-list">
+      <ul class="nav flex-column menu-list h-100">
         <li class="nav-item" *ngFor="let log of environmentLogs">
           <a class="nav-link" [ngClass]="{'active': log.UUID === (activeEnvironmentLogUUID$ | async)}"
             (click)="selectLog(log.UUID)">
@@ -43,9 +43,9 @@
       <p *ngIf="!environmentLogs?.length" class="message mt-4">No records yet</p>
 
       <div *ngIf="activeEnvironmentLog$ | async as selectedLog; else pleaseSelect"
-        class="environment-logs-content">
+        class="environment-logs-content d-flex flex-column h-100">
         <ng-container *ngIf="activeEnvironmentLogsTab$ | async as activeEnvironmentLogsTab">
-          <ul class="nav nav-tabs flex-grow-1">
+          <ul class="nav nav-tabs">
             <li class="nav-item">
               <a class="nav-link" [ngClass]="{'active': activeEnvironmentLogsTab === 'REQUEST'}"
               (click)="setActiveTab('REQUEST')">Request <i class="material-icons">call_received</i></a>
@@ -56,8 +56,8 @@
             </li>
           </ul>
 
-          <ng-container *ngIf="activeEnvironmentLogsTab === 'REQUEST'">
-            <div class="environment-logs-content-request pt-2 pl-2 pr-2">
+          <div class="environment-logs-content-container">
+            <div *ngIf="activeEnvironmentLogsTab === 'REQUEST'" class="environment-logs-content-request p-2">
               <div class="environment-logs-content-title" (click)="collapseStates['request.general'] = !collapseStates['request.general']">
                 <i *ngIf="!collapseStates['request.general']" class="material-icons">unfold_less</i>
                 <i *ngIf="collapseStates['request.general']" class="material-icons">unfold_more</i>
@@ -126,10 +126,8 @@
                 <div class="environment-logs-content-item pre">{{selectedLog?.request?.truncatedBody}}</div>
               </div>
             </div>
-          </ng-container>
 
-          <ng-container *ngIf="activeEnvironmentLogsTab === 'RESPONSE'">
-            <div *ngIf="selectedLog.response" class="environment-logs-content-response pt-2 pl-2 pr-2">
+            <div *ngIf="activeEnvironmentLogsTab === 'RESPONSE' && selectedLog.response" class="environment-logs-content-response p-2">
               <!-- General Response -->
               <div class="environment-logs-content-title" (click)="collapseStates['response.general'] = !collapseStates['response.general']">
                 <i *ngIf="!collapseStates['response.general']" class="material-icons">unfold_less</i>
@@ -169,7 +167,7 @@
                 <div class="environment-logs-content-item pre">{{selectedLog.response?.truncatedBody}}</div>
               </div>
             </div>
-          </ng-container>
+          </div>
         </ng-container>
       </div>
     </div>
