@@ -24,7 +24,7 @@ export class MigrationService {
     // migration depends on settings being ready
     return this.store.select('settings').pipe(
       first((settings) => !!settings),
-      map((s) => {
+      map(() => {
         environments.forEach((environment) => {
           this.migrateEnvironment(environment);
         });
