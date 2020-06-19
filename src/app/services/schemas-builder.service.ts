@@ -29,7 +29,8 @@ export class SchemasBuilderService {
       headers: [this.buildHeader()],
       filePath: '',
       sendFileAsBody: false,
-      rules: []
+      rules: [],
+      disableTemplating: false
     };
   }
 

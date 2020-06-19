@@ -1,7 +1,7 @@
 [
   {
     "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Export env",
     "endpointPrefix": "",
     "latency": 0,
@@ -23,7 +23,8 @@
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "rules": []
+            "rules": [],
+            "disableTemplating": false
           }
         ]
       }

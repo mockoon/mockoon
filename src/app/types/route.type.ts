@@ -243,6 +243,7 @@ export type RouteResponse = {
   latency: number;
   filePath: string;
   sendFileAsBody: boolean;
+  disableTemplating: boolean;
 };
 
 export type ResponseRule = {

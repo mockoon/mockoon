@@ -1,7 +1,7 @@
 [
   {
     "uuid": "500ea6c0-5d91-11ea-b15f-91b10dfe38f8",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Regulations.gov",
     "endpointPrefix": "regulations/v3",
     "latency": 0,
@@ -22,6 +22,7 @@
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           },
           {
@@ -33,6 +34,7 @@
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           },
           {
@@ -44,6 +46,7 @@
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ],
@@ -64,6 +67,7 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           },
           {
@@ -75,6 +79,7 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           },
           {
@@ -86,6 +91,7 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ],
@@ -106,6 +112,7 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           },
           {
@@ -117,6 +124,7 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           },
           {
@@ -128,6 +136,7 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ],

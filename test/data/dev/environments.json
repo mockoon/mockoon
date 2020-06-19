@@ -1,7 +1,7 @@
 [
   {
     "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Demo users API",
     "endpointPrefix": "",
     "latency": 0,
@@ -22,7 +22,8 @@
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "rules": []
+            "rules": [],
+            "disableTemplating": false
           }
         ],
         "enabled": true
@@ -49,7 +50,8 @@
                 "value": "1",
                 "isRegex": false
               }
-            ]
+            ],
+            "disableTemplating": false
           },
           {
             "uuid": "e84c9929-6047-11ea-b4a3-058bbf68d234",
@@ -67,7 +69,8 @@
                 "value": "2",
                 "isRegex": false
               }
-            ]
+            ],
+            "disableTemplating": false
           }
         ],
         "enabled": true
@@ -94,7 +97,8 @@
                 "value": ".+",
                 "isRegex": true
               }
-            ]
+            ],
+            "disableTemplating": false
           },
           {
             "uuid": "e84c992d-6047-11ea-b4a3-058bbf68d234",
@@ -112,7 +116,8 @@
                 "value": "^$",
                 "isRegex": true
               }
-            ]
+            ],
+            "disableTemplating": false
           }
         ],
         "enabled": true
@@ -139,7 +144,8 @@
                 "value": ".*",
                 "isRegex": true
               }
-            ]
+            ],
+            "disableTemplating": false
           }
         ],
         "enabled": true

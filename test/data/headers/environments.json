@@ -1,7 +1,7 @@
 [
   {
     "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -28,6 +28,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -53,6 +54,7 @@
             ],
             "filePath": "./test/data/headers/test.pdf",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -73,6 +75,7 @@
             "headers": [],
             "filePath": "./test/data/headers/test.pdf",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
