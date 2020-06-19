@@ -18,7 +18,7 @@
             "uuid": "505a77b1-34c7-4af8-adde-ed00b8dd29bf",
             "body": "{\"response\": \"{{urlParam 'var'}}\"}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -44,7 +44,7 @@
             "uuid": "057ec98a-dd5d-4dd8-9af9-a99dd7a5c3f5",
             "body": "42",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -70,7 +70,7 @@
             "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",
             "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {

@@ -18,7 +18,7 @@
             "uuid": "ed529d3c-c546-4939-b672-810e2d25427d",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -44,7 +44,7 @@
             "uuid": "c8563856-fe44-4970-825e-58cb6f4e7ae9",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -70,7 +70,7 @@
             "uuid": "d1454fdf-6bc3-420e-b255-2693b3ace28d",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [],
             "filePath": "./test/data/headers/test.pdf",

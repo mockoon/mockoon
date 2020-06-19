@@ -80,5 +80,13 @@ describe('Environments migrations', () => {
         false
       );
     });
+
+    it('Should convert "statusCode" to number', async () => {
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        '0.routes.0.responses.0.statusCode',
+        200
+      );
+    });
   });
 });

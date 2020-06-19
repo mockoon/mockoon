@@ -236,7 +236,7 @@ export const headerValues = [
 export type RouteResponse = {
   uuid: string;
   rules: ResponseRule[];
-  statusCode: string;
+  statusCode: number;
   label: string;
   headers: Header[];
   body?: string;

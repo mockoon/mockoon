@@ -223,7 +223,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
 
     this.activeRouteResponseForm = this.formBuilder.group({
-      statusCode: [''],
+      statusCode: [null],
       label: [''],
       latency: [''],
       filePath: [''],

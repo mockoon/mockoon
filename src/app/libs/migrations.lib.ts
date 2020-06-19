@@ -137,7 +137,7 @@ export const Migrations: {
           }
         ) => {
           route.responses = [];
-          route.responses.push(<RouteResponse>{
+          route.responses.push(<RouteResponse & { statusCode: string }>{
             uuid: uuid(),
             statusCode: route.statusCode,
             label: '',
@@ -219,7 +219,8 @@ export const Migrations: {
   },
 
   /**
-   * Add route response's disableTemplating option
+   * Add route response's disableTemplating option.
+   * Convert statusCode to number
    */
   {
     id: 11,
@@ -229,6 +230,11 @@ export const Migrations: {
           if (routeResponse.disableTemplating === undefined) {
             routeResponse.disableTemplating = false;
           }
+
+          routeResponse.statusCode = parseInt(
+            (routeResponse.statusCode as unknown) as string,
+            10
+          );
         });
       });
     }

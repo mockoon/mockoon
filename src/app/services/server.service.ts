@@ -225,9 +225,7 @@ export class ServerService {
                 );
 
                 // set http code
-                res.status(
-                  (enabledRouteResponse.statusCode as unknown) as number
-                );
+                res.status(enabledRouteResponse.statusCode);
 
                 this.setHeaders(enabledRouteResponse.headers, res, req);
 
