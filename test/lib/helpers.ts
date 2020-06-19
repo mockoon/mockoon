@@ -2,7 +2,11 @@ import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
 import { ToastTypes } from 'src/app/services/toasts.service';
-import { EnvironmentLogsTabsNameType, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import {
+  EnvironmentLogsTabsNameType,
+  TabsNameType,
+  ViewsNameType
+} from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
 import { Header, ResponseRule } from 'src/app/types/route.type';
 import { fetch } from 'test/lib/fetch';
@@ -274,7 +278,9 @@ export class Helpers {
       HEADERS:
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2) .nav-link',
       RULES:
-        '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(3) .nav-link'
+        '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(3) .nav-link',
+      SETTINGS:
+        '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(4) .nav-link'
     };
 
     await this.testsInstance.app.client.element(selectors[tabName]).click();
@@ -340,16 +346,20 @@ export class Helpers {
     if (httpCall.testedResponse) {
       Object.keys(httpCall.testedResponse).forEach((propertyName) => {
         if (propertyName === 'headers') {
-          expect(response[propertyName]).to.include(
-            httpCall.testedResponse[propertyName]
-          );
+          Object.keys(httpCall.testedResponse.headers).forEach((headerName) => {
+            const responseHeader = response.headers[headerName];
+
+            expect(responseHeader).to.not.be.undefined;
+            expect(responseHeader).to.include(
+              httpCall.testedResponse.headers[headerName]
+            );
+          });
         } else if (
           propertyName === 'body' &&
-          typeof httpCall.testedResponse[propertyName] === 'object'
+          typeof httpCall.testedResponse.body === 'object'
         ) {
-          expect(response[propertyName]).to.have.string(
-            (httpCall.testedResponse[propertyName] as { contains: string })
-              .contains
+          expect(response.body).to.have.string(
+            (httpCall.testedResponse.body as { contains: string }).contains
           );
         } else {
           expect(response[propertyName]).to.equal(
@@ -569,5 +579,11 @@ export class Helpers {
     await this.testsInstance.app.client
       .element(`${inputsSelector}(2)`)
       .setValue(header.value);
+  }
+
+  async toggleDisableTemplating() {
+    await this.testsInstance.app.client
+      .element("label[for='disableTemplating']")
+      .click();
   }
 }

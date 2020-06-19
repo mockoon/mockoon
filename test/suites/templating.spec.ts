@@ -774,7 +774,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
           status: 200,
           body: {
             contains:
-              "Error while serving the file: Parse error on line 1:\n...:/test/{{body 'test'}}}.txt"
+              "Error while serving the content: Parse error on line 1:\n...:/test/{{body 'test'}}}.txt"
           }
         }
       },
@@ -788,7 +788,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
           status: 200,
           body: {
             contains:
-              "Error while serving the file: Parse error on line 1:\n{{body 'test'}}}"
+              "Error while serving the file content: Parse error on line 1:\n{{body 'test'}}}"
           }
         }
       }
@@ -1145,19 +1145,61 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
 ];
 
 describe('Templating', () => {
-  const tests = new Tests('templating', true);
-  tests.runHooks();
+  describe('Helpers', () => {
+    const tests = new Tests('templating', true);
+    tests.runHooks();
 
-  it('Start default environment', async () => {
-    await tests.helpers.startEnvironment();
+    it('Start default environment', async () => {
+      await tests.helpers.startEnvironment();
+    });
+
+    testSuites.forEach((testSuite) => {
+      describe(testSuite.name, () => {
+        testSuite.tests.forEach((testCase) => {
+          it(testCase.description, async () => {
+            await tests.helpers.httpCallAsserter(testCase);
+          });
+        });
+      });
+    });
   });
 
-  testSuites.forEach((testSuite) => {
-    describe(testSuite.name, () => {
-      testSuite.tests.forEach((testCase) => {
-        it(testCase.description, async () => {
-          await tests.helpers.httpCallAsserter(testCase);
-        });
+  describe('Disable route response templating', () => {
+    const tests = new Tests('templating', true);
+    tests.runHooks();
+
+    it('Start default environment', async () => {
+      await tests.helpers.startEnvironment();
+    });
+
+    it('Get body content with disabled templating', async () => {
+      await tests.helpers.selectRoute(1);
+      await tests.helpers.switchTab('SETTINGS');
+      await tests.helpers.toggleDisableTemplating();
+
+      await tests.helpers.httpCallAsserter({
+        path: '/bodyjson-rootlvl',
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        testedResponse: {
+          status: 200,
+          body: "{{body 'property1' 'defaultvalue'}}"
+        }
+      });
+    });
+
+    it('Get file content with disabled templating', async () => {
+      await tests.helpers.selectRoute(19);
+      await tests.helpers.switchTab('SETTINGS');
+      await tests.helpers.toggleDisableTemplating();
+      await tests.helpers.httpCallAsserter({
+        path: '/file-templating',
+        method: 'GET',
+        headers: { 'Content-Type': 'text/plain' },
+        testedResponse: {
+          status: 200,
+          body: "start{{body 'test'}}end"
+        }
       });
     });
   });

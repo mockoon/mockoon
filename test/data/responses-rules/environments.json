@@ -1,7 +1,7 @@
 [
   {
     "uuid": "e8463b18-ef78-46ec-b288-a7ee23e892ec",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -28,6 +28,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -53,6 +54,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           },
           {
@@ -69,6 +71,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "query",
@@ -92,6 +95,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "query",
@@ -115,6 +119,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "params",
@@ -138,6 +143,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "header",
@@ -161,6 +167,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "header",
@@ -184,6 +191,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "body",
@@ -207,6 +215,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "body",
@@ -230,6 +239,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "body",
@@ -253,6 +263,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "body",
@@ -276,6 +287,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "body",
@@ -299,6 +311,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "body",
@@ -322,6 +335,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": [
               {
                 "target": "body",

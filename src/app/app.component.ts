@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { remote, shell } from 'electron';
@@ -6,17 +12,28 @@ import { lookup as mimeTypeLookup } from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
 import { platform } from 'os';
 import { merge, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  distinctUntilKeyChanged,
+  filter,
+  map
+} from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
 import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
-import { GetRouteResponseContentType, IsValidURL } from 'src/app/libs/utils.lib';
+import {
+  GetRouteResponseContentType,
+  IsValidURL
+} from 'src/app/libs/utils.lib';
 import { HeadersProperties } from 'src/app/models/common.model';
 import { ContextMenuItemPayload } from 'src/app/models/context-menu.model';
-import { EnvironmentLog, EnvironmentLogs } from 'src/app/models/environment-logs.model';
+import {
+  EnvironmentLog,
+  EnvironmentLogs
+} from 'src/app/models/environment-logs.model';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
@@ -28,10 +45,25 @@ import { UIService } from 'src/app/services/ui.service';
 import { UpdateService } from 'src/app/services/update.service';
 import { clearLogsAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { DuplicatedRoutesTypes, EnvironmentsStatuses, EnvironmentStatus, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import {
+  DuplicatedRoutesTypes,
+  EnvironmentsStatuses,
+  EnvironmentStatus,
+  Store,
+  TabsNameType,
+  ViewsNameType
+} from 'src/app/stores/store';
 import { DataSubject } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
-import { CORSHeaders, Header, methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
+import {
+  CORSHeaders,
+  Header,
+  methods,
+  mimeTypesWithTemplating,
+  Route,
+  RouteResponse,
+  statusCodes
+} from 'src/app/types/route.type';
 import { DraggableContainerNames } from 'src/app/types/ui.type';
 
 @Component({
@@ -197,7 +229,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       filePath: [''],
       sendFileAsBody: [''],
       body: [''],
-      rules: this.formBuilder.array([])
+      rules: this.formBuilder.array([]),
+      disableTemplating: [false]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -300,7 +333,8 @@ export class AppComponent implements OnInit, AfterViewInit {
             filePath: activeRouteResponse.filePath,
             sendFileAsBody: activeRouteResponse.sendFileAsBody,
             body: activeRouteResponse.body,
-            rules: activeRouteResponse.rules
+            rules: activeRouteResponse.rules,
+            disableTemplating: activeRouteResponse.disableTemplating
           },
           { emitEvent: false }
         );

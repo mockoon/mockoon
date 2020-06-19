@@ -1,7 +1,7 @@
 [
   {
     "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -28,6 +28,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -53,6 +54,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -78,6 +80,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -103,6 +106,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -128,6 +132,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -153,6 +158,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -178,6 +184,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -203,6 +210,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -228,6 +236,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -253,6 +262,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -278,6 +288,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -303,6 +314,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -328,6 +340,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -353,6 +366,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -382,6 +396,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -407,6 +422,7 @@
             ],
             "filePath": "c:/test/{{body 'test'}}}.txt",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -432,6 +448,7 @@
             ],
             "filePath": "./test/data/templating/file-templating-error.txt",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -457,6 +474,7 @@
             ],
             "filePath": "./test/data/templating/{{body 'test'}}.txt",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -482,6 +500,7 @@
             ],
             "filePath": "./test/data/templating/file-templating.txt",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -507,6 +526,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -532,6 +552,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -557,6 +578,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -582,6 +604,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -607,6 +630,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -632,6 +656,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -657,6 +682,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -682,6 +708,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -707,6 +734,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -732,6 +760,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -757,6 +786,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -782,6 +812,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -807,6 +838,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -832,6 +864,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -857,6 +890,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -882,6 +916,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -907,6 +942,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -932,6 +968,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -957,6 +994,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -982,6 +1020,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1007,6 +1046,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1032,6 +1072,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1057,6 +1098,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1082,6 +1124,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1107,6 +1150,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1132,6 +1176,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1157,6 +1202,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1182,6 +1228,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1207,6 +1254,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1232,6 +1280,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1257,6 +1306,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1282,6 +1332,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1307,6 +1358,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1332,6 +1384,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1357,6 +1410,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1382,6 +1436,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1407,6 +1462,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1432,6 +1488,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1457,6 +1514,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1482,6 +1540,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1507,6 +1566,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1532,6 +1592,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1557,6 +1618,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1582,6 +1644,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1607,6 +1670,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1632,6 +1696,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1657,6 +1722,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1682,6 +1748,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1707,6 +1774,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1732,6 +1800,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1757,6 +1826,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1782,6 +1852,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1807,6 +1878,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1832,6 +1904,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1857,6 +1930,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1882,6 +1956,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1907,6 +1982,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1932,6 +2008,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1957,6 +2034,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -1982,6 +2060,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -2007,6 +2086,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]

@@ -64,4 +64,21 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 11', () => {
+    const filesPath = 'migrations/11';
+    const tests = new Tests(filesPath);
+
+    tests.runHooks();
+
+    it('Should add "disableTemplating" at false to route responses', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        '0.routes.0.responses.0.disableTemplating',
+        false
+      );
+    });
+  });
 });

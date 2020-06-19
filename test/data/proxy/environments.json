@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -28,6 +28,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -57,6 +58,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -82,6 +84,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -97,7 +100,7 @@
   },
   {
     "uuid": "2cbdec80-f284-11e9-a28c-912bdc671019",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Proxy",
     "endpointPrefix": "",
     "latency": 0,
@@ -118,7 +121,7 @@
   },
   {
     "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Proxy disabled",
     "endpointPrefix": "",
     "latency": 0,
@@ -145,6 +148,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]

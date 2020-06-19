@@ -327,6 +327,10 @@
                                 class="btn btn-link text-primary cp doc-link ml-2"><i
                                   class="material-icons">info</i></span></a>
                             </li>
+                            <li class="nav-item">
+                              <a class="nav-link" [ngClass]="{'active': activeTab === 'SETTINGS'}"
+                                (click)="setActiveTab('SETTINGS')">Settings</a>
+                            </li>
                           </ul>
 
                           <!-- Response delete button -->
@@ -468,6 +472,29 @@
                       <div class="row flex-fill mh0">
                         <div class="col scroll-content h-100" #routeResponseRulesContainer>
                           <app-route-response-rules [activeRouteResponse$]="activeRouteResponse$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <!-- Route settings tab -->
+                    <ng-container *ngIf="(activeTab$ | async) === 'SETTINGS'">
+                      <div class="row flex-fill mh0" [formGroup]="activeRouteResponseForm">
+                        <div class="col pt-3 h-100">
+                          <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                              <input
+                                type="checkbox"
+                                class="custom-control-input"
+                                id="disableTemplating"
+                                formControlName="disableTemplating"
+                              />
+                              <label
+                                class="custom-control-label"
+                                for="disableTemplating"
+                              >Disable templating in body or file content. <span class="text-primary cp"><i class="material-icons" ngbTooltip="Helpers like {{'{' + '{'}}body{{ '}' + '}' }} won't be interpreted.">info</i></span>
+                              </label>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </ng-container>
