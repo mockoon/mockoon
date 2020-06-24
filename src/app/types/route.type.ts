@@ -236,13 +236,14 @@ export const headerValues = [
 export type RouteResponse = {
   uuid: string;
   rules: ResponseRule[];
-  statusCode: string;
+  statusCode: number;
   label: string;
   headers: Header[];
   body?: string;
   latency: number;
   filePath: string;
   sendFileAsBody: boolean;
+  disableTemplating: boolean;
 };
 
 export type ResponseRule = {

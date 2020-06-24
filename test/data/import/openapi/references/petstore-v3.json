@@ -1,7 +1,7 @@
 [
   {
     "uuid": "6e3bac30-5b05-11ea-a005-35ade7bcb066",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Swagger Petstore v3",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -17,7 +17,7 @@
             "uuid": "6e3bd340-5b05-11ea-a005-35ade7bcb066",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "pet response",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -26,6 +26,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ],
@@ -41,11 +42,12 @@
             "uuid": "6e3bd342-5b05-11ea-a005-35ade7bcb066",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "pet response",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ],
@@ -61,11 +63,12 @@
             "uuid": "6e3bd344-5b05-11ea-a005-35ade7bcb066",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "pet response",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ],
@@ -81,11 +84,12 @@
             "uuid": "6e3bd346-5b05-11ea-a005-35ade7bcb066",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "pet deleted",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ],

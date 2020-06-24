@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { get as storageGet, set as storageSet } from 'electron-json-storage';
 import { cloneDeep } from 'lodash';
-import { debounceTime } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { DataService } from 'src/app/services/data.service';
@@ -9,6 +9,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { MigrationService } from 'src/app/services/migration.service';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ServerService } from 'src/app/services/server.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { UIService } from 'src/app/services/ui.service';
 import {
   addEnvironmentAction,
@@ -35,8 +36,17 @@ import {
   updateRouteResponseAction
 } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { EnvironmentLogsTabsNameType, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
-import { Environment, EnvironmentProperties } from 'src/app/types/environment.type';
+import {
+  EnvironmentLogsTabsNameType,
+  Store,
+  TabsNameType,
+  ViewsNameType
+} from 'src/app/stores/store';
+import {
+  Environment,
+  EnvironmentProperties,
+  Environments
+} from 'src/app/types/environment.type';
 import {
   Header,
   Method,
@@ -45,9 +55,14 @@ import {
   RouteResponse,
   RouteResponseProperties
 } from 'src/app/types/route.type';
-import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
+import {
+  DraggableContainerNames,
+  ScrollDirection
+} from 'src/app/types/ui.type';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class EnvironmentsService {
   private storageKey = 'environments';
   private logger = new Logger('[SERVICE][ENVIRONMENTS]');
@@ -59,54 +74,37 @@ export class EnvironmentsService {
     private serverService: ServerService,
     private migrationService: MigrationService,
     private schemasBuilderService: SchemasBuilderService,
-    private uiService: UIService
+    private uiService: UIService,
+    private storageService: StorageService
   ) {
-    // get existing environments from storage or default one
-    storageGet(this.storageKey, (error: any, environments: Environment[]) => {
-      if (error) {
-        this.logger.error(
-          `Error while loading the environments: ${error.code} ${error.message}`
-        );
+    // get existing environments from storage or create default one, start saving after loading the data
+    this.storageService
+      .loadData<Environments>(this.storageKey)
+      .pipe(
+        mergeMap((environments) => {
+          if (
+            Object.keys(environments).length === 0 &&
+            environments.constructor === Object
+          ) {
+            this.logger.info(`No Data, building default environment`);
 
-        return;
-      }
-
-      // if empty object build default starting env
-      if (
-        Object.keys(environments).length === 0 &&
-        environments.constructor === Object
-      ) {
-        this.logger.info(`No Data, building default environment`);
-
-        this.store.update(
-          setInitialEnvironmentsAction([
-            this.schemasBuilderService.buildDefaultEnvironment()
-          ])
-        );
-      } else {
-        this.migrationService
-          .migrateEnvironments(environments)
-          .subscribe((migratedEnvironments) => {
-            this.store.update(
-              setInitialEnvironmentsAction(migratedEnvironments)
-            );
-          });
-      }
-    });
-
-    // subscribe to environments update to save
-    this.store
-      .select('environments')
-      .pipe(debounceTime(2000))
-      .subscribe((environments) => {
-        storageSet(this.storageKey, environments, (error) => {
-          if (error) {
-            this.logger.error(
-              `Error while loading the environments: ${error.code} ${error.message}`
-            );
+            return of([this.schemasBuilderService.buildDefaultEnvironment()]);
+          } else {
+            return this.migrationService.migrateEnvironments(environments);
           }
-        });
-      });
+        }),
+        tap((environments) => {
+          this.store.update(setInitialEnvironmentsAction(environments));
+        }),
+        mergeMap(() =>
+          this.storageService.saveData(
+            this.store.select('environments'),
+            'environments',
+            2000
+          )
+        )
+      )
+      .subscribe();
   }
 
   /**
@@ -430,7 +428,7 @@ export class EnvironmentsService {
         routeResponse = {
           ...this.schemasBuilderService.buildRouteResponse(),
           headers,
-          statusCode: log.response.status.toString(),
+          statusCode: log.response.status,
           body: log.response.body
         };
       } else {

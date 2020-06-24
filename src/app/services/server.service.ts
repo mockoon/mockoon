@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import * as express from 'express';
-import { readFileSync } from 'fs';
+import { readFile } from 'fs';
 import { createServer as httpCreateServer, Server as httpServer } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { createServer as httpsCreateServer, Server as httpsServer } from 'https';
+import {
+  createServer as httpsCreateServer,
+  Server as httpsServer
+} from 'https';
 import * as killable from 'killable';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { basename } from 'path';
@@ -12,15 +15,28 @@ import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpr
 import { Errors } from 'src/app/enums/errors.enum';
 import { Middlewares } from 'src/app/libs/express-middlewares.lib';
 import { TemplateParser } from 'src/app/libs/template-parser.lib';
-import { GetContentType, GetRouteResponseContentType, IsValidURL, TestHeaderValidity } from 'src/app/libs/utils.lib';
+import {
+  GetContentType,
+  GetRouteResponseContentType,
+  IsValidURL,
+  TestHeaderValidity
+} from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
-import { logRequestAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
+import {
+  logRequestAction,
+  updateEnvironmentStatusAction
+} from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
-import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
+import {
+  CORSHeaders,
+  Header,
+  mimeTypesWithTemplating,
+  Route
+} from 'src/app/types/route.type';
 
 const httpsConfig = {
   key: pemFiles.key,
@@ -204,41 +220,32 @@ export class ServerService {
                   currentEnvironment,
                   enabledRouteResponse
                 );
-                const routeContentType = GetContentType(enabledRouteResponse.headers);
+                const routeContentType = GetContentType(
+                  enabledRouteResponse.headers
+                );
 
                 // set http code
-                res.status(
-                  (enabledRouteResponse.statusCode as unknown) as number
-                );
+                res.status(enabledRouteResponse.statusCode);
 
                 this.setHeaders(enabledRouteResponse.headers, res, req);
 
-                // send the file
-                if (enabledRouteResponse.filePath) {
-                  let filePath: string;
+                try {
+                  // send the file
+                  if (enabledRouteResponse.filePath) {
+                    let filePath: string;
+                    let fileMimeType: string;
 
-                  // throw error or serve file
-                  try {
                     filePath = TemplateParser(
                       enabledRouteResponse.filePath,
                       req
                     );
-                    const fileMimeType =
+
+                    fileMimeType =
                       mimeTypeLookup(enabledRouteResponse.filePath) || '';
 
                     // set content-type to route response's one or the detected mime type if none
                     if (!routeContentType) {
                       res.set('Content-Type', fileMimeType);
-                    }
-
-                    let fileContent: Buffer | string = readFileSync(filePath);
-
-                    // parse templating for a limited list of mime types
-                    if (mimeTypesWithTemplating.indexOf(fileMimeType) > -1) {
-                      fileContent = TemplateParser(
-                        fileContent.toString('utf-8', 0, fileContent.length),
-                        req
-                      );
                     }
 
                     if (!enabledRouteResponse.sendFileAsBody) {
@@ -248,32 +255,56 @@ export class ServerService {
                       );
                     }
 
-                    res.body = fileContent.toString();
+                    readFile(filePath, (readError, data) => {
+                      try {
+                        if (readError) {
+                          throw readError;
+                        }
 
-                    res.send(fileContent);
-                  } catch (error) {
-                    const errorMessage = `Error while serving the file: ${error.message}`;
+                        let fileContent: string;
 
-                    this.logger.error(errorMessage);
-                    this.sendError(res, errorMessage);
-                  }
-                } else {
-                  try {
+                        fileContent = data.toString();
+
+                        // parse templating for a limited list of mime types
+                        if (
+                          mimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
+                          !enabledRouteResponse.disableTemplating
+                        ) {
+                          fileContent = TemplateParser(fileContent, req);
+                        }
+
+                        res.body = fileContent;
+
+                        res.send(fileContent);
+                      } catch (error) {
+                        const errorMessage = `Error while serving the file content: ${error.message}`;
+
+                        this.logger.error(errorMessage);
+
+                        this.sendError(res, errorMessage);
+                      }
+                    });
+                  } else {
                     if (contentType.includes('application/json')) {
                       res.set('Content-Type', 'application/json');
                     }
 
-                    const body = TemplateParser(enabledRouteResponse.body, req);
+                    let body = enabledRouteResponse.body;
+
+                    if (!enabledRouteResponse.disableTemplating) {
+                      body = TemplateParser(body, req);
+                    }
 
                     res.body = body;
 
                     res.send(body);
-                  } catch (error) {
-                    const errorMessage = `Error while serving the content: ${error.message}`;
-                    this.logger.error(errorMessage);
-
-                    this.sendError(res, errorMessage);
                   }
+                } catch (error) {
+                  const errorMessage = `Error while serving the content: ${error.message}`;
+
+                  this.logger.error(errorMessage);
+
+                  this.sendError(res, errorMessage);
                 }
               }, enabledRouteResponse.latency);
             }

@@ -1,7 +1,7 @@
 [
   {
     "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Demo users API",
     "endpointPrefix": "",
     "latency": 0,
@@ -17,12 +17,13 @@
             "uuid": "e84c9925-6047-11ea-b4a3-058bbf68d234",
             "body": "[\n  {\n    \"id\": 1,\n    \"firstname\": \"John\",\n    \"Lastname\": \"Snow\",\n    \"status\": \"Learning things\"\n  },\n  {\n    \"id\": 2,\n    \"firstname\": \"Daenerys\",\n    \"Lastname\": \"Targaryen\",\n    \"status\": \"Riding a dragon\"\n  }\n]",
             "latency": 50,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "Success",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "rules": []
+            "rules": [],
+            "disableTemplating": false
           }
         ],
         "enabled": true
@@ -37,7 +38,7 @@
             "uuid": "e84c9928-6047-11ea-b4a3-058bbf68d234",
             "body": "{\n  \"id\": 1,\n  \"firstname\": \"John\",\n  \"Lastname\": \"Snow\",\n  \"status\": \"Learning things\"\n}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "Get userId 1",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
@@ -49,13 +50,14 @@
                 "value": "1",
                 "isRegex": false
               }
-            ]
+            ],
+            "disableTemplating": false
           },
           {
             "uuid": "e84c9929-6047-11ea-b4a3-058bbf68d234",
             "body": "{\n  \"id\": 2,\n  \"firstname\": \"Daenerys\",\n  \"Lastname\": \"Targaryen\",\n  \"status\": \"Riding a dragon\"\n}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "Get userId 2",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
@@ -67,7 +69,8 @@
                 "value": "2",
                 "isRegex": false
               }
-            ]
+            ],
+            "disableTemplating": false
           }
         ],
         "enabled": true
@@ -82,7 +85,7 @@
             "uuid": "e84c992c-6047-11ea-b4a3-058bbf68d234",
             "body": "{\n  \"firstname\": \"{{body 'firstname'}}\",\n  \"lastname\": \"{{body 'lastname'}}\",\n  \"status\": \"{{body 'status'}}\"\n}",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Success",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
@@ -94,13 +97,14 @@
                 "value": ".+",
                 "isRegex": true
               }
-            ]
+            ],
+            "disableTemplating": false
           },
           {
             "uuid": "e84c992d-6047-11ea-b4a3-058bbf68d234",
             "body": "{\n  \"Error\": \"firstname is required\"\n}",
             "latency": 0,
-            "statusCode": "400",
+            "statusCode": 400,
             "label": "Missing data",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
@@ -112,7 +116,8 @@
                 "value": "^$",
                 "isRegex": true
               }
-            ]
+            ],
+            "disableTemplating": false
           }
         ],
         "enabled": true
@@ -127,7 +132,7 @@
             "uuid": "e84c9930-6047-11ea-b4a3-058bbf68d234",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "User deleted",
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
@@ -139,7 +144,8 @@
                 "value": ".*",
                 "isRegex": true
               }
-            ]
+            ],
+            "disableTemplating": false
           }
         ],
         "enabled": true

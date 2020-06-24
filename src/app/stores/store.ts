@@ -11,7 +11,7 @@ import { Route, RouteResponse } from 'src/app/types/route.type';
 
 export type ViewsNameType = 'ROUTE' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
-export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES';
+export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 

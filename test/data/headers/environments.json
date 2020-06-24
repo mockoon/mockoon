@@ -1,7 +1,7 @@
 [
   {
     "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -18,7 +18,7 @@
             "uuid": "ed529d3c-c546-4939-b672-810e2d25427d",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -28,6 +28,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -43,7 +44,7 @@
             "uuid": "c8563856-fe44-4970-825e-58cb6f4e7ae9",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -53,6 +54,7 @@
             ],
             "filePath": "./test/data/headers/test.pdf",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -68,11 +70,12 @@
             "uuid": "d1454fdf-6bc3-420e-b255-2693b3ace28d",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [],
             "filePath": "./test/data/headers/test.pdf",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]

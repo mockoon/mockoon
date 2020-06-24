@@ -25,12 +25,13 @@ export class SchemasBuilderService {
       uuid: uuid(),
       body: '{}',
       latency: 0,
-      statusCode: '200',
+      statusCode: 200,
       label: '',
       headers: [this.buildHeader()],
       filePath: '',
       sendFileAsBody: false,
-      rules: []
+      rules: [],
+      disableTemplating: false
     };
   }
 
@@ -102,7 +103,7 @@ export class SchemasBuilderService {
           responses: [
             {
               ...this.buildRouteResponse(),
-              statusCode: '200',
+              statusCode: 200,
               label: 'Success',
               latency: 50,
               headers: [{ key: 'Content-Type', value: 'application/json' }],
@@ -120,7 +121,7 @@ export class SchemasBuilderService {
           responses: [
             {
               ...this.buildRouteResponse(),
-              statusCode: '200',
+              statusCode: 200,
               label: 'Get userId 1',
               headers: [{ key: 'Content-Type', value: 'application/json' }],
               body:
@@ -136,7 +137,7 @@ export class SchemasBuilderService {
             },
             {
               ...this.buildRouteResponse(),
-              statusCode: '200',
+              statusCode: 200,
               label: 'Get userId 2',
               headers: [{ key: 'Content-Type', value: 'application/json' }],
               body:
@@ -160,7 +161,7 @@ export class SchemasBuilderService {
           responses: [
             {
               ...this.buildRouteResponse(),
-              statusCode: '201',
+              statusCode: 201,
               label: 'Success',
               headers: [{ key: 'Content-Type', value: 'application/json' }],
               body:
@@ -176,7 +177,7 @@ export class SchemasBuilderService {
             },
             {
               ...this.buildRouteResponse(),
-              statusCode: '400',
+              statusCode: 400,
               label: 'Missing data',
               headers: [{ key: 'Content-Type', value: 'application/json' }],
               body: '{\n  "Error": "firstname is required"\n}',
@@ -199,7 +200,7 @@ export class SchemasBuilderService {
           responses: [
             {
               ...this.buildRouteResponse(),
-              statusCode: '204',
+              statusCode: 204,
               label: 'User deleted',
               headers: [{ key: 'Content-Type', value: 'application/json' }],
               body: '',

@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { remote, shell } from 'electron';
@@ -219,13 +225,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
 
     this.activeRouteResponseForm = this.formBuilder.group({
-      statusCode: [''],
+      statusCode: [null],
       label: [''],
       latency: [''],
       filePath: [''],
       sendFileAsBody: [''],
       body: [''],
-      rules: this.formBuilder.array([])
+      rules: this.formBuilder.array([]),
+      disableTemplating: [false]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -328,7 +335,8 @@ export class AppComponent implements OnInit, AfterViewInit {
             filePath: activeRouteResponse.filePath,
             sendFileAsBody: activeRouteResponse.sendFileAsBody,
             body: activeRouteResponse.body,
-            rules: activeRouteResponse.rules
+            rules: activeRouteResponse.rules,
+            disableTemplating: activeRouteResponse.disableTemplating
           },
           { emitEvent: false }
         );

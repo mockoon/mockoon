@@ -1,5 +1,5 @@
 import { Environment } from 'src/app/types/environment.type';
-import { Header, Route } from 'src/app/types/route.type';
+import { Header, Route, RouteResponse } from 'src/app/types/route.type';
 import { v1 as uuid } from 'uuid';
 
 export const Migrations: {
@@ -137,7 +137,7 @@ export const Migrations: {
           }
         ) => {
           route.responses = [];
-          route.responses.push({
+          route.responses.push(<RouteResponse & { statusCode: string }>{
             uuid: uuid(),
             statusCode: route.statusCode,
             label: '',
@@ -215,6 +215,28 @@ export const Migrations: {
       if (!environment.proxyResHeaders) {
         environment.proxyResHeaders = [{ key: '', value: '' }];
       }
+    }
+  },
+
+  /**
+   * Add route response's disableTemplating option.
+   * Convert statusCode to number
+   */
+  {
+    id: 11,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((routeResponse) => {
+          if (routeResponse.disableTemplating === undefined) {
+            routeResponse.disableTemplating = false;
+          }
+
+          routeResponse.statusCode = parseInt(
+            (routeResponse.statusCode as unknown) as string,
+            10
+          );
+        });
+      });
     }
   }
 ];
