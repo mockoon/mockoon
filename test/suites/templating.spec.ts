@@ -1139,6 +1139,51 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
           status: 200,
           body: { contains: 'The repeat helper requires a numeric param' }
         }
+      },
+      {
+        description: 'Helper: switch from urlParam',
+        path: '/old.switch/1',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'casecontent1'
+        }
+      },
+      {
+        description: 'Helper: switch from urlParam, default',
+        path: '/old.switch/11',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'defaultcontent'
+        }
+      },
+      {
+        description: 'Helper: switch from urlParam with inner helper',
+        path: '/old.switch.helper/1',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'GET'
+        }
+      },
+      {
+        description: 'Helper: switch from urlParam with inner helper, default',
+        path: '/old.switch.helper/11',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'defaultcontentGET'
+        }
+      },
+      {
+        description: 'Helper: multiple switches from urlParam',
+        path: '/old.switch.multi/1/2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'switch1casecontent1switch2casecontent2'
+        }
       }
     ]
   }
