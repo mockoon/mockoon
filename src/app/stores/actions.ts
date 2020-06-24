@@ -9,17 +9,8 @@ import {
   UIStateProperties,
   ViewsNameType
 } from 'src/app/stores/store';
-import {
-  Environment,
-  EnvironmentProperties,
-  Environments
-} from 'src/app/types/environment.type';
-import {
-  Route,
-  RouteProperties,
-  RouteResponse,
-  RouteResponseProperties
-} from 'src/app/types/route.type';
+import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
+import { Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
 
 export const enum ActionTypes {
   SET_ACTIVE_TAB,
@@ -43,7 +34,6 @@ export const enum ActionTypes {
   UPDATE_ROUTE,
   SET_ACTIVE_ROUTE_RESPONSE,
   ADD_ROUTE_RESPONSE,
-  DUPLICATE_ROUTE_RESPONSE,
   UPDATE_ROUTE_RESPONSE,
   LOG_REQUEST,
   CLEAR_LOGS,
@@ -304,18 +294,17 @@ export function setActiveRouteResponseAction(routeResponseUUID: string) {
 /**
  * Add a new route response
  *
- * @param routeReponse - route response to add
- * @param relativeIndexInList - (optional) indicates where to put the new
- * route response with relativity to active route response.
+ * @param routeResponse - route response to add
+ * @param isDuplication - (optional) indicates if the addition is a duplication.
  */
 export function addRouteResponseAction(
-  routeReponse: RouteResponse,
-  relativeIndexInList?: number
+  routeResponse: RouteResponse,
+  isDuplication?: boolean
 ) {
   return <const>{
     type: ActionTypes.ADD_ROUTE_RESPONSE,
-    routeReponse,
-    relativeIndexInList
+    routeResponse,
+    isDuplication
   };
 }
 

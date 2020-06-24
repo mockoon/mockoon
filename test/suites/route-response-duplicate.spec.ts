@@ -1,9 +1,9 @@
-import { Tests } from 'test/lib/tests';
 import { expect } from 'chai';
+import { Tests } from 'test/lib/tests';
 
 const tests = new Tests('basic-data');
 
-describe.only('Duplicate a route response', async () => {
+describe('Duplicate a route response', () => {
   tests.runHooks();
 
   it('Duplicate first route response', async () => {
@@ -25,10 +25,10 @@ describe.only('Duplicate a route response', async () => {
       .setValue(label);
     await tests.helpers.duplicateRouteResponse();
 
-    const labelText = await tests.app.client.getValue(
-      routeResponseLabelInputSelector
+    await tests.helpers.assertElementValue(
+      routeResponseLabelInputSelector,
+      labelToCompare
     );
-    expect(labelText).to.equal(labelToCompare);
   });
 
   it('Verify duplicated route response has the same status code with the original response', async () => {
@@ -43,10 +43,10 @@ describe.only('Duplicate a route response', async () => {
       .selectByValue(statusCode);
     await tests.helpers.duplicateRouteResponse();
 
-    const statusCodeValue = await tests.app.client.getValue(
-      routeResponseStatusCodeSelectSelector
+    await tests.helpers.assertElementValue(
+      routeResponseStatusCodeSelectSelector,
+      statusCode
     );
-    expect(statusCodeValue).to.equal(statusCode);
   });
 
   it('Verify duplicated route response has the same body with the original response', async () => {
@@ -94,10 +94,10 @@ describe.only('Duplicate a route response', async () => {
         'test'
     };
 
-    Object.keys(selectorAndValueAssertionPairs).forEach((selector: string) => {
+    for (const selector of Object.keys(selectorAndValueAssertionPairs)) {
       const valueToCompare = selectorAndValueAssertionPairs[selector];
-      tests.helpers.assertElementValue(selector, valueToCompare);
-    });
+      await tests.helpers.assertElementValue(selector, valueToCompare);
+    }
   });
 
   it('Verify duplicated route response has the same rules with the original response', async () => {
@@ -126,9 +126,9 @@ describe.only('Duplicate a route response', async () => {
       'app-route-response-rules .row input[formcontrolname="value"]': 'test'
     };
 
-    Object.keys(selectorAndValueAssertionPairs).forEach((selector: string) => {
+    for (const selector of Object.keys(selectorAndValueAssertionPairs)) {
       const valueToCompare = selectorAndValueAssertionPairs[selector];
-      tests.helpers.assertElementValue(selector, valueToCompare);
-    });
+      await tests.helpers.assertElementValue(selector, valueToCompare);
+    }
   });
 });

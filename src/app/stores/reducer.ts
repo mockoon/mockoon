@@ -5,17 +5,10 @@ import {
   GetEditorModeFromContentType,
   GetRouteResponseContentType
 } from 'src/app/libs/utils.lib';
-import {
-  ActiveEnvironmentsLogUUIDs,
-  EnvironmentLogs
-} from 'src/app/models/environment-logs.model';
+import { ActiveEnvironmentsLogUUIDs, EnvironmentLogs } from 'src/app/models/environment-logs.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions, ActionTypes } from 'src/app/stores/actions';
-import {
-  DuplicatedRoutesTypes,
-  EnvironmentsStatuses,
-  StoreType
-} from 'src/app/stores/store';
+import { DuplicatedRoutesTypes, EnvironmentsStatuses, StoreType } from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
 
@@ -738,7 +731,7 @@ export function environmentReducer(
     }
 
     case ActionTypes.ADD_ROUTE_RESPONSE: {
-      const newRouteResponse: RouteResponse = action.routeReponse;
+      const newRouteResponse: RouteResponse = action.routeResponse;
       newState = {
         ...state,
         activeRouteResponseUUID: newRouteResponse.uuid,
@@ -750,7 +743,7 @@ export function environmentReducer(
               routes: environment.routes.map((route) => {
                 if (route.uuid === state.activeRouteUUID) {
                   const responses = [...route.responses];
-                  if (![undefined, null].includes(action.relativeIndexInList)) {
+                  if (action.isDuplication) {
                     const activeRouteResponseIndex = route.responses.findIndex(
                       (routeResponse: RouteResponse) => {
                         return (
@@ -759,7 +752,7 @@ export function environmentReducer(
                       }
                     );
                     responses.splice(
-                      activeRouteResponseIndex + action.relativeIndexInList,
+                      activeRouteResponseIndex + 1,
                       0,
                       newRouteResponse
                     );
