@@ -18,7 +18,7 @@
             "uuid": "c47c898e-d11b-45ef-aa89-a9e35966781a",
             "body": "{}",
             "latency": 0,
-            "statusCode": "500",
+            "statusCode": 500,
             "label": "",
             "headers": [
               {
@@ -44,7 +44,7 @@
             "uuid": "7b619bca-4cf6-4802-8ad6-e079b25b02f9",
             "body": "0",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "",
             "headers": [
               {
@@ -61,7 +61,7 @@
             "uuid": "41ee0b64-8b28-42bf-a8a9-636377d1f7e1",
             "body": "1",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -85,7 +85,7 @@
             "uuid": "326174f3-7ef8-4f33-a1f7-bd560f16b44b",
             "body": "2",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -109,7 +109,7 @@
             "uuid": "6882c03e-3b42-447e-b4bd-3eba324bddae",
             "body": "3",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -133,7 +133,7 @@
             "uuid": "b0aa0a5e-f7bb-4cb5-961e-42b41d0c0bcd",
             "body": "4",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -157,7 +157,7 @@
             "uuid": "9611a47d-0cbe-4ffb-954a-a085cca8c238",
             "body": "5",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -181,7 +181,7 @@
             "uuid": "d490d66e-d47b-4ea8-81a8-dd4d04f8a74e",
             "body": "6",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -205,7 +205,7 @@
             "uuid": "039cd461-a162-490e-817e-eb3ec0775529",
             "body": "7",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -229,7 +229,7 @@
             "uuid": "5fc6c3d5-ac7a-4f02-9b11-57e9b54eba06",
             "body": "8",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -253,7 +253,7 @@
             "uuid": "43a4cc0d-9f58-4bf2-95a7-43ee715b1ad6",
             "body": "9",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -277,7 +277,7 @@
             "uuid": "15b8cbc8-52bb-42e9-9898-de5523c2baff",
             "body": "10",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -301,7 +301,7 @@
             "uuid": "2f56e45b-e5fa-4bcc-ac9c-fbb9fe7971b0",
             "body": "11",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -325,7 +325,7 @@
             "uuid": "8b2ac231-1d0e-4d83-be14-fd825c01f928",
             "body": "12",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {

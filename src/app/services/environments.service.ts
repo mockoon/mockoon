@@ -415,7 +415,7 @@ export class EnvironmentsService {
         routeResponse = {
           ...this.schemasBuilderService.buildRouteResponse(),
           headers,
-          statusCode: log.response.status.toString(),
+          statusCode: log.response.status,
           body: log.response.body
         };
       } else {

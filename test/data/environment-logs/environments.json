@@ -18,7 +18,7 @@
             "uuid": "4bddd419-fbd4-44b7-9564-fb5cd234a2eb",
             "body": "responsebody",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -39,7 +39,7 @@
             "uuid": "10e32786-2fc9-4490-9f85-b4fe1763717a",
             "body": "created",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "",
             "headers": [
               {
@@ -63,7 +63,7 @@
             "uuid": "31f4e399-4878-4bbe-bf86-6fcaf29e5bba",
             "body": "nocontent",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "",
             "headers": [
               {
@@ -111,7 +111,7 @@
             "uuid": "399508f1-304d-4dab-a140-5d9a04695509",
             "body": "responsebody",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {

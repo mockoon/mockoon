@@ -18,7 +18,7 @@
             "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",
             "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -44,7 +44,7 @@
             "uuid": "34eb3510-2886-434a-acb8-4542d67739da",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {

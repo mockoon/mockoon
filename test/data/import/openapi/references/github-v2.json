@@ -17,7 +17,7 @@
             "uuid": "74e008c0-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -36,7 +36,7 @@
             "uuid": "74e008c1-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -64,7 +64,7 @@
             "uuid": "74e008c3-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -83,7 +83,7 @@
             "uuid": "74e008c4-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -111,7 +111,7 @@
             "uuid": "74e008c6-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -130,7 +130,7 @@
             "uuid": "74e008c7-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -158,7 +158,7 @@
             "uuid": "74e008c9-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -177,7 +177,7 @@
             "uuid": "74e008ca-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -205,7 +205,7 @@
             "uuid": "74e008cc-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -224,7 +224,7 @@
             "uuid": "74e008cd-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -252,7 +252,7 @@
             "uuid": "74e02fd0-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -271,7 +271,7 @@
             "uuid": "74e02fd1-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -299,7 +299,7 @@
             "uuid": "74e02fd3-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -318,7 +318,7 @@
             "uuid": "74e02fd4-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -346,7 +346,7 @@
             "uuid": "74e02fd6-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -365,7 +365,7 @@
             "uuid": "74e02fd7-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -393,7 +393,7 @@
             "uuid": "74e02fd9-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -412,7 +412,7 @@
             "uuid": "74e02fda-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -440,7 +440,7 @@
             "uuid": "74e02fdc-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -459,7 +459,7 @@
             "uuid": "74e02fdd-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -487,7 +487,7 @@
             "uuid": "74e02fdf-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -506,7 +506,7 @@
             "uuid": "74e02fe0-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -534,7 +534,7 @@
             "uuid": "74e02fe2-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -553,7 +553,7 @@
             "uuid": "74e02fe3-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -581,7 +581,7 @@
             "uuid": "74e02fe5-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -600,7 +600,7 @@
             "uuid": "74e02fe6-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -628,7 +628,7 @@
             "uuid": "74e056e0-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -647,7 +647,7 @@
             "uuid": "74e056e1-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -675,7 +675,7 @@
             "uuid": "74e056e3-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -694,7 +694,7 @@
             "uuid": "74e056e4-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -722,7 +722,7 @@
             "uuid": "74e056e6-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Exists.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -741,7 +741,7 @@
             "uuid": "74e056e7-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -760,7 +760,7 @@
             "uuid": "74e056e8-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "Not exists.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -788,7 +788,7 @@
             "uuid": "74e056ea-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Item removed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -807,7 +807,7 @@
             "uuid": "74e056eb-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -835,7 +835,7 @@
             "uuid": "74e056ed-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Exists.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -854,7 +854,7 @@
             "uuid": "74e056ee-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -873,7 +873,7 @@
             "uuid": "74e056ef-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "Not exists.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -901,7 +901,7 @@
             "uuid": "74e056f1-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Starred.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -920,7 +920,7 @@
             "uuid": "74e056f2-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -948,7 +948,7 @@
             "uuid": "74e056f4-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -967,7 +967,7 @@
             "uuid": "74e056f5-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -995,7 +995,7 @@
             "uuid": "74e056f7-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1014,7 +1014,7 @@
             "uuid": "74e056f8-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1042,7 +1042,7 @@
             "uuid": "74e056fa-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1061,7 +1061,7 @@
             "uuid": "74e056fb-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1089,7 +1089,7 @@
             "uuid": "74e07df0-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1108,7 +1108,7 @@
             "uuid": "74e07df1-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1136,7 +1136,7 @@
             "uuid": "74e07df3-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1155,7 +1155,7 @@
             "uuid": "74e07df4-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1183,7 +1183,7 @@
             "uuid": "74e07df6-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1202,7 +1202,7 @@
             "uuid": "74e07df7-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1230,7 +1230,7 @@
             "uuid": "74e07df9-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1249,7 +1249,7 @@
             "uuid": "74e07dfa-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1277,7 +1277,7 @@
             "uuid": "74e07dfc-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "text/html" },
@@ -1296,7 +1296,7 @@
             "uuid": "74e07dfd-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "text/html" },
@@ -1324,7 +1324,7 @@
             "uuid": "74e07dff-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "text/html" },
@@ -1343,7 +1343,7 @@
             "uuid": "74e07e00-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "text/html" },
@@ -1371,7 +1371,7 @@
             "uuid": "74e07e02-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1390,7 +1390,7 @@
             "uuid": "74e07e03-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1418,7 +1418,7 @@
             "uuid": "74e07e05-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1437,7 +1437,7 @@
             "uuid": "74e07e06-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1465,7 +1465,7 @@
             "uuid": "74e07e08-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1484,7 +1484,7 @@
             "uuid": "74e07e09-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1512,7 +1512,7 @@
             "uuid": "74e07e0b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "205",
+            "statusCode": 205,
             "label": "Marked as read.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1531,7 +1531,7 @@
             "uuid": "74e07e0c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1559,7 +1559,7 @@
             "uuid": "74e07e0e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1578,7 +1578,7 @@
             "uuid": "74e07e0f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1606,7 +1606,7 @@
             "uuid": "74e07e11-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "205",
+            "statusCode": 205,
             "label": "Thread marked as read.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1625,7 +1625,7 @@
             "uuid": "74e07e12-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1653,7 +1653,7 @@
             "uuid": "74e0a500-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No Content\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1672,7 +1672,7 @@
             "uuid": "74e0a501-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1700,7 +1700,7 @@
             "uuid": "74e0a503-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1719,7 +1719,7 @@
             "uuid": "74e0a504-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1747,7 +1747,7 @@
             "uuid": "74e0a506-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1766,7 +1766,7 @@
             "uuid": "74e0a507-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1794,7 +1794,7 @@
             "uuid": "74e0a509-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1813,7 +1813,7 @@
             "uuid": "74e0a50a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1841,7 +1841,7 @@
             "uuid": "74e0a50c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1860,7 +1860,7 @@
             "uuid": "74e0a50d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1888,7 +1888,7 @@
             "uuid": "74e0a50f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1907,7 +1907,7 @@
             "uuid": "74e0a510-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1935,7 +1935,7 @@
             "uuid": "74e0a512-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1954,7 +1954,7 @@
             "uuid": "74e0a513-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -1982,7 +1982,7 @@
             "uuid": "74e0a515-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2001,7 +2001,7 @@
             "uuid": "74e0a516-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "302",
+            "statusCode": 302,
             "label": "Response if requester is not an organization member.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2020,7 +2020,7 @@
             "uuid": "74e0a517-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2048,7 +2048,7 @@
             "uuid": "74e0a519-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2067,7 +2067,7 @@
             "uuid": "74e0a51a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2095,7 +2095,7 @@
             "uuid": "74e0a51c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content. Response if requester is an organization member and user is a member\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2114,7 +2114,7 @@
             "uuid": "74e0a51d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "302",
+            "statusCode": 302,
             "label": "Found. Response if requester is not an organization member\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2133,7 +2133,7 @@
             "uuid": "74e0a51e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2152,7 +2152,7 @@
             "uuid": "74e0a51f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "Not Found.\na. Response if requester is an organization member and user is not a member\nb. Response if requester is not an organization member and is inquiring about themselves\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2180,7 +2180,7 @@
             "uuid": "74e0a521-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2199,7 +2199,7 @@
             "uuid": "74e0a522-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2227,7 +2227,7 @@
             "uuid": "74e0a524-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Concealed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2246,7 +2246,7 @@
             "uuid": "74e0a525-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2274,7 +2274,7 @@
             "uuid": "74e0a527-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "User is a public member.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2293,7 +2293,7 @@
             "uuid": "74e0a528-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2312,7 +2312,7 @@
             "uuid": "74e0a529-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "User is not a public member.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2340,7 +2340,7 @@
             "uuid": "74e0a52b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Publicized.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2359,7 +2359,7 @@
             "uuid": "74e0a52c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2387,7 +2387,7 @@
             "uuid": "74e0a52e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2406,7 +2406,7 @@
             "uuid": "74e0a52f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2434,7 +2434,7 @@
             "uuid": "74e0a531-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2453,7 +2453,7 @@
             "uuid": "74e0a532-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2481,7 +2481,7 @@
             "uuid": "74e0a534-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2500,7 +2500,7 @@
             "uuid": "74e0a535-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2528,7 +2528,7 @@
             "uuid": "74e0a537-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2547,7 +2547,7 @@
             "uuid": "74e0a538-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2575,7 +2575,7 @@
             "uuid": "74e0a53a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2594,7 +2594,7 @@
             "uuid": "74e0a53b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2622,7 +2622,7 @@
             "uuid": "74e0a53d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Item removed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2641,7 +2641,7 @@
             "uuid": "74e0a53e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2669,7 +2669,7 @@
             "uuid": "74e0a540-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2688,7 +2688,7 @@
             "uuid": "74e0a541-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2716,7 +2716,7 @@
             "uuid": "74e0a543-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2735,7 +2735,7 @@
             "uuid": "74e0a544-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2763,7 +2763,7 @@
             "uuid": "74e0a546-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2782,7 +2782,7 @@
             "uuid": "74e0a547-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2810,7 +2810,7 @@
             "uuid": "74e0a549-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "User is an assignee.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2829,7 +2829,7 @@
             "uuid": "74e0a54a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2848,7 +2848,7 @@
             "uuid": "74e0a54b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "User isn't an assignee.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2876,7 +2876,7 @@
             "uuid": "74e0a54d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2895,7 +2895,7 @@
             "uuid": "74e0a54e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2923,7 +2923,7 @@
             "uuid": "74e0a550-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2942,7 +2942,7 @@
             "uuid": "74e0a551-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2970,7 +2970,7 @@
             "uuid": "74e0a553-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -2989,7 +2989,7 @@
             "uuid": "74e0a554-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3017,7 +3017,7 @@
             "uuid": "74e0a556-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Collaborator removed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3036,7 +3036,7 @@
             "uuid": "74e0a557-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3064,7 +3064,7 @@
             "uuid": "74e0a559-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "User is a collaborator.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3083,7 +3083,7 @@
             "uuid": "74e0a55a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3102,7 +3102,7 @@
             "uuid": "74e0a55b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "User is not a collaborator.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3130,7 +3130,7 @@
             "uuid": "74e0cc10-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Collaborator added.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3149,7 +3149,7 @@
             "uuid": "74e0cc11-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3177,7 +3177,7 @@
             "uuid": "74e0cc13-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3196,7 +3196,7 @@
             "uuid": "74e0cc14-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3224,7 +3224,7 @@
             "uuid": "74e0cc16-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3243,7 +3243,7 @@
             "uuid": "74e0cc17-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3271,7 +3271,7 @@
             "uuid": "74e0cc19-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3290,7 +3290,7 @@
             "uuid": "74e0cc1a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3318,7 +3318,7 @@
             "uuid": "74e0cc1c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3337,7 +3337,7 @@
             "uuid": "74e0cc1d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3365,7 +3365,7 @@
             "uuid": "74e0cc1f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3384,7 +3384,7 @@
             "uuid": "74e0cc20-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3412,7 +3412,7 @@
             "uuid": "74e0cc22-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3431,7 +3431,7 @@
             "uuid": "74e0cc23-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3459,7 +3459,7 @@
             "uuid": "74e0cc25-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3478,7 +3478,7 @@
             "uuid": "74e0cc26-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3506,7 +3506,7 @@
             "uuid": "74e0cc28-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3525,7 +3525,7 @@
             "uuid": "74e0cc29-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3553,7 +3553,7 @@
             "uuid": "74e0cc2b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3572,7 +3572,7 @@
             "uuid": "74e0cc2c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3600,7 +3600,7 @@
             "uuid": "74e0cc2e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3619,7 +3619,7 @@
             "uuid": "74e0cc2f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3647,7 +3647,7 @@
             "uuid": "74e0cc31-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3666,7 +3666,7 @@
             "uuid": "74e0cc32-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3694,7 +3694,7 @@
             "uuid": "74e0cc34-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3713,7 +3713,7 @@
             "uuid": "74e0cc35-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3741,7 +3741,7 @@
             "uuid": "74e0cc37-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3760,7 +3760,7 @@
             "uuid": "74e0cc38-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3788,7 +3788,7 @@
             "uuid": "74e0cc3a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3807,7 +3807,7 @@
             "uuid": "74e0cc3b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3835,7 +3835,7 @@
             "uuid": "74e0cc3d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3854,7 +3854,7 @@
             "uuid": "74e0cc3e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3882,7 +3882,7 @@
             "uuid": "74e0cc40-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3901,7 +3901,7 @@
             "uuid": "74e0cc41-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3929,7 +3929,7 @@
             "uuid": "74e0cc43-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3948,7 +3948,7 @@
             "uuid": "74e0cc44-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3976,7 +3976,7 @@
             "uuid": "74e0cc46-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "ok",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -3995,7 +3995,7 @@
             "uuid": "74e0cc47-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4023,7 +4023,7 @@
             "uuid": "74e0cc49-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4042,7 +4042,7 @@
             "uuid": "74e0cc4a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4070,7 +4070,7 @@
             "uuid": "74e0cc4c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4089,7 +4089,7 @@
             "uuid": "74e0cc4d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4117,7 +4117,7 @@
             "uuid": "74e0cc4f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4136,7 +4136,7 @@
             "uuid": "74e0cc50-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4164,7 +4164,7 @@
             "uuid": "74e0cc52-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4183,7 +4183,7 @@
             "uuid": "74e0cc53-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4211,7 +4211,7 @@
             "uuid": "74e0cc55-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4230,7 +4230,7 @@
             "uuid": "74e0cc56-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4258,7 +4258,7 @@
             "uuid": "74e0cc58-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4277,7 +4277,7 @@
             "uuid": "74e0cc59-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4305,7 +4305,7 @@
             "uuid": "74e0cc5b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4324,7 +4324,7 @@
             "uuid": "74e0cc5c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4352,7 +4352,7 @@
             "uuid": "74e0cc5e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4371,7 +4371,7 @@
             "uuid": "74e0cc5f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4399,7 +4399,7 @@
             "uuid": "74e0cc61-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4418,7 +4418,7 @@
             "uuid": "74e0cc62-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4446,7 +4446,7 @@
             "uuid": "74e0cc64-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4465,7 +4465,7 @@
             "uuid": "74e0cc65-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4493,7 +4493,7 @@
             "uuid": "74e0cc67-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4512,7 +4512,7 @@
             "uuid": "74e0cc68-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4540,7 +4540,7 @@
             "uuid": "74e0cc6a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4559,7 +4559,7 @@
             "uuid": "74e0cc6b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4587,7 +4587,7 @@
             "uuid": "74e0cc6d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No Content",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4606,7 +4606,7 @@
             "uuid": "74e0cc6e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4634,7 +4634,7 @@
             "uuid": "74e0cc70-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4653,7 +4653,7 @@
             "uuid": "74e0cc71-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4681,7 +4681,7 @@
             "uuid": "74e0cc73-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4700,7 +4700,7 @@
             "uuid": "74e0cc74-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4728,7 +4728,7 @@
             "uuid": "74e0cc76-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4747,7 +4747,7 @@
             "uuid": "74e0cc77-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4775,7 +4775,7 @@
             "uuid": "74e0cc79-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4794,7 +4794,7 @@
             "uuid": "74e0cc7a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4822,7 +4822,7 @@
             "uuid": "74e0cc7c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4841,7 +4841,7 @@
             "uuid": "74e0cc7d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4869,7 +4869,7 @@
             "uuid": "74e0cc7f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4888,7 +4888,7 @@
             "uuid": "74e0cc80-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4916,7 +4916,7 @@
             "uuid": "74e0cc82-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4935,7 +4935,7 @@
             "uuid": "74e0cc83-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4963,7 +4963,7 @@
             "uuid": "74e0cc85-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -4982,7 +4982,7 @@
             "uuid": "74e0cc86-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5010,7 +5010,7 @@
             "uuid": "74e0cc88-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5029,7 +5029,7 @@
             "uuid": "74e0cc89-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5057,7 +5057,7 @@
             "uuid": "74e0cc8b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5076,7 +5076,7 @@
             "uuid": "74e0cc8c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5104,7 +5104,7 @@
             "uuid": "74e0cc8e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5123,7 +5123,7 @@
             "uuid": "74e0cc8f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5151,7 +5151,7 @@
             "uuid": "74e0cc91-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Hook is triggered.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5170,7 +5170,7 @@
             "uuid": "74e0cc92-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5198,7 +5198,7 @@
             "uuid": "74e0cc94-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5217,7 +5217,7 @@
             "uuid": "74e0cc95-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5245,7 +5245,7 @@
             "uuid": "74e0cc97-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5264,7 +5264,7 @@
             "uuid": "74e0cc98-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5292,7 +5292,7 @@
             "uuid": "74e0cc9a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5311,7 +5311,7 @@
             "uuid": "74e0cc9b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5339,7 +5339,7 @@
             "uuid": "74e0cc9d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5358,7 +5358,7 @@
             "uuid": "74e0cc9e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5386,7 +5386,7 @@
             "uuid": "74e0cca0-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5405,7 +5405,7 @@
             "uuid": "74e0cca1-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5433,7 +5433,7 @@
             "uuid": "74e0f320-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5452,7 +5452,7 @@
             "uuid": "74e0f321-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5480,7 +5480,7 @@
             "uuid": "74e0f323-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5499,7 +5499,7 @@
             "uuid": "74e0f324-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5527,7 +5527,7 @@
             "uuid": "74e0f326-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5546,7 +5546,7 @@
             "uuid": "74e0f327-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5574,7 +5574,7 @@
             "uuid": "74e0f329-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5593,7 +5593,7 @@
             "uuid": "74e0f32a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5621,7 +5621,7 @@
             "uuid": "74e0f32c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5640,7 +5640,7 @@
             "uuid": "74e0f32d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5668,7 +5668,7 @@
             "uuid": "74e0f32f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5687,7 +5687,7 @@
             "uuid": "74e0f330-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5715,7 +5715,7 @@
             "uuid": "74e0f332-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5734,7 +5734,7 @@
             "uuid": "74e0f333-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5762,7 +5762,7 @@
             "uuid": "74e0f335-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5781,7 +5781,7 @@
             "uuid": "74e0f336-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5809,7 +5809,7 @@
             "uuid": "74e0f338-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5828,7 +5828,7 @@
             "uuid": "74e0f339-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5856,7 +5856,7 @@
             "uuid": "74e0f33b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5875,7 +5875,7 @@
             "uuid": "74e0f33c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5903,7 +5903,7 @@
             "uuid": "74e0f33e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5922,7 +5922,7 @@
             "uuid": "74e0f33f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5950,7 +5950,7 @@
             "uuid": "74e0f341-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5969,7 +5969,7 @@
             "uuid": "74e0f342-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -5997,7 +5997,7 @@
             "uuid": "74e0f344-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Item removed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6016,7 +6016,7 @@
             "uuid": "74e0f345-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6044,7 +6044,7 @@
             "uuid": "74e0f347-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6063,7 +6063,7 @@
             "uuid": "74e0f348-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6091,7 +6091,7 @@
             "uuid": "74e0f34a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6110,7 +6110,7 @@
             "uuid": "74e0f34b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6138,7 +6138,7 @@
             "uuid": "74e0f34d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6157,7 +6157,7 @@
             "uuid": "74e0f34e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6185,7 +6185,7 @@
             "uuid": "74e0f350-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6204,7 +6204,7 @@
             "uuid": "74e0f351-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6232,7 +6232,7 @@
             "uuid": "74e0f353-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6251,7 +6251,7 @@
             "uuid": "74e0f354-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6279,7 +6279,7 @@
             "uuid": "74e0f356-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6298,7 +6298,7 @@
             "uuid": "74e0f357-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6326,7 +6326,7 @@
             "uuid": "74e0f359-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6345,7 +6345,7 @@
             "uuid": "74e0f35a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6373,7 +6373,7 @@
             "uuid": "74e0f35c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6392,7 +6392,7 @@
             "uuid": "74e0f35d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6420,7 +6420,7 @@
             "uuid": "74e0f35f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6439,7 +6439,7 @@
             "uuid": "74e0f360-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6467,7 +6467,7 @@
             "uuid": "74e0f362-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6486,7 +6486,7 @@
             "uuid": "74e0f363-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6514,7 +6514,7 @@
             "uuid": "74e0f365-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Successful Response (The resulting merge commit)",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6533,7 +6533,7 @@
             "uuid": "74e0f366-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No-op response (base already contains the head, nothing to merge)",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6552,7 +6552,7 @@
             "uuid": "74e0f367-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6571,7 +6571,7 @@
             "uuid": "74e0f368-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "Missing base response or missing head response",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6590,7 +6590,7 @@
             "uuid": "74e0f369-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "409",
+            "statusCode": 409,
             "label": "Merge conflict response.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6618,7 +6618,7 @@
             "uuid": "74e0f36b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6637,7 +6637,7 @@
             "uuid": "74e0f36c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6665,7 +6665,7 @@
             "uuid": "74e0f36e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6684,7 +6684,7 @@
             "uuid": "74e0f36f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6712,7 +6712,7 @@
             "uuid": "74e0f371-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6731,7 +6731,7 @@
             "uuid": "74e0f372-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6759,7 +6759,7 @@
             "uuid": "74e0f374-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6778,7 +6778,7 @@
             "uuid": "74e0f375-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6806,7 +6806,7 @@
             "uuid": "74e0f377-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6825,7 +6825,7 @@
             "uuid": "74e0f378-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6853,7 +6853,7 @@
             "uuid": "74e0f37a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6872,7 +6872,7 @@
             "uuid": "74e0f37b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6900,7 +6900,7 @@
             "uuid": "74e0f37d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6919,7 +6919,7 @@
             "uuid": "74e0f37e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6947,7 +6947,7 @@
             "uuid": "74e0f380-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "205",
+            "statusCode": 205,
             "label": "Marked as read.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6966,7 +6966,7 @@
             "uuid": "74e0f381-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -6994,7 +6994,7 @@
             "uuid": "74e0f383-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7013,7 +7013,7 @@
             "uuid": "74e0f384-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7041,7 +7041,7 @@
             "uuid": "74e0f386-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7060,7 +7060,7 @@
             "uuid": "74e0f387-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7088,7 +7088,7 @@
             "uuid": "74e0f389-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7107,7 +7107,7 @@
             "uuid": "74e0f38a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7135,7 +7135,7 @@
             "uuid": "74e0f38c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7154,7 +7154,7 @@
             "uuid": "74e0f38d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7182,7 +7182,7 @@
             "uuid": "74e0f38f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7201,7 +7201,7 @@
             "uuid": "74e0f390-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7229,7 +7229,7 @@
             "uuid": "74e0f392-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7248,7 +7248,7 @@
             "uuid": "74e0f393-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7276,7 +7276,7 @@
             "uuid": "74e0f395-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7295,7 +7295,7 @@
             "uuid": "74e0f396-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7323,7 +7323,7 @@
             "uuid": "74e0f398-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7342,7 +7342,7 @@
             "uuid": "74e0f399-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7370,7 +7370,7 @@
             "uuid": "74e0f39b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7389,7 +7389,7 @@
             "uuid": "74e0f39c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7417,7 +7417,7 @@
             "uuid": "74e0f39e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7436,7 +7436,7 @@
             "uuid": "74e0f39f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7464,7 +7464,7 @@
             "uuid": "74e0f3a1-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7483,7 +7483,7 @@
             "uuid": "74e0f3a2-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7511,7 +7511,7 @@
             "uuid": "74e0f3a4-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7530,7 +7530,7 @@
             "uuid": "74e0f3a5-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7558,7 +7558,7 @@
             "uuid": "74e0f3a7-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Pull request has been merged.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7577,7 +7577,7 @@
             "uuid": "74e0f3a8-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7596,7 +7596,7 @@
             "uuid": "74e0f3a9-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "Pull request has not been merged.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7624,7 +7624,7 @@
             "uuid": "74e0f3ab-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "Response if merge was successful.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7643,7 +7643,7 @@
             "uuid": "74e0f3ac-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7662,7 +7662,7 @@
             "uuid": "74e0f3ad-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "405",
+            "statusCode": 405,
             "label": "Response if merge cannot be performed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7690,7 +7690,7 @@
             "uuid": "74e0f3af-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7709,7 +7709,7 @@
             "uuid": "74e0f3b0-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7737,7 +7737,7 @@
             "uuid": "74e0f3b2-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7756,7 +7756,7 @@
             "uuid": "74e0f3b3-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7784,7 +7784,7 @@
             "uuid": "74e0f3b5-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7803,7 +7803,7 @@
             "uuid": "74e11a30-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7831,7 +7831,7 @@
             "uuid": "74e11a32-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No Content",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7850,7 +7850,7 @@
             "uuid": "74e11a33-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7878,7 +7878,7 @@
             "uuid": "74e11a35-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7897,7 +7897,7 @@
             "uuid": "74e11a36-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7925,7 +7925,7 @@
             "uuid": "74e11a38-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7944,7 +7944,7 @@
             "uuid": "74e11a39-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7972,7 +7972,7 @@
             "uuid": "74e11a3b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No Content",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -7991,7 +7991,7 @@
             "uuid": "74e11a3c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8019,7 +8019,7 @@
             "uuid": "74e11a3e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8038,7 +8038,7 @@
             "uuid": "74e11a3f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8066,7 +8066,7 @@
             "uuid": "74e11a41-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8085,7 +8085,7 @@
             "uuid": "74e11a42-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8113,7 +8113,7 @@
             "uuid": "74e11a44-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8132,7 +8132,7 @@
             "uuid": "74e11a45-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8160,7 +8160,7 @@
             "uuid": "74e11a47-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8179,7 +8179,7 @@
             "uuid": "74e11a48-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8207,7 +8207,7 @@
             "uuid": "74e11a4a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8226,7 +8226,7 @@
             "uuid": "74e11a4b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8254,7 +8254,7 @@
             "uuid": "74e11a4d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8273,7 +8273,7 @@
             "uuid": "74e11a4e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8301,7 +8301,7 @@
             "uuid": "74e11a50-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8320,7 +8320,7 @@
             "uuid": "74e11a51-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8348,7 +8348,7 @@
             "uuid": "74e11a53-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8367,7 +8367,7 @@
             "uuid": "74e11a54-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8395,7 +8395,7 @@
             "uuid": "74e11a56-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8414,7 +8414,7 @@
             "uuid": "74e11a57-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8442,7 +8442,7 @@
             "uuid": "74e11a59-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8461,7 +8461,7 @@
             "uuid": "74e11a5a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8489,7 +8489,7 @@
             "uuid": "74e11a5c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8508,7 +8508,7 @@
             "uuid": "74e11a5d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8536,7 +8536,7 @@
             "uuid": "74e11a5f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8555,7 +8555,7 @@
             "uuid": "74e11a60-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8583,7 +8583,7 @@
             "uuid": "74e11a62-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8602,7 +8602,7 @@
             "uuid": "74e11a63-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8630,7 +8630,7 @@
             "uuid": "74e11a65-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8649,7 +8649,7 @@
             "uuid": "74e11a66-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8677,7 +8677,7 @@
             "uuid": "74e11a68-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8696,7 +8696,7 @@
             "uuid": "74e11a69-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8724,7 +8724,7 @@
             "uuid": "74e11a6b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8743,7 +8743,7 @@
             "uuid": "74e11a6c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8771,7 +8771,7 @@
             "uuid": "74e11a6e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8790,7 +8790,7 @@
             "uuid": "74e11a6f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8818,7 +8818,7 @@
             "uuid": "74e11a71-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8837,7 +8837,7 @@
             "uuid": "74e11a72-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8865,7 +8865,7 @@
             "uuid": "74e11a74-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "302",
+            "statusCode": 302,
             "label": "Found.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8884,7 +8884,7 @@
             "uuid": "74e11a75-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8912,7 +8912,7 @@
             "uuid": "74e11a77-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8931,7 +8931,7 @@
             "uuid": "74e11a78-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8959,7 +8959,7 @@
             "uuid": "74e11a7a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -8978,7 +8978,7 @@
             "uuid": "74e11a7b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9006,7 +9006,7 @@
             "uuid": "74e11a7d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9025,7 +9025,7 @@
             "uuid": "74e11a7e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9053,7 +9053,7 @@
             "uuid": "74e11a80-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9072,7 +9072,7 @@
             "uuid": "74e11a81-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9100,7 +9100,7 @@
             "uuid": "74e11a83-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9119,7 +9119,7 @@
             "uuid": "74e11a84-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9147,7 +9147,7 @@
             "uuid": "74e11a86-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9166,7 +9166,7 @@
             "uuid": "74e11a87-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9194,7 +9194,7 @@
             "uuid": "74e11a89-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9213,7 +9213,7 @@
             "uuid": "74e11a8a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9241,7 +9241,7 @@
             "uuid": "74e11a8c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9260,7 +9260,7 @@
             "uuid": "74e11a8d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9288,7 +9288,7 @@
             "uuid": "74e11a8f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9307,7 +9307,7 @@
             "uuid": "74e11a90-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9335,7 +9335,7 @@
             "uuid": "74e11a92-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Team member removed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9354,7 +9354,7 @@
             "uuid": "74e11a93-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9382,7 +9382,7 @@
             "uuid": "74e14140-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "User is a member.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9401,7 +9401,7 @@
             "uuid": "74e14141-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9420,7 +9420,7 @@
             "uuid": "74e14142-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "User is not a member.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9448,7 +9448,7 @@
             "uuid": "74e14144-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Team member added.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9467,7 +9467,7 @@
             "uuid": "74e14145-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9486,7 +9486,7 @@
             "uuid": "74e14146-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "422",
+            "statusCode": 422,
             "label": "If you attempt to add an organization to a team, you will get this.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9514,7 +9514,7 @@
             "uuid": "74e14148-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Team member removed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9533,7 +9533,7 @@
             "uuid": "74e14149-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9561,7 +9561,7 @@
             "uuid": "74e1414b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "User is a member.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9580,7 +9580,7 @@
             "uuid": "74e1414c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9599,7 +9599,7 @@
             "uuid": "74e1414d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "User has no membership with team",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9627,7 +9627,7 @@
             "uuid": "74e1414f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "Team member added.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9646,7 +9646,7 @@
             "uuid": "74e14150-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9665,7 +9665,7 @@
             "uuid": "74e14151-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "422",
+            "statusCode": 422,
             "label": "If you attempt to add an organization to a team, you will get this.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9693,7 +9693,7 @@
             "uuid": "74e14153-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9712,7 +9712,7 @@
             "uuid": "74e14154-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9740,7 +9740,7 @@
             "uuid": "74e14156-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9759,7 +9759,7 @@
             "uuid": "74e14157-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9787,7 +9787,7 @@
             "uuid": "74e14159-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9815,7 +9815,7 @@
             "uuid": "74e1415b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9843,7 +9843,7 @@
             "uuid": "74e1415d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9862,7 +9862,7 @@
             "uuid": "74e1415e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9890,7 +9890,7 @@
             "uuid": "74e14160-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9909,7 +9909,7 @@
             "uuid": "74e14161-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9937,7 +9937,7 @@
             "uuid": "74e14163-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9956,7 +9956,7 @@
             "uuid": "74e14164-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -9984,7 +9984,7 @@
             "uuid": "74e14166-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/vnd.github.v3" },
@@ -10003,7 +10003,7 @@
             "uuid": "74e14167-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/vnd.github.v3" },
@@ -10031,7 +10031,7 @@
             "uuid": "74e14169-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10059,7 +10059,7 @@
             "uuid": "74e1416b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10078,7 +10078,7 @@
             "uuid": "74e1416c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10106,7 +10106,7 @@
             "uuid": "74e1416e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10125,7 +10125,7 @@
             "uuid": "74e1416f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10153,7 +10153,7 @@
             "uuid": "74e14171-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "User unfollowed.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10172,7 +10172,7 @@
             "uuid": "74e14172-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10200,7 +10200,7 @@
             "uuid": "74e16851-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Response if you are following this user.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10219,7 +10219,7 @@
             "uuid": "74e16852-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10238,7 +10238,7 @@
             "uuid": "74e16853-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "Response if you are not following this user.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10266,7 +10266,7 @@
             "uuid": "74e16855-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "You are now following the user.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10285,7 +10285,7 @@
             "uuid": "74e16856-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10313,7 +10313,7 @@
             "uuid": "74e16858-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10332,7 +10332,7 @@
             "uuid": "74e16859-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10360,7 +10360,7 @@
             "uuid": "74e1685b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10379,7 +10379,7 @@
             "uuid": "74e1685c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10407,7 +10407,7 @@
             "uuid": "74e1685e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10426,7 +10426,7 @@
             "uuid": "74e1685f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10454,7 +10454,7 @@
             "uuid": "74e16861-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "No content.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10473,7 +10473,7 @@
             "uuid": "74e16862-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10501,7 +10501,7 @@
             "uuid": "74e16864-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10520,7 +10520,7 @@
             "uuid": "74e16865-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10548,7 +10548,7 @@
             "uuid": "74e16867-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10567,7 +10567,7 @@
             "uuid": "74e16868-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10595,7 +10595,7 @@
             "uuid": "74e1686a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10614,7 +10614,7 @@
             "uuid": "74e1686b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10642,7 +10642,7 @@
             "uuid": "74e1686d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "201",
+            "statusCode": 201,
             "label": "Created",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10661,7 +10661,7 @@
             "uuid": "74e1686e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10689,7 +10689,7 @@
             "uuid": "74e16870-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10708,7 +10708,7 @@
             "uuid": "74e16871-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10736,7 +10736,7 @@
             "uuid": "74e16873-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Unstarred.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10755,7 +10755,7 @@
             "uuid": "74e16874-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10783,7 +10783,7 @@
             "uuid": "74e16876-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "This repository is starred by you.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10802,7 +10802,7 @@
             "uuid": "74e16877-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10821,7 +10821,7 @@
             "uuid": "74e16878-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "This repository is not starred by you.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10849,7 +10849,7 @@
             "uuid": "74e1687a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Repository starred.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10868,7 +10868,7 @@
             "uuid": "74e1687b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10896,7 +10896,7 @@
             "uuid": "74e1687d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10915,7 +10915,7 @@
             "uuid": "74e1687e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10943,7 +10943,7 @@
             "uuid": "74e16880-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Unwatched.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10962,7 +10962,7 @@
             "uuid": "74e16881-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -10990,7 +10990,7 @@
             "uuid": "74e16883-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Repository is watched by you.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11009,7 +11009,7 @@
             "uuid": "74e16884-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11028,7 +11028,7 @@
             "uuid": "74e16885-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "Repository is not watched by you.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11056,7 +11056,7 @@
             "uuid": "74e16887-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Repository is watched.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11075,7 +11075,7 @@
             "uuid": "74e16888-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11103,7 +11103,7 @@
             "uuid": "74e1688a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11122,7 +11122,7 @@
             "uuid": "74e1688b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11150,7 +11150,7 @@
             "uuid": "74e1688d-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11169,7 +11169,7 @@
             "uuid": "74e1688e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11197,7 +11197,7 @@
             "uuid": "74e16890-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11216,7 +11216,7 @@
             "uuid": "74e16891-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11244,7 +11244,7 @@
             "uuid": "74e16893-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11272,7 +11272,7 @@
             "uuid": "74e16895-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11300,7 +11300,7 @@
             "uuid": "74e16897-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11319,7 +11319,7 @@
             "uuid": "74e16898-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11347,7 +11347,7 @@
             "uuid": "74e1689a-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "204",
+            "statusCode": 204,
             "label": "Response if user follows target user.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11366,7 +11366,7 @@
             "uuid": "74e1689b-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11385,7 +11385,7 @@
             "uuid": "74e1689c-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "404",
+            "statusCode": 404,
             "label": "Response if user does not follow target user.",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11413,7 +11413,7 @@
             "uuid": "74e1689e-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11432,7 +11432,7 @@
             "uuid": "74e1689f-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11460,7 +11460,7 @@
             "uuid": "74e168a1-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11479,7 +11479,7 @@
             "uuid": "74e168a2-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11507,7 +11507,7 @@
             "uuid": "74e168a4-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11526,7 +11526,7 @@
             "uuid": "74e168a5-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11554,7 +11554,7 @@
             "uuid": "74e168a7-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11582,7 +11582,7 @@
             "uuid": "74e168a9-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11610,7 +11610,7 @@
             "uuid": "74e168ab-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "OK",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11629,7 +11629,7 @@
             "uuid": "74e168ac-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11657,7 +11657,7 @@
             "uuid": "74e168ae-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },
@@ -11685,7 +11685,7 @@
             "uuid": "74e18f60-5d8e-11ea-85cb-79ee683d2b61",
             "body": "",
             "latency": 0,
-            "statusCode": "403",
+            "statusCode": 403,
             "label": "API rate limit exceeded. See http://developer.github.com/v3/#rate-limiting\nfor details.\n",
             "headers": [
               { "key": "Content-Type", "value": "application/json" },

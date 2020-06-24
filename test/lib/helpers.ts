@@ -224,12 +224,6 @@ export class Helpers {
     }
   }
 
-  async setRouteStatusCode(statusCode: string) {
-    await this.testsInstance.app.client
-      .element('select[formcontrolname="statusCode"]')
-      .setValue(statusCode);
-  }
-
   async selectRoute(index: number) {
     await this.testsInstance.app.client
       .element(`.routes-menu .nav.menu-list .nav-item:nth-child(${index})`)
