@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { cloneDeep } from 'lodash';
 import { HighestMigrationId } from 'src/app/libs/migrations.lib';
 import { DataService } from 'src/app/services/data.service';
 import { Environment } from 'src/app/types/environment.type';
@@ -31,6 +32,17 @@ export class SchemasBuilderService {
       sendFileAsBody: false,
       rules: [],
       disableTemplating: false
+    };
+  }
+
+  /**
+   * Clone a new route response with a fresh UUID
+   */
+  public cloneRouteResponse(routeResponse: RouteResponse): RouteResponse {
+    return {
+      ...cloneDeep(routeResponse),
+      uuid: uuid(),
+      label: `${routeResponse.label} (copy)`
     };
   }
 

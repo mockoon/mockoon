@@ -1,6 +1,10 @@
 import { Config } from 'src/app/config';
 import { HighestMigrationId } from 'src/app/libs/migrations.lib';
-import { ArrayContainsObjectKey, GetEditorModeFromContentType, GetRouteResponseContentType } from 'src/app/libs/utils.lib';
+import {
+  ArrayContainsObjectKey,
+  GetEditorModeFromContentType,
+  GetRouteResponseContentType
+} from 'src/app/libs/utils.lib';
 import { ActiveEnvironmentsLogUUIDs, EnvironmentLogs } from 'src/app/models/environment-logs.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions, ActionTypes } from 'src/app/stores/actions';
@@ -727,8 +731,7 @@ export function environmentReducer(
     }
 
     case ActionTypes.ADD_ROUTE_RESPONSE: {
-      const newRouteResponse: RouteResponse = action.routeReponse;
-
+      const newRouteResponse: RouteResponse = action.routeResponse;
       newState = {
         ...state,
         activeRouteResponseUUID: newRouteResponse.uuid,
@@ -739,10 +742,25 @@ export function environmentReducer(
               ...environment,
               routes: environment.routes.map((route) => {
                 if (route.uuid === state.activeRouteUUID) {
-                  return {
-                    ...route,
-                    responses: [...route.responses, newRouteResponse]
-                  };
+                  const responses = [...route.responses];
+                  if (action.isDuplication) {
+                    const activeRouteResponseIndex = route.responses.findIndex(
+                      (routeResponse: RouteResponse) => {
+                        return (
+                          routeResponse.uuid === state.activeRouteResponseUUID
+                        );
+                      }
+                    );
+                    responses.splice(
+                      activeRouteResponseIndex + 1,
+                      0,
+                      newRouteResponse
+                    );
+                  } else {
+                    responses.push(newRouteResponse);
+                  }
+
+                  return { ...route, responses };
                 }
 
                 return route;

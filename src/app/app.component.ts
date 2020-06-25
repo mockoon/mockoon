@@ -64,7 +64,9 @@ import {
   RouteResponse,
   statusCodes
 } from 'src/app/types/route.type';
-import { DraggableContainerNames } from 'src/app/types/ui.type';
+import {
+  DraggableContainerNames
+} from 'src/app/types/ui.type';
 
 @Component({
   selector: 'app-root',
@@ -635,5 +637,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.environmentsService.setActiveEnvironmentActiveLog(lastLogUUID);
     this.environmentsService.setActiveView('ENV_LOGS');
     this.environmentsService.setActiveEnvironmentLogTab('RESPONSE');
+  }
+
+  /**
+   * Duplicate the active route response
+   */
+  public duplicateRouteResponse() {
+    this.environmentsService.duplicateRouteResponse();
   }
 }

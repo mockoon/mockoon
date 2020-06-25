@@ -223,6 +223,19 @@ export class EnvironmentsService {
   }
 
   /**
+   * Duplicate the given route response and save it in the store
+   */
+  public duplicateRouteResponse() {
+    const activeRouteResponse = this.store.getActiveRouteResponse();
+    this.store.update(
+      addRouteResponseAction(
+        this.schemasBuilderService.cloneRouteResponse(activeRouteResponse),
+        true
+      )
+    );
+  }
+
+  /**
    * Duplicate a route, or the current active route and append it at the end
    */
   public duplicateRoute(routeUUID?: string) {

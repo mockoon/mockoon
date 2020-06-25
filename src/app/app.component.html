@@ -333,11 +333,20 @@
                             </li>
                           </ul>
 
+                          <!-- Response duplication button -->
+                          <button type="button" id="route-response-duplication-button" class="btn btn-link btn-icon"
+                                  (click)="duplicateRouteResponse()">
+                            <span ngbTooltip="Duplicate response">
+                              <i class="material-icons">content_copy</i></span>
+                          </button>
+
                           <!-- Response delete button -->
-                          <button *ngIf="activeRoute?.responses.length > 1" type="button" class="btn btn-link btn-icon"
-                            (click)="deleteCurrentRouteResponse()">
-                            <span *ngIf="!(deleteCurrentRouteResponseRequested$ | async)" ngbTooltip="Delete response"><i
-                                class="material-icons">delete</i></span>
+                          <button *ngIf="activeRoute?.responses.length > 1" type="button"
+                                  id="route-response-removal-button" class="btn btn-link btn-icon"
+                                  (click)="deleteCurrentRouteResponse()">
+                            <span *ngIf="!(deleteCurrentRouteResponseRequested$ | async)"
+                                  ngbTooltip="Delete response"><i
+                              class="material-icons">delete</i></span>
                             <span *ngIf="deleteCurrentRouteResponseRequested$ | async" class="text-danger" ngbTooltip="Confirm deletion"><i
                                 class="material-icons">delete</i></span>
                           </button>
