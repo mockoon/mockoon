@@ -208,29 +208,29 @@ const TemplateParserHelpers = function (request: Request) {
     },
     // switch cases
     switch: function (value, options) {
-      this.found = false;
+      options.data.found = false;
 
-      this.switchValue = value;
-      const htmlContent = options.fn(this);
+      options.data.switchValue = value;
+      const htmlContent = options.fn(options);
 
       return htmlContent;
     },
     // case helper for switch
     case: function (value, options) {
       // check switch value to simulate break
-      if (value === this.switchValue && !this.found) {
-        this.found = true;
+      if (value === options.data.switchValue && !options.data.found) {
+        options.data.found = true;
 
-        return options.fn(this);
+        return options.fn(options);
       }
     },
     // default helper for switch
     default: function (options) {
       // if there is still a switch value show default content
-      if (!this.found) {
-        delete this.switchValue;
+      if (!options.data.found) {
+        delete options.data.switchValue;
 
-        return options.fn(this);
+        return options.fn(options);
       }
     },
     // provide current time with format
