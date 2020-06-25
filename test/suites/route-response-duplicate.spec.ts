@@ -34,7 +34,7 @@ describe('Duplicate a route response', () => {
   it('Verify duplicated route response has the same status code with the original response', async () => {
     const routeResponseStatusCodeSelectSelector =
       '.input-group .custom-select[formcontrolname="statusCode"]';
-    const statusCode = '400';
+    const statusCode = '22: 400';
 
     await tests.helpers.selectRouteResponse(1);
     await tests.helpers.removeRouteResponse();
