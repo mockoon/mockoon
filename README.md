@@ -43,7 +43,7 @@ If community support is not enough and you still want to open an issue for a bug
 
 ## Documentation
 
-You will find some [tutorials](https://mockoon.com/tutorials) on the official website. They cover Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
+You will find the [documentation](https://mockoon.com/docs/latest) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
 
 ## Contributing
 
