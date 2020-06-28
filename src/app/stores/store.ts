@@ -72,7 +72,8 @@ export class Store {
         wrap: 'free',
         showPrintMargin: false,
         tooltipFollowsMouse: false,
-        useWorker: false
+        useWorker: false,
+        tabSize: 2
       },
       mode: 'json',
       theme: 'custom_theme'
