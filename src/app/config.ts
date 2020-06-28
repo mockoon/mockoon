@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 
 const appVersion = require('../../package.json').version;
-const tutorialURL = 'https://mockoon.com/tutorial/';
+const docsURL = 'https://mockoon.com/docs/latest/';
 
 export const Config = {
   appVersion,
@@ -14,12 +14,12 @@ export const Config = {
   githubBinaryDownloadUrl:
     'https://github.com/mockoon/mockoon/releases/download/',
   docs: {
-    templating: tutorialURL + 'dynamic-response-with-templating/',
-    proxy: tutorialURL + 'api-mocking-proxy-mode/',
-    cors: tutorialURL + 'automatic-handling-preflight-requests/',
-    https: tutorialURL + 'serve-mock-api-tls/',
-    headers: tutorialURL + 'define-response-headers/',
-    rules: tutorialURL + 'multiple-route-responses/'
+    templating: docsURL + 'templating/',
+    proxy: docsURL + 'proxy-mode/',
+    cors: docsURL + 'cors/',
+    https: docsURL + 'https/',
+    headers: docsURL + 'response-headers/',
+    rules: docsURL + 'multiple-responses/'
   },
   maxLogsPerEnvironment: 50,
   firebaseConfig: {

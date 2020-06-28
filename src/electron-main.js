@@ -324,9 +324,9 @@ function createWindow() {
         }
       },
       {
-        label: 'Tutorials',
+        label: 'Docs',
         click: function () {
-          shell.openExternal('https://mockoon.com/tutorials');
+          shell.openExternal('https://mockoon.com/docs');
         }
       },
       {
