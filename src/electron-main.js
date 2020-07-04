@@ -5,8 +5,6 @@ logs.catchErrors();
 
 const electron = require('electron');
 const windowState = require('electron-window-state');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
@@ -15,31 +13,18 @@ const app = electron.app;
 const shell = electron.shell;
 const BrowserWindow = electron.BrowserWindow;
 
-// if serving enable hot reload
+// get command line args
 const args = process.argv.slice(1);
-
-// init CMD flags
 const isServing = args.some((val) => val === '--serve');
 const isTesting = args.some((val) => val === '--tests');
 
-// set test folder when testing
-if (isTesting) {
+// set local data folder when in dev mode or running tests
+if (isTesting || isDev) {
   app.setPath('userData', path.resolve('./tmp'));
 }
 
-// in dev mode add local data and enable hot reloading
+// when serving (devmode) enable hot reloading
 if (isDev && isServing) {
-  mkdirp.sync('./tmp/storage/');
-  fs.copyFileSync(
-    path.resolve('./test/data/dev/environments.json'),
-    path.resolve('./tmp/storage/environments.json')
-  );
-  fs.copyFileSync(
-    path.resolve('./test/data/settings.json'),
-    path.resolve('./tmp/storage/settings.json')
-  );
-
-  electron.app.setPath('userData', path.resolve('./tmp'));
   require('electron-reload')(__dirname, {});
 }
 
@@ -346,7 +331,7 @@ function createWindow() {
       {
         label: 'Show app data folder',
         click: function () {
-          shell.showItemInFolder(electron.app.getPath('userData'));
+          shell.showItemInFolder(app.getPath('userData'));
         }
       }
     ]
@@ -376,6 +361,3 @@ app.on('activate', function () {
     createWindow();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

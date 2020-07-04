@@ -93,99 +93,61 @@ export class SchemasBuilderService {
   public buildDefaultEnvironment(): Environment {
     return {
       ...this.buildEnvironment(),
-      name: 'Demo users API',
+      name: 'Demo API',
       routes: [
         {
           ...this.buildRoute(),
           method: 'get',
           endpoint: 'users',
-          documentation: 'Get all users',
+          documentation:
+            'Generate random body (JSON, text, CSV, etc) with templating',
           responses: [
             {
               ...this.buildRouteResponse(),
-              statusCode: 200,
-              label: 'Success',
-              latency: 50,
-              headers: [{ key: 'Content-Type', value: 'application/json' }],
+              label:
+                "Creates 10 random users, or the amount specified in the 'total' query param",
               body:
-                '[\n  {\n    "id": 1,\n    "firstname": "John",\n    "Lastname": "Snow",' +
-                '\n    "status": "Learning things"\n  },\n  {\n    "id": 2,\n    "firstname": "Daenerys",\n    "Lastname": "Targaryen",\n    "status": "Riding a dragon"\n  }\n]'
-            }
-          ]
-        },
-        {
-          ...this.buildRoute(),
-          method: 'get',
-          endpoint: 'users/:id',
-          documentation: 'Get a user',
-          responses: [
-            {
-              ...this.buildRouteResponse(),
-              statusCode: 200,
-              label: 'Get userId 1',
-              headers: [{ key: 'Content-Type', value: 'application/json' }],
-              body:
-                '{\n  "id": 1,\n  "firstname": "John",\n  "Lastname": "Snow",\n  "status": "Learning things"\n}',
-              rules: [
-                {
-                  target: 'params',
-                  modifier: 'id',
-                  value: '1',
-                  isRegex: false
-                }
-              ]
-            },
-            {
-              ...this.buildRouteResponse(),
-              statusCode: 200,
-              label: 'Get userId 2',
-              headers: [{ key: 'Content-Type', value: 'application/json' }],
-              body:
-                '{\n  "id": 2,\n  "firstname": "Daenerys",\n  "Lastname": "Targaryen",\n  "status": "Riding a dragon"\n}',
-              rules: [
-                {
-                  target: 'params',
-                  modifier: 'id',
-                  value: '2',
-                  isRegex: false
-                }
-              ]
+                '{\n  "Templating example": "For more information about templating, click the blue \'i\' above this editor",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'random.number\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'name.firstName\' }}",\n        "lastname": "{{ faker \'name.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'random.number\' 5) }}\n            {\n              "id": "{{ faker \'random.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
             }
           ]
         },
         {
           ...this.buildRoute(),
           method: 'post',
-          endpoint: 'users',
-          documentation: 'Create a user',
+          endpoint: 'content/:param1',
+          documentation: 'Use multiple responses with rules',
           responses: [
             {
               ...this.buildRouteResponse(),
-              statusCode: 201,
-              label: 'Success',
-              headers: [{ key: 'Content-Type', value: 'application/json' }],
+              label: 'Default response',
               body:
-                '{\n  "firstname": "{{body \'firstname\'}}",\n  "lastname": "{{body \'lastname\'}}",\n  "status": "{{body \'status\'}}"\n}',
+                '{\n  "Rules example": "Default response. Served if route param \'param1\' is not present."\n}'
+            },
+            {
+              ...this.buildRouteResponse(),
+              label: 'Content XYZ',
+              body:
+                "{\n  \"Rules example\": \"Content XYZ. Served if route param 'param1' equals 'xyz'. (See in 'Rules' tab)\"\n}",
               rules: [
                 {
-                  target: 'body',
-                  modifier: 'firstname',
-                  value: '.+',
-                  isRegex: true
+                  target: 'params',
+                  modifier: 'param1',
+                  value: 'xyz',
+                  isRegex: false
                 }
               ]
             },
             {
               ...this.buildRouteResponse(),
-              statusCode: 400,
-              label: 'Missing data',
-              headers: [{ key: 'Content-Type', value: 'application/json' }],
-              body: '{\n  "Error": "firstname is required"\n}',
+              statusCode: 404,
+              label: 'Content not found',
+              body:
+                "{\n  \"Rules example\": \"Content not found. Served if route param 'param1' is not equal to 'xyz'. (See in 'Rules' tab)\"\n}\n",
               rules: [
                 {
-                  target: 'body',
-                  modifier: 'firstname',
-                  value: '^$',
+                  target: 'params',
+                  modifier: 'param1',
+                  value: '^(?!.*xyz).*$',
                   isRegex: true
                 }
               ]
@@ -194,24 +156,45 @@ export class SchemasBuilderService {
         },
         {
           ...this.buildRoute(),
-          method: 'delete',
-          endpoint: 'users/:id',
-          documentation: 'Delete a user',
+          method: 'get',
+          endpoint: 'file/:pageName',
+          documentation:
+            "Serve a file dynamically depending on the path param 'pageName'.",
           responses: [
             {
               ...this.buildRouteResponse(),
-              statusCode: 204,
-              label: 'User deleted',
-              headers: [{ key: 'Content-Type', value: 'application/json' }],
+              label: 'Templating is also supported in file path',
+              headers: [{ key: 'Content-Type', value: 'text/html' }],
               body: '',
-              rules: [
-                {
-                  target: 'body',
-                  modifier: 'firstname',
-                  value: '.*',
-                  isRegex: true
-                }
-              ]
+              filePath: "./page{{urlParam 'pageName'}}.html"
+            }
+          ]
+        },
+        {
+          ...this.buildRoute(),
+          method: 'put',
+          endpoint: 'path/with/pattern(s)?/*',
+          documentation: 'Path supports various patterns',
+          responses: [
+            {
+              ...this.buildRouteResponse(),
+              headers: [{ key: 'Content-Type', value: 'text/plain' }],
+              body:
+                "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/routing"
+            }
+          ]
+        },
+        {
+          ...this.buildRoute(),
+          method: 'get',
+          endpoint: 'forward-and-record',
+          documentation: 'Can Mockoon forward or record entering requests?',
+          responses: [
+            {
+              ...this.buildRouteResponse(),
+              headers: [{ key: 'Content-Type', value: 'text/plain' }],
+              body:
+                "Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings ('cog' icon in the upper right corner). \nTo learn more: https://mockoon.com/docs/latest/proxy-mode\n\nAs always, all entering requests, and responses from the proxied server will be recorded ('clock' icon in the upper right corner).\nTo learn more: https://mockoon.com/docs/latest/requests-logging"
             }
           ]
         }
