@@ -15,12 +15,16 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Adam Recvlohe
 - Adialix
 - Andres Saa
+- Валентин Радчук
 - Buckley Robinson
 - Colin White
 - Cyhung
+- Efe
+- Jeremy
 - John
 - Kelly Farris
 - Max Sommer
+- Mike
 - Mishal
 - Mokkun
 - Mrsean2k
@@ -36,3 +40,4 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Vetle Økland
 - Victor Castro
 - Yuemuc
+(List from [Buy Me A Coffee](https://www.buymeacoffee.com/255kb) page)
