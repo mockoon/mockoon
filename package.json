@@ -108,7 +108,7 @@
     "istanbul-instrumenter-loader": "3.0.1",
     "jasmine-core": "3.5.0",
     "jasmine-spec-reporter": "5.0.1",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "material-design-icons": "3.0.1",
     "mocha": "7.1.1",
     "ng2-ace-editor": "0.3.9",
