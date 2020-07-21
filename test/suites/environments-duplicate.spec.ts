@@ -1,8 +1,7 @@
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('basic-data');
-
 describe('Duplicate an environment', () => {
+  const tests = new Tests('basic-data');
   tests.runHooks();
 
   it('Open environment menu', async () => {

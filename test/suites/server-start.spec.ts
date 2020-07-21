@@ -1,8 +1,7 @@
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('basic-data');
-
 describe('Environment start/stop/restart', () => {
+  const tests = new Tests('basic-data');
   tests.runHooks();
 
   it('Start default selected environment', async () => {

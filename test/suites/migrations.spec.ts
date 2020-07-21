@@ -7,7 +7,7 @@ import { Tests } from 'test/lib/tests';
 describe('Environments migrations', () => {
   describe('Pre 1.7.0', () => {
     const filesPath = 'migrations/pre-1.7.0';
-    const tests = new Tests(filesPath, true);
+    const tests = new Tests(filesPath);
 
     tests.runHooks();
 

@@ -1,7 +1,7 @@
 import { Tests } from 'test/lib/tests';
-const tests = new Tests('welcome-modal', true);
 
 describe('Welcome modal', () => {
+  const tests = new Tests('welcome-modal');
   tests.runHooks(false, false);
   tests.waitForWindowReady();
 

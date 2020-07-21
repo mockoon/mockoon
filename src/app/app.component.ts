@@ -2,21 +2,22 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  HostListener,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
-import { remote, shell } from 'electron';
+import { ipcRenderer, remote, shell } from 'electron';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
-import { platform } from 'os';
-import { merge, Observable, Subject } from 'rxjs';
+import { merge, Observable, Subject, Subscription } from 'rxjs';
 import {
   distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
@@ -40,10 +41,10 @@ import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ImportExportService } from 'src/app/services/import-export.service';
 import { IpcService } from 'src/app/services/ipc.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { Toast, ToastsService } from 'src/app/services/toasts.service';
 import { UIService } from 'src/app/services/ui.service';
-import { UpdateService } from 'src/app/services/update.service';
-import { clearLogsAction } from 'src/app/stores/actions';
+import { clearLogsAction, updateUIStateAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import {
   DuplicatedRoutesTypes,
@@ -64,9 +65,7 @@ import {
   RouteResponse,
   statusCodes
 } from 'src/app/types/route.type';
-import {
-  DraggableContainerNames
-} from 'src/app/types/ui.type';
+import { DraggableContainerNames } from 'src/app/types/ui.type';
 
 @Component({
   selector: 'app-root',
@@ -108,15 +107,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   public Infinity = Infinity;
   public isValidURL = IsValidURL;
   public methods = methods;
-  public platform = platform();
   public scrollToBottom = this.uiService.scrollToBottom;
   public statusCodes = statusCodes;
   public toasts$: Observable<Toast[]>;
-  public updateAvailable = false;
   private injectHeaders$ = new Subject<Header[]>();
   private BrowserWindow = remote.BrowserWindow;
   private dialog = remote.dialog;
   private logger = new Logger('[COMPONENT][APP]');
+  private closingSubscription: Subscription;
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -130,8 +128,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private store: Store,
     private toastService: ToastsService,
     private uiService: UIService,
-    private updateService: UpdateService,
-    private ipcService: IpcService
+    private ipcService: IpcService,
+    private storageService: StorageService
   ) {}
 
   ngOnInit() {
@@ -193,16 +191,37 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.toasts$ = this.store.select('toasts');
 
     this.initFormValues();
-
-    // subscribe to update events
-    this.updateService.updateAvailable.subscribe(() => {
-      this.updateAvailable = true;
-    });
   }
 
   ngAfterViewInit() {
     this.ipcService.init(this.changelogModal, this.settingsModal);
   }
+
+  // Listen to widow beforeunload event, and verify that no data saving is in progress
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(event: BeforeUnloadEvent) {
+    if (this.storageService.isSaving()) {
+      if (!this.closingSubscription) {
+        this.logger.info('App closing. Waiting for save to finish.');
+
+        this.store.update(updateUIStateAction({ appClosing: true }));
+
+        this.closingSubscription = this.storageService
+          .saving()
+          .pipe(
+            filter((saving) => !saving),
+            tap(() => {
+              ipcRenderer.send('renderer-app-quit');
+              window.onbeforeunload = null;
+            })
+          )
+          .subscribe();
+      }
+
+      event.returnValue = '';
+    }
+  }
+
   /**
    * Init active environment and route forms, and subscribe to changes
    */
@@ -459,16 +478,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.toastService.removeToast(toastUUID);
   }
 
-  public openFeedbackLink() {
-    shell.openExternal(Config.feedbackLink);
-  }
-
   public openWikiLink(linkName: string) {
     shell.openExternal(Config.docs[linkName]);
-  }
-
-  public applyUpdate() {
-    this.updateService.applyUpdate();
   }
 
   /**

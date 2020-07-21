@@ -2,10 +2,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { spawn } from 'child_process';
 import { remote, shell } from 'electron';
-import { createWriteStream, existsSync, NoParamCallback, rename, unlink } from 'fs';
+import {
+  createWriteStream,
+  existsSync,
+  NoParamCallback,
+  rename,
+  unlink
+} from 'fs';
 import { platform } from 'os';
 import { get as requestGet } from 'request';
-import { Subject } from 'rxjs/internal/Subject';
+import { BehaviorSubject } from 'rxjs';
 import { gt as semverGt } from 'semver';
 import { Logger } from 'src/app/classes/logger';
 import { Config } from 'src/app/config';
@@ -23,7 +29,9 @@ export class UpdateService {
     darwin: 'mockoon.setup.%v%.dmg',
     linux: 'mockoon-%v%-x86_64.AppImage'
   };
-  public updateAvailable: Subject<any> = new Subject();
+  private updateAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(
+    false
+  );
   private nextVersion: string;
   private nextVersionFileName: string;
   private userDataPath = remote.app.getPath('userData') + '/';
@@ -59,19 +67,19 @@ export class UpdateService {
               ].replace('%v%', this.nextVersion);
               // if already have an update file
               if (existsSync(this.userDataPath + this.nextVersionFileName)) {
-                this.updateAvailable.next();
+                this.updateAvailable$.next(true);
               } else {
                 this.fileDownload(
                   `${Config.githubBinaryDownloadUrl}${githubRelease.tag_name}/${this.nextVersionFileName}`,
                   this.userDataPath,
                   this.nextVersionFileName,
                   () => {
-                    this.updateAvailable.next();
+                    this.updateAvailable$.next(true);
                   }
                 );
               }
             } else {
-              this.updateAvailable.next();
+              this.updateAvailable$.next(true);
             }
 
             this.logger.info(`An update is available ${this.nextVersion}`);
@@ -80,6 +88,13 @@ export class UpdateService {
           }
         });
     }
+  }
+
+  /**
+   * Expose available update subject
+   */
+  public updateAvailable() {
+    return this.updateAvailable$.asObservable();
   }
 
   /**

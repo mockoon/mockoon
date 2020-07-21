@@ -10,8 +10,10 @@ const url = require('url');
 const isDev = require('electron-is-dev');
 
 const app = electron.app;
+const ipcMain = electron.ipcMain;
 const shell = electron.shell;
 const BrowserWindow = electron.BrowserWindow;
+let mainWindow;
 
 // get command line args
 const args = process.argv.slice(1);
@@ -28,15 +30,13 @@ if (isDev && isServing) {
   require('electron-reload')(__dirname, {});
 }
 
-let mainWindow;
-
-function createWindow() {
+const createWindow = function () {
   const mainWindowState = windowState({
     defaultWidth: 1024,
     defaultHeight: 768
   });
 
-  const BrowserWindowConfig = {
+  mainWindow = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
     minWidth: 1024,
@@ -48,17 +48,9 @@ function createWindow() {
     icon: path.join(__dirname, '/icon_512x512x32.png'),
     webPreferences: {
       nodeIntegration: true,
-      devTools: false
+      devTools: isDev ? true : false
     }
-  };
-
-  // show devtools in dev
-  if (isDev) {
-    BrowserWindowConfig.webPreferences.devTools = true;
-  }
-
-  // Create the browser window.
-  mainWindow = new BrowserWindow(BrowserWindowConfig);
+  });
 
   mainWindowState.manage(mainWindow);
 
@@ -71,7 +63,7 @@ function createWindow() {
     })
   );
 
-  // Open the DevTools / Redux except when running functional tests
+  // Open the DevTools in dev mode except when running functional tests
   if (isDev && !isTesting) {
     mainWindow.webContents.openDevTools();
   }
@@ -93,40 +85,47 @@ function createWindow() {
     mainWindow = null;
   });
 
-  var menuApplication = {
-    label: 'Application',
-    submenu: [
-      {
-        label: 'Settings',
-        accelerator: 'CmdOrCtrl+,',
-        click: function () {
-          mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
-        }
-      },
-      {
-        label: 'Release notes',
-        click: function () {
-          mainWindow.webContents.send('keydown', { action: 'OPEN_CHANGELOG' });
-        }
-      },
-      { type: 'separator' }
-    ]
-  };
+  electron.Menu.setApplicationMenu(
+    electron.Menu.buildFromTemplate(createAppMenu())
+  );
+};
+
+const createAppMenu = function () {
+  const menu = [
+    {
+      label: 'Application',
+      submenu: [
+        {
+          label: 'Settings',
+          accelerator: 'CmdOrCtrl+,',
+          click: function () {
+            mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
+          }
+        },
+        {
+          label: 'Release notes',
+          click: function () {
+            mainWindow.webContents.send('keydown', {
+              action: 'OPEN_CHANGELOG'
+            });
+          }
+        },
+        { type: 'separator' }
+      ]
+    }
+  ];
 
   if (process.platform === 'darwin') {
-    menuApplication.submenu.push(
+    menu[0].submenu.push(
       { label: 'Hide', role: 'hide' },
       { role: 'hideOthers' },
       { type: 'separator' }
     );
   }
 
-  menuApplication.submenu.push({ label: 'Quit', role: 'quit' });
+  menu[0].submenu.push({ label: 'Quit', role: 'quit' });
 
-  // create prod menu
-  var menu = [menuApplication];
-
-  // add edit menu for mac because needed for copy paste
+  // add edit menu for mac (for copy paste)
   if (process.platform === 'darwin') {
     menu.push({
       label: 'Edit',
@@ -244,7 +243,6 @@ function createWindow() {
     ]
   });
 
-  // add tools menu, send action through web contents
   menu.push({
     label: 'Import/export',
     submenu: [
@@ -337,8 +335,8 @@ function createWindow() {
     ]
   });
 
-  electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(menu));
-}
+  return menu;
+};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -352,6 +350,12 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+// Quit requested by renderer (when waiting for save to finish)
+ipcMain.on('renderer-app-quit', function () {
+  // destroy the window otherwise app.quit() will trigger beforeunload again. Also there is no app.quit for macos
+  mainWindow.destroy();
 });
 
 app.on('activate', function () {

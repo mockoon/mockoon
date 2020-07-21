@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
-import { get as storageGet, set as storageSet } from 'electron-json-storage';
-import { bindNodeCallback, EMPTY, Observable, throwError } from 'rxjs';
+import {
+  DataOptions,
+  get as storageGet,
+  set as storageSet
+} from 'electron-json-storage';
+import {
+  BehaviorSubject,
+  bindNodeCallback,
+  EMPTY,
+  Observable,
+  throwError
+} from 'rxjs';
 import {
   catchError,
   concatMap,
   debounceTime,
   distinctUntilChanged,
-  tap,
-  skip
+  tap
 } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { ToastsService } from 'src/app/services/toasts.service';
@@ -15,10 +24,32 @@ import { ToastsService } from 'src/app/services/toasts.service';
 @Injectable({ providedIn: 'root' })
 export class StorageService {
   private logger = new Logger('[SERVICE][STORAGE]');
-  private storageSet$ = bindNodeCallback(storageSet);
+  private storageSet$ = bindNodeCallback(
+    (
+      key: string,
+      json: object,
+      options: DataOptions,
+      callback: (error: any) => void
+    ) => storageSet(key, json, options, callback)
+  );
   private storageGet$ = bindNodeCallback<string, any>(storageGet);
+  private saving$ = new BehaviorSubject<boolean>(false);
 
   constructor(private toastsService: ToastsService) {}
+
+  /**
+   * Saving in progress observable
+   */
+  public saving(): Observable<boolean> {
+    return this.saving$.asObservable().pipe(distinctUntilChanged());
+  }
+
+  /**
+   * Saving in progress observable value
+   */
+  public isSaving(): boolean {
+    return this.saving$.value;
+  }
 
   /**
    * Load data from JSON storage.
@@ -61,9 +92,12 @@ export class StorageService {
   ): Observable<void> {
     return source.pipe(
       distinctUntilChanged(),
+      tap(() => {
+        this.saving$.next(true);
+      }),
       debounceTime(interval),
-      concatMap((data) =>
-        this.storageSet$(key, data).pipe(
+      concatMap((data) => {
+        return this.storageSet$(key, data, null).pipe(
           catchError((error) => {
             const errorMessage = `Error while saving ${key}`;
 
@@ -77,9 +111,12 @@ export class StorageService {
             );
 
             return EMPTY;
+          }),
+          tap(() => {
+            this.saving$.next(false);
           })
-        )
-      )
+        );
+      })
     );
   }
 }

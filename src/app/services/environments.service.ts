@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { of } from 'rxjs';
-import { mergeMap, tap } from 'rxjs/operators';
+import { concatMap, mergeMap, tap } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { DataService } from 'src/app/services/data.service';
@@ -96,7 +96,7 @@ export class EnvironmentsService {
         tap((environments) => {
           this.store.update(setInitialEnvironmentsAction(environments));
         }),
-        mergeMap(() =>
+        concatMap(() =>
           this.storageService.saveData(
             this.store.select('environments'),
             'environments',
