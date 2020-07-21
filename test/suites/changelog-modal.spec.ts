@@ -9,7 +9,7 @@ describe('Changelog modal', () => {
     it('Should show the changelog modal', async () => {
       await tests.app.client.waitUntilTextExists(
         '.modal-title',
-        `Version ${Config.appVersion}`
+        `Release notes v${Config.appVersion}`
       );
 
       // wait for settings save
@@ -33,7 +33,7 @@ describe('Changelog modal', () => {
     it('Should show the changelog modal', async () => {
       await tests.app.client.waitUntilTextExists(
         '.modal-title',
-        `Version ${Config.appVersion}`
+        `Release notes v${Config.appVersion}`
       );
 
       // wait for settings save

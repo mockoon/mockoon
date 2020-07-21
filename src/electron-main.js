@@ -102,14 +102,6 @@ const createAppMenu = function () {
             mainWindow.webContents.send('keydown', { action: 'OPEN_SETTINGS' });
           }
         },
-        {
-          label: 'Release notes',
-          click: function () {
-            mainWindow.webContents.send('keydown', {
-              action: 'OPEN_CHANGELOG'
-            });
-          }
-        },
         { type: 'separator' }
       ]
     }
@@ -310,6 +302,14 @@ const createAppMenu = function () {
         label: 'Docs',
         click: function () {
           shell.openExternal('https://mockoon.com/docs');
+        }
+      },
+      {
+        label: 'Release notes',
+        click: function () {
+          mainWindow.webContents.send('keydown', {
+            action: 'OPEN_CHANGELOG'
+          });
         }
       },
       {
