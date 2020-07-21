@@ -16,6 +16,7 @@ import { ContextMenuComponent } from 'src/app/components/context-menu/context-me
 import { EditorModalComponent } from 'src/app/components/editor-modal/editor-modal.component';
 import { EnvironmentLogsComponent } from 'src/app/components/environment-logs.component';
 import { EnvironmentsMenuComponent } from 'src/app/components/environments-menu/environments-menu.component';
+import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { HeadersListComponent } from 'src/app/components/headers-list.component';
 import { RouteResponseRulesComponent } from 'src/app/components/route-response-rules.component';
 import { RoutesMenuComponent } from 'src/app/components/routes-menu/routes-menu.component';
@@ -49,7 +50,8 @@ import { AppComponent } from './app.component';
     RouteResponseRulesComponent,
     EnvironmentsMenuComponent,
     RoutesMenuComponent,
-    TitleSeparatorComponent
+    TitleSeparatorComponent,
+    FooterComponent
   ],
   imports: [
     AceEditorModule,

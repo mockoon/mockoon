@@ -1,8 +1,7 @@
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('migrations/incompatible');
-
 describe('Environments incompatibility', () => {
+  const tests = new Tests('migrations/incompatible');
   tests.runHooks();
 
   it('Should display the incompatible environment with special design', async () => {

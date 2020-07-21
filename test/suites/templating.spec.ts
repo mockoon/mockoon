@@ -1191,7 +1191,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
 
 describe('Templating', () => {
   describe('Helpers', () => {
-    const tests = new Tests('templating', true);
+    const tests = new Tests('templating');
     tests.runHooks();
 
     it('Start default environment', async () => {
@@ -1210,7 +1210,7 @@ describe('Templating', () => {
   });
 
   describe('Disable route response templating', () => {
-    const tests = new Tests('templating', true);
+    const tests = new Tests('templating');
     tests.runHooks();
 
     it('Start default environment', async () => {

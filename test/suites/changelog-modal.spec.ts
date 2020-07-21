@@ -3,7 +3,7 @@ import { Tests } from 'test/lib/tests';
 
 describe('Changelog modal', () => {
   describe('Show changelog modal if never shown (software update)', () => {
-    const tests = new Tests('changelog-modal/never-shown', true);
+    const tests = new Tests('changelog-modal/never-shown');
     tests.runHooks(true, false);
 
     it('Should show the changelog modal', async () => {
@@ -27,7 +27,7 @@ describe('Changelog modal', () => {
   });
 
   describe('Show changelog modal if last changelog shown is from older version', () => {
-    const tests = new Tests('changelog-modal/shown', true);
+    const tests = new Tests('changelog-modal/shown');
     tests.runHooks(true, false);
 
     it('Should show the changelog modal', async () => {
@@ -51,7 +51,7 @@ describe('Changelog modal', () => {
   });
 
   describe('Do not show changelog modal if it is a fresh install', () => {
-    const tests = new Tests('changelog-modal/fresh-install', true);
+    const tests = new Tests('changelog-modal/fresh-install', false);
     tests.runHooks(true, false);
 
     it('Should show the welcome modal only', async () => {
@@ -80,7 +80,7 @@ describe('Changelog modal', () => {
   });
 
   describe('Do not show changelog modal if same version already shown', () => {
-    const tests = new Tests('changelog-modal/shown', true);
+    const tests = new Tests('changelog-modal/shown');
     tests.runHooks(true, false, { lastChangelog: Config.appVersion });
 
     it('Should not show the changelog modal', async () => {

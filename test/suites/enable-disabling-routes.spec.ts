@@ -1,8 +1,6 @@
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('basic-data');
-
 const getAnswerCall: HttpCall[] = [
   {
     description: 'Call GET answer',
@@ -25,6 +23,7 @@ const getAnswerCall: HttpCall[] = [
 ];
 
 describe('Enable/disable routes', () => {
+  const tests = new Tests('basic-data');
   tests.runHooks();
 
   it('Enabling environment', async () => {

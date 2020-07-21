@@ -1,9 +1,8 @@
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('responses-rules');
-
 describe('Responses rules', () => {
+  const tests = new Tests('responses-rules');
   tests.runHooks();
 
   it('Start default environment', async () => {

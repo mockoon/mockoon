@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('basic-data');
-
 describe('Create and delete environments', () => {
+  const tests = new Tests('basic-data');
   tests.runHooks();
 
   it('Add an environment', async () => {

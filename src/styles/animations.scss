@@ -1,0 +1,10 @@
+.animation-flash {
+  opacity: 1;
+  animation: flash 1s linear infinite;
+}
+
+@keyframes flash {
+  50% {
+    opacity: 0.3;
+  }
+}

@@ -2,8 +2,6 @@ import { expect } from 'chai';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('proxy');
-
 const getAnswerCall: HttpCall = {
   description: 'Call GET answer',
   path: '/answer',
@@ -39,6 +37,7 @@ const getDisabledProxyCall: HttpCall = {
 };
 
 describe('Proxy', () => {
+  const tests = new Tests('proxy');
   tests.runHooks();
 
   it('Add headers', async () => {

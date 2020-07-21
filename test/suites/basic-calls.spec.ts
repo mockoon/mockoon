@@ -1,8 +1,6 @@
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
-const tests = new Tests('basic-data');
-
 const cases: HttpCall[] = [
   {
     description: 'Call GET /answer',
@@ -37,12 +35,13 @@ const cases: HttpCall[] = [
     method: 'POST',
     testedResponse: {
       status: 200,
-      body: '{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}'
+      body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}'
     }
   }
 ];
 
 describe('Basic endpoint calls', () => {
+  const tests = new Tests('basic-data');
   tests.runHooks();
 
   it('Start default environment', async () => {

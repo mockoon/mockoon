@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
-import { ActiveEnvironmentsLogUUIDs, EnvironmentLog, EnvironmentLogs } from 'src/app/models/environment-logs.model';
+import {
+  ActiveEnvironmentsLogUUIDs,
+  EnvironmentLog,
+  EnvironmentLogs
+} from 'src/app/models/environment-logs.model';
 import { Settings } from 'src/app/models/settings.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions } from 'src/app/stores/actions';
@@ -29,7 +33,10 @@ export type EnvironmentsStatuses = { [key: string]: EnvironmentStatus };
 
 export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
 
-export type UIState = { environmentsMenuOpened: boolean };
+export type UIState = {
+  environmentsMenuOpened: boolean;
+  appClosing: boolean;
+};
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
 
@@ -84,7 +91,8 @@ export class Store {
     toasts: [],
     userId: null,
     uiState: {
-      environmentsMenuOpened: false
+      environmentsMenuOpened: false,
+      appClosing: false
     },
     settings: null
   });
