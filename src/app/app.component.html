@@ -303,8 +303,8 @@
                         (click)="setActiveTab('HEADERS')">Headers</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" [ngClass]="{'active': activeTab === 'RULES'}"
-                          (click)="setActiveTab('RULES')">Rules</a>
+                        <a class="nav-link" data-testid="rules-tab" [ngClass]="{'active': activeTab === 'RULES'}"
+                          (click)="setActiveTab('RULES')">Rules{{activeRouteResponseRulesLabelSuffix$ | async}}</a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" [ngClass]="{'active': activeTab === 'SETTINGS'}"

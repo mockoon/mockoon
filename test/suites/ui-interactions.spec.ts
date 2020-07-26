@@ -127,4 +127,62 @@ describe('UI interactions', () => {
       });
     });
   });
+
+  describe('Headers && Rules tabs', () => {
+    const tests = new Tests('ui');
+
+    it('Rules tab shows count of active rules', async () => {
+      const rulesTabSelector =
+        '#route-responses-menu .nav.nav-tabs [data-testid="rules-tab"]';
+
+      let text = await tests.helpers.getElementText(rulesTabSelector);
+      expect(text).to.equal('Rules');
+
+      await tests.helpers.switchTab('RULES');
+      await tests.helpers.addResponseRule({
+        modifier: 'var',
+        target: 'params',
+        value: '10',
+        isRegex: false
+      });
+
+      // this is needed for the tab re-render to complete
+      await tests.app.client.pause(100);
+      text = await tests.helpers.getElementText(rulesTabSelector);
+      expect(text).to.equal('Rules (1)');
+
+      await tests.helpers.addResponseRule({
+        modifier: 'test',
+        target: 'query',
+        value: 'true',
+        isRegex: false
+      });
+
+      // this is needed for the tab re-render to complete
+      await tests.app.client.pause(100);
+      text = await tests.helpers.getElementText(rulesTabSelector);
+      expect(text).to.equal('Rules (2)');
+
+      await tests.helpers.addRouteResponse();
+      await tests.helpers.countRouteResponses(2);
+
+      // this is needed for the tab re-render to complete
+      await tests.app.client.pause(100);
+      text = await tests.helpers.getElementText(rulesTabSelector);
+      expect(text).to.equal('Rules');
+
+      await tests.helpers.switchTab('RULES');
+      await tests.helpers.addResponseRule({
+        modifier: 'var',
+        target: 'params',
+        value: '10',
+        isRegex: false
+      });
+
+      // this is needed for the tab re-render to complete
+      await tests.app.client.pause(100);
+      text = await tests.helpers.getElementText(rulesTabSelector);
+      expect(text).to.equal('Rules (1)');
+    });
+  });
 });

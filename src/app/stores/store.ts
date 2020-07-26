@@ -258,6 +258,15 @@ export class Store {
   }
 
   /**
+   * Select active route rule count observable
+   */
+  public selectActiveRouteResponseRuleCount(): Observable<number> {
+    return this.selectActiveRouteResponseProperty('rules').pipe(
+      map((rules) => rules.length)
+    );
+  }
+
+  /**
    * Get environment by uuid
    */
   public getEnvironmentByUUID(UUID: string): Environment {

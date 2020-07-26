@@ -91,6 +91,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public activeRouteResponseForm: FormGroup;
   public activeRouteResponseIndex$: Observable<number>;
   public activeRouteResponseLastLog$: Observable<EnvironmentLog>;
+  public activeRouteResponseRulesLabelSuffix$: Observable<string>;
   public injectedHeaders$: Observable<Header[]>;
   public activeTab$: Observable<TabsNameType>;
   public activeView$: Observable<ViewsNameType>;
@@ -197,6 +198,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.environmentsLogs$ = this.store.select('environmentsLogs');
     this.activeRouteResponseLastLog$ = this.store.selectActiveRouteResponseLastLog();
     this.toasts$ = this.store.select('toasts');
+
+    this.activeRouteResponseRulesLabelSuffix$ = this.selectActiveRouteResponseRulesLabelSuffix();
 
     this.initFormValues();
   }
@@ -649,5 +652,11 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   private toggleRoute(routeUUID?: string) {
     this.environmentsService.toggleRoute(routeUUID);
+  }
+
+  private selectActiveRouteResponseRulesLabelSuffix() {
+    return this.store
+      .selectActiveRouteResponseRuleCount()
+      .pipe(map((ruleCount) => (ruleCount > 0 ? ` (${ruleCount})` : '')));
   }
 }
