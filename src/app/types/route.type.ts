@@ -251,6 +251,7 @@ export type ResponseRule = {
   modifier: string;
   value: string;
   isRegex: boolean;
+  andRules?: boolean;
 };
 
 export type ResponseRuleTargets = 'body' | 'query' | 'header' | 'params';

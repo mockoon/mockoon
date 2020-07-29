@@ -23,11 +23,21 @@ export class ResponseRulesInterpreter {
    * If no rule has been fulfilled get the first route response.
    */
   public chooseResponse(): RouteResponse {
-    return (
-      this.routeResponses.find(routeResponse => {
-        return !!routeResponse.rules.find(this.isValidRule);
-      }) || this.routeResponses[0]
-    );
+    let response = this.routeResponses.find(routeResponse => {
+      const andRules =
+        routeResponse.rules.length > 0 &&
+        routeResponse.rules[0].andRules === true;
+
+      return andRules
+        ? !!routeResponse.rules.every(this.isValidRule)
+        : !!routeResponse.rules.find(this.isValidRule);
+    });
+
+    if (response === undefined) {
+      response = this.routeResponses[0];
+    }
+
+    return response;
   }
 
   /**
@@ -63,7 +73,7 @@ export class ResponseRulesInterpreter {
       return value.includes(rule.value);
     }
 
-    return value === rule.value;
+    return value.toString() === rule.value.toString();
   };
 
   /**
