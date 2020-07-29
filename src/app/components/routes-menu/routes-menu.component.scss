@@ -1,8 +1,10 @@
-@import 'src/styles/bootstrap-custom-variables.scss';
+@import 'src/styles/bootstrap-variables.scss';
 @import 'src/styles/variables.scss';
 
 .routes-menu {
   background: $gray-900;
   border-right: 1px solid lighten($gray-900, 2%);
   width: $routes-menu-width;
+
+  position: relative; // we need this for the resize-column
 }

@@ -1,0 +1,10 @@
+{
+  "welcomeShown": false,
+  "analytics": true,
+  "bannerDismissed": [],
+  "logSizeLimit": 10000,
+  "truncateRouteName": true,
+  "fakerLocale": "en",
+  "fakerSeed": null,
+  "lastChangelog": "9999.9.9"
+}

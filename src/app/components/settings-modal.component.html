@@ -4,38 +4,153 @@
       <h4 class="modal-title">Settings</h4>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="truncate-route-name" name="truncateRouteName" [ngModel]="settings.truncateRouteName" (ngModelChange)="settingsUpdated($event, 'truncateRouteName')">
-          <label class="custom-control-label" for="truncate-route-name">Truncate route path in routes list</label>
+      <app-title-separator
+        heading="Text truncation"
+        [isFirst]="true"
+        icon="subject"
+        iconClasses="text-primary"
+      ></app-title-separator>
+
+      <div class="pl-3">
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="truncate-route-name"
+              name="truncateRouteName"
+              [ngModel]="settings.truncateRouteName"
+              (ngModelChange)="settingsUpdated($event, 'truncateRouteName')"
+            />
+            <label class="custom-control-label" for="truncate-route-name"
+              >Truncate long route paths in routes list</label
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text pl-0">Log body size:</span>
+            </div>
+            <input
+              type="number"
+              class="form-control col-4"
+              id="log-body-size"
+              [InputNumber]="{ min: 1, max: Infinity }"
+              placeholder="10000 (default)"
+              [ngModel]="settings.logSizeLimit"
+              (ngModelChange)="settingsUpdated($event, 'logSizeLimit')"
+            />
+            <div class="input-group-prepend">
+              <span class="input-group-text pl-0">&nbsp;characters</span>
+            </div>
+          </div>
+          <p class="text-muted">
+            <small
+              >Truncate the entering requests and exiting responses bodies if
+              bigger than {{ settings.logSizeLimit }} characters.</small
+            >
+          </p>
         </div>
       </div>
 
-      <div class="title-separator"></div>
+      <app-title-separator
+        heading="Faker.js"
+        subheading="Templating system supports Faker.js"
+        icon="code"
+        iconClasses="text-primary"
+        docLink="templating"
+      ></app-title-separator>
 
-      <div class="form-group">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text pl-0">Log body size:</span>
+      <div class="pl-3">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text pl-0">Locale:</span>
+            </div>
+            <select
+              class="custom-select col-2"
+              id="faker-locale"
+              [ngModel]="settings.fakerLocale"
+              (ngModelChange)="settingsUpdated($event, 'fakerLocale')"
+            >
+              <option
+                *ngFor="let fakerLocale of fakerLocales"
+                [value]="fakerLocale.code"
+                [selected]="settings.fakerLocale === fakerLocale.code"
+                >{{ fakerLocale.label }}
+              </option>
+            </select>
           </div>
-          <input type="text" class="form-control col-4" id="log-body-size" [InputNumber]="{ min: 1, max: Infinity }" placeholder="10000 (default)" [ngModel]="settings.logSizeLimit" (ngModelChange)="settingsUpdated($event, 'logSizeLimit')">
-          <div class="input-group-prepend">
-            <span class="input-group-text pl-0">&nbsp;characters</span>
-          </div>
+          <p class="text-muted">
+            <small
+              >Choose Faker.js's primary locale. Most of the time, Faker.js will
+              fallback to English ('en') for helpers not covered by this
+              locale.</small
+            >
+          </p>
         </div>
-        <p class="text-muted"><small>Truncate the entering requests and exiting responses bodies if bigger than {{settings.logSizeLimit}} characters.</small></p>
+
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text pl-0">Seed:</span>
+            </div>
+            <input
+              type="number"
+              class="form-control col-4"
+              id="faker-seed"
+              placeholder="Numbers only"
+              [InputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
+              [ngModel]="settings.fakerSeed"
+              (ngModelChange)="settingsUpdated($event, 'fakerSeed')"
+            />
+          </div>
+          <p class="text-muted">
+            <small
+              >Set Faker.js's seed. By setting a seed, faker.js will always
+              generate the same data.</small
+            >
+          </p>
+        </div>
       </div>
 
-      <div class="title-separator"></div>
+      <app-title-separator
+        heading="Analytics"
+        icon="show_chart"
+        iconClasses="text-primary"
+      ></app-title-separator>
 
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="analytics" name="analytics" [ngModel]="settings.analytics" (ngModelChange)="settingsUpdated($event, 'analytics')">
-        <label class="custom-control-label" for="analytics">I agree to share anonymous usage data</label>
+      <div class="pl-3">
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="analytics"
+              name="analytics"
+              [ngModel]="settings.analytics"
+              (ngModelChange)="settingsUpdated($event, 'analytics')"
+            />
+            <label class="custom-control-label" for="analytics"
+              >I agree to share anonymous usage data</label
+            >
+          </div>
+          <p class="text-muted">
+            <small
+              >We are using a basic Google Analytics setup, none of your
+              data/content is kept anywhere and it helps us improve Mockoon
+              :)</small
+            >
+          </p>
+        </div>
       </div>
-      <p class="text-muted"><small>We are using a basic Google Analytics setup, none of your data/content is kept anywhere and it helps us improve Mockoon :)</small></p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="close()">Close</button>
+      <button type="button" class="btn btn-primary" (click)="close()">
+        Close
+      </button>
     </div>
   </ng-container>
 </ng-template>

@@ -1,55 +1,100 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ipcRenderer, remote, shell } from 'electron';
-import * as mimeTypes from 'mime-types';
+import { lookup as mimeTypeLookup } from 'mime-types';
 import { DragulaService } from 'ng2-dragula';
-import { merge, Observable } from 'rxjs';
-import { distinctUntilChanged, distinctUntilKeyChanged, filter, map } from 'rxjs/operators';
+import { merge, Observable, Subject, Subscription } from 'rxjs';
+import {
+  distinctUntilChanged,
+  distinctUntilKeyChanged,
+  filter,
+  map,
+  tap
+} from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
-import { ContextMenuItemPayload } from 'src/app/components/context-menu/context-menu.component';
+import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
+import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
-import { GetRouteResponseContentType, IsValidURL } from 'src/app/libs/utils.lib';
+import {
+  GetRouteResponseContentType,
+  IsValidURL
+} from 'src/app/libs/utils.lib';
+import { HeadersProperties } from 'src/app/models/common.model';
+import { ContextMenuItemPayload } from 'src/app/models/context-menu.model';
+import {
+  EnvironmentLog,
+  EnvironmentLogs
+} from 'src/app/models/environment-logs.model';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ImportExportService } from 'src/app/services/import-export.service';
+import { IpcService } from 'src/app/services/ipc.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { Toast, ToastsService } from 'src/app/services/toasts.service';
 import { UIService } from 'src/app/services/ui.service';
-import { UpdateService } from 'src/app/services/update.service';
-import { clearLogsAction } from 'src/app/stores/actions';
+import { clearLogsAction, updateUIStateAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
-import { DuplicatedRoutesTypes, EnvironmentsStatuses, EnvironmentStatus, Store, TabsNameType, ViewsNameType } from 'src/app/stores/store';
+import {
+  DuplicatedRoutesTypes,
+  EnvironmentsStatuses,
+  EnvironmentStatus,
+  Store,
+  TabsNameType,
+  ViewsNameType
+} from 'src/app/stores/store';
 import { DataSubject } from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
-import { methods, mimeTypesWithTemplating, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
-import { EnvironmentLogs } from 'src/app/types/server.type';
-import { DraggableContainerNames, ScrollDirection } from 'src/app/types/ui.type';
-
-const platform = require('os').platform();
-const appVersion = require('../../package.json').version;
+import {
+  CORSHeaders,
+  Header,
+  methods,
+  mimeTypesWithTemplating,
+  Route,
+  RouteResponse,
+  statusCodes
+} from 'src/app/types/route.type';
+import { DraggableContainerNames } from 'src/app/types/ui.type';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
+  @ViewChild('changelogModal', { static: false })
+  changelogModal: ChangelogModalComponent;
+  @ViewChild('settingsModal', { static: false })
+  settingsModal: SettingsModalComponent;
   public activeEnvironment$: Observable<Environment>;
   public activeEnvironmentForm: FormGroup;
   public activeEnvironmentState$: Observable<EnvironmentStatus>;
+  public activeEnvironmentHeaders$: Observable<Header[]>;
+  public activeEnvironmentProxyReqHeader$: Observable<Header[]>;
+  public activeEnvironmentProxyResHeader$: Observable<Header[]>;
   public activeEnvironmentUUID$: Observable<string>;
   public activeRoute$: Observable<Route>;
   public activeRouteForm: FormGroup;
   public activeRouteResponse$: Observable<RouteResponse>;
+  public activeRouteResponseUUID$: Observable<string>;
+  public activeRouteResponseHeaders$: Observable<Header[]>;
   public activeRouteResponseForm: FormGroup;
   public activeRouteResponseIndex$: Observable<number>;
+  public activeRouteResponseLastLog$: Observable<EnvironmentLog>;
+  public injectedHeaders$: Observable<Header[]>;
   public activeTab$: Observable<TabsNameType>;
   public activeView$: Observable<ViewsNameType>;
-  public appVersion = appVersion;
   public bodyEditorConfig$: Observable<any>;
   public clearEnvironmentLogsRequested$ = new TimedBoolean(false, 4000);
   public deleteCurrentRouteResponseRequested$ = new TimedBoolean(false, 4000);
@@ -62,15 +107,14 @@ export class AppComponent implements OnInit {
   public Infinity = Infinity;
   public isValidURL = IsValidURL;
   public methods = methods;
-  public platform = platform;
   public scrollToBottom = this.uiService.scrollToBottom;
   public statusCodes = statusCodes;
   public toasts$: Observable<Toast[]>;
-  public updateAvailable = false;
+  private injectHeaders$ = new Subject<Header[]>();
   private BrowserWindow = remote.BrowserWindow;
   private dialog = remote.dialog;
   private logger = new Logger('[COMPONENT][APP]');
-  private settingsModalOpened = false;
+  private closingSubscription: Subscription;
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -84,76 +128,19 @@ export class AppComponent implements OnInit {
     private store: Store,
     private toastService: ToastsService,
     private uiService: UIService,
-    private updateService: UpdateService
-  ) {
+    private ipcService: IpcService,
+    private storageService: StorageService
+  ) {}
+
+  ngOnInit() {
+    this.injectedHeaders$ = this.injectHeaders$.asObservable();
+
     // tooltip config
     this.config.container = 'body';
 
-    // set listeners on main process messages
-    ipcRenderer.on('keydown', (event, data) => {
-      switch (data.action) {
-        case 'NEW_ENVIRONMENT':
-          this.addEnvironment();
-          break;
-        case 'NEW_ROUTE':
-          this.environmentsService.addRoute();
-          break;
-        case 'START_ENVIRONMENT':
-          this.toggleEnvironment();
-          break;
-        case 'DUPLICATE_ENVIRONMENT':
-          this.environmentsService.duplicateEnvironment();
-          break;
-        case 'DUPLICATE_ROUTE':
-          this.environmentsService.duplicateRoute();
-          break;
-        case 'DELETE_ENVIRONMENT':
-          this.environmentsService.removeEnvironment();
-          break;
-        case 'DELETE_ROUTE':
-          this.environmentsService.removeRoute();
-          break;
-        case 'PREVIOUS_ENVIRONMENT':
-          this.selectEnvironment('previous');
-          break;
-        case 'NEXT_ENVIRONMENT':
-          this.selectEnvironment('next');
-          break;
-        case 'PREVIOUS_ROUTE':
-          this.environmentsService.setActiveRoute('previous');
-          break;
-        case 'NEXT_ROUTE':
-          this.environmentsService.setActiveRoute('next');
-          break;
-        case 'OPEN_SETTINGS':
-          if (!this.settingsModalOpened) {
-            this.settingsModalOpened = true;
-            this.eventsService.settingsModalEvents.emit(true);
-          }
-          break;
-        case 'IMPORT_FILE':
-          this.importExportService.importFromFile();
-          break;
-        case 'IMPORT_OPENAPI_FILE':
-          this.importExportService.importOpenAPIFile();
-          break;
-        case 'EXPORT_OPENAPI_FILE':
-          this.importExportService.exportOpenAPIFile();
-          break;
-        case 'IMPORT_CLIPBOARD':
-          this.importExportService.importFromClipboard();
-          break;
-        case 'EXPORT_FILE':
-          this.importExportService.exportAllEnvironments();
-          break;
-      }
-    });
-  }
-
-  ngOnInit() {
     this.logger.info(`Initializing application`);
 
-    this.dragulaService.dropModel().subscribe(dragResult => {
+    this.dragulaService.dropModel().subscribe((dragResult) => {
       this.environmentsService.moveMenuItem(
         dragResult.name as DraggableContainerNames,
         dragResult.sourceIndex,
@@ -175,24 +162,64 @@ export class AppComponent implements OnInit {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeRoute$ = this.store.selectActiveRoute();
     this.activeRouteResponse$ = this.store.selectActiveRouteResponse();
+    this.activeRouteResponseUUID$ = this.store.selectActiveRouteResponseProperty(
+      'uuid'
+    );
+    this.activeRouteResponseHeaders$ = this.store.selectActiveRouteResponseProperty(
+      'headers'
+    );
     this.activeRouteResponseIndex$ = this.store.selectActiveRouteResponseIndex();
     this.activeTab$ = this.store.select('activeTab');
     this.activeView$ = this.store.select('activeView');
     this.activeEnvironmentState$ = this.store.selectActiveEnvironmentStatus();
+    this.activeEnvironmentHeaders$ = this.store.selectActiveEnvironmentProperty(
+      'headers'
+    );
+    this.activeEnvironmentProxyReqHeader$ = this.store.selectActiveEnvironmentProperty(
+      'proxyReqHeaders'
+    );
+    this.activeEnvironmentProxyResHeader$ = this.store.selectActiveEnvironmentProperty(
+      'proxyResHeaders'
+    );
     this.activeEnvironmentUUID$ = this.store.select('activeEnvironmentUUID');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
     this.duplicatedEnvironments$ = this.store.select('duplicatedEnvironments');
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
     this.environmentsLogs$ = this.store.select('environmentsLogs');
+    this.activeRouteResponseLastLog$ = this.store.selectActiveRouteResponseLastLog();
     this.toasts$ = this.store.select('toasts');
 
     this.initFormValues();
+  }
 
-    // subscribe to update events
-    this.updateService.updateAvailable.subscribe(() => {
-      this.updateAvailable = true;
-    });
+  ngAfterViewInit() {
+    this.ipcService.init(this.changelogModal, this.settingsModal);
+  }
+
+  // Listen to widow beforeunload event, and verify that no data saving is in progress
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(event: BeforeUnloadEvent) {
+    if (this.storageService.isSaving()) {
+      if (!this.closingSubscription) {
+        this.logger.info('App closing. Waiting for save to finish.');
+
+        this.store.update(updateUIStateAction({ appClosing: true }));
+
+        this.closingSubscription = this.storageService
+          .saving()
+          .pipe(
+            filter((saving) => !saving),
+            tap(() => {
+              ipcRenderer.send('renderer-app-quit');
+              window.onbeforeunload = null;
+            })
+          )
+          .subscribe();
+      }
+
+      event.returnValue = '';
+    }
   }
 
   /**
@@ -217,45 +244,50 @@ export class AppComponent implements OnInit {
     });
 
     this.activeRouteResponseForm = this.formBuilder.group({
-      statusCode: [''],
+      statusCode: [null],
       label: [''],
       latency: [''],
       filePath: [''],
       sendFileAsBody: [''],
       body: [''],
-      rules: this.formBuilder.array([])
+      rules: this.formBuilder.array([]),
+      disableTemplating: [false]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
     merge(
-      ...Object.keys(this.activeEnvironmentForm.controls).map(controlName => {
+      ...Object.keys(this.activeEnvironmentForm.controls).map((controlName) => {
         return this.activeEnvironmentForm
           .get(controlName)
-          .valueChanges.pipe(map(newValue => ({ [controlName]: newValue })));
+          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })));
       })
-    ).subscribe(newProperty => {
+    ).subscribe((newProperty) => {
       this.environmentsService.updateActiveEnvironment(newProperty);
     });
 
     // send new activeRouteForm values to the store, one by one
     merge(
-      ...Object.keys(this.activeRouteForm.controls).map(controlName => {
+      ...Object.keys(this.activeRouteForm.controls).map((controlName) => {
         return this.activeRouteForm
           .get(controlName)
-          .valueChanges.pipe(map(newValue => ({ [controlName]: newValue })));
+          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })));
       })
-    ).subscribe(newProperty => {
+    ).subscribe((newProperty) => {
       this.environmentsService.updateActiveRoute(newProperty);
     });
 
     // send new activeRouteResponseForm values to the store, one by one
     merge(
-      ...Object.keys(this.activeRouteResponseForm.controls).map(controlName => {
-        return this.activeRouteResponseForm
-          .get(controlName)
-          .valueChanges.pipe(map(newValue => ({ [controlName]: newValue })));
-      })
-    ).subscribe(newProperty => {
+      ...Object.keys(this.activeRouteResponseForm.controls).map(
+        (controlName) => {
+          return this.activeRouteResponseForm
+            .get(controlName)
+            .valueChanges.pipe(
+              map((newValue) => ({ [controlName]: newValue }))
+            );
+        }
+      )
+    ).subscribe((newProperty) => {
       this.environmentsService.updateActiveRouteResponse(newProperty);
     });
   }
@@ -267,10 +299,10 @@ export class AppComponent implements OnInit {
     // subscribe to active environment changes to reset the form
     this.activeEnvironment$
       .pipe(
-        filter(environment => !!environment),
+        filter((environment) => !!environment),
         distinctUntilKeyChanged('uuid')
       )
-      .subscribe(activeEnvironment => {
+      .subscribe((activeEnvironment) => {
         this.activeEnvironmentForm.setValue(
           {
             name: activeEnvironment.name,
@@ -289,10 +321,10 @@ export class AppComponent implements OnInit {
     // subscribe to active route changes to reset the form
     this.activeRoute$
       .pipe(
-        filter(route => !!route),
+        filter((route) => !!route),
         distinctUntilKeyChanged('uuid')
       )
-      .subscribe(activeRoute => {
+      .subscribe((activeRoute) => {
         this.activeRouteForm.patchValue(
           {
             documentation: activeRoute.documentation,
@@ -306,14 +338,14 @@ export class AppComponent implements OnInit {
     // subscribe to active route response changes to reset the form
     this.activeRouteResponse$
       .pipe(
-        filter(routeResponse => !!routeResponse),
+        filter((routeResponse) => !!routeResponse),
         // monitor changes in uuid and body (for body formatter method)
         distinctUntilChanged(
           (previous, next) =>
             previous.uuid === next.uuid && previous.body === next.body
         )
       )
-      .subscribe(activeRouteResponse => {
+      .subscribe((activeRouteResponse) => {
         this.activeRouteResponseForm.patchValue(
           {
             statusCode: activeRouteResponse.statusCode,
@@ -322,7 +354,8 @@ export class AppComponent implements OnInit {
             filePath: activeRouteResponse.filePath,
             sendFileAsBody: activeRouteResponse.sendFileAsBody,
             body: activeRouteResponse.body,
-            rules: activeRouteResponse.rules
+            rules: activeRouteResponse.rules,
+            disableTemplating: activeRouteResponse.disableTemplating
           },
           { emitEvent: false }
         );
@@ -384,10 +417,6 @@ export class AppComponent implements OnInit {
     this.environmentsService.addRouteResponse();
   }
 
-  public handleSettingsModalClosed() {
-    this.settingsModalOpened = false;
-  }
-
   /**
    * Set the active environment
    */
@@ -395,14 +424,6 @@ export class AppComponent implements OnInit {
     environmentUUIDOrDirection: string | ReducerDirectionType
   ) {
     this.environmentsService.setActiveEnvironment(environmentUUIDOrDirection);
-  }
-
-  /**
-   * Create a new environment. Append at the end of the list.
-   */
-  private addEnvironment() {
-    this.environmentsService.addEnvironment();
-    this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
   }
 
   /**
@@ -432,10 +453,6 @@ export class AppComponent implements OnInit {
     routeUrl += activeRoute.endpoint;
 
     shell.openExternal(routeUrl);
-
-    this.eventsService.analyticsEvents.next(
-      AnalyticsEvents.LINK_ROUTE_IN_BROWSER
-    );
   }
 
   /**
@@ -461,28 +478,8 @@ export class AppComponent implements OnInit {
     this.toastService.removeToast(toastUUID);
   }
 
-  public openFeedbackLink() {
-    shell.openExternal(Config.feedbackLink);
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_FEEDBACK);
-  }
-
-  public openChangelogModal() {
-    this.eventsService.changelogModalEvents.next(true);
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_RELEASE);
-  }
-
   public openWikiLink(linkName: string) {
-    shell.openExternal(Config.wikiLinks[linkName]);
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_WIKI);
-  }
-
-  public applyUpdate() {
-    this.updateService.applyUpdate();
-
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.LINK_APPLY_UPDATE);
+    shell.openExternal(Config.docs[linkName]);
   }
 
   /**
@@ -549,7 +546,7 @@ export class AppComponent implements OnInit {
   public getFileMimeType(
     filePath: string
   ): { mimeType: string; supportsTemplating: boolean } {
-    const mimeType = mimeTypes.lookup(filePath);
+    const mimeType = mimeTypeLookup(filePath) || 'none';
 
     return {
       mimeType,
@@ -576,7 +573,7 @@ export class AppComponent implements OnInit {
    * Add the CORS predefined headers to the environment headers
    */
   public addCORSHeadersToEnvironment() {
-    this.environmentsService.setEnvironmentCORSHeaders();
+    this.injectHeaders$.next(CORSHeaders);
   }
 
   /**
@@ -623,5 +620,40 @@ export class AppComponent implements OnInit {
         // ignore any errors with parsing / stringifying the JSON
       }
     }
+  }
+
+  /**
+   * Update the store when headers lists are updated
+   */
+  public headersUpdated(
+    subject: 'environment' | 'routeResponse',
+    targetHeaders: HeadersProperties,
+    headers: Header[]
+  ) {
+    if (subject === 'environment') {
+      this.environmentsService.updateActiveEnvironment({
+        [targetHeaders]: headers
+      });
+    } else if (subject === 'routeResponse') {
+      this.environmentsService.updateActiveRouteResponse({
+        [targetHeaders]: headers
+      });
+    }
+  }
+
+  /**
+   * Navigate to the logs with route response's log selected
+   */
+  public goToRouteResponseLog(lastLogUUID: string) {
+    this.environmentsService.setActiveEnvironmentActiveLog(lastLogUUID);
+    this.environmentsService.setActiveView('ENV_LOGS');
+    this.environmentsService.setActiveEnvironmentLogTab('RESPONSE');
+  }
+
+  /**
+   * Duplicate the active route response
+   */
+  public duplicateRouteResponse() {
+    this.environmentsService.duplicateRouteResponse();
   }
 }

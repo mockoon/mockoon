@@ -1,29 +1,42 @@
 import { Injectable } from '@angular/core';
 import * as express from 'express';
-import { Application } from 'express';
-import * as fs from 'fs';
-import * as http from 'http';
-import * as proxy from 'http-proxy-middleware';
-import * as https from 'https';
+import { readFile } from 'fs';
+import { createServer as httpCreateServer, Server as httpServer } from 'http';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import {
+  createServer as httpsCreateServer,
+  Server as httpsServer
+} from 'https';
 import * as killable from 'killable';
-import * as mimeTypes from 'mime-types';
-import * as path from 'path';
+import { lookup as mimeTypeLookup } from 'mime-types';
+import { basename } from 'path';
 import { Logger } from 'src/app/classes/logger';
 import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpreter';
 import { Errors } from 'src/app/enums/errors.enum';
-import { DummyJSONParser } from 'src/app/libs/dummy-helpers.lib';
-import { ExpressMiddlewares } from 'src/app/libs/express-middlewares.lib';
-import { GetRouteResponseContentType, HeadersArrayToObject, IsValidURL, ObjectValuesFlatten, TestHeaderValidity } from 'src/app/libs/utils.lib';
+import { Middlewares } from 'src/app/libs/express-middlewares.lib';
+import { TemplateParser } from 'src/app/libs/template-parser.lib';
+import {
+  GetContentType,
+  GetRouteResponseContentType,
+  IsValidURL,
+  TestHeaderValidity
+} from 'src/app/libs/utils.lib';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
-import { logRequestAction, logResponseAction, updateEnvironmentStatusAction } from 'src/app/stores/actions';
+import {
+  logRequestAction,
+  updateEnvironmentStatusAction
+} from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
-import { IEnhancedRequest } from 'src/app/types/misc.type';
-import { CORSHeaders, Header, mimeTypesWithTemplating, Route } from 'src/app/types/route.type';
-import * as uuid from 'uuid/v1';
+import {
+  CORSHeaders,
+  Header,
+  mimeTypesWithTemplating,
+  Route
+} from 'src/app/types/route.type';
 
 const httpsConfig = {
   key: pemFiles.key,
@@ -53,7 +66,7 @@ export class ServerService {
     server.disable('x-powered-by');
     server.disable('etag');
 
-    let serverInstance: http.Server | https.Server;
+    let serverInstance: httpServer | httpsServer;
 
     // create https or http server instance
     this.logger.info(
@@ -61,18 +74,20 @@ export class ServerService {
     );
 
     if (environment.https) {
-      serverInstance = https.createServer(httpsConfig, server);
+      serverInstance = httpsCreateServer(httpsConfig, server);
     } else {
-      serverInstance = http.createServer(server);
+      serverInstance = httpCreateServer(server);
     }
 
     // set timeout long enough to allow long latencies
     serverInstance.setTimeout(3_600_000);
 
-    this.logger.info(`Starting server on port ${environment.port}`);
+    this.logger.info(
+      `Starting server ${environment.uuid} on port ${environment.port}`
+    );
     serverInstance.listen(environment.port, () => {
       this.logger.info(
-        `Server was started successfully on port ${environment.port}`
+        `Server ${environment.uuid} was started successfully on port ${environment.port}`
       );
 
       this.instances[environment.uuid] = serverInstance;
@@ -81,19 +96,20 @@ export class ServerService {
       );
     });
 
-    ExpressMiddlewares(this.eventsService).forEach(expressMiddleware => {
+    Middlewares(
+      this.eventsService,
+      () => this.store.getEnvironmentByUUID(environment.uuid).latency
+    ).forEach((expressMiddleware) => {
       server.use(expressMiddleware);
     });
 
     // apply latency, cors, routes and proxy to express server
-    this.logRequests(server, environment);
-    this.setEnvironmentLatency(server, environment.uuid);
+    this.logRequest(server, environment);
     this.setResponseHeaders(server, environment);
-    this.logResponses(server, environment);
     this.setRoutes(server, environment);
     this.setCors(server, environment);
     this.enableProxy(server, environment);
-    this.logErrorResponses(server, environment);
+    this.errorHandler(server);
 
     // handle server errors
     serverInstance.on('error', (error: any) => {
@@ -138,7 +154,7 @@ export class ServerService {
    * @param server - express instance
    * @param environment - environment to be started
    */
-  private setCors(server: Application, environment: Environment) {
+  private setCors(server: express.Application, environment: Environment) {
     if (environment.cors) {
       server.options('/*', (req, res) => {
         const environmentSelected = this.store.getEnvironmentByUUID(
@@ -148,12 +164,11 @@ export class ServerService {
         // override default CORS headers with environment's headers
         this.setHeaders(
           [...CORSHeaders, ...environmentSelected.headers],
-          header => {
-            res.set(header.key, DummyJSONParser(header.value, req));
-          }
+          res,
+          req
         );
 
-        res.send(200);
+        res.status(200).end();
       });
     }
   }
@@ -164,7 +179,7 @@ export class ServerService {
    * @param server - server on which attach routes
    * @param environment - environment to get route schema from
    */
-  private setRoutes(server: Application, environment: Environment) {
+  private setRoutes(server: express.Application, environment: Environment) {
     environment.routes.forEach((declaredRoute: Route) => {
       const duplicatedRoutes = this.store.get('duplicatedRoutes')[
         environment.uuid
@@ -188,129 +203,108 @@ export class ServerService {
                 environment.uuid
               );
               const currentRoute = currentEnvironment.routes.find(
-                route => route.uuid === declaredRoute.uuid
+                (route) => route.uuid === declaredRoute.uuid
               );
               const enabledRouteResponse = new ResponseRulesInterpreter(
                 currentRoute.responses,
                 req
               ).chooseResponse();
 
+              // save route and response UUIDs for logs
+              res.routeUUID = declaredRoute.uuid;
+              res.routeResponseUUID = enabledRouteResponse.uuid;
+
               // add route latency if any
               setTimeout(() => {
-                const routeContentType = GetRouteResponseContentType(
+                const contentType = GetRouteResponseContentType(
                   currentEnvironment,
                   enabledRouteResponse
                 );
-
-                // set http code
-                res.status(
-                  (enabledRouteResponse.statusCode as unknown) as number
+                const routeContentType = GetContentType(
+                  enabledRouteResponse.headers
                 );
 
-                this.setHeaders(enabledRouteResponse.headers, header => {
-                  res.set(header.key, DummyJSONParser(header.value, req));
-                });
+                // set http code
+                res.status(enabledRouteResponse.statusCode);
 
-                // send the file
-                if (enabledRouteResponse.filePath) {
-                  let filePath: string;
+                this.setHeaders(enabledRouteResponse.headers, res, req);
 
-                  // throw error or serve file
-                  try {
-                    filePath = DummyJSONParser(
+                try {
+                  // send the file
+                  if (enabledRouteResponse.filePath) {
+                    let filePath: string;
+                    let fileMimeType: string;
+
+                    filePath = TemplateParser(
                       enabledRouteResponse.filePath,
                       req
                     );
-                    const fileMimeType = mimeTypes.lookup(
-                      enabledRouteResponse.filePath
-                    );
 
-                    // if no route content type set to the one detected
+                    fileMimeType =
+                      mimeTypeLookup(enabledRouteResponse.filePath) || '';
+
+                    // set content-type to route response's one or the detected mime type if none
                     if (!routeContentType) {
                       res.set('Content-Type', fileMimeType);
-                    }
-
-                    let fileContent: Buffer | string = fs.readFileSync(
-                      filePath
-                    );
-
-                    // parse templating for a limited list of mime types
-                    if (mimeTypesWithTemplating.indexOf(fileMimeType) > -1) {
-                      fileContent = DummyJSONParser(
-                        fileContent.toString('utf-8', 0, fileContent.length),
-                        req
-                      );
                     }
 
                     if (!enabledRouteResponse.sendFileAsBody) {
                       res.set(
                         'Content-Disposition',
-                        `attachment; filename="${path.basename(filePath)}"`
+                        `attachment; filename="${basename(filePath)}"`
                       );
                     }
-                    res.send(fileContent);
-                  } catch (error) {
-                    this.logger.error(
-                      `Error while serving the file: ${error.message}`
-                    );
 
-                    if (error.code === 'ENOENT') {
-                      this.sendError(
-                        res,
-                        Errors.FILE_NOT_EXISTS + filePath,
-                        false
-                      );
-                    } else if (error.message.indexOf('Parse error') > -1) {
-                      this.sendError(res, Errors.TEMPLATE_PARSE, false);
-                    }
+                    readFile(filePath, (readError, data) => {
+                      try {
+                        if (readError) {
+                          throw readError;
+                        }
 
-                    res.end();
-                  }
-                } else {
-                  // detect if content type is json in order to parse
-                  if (routeContentType.includes('application/json')) {
-                    try {
-                      res.json(
-                        JSON.parse(
-                          DummyJSONParser(enabledRouteResponse.body, req)
-                        )
-                      );
-                    } catch (error) {
-                      this.logger.error(
-                        `Error while serving the JSON: ${error.message}`
-                      );
+                        let fileContent: string;
 
-                      // if JSON parsing error send plain text error
-                      if (
-                        error.message.indexOf('Unexpected token') > -1 ||
-                        error.message.indexOf('Parse error') > -1
-                      ) {
-                        this.sendError(res, Errors.JSON_PARSE);
-                      } else if (error.message.indexOf('Missing helper') > -1) {
-                        this.sendError(
-                          res,
-                          Errors.MISSING_HELPER + error.message.split('"')[1]
-                        );
+                        fileContent = data.toString();
+
+                        // parse templating for a limited list of mime types
+                        if (
+                          mimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
+                          !enabledRouteResponse.disableTemplating
+                        ) {
+                          fileContent = TemplateParser(fileContent, req);
+                        }
+
+                        res.body = fileContent;
+
+                        res.send(fileContent);
+                      } catch (error) {
+                        const errorMessage = `Error while serving the file content: ${error.message}`;
+
+                        this.logger.error(errorMessage);
+
+                        this.sendError(res, errorMessage);
                       }
-
-                      res.end();
-                    }
+                    });
                   } else {
-                    try {
-                      res.send(DummyJSONParser(enabledRouteResponse.body, req));
-                    } catch (error) {
-                      this.logger.error(
-                        `Error while serving the content: ${error.message}`
-                      );
-
-                      // if invalid Content-Type provided
-                      if (error.message.indexOf('invalid media type') > -1) {
-                        this.sendError(res, Errors.INVALID_CONTENT_TYPE);
-                      }
-
-                      res.end();
+                    if (contentType.includes('application/json')) {
+                      res.set('Content-Type', 'application/json');
                     }
+
+                    let body = enabledRouteResponse.body;
+
+                    if (!enabledRouteResponse.disableTemplating) {
+                      body = TemplateParser(body, req);
+                    }
+
+                    res.body = body;
+
+                    res.send(body);
                   }
+                } catch (error) {
+                  const errorMessage = `Error while serving the content: ${error.message}`;
+
+                  this.logger.error(errorMessage);
+
+                  this.sendError(res, errorMessage);
                 }
               }, enabledRouteResponse.latency);
             }
@@ -338,27 +332,44 @@ export class ServerService {
    */
   private setResponseHeaders(server: any, environment: Environment) {
     server.use((req, res, next) => {
-      this.setHeaders(environment.headers, header => {
-        res.setHeader(header.key, DummyJSONParser(header.value, req));
-      });
+      this.setHeaders(environment.headers, res, req);
 
       next();
     });
   }
 
   /**
-   * Calls a setterFn function on each header
+   * Set the provided headers on the target. Use different headers accessors
+   * depending on the type of target:
+   * express.Response/http.OutgoingMessage/http.IncomingMessage
+   * Use the source in the template parsing of each header value.
    *
    * @param headers
-   * @param setterFn
+   * @param target
+   * @param source
    */
-  private setHeaders(
-    headers: Partial<Header>[],
-    setterFn: (header: Partial<Header>) => any
-  ) {
-    headers.forEach(header => {
+  private setHeaders(headers: Partial<Header>[], target: any, source: any) {
+    headers.forEach((header) => {
       if (header.key && header.value && !TestHeaderValidity(header.key)) {
-        setterFn(header);
+        let parsedHeaderValue: string;
+        try {
+          parsedHeaderValue = TemplateParser(header.value, source);
+        } catch (error) {
+          const errorMessage = `-- Parsing error. Check logs for more information --`;
+          this.logger.error(errorMessage);
+          parsedHeaderValue = errorMessage;
+        }
+
+        if (target.set) {
+          // for express.Response
+          target.set(header.key, parsedHeaderValue);
+        } else if (target.setHeader) {
+          // for proxy http.OutgoingMessage
+          target.setHeader(header.key, parsedHeaderValue);
+        } else {
+          // for http.IncomingMessage
+          target.headers[header.key] = parsedHeaderValue;
+        }
       }
     });
   }
@@ -371,176 +382,113 @@ export class ServerService {
    * @param errorMessage
    * @param showToast
    */
-  private sendError(res: any, errorMessage: string, showToast = true) {
+  private sendError(
+    res: express.Response,
+    errorMessage: string,
+    showToast = true,
+    status: number = null
+  ) {
     if (showToast) {
       this.toastService.addToast('error', errorMessage);
     }
     res.set('Content-Type', 'text/plain');
+    res.body = errorMessage;
+
+    if (status !== null) {
+      res.status(status);
+    }
+
     res.send(errorMessage);
   }
 
   /**
-   * Enable catch all proxy.
-   * Restream the body to the proxied API because it already has been intercepted by body parser
+   * Add catch-all proxy if enabled.
+   * Restream the body to the proxied API because it already has been
+   * intercepted by the body parser.
    *
    * @param server - server on which to launch the proxy
    * @param environment - environment to get proxy settings from
    */
-  private enableProxy(server: Application, environment: Environment) {
-    // Add catch all proxy if enabled
+  private enableProxy(server: express.Application, environment: Environment) {
     if (
       environment.proxyMode &&
       environment.proxyHost &&
       IsValidURL(environment.proxyHost)
     ) {
-      // res-stream the body (intercepted by body parser method) and mark as proxied
-      const processRequest = (proxyReq, req, res) => {
-        req.proxied = true;
-
-        this.setHeaders(environment.proxyReqHeaders, header => {
-          proxyReq.setHeader(header.key, DummyJSONParser(header.value, req));
-        });
-
-        if (req.body) {
-          proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
-          // stream the content
-          proxyReq.write(req.body);
-        }
-      };
-
-      // logging the proxied response
-      const self = this;
-      const processResponse = (proxyRes, req, res) => {
-        // flatten headers as proxy might return Set-Cookie header(s) values in an array
-        const combinedHeaders = ObjectValuesFlatten({
-          ...res.getHeaders(),
-          ...proxyRes.headers,
-          ...HeadersArrayToObject(environment.proxyResHeaders)
-        });
-
-        let body = '';
-        proxyRes.on('data', chunk => {
-          body += chunk;
-        });
-        proxyRes.on('end', () => {
-          proxyRes.getHeaders = function() {
-            return combinedHeaders;
-          };
-          const enhancedReq = req as IEnhancedRequest;
-          const response = self.dataService.formatResponseLog(
-            proxyRes,
-            body,
-            enhancedReq.uuid
-          );
-          self.store.update(logResponseAction(environment.uuid, response));
-        });
-
-        this.setHeaders(environment.proxyResHeaders, header => {
-          proxyRes.headers[header.key] = DummyJSONParser(header.value, req);
-        });
-      };
-
-      const logErrorResponse = (err, req, res) => {
-        // the response is logged by the overriden function
-        res
-          .status(504)
-          .send('Error occured while trying to proxy to: ' + req.url);
-      };
+      this.logger.info(
+        `Creating proxy between localhost:${environment.port} and ${environment.proxyHost}`
+      );
 
       server.use(
         '*',
-        proxy(<proxy.Config>{
+        createProxyMiddleware({
           target: environment.proxyHost,
           secure: false,
           changeOrigin: true,
           ssl: { ...httpsConfig, agent: false },
-          onProxyReq: processRequest,
-          onProxyRes: processResponse,
-          onError: logErrorResponse
+          onProxyReq: (proxyReq, req, res) => {
+            req.proxied = true;
+
+            this.setHeaders(environment.proxyReqHeaders, proxyReq, req);
+
+            if (req.body) {
+              proxyReq.setHeader('Content-Length', Buffer.byteLength(req.body));
+
+              // re-stream the body (intercepted by body parser method) and mark as proxied
+              proxyReq.write(req.body);
+            }
+          },
+          onProxyRes: (proxyRes, req, res) => {
+            let body = '';
+            proxyRes.on('data', (chunk) => {
+              body += chunk;
+            });
+            proxyRes.on('end', () => {
+              res.body = body;
+            });
+
+            this.setHeaders(environment.proxyResHeaders, proxyRes, req);
+          },
+          onError: (err, req, res) => {
+            this.sendError(
+              res,
+              `An error occured while trying to proxy to ${environment.proxyHost}${req.url}: ${err}`,
+              false,
+              504
+            );
+          }
         })
       );
-    } else {
-      // if not proxy, log the 404 response
-      server.use((req, res, next) => {
-        this.setHeaders(environment.headers, header => {
-          res.setHeader(header.key, DummyJSONParser(header.value, req));
-        });
-
-        // the send function is logging the response
-        return res.status(404).send('Cannot ' + req.method + ' ' + req.url);
-      });
     }
   }
 
   /**
-   * Logs all request made to the environment
+   * Logs all request made to the environment when response is sent ('close' event)
    *
    * @param server - server on which to log the request
    * @param environment - environment to link log to
    */
-  private logRequests(server: Application, environment: Environment) {
+  private logRequest(server: express.Application, environment: Environment) {
     server.use((req, res, next) => {
-      const log = this.dataService.formatRequestLog(req);
-      log.uuid = uuid();
-      const enhancedReq = req as IEnhancedRequest;
-      enhancedReq.uuid = log.uuid;
-      this.store.update(logRequestAction(environment.uuid, log));
-      next();
-    });
-  }
-
-  /**
-   * Log all response made by the environment
-   *
-   * @param server - server on which to log the response
-   * @param environment - environment to link log to
-   */
-  private logResponses(server: any, environment: Environment) {
-    server.use((req, res, next) => {
-      const oldSend = res.send;
-
-      const self = this;
-      res.send = function(body) {
-        oldSend.apply(res, arguments);
-        const enhancedReq = this.req as IEnhancedRequest;
-        const responseLog = self.dataService.formatResponseLog(
-          this,
-          body,
-          enhancedReq.uuid
+      res.on('close', () => {
+        this.store.update(
+          logRequestAction(environment.uuid, this.dataService.formatLog(res))
         );
-        self.store.update(logResponseAction(environment.uuid, responseLog));
-      };
+      });
 
       next();
     });
   }
 
   /**
-   * Log all error responses made by the environment
+   * Catch all error handler
+   * http://expressjs.com/en/guide/error-handling.html#catching-errors
    *
    * @param server - server on which to log the response
-   * @param environment - environment to link log to
    */
-  private logErrorResponses(server: any, environment: Environment) {
-    const self = this;
+  private errorHandler(server: express.Application) {
     server.use((err, req, res, next) => {
-      // the response is logged by the overrided function
-      return res.status(500).send(err);
-    });
-  }
-
-  /**
-   * Set the environment latency if any
-   *
-   * @param server - server instance
-   * @param environmentUUID - environment UUID
-   */
-  private setEnvironmentLatency(server: Application, environmentUUID: string) {
-    server.use((req, res, next) => {
-      const environmentSelected = this.store.getEnvironmentByUUID(
-        environmentUUID
-      );
-      setTimeout(next, environmentSelected.latency);
+      this.sendError(res, err, false, 500);
     });
   }
 }

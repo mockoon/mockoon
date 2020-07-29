@@ -50,6 +50,7 @@ export const statusCodes = [
   { code: 415, text: 'Unsupported Media Type' },
   { code: 416, text: 'Range Not Satisfiable' },
   { code: 417, text: 'Expectation Failed' },
+  { code: 418, text: 'I\'m a teapot' },
   { code: 421, text: 'Misdirected Request' },
   { code: 422, text: 'Unprocessable Entity' },
   { code: 423, text: 'Locked' },
@@ -235,13 +236,14 @@ export const headerValues = [
 export type RouteResponse = {
   uuid: string;
   rules: ResponseRule[];
-  statusCode: string;
+  statusCode: number;
   label: string;
   headers: Header[];
   body?: string;
   latency: number;
   filePath: string;
   sendFileAsBody: boolean;
+  disableTemplating: boolean;
 };
 
 export type ResponseRule = {

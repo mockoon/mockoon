@@ -1,6 +1,8 @@
-<div class="context-menu" *ngIf="show" [ngStyle]="position" (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()">
-  <div *ngFor="let item of items; let itemIndex = index" class="context-menu-item" [ngClass]="{'is-separator': item.separator}" (click)="action(item, itemIndex, $event)">
-    <span *ngIf="confirmIndex !== itemIndex"><i class="material-icons">{{item.icon}}</i> {{item.label}}</span>
-    <span *ngIf="confirmIndex === itemIndex" [ngClass]="item.confirmColor"><i class="material-icons">{{item.confirm.icon}}</i> {{item.confirm.label}}</span>
+<ng-container *ngIf="menuState$ | async as menuState">
+  <div class="context-menu" *ngIf="menuState.show" [ngStyle]="menuState.position" (mouseleave)="mouseLeave()" (mouseenter)="mouseEnter()">
+    <div *ngFor="let item of menuState.items; let itemIndex = index" class="context-menu-item" [ngClass]="{'is-separator': item.separator}" (click)="action(item, $event)">
+      <span *ngIf="!item.needConfirm"><i class="material-icons">{{item.icon}}</i> {{item.label}}</span>
+      <span *ngIf="item.needConfirm" [ngClass]="item.confirmColor"><i class="material-icons">{{item.confirm.icon}}</i> {{item.confirm.label}}</span>
+    </div>
   </div>
-</div>
+</ng-container>

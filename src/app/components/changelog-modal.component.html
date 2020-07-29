@@ -1,13 +1,31 @@
 <ng-template #modal let-close="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title">v{{appVersion}} changelog <a class="btn btn-link btn-sm btn-icon text-primary" (click)="openReleaseLink()">View online</a></h4>
+    <h4 class="modal-title">
+      Release notes v{{ appVersion }}
+      <a
+        class="btn btn-link btn-sm btn-icon text-primary"
+        (click)="openReleaseLink()"
+        >View online</a
+      >
+    </h4>
   </div>
   <div class="modal-body">
-    <markdown ngPreserveWhitespaces>
-      {{releaseChangelog}}
+    <markdown
+      *ngIf="changelog$ | async as changelog; else noChangelog"
+      ngPreserveWhitespaces
+    >
+      {{ changelog }}
     </markdown>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="close()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="close()">
+      Close
+    </button>
   </div>
+</ng-template>
+
+<ng-template #noChangelog>
+  <p class="message">
+    Changelog could not be loaded
+  </p>
 </ng-template>

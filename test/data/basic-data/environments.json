@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -18,7 +18,7 @@
             "uuid": "505a77b1-34c7-4af8-adde-ed00b8dd29bf",
             "body": "{\"response\": \"{{urlParam 'var'}}\"}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -28,7 +28,8 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
-            "rules": []
+            "rules": [],
+            "disableTemplating": false
           }
         ]
       },
@@ -43,7 +44,7 @@
             "uuid": "057ec98a-dd5d-4dd8-9af9-a99dd7a5c3f5",
             "body": "42",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -53,7 +54,8 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
-            "rules": []
+            "rules": [],
+            "disableTemplating": false
           }
         ]
       },
@@ -68,7 +70,7 @@
             "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",
             "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -78,7 +80,8 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
-            "rules": []
+            "rules": [],
+            "disableTemplating": false
           }
         ]
       }
@@ -93,7 +96,7 @@
         "value": ""
       }
     ],
-    "proxyReqHeaders": [{"key": "", "value":""}],
-    "proxyResHeaders": [{"key": "", "value":""}]
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
   }
 ]

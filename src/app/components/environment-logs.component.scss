@@ -1,4 +1,4 @@
-@import 'src/styles/bootstrap-custom-variables.scss';
+@import 'src/styles/bootstrap-variables.scss';
 @import 'src/styles/variables.scss';
 
 $logs-border: 1px solid lighten($gray-900, 1%);
@@ -7,9 +7,6 @@ $logs-border: 1px solid lighten($gray-900, 1%);
   border-top: $logs-border;
 
   &-column {
-    overflow-x: hidden;
-    overflow-y: auto;
-
     &:first-of-type {
       min-width: $menu-width;
       max-width: $menu-width;
@@ -18,10 +15,16 @@ $logs-border: 1px solid lighten($gray-900, 1%);
     &:last-of-type {
       border-left: $logs-border;
     }
+
+    position: relative; // we need this for the resize-column
   }
 
   &-content {
     word-break: break-all;
+
+    &-container {
+      overflow-y: auto;
+    }
 
     &-title {
       cursor: pointer;

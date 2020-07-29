@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -18,7 +18,7 @@
             "uuid": "505a77b1-34c7-4af8-adde-ed00b8dd29bf",
             "body": "{\"response\": \"{{urlParam 'var'}}\"}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -28,6 +28,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -43,7 +44,7 @@
             "uuid": "057ec98a-dd5d-4dd8-9af9-a99dd7a5c3f5",
             "body": "42",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -57,6 +58,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -72,7 +74,7 @@
             "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",
             "body": "{\n    \"response\": \"So Long, and Thanks for All the Fish\"\n}",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -82,6 +84,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]
@@ -91,18 +94,13 @@
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [
-      {
-        "key": "env-header",
-        "value": "env-header"
-      }
-    ],
+    "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }]
   },
   {
     "uuid": "2cbdec80-f284-11e9-a28c-912bdc671019",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Proxy",
     "endpointPrefix": "",
     "latency": 0,
@@ -116,28 +114,14 @@
       {
         "key": "Content-Type",
         "value": "application/json"
-      },
-      {
-        "key": "x-custom-header",
-        "value": "header value"
       }
     ],
-    "proxyReqHeaders": [
-      {
-        "key": "x-proxy-request-header",
-        "value": "header value"
-      }
-    ],
-    "proxyResHeaders": [
-      {
-        "key": "x-proxy-response-header",
-        "value": "header value"
-      }
-    ]
+    "proxyReqHeaders": [],
+    "proxyResHeaders": []
   },
   {
     "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-    "lastMigration": 10,
+    "lastMigration": 11,
     "name": "Proxy disabled",
     "endpointPrefix": "",
     "latency": 0,
@@ -154,7 +138,7 @@
             "uuid": "5ddcbb6a-e13d-4d4a-ac6f-2e776dc6e3e9",
             "body": "",
             "latency": 0,
-            "statusCode": "200",
+            "statusCode": 200,
             "label": "",
             "headers": [
               {
@@ -164,6 +148,7 @@
             ],
             "filePath": "",
             "sendFileAsBody": false,
+            "disableTemplating": false,
             "rules": []
           }
         ]

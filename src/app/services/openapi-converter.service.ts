@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
+import * as SwaggerParser from '@apidevtools/swagger-parser';
 import { OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { Logger } from 'src/app/classes/logger';
 import { Errors } from 'src/app/enums/errors.enum';
-import { GetRouteResponseContentType, RemoveLeadingSlash } from 'src/app/libs/utils.lib';
+import {
+  GetRouteResponseContentType,
+  RemoveLeadingSlash
+} from 'src/app/libs/utils.lib';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { Environment } from 'src/app/types/environment.type';
-import { Header, Method, methods, Route, RouteResponse, statusCodes } from 'src/app/types/route.type';
-import * as SwaggerParser from 'swagger-parser';
+import {
+  Header,
+  Method,
+  methods,
+  Route,
+  RouteResponse,
+  statusCodes
+} from 'src/app/types/route.type';
 import { parse as urlParse } from 'url';
 
 type ParametersTypes = 'PATH_PARAMETERS' | 'SERVER_VARIABLES';
@@ -49,6 +59,10 @@ export class OpenAPIConverterService {
         this.toastsService.addToast('warning', Errors.IMPORT_WRONG_VERSION);
       }
     } catch (error) {
+      this.toastsService.addToast(
+        'error',
+        `${Errors.IMPORT_ERROR}: ${error.message}`
+      );
       this.logger.error(`Error while importing OpenAPI file: ${error.message}`);
     }
   }
@@ -66,6 +80,10 @@ export class OpenAPIConverterService {
     try {
       return this.convertToOpenAPIV3(environment);
     } catch (error) {
+      this.toastsService.addToast(
+        'error',
+        `${Errors.EXPORT_ERROR}: ${error.message}`
+      );
       this.logger.error(`Error while exporting OpenAPI file: ${error.message}`);
     }
   }
@@ -169,7 +187,7 @@ export class OpenAPIConverterService {
                   routeResponse
                 );
 
-                responses[routeResponse.statusCode] = {
+                responses[routeResponse.statusCode.toString()] = {
                   description: routeResponse.label,
                   content: responseContentType
                     ? { [responseContentType]: {} }
@@ -249,8 +267,8 @@ export class OpenAPIConverterService {
   ): Route[] {
     const routes: Route[] = [];
 
-    Object.keys(parsedAPI.paths).forEach(routePath => {
-      Object.keys(parsedAPI.paths[routePath]).forEach(routeMethod => {
+    Object.keys(parsedAPI.paths).forEach((routePath) => {
+      Object.keys(parsedAPI.paths[routePath]).forEach((routeMethod) => {
         const parsedRoute:
           | OpenAPIV2.OperationObject
           | OpenAPIV3.OperationObject = parsedAPI.paths[routePath][routeMethod];
@@ -258,11 +276,11 @@ export class OpenAPIConverterService {
         if (methods.includes(routeMethod)) {
           const routeResponses: RouteResponse[] = [];
 
-          Object.keys(parsedRoute.responses).forEach(responseStatus => {
+          Object.keys(parsedRoute.responses).forEach((responseStatus) => {
             // filter unsupported status codes (i.e. ranges containing "X", 4XX, 5XX, etc)
             if (
               statusCodes.find(
-                statusCode => statusCode.code.toString() === responseStatus
+                (statusCode) => statusCode.code === parseInt(responseStatus, 10)
               )
             ) {
               const routeResponse:
@@ -286,7 +304,7 @@ export class OpenAPIConverterService {
               routeResponses.push({
                 ...this.schemasBuilderService.buildRouteResponse(),
                 body: '',
-                statusCode: responseStatus.toString(),
+                statusCode: parseInt(responseStatus, 10),
                 label: routeResponse.description || '',
                 headers: this.buildResponseHeaders(
                   contentTypeHeaders,
@@ -357,7 +375,7 @@ export class OpenAPIConverterService {
     if (responseHeaders) {
       return [
         routeContentTypeHeader,
-        ...Object.keys(responseHeaders).map(header =>
+        ...Object.keys(responseHeaders).map((header) =>
           this.schemasBuilderService.buildHeader(header, '')
         )
       ];

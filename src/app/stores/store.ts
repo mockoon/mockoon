@@ -1,29 +1,42 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
-import { Settings } from 'src/app/services/settings.service';
+import {
+  ActiveEnvironmentsLogUUIDs,
+  EnvironmentLog,
+  EnvironmentLogs
+} from 'src/app/models/environment-logs.model';
+import { Settings } from 'src/app/models/settings.model';
 import { Toast } from 'src/app/services/toasts.service';
 import { Actions } from 'src/app/stores/actions';
 import { environmentReducer } from 'src/app/stores/reducer';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
-import { EnvironmentLogs } from 'src/app/types/server.type';
 
 export type ViewsNameType = 'ROUTE' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
-export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES';
+export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 
-export type EnvironmentStatus = { running: boolean, needRestart: boolean, disabledForIncompatibility: boolean };
+export type EnvironmentStatus = {
+  running: boolean;
+  needRestart: boolean;
+  disabledForIncompatibility: boolean;
+};
 
-export type EnvironmentStatusProperties = { [T in keyof EnvironmentStatus]?: EnvironmentStatus[T] };
+export type EnvironmentStatusProperties = {
+  [T in keyof EnvironmentStatus]?: EnvironmentStatus[T];
+};
 
 export type EnvironmentsStatuses = { [key: string]: EnvironmentStatus };
 
 export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
 
-export type UIState = { environmentsMenuOpened: boolean };
+export type UIState = {
+  environmentsMenuOpened: boolean;
+  appClosing: boolean;
+};
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
 
@@ -40,6 +53,8 @@ export type StoreType = {
   duplicatedEnvironments: Set<string>;
   duplicatedRoutes: DuplicatedRoutesTypes;
   environmentsLogs: EnvironmentLogs;
+  // the active log UUID per environment
+  activeEnvironmentLogsUUID: ActiveEnvironmentsLogUUIDs;
   toasts: Toast[];
   userId: string;
   uiState: UIState;
@@ -52,6 +67,7 @@ export class Store {
     activeView: 'ROUTE',
     activeTab: 'RESPONSE',
     activeEnvironmentLogsTab: 'REQUEST',
+    activeEnvironmentLogsUUID: {},
     activeEnvironmentUUID: null,
     activeRouteUUID: null,
     activeRouteResponseUUID: null,
@@ -63,7 +79,8 @@ export class Store {
         wrap: 'free',
         showPrintMargin: false,
         tooltipFollowsMouse: false,
-        useWorker: false
+        useWorker: false,
+        tabSize: 2
       },
       mode: 'json',
       theme: 'custom_theme'
@@ -74,20 +91,19 @@ export class Store {
     toasts: [],
     userId: null,
     uiState: {
-      environmentsMenuOpened: false
+      environmentsMenuOpened: false,
+      appClosing: false
     },
     settings: null
   });
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Select store element
    */
   public select<T extends keyof StoreType>(path: T): Observable<StoreType[T]> {
-    return this.store$.asObservable().pipe(
-      pluck(path)
-    );
+    return this.store$.asObservable().pipe(pluck(path));
   }
 
   /**
@@ -101,9 +117,24 @@ export class Store {
    * Select active environment observable
    */
   public selectActiveEnvironment(): Observable<Environment> {
-    return this.store$.asObservable().pipe(
-      map(store => store.environments.find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID))
-    );
+    return this.store$
+      .asObservable()
+      .pipe(
+        map((store) =>
+          store.environments.find(
+            (environment) => environment.uuid === store.activeEnvironmentUUID
+          )
+        )
+      );
+  }
+
+  /**
+   * Select active environment property observable
+   */
+  public selectActiveEnvironmentProperty<T extends keyof Environment>(
+    path: T
+  ): Observable<Environment[T]> {
+    return this.selectActiveEnvironment().pipe(pluck(path));
   }
 
   /**
@@ -111,17 +142,69 @@ export class Store {
    */
   public selectActiveEnvironmentStatus(): Observable<EnvironmentStatus> {
     return this.store$.asObservable().pipe(
-      map(store => store.environmentsStatus[this.store$.value.activeEnvironmentUUID])
+      map((store: StoreType) => {
+        return store.environmentsStatus[store.activeEnvironmentUUID];
+      })
     );
+  }
+
+  /**
+   * Select active environment logs
+   */
+  public selectActiveEnvironmentLogs(): Observable<EnvironmentLog[]> {
+    return this.store$
+      .asObservable()
+      .pipe(
+        map((store) => store.environmentsLogs[store.activeEnvironmentUUID])
+      );
+  }
+
+  /**
+   * Select active environment log UUID for selected environment
+   */
+  public selectActiveEnvironmentLogUUID(): Observable<string> {
+    return this.store$
+      .asObservable()
+      .pipe(
+        map(
+          (store) =>
+            store.activeEnvironmentLogsUUID[store.activeEnvironmentUUID]
+        )
+      );
+  }
+
+  /**
+   * Select last environment log for active route response
+   */
+  public selectActiveRouteResponseLastLog(): Observable<EnvironmentLog> {
+    return this.store$
+      .asObservable()
+      .pipe(
+        map((store) =>
+          store.activeEnvironmentUUID
+            ? store.environmentsLogs[store.activeEnvironmentUUID].find(
+                (environmentLog) =>
+                  environmentLog.routeUUID === store.activeRouteUUID &&
+                  environmentLog.routeResponseUUID ===
+                    store.activeRouteResponseUUID
+              )
+            : null
+        )
+      );
   }
 
   /**
    * Select active route observable
    */
   public selectActiveRoute(): Observable<Route> {
-    return this.store$.asObservable().pipe(
-      map(store => store.environments.find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID)),
-      map(environment => environment ? environment.routes.find(route => route.uuid === this.store$.value.activeRouteUUID) : null)
+    return this.selectActiveEnvironment().pipe(
+      map((environment) =>
+        environment
+          ? environment.routes.find(
+              (route) => route.uuid === this.store$.value.activeRouteUUID
+            )
+          : null
+      )
     );
   }
 
@@ -129,21 +212,40 @@ export class Store {
    * Select active route response observable
    */
   public selectActiveRouteResponse(): Observable<RouteResponse> {
-    return this.store$.asObservable().pipe(
-      map(store => store.environments.find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID)),
-      map(environment => environment ? environment.routes.find(route => route.uuid === this.store$.value.activeRouteUUID) : null),
-      map(route => route ? route.responses.find(routeResponse => routeResponse.uuid === this.store$.value.activeRouteResponseUUID) : null)
+    return this.selectActiveRoute().pipe(
+      map((route) =>
+        route
+          ? route.responses.find(
+              (routeResponse) =>
+                routeResponse.uuid === this.store$.value.activeRouteResponseUUID
+            )
+          : null
+      )
     );
+  }
+
+  /**
+   * Select active route response property observable
+   */
+  public selectActiveRouteResponseProperty<T extends keyof RouteResponse>(
+    path: T
+  ): Observable<RouteResponse[T]> {
+    return this.selectActiveRouteResponse().pipe(pluck(path));
   }
 
   /**
    * Select active route response index observable
    */
   public selectActiveRouteResponseIndex(): Observable<number> {
-    return this.store$.asObservable().pipe(
-      map(store => store.environments.find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID)),
-      map(environment => environment ? environment.routes.find(route => route.uuid === this.store$.value.activeRouteUUID) : null),
-      map(route => route ? route.responses.findIndex(routeResponse => routeResponse.uuid === this.store$.value.activeRouteResponseUUID) + 1 : null)
+    return this.selectActiveRoute().pipe(
+      map((route) =>
+        route
+          ? route.responses.findIndex(
+              (routeResponse) =>
+                routeResponse.uuid === this.store$.value.activeRouteResponseUUID
+            ) + 1
+          : null
+      )
     );
   }
 
@@ -151,14 +253,19 @@ export class Store {
    * Get environment by uuid
    */
   public getEnvironmentByUUID(UUID: string): Environment {
-    return this.store$.value.environments.find(environment => environment.uuid === UUID);
+    return this.store$.value.environments.find(
+      (environment) => environment.uuid === UUID
+    );
   }
 
   /**
    * Get active environment value
    */
   public getActiveEnvironment(): Environment {
-    return this.store$.value.environments.find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID);
+    return this.store$.value.environments.find(
+      (environment) =>
+        environment.uuid === this.store$.value.activeEnvironmentUUID
+    );
   }
 
   /**
@@ -169,28 +276,37 @@ export class Store {
   }
 
   /**
-   * Get active route observable
+   * Get active route value
    */
   public getActiveRoute(): Route {
-    const activeEnvironment = this.store$.value.environments
-      .find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID);
+    const activeEnvironment = this.store$.value.environments.find(
+      (environment) =>
+        environment.uuid === this.store$.value.activeEnvironmentUUID
+    );
 
     if (!activeEnvironment) {
       return null;
     }
 
-    return activeEnvironment.routes
-    .find(route => route.uuid === this.store$.value.activeRouteUUID);
+    return activeEnvironment.routes.find(
+      (route) => route.uuid === this.store$.value.activeRouteUUID
+    );
   }
 
   /**
-   * Get active route response observable
+   * Get active route response value
    */
   public getActiveRouteResponse(): RouteResponse {
     return this.store$.value.environments
-      .find(environment => environment.uuid === this.store$.value.activeEnvironmentUUID).routes
-      .find(route => route.uuid === this.store$.value.activeRouteUUID).responses
-      .find(response => response.uuid === this.store$.value.activeRouteResponseUUID);
+      .find(
+        (environment) =>
+          environment.uuid === this.store$.value.activeEnvironmentUUID
+      )
+      .routes.find((route) => route.uuid === this.store$.value.activeRouteUUID)
+      .responses.find(
+        (response) =>
+          response.uuid === this.store$.value.activeRouteResponseUUID
+      );
   }
 
   /**

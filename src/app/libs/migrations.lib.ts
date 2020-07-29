@@ -1,6 +1,6 @@
 import { Environment } from 'src/app/types/environment.type';
-import { Header, Route } from 'src/app/types/route.type';
-import * as uuid from 'uuid/v1';
+import { Header, Route, RouteResponse } from 'src/app/types/route.type';
+import { v1 as uuid } from 'uuid';
 
 export const Migrations: {
   id: number;
@@ -31,7 +31,7 @@ export const Migrations: {
         environment.cors = true;
       }
 
-      environment.routes.forEach(route => {
+      environment.routes.forEach((route) => {
         // add uuid
         if (!route.uuid) {
           route.uuid = uuid();
@@ -40,7 +40,7 @@ export const Migrations: {
         if (route['customHeaders']) {
           // find content type header
           const ContentTypeHeader = route['customHeaders'].find(
-            customHeader => customHeader.key === 'Content-Type'
+            (customHeader) => customHeader.key === 'Content-Type'
           );
 
           // add custom header only if no content type
@@ -63,7 +63,7 @@ export const Migrations: {
   {
     id: 3,
     migrationFunction: (environment: Environment) => {
-      environment.routes.forEach(route => {
+      environment.routes.forEach((route) => {
         // add missing uuid
         if (!route.uuid) {
           route.uuid = uuid();
@@ -137,7 +137,7 @@ export const Migrations: {
           }
         ) => {
           route.responses = [];
-          route.responses.push({
+          route.responses.push(<RouteResponse & { statusCode: string }>{
             uuid: uuid(),
             statusCode: route.statusCode,
             label: '',
@@ -167,7 +167,7 @@ export const Migrations: {
     id: 7,
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
-        route.responses.forEach(routeResponse => {
+        route.responses.forEach((routeResponse) => {
           routeResponse.uuid = uuid();
         });
       });
@@ -193,7 +193,7 @@ export const Migrations: {
     id: 9,
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
-        route.responses.forEach(routeResponse => {
+        route.responses.forEach((routeResponse) => {
           if (!routeResponse.label) {
             routeResponse.label = '';
           }
@@ -215,6 +215,28 @@ export const Migrations: {
       if (!environment.proxyResHeaders) {
         environment.proxyResHeaders = [{ key: '', value: '' }];
       }
+    }
+  },
+
+  /**
+   * Add route response's disableTemplating option.
+   * Convert statusCode to number
+   */
+  {
+    id: 11,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((routeResponse) => {
+          if (routeResponse.disableTemplating === undefined) {
+            routeResponse.disableTemplating = false;
+          }
+
+          routeResponse.statusCode = parseInt(
+            (routeResponse.statusCode as unknown) as string,
+            10
+          );
+        });
+      });
     }
   }
 ];
