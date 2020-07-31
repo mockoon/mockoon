@@ -31,6 +31,7 @@ export class SchemasBuilderService {
       filePath: '',
       sendFileAsBody: false,
       rules: [],
+      rulesOperator: 'OR',
       disableTemplating: false
     };
   }

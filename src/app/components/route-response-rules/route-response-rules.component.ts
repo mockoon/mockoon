@@ -1,20 +1,41 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilKeyChanged, filter, map, takeUntil, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilKeyChanged,
+  filter,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 import { SelectOptionsList } from 'src/app/models/common.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
-import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/route.type';
+import {
+  LogicalOperators,
+  ResponseRule,
+  ResponseRuleTargets,
+  RouteResponse
+} from 'src/app/types/route.type';
 
 @Component({
   selector: 'app-route-response-rules',
   templateUrl: 'route-response-rules.component.html',
+  styleUrls: ['route-response-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Input() activeRouteResponse$: Observable<RouteResponse>;
   @Output() ruleAdded: EventEmitter<any> = new EventEmitter();
-  public rules$: Observable<ResponseRule[]>;
+  public routeResponse$: Observable<RouteResponse>;
   public form: FormGroup;
   public responseRuleTargets: SelectOptionsList<ResponseRuleTargets> = [
     { code: 'body', text: 'Body path (JSON / form data)' },
@@ -22,6 +43,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { code: 'header', text: 'Header' },
     { code: 'params', text: 'Route params' }
   ];
+  public rulesOperatorsList: LogicalOperators[] = ['OR', 'AND'];
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
@@ -33,29 +55,28 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
+      rulesOperator: ['OR'],
       rules: this.formBuilder.array([])
     });
 
-    // subscribe to rules changes to reset the form
-    this.rules$ = this.activeRouteResponse$.pipe(
+    // subscribe to active route response to reset the form
+    this.routeResponse$ = this.activeRouteResponse$.pipe(
       filter((activeRouteResponse) => !!activeRouteResponse),
       distinctUntilKeyChanged('uuid'),
-      map((activeRouteResponse) => activeRouteResponse.rules),
-      tap((rules) => {
-        this.replaceRules(rules, false);
+      tap((routeResponse) => {
+        this.replaceRules(routeResponse.rules, false);
+        this.form.get('rulesOperator').setValue(routeResponse.rulesOperator);
+        this.changeDetectorRef.markForCheck();
       })
     );
 
-    // subscribe to changes and send new rules values to the store
-    this.form
-      .get('rules')
-      .valueChanges.pipe(
+    // subscribe to changes and send new values to the store
+    this.form.valueChanges
+      .pipe(
         filter(() => this.listenToChanges),
         debounceTime(100),
-        tap((newRules) => {
-          this.environmentsService.updateActiveRouteResponse({
-            rules: newRules
-          });
+        tap((newProperties) => {
+          this.environmentsService.updateActiveRouteResponse(newProperties);
         }),
         takeUntil(this.destroy$)
       )
@@ -77,10 +98,12 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     formRulesArray.clear();
 
     newRules.forEach((rule) => {
-      formRulesArray.push(this.formBuilder.group(<ResponseRule>{ ...rule }));
+      formRulesArray.push(
+        this.formBuilder.group(<ResponseRule>{
+          ...rule
+        })
+      );
     });
-
-    this.changeDetectorRef.markForCheck();
 
     this.listenToChanges = true;
   }

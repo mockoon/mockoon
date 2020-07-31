@@ -170,6 +170,17 @@ label {
   );
 }
 
+.btn-xxs {
+  // line-height: ensure proper height of button next to small input
+  @include button-size(
+    $input-btn-padding-y-xxs,
+    $input-btn-padding-x-xxs,
+    $font-size-xxs,
+    $input-btn-line-height-xxs,
+    $btn-border-radius-xxs
+  );
+}
+
 .btn-group {
   .btn:first-of-type {
     border-right: 1px solid $gray-800;

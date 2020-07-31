@@ -1,7 +1,7 @@
 [
   {
     "uuid": "3dbd1f30-5b05-11ea-a005-35ade7bcb066",
-    "lastMigration": 11,
+    "lastMigration": 12,
     "name": "Swagger Petstore v2",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -23,7 +23,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -44,7 +45,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd4643-5b05-11ea-a005-35ade7bcb066",
@@ -56,7 +58,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd4644-5b05-11ea-a005-35ade7bcb066",
@@ -68,7 +71,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -89,7 +93,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd6d51-5b05-11ea-a005-35ade7bcb066",
@@ -101,7 +106,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -122,7 +128,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd6d54-5b05-11ea-a005-35ade7bcb066",
@@ -134,7 +141,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -155,7 +163,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd6d57-5b05-11ea-a005-35ade7bcb066",
@@ -167,7 +176,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd6d58-5b05-11ea-a005-35ade7bcb066",
@@ -179,7 +189,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -200,7 +211,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -221,7 +233,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd6d5d-5b05-11ea-a005-35ade7bcb066",
@@ -233,7 +246,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -254,7 +268,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -275,7 +290,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -296,7 +312,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd6d64-5b05-11ea-a005-35ade7bcb066",
@@ -308,7 +325,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -329,7 +347,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd9461-5b05-11ea-a005-35ade7bcb066",
@@ -341,7 +360,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd9462-5b05-11ea-a005-35ade7bcb066",
@@ -353,7 +373,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -374,7 +395,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd9465-5b05-11ea-a005-35ade7bcb066",
@@ -386,7 +408,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -407,7 +430,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -428,7 +452,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -449,7 +474,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -474,7 +500,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd946e-5b05-11ea-a005-35ade7bcb066",
@@ -486,7 +513,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -507,7 +535,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -528,7 +557,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd9473-5b05-11ea-a005-35ade7bcb066",
@@ -540,7 +570,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd9474-5b05-11ea-a005-35ade7bcb066",
@@ -552,7 +583,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -573,7 +605,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbd9477-5b05-11ea-a005-35ade7bcb066",
@@ -585,7 +618,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -606,7 +640,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "3dbdbb71-5b05-11ea-a005-35ade7bcb066",
@@ -618,7 +653,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true

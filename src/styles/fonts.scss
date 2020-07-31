@@ -35,6 +35,10 @@
   font-feature-settings: 'liga';
 
   &-xs {
+    font-size: 1rem;
+  }
+
+  &-xxs {
     font-size: 0.9rem;
   }
 }

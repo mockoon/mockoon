@@ -64,7 +64,8 @@ $line-height-base:            1.5 !default;
 $font-size-base:              1rem;
 $font-size-lg:                ($font-size-base * 1.25);
 $font-size-sm:                ($font-size-base * .875);
-$font-size-xs:   .75rem;
+$font-size-xs:   .80rem;
+$font-size-xxs:   .75rem;
 
 $font-weight-light:           300;
 $font-weight-normal:          400;
@@ -72,7 +73,8 @@ $font-weight-bold:            700;
 
 $grid-gutter-width: 0;
 
-$border-radius-xs:       .1rem;
+$border-radius-xs:       .2rem;
+$border-radius-xxs:       .1rem;
 $border-width:                1px !default;
 $component-active-color:      $white;
 $component-active-bg:    $custom-gray;
@@ -80,9 +82,12 @@ $component-active-bg:    $custom-gray;
 $hr-border-color: lighten($gray-900, 2%);
 
 $input-btn-padding-y:         .375rem !default;
-$input-btn-padding-x-xs:               .3rem;
-$input-btn-padding-y-xs:               .1rem;
-$input-btn-line-height-xs:              1.25;
+$input-btn-padding-x-xs:               .4rem;
+$input-btn-padding-y-xs:               .2rem;
+$input-btn-padding-x-xxs:               .3rem;
+$input-btn-padding-y-xxs:               .1rem;
+$input-btn-line-height-xs:              1.3;
+$input-btn-line-height-xxs:              1.25;
 $input-btn-line-height:       $line-height-base !default;
 
 
@@ -94,6 +99,7 @@ $custom-select-focus-box-shadow: none;
 
 $btn-border-radius:              0;
 $btn-border-radius-xs:           $border-radius-xs;
+$btn-border-radius-xxs:          $border-radius-xxs;
 $input-bg:                       $custom-gray;
 $input-line-height:              $input-btn-line-height !default;
 $input-disabled-bg:              $custom-gray;

@@ -1,7 +1,7 @@
 [
   {
     "uuid": "500ea6c0-5d91-11ea-b15f-91b10dfe38f8",
-    "lastMigration": 11,
+    "lastMigration": 12,
     "name": "Regulations.gov",
     "endpointPrefix": "regulations/v3",
     "latency": 0,
@@ -23,7 +23,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "500ea6c2-5d91-11ea-b15f-91b10dfe38f8",
@@ -35,7 +36,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "500ea6c3-5d91-11ea-b15f-91b10dfe38f8",
@@ -47,7 +49,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -68,7 +71,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "500ea6c6-5d91-11ea-b15f-91b10dfe38f8",
@@ -80,7 +84,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "500ea6c7-5d91-11ea-b15f-91b10dfe38f8",
@@ -92,7 +97,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -113,7 +119,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "500ea6ca-5d91-11ea-b15f-91b10dfe38f8",
@@ -125,7 +132,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
             "uuid": "500ea6cb-5d91-11ea-b15f-91b10dfe38f8",
@@ -137,7 +145,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true

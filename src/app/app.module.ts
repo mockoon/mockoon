@@ -18,7 +18,7 @@ import { EnvironmentLogsComponent } from 'src/app/components/environment-logs.co
 import { EnvironmentsMenuComponent } from 'src/app/components/environments-menu/environments-menu.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { HeadersListComponent } from 'src/app/components/headers-list.component';
-import { RouteResponseRulesComponent } from 'src/app/components/route-response-rules.component';
+import { RouteResponseRulesComponent } from 'src/app/components/route-response-rules/route-response-rules.component';
 import { RoutesMenuComponent } from 'src/app/components/routes-menu/routes-menu.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { TitleSeparatorComponent } from 'src/app/components/title-separator/title-separator.component';

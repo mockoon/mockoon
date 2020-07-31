@@ -1,7 +1,7 @@
 [
   {
     "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-    "lastMigration": 11,
+    "lastMigration": 12,
     "name": "Environment logs 1",
     "endpointPrefix": "",
     "latency": 0,
@@ -33,6 +33,7 @@
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
+            "rulesOperator": "OR",
             "disableTemplating": false
           },
           {
@@ -57,6 +58,7 @@
                 "isRegex": false
               }
             ],
+            "rulesOperator": "OR",
             "disableTemplating": false
           },
           {
@@ -74,6 +76,7 @@
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
+            "rulesOperator": "OR",
             "disableTemplating": false
           }
         ]
@@ -126,6 +129,7 @@
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
+            "rulesOperator": "OR",
             "disableTemplating": false
           }
         ]

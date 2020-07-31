@@ -253,4 +253,117 @@ describe('Responses rules', () => {
       });
     }
   });
+
+  describe('Rules operator', async () => {
+    const testCases: HttpCall[] = [
+      {
+        description: 'Call fulfill 2nd response OR first rule',
+        path: '/operator/param1value?qp1=qp99value',
+        method: 'GET',
+        testedResponse: {
+          status: 201,
+          body: 'rulesOperatorOR'
+        }
+      },
+      {
+        description: 'Call fulfill 2nd response OR second rule',
+        path: '/operator/param99value?qp1=qp1value',
+        method: 'GET',
+        testedResponse: {
+          status: 201,
+          body: 'rulesOperatorOR'
+        }
+      },
+      {
+        description: 'Call fulfill 2nd response OR both rules',
+        path: '/operator/param1value?qp1=qp1value',
+        method: 'GET',
+        testedResponse: {
+          status: 201,
+          body: 'rulesOperatorOR'
+        }
+      },
+      {
+        description: 'Call do not fulfill 2nd response OR rules',
+        path: '/operator/param99value?qp1=qp99value',
+        method: 'GET',
+        testedResponse: {
+          status: 500,
+          body: 'error'
+        }
+      },
+      {
+        description: 'Call fulfill 3rd response AND rules',
+        path: '/operator/param1value2?qp2=qp2value&qp3=qp3value',
+        method: 'GET',
+        testedResponse: {
+          status: 202,
+          body: 'rulesOperatorAND'
+        }
+      },
+      {
+        description: 'Call do not fulfill 3rd response AND rules',
+        path: '/operator/param1value2?qp2=qp2value&qp3=qp99value',
+        method: 'GET',
+        testedResponse: {
+          status: 500,
+          body: 'error'
+        }
+      }
+    ];
+
+    it('Add 2 OR rules on response 2, verify operator switch presence', async () => {
+      await tests.helpers.selectRoute(3);
+      await tests.helpers.selectRouteResponse(2);
+      await tests.helpers.switchTab('RULES');
+      await tests.helpers.addResponseRule({
+        modifier: 'param1',
+        target: 'params',
+        value: 'param1value',
+        isRegex: false
+      });
+      await tests.helpers.assertRulesOperatorPresence(true);
+      await tests.helpers.addResponseRule({
+        modifier: 'qp1',
+        target: 'query',
+        value: 'qp1value',
+        isRegex: false
+      });
+      await tests.helpers.assertRulesOperatorPresence();
+      await tests.helpers.assertRulesOperator('OR');
+    });
+
+    it('Add 3 AND rules on response 3, verify operator switch presence', async () => {
+      await tests.helpers.selectRouteResponse(3);
+      await tests.helpers.switchTab('RULES');
+      await tests.helpers.addResponseRule({
+        modifier: 'param1',
+        target: 'params',
+        value: 'param1value2',
+        isRegex: false
+      });
+      await tests.helpers.addResponseRule({
+        modifier: 'qp2',
+        target: 'query',
+        value: 'qp2value',
+        isRegex: false
+      });
+      await tests.helpers.addResponseRule({
+        modifier: 'qp3',
+        target: 'query',
+        value: 'qp3value',
+        isRegex: false
+      });
+      await tests.helpers.assertRulesOperatorPresence();
+      await tests.helpers.assertRulesOperator('OR');
+      await tests.helpers.selectRulesOperator('AND');
+      await tests.helpers.assertRulesOperator('AND');
+    });
+
+    for (let index = 0; index < testCases.length; index++) {
+      it(testCases[index].description, async () => {
+        await tests.helpers.httpCallAsserter(testCases[index]);
+      });
+    }
+  });
 });

@@ -8,7 +8,11 @@ import {
   ViewsNameType
 } from 'src/app/stores/store';
 import { Environments } from 'src/app/types/environment.type';
-import { Header, ResponseRule } from 'src/app/types/route.type';
+import {
+  Header,
+  LogicalOperators,
+  ResponseRule
+} from 'src/app/types/route.type';
 import { fetch } from 'test/lib/fetch';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
@@ -592,6 +596,27 @@ export class Helpers {
   async toggleDisableTemplating() {
     await this.testsInstance.app.client
       .element("label[for='disableTemplating']")
+      .click();
+  }
+
+  async assertRulesOperatorPresence(inverted = false) {
+    await this.testsInstance.app.client.waitForExist(
+      '.rules-operator',
+      1000,
+      inverted
+    );
+  }
+
+  async assertRulesOperator(operator: LogicalOperators) {
+    const selected: boolean = await this.testsInstance.app.client.isSelected(
+      `.rules-operator input[id="rulesOperators${operator}"]`
+    );
+    expect(selected).to.equals(true);
+  }
+
+  async selectRulesOperator(operator: LogicalOperators) {
+    await this.testsInstance.app.client
+      .element(`.rules-operator .rules-operator-${operator}`)
       .click();
   }
 }

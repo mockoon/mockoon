@@ -89,4 +89,21 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 12', () => {
+    const filesPath = 'migrations/12';
+    const tests = new Tests(filesPath);
+
+    tests.runHooks();
+
+    it('Should add "rulesOperator" at OR to route responses', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        '0.routes.0.responses.0.rulesOperator',
+        'OR'
+      );
+    });
+  });
 });
