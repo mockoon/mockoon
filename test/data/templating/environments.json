@@ -1,7 +1,7 @@
 [
   {
     "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
-    "lastMigration": 11,
+    "lastMigration": 12,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -29,7 +29,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -55,7 +56,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -81,7 +83,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -107,7 +110,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -133,7 +137,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -159,7 +164,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -185,7 +191,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -211,7 +218,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -237,7 +245,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -263,7 +272,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -289,7 +299,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -315,7 +326,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -341,7 +353,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -367,7 +380,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -397,7 +411,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -423,7 +438,8 @@
             "filePath": "c:/test/{{body 'test'}}}.txt",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -449,7 +465,8 @@
             "filePath": "./test/data/templating/file-templating-error.txt",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -475,7 +492,8 @@
             "filePath": "./test/data/templating/{{body 'test'}}.txt",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -501,7 +519,8 @@
             "filePath": "./test/data/templating/file-templating.txt",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -527,7 +546,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -553,7 +573,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -579,7 +600,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -605,7 +627,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -631,7 +654,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -657,7 +681,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -683,7 +708,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -709,7 +735,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -735,7 +762,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -761,7 +789,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -787,7 +816,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -813,7 +843,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -839,7 +870,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -865,7 +897,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -891,7 +924,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -917,7 +951,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -943,7 +978,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -969,7 +1005,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -995,7 +1032,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1021,7 +1059,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1047,7 +1086,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1073,7 +1113,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1099,7 +1140,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1125,7 +1167,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1151,7 +1194,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1177,7 +1221,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1203,7 +1248,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1229,7 +1275,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1255,7 +1302,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1281,7 +1329,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1307,7 +1356,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1333,7 +1383,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1359,7 +1410,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1385,7 +1437,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1411,7 +1464,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1437,7 +1491,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1463,7 +1518,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1489,7 +1545,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1515,7 +1572,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1541,7 +1599,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1567,7 +1626,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1593,7 +1653,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1619,7 +1680,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1645,7 +1707,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1671,7 +1734,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1697,7 +1761,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1723,7 +1788,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1749,7 +1815,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1775,7 +1842,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1801,7 +1869,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1827,7 +1896,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1853,7 +1923,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1879,7 +1950,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1905,7 +1977,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1931,7 +2004,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1957,7 +2031,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -1983,7 +2058,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -2009,7 +2085,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -2035,7 +2112,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -2061,7 +2139,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -2087,7 +2166,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -2113,7 +2193,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -2139,7 +2220,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
@@ -2165,7 +2247,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       }

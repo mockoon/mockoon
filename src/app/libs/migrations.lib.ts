@@ -238,6 +238,22 @@ export const Migrations: {
         });
       });
     }
+  },
+
+  /**
+   * Add route response rulesOperator
+   */
+  {
+    id: 12,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((routeResponse) => {
+          if (routeResponse.rulesOperator === undefined) {
+            routeResponse.rulesOperator = 'OR';
+          }
+        });
+      });
+    }
   }
 ];
 

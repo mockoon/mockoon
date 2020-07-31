@@ -1,21 +1,21 @@
 [
   {
-    "uuid": "e8463b18-ef78-46ec-b288-a7ee23e892ec",
-    "lastMigration": 11,
+    "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
+    "lastMigration": 12,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
     "port": 3000,
     "routes": [
       {
-        "uuid": "798b0686-59a2-4d0d-8920-8a97f90c9d53",
+        "uuid": "c7b025db-6fcb-4029-8a10-0054a4fbcb22",
         "method": "get",
         "endpoint": "users/:userid",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "c47c898e-d11b-45ef-aa89-a9e35966781a",
+            "uuid": "adecd307-1c8c-4846-8e50-a37ec6aaab06",
             "body": "{}",
             "latency": 0,
             "statusCode": 500,
@@ -29,19 +29,20 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       },
       {
-        "uuid": "29c06e19-f13b-47f7-af0f-c3606ec4ad27",
+        "uuid": "8329a6ce-cd63-4a9f-bac8-b6e2f7f9b2ce",
         "method": "get",
         "endpoint": "rules/:id",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
-            "uuid": "7b619bca-4cf6-4802-8ad6-e079b25b02f9",
+            "uuid": "a222bfa1-5f1a-4dd9-af32-e3e503e5251b",
             "body": "0",
             "latency": 0,
             "statusCode": 404,
@@ -55,10 +56,11 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "41ee0b64-8b28-42bf-a8a9-636377d1f7e1",
+            "uuid": "2f128378-58b8-4ad9-b15d-be0a3d7e4d23",
             "body": "1",
             "latency": 0,
             "statusCode": 200,
@@ -79,10 +81,11 @@
                 "value": "^value",
                 "isRegex": true
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "326174f3-7ef8-4f33-a1f7-bd560f16b44b",
+            "uuid": "9a5b95ab-6bee-46b5-9b8f-3c242a5e057a",
             "body": "2",
             "latency": 0,
             "statusCode": 200,
@@ -103,10 +106,11 @@
                 "value": "test1|test2",
                 "isRegex": true
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "6882c03e-3b42-447e-b4bd-3eba324bddae",
+            "uuid": "3aaf043e-ff03-48fe-90e1-f10c40570919",
             "body": "3",
             "latency": 0,
             "statusCode": 200,
@@ -127,10 +131,11 @@
                 "value": "^1",
                 "isRegex": true
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "b0aa0a5e-f7bb-4cb5-961e-42b41d0c0bcd",
+            "uuid": "610a8e18-b3e2-4111-a361-cda0d4c7efdf",
             "body": "4",
             "latency": 0,
             "statusCode": 200,
@@ -151,10 +156,11 @@
                 "value": "UTF-8",
                 "isRegex": false
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "9611a47d-0cbe-4ffb-954a-a085cca8c238",
+            "uuid": "9f1e9bc4-d9eb-4e28-b7ed-422ff53eec2d",
             "body": "5",
             "latency": 0,
             "statusCode": 200,
@@ -175,10 +181,11 @@
                 "value": "UTF\\-8|UTF\\-16",
                 "isRegex": true
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "d490d66e-d47b-4ea8-81a8-dd4d04f8a74e",
+            "uuid": "87928f89-b004-47bb-b72d-64aac9c6b5ec",
             "body": "6",
             "latency": 0,
             "statusCode": 200,
@@ -199,10 +206,11 @@
                 "value": "john",
                 "isRegex": false
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "039cd461-a162-490e-817e-eb3ec0775529",
+            "uuid": "dbca6563-15d1-4316-91b3-52e4bbff8026",
             "body": "7",
             "latency": 0,
             "statusCode": 200,
@@ -223,10 +231,11 @@
                 "value": "John",
                 "isRegex": false
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "5fc6c3d5-ac7a-4f02-9b11-57e9b54eba06",
+            "uuid": "483388eb-b28b-4f34-aa59-8bc1f3c4d85d",
             "body": "8",
             "latency": 0,
             "statusCode": 200,
@@ -247,10 +256,11 @@
                 "value": "Paul",
                 "isRegex": false
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "43a4cc0d-9f58-4bf2-95a7-43ee715b1ad6",
+            "uuid": "8c4b497f-d8f4-43dc-acf7-4262851005e0",
             "body": "9",
             "latency": 0,
             "statusCode": 200,
@@ -271,10 +281,11 @@
                 "value": "^Ric",
                 "isRegex": true
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "15b8cbc8-52bb-42e9-9898-de5523c2baff",
+            "uuid": "9272e63c-760e-4d10-9c26-e975deb879b7",
             "body": "10",
             "latency": 0,
             "statusCode": 200,
@@ -295,10 +306,11 @@
                 "value": "^Ric",
                 "isRegex": true
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "2f56e45b-e5fa-4bcc-ac9c-fbb9fe7971b0",
+            "uuid": "33c6a79f-55f9-4166-bbfd-387c6c7cf789",
             "body": "11",
             "latency": 0,
             "statusCode": 200,
@@ -319,10 +331,11 @@
                 "value": "test",
                 "isRegex": false
               }
-            ]
+            ],
+            "rulesOperator": "OR"
           },
           {
-            "uuid": "8b2ac231-1d0e-4d83-be14-fd825c01f928",
+            "uuid": "62ff2808-2136-4fce-b158-5bacf618fd91",
             "body": "12",
             "latency": 0,
             "statusCode": 200,
@@ -343,7 +356,71 @@
                 "value": "1",
                 "isRegex": true
               }
-            ]
+            ],
+            "rulesOperator": "OR"
+          }
+        ]
+      },
+      {
+        "uuid": "cdc1ec69-6bd5-47c5-bd17-38fdd9c717d3",
+        "method": "get",
+        "endpoint": "operator/:param1",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "eea47ee2-b04d-40d9-b57e-1342bb59d276",
+            "body": "error",
+            "latency": 0,
+            "statusCode": 500,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          },
+          {
+            "uuid": "3165fcf9-8c01-4bbd-aa28-0a216ff5119d",
+            "body": "rulesOperatorOR",
+            "latency": 0,
+            "statusCode": 201,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          },
+          {
+            "uuid": "ff7c00a6-338c-4e48-a39a-a945e13d2991",
+            "body": "rulesOperatorAND",
+            "latency": 0,
+            "statusCode": 202,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ]
       }
@@ -358,7 +435,7 @@
         "value": "application/json"
       }
     ],
-    "proxyReqHeaders": [{"key": "", "value":""}],
-    "proxyResHeaders": [{"key": "", "value":""}]
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
   }
 ]

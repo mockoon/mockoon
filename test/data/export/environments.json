@@ -1,7 +1,7 @@
 [
   {
     "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-    "lastMigration": 11,
+    "lastMigration": 12,
     "name": "Export env",
     "endpointPrefix": "",
     "latency": 0,
@@ -24,6 +24,7 @@
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
+            "rulesOperator": "OR",
             "disableTemplating": false
           }
         ]

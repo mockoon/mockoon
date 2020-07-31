@@ -1,0 +1,124 @@
+<ng-container *ngIf="routeResponse$ | async">
+  <ng-container [formGroup]="form">
+    <div class="rules d-flex">
+      <div
+        *ngIf="form.get('rules').value.length > 1"
+        class="rules-operator d-flex flex-column justify-content-center"
+      >
+        <div class="btn-group btn-group-toggle mr-1" data-toggle="buttons">
+          <ng-container *ngFor="let rulesOperatorsItem of rulesOperatorsList">
+            <label
+              class="btn btn-xs rules-operator-{{rulesOperatorsItem}}"
+              [ngClass]="{
+                active: rulesOperatorsItem === form.get('rulesOperator').value,
+                'btn-primary':
+                  rulesOperatorsItem === form.get('rulesOperator').value,
+                'btn-secondary':
+                  rulesOperatorsItem !== form.get('rulesOperator').value
+              }"
+            >
+              <input
+                type="radio"
+                formControlName="rulesOperator"
+                id="rulesOperators{{ rulesOperatorsItem }}"
+                [value]="rulesOperatorsItem"
+                autocomplete="off"
+                [checked]="
+                  rulesOperatorsItem === form.get('rulesOperator').value
+                "
+              />
+              {{ rulesOperatorsItem }}
+            </label>
+          </ng-container>
+        </div>
+      </div>
+      <div class="rules-list flex-grow-1">
+        <ng-container formArrayName="rules">
+          <div
+            class="rule-item row mt-2"
+            *ngFor="
+              let rule of form.get('rules')['controls'];
+              index as ruleIndex
+            "
+            [formGroupName]="ruleIndex"
+          >
+            <div class="col form-inline">
+              <select
+                class="custom-select col-3 mr-1"
+                formControlName="target"
+                #targetFormControl
+              >
+                <option
+                  *ngFor="let responseRuleTarget of responseRuleTargets"
+                  [value]="responseRuleTarget.code"
+                  [selected]="
+                    targetFormControl.value === responseRuleTarget.code
+                  "
+                  >{{ responseRuleTarget.text }}</option
+                >
+              </select>
+
+              <input
+                type="text"
+                class="form-control col-3"
+                placeholder="name or path (users.0.name)"
+                formControlName="modifier"
+              />
+
+              <div class="input-group-prepend">
+                <span
+                  class="input-group-text"
+                  [ngbTooltip]="
+                    'equals or includes (if ' +
+                    (form.get(['rules', ruleIndex, 'modifier']).value ||
+                      'name') +
+                    ' is an array)'
+                  "
+                  >=</span
+                >
+              </div>
+
+              <input
+                type="text"
+                class="form-control col-3"
+                placeholder="value"
+                formControlName="value"
+              />
+
+              <div class="custom-control custom-checkbox ml-2">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="isRegex{{ ruleIndex }}"
+                  formControlName="isRegex"
+                />
+                <label
+                  class="custom-control-label"
+                  for="isRegex{{ ruleIndex }}"
+                  ngbTooltip="Value is a regex"
+                  >(.*)</label
+                >
+              </div>
+
+              <div class="input-group-prepend clickable ml-4">
+                <span
+                  class="input-group-text p-1 text-danger"
+                  (click)="removeRule(ruleIndex)"
+                  ngbTooltip="Remove"
+                  ><i class="material-icons">delete</i></span
+                >
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="btn btn-link btn-icon mt-2"
+      (click)="addRule()"
+    >
+      <i class="material-icons text-success">add_box</i> Add rule
+    </button>
+  </ng-container>
+</ng-container>

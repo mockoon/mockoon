@@ -1,7 +1,11 @@
 import { Request } from 'express';
 import { get as objectPathGet } from 'object-path';
 import { parse as qsParse, ParsedUrlQuery } from 'querystring';
-import { ResponseRule, ResponseRuleTargets, RouteResponse } from 'src/app/types/route.type';
+import {
+  ResponseRule,
+  ResponseRuleTargets,
+  RouteResponse
+} from 'src/app/types/route.type';
 
 /**
  * Interpretor for the route response rules.
@@ -23,15 +27,11 @@ export class ResponseRulesInterpreter {
    * If no rule has been fulfilled get the first route response.
    */
   public chooseResponse(): RouteResponse {
-    let response = this.routeResponses.find(routeResponse => {
-      const andRules =
-        routeResponse.rules.length > 0 &&
-        routeResponse.rules[0].andRules === true;
-
-      return andRules
+    let response = this.routeResponses.find((routeResponse) =>
+      routeResponse.rulesOperator === 'AND'
         ? !!routeResponse.rules.every(this.isValidRule)
-        : !!routeResponse.rules.find(this.isValidRule);
-    });
+        : !!routeResponse.rules.find(this.isValidRule)
+    );
 
     if (response === undefined) {
       response = this.routeResponses[0];
@@ -65,7 +65,7 @@ export class ResponseRulesInterpreter {
       regex = new RegExp(rule.value);
 
       return Array.isArray(value)
-        ? value.some(arrayValue => regex.test(arrayValue))
+        ? value.some((arrayValue) => regex.test(arrayValue))
         : regex.test(value);
     }
 

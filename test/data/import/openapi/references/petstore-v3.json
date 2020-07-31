@@ -1,7 +1,7 @@
 [
   {
     "uuid": "6e3bac30-5b05-11ea-a005-35ade7bcb066",
-    "lastMigration": 11,
+    "lastMigration": 12,
     "name": "Swagger Petstore v3",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -27,7 +27,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -48,7 +49,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -69,7 +71,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
@@ -90,7 +93,8 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": []
+            "rules": [],
+            "rulesOperator": "OR"
           }
         ],
         "enabled": true
