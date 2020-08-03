@@ -354,7 +354,32 @@
                 "target": "body",
                 "modifier": "test",
                 "value": "1",
-                "isRegex": true
+                "isRegex": false
+              }
+            ],
+            "rulesOperator": "OR"
+          },
+          {
+            "uuid": "1c3f176a-f737-4a49-b97e-849523fd5357",
+            "body": "13",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "test",
+                "value": "true",
+                "isRegex": false
               }
             ],
             "rulesOperator": "OR"
