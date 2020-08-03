@@ -233,7 +233,7 @@ describe('Responses rules', () => {
         }
       },
       {
-        description: 'Body path to number, with regex',
+        description: 'Body path to number, without regex',
         path: '/rules/2',
         method: 'GET',
         headers: {
@@ -243,6 +243,19 @@ describe('Responses rules', () => {
         testedResponse: {
           status: 200,
           body: '12'
+        }
+      },
+      {
+        description: 'Body path to boolean, without regex',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: { test: true },
+        testedResponse: {
+          status: 200,
+          body: '13'
         }
       }
     ];
