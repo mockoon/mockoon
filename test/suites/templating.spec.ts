@@ -1141,8 +1141,8 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
-        description: 'Helper: switch from urlParam',
-        path: '/old.switch/1',
+        description: 'Helper: switch from urlParam, string case value',
+        path: '/old.switch.urlParam/1',
         method: 'GET',
         testedResponse: {
           status: 200,
@@ -1150,8 +1150,17 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
+        description: 'Helper: switch from urlParam, number case value',
+        path: '/old.switch.urlParam/2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'casecontent2'
+        }
+      },
+      {
         description: 'Helper: switch from urlParam, default',
-        path: '/old.switch/11',
+        path: '/old.switch.urlParam/11',
         method: 'GET',
         testedResponse: {
           status: 200,
@@ -1160,7 +1169,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description: 'Helper: switch from urlParam with inner helper',
-        path: '/old.switch.helper/1',
+        path: '/old.switch.urlParam.helper/1',
         method: 'GET',
         testedResponse: {
           status: 200,
@@ -1169,7 +1178,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description: 'Helper: switch from urlParam with inner helper, default',
-        path: '/old.switch.helper/11',
+        path: '/old.switch.urlParam.helper/11',
         method: 'GET',
         testedResponse: {
           status: 200,
@@ -1178,11 +1187,82 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description: 'Helper: multiple switches from urlParam',
-        path: '/old.switch.multi/1/2',
+        path: '/old.switch.urlParam.multi/1/2',
         method: 'GET',
         testedResponse: {
           status: 200,
           body: 'switch1casecontent1switch2casecontent2'
+        }
+      },
+      {
+        description: 'Helper: switch from queryParam, string case value',
+        path: '/old.switch.queryParam?qp=1',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'casecontent1'
+        }
+      },
+      {
+        description: 'Helper: switch from queryParam, number case value',
+        path: '/old.switch.queryParam?qp=2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'casecontent2'
+        }
+      },
+      {
+        description: 'Helper: switch from queryParam, default',
+        path: '/old.switch.queryParam?qp=11',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'defaultcontent'
+        }
+      },
+      {
+        description: 'Helper: switch from body, string case value',
+        path: '/old.switch.body',
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{ "prop": 1 }',
+        testedResponse: {
+          status: 200,
+          body: 'casecontent1'
+        }
+      },
+      {
+        description: 'Helper: switch from body, number case value',
+        path: '/old.switch.body',
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: { prop: 2 },
+        testedResponse: {
+          status: 200,
+          body: 'casecontent2'
+        }
+      },
+      {
+        description: 'Helper: switch from body, boolean case value',
+        path: '/old.switch.body',
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: { prop: true },
+        testedResponse: {
+          status: 200,
+          body: 'casecontenttrue'
+        }
+      },
+      {
+        description: 'Helper: switch from body, default',
+        path: '/old.switch.body',
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: { prop: 'nothing' },
+        testedResponse: {
+          status: 200,
+          body: 'defaultcontent'
         }
       }
     ]

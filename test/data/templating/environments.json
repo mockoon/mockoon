@@ -2174,13 +2174,13 @@
       {
         "uuid": "3c11320c-f877-4d33-8c8b-cc00e39ebf48",
         "method": "get",
-        "endpoint": "old.switch/:param",
+        "endpoint": "old.switch.urlParam/:param",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
             "uuid": "fce44ac2-cfca-4722-930b-5cb0c85250b1",
-            "body": "{{#switch (urlParam 'param')}}{{#case '1'}}casecontent1{{/case}}{{#case '2'}}casecontent2{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
+            "body": "{{#switch (urlParam 'param')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
             "latency": 0,
             "statusCode": 200,
             "label": "",
@@ -2201,7 +2201,7 @@
       {
         "uuid": "2788d9f7-4e73-4a50-9369-094614a7b954",
         "method": "get",
-        "endpoint": "old.switch.helper/:param",
+        "endpoint": "old.switch.urlParam.helper/:param",
         "documentation": "",
         "enabled": true,
         "responses": [
@@ -2228,13 +2228,67 @@
       {
         "uuid": "e15f86c5-038e-4556-aa66-b71e9a02128a",
         "method": "get",
-        "endpoint": "old.switch.multi/:param1/:param2",
+        "endpoint": "old.switch.urlParam.multi/:param1/:param2",
         "documentation": "",
         "enabled": true,
         "responses": [
           {
             "uuid": "ec0f78e0-63e7-4efd-8a60-8ba69bff3d01",
             "body": "{{#switch (urlParam 'param1')}}{{#case '1'}}switch1casecontent1{{/case}}{{#case '2'}}switch1casecontent2{{/case}}{{#default}}switch1defaultcontent{{/default}}{{/switch}}{{#switch (urlParam 'param2')}}{{#case '1'}}switch2casecontent1{{/case}}{{#case '2'}}switch2casecontent2{{/case}}{{#default}}switch2defaultcontent{{/default}}{{/switch}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          }
+        ]
+      },
+      {
+        "uuid": "4baa34c8-097a-4841-a978-e15789f48480",
+        "method": "get",
+        "endpoint": "old.switch.queryParam",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "07db1e8c-01c9-4caf-afc2-ca4a52b41667",
+            "body": "{{#switch (queryParam 'qp')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          }
+        ]
+      },
+      {
+        "uuid": "5c78c723-050e-40b9-b7e0-d216cd2738ff",
+        "method": "get",
+        "endpoint": "old.switch.body",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "31aecc90-b083-48fb-a3c3-281dd767b70d",
+            "body": "{{#switch (body 'prop')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#case true}}casecontenttrue{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
             "latency": 0,
             "statusCode": 200,
             "label": "",
