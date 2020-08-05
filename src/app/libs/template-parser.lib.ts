@@ -210,7 +210,8 @@ const TemplateParserHelpers = function (request: Request) {
     switch: function (value, options) {
       options.data.found = false;
 
-      options.data.switchValue = value;
+      options.data.switchValue =
+        value instanceof SafeString ? value.toString() : value;
       const htmlContent = options.fn(options);
 
       return htmlContent;
@@ -218,7 +219,7 @@ const TemplateParserHelpers = function (request: Request) {
     // case helper for switch
     case: function (value, options) {
       // check switch value to simulate break
-      if (value === options.data.switchValue && !options.data.found) {
+      if (value.toString() === options.data.switchValue && !options.data.found) {
         options.data.found = true;
 
         return options.fn(options);
