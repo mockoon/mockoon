@@ -100,7 +100,7 @@ export class OpenAPIConverterService {
     );
 
     // parse the port
-    newEnvironment.port =
+    newEnvironment.port = parsedAPI.host &&
       parseInt(parsedAPI.host.split(':')[1], 10) || newEnvironment.port;
 
     if (parsedAPI.basePath) {
