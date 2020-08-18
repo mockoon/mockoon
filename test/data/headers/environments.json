@@ -53,7 +53,7 @@
                 "value": "application/xml"
               }
             ],
-            "filePath": "./test/data/headers/test.pdf",
+            "filePath": "./test/data/test.pdf",
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
@@ -75,7 +75,7 @@
             "statusCode": 200,
             "label": "",
             "headers": [],
-            "filePath": "./test/data/headers/test.pdf",
+            "filePath": "./test/data/test.pdf",
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],

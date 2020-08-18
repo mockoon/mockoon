@@ -31,6 +31,15 @@ const errorCall: HttpCall = {
   }
 };
 
+const binaryCall: HttpCall = {
+  description: 'Call GET /file',
+  path: '/file',
+  method: 'GET',
+  testedResponse: {
+    status: 200
+  }
+};
+
 describe('Environment logs', () => {
   describe('Verify environment logs content', () => {
     const tests = new Tests('environment-logs');
@@ -210,9 +219,55 @@ describe('Environment logs', () => {
       });
 
       it('Mock /test log', async () => {
-        await tests.helpers.countRoutes(1);
-        await tests.helpers.environmentLogClickMockButton(1);
         await tests.helpers.countRoutes(2);
+        await tests.helpers.environmentLogClickMockButton(1);
+        await tests.helpers.countRoutes(3);
+      });
+    });
+
+    describe('Verify environment logs after GET call to /file (binary)', () => {
+      it(errorCall.description, async () => {
+        await tests.helpers.httpCallAsserter(binaryCall);
+      });
+
+      it('Environment logs have two entries', async () => {
+        await tests.helpers.switchViewInHeader('ENV_LOGS');
+        await tests.helpers.countEnvironmentLogsEntries(3);
+      });
+
+      it('First entry is GET /file and was caught by the application', async () => {
+        await tests.helpers.selectEnvironmentLogEntry(1);
+        await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
+        await tests.helpers.environmentLogMenuPathEqual('/file', 1);
+        await tests.helpers.environmentLogMenuCheckIcon('CAUGHT', 1);
+      });
+
+      it('Verify response tab content', async () => {
+        await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
+        await tests.helpers.environmentLogItemEqual(
+          'Status: 200',
+          'response',
+          2,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Content-length: 8696',
+          'response',
+          4,
+          1
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Content-type: application/pdf',
+          'response',
+          4,
+          2
+        );
+        await tests.helpers.environmentLogItemEqual(
+          'Binary content - No preview available',
+          'response',
+          6,
+          1
+        );
       });
     });
   });

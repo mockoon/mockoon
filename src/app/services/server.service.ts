@@ -12,6 +12,7 @@ import { lookup as mimeTypeLookup } from 'mime-types';
 import { basename } from 'path';
 import { Logger } from 'src/app/classes/logger';
 import { ResponseRulesInterpreter } from 'src/app/classes/response-rules-interpreter';
+import { BINARY_BODY } from 'src/app/constants/server.constants';
 import { Errors } from 'src/app/enums/errors.enum';
 import { Middlewares } from 'src/app/libs/express-middlewares.lib';
 import { TemplateParser } from 'src/app/libs/template-parser.lib';
@@ -261,21 +262,21 @@ export class ServerService {
                           throw readError;
                         }
 
-                        let fileContent: string;
-
-                        fileContent = data.toString();
-
                         // parse templating for a limited list of mime types
                         if (
                           mimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
                           !enabledRouteResponse.disableTemplating
                         ) {
-                          fileContent = TemplateParser(fileContent, req);
+                          const fileContent = TemplateParser(
+                            data.toString(),
+                            req
+                          );
+                          res.body = fileContent;
+                          res.send(fileContent);
+                        } else {
+                          res.body = BINARY_BODY;
+                          res.send(data);
                         }
-
-                        res.body = fileContent;
-
-                        res.send(fileContent);
                       } catch (error) {
                         const errorMessage = `Error while serving the file content: ${error.message}`;
 

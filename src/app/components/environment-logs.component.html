@@ -159,12 +159,15 @@
                   <i *ngIf="selectedLog.response?.body && collapseStates['response.body']" class="material-icons">unfold_more</i>
                   Body ({{(!selectedLog.response?.body)?'none': 'raw'}})
                 </div>
-                <div class="ml-auto">
+                <div *ngIf="!selectedLog.response.binaryBody" class="ml-auto">
                   <span *ngIf="selectedLog?.response?.truncatedBody" class="btn btn-link btn-icon text-primary p-0" (click)="viewBodyInEditor(selectedLog.response, 'response')">View full body in editor</span>
                 </div>
               </div>
               <div [ngbCollapse]="collapseStates['response.body']">
-                <div class="environment-logs-content-item pre">{{selectedLog.response?.truncatedBody}}</div>
+                <div *ngIf="!selectedLog.response.binaryBody" class="environment-logs-content-item pre">{{selectedLog.response?.truncatedBody}}</div>
+                <div *ngIf="selectedLog.response.binaryBody" class="environment-logs-content-item">
+                  <p class="message mt-4">Binary content - No preview available</p>
+                </div>
               </div>
             </div>
           </div>
