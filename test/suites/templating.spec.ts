@@ -472,8 +472,19 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
     name: 'Helper in file path',
     tests: [
       {
-        description: 'Body helper',
+        description: 'Relative unix-like path with body helper',
         path: '/filepath',
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: { test: 'file' },
+        testedResponse: {
+          status: 200,
+          body: 'filebody'
+        }
+      },
+      {
+        description: 'Relative windows-like path with body helper',
+        path: '/filepath-windows',
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         body: { test: 'file' },
@@ -1269,7 +1280,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
   }
 ];
 
-describe('Templating', () => {
+describe('Templating2', () => {
   describe('Helpers', () => {
     const tests = new Tests('templating');
     tests.runHooks();
@@ -1314,7 +1325,7 @@ describe('Templating', () => {
     });
 
     it('Get file content with disabled templating', async () => {
-      await tests.helpers.selectRoute(19);
+      await tests.helpers.selectRoute(20);
       await tests.helpers.switchTab('SETTINGS');
       await tests.helpers.toggleDisableTemplating();
       await tests.helpers.httpCallAsserter({
