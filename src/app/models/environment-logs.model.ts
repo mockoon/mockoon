@@ -15,6 +15,7 @@ export type EnvironmentLogResponse = {
   headers: Header[];
   body: string;
   truncatedBody?: string;
+  binaryBody: boolean;
 };
 
 export type EnvironmentLog = {

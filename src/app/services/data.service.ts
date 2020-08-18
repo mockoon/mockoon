@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Response } from 'express';
+import { BINARY_BODY } from 'src/app/constants/server.constants';
 import { AscSort, ObjectValuesFlatten } from 'src/app/libs/utils.lib';
 import { EnvironmentLog } from 'src/app/models/environment-logs.model';
 import { Store } from 'src/app/stores/store';
@@ -64,7 +65,8 @@ export class DataService {
             };
           })
           .sort(AscSort),
-        body: response.body
+        body: response.body,
+        binaryBody: response.body === BINARY_BODY
       }
     };
   }
