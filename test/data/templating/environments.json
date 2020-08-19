@@ -498,6 +498,33 @@
         ]
       },
       {
+        "uuid": "f87f17f2-8cb9-4f2d-9925-7b8b14edfb8c",
+        "method": "get",
+        "endpoint": "filepath-windows",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "d34f47ae-1343-4e9c-884e-59db780fb0fe",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": ".\\test\\data\\templating\\{{body 'test'}}.txt",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          }
+        ]
+      },
+      {
         "uuid": "570e06b6-dac0-4229-b592-c369c0acfd92",
         "method": "get",
         "endpoint": "file-templating",

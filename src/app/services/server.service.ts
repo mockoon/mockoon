@@ -233,16 +233,11 @@ export class ServerService {
                 try {
                   // send the file
                   if (enabledRouteResponse.filePath) {
-                    let filePath: string;
-                    let fileMimeType: string;
-
-                    filePath = TemplateParser(
-                      enabledRouteResponse.filePath,
+                    const filePath = TemplateParser(
+                      enabledRouteResponse.filePath.replace(/\\/g, '/'),
                       req
                     );
-
-                    fileMimeType =
-                      mimeTypeLookup(enabledRouteResponse.filePath) || '';
+                    const fileMimeType = mimeTypeLookup(filePath) || '';
 
                     // set content-type to route response's one or the detected mime type if none
                     if (!routeContentType) {
