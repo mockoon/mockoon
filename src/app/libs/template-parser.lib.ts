@@ -244,6 +244,24 @@ const TemplateParserHelpers = function (request: Request) {
           useAdditionalDayOfYearTokens: true
         }
       );
+    },    
+    // converts the input to a base64 string
+    base64: function (...args) {
+      const hbsOptions: HelperOptions & hbs.AST.Node = args[args.length - 1];
+
+      let content: string;
+
+      if (args.length === 1) {
+        content = hbsOptions.fn(hbsOptions);
+      } else {
+        content = args[0];
+      }
+
+      return btoa(content);
+    },
+    // adds a newline to the output
+    newline: function() {
+      return '\n';
     },
     // Handlebars hook when a helper is missing
     helperMissing: function () {
