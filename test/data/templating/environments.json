@@ -1065,6 +1065,60 @@
         ]
       },
       {
+        "uuid": "deb123f8-8c31-4652-9399-a64ab69b75c1",
+        "method": "get",
+        "endpoint": "newline",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "30042a63-f29e-4e1e-b50e-9d157c447b7c",
+            "body": "{{newline}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          }
+        ]
+      },
+      {
+        "uuid": "51993754-4d1d-4723-902f-c3ebc8c86e24",
+        "method": "get",
+        "endpoint": "base64",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "66435b82-6bd0-401f-b973-7d4e056ac632",
+            "body": "{{base64 (body)}}{{# base64}}{{# repeat 10 comma=false}}{{body}}{{/ repeat}}{{/ base64}}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          }
+        ]
+      },
+      {
         "uuid": "b6bb0705-040a-4fb2-b706-434c7680a9b1",
         "method": "get",
         "endpoint": "faker.missing",
