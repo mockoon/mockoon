@@ -219,7 +219,10 @@ const TemplateParserHelpers = function (request: Request) {
     // case helper for switch
     case: function (value, options) {
       // check switch value to simulate break
-      if (value.toString() === options.data.switchValue && !options.data.found) {
+      if (
+        value.toString() === options.data.switchValue &&
+        !options.data.found
+      ) {
         options.data.found = true;
 
         return options.fn(options);
@@ -244,7 +247,7 @@ const TemplateParserHelpers = function (request: Request) {
           useAdditionalDayOfYearTokens: true
         }
       );
-    },    
+    },
     // converts the input to a base64 string
     base64: function (...args) {
       const hbsOptions: HelperOptions & hbs.AST.Node = args[args.length - 1];
@@ -257,10 +260,10 @@ const TemplateParserHelpers = function (request: Request) {
         content = args[0];
       }
 
-      return btoa(content);
+      return new SafeString(btoa(content));
     },
     // adds a newline to the output
-    newline: function() {
+    newline: function () {
       return '\n';
     },
     // Handlebars hook when a helper is missing

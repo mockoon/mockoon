@@ -739,6 +739,26 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
+        description: 'Helper: newline',
+        path: '/newline',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: '\n'
+        }
+      },
+      {
+        description: 'Helper: base64 (inline + block helper)',
+        path: '/base64',
+        method: 'GET',
+        body: 'test',
+        testedResponse: {
+          status: 200,
+          body:
+            'dGVzdA==dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0dGVzdA=='
+        }
+      },
+      {
         description: 'Bad helper name',
         path: '/bad-helper',
         method: 'GET',
@@ -1280,7 +1300,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
   }
 ];
 
-describe('Templating2', () => {
+describe('Templating', () => {
   describe('Helpers', () => {
     const tests = new Tests('templating');
     tests.runHooks();
