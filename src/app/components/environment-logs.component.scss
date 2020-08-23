@@ -20,7 +20,7 @@ $logs-border: 1px solid lighten($gray-900, 1%);
   }
 
   &-content {
-    word-break: break-all;
+    overflow-wrap: anywhere;
 
     &-container {
       overflow-y: auto;
