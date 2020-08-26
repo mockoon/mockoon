@@ -24,6 +24,7 @@ import { TimedBoolean } from 'src/app/classes/timed-boolean';
 import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { Config } from 'src/app/config';
+import { INDENT_SIZE } from 'src/app/constants/common.constants';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import {
   GetRouteResponseContentType,
@@ -614,7 +615,11 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.activeRouteResponseForm
           .get('body')
           .setValue(
-            JSON.stringify(JSON.parse(activeRouteResponse.body), undefined, 2)
+            JSON.stringify(
+              JSON.parse(activeRouteResponse.body),
+              undefined,
+              INDENT_SIZE
+            )
           );
       } catch (e) {
         // ignore any errors with parsing / stringifying the JSON

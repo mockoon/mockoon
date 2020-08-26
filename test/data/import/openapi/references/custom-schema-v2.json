@@ -1,0 +1,41 @@
+[
+  {
+    "uuid": "a03a4dc0-e7d4-11ea-a5ec-979674ac1a4b",
+    "lastMigration": 12,
+    "name": "Sample v2 schema",
+    "endpointPrefix": "api",
+    "latency": 0,
+    "port": 3000,
+    "routes": [
+      {
+        "uuid": "a03a74d1-e7d4-11ea-a5ec-979674ac1a4b",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "endpoint",
+        "responses": [
+          {
+            "uuid": "a03a74d0-e7d4-11ea-a5ec-979674ac1a4b",
+            "body": "[\n  {\n    \"id\": {{faker 'random.number'}},\n    \"order\": {{faker 'random.float'}},\n    \"quantity\": {{faker 'random.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'random.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'random.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [],
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
+  }
+]

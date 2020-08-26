@@ -39,6 +39,12 @@ const testSuites = [
         filePath: dataSamplesPath + 'datagov-v2.yaml',
         referenceFilePath: dataReferencesPath + 'datagov-v2.json',
         environmentTitle: 'Regulations.gov'
+      },
+      {
+        desc: 'Custom schema',
+        filePath: dataSamplesPath + 'custom-schema-v2.yaml',
+        referenceFilePath: dataReferencesPath + 'custom-schema-v2.json',
+        environmentTitle: 'Sample v2 schema'
       }
     ]
   },
@@ -74,6 +80,12 @@ const testSuites = [
         filePath: dataSamplesPath + 'aws-cloudfront-v3.yaml',
         referenceFilePath: dataReferencesPath + 'aws-cloudfront-v3.json',
         environmentTitle: 'Amazon CloudFront'
+      },
+      {
+        desc: 'Custom schema',
+        filePath: dataSamplesPath + 'custom-schema-v3.yaml',
+        referenceFilePath: dataReferencesPath + 'custom-schema-v3.json',
+        environmentTitle: 'Sample v3 schema'
       }
     ]
   }

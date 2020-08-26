@@ -1,0 +1,100 @@
+# Test: primitives, arrays, objects (with or without type: object), refs, example, default, allOf, oneOf, anyOf
+
+---
+swagger: "2.0"
+info:
+  title: "Sample v2 schema"
+  description: "Sample v2 schema"
+  version: "1.0.0"
+host: "mockoon.com"
+basePath: "/api"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /endpoint:
+    get:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SchemaObject"
+definitions:
+  SchemaObject:
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      order:
+        type: "number"
+        format: "double"
+      quantity:
+        type: "number"
+        format: "float"
+      datetime:
+        type: "string"
+        format: "date-time"
+      date:
+        type: "string"
+        format: "date"
+      age:
+        type: "integer"
+        default: "32"
+      email:
+        type: "string"
+        format: "email"
+      uuid:
+        type: "string"
+        format: "uuid"
+      tags:
+        type: "array"
+        items:
+          $ref: "#/definitions/Tag"
+      status:
+        type: "string"
+        description: "Order Status"
+        enum:
+          - "enum1"
+          - "enum2"
+          - "enum3"
+      inProgress:
+        type: "boolean"
+      complete:
+        type: "boolean"
+        example: true
+      categories:
+        type: "array"
+        items:
+          $ref: "#/definitions/Category"
+      allOfArray:
+        type: "array"
+        items:
+          allOf:
+            - $ref: "#/definitions/Category"
+            - $ref: "#/definitions/Tag"
+      oneOfArray:
+        type: "array"
+        items:
+          oneOf:
+            - $ref: "#/definitions/Tag"
+            - $ref: "#/definitions/Category"
+      anyOfArray:
+        type: "array"
+        items:
+          anyOf:
+            - $ref: "#/definitions/Category"
+            - $ref: "#/definitions/Tag"
+
+  Category:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+  Tag:
+    type: "string"
