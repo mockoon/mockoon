@@ -1,6 +1,6 @@
 import { EnvironmentLog } from 'src/app/models/environment-logs.model';
 import { SettingsProperties } from 'src/app/models/settings.model';
-import { Toast } from 'src/app/services/toasts.service';
+import { Toast } from 'src/app/models/toasts.model';
 import { ReducerDirectionType, ReducerIndexes } from 'src/app/stores/reducer';
 import {
   EnvironmentLogsTabsNameType,
@@ -9,8 +9,17 @@ import {
   UIStateProperties,
   ViewsNameType
 } from 'src/app/stores/store';
-import { Environment, EnvironmentProperties, Environments } from 'src/app/types/environment.type';
-import { Route, RouteProperties, RouteResponse, RouteResponseProperties } from 'src/app/types/route.type';
+import {
+  Environment,
+  EnvironmentProperties,
+  Environments
+} from 'src/app/types/environment.type';
+import {
+  Route,
+  RouteProperties,
+  RouteResponse,
+  RouteResponseProperties
+} from 'src/app/types/route.type';
 
 export const enum ActionTypes {
   SET_ACTIVE_TAB,

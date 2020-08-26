@@ -7,7 +7,7 @@ import {
   EnvironmentLogs
 } from 'src/app/models/environment-logs.model';
 import { Settings } from 'src/app/models/settings.model';
-import { Toast } from 'src/app/services/toasts.service';
+import { Toast } from 'src/app/models/toasts.model';
 import { Actions } from 'src/app/stores/actions';
 import { environmentReducer } from 'src/app/stores/reducer';
 import { Environment, Environments } from 'src/app/types/environment.type';

@@ -15,7 +15,13 @@ import { SchemasBuilderService } from 'src/app/services/schemas-builder.service'
 import { ToastsService } from 'src/app/services/toasts.service';
 import { addEnvironmentAction, addRouteAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
-import { Export, ExportData, ExportDataEnvironment, ExportDataRoute, OldExport } from 'src/app/types/data.type';
+import {
+  Export,
+  ExportData,
+  ExportDataEnvironment,
+  ExportDataRoute,
+  OldExport
+} from 'src/app/types/data.type';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route } from 'src/app/types/route.type';
 
@@ -47,9 +53,13 @@ export class ImportExportService {
    * Export all envs in a json file
    */
   public async exportAllEnvironments() {
-    this.logger.info(`Exporting all environments to a file`);
-
     const environments = this.store.get('environments');
+
+    if (environments.length === 0) {
+      return;
+    }
+
+    this.logger.info(`Exporting all environments to a file`);
 
     const filePath = await this.openSaveDialog('Export all to JSON');
 
@@ -236,6 +246,12 @@ export class ImportExportService {
    * Export all environments to an OpenAPI v3 file
    */
   public async exportOpenAPIFile() {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (!activeEnvironment) {
+      return;
+    }
+
     this.logger.info(`Exporting to OpenAPI file`);
 
     const filePath = await this.openSaveDialog('Export all to JSON');
@@ -245,9 +261,7 @@ export class ImportExportService {
       try {
         writeFile(
           filePath,
-          this.openAPIConverterService.export(
-            this.store.getActiveEnvironment()
-          ),
+          this.openAPIConverterService.export(activeEnvironment),
           (error) => {
             if (error) {
               this.toastService.addToast('error', Errors.EXPORT_ERROR);

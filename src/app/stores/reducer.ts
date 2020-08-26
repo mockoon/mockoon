@@ -5,10 +5,17 @@ import {
   GetEditorModeFromContentType,
   GetRouteResponseContentType
 } from 'src/app/libs/utils.lib';
-import { ActiveEnvironmentsLogUUIDs, EnvironmentLogs } from 'src/app/models/environment-logs.model';
-import { Toast } from 'src/app/services/toasts.service';
+import {
+  ActiveEnvironmentsLogUUIDs,
+  EnvironmentLogs
+} from 'src/app/models/environment-logs.model';
+import { Toast } from 'src/app/models/toasts.model';
 import { Actions, ActionTypes } from 'src/app/stores/actions';
-import { DuplicatedRoutesTypes, EnvironmentsStatuses, StoreType } from 'src/app/stores/store';
+import {
+  DuplicatedRoutesTypes,
+  EnvironmentsStatuses,
+  StoreType
+} from 'src/app/stores/store';
 import { Environment, Environments } from 'src/app/types/environment.type';
 import { Route, RouteResponse } from 'src/app/types/route.type';
 

@@ -35,6 +35,7 @@ import {
   EnvironmentLog,
   EnvironmentLogs
 } from 'src/app/models/environment-logs.model';
+import { Toast } from 'src/app/models/toasts.model';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
@@ -42,7 +43,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { ImportExportService } from 'src/app/services/import-export.service';
 import { IpcService } from 'src/app/services/ipc.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { Toast, ToastsService } from 'src/app/services/toasts.service';
+import { ToastsService } from 'src/app/services/toasts.service';
 import { UIService } from 'src/app/services/ui.service';
 import { clearLogsAction, updateUIStateAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';

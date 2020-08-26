@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
+import { ToastTypes } from 'src/app/models/toasts.model';
 import { addToastAction, removeToastAction } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { v1 as uuid } from 'uuid';
-
-export type ToastTypes = 'error' | 'success' | 'warning';
-export type Toast = { UUID: string; message: string; type: ToastTypes };
 
 @Injectable({ providedIn: 'root' })
 export class ToastsService {
