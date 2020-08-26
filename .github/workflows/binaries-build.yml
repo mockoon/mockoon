@@ -9,6 +9,7 @@ jobs:
   build-macos:
     name: Build macOS binary (dmg)
     runs-on: macos-latest
+    timeout-minutes: 60
 
     env:
       APPLEID: ${{secrets.APPLEID}}
@@ -47,6 +48,7 @@ jobs:
   build-linux:
     name: Build Linux binaries (deb, rpm, snap, AppImage)
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v1
@@ -87,6 +89,8 @@ jobs:
   build-windows:
     name: Build Windows binary (exe)
     runs-on: windows-latest
+    timeout-minutes: 60
+
     env:
       CSC_LINK: ${{secrets.WIN_CSC_LINK}}
       CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
