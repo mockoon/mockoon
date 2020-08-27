@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as SwaggerParser from '@apidevtools/swagger-parser';
 import { OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { Logger } from 'src/app/classes/logger';
+import { INDENT_SIZE } from 'src/app/constants/common.constants';
 import { Errors } from 'src/app/enums/errors.enum';
 import {
   GetRouteResponseContentType,
@@ -44,12 +45,14 @@ export class OpenAPIConverterService {
    * @param filePath
    */
   public async import(filePath: string) {
-    this.logger.info(`Starting OpenAPI file '${filePath}' import`);
+    this.logger.info(`Started importing OpenAPI file '${filePath}' import`);
 
     try {
       const parsedAPI:
         | OpenAPIV2.Document
-        | OpenAPIV3.Document = await SwaggerParser.dereference(filePath);
+        | OpenAPIV3.Document = await SwaggerParser.dereference(filePath, {
+        dereference: { circular: 'ignore' }
+      });
 
       if (this.isSwagger(parsedAPI)) {
         return this.convertFromSwagger(parsedAPI);
@@ -100,8 +103,9 @@ export class OpenAPIConverterService {
     );
 
     // parse the port
-    newEnvironment.port = parsedAPI.host &&
-      parseInt(parsedAPI.host.split(':')[1], 10) || newEnvironment.port;
+    newEnvironment.port =
+      (parsedAPI.host && parseInt(parsedAPI.host.split(':')[1], 10)) ||
+      newEnvironment.port;
 
     if (parsedAPI.basePath) {
       newEnvironment.endpointPrefix = RemoveLeadingSlash(parsedAPI.basePath);
@@ -262,16 +266,15 @@ export class OpenAPIConverterService {
     version: 'OPENAPI_V3'
   ): Route[];
   private createRoutes(
-    parsedAPI: OpenAPIV2.Document | OpenAPIV3.Document,
+    parsedAPI: OpenAPIV2.Document & OpenAPIV3.Document,
     version: SpecificationVersions
   ): Route[] {
     const routes: Route[] = [];
 
     Object.keys(parsedAPI.paths).forEach((routePath) => {
       Object.keys(parsedAPI.paths[routePath]).forEach((routeMethod) => {
-        const parsedRoute:
-          | OpenAPIV2.OperationObject
-          | OpenAPIV3.OperationObject = parsedAPI.paths[routePath][routeMethod];
+        const parsedRoute: OpenAPIV2.OperationObject &
+          OpenAPIV3.OperationObject = parsedAPI.paths[routePath][routeMethod];
 
         if (methods.includes(routeMethod)) {
           const routeResponses: RouteResponse[] = [];
@@ -283,27 +286,44 @@ export class OpenAPIConverterService {
                 (statusCode) => statusCode.code === parseInt(responseStatus, 10)
               )
             ) {
-              const routeResponse:
-                | OpenAPIV2.ResponseObject
-                | OpenAPIV3.ResponseObject =
+              const routeResponse: OpenAPIV2.ResponseObject &
+                OpenAPIV3.ResponseObject =
                 parsedRoute.responses[responseStatus];
 
-              let contentTypeHeaders;
+              let contentTypeHeaders: string[] = [];
+              let schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject;
+
               if (version === 'SWAGGER') {
-                contentTypeHeaders = (parsedRoute as OpenAPIV2.OperationObject)
-                  .produces;
-              } else if (version === 'OPENAPI_V3') {
-                contentTypeHeaders = (routeResponse as OpenAPIV3.ResponseObject)
-                  .content
-                  ? Object.keys(
-                      (routeResponse as OpenAPIV3.ResponseObject).content
-                    )
-                  : [];
+                contentTypeHeaders =
+                  parsedRoute.produces ||
+                  parsedRoute.consumes ||
+                  parsedAPI.produces ||
+                  parsedAPI.consumes ||
+                  [];
+              } else if (version === 'OPENAPI_V3' && routeResponse.content) {
+                contentTypeHeaders = Object.keys(routeResponse.content);
+              }
+
+              // extract schema
+              if (contentTypeHeaders.includes('application/json')) {
+                if (version === 'SWAGGER') {
+                  schema = routeResponse.schema;
+                } else if (version === 'OPENAPI_V3') {
+                  schema = routeResponse.content['application/json'].schema;
+                }
               }
 
               routeResponses.push({
                 ...this.schemasBuilderService.buildRouteResponse(),
-                body: '',
+                body: schema
+                  ? this.convertJSONSchemaPrimitives(
+                      JSON.stringify(
+                        this.generateSchema(schema),
+                        null,
+                        INDENT_SIZE
+                      )
+                    )
+                  : '',
                 statusCode: parseInt(responseStatus, 10),
                 label: routeResponse.description || '',
                 headers: this.buildResponseHeaders(
@@ -323,7 +343,8 @@ export class OpenAPIConverterService {
                   'Content-Type',
                   'application/json'
                 )
-              ]
+              ],
+              body: ''
             });
           }
 
@@ -423,6 +444,112 @@ export class OpenAPIConverterService {
   private isOpenAPIV3(parsedAPI: any): parsedAPI is OpenAPIV3.Document {
     return (
       parsedAPI.openapi !== undefined && parsedAPI.openapi.startsWith('3.')
+    );
+  }
+
+  /**
+   * Generate a JSON object from a schema
+   *
+   */
+  private generateSchema(
+    schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject
+  ) {
+    const typeFactories = {
+      integer: () => "{{faker 'random.number'}}",
+      number: () => "{{faker 'random.number'}}",
+      number_float: () => "{{faker 'random.float'}}",
+      number_double: () => "{{faker 'random.float'}}",
+      string: () => '',
+      string_date: () => "{{date '2019' (now) 'yyyy-MM-dd'}}",
+      'string_date-time': () => "{{faker 'date.recent' 365}}",
+      string_email: () => "{{faker 'internet.email'}}",
+      string_uuid: () => "{{faker 'random.uuid'}}",
+      boolean: () => "{{faker 'random.boolean'}}",
+      array: (arraySchema) => {
+        const newObject = this.generateSchema(arraySchema.items);
+
+        return arraySchema.collectionFormat === 'csv' ? newObject : [newObject];
+      },
+      object: (objectSchema) => {
+        const newObject = {};
+        const { properties } = objectSchema;
+
+        if (properties) {
+          Object.keys(properties).forEach((propertyName) => {
+            newObject[propertyName] = this.generateSchema(
+              properties[propertyName]
+            );
+          });
+        }
+
+        return newObject;
+      }
+    };
+
+    if (schema instanceof Object) {
+      let type: string =
+        Array.isArray(schema.type) && schema.type.length >= 1
+          ? schema.type[0]
+          : (schema.type as string);
+
+      // use enum property if present
+      if (schema.enum) {
+        return `{{oneOf (array '${schema.enum.join("' '")}')}}`;
+      }
+
+      // return example if any
+      if (schema.example) {
+        return schema.example;
+      }
+
+      // return default value if any
+      if (schema.default) {
+        return schema.default;
+      }
+
+      let schemaToBuild = schema;
+
+      // check if we have an array of schemas, and take first item
+      ['allOf', 'oneOf', 'anyOf'].forEach((propertyName) => {
+        if (
+          schema.hasOwnProperty(propertyName) &&
+          schema[propertyName].length > 0
+        ) {
+          type = schema[propertyName][0].type;
+          schemaToBuild = schema[propertyName][0];
+        }
+      });
+
+      // sometimes we have no type but only 'properties' (=object)
+      if (
+        !type &&
+        schemaToBuild.properties &&
+        schemaToBuild.properties instanceof Object
+      ) {
+        type = 'object';
+      }
+
+      const typeFactory =
+        typeFactories[`${type}_${schemaToBuild.format}`] || typeFactories[type];
+
+      if (typeFactory) {
+        return typeFactory(schemaToBuild);
+      }
+
+      return '';
+    }
+  }
+
+  /**
+   * After generating example bodies, remove the quotes around some
+   * primitive helpers
+   *
+   * @param jsonSchema
+   */
+  private convertJSONSchemaPrimitives(jsonSchema: string) {
+    return jsonSchema.replace(
+      /\"({{faker 'random\.(number|boolean|float)'}})\"/g,
+      '$1'
     );
   }
 }

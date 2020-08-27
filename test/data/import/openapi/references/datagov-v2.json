@@ -1,6 +1,6 @@
 [
   {
-    "uuid": "500ea6c0-5d91-11ea-b15f-91b10dfe38f8",
+    "uuid": "b8701e60-e7d4-11ea-a5ec-979674ac1a4b",
     "lastMigration": 12,
     "name": "Regulations.gov",
     "endpointPrefix": "regulations/v3",
@@ -8,13 +8,13 @@
     "port": 3000,
     "routes": [
       {
-        "uuid": "500ea6c4-5d91-11ea-b15f-91b10dfe38f8",
+        "uuid": "b8701e64-e7d4-11ea-a5ec-979674ac1a4b",
         "documentation": "Returns Docket information",
         "method": "get",
         "endpoint": "docket.:response_format",
         "responses": [
           {
-            "uuid": "500ea6c1-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e61-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -22,12 +22,12 @@
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           },
           {
-            "uuid": "500ea6c2-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e62-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 400,
@@ -35,12 +35,12 @@
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           },
           {
-            "uuid": "500ea6c3-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e63-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 404,
@@ -48,21 +48,21 @@
             "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
         "enabled": true
       },
       {
-        "uuid": "500ea6c8-5d91-11ea-b15f-91b10dfe38f8",
+        "uuid": "b8701e68-e7d4-11ea-a5ec-979674ac1a4b",
         "documentation": "Returns Document information",
         "method": "get",
         "endpoint": "document.:response_format",
         "responses": [
           {
-            "uuid": "500ea6c5-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e65-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -70,12 +70,12 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           },
           {
-            "uuid": "500ea6c6-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e66-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 400,
@@ -83,12 +83,12 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           },
           {
-            "uuid": "500ea6c7-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e67-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 404,
@@ -96,21 +96,21 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
         "enabled": true
       },
       {
-        "uuid": "500ea6cc-5d91-11ea-b15f-91b10dfe38f8",
+        "uuid": "b8701e6c-e7d4-11ea-a5ec-979674ac1a4b",
         "documentation": "Search for Documents",
         "method": "get",
         "endpoint": "documents.:response_format",
         "responses": [
           {
-            "uuid": "500ea6c9-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e69-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -118,12 +118,12 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           },
           {
-            "uuid": "500ea6ca-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e6a-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 400,
@@ -131,12 +131,12 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           },
           {
-            "uuid": "500ea6cb-5d91-11ea-b15f-91b10dfe38f8",
+            "uuid": "b8701e6b-e7d4-11ea-a5ec-979674ac1a4b",
             "body": "",
             "latency": 0,
             "statusCode": 404,
@@ -144,9 +144,9 @@
             "headers": [{ "key": "Content-Type", "value": "*/*" }],
             "filePath": "",
             "sendFileAsBody": false,
-            "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
         "enabled": true
