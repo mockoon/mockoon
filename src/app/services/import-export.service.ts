@@ -56,26 +56,31 @@ export class ImportExportService {
     // clone environments before exporting
     const dataToExport = cloneDeep(environments);
 
-    try {
-      writeFile(
-        filePath,
-        this.prepareExport({ data: dataToExport, subject: 'environment' }),
-        (error) => {
-          if (error) {
-            this.toastService.addToast('error', Errors.EXPORT_ERROR);
-          } else {
-            this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
+    // dialog not cancelled
+    if (filePath) {
+      try {
+        writeFile(
+          filePath,
+          this.prepareExport({ data: dataToExport, subject: 'environment' }),
+          (error) => {
+            if (error) {
+              this.toastService.addToast('error', Errors.EXPORT_ERROR);
+            } else {
+              this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
 
-            this.eventsService.analyticsEvents.next(
-              AnalyticsEvents.EXPORT_FILE
-            );
+              this.eventsService.analyticsEvents.next(
+                AnalyticsEvents.EXPORT_FILE
+              );
+            }
           }
-        }
-      );
-    } catch (error) {
-      this.logger.error(`Error while exporting environments: ${error.message}`);
+        );
+      } catch (error) {
+        this.logger.error(
+          `Error while exporting environments: ${error.message}`
+        );
 
-      this.toastService.addToast('error', Errors.EXPORT_ERROR);
+        this.toastService.addToast('error', Errors.EXPORT_ERROR);
+      }
     }
   }
 
