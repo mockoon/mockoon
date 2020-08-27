@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ipcRenderer } from 'electron';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { ImportExportService } from 'src/app/services/import-export.service';
 import { UIService } from 'src/app/services/ui.service';
+import { Store } from 'src/app/stores/store';
 import { ScrollDirection } from 'src/app/types/ui.type';
 
 @Injectable({ providedIn: 'root' })
@@ -14,7 +16,8 @@ export class IpcService {
     private environmentsService: EnvironmentsService,
     private modalService: NgbModal,
     private importExportService: ImportExportService,
-    private uiService: UIService
+    private uiService: UIService,
+    private store: Store
   ) {}
 
   public init(
@@ -83,5 +86,27 @@ export class IpcService {
           break;
       }
     });
+
+    // listen to environments and enable/disable export menu entries
+    this.store
+      .select('environments')
+      .pipe(
+        distinctUntilChanged(),
+        tap((environments) => {
+          this.sendMessage(
+            environments.length >= 1 ? 'enable-export' : 'disable-export'
+          );
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Send a messgae to main process
+   *
+   * @param channel
+   */
+  private sendMessage(channel: 'enable-export' | 'disable-export') {
+    ipcRenderer.send(channel);
   }
 }

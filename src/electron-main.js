@@ -338,6 +338,12 @@ const createAppMenu = function () {
   return menu;
 };
 
+const toggleExportMenuItems = function (state) {
+  const menu = electron.Menu.getApplicationMenu();
+  menu.items[2].submenu.items[0].submenu.items[2].enabled = state;
+  menu.items[2].submenu.items[2].submenu.items[1].enabled = state;
+};
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -356,6 +362,14 @@ app.on('window-all-closed', function () {
 ipcMain.on('renderer-app-quit', function () {
   // destroy the window otherwise app.quit() will trigger beforeunload again. Also there is no app.quit for macos
   mainWindow.destroy();
+});
+
+ipcMain.on('disable-export', function () {
+  toggleExportMenuItems(false);
+});
+
+ipcMain.on('enable-export', function () {
+  toggleExportMenuItems(true);
 });
 
 app.on('activate', function () {
