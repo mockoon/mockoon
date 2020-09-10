@@ -3,6 +3,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const logs = require('electron-log');
 logs.catchErrors();
 
+const objectPath = require('object-path');
 const electron = require('electron');
 const windowState = require('electron-window-state');
 const path = require('path');
@@ -340,8 +341,15 @@ const createAppMenu = function () {
 
 const toggleExportMenuItems = function (state) {
   const menu = electron.Menu.getApplicationMenu();
-  menu.items[2].submenu.items[0].submenu.items[2].enabled = state;
-  menu.items[2].submenu.items[2].submenu.items[1].enabled = state;
+
+  if (
+    menu &&
+    objectPath.has(menu, 'items.2.submenu.items.0.submenu.items.2') &&
+    objectPath.has(menu, 'items.2.submenu.items.2.submenu.items.1')
+  ) {
+    menu.items[2].submenu.items[0].submenu.items[2].enabled = state;
+    menu.items[2].submenu.items[2].submenu.items[1].enabled = state;
+  }
 };
 
 // This method will be called when Electron has finished
