@@ -33,6 +33,11 @@
                 "output": "/"
               },
               {
+                "glob": "splashscreen.html",
+                "input": "src",
+                "output": "/"
+              },
+              {
                 "glob": "package.json",
                 "input": ".",
                 "output": "/"
