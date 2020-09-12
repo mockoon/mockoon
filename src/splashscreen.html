@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        overflow: hidden;
+        user-select: none;
+        -webkit-app-region: drag;
+        margin: 0px;
+        padding: 0px;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        height: 100%;
+        text-align: center;
+      }
+      .container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      img.logo {
+        flex-grow: 1;
+        pointer-events: none;
+        padding: 0 20px;
+        filter: drop-shadow(0 0 4px #5cc9fb33);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <img
+        class="logo"
+        src="./assets/logo_animated.svg"
+        width="300"
+        draggable="false"
+      />
+    </div>
+  </body>
+</html>
