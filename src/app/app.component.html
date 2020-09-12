@@ -251,7 +251,8 @@
                           </div>
                           <input type="text" class="form-control"
                             placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" ValidPath
-                            formControlName="endpoint">
+                            formControlName="endpoint"
+                            [focusOnEvent]="focusableInputs.ROUTE_PATH">
                           <div *ngIf="environmentsStatus$ | async as environmentsStatus" class="input-group-prepend" ngbTooltip="Open route in browser (GET method only)">
                             <button
                               class="btn btn-link" [ngClass]="{'is-primary': !environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'}"

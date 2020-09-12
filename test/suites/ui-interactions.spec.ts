@@ -48,6 +48,27 @@ describe('UI interactions', () => {
     });
   });
 
+  describe('Inputs autofocus', () => {
+    const tests = new Tests('ui');
+    tests.runHooks();
+
+    it('Focus "documentation" input, add route, and assert "path" input has focus', async () => {
+      const documentationSelector = 'input[formcontrolname="documentation"]';
+
+      await tests.app.client.element(documentationSelector).setValue('test');
+      const documentationHasFocus = await tests.app.client.hasFocus(
+        documentationSelector
+      );
+      expect(documentationHasFocus).to.equal(true);
+
+      await tests.helpers.addRoute();
+      const pathHasFocus = await tests.app.client.hasFocus(
+        'input[formcontrolname="endpoint"]'
+      );
+      expect(pathHasFocus).to.equal(true);
+    });
+  });
+
   describe('Add CORS headers', () => {
     const tests = new Tests('ui');
     tests.runHooks();

@@ -59,6 +59,7 @@ import {
   DraggableContainerNames,
   ScrollDirection
 } from 'src/app/types/ui.type';
+import { FocusableInputs } from 'src/app/enums/ui.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -210,6 +211,7 @@ export class EnvironmentsService {
       );
       this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
       this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+      this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
     }
   }
 
