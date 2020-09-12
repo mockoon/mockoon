@@ -24,6 +24,7 @@ import { SettingsModalComponent } from 'src/app/components/settings-modal.compon
 import { TitleSeparatorComponent } from 'src/app/components/title-separator/title-separator.component';
 import { WelcomeModalComponent } from 'src/app/components/welcome-modal.component';
 import { Config } from 'src/app/config';
+import { FocusOnEventDirective } from 'src/app/directives/focus-event.directive';
 import { InputNumberDirective } from 'src/app/directives/input-number.directive';
 import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzone.directive';
 import { ResizeColumnDirective } from 'src/app/directives/resize-column.directive';
@@ -39,6 +40,7 @@ import { AppComponent } from './app.component';
     ResizeColumnDirective,
     ValidPathDirective,
     MousedragDeadzoneDirective,
+    FocusOnEventDirective,
     ContextMenuComponent,
     WelcomeModalComponent,
     SettingsModalComponent,

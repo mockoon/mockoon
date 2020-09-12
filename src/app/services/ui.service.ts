@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { FocusableInputs } from 'src/app/enums/ui.enum';
+import { EventsService } from 'src/app/services/events.service';
 import { updateUIStateAction } from 'src/app/stores/actions';
 import { Store, UIStateProperties } from 'src/app/stores/store';
 import { ScrollDirection } from 'src/app/types/ui.type';
@@ -9,7 +11,7 @@ export class UIService {
   public scrollEnvironmentsMenu: Subject<ScrollDirection> = new Subject();
   public scrollRoutesMenu: Subject<ScrollDirection> = new Subject();
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private eventsService: EventsService) {}
 
   /**
    * Scroll to bottom of an element
@@ -54,5 +56,14 @@ export class UIService {
    */
   public updateUIState(newProperties: UIStateProperties) {
     this.store.update(updateUIStateAction(newProperties));
+  }
+
+  /**
+   * Focus an input by name
+   *
+   * @param input
+   */
+  public focusInput(input: FocusableInputs) {
+    this.eventsService.focusInput.next(input);
   }
 }

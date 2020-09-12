@@ -26,6 +26,7 @@ import { SettingsModalComponent } from 'src/app/components/settings-modal.compon
 import { Config } from 'src/app/config';
 import { INDENT_SIZE } from 'src/app/constants/common.constants';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
+import { FocusableInputs } from 'src/app/enums/ui.enum';
 import {
   GetRouteResponseContentType,
   IsValidURL
@@ -112,6 +113,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public scrollToBottom = this.uiService.scrollToBottom;
   public statusCodes = statusCodes;
   public toasts$: Observable<Toast[]>;
+  public focusableInputs = FocusableInputs;
   private injectHeaders$ = new Subject<Header[]>();
   private BrowserWindow = remote.BrowserWindow;
   private dialog = remote.dialog;
