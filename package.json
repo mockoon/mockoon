@@ -103,7 +103,7 @@
     "electron-notarize": "0.2.1",
     "electron-reload": "1.5.0",
     "faker": "github:Marak/faker.js",
-    "firebase": "7.16.1",
+    "firebase": "7.20.0",
     "http-proxy-middleware": "1.0.4",
     "istanbul-instrumenter-loader": "3.0.1",
     "jasmine-core": "3.5.0",
