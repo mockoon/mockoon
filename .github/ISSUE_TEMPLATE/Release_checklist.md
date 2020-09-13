@@ -5,11 +5,8 @@ about: Checklist for releases (admin use only)
 ---
 
 - [ ] Bump app version
-
-**Builds:**
-- [ ] Build and sign Windows binary
-- [ ] Build Linux binaries (deb, rpm, snap, AppImage)
-- [ ] Build OSX binary (dmg)
+- [ ] Create a **pre-release** (!important) on GitHub with correct version and publish
+- [ ] Build the binaries (automated after pre-release publication)
 
 **Tests:**
 - [ ] Test Windows binary
@@ -17,18 +14,17 @@ about: Checklist for releases (admin use only)
 - [ ] Test OSX binary
 
 **Release:**
-- [ ] Create release on repository with correct version and tag
 - [ ] Add Windows binaries to release
 - [ ] Add Linux binaries to release
 - [ ] Add OSX binaries to release
-- [ ] Publish release
+- [ ] Set the release to final (non pre-release)
 
 **Website:**
-- [ ] Update website versions
-- [ ] Publish website on Firebase
+- [ ] Update website package version
+- [ ] Merge release branch on master
 
 **Distribution:**
-- [ ] Update homebrew cask
+- [ ] Update homebrew cask (PR)
 - [ ] Update Snap Store
 - [ ] Update Arch Linux repository
 - [ ] Update choco
@@ -36,5 +32,5 @@ about: Checklist for releases (admin use only)
 **Misc:**
 - [ ] Close / update Github issues
 - [ ] Clean 'Roadmap' project
-- [ ] Close milestone
+- [ ] Close milestones
 - [ ] Spread the word!
