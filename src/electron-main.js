@@ -71,7 +71,16 @@ const createSplashScreen = function () {
 };
 
 const init = function () {
-  createSplashScreen();
+  /**
+   * Delay splashscreen launch due to transparency not available directly after app "ready" event
+   * See https://github.com/electron/electron/issues/15947 and https://stackoverflow.com/questions/53538215/cant-succeed-in-making-transparent-window-in-electron-javascript
+   */
+  setTimeout(
+    () => {
+      createSplashScreen();
+    },
+    process.platform === 'linux' ? 500 : 0
+  );
 
   const mainWindowState = windowState({
     defaultWidth: 1024,
@@ -125,7 +134,7 @@ const init = function () {
     }
 
     mainWindowState.manage(mainWindow);
-    // ensure focus, as manage function does not necessarily focus 
+    // ensure focus, as manage function does not necessarily focus
     mainWindow.show();
   });
 
