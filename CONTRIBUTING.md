@@ -76,7 +76,7 @@ Only maintainers (@255kb) are entitled to build and package the application with
 
 Some manual steps are required in order to properly distribute the application:
 
-- A pull request must be created to update Homebrew cask repository (update the `version` and the `sha256` hash in the `Casks/mockoon.rb` file).
-- Binary must be uploaded to the Snap store manually.
+- A pull request must be created to update Homebrew cask repository (update the `version` and the `sha256` hash in the `Casks/mockoon.rb` file and open a PR).
+- Binary must be uploaded to the Snap store manually with `snapcraft push --release=stable ./mockoon-{version}.snap` command.
 - Arch Linux repository must be updated (Docker image and script can be used in `./scripts/aur-version-bump`).
 - Chocolatey package should be automatically updated after some days.
