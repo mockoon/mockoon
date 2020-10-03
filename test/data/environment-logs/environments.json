@@ -3,7 +3,7 @@
     "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
     "lastMigration": 12,
     "name": "Environment logs 1",
-    "endpointPrefix": "",
+    "endpointPrefix": "prefix",
     "latency": 0,
     "port": 3000,
     "routes": [
@@ -121,7 +121,7 @@
     "uuid": "5f5ec26d-9a10-4b34-95a8-a9e4dff5ca41",
     "lastMigration": 11,
     "name": "Environment logs 2",
-    "endpointPrefix": "",
+    "endpointPrefix": "prefix",
     "latency": 0,
     "port": 3000,
     "routes": [

@@ -2,8 +2,8 @@ import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
 const endpointCall: HttpCall = {
-  description: 'Call GET /endpoint/1',
-  path: '/endpoint/1?qp1=qp1test',
+  description: 'Call GET /prefix/endpoint/1',
+  path: '/prefix/endpoint/1?qp1=qp1test',
   method: 'GET',
   body: 'requestbody',
   testedResponse: {
@@ -13,8 +13,8 @@ const endpointCall: HttpCall = {
 };
 
 const endpointCall2: HttpCall = {
-  description: 'Call GET /endpoint/2',
-  path: '/endpoint/2',
+  description: 'Call GET /prefix/endpoint/2',
+  path: '/prefix/endpoint/2',
   method: 'GET',
   testedResponse: {
     body: 'created',
@@ -23,8 +23,8 @@ const endpointCall2: HttpCall = {
 };
 
 const errorCall: HttpCall = {
-  description: 'Call GET /test',
-  path: '/test',
+  description: 'Call GET /prefix/test',
+  path: '/prefix/test',
   method: 'GET',
   testedResponse: {
     status: 404
@@ -32,8 +32,8 @@ const errorCall: HttpCall = {
 };
 
 const binaryCall: HttpCall = {
-  description: 'Call GET /file',
-  path: '/file',
+  description: 'Call GET /prefix/file',
+  path: '/prefix/file',
   method: 'GET',
   testedResponse: {
     status: 200
@@ -49,7 +49,7 @@ describe('Environment logs', () => {
       await tests.helpers.startEnvironment();
     });
 
-    describe('Verify environment logs after GET call to /endpoint', () => {
+    describe('Verify environment logs after GET call to /prefix/endpoint', () => {
       it(endpointCall.description, async () => {
         await tests.helpers.httpCallAsserter(endpointCall);
         await tests.helpers.switchViewInHeader('ENV_LOGS');
@@ -58,13 +58,13 @@ describe('Environment logs', () => {
       it('Environment logs menu shows a call that was caught by the application', async () => {
         await tests.helpers.selectEnvironmentLogEntry(1);
         await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
-        await tests.helpers.environmentLogMenuPathEqual('/endpoint/1', 1);
+        await tests.helpers.environmentLogMenuPathEqual('/prefix/endpoint/1', 1);
         await tests.helpers.environmentLogMenuCheckIcon('CAUGHT', 1);
       });
 
       it('Verify request tab content', async () => {
         await tests.helpers.environmentLogItemEqual(
-          'Request URL: /endpoint/1',
+          'Request URL: /prefix/endpoint/1',
           'request',
           2,
           1
@@ -76,7 +76,7 @@ describe('Environment logs', () => {
           2
         );
         await tests.helpers.environmentLogItemEqual(
-          'Caught by route: /endpoint/:param1',
+          'Caught by route: /prefix/endpoint/:param1',
           'request',
           2,
           3
@@ -162,7 +162,7 @@ describe('Environment logs', () => {
       });
     });
 
-    describe('Verify environment logs after GET call to /test (404)', () => {
+    describe('Verify environment logs after GET call to /prefix/test (404)', () => {
       it(errorCall.description, async () => {
         await tests.helpers.httpCallAsserter(errorCall);
       });
@@ -171,10 +171,10 @@ describe('Environment logs', () => {
         await tests.helpers.countEnvironmentLogsEntries(2);
       });
 
-      it('First entry is GET /test and was not caught by the application', async () => {
+      it('First entry is GET /prefix/test and was not caught by the application', async () => {
         await tests.helpers.selectEnvironmentLogEntry(1);
         await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
-        await tests.helpers.environmentLogMenuPathEqual('/test', 1);
+        await tests.helpers.environmentLogMenuPathEqual('/prefix/test', 1);
         await tests.helpers.environmentLogMenuCheckIcon('CAUGHT', 1, true);
       });
 
@@ -187,7 +187,7 @@ describe('Environment logs', () => {
           1
         );
         await tests.helpers.environmentLogItemEqual(
-          'Content-length: 143',
+          'Content-length: 150',
           'response',
           4,
           1
@@ -218,14 +218,18 @@ describe('Environment logs', () => {
         );
       });
 
-      it('Mock /test log', async () => {
+      it('Mock /prefix/test log', async () => {
         await tests.helpers.countRoutes(2);
         await tests.helpers.environmentLogClickMockButton(1);
         await tests.helpers.countRoutes(3);
       });
+
+      it('Mocking removed the prefix', async () => {
+        await tests.helpers.checkActiveRoute('GET\n/test')
+      });
     });
 
-    describe('Verify environment logs after GET call to /file (binary)', () => {
+    describe('Verify environment logs after GET call to /prefix/file (binary)', () => {
       it(errorCall.description, async () => {
         await tests.helpers.httpCallAsserter(binaryCall);
       });
@@ -235,10 +239,10 @@ describe('Environment logs', () => {
         await tests.helpers.countEnvironmentLogsEntries(3);
       });
 
-      it('First entry is GET /file and was caught by the application', async () => {
+      it('First entry is GET /prefix/file and was caught by the application', async () => {
         await tests.helpers.selectEnvironmentLogEntry(1);
         await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
-        await tests.helpers.environmentLogMenuPathEqual('/file', 1);
+        await tests.helpers.environmentLogMenuPathEqual('/prefix/file', 1);
         await tests.helpers.environmentLogMenuCheckIcon('CAUGHT', 1);
       });
 
@@ -350,7 +354,7 @@ describe('Environment logs', () => {
       it('Select entry and verify that it is displayed on the right', async () => {
         await tests.helpers.selectEnvironmentLogEntry(1);
         await tests.helpers.environmentLogItemEqual(
-          'Request URL: /endpoint/1',
+          'Request URL: /prefix/endpoint/1',
           'request',
           2,
           1

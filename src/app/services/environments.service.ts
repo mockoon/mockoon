@@ -437,10 +437,16 @@ export class EnvironmentsService {
         routeResponse = this.schemasBuilderService.buildRouteResponse();
       }
 
+      const prefix = this.store.getActiveEnvironment().endpointPrefix;
+      let endpoint = log.url.slice(1); // Remove the initial slash '/'
+      if (prefix.length && endpoint.startsWith(prefix)) {
+        endpoint = endpoint.slice(prefix.length + 1); // Remove the prefix and the slash
+      }
+
       const newRoute: Route = {
         ...this.schemasBuilderService.buildRoute(),
         method: log.method.toLowerCase() as Method,
-        endpoint: log.url.slice(1), // Remove the initial slash '/'
+        endpoint,
         responses: [routeResponse]
       };
 
