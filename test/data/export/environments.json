@@ -37,5 +37,44 @@
     "headers": [{ "key": "", "value": "" }],
     "proxyReqHeaders": [{"key": "", "value":""}],
     "proxyResHeaders": [{"key": "", "value":""}]
+  },
+  {
+    "uuid": "867fe03b-01f9-4c6c-a6bc-30000dddba46",
+    "lastMigration": 12,
+    "name": "Alt export env",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3001,
+    "routes": [
+      {
+        "uuid": "867fe03b-02f9-4c6c-a6bc-30000dddba46",
+        "method": "post",
+        "endpoint": "answer",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "867fe03b-03f9-4c6c-a6bc-30000dddba46",
+            "body": "{\n  \"response\": 42\n}",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ]
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [{ "key": "", "value": "" }],
+    "proxyReqHeaders": [{"key": "", "value":""}],
+    "proxyResHeaders": [{"key": "", "value":""}]
   }
 ]

@@ -84,6 +84,9 @@ export class IpcService {
         case 'EXPORT_FILE':
           this.importExportService.exportAllEnvironments();
           break;
+        case 'EXPORT_FILE_SELECTED':
+          this.importExportService.exportActiveEnvironment();
+          break;
       }
     });
 

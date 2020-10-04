@@ -325,6 +325,12 @@ const createAppMenu = function () {
             click: function () {
               mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE' });
             }
+          },
+          {
+            label: 'Export current environment to a file (JSON)',
+            click: function () {
+              mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE_SELECTED' });
+            }
           }
         ]
       },
@@ -411,6 +417,7 @@ const toggleExportMenuItems = function (state) {
     objectPath.has(menu, 'items.2.submenu.items.2.submenu.items.1')
   ) {
     menu.items[2].submenu.items[0].submenu.items[2].enabled = state;
+    menu.items[2].submenu.items[0].submenu.items[3].enabled = state;
     menu.items[2].submenu.items[2].submenu.items[1].enabled = state;
   }
 };
