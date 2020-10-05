@@ -439,7 +439,7 @@ export class EnvironmentsService {
 
       const prefix = this.store.getActiveEnvironment().endpointPrefix;
       let endpoint = log.url.slice(1); // Remove the initial slash '/'
-      if (prefix.length && endpoint.startsWith(prefix)) {
+      if (prefix && endpoint.startsWith(prefix)) {
         endpoint = endpoint.slice(prefix.length + 1); // Remove the prefix and the slash
       }
 
