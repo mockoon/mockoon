@@ -71,16 +71,18 @@ const createSplashScreen = function () {
 };
 
 const init = function () {
-  /**
-   * Delay splashscreen launch due to transparency not available directly after app "ready" event
-   * See https://github.com/electron/electron/issues/15947 and https://stackoverflow.com/questions/53538215/cant-succeed-in-making-transparent-window-in-electron-javascript
-   */
-  setTimeout(
-    () => {
-      createSplashScreen();
-    },
-    process.platform === 'linux' ? 500 : 0
-  );
+  if (!isTesting) {
+    /**
+     * Delay splashscreen launch due to transparency not available directly after app "ready" event
+     * See https://github.com/electron/electron/issues/15947 and https://stackoverflow.com/questions/53538215/cant-succeed-in-making-transparent-window-in-electron-javascript
+     */
+    setTimeout(
+      () => {
+        createSplashScreen();
+      },
+      process.platform === 'linux' ? 500 : 0
+    );
+  }
 
   const mainWindowState = windowState({
     defaultWidth: 1024,
@@ -97,7 +99,8 @@ const init = function () {
     title: `Mockoon`,
     backgroundColor: '#252830',
     icon: path.join(__dirname, '/icon_512x512x32.png'),
-    show: false,
+    // directly show the main window when running the tests
+    show: isTesting ? true : false,
     webPreferences: {
       nodeIntegration: true,
       devTools: isDev ? true : false
@@ -420,8 +423,8 @@ app.on('ready', init);
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
+  // to stay active until the user quits explicitly with Cmd + Q (except when running tests)
+  if (process.platform !== 'darwin' || isTesting) {
     app.quit();
   }
 });
