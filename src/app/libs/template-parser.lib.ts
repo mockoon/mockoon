@@ -266,6 +266,13 @@ const TemplateParserHelpers = function (request: Request) {
     newline: function () {
       return '\n';
     },
+    // returns a new random ObjectId compatible with MongoDB
+    objectId: function() {
+      var timestamp = (new Date().getTime() / 1000 | 0).toString(16);
+      return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function() {
+          return (Math.random() * 16 | 0).toString(16);
+      }).toLowerCase();
+    },
     // Handlebars hook when a helper is missing
     helperMissing: function () {
       return '';
