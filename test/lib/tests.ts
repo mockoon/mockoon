@@ -72,12 +72,12 @@ export class Tests {
    */
   public waitForWindowReady() {
     it('Should wait for window to be ready', async () => {
-      await this.app.client.waitUntilWindowLoaded();
+      await this.app.client.waitUntilWindowLoaded(10000);
     });
   }
 
   /**
-   * Wait for environement to be loaded by checking for active environment menu item
+   * Wait for environment to be loaded by checking for active environment menu item
    */
   public waitForEnvironmentLoaded() {
     it('Should load the environment', async () => {
