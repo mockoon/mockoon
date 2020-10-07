@@ -362,6 +362,11 @@ export class Helpers {
           });
         } else if (
           propertyName === 'body' &&
+          httpCall.testedResponse.body instanceof RegExp
+        ) {
+          expect(response.body).to.match(httpCall.testedResponse.body)
+        } else if (
+          propertyName === 'body' &&
           typeof httpCall.testedResponse.body === 'object'
         ) {
           expect(response.body).to.have.string(

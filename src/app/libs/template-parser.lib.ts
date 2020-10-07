@@ -7,6 +7,7 @@ import { get as objectGet } from 'object-path';
 import { Logger } from 'src/app/classes/logger';
 import { OldTemplatingHelpers } from 'src/app/libs/old-templating-helpers';
 import { IsEmpty } from 'src/app/libs/utils.lib';
+import ObjectId from 'bson-objectid';
 
 const logger = new Logger('[LIB][TEMPLATE-PARSER]');
 
@@ -266,12 +267,15 @@ const TemplateParserHelpers = function (request: Request) {
     newline: function () {
       return '\n';
     },
-    // returns a new random ObjectId compatible with MongoDB
-    objectId: function() {
-      var timestamp = (new Date().getTime() / 1000 | 0).toString(16);
-      return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function() {
-          return (Math.random() * 16 | 0).toString(16);
-      }).toLowerCase();
+    // returns a compatible ObjectId
+    // * if value is undefined or null returns a random ObjectId
+    // * if value is defined is used a seed, can be a string, number or Buffer
+    objectId: function(defaultValue: string) {
+      if (typeof defaultValue === 'object') {
+        defaultValue = undefined;
+      }
+
+      return new ObjectId(defaultValue).toHexString();
     },
     // Handlebars hook when a helper is missing
     helperMissing: function () {

@@ -748,6 +748,24 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
+        description: 'Helper: random objectId',
+        path: '/objectid_1',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i
+        }
+      },
+      {
+        description: 'Helper: objectId based on time',
+        path: '/objectid_2',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: '54495ad94c934721ede76d90'
+        }
+      },
+      {
         description: 'Helper: base64 (inline + block helper)',
         path: '/base64',
         method: 'GET',
