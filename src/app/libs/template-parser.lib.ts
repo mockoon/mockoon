@@ -7,6 +7,7 @@ import { get as objectGet } from 'object-path';
 import { Logger } from 'src/app/classes/logger';
 import { OldTemplatingHelpers } from 'src/app/libs/old-templating-helpers';
 import { IsEmpty } from 'src/app/libs/utils.lib';
+import ObjectId from 'bson-objectid';
 
 const logger = new Logger('[LIB][TEMPLATE-PARSER]');
 
@@ -265,6 +266,16 @@ const TemplateParserHelpers = function (request: Request) {
     // adds a newline to the output
     newline: function () {
       return '\n';
+    },
+    // returns a compatible ObjectId
+    // * if value is undefined or null returns a random ObjectId
+    // * if value is defined is used a seed, can be a string, number or Buffer
+    objectId: function(defaultValue: string) {
+      if (typeof defaultValue === 'object') {
+        defaultValue = undefined;
+      }
+
+      return new ObjectId(defaultValue).toHexString();
     },
     // Handlebars hook when a helper is missing
     helperMissing: function () {
