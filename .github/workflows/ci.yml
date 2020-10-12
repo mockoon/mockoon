@@ -6,6 +6,7 @@ jobs:
   tests:
     name: Lint, build and test
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       ELECTRON_DISABLE_SANDBOX: 1
 
