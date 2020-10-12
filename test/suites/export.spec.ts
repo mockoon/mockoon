@@ -28,8 +28,59 @@ describe('Environments export', () => {
       await tests.app.client.pause(1000);
       await tests.helpers.verifyObjectPropertyInFile(
         filePath,
-        ['source', 'data.0.type', 'data.0.item.name'],
-        [`mockoon:${Config.appVersion}`, 'environment', 'Export env']
+        ['source', 'data.0.type', 'data.0.item.name', 'data.1.type', 'data.1.item.name'],
+        [
+          `mockoon:${Config.appVersion}`,
+          'environment',
+          'Export env',
+          'environment',
+          'Alt export env'
+        ]
+      );
+    });
+
+    it('Should export data without UUIDs', async () => {
+      await tests.helpers.verifyObjectPropertyInFile(
+        filePath,
+        [
+          'data.0.item.uuid',
+          'data.0.item.routes.0.uuid',
+          'data.0.item.routes.0.responses.0.uuid',
+          'data.1.item.uuid',
+          'data.1.item.routes.0.uuid',
+          'data.1.item.routes.0.responses.0.uuid'
+        ],
+        ['', '', '', '', '', '']
+      );
+    });
+  });
+
+  describe('Export active environment to a file (JSON)', () => {
+    const tests = new Tests('export');
+    tests.runHooks(true, true);
+
+    const filePath = `./tmp/storage/${uuid()}.json`;
+
+    it('Should create an export file with content', async () => {
+      tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+        {
+          method: 'showSaveDialog',
+          value: { filePath }
+        }
+      ]);
+
+      tests.helpers.sendWebContentsAction('EXPORT_FILE_SELECTED');
+
+      await tests.helpers.checkToastDisplayed(
+        'success',
+        'Environment has been successfully exported'
+      );
+      // wait for file save
+      await tests.app.client.pause(1000);
+      await tests.helpers.verifyObjectPropertyInFile(
+        filePath,
+        ['source', 'data.0.type', 'data.0.item.name', 'data.1'],
+        [`mockoon:${Config.appVersion}`, 'environment', 'Export env', undefined]
       );
     });
 

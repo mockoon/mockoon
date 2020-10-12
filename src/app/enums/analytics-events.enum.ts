@@ -8,6 +8,7 @@ type AnalyticsEventsNames =
   | 'CREATE_ENVIRONMENT'
   | 'CREATE_ROUTE'
   | 'EXPORT_FILE'
+  | 'EXPORT_FILE_SELECTED'
   | 'EXPORT_OPENAPI'
   | 'EXPORT_CLIPBOARD'
   | 'IMPORT_FILE'
@@ -38,6 +39,7 @@ export const AnalyticsEvents: {
   },
   CREATE_ROUTE: { type: 'event', category: 'create', action: 'route' },
   EXPORT_FILE: { type: 'event', category: 'export', action: 'file' },
+  EXPORT_FILE_SELECTED: { type: 'event', category: 'export', action: 'file-selected' },
   EXPORT_OPENAPI: { type: 'event', category: 'export', action: 'openapi-file' },
   EXPORT_CLIPBOARD: { type: 'event', category: 'export', action: 'clipboard' },
   IMPORT_FILE: { type: 'event', category: 'import', action: 'file' },

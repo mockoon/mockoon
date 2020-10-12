@@ -68,29 +68,73 @@ export class ImportExportService {
 
     // dialog not cancelled
     if (filePath) {
-      try {
-        writeFile(
-          filePath,
-          this.prepareExport({ data: dataToExport, subject: 'environment' }),
-          (error) => {
-            if (error) {
-              this.toastService.addToast('error', Errors.EXPORT_ERROR);
-            } else {
-              this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
+      this.exportDataToFilePath(dataToExport, filePath, (error) => {
+        if (error) {
+          this.toastService.addToast('error', Errors.EXPORT_ERROR);
+        } else {
+          this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
 
-              this.eventsService.analyticsEvents.next(
-                AnalyticsEvents.EXPORT_FILE
-              );
-            }
-          }
-        );
-      } catch (error) {
-        this.logger.error(
-          `Error while exporting environments: ${error.message}`
-        );
+          this.eventsService.analyticsEvents.next(
+            AnalyticsEvents.EXPORT_FILE
+          );
+        }
+      });
+    }
+  }
 
-        this.toastService.addToast('error', Errors.EXPORT_ERROR);
-      }
+  /**
+   * Export active env in a json file
+   */
+  public async exportActiveEnvironment() {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (!activeEnvironment) {
+      return;
+    }
+
+    this.logger.info(`Exporting active environment to a file`);
+
+    const filePath = await this.openSaveDialog('Export current to JSON');
+
+    // clone environment before exporting
+    const dataToExport = cloneDeep(activeEnvironment);
+
+    // dialog not cancelled
+    if (filePath) {
+      this.exportDataToFilePath(dataToExport, filePath, (error) => {
+        if (error) {
+          this.toastService.addToast('error', Errors.EXPORT_ERROR);
+        } else {
+          this.toastService.addToast('success', Messages.EXPORT_SELECTED_SUCCESS);
+
+          this.eventsService.analyticsEvents.next(
+            AnalyticsEvents.EXPORT_FILE_SELECTED
+          );
+        }
+      });
+    }
+  }
+
+  /**
+   * Writes JSON data to the specified filePath in Mockoon format.
+   *
+   * @param dataToExport
+   * @param filePath
+   * @param callback
+   */
+  private exportDataToFilePath(dataToExport, filePath, callback) {
+    try {
+      writeFile(
+        filePath,
+        this.prepareExport({ data: dataToExport, subject: 'environment' }),
+        callback
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error while exporting environments: ${error.message}`
+      );
+
+      this.toastService.addToast('error', Errors.EXPORT_ERROR);
     }
   }
 
