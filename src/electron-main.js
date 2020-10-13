@@ -107,6 +107,23 @@ const init = function () {
     }
   });
 
+  if (isTesting) {
+    mainWindowState.manage(mainWindow);
+    // ensure focus, as manage function does not necessarily focus
+    mainWindow.show();
+  } else {
+    // when main app finished loading, hide splashscreen and show the mainWindow
+    mainWindow.webContents.on('did-finish-load', () => {
+      if (splashScreen) {
+        splashScreen.close();
+      }
+
+      mainWindowState.manage(mainWindow);
+      // ensure focus, as manage function does not necessarily focus
+      mainWindow.show();
+    });
+  }
+
   // and load the index.html of the app.
   mainWindow.loadURL(
     url.format({
@@ -128,17 +145,6 @@ const init = function () {
     if (url.includes('openexternal::')) {
       shell.openExternal(url.split('::')[1]);
     }
-  });
-
-  // when main app finished loading, hide splashscreen and show the mainWindow
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (splashScreen) {
-      splashScreen.close();
-    }
-
-    mainWindowState.manage(mainWindow);
-    // ensure focus, as manage function does not necessarily focus
-    mainWindow.show();
   });
 
   // Emitted when the window is closed.
