@@ -269,6 +269,15 @@ const createAppMenu = function () {
           });
         }
       },
+      {
+        label: 'Start/Stop/Reload all environments',
+        accelerator: 'Shift+CmdOrCtrl+A',
+        click: function () {
+          mainWindow.webContents.send('keydown', {
+            action: 'START_ALL_ENVIRONMENTS',
+          });
+        }
+      },
       { type: 'separator' },
       {
         label: 'Select previous environment',

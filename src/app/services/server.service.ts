@@ -28,7 +28,8 @@ import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
 import {
   logRequestAction,
-  updateEnvironmentStatusAction
+  updateEnvironmentStatusAction,
+  setActiveEnvironmentAction,
 } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
@@ -92,6 +93,7 @@ export class ServerService {
       );
 
       this.instances[environment.uuid] = serverInstance;
+      this.setActiveEnvironment(environment.uuid);
       this.store.update(
         updateEnvironmentStatusAction({ running: true, needRestart: false })
       );
@@ -141,6 +143,7 @@ export class ServerService {
         this.logger.info(`Server ${environmentUUID} has been stopped`);
 
         delete this.instances[environmentUUID];
+        this.setActiveEnvironment(environmentUUID);
         this.store.update(
           updateEnvironmentStatusAction({ running: false, needRestart: false })
         );
@@ -486,5 +489,18 @@ export class ServerService {
     server.use((err, req, res, next) => {
       this.sendError(res, err, false, 500);
     });
+  }
+
+  /**
+   * Make sure environment is active
+   *
+   * @param uuid - uuid of environment
+   */
+  private setActiveEnvironment (uuid) {
+    if (this.store.getActiveEnvironment().uuid !== uuid) {
+      this.store.update(
+        setActiveEnvironmentAction(uuid)
+      );
+    }
   }
 }

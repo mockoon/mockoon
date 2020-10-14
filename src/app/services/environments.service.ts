@@ -378,6 +378,36 @@ export class EnvironmentsService {
   }
 
   /**
+   * Start / stop all environments
+   */
+  public toggleAllEnvironments() {
+    const environments = this.store.get('environments');
+    const environmentsStatus = this.store.get('environmentsStatus');
+
+    // check if environments should be started or stopped. If at least one env is turned off, we'll turn all on
+    const shouldStart = Object.keys(environmentsStatus)
+      .map(uuid => environmentsStatus[uuid].running)
+      .some(status => !status);
+
+    environments.map(environment => {
+      const environmentState = environmentsStatus[environment.uuid];
+      this.logger.info(
+        `start toggle environment ${environment.name}`,
+      );
+
+      if (shouldStart) {
+        if (!environmentState.running || environmentState.needRestart) {
+          this.serverService.start(environment);
+        }
+      } else {
+        if (environmentState.running) {
+          this.serverService.stop(environment.uuid);
+        }
+      }
+    });
+  }
+
+  /**
    * Move a menu item (envs / routes)
    */
   public moveMenuItem(
