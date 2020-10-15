@@ -4,7 +4,6 @@ import { Tests } from 'test/lib/tests';
 describe('UI interactions', () => {
   describe('Environments menu', () => {
     const tests = new Tests('ui');
-    tests.runHooks();
 
     it('Collapsed environment menu item displays first two characters of name', async () => {
       await tests.helpers.assertHasActiveEnvironment(' FT');
@@ -20,7 +19,7 @@ describe('UI interactions', () => {
       await tests.helpers.contextMenuOpen(
         '.environments-menu .nav-item .nav-link.active'
       );
-      await tests.app.client.waitForExist(`.context-menu`);
+      await tests.helpers.waitElementExist(`.context-menu`);
     });
 
     it('Opened environment menu item displays full name', async () => {
@@ -29,7 +28,7 @@ describe('UI interactions', () => {
     });
 
     it('Opened environment menu has button to add an environment', async () => {
-      await tests.app.client.waitForExist(
+      await tests.helpers.waitElementExist(
         '.environments-menu .nav:first-of-type .nav-item .nav-link.add-environment'
       );
     });
@@ -44,34 +43,33 @@ describe('UI interactions', () => {
       await tests.helpers.contextMenuOpen(
         '.environments-menu .nav-item .nav-link.active'
       );
-      await tests.app.client.waitForExist(`.context-menu`);
+      await tests.helpers.waitElementExist(`.context-menu`);
     });
   });
 
   describe('Inputs autofocus', () => {
     const tests = new Tests('ui');
-    tests.runHooks();
 
     it('Focus "documentation" input, add route, and assert "path" input has focus', async () => {
       const documentationSelector = 'input[formcontrolname="documentation"]';
 
-      await tests.app.client.element(documentationSelector).setValue('test');
-      const documentationHasFocus = await tests.app.client.hasFocus(
+      await tests.helpers.setElementValue(documentationSelector, 'test');
+      const documentationInput = await tests.helpers.getElement(
         documentationSelector
       );
-      expect(documentationHasFocus).to.equal(true);
+      expect(await documentationInput.isFocused()).to.equal(true);
 
       await tests.helpers.addRoute();
-      const pathHasFocus = await tests.app.client.hasFocus(
+
+      const pathInput = await tests.helpers.getElement(
         'input[formcontrolname="endpoint"]'
       );
-      expect(pathHasFocus).to.equal(true);
+      expect(await pathInput.isFocused()).to.equal(true);
     });
   });
 
   describe('Add CORS headers', () => {
     const tests = new Tests('ui');
-    tests.runHooks();
 
     const environmentHeadersSelector =
       'app-headers-list#environment-headers .row.headers-list';
@@ -79,11 +77,7 @@ describe('UI interactions', () => {
     it('Switch to environment settings and check headers count', async () => {
       await tests.helpers.switchViewInHeader('ENV_SETTINGS');
 
-      await tests.app.client
-        .elements(environmentHeadersSelector)
-        .should.eventually.have.property('value')
-        .to.be.an('Array')
-        .that.have.lengthOf(1);
+      await tests.helpers.countElements(environmentHeadersSelector, 1);
     });
 
     describe('Check environment headers', () => {
@@ -91,26 +85,21 @@ describe('UI interactions', () => {
         it(`Row 1 input ${
           index + 1
         } should be equal to ${expected}`, async () => {
-          const value = await (tests.app.client
-            .element(
-              `${environmentHeadersSelector}:nth-of-type(1) input:nth-of-type(${
-                index + 1
-              })`
-            )
-            .getAttribute('value') as string);
+          const value = await tests.helpers.getElementAttribute(
+            `${environmentHeadersSelector}:nth-of-type(1) input:nth-of-type(${
+              index + 1
+            })`,
+            'value'
+          );
           expect(value).to.equal(expected);
         });
       });
     });
 
     it('Click on "Add CORS headers" button and check headers count', async () => {
-      await tests.app.client.element('button.settings-add-cors').click();
+      await tests.helpers.elementClick('button.settings-add-cors');
 
-      await tests.app.client
-        .elements(environmentHeadersSelector)
-        .should.eventually.have.property('value')
-        .to.be.an('Array')
-        .that.have.lengthOf(4);
+      await tests.helpers.countElements(environmentHeadersSelector, 4);
     });
 
     describe('Check environment headers', () => {
@@ -127,13 +116,12 @@ describe('UI interactions', () => {
         it(`Row ${Math.ceil((index + 1) / 2)} input ${
           index + 1
         } should be equal to ${expected}`, async () => {
-          const value = await (tests.app.client
-            .element(
-              `${environmentHeadersSelector}:nth-of-type(${Math.ceil(
-                (index + 1) / 2
-              )}) input:nth-of-type(${(index + 1) % 2 === 0 ? 2 : 1})`
-            )
-            .getAttribute('value') as string);
+          const value = await tests.helpers.getElementAttribute(
+            `${environmentHeadersSelector}:nth-of-type(${Math.ceil(
+              (index + 1) / 2
+            )}) input:nth-of-type(${(index + 1) % 2 === 0 ? 2 : 1})`,
+            'value'
+          );
           expect(value).to.equal(expected);
         });
       });

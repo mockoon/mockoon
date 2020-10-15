@@ -6,12 +6,11 @@ import { v1 as uuid } from 'uuid';
 describe('Environments export', () => {
   describe('Export all environments to a file (JSON)', () => {
     const tests = new Tests('export');
-    tests.runHooks(true, true);
 
     const filePath = `./tmp/storage/${uuid()}.json`;
 
     it('Should create an export file with content', async () => {
-      tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+      tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
         {
           method: 'showSaveDialog',
           value: { filePath }
@@ -28,7 +27,13 @@ describe('Environments export', () => {
       await tests.app.client.pause(1000);
       await tests.helpers.verifyObjectPropertyInFile(
         filePath,
-        ['source', 'data.0.type', 'data.0.item.name', 'data.1.type', 'data.1.item.name'],
+        [
+          'source',
+          'data.0.type',
+          'data.0.item.name',
+          'data.1.type',
+          'data.1.item.name'
+        ],
         [
           `mockoon:${Config.appVersion}`,
           'environment',
@@ -57,12 +62,11 @@ describe('Environments export', () => {
 
   describe('Export active environment to a file (JSON)', () => {
     const tests = new Tests('export');
-    tests.runHooks(true, true);
 
     const filePath = `./tmp/storage/${uuid()}.json`;
 
     it('Should create an export file with content', async () => {
-      tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+      tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
         {
           method: 'showSaveDialog',
           value: { filePath }
@@ -99,7 +103,6 @@ describe('Environments export', () => {
 
   describe('Export environment to the clipboard', () => {
     const tests = new Tests('export');
-    tests.runHooks(true, true);
 
     it('Should copy environment to clipboard wrapped with export info', async () => {
       await tests.helpers.contextMenuClick(
@@ -124,7 +127,6 @@ describe('Environments export', () => {
 
   describe('Export route to the clipboard', () => {
     const tests = new Tests('export');
-    tests.runHooks(true, true);
 
     it('Should copy route to clipboard wrapped with export info', async () => {
       await tests.helpers.contextMenuClick(

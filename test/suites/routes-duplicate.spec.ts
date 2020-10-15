@@ -2,7 +2,6 @@ import { Tests } from 'test/lib/tests';
 
 describe('Duplicate a route', () => {
   const tests = new Tests('basic-data');
-  tests.runHooks();
 
   it('Verify three routes', async () => {
     await tests.helpers.countRoutes(3);
@@ -15,7 +14,7 @@ describe('Duplicate a route', () => {
   });
 
   it('Verify duplicated environment in second slot', async () => {
-    await tests.app.client.waitForExist(
+    await tests.helpers.waitElementExist(
       '.routes-menu .menu-list .nav-item:nth-of-type(2) .text-warning'
     );
   });

@@ -3,7 +3,6 @@ import { Tests } from 'test/lib/tests';
 
 describe('Responses rules', () => {
   const tests = new Tests('responses-rules');
-  tests.runHooks();
 
   it('Start default environment', async () => {
     await tests.helpers.startEnvironment();

@@ -3,7 +3,6 @@ import { Tests } from 'test/lib/tests';
 
 describe('Create and delete routes', () => {
   const tests = new Tests('basic-data');
-  tests.runHooks();
 
   it('Add a route', async () => {
     await tests.helpers.countRoutes(3);
@@ -22,7 +21,7 @@ describe('Create and delete routes', () => {
   });
 
   it('Last added route should remain and be active', async () => {
-    const routeMethod = await tests.app.client.getText(
+    const routeMethod = await tests.helpers.getElementText(
       '.routes-menu .menu-list .nav-item:first-of-type .nav-link.active .ellipsis:first-child'
     );
     expect(routeMethod).to.equal('GET\n/');
@@ -36,7 +35,7 @@ describe('Create and delete routes', () => {
 
     await tests.helpers.countRoutes(0);
 
-    await tests.app.client.waitForExist(
+    await tests.helpers.waitElementExist(
       '.header .btn[ngbTooltip="Environment settings"].active'
     );
   });

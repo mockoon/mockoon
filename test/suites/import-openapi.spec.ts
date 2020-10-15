@@ -96,11 +96,10 @@ describe('Swagger/OpenAPI import', () => {
     describe(testSuite.name, () => {
       testSuite.tests.forEach((testCase) => {
         describe(testCase.desc, () => {
-          const tests = new Tests('import');
-          tests.runHooks(true, false);
+          const tests = new Tests('import', true, true, false);
 
           it('Should import the file', async () => {
-            tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+            tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
               {
                 method: 'showOpenDialog',
                 value: { filePaths: [testCase.filePath] }

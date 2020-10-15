@@ -3,7 +3,6 @@ import { Tests } from 'test/lib/tests';
 
 describe('Duplicate a route response', () => {
   const tests = new Tests('basic-data');
-  tests.runHooks();
 
   it('Duplicate first route response', async () => {
     await tests.helpers.countRouteResponses(1);
@@ -19,9 +18,7 @@ describe('Duplicate a route response', () => {
 
     await tests.helpers.selectRouteResponse(1);
     await tests.helpers.removeRouteResponse();
-    await tests.app.client
-      .element(routeResponseLabelInputSelector)
-      .setValue(label);
+    await tests.helpers.setElementValue(routeResponseLabelInputSelector, label);
     await tests.helpers.duplicateRouteResponse();
 
     await tests.helpers.assertElementValue(
@@ -37,9 +34,11 @@ describe('Duplicate a route response', () => {
 
     await tests.helpers.selectRouteResponse(1);
     await tests.helpers.removeRouteResponse();
-    await tests.app.client
-      .element(routeResponseStatusCodeSelectSelector)
-      .selectByValue(statusCode);
+    await tests.helpers.selectByAttribute(
+      routeResponseStatusCodeSelectSelector,
+      'value',
+      statusCode
+    );
     await tests.helpers.duplicateRouteResponse();
 
     await tests.helpers.assertElementValue(
@@ -53,12 +52,12 @@ describe('Duplicate a route response', () => {
 
     await tests.helpers.selectRouteResponse(1);
     await tests.helpers.removeRouteResponse();
-    const originalBodyText = await tests.app.client.getText(
+    const originalBodyText = await tests.helpers.getElementText(
       routeResponseAceContentSelector
     );
     await tests.helpers.duplicateRouteResponse();
 
-    const duplicatedBodyText = await tests.app.client.getText(
+    const duplicatedBodyText = await tests.helpers.getElementText(
       routeResponseAceContentSelector
     );
     expect(duplicatedBodyText).to.equal(originalBodyText);
@@ -76,11 +75,10 @@ describe('Duplicate a route response', () => {
     await tests.helpers.duplicateRouteResponse();
     await tests.helpers.switchTab('HEADERS');
 
-    await tests.app.client
-      .elements('#route-response-headers .row.headers-list')
-      .should.eventually.have.property('value')
-      .to.be.an('Array')
-      .that.have.lengthOf(2);
+    await tests.helpers.countElements(
+      '#route-response-headers .row.headers-list',
+      2
+    );
 
     const selectorAndValueAssertionPairs = {
       '#route-response-headers .row.headers-list:first-child .form-control:first-child':
@@ -113,11 +111,7 @@ describe('Duplicate a route response', () => {
     await tests.helpers.duplicateRouteResponse();
     await tests.helpers.switchTab('RULES');
 
-    await tests.app.client
-      .elements('app-route-response-rules .row')
-      .should.eventually.have.property('value')
-      .to.be.an('Array')
-      .that.have.lengthOf(1);
+    await tests.helpers.countElements('app-route-response-rules .row', 1);
 
     const selectorAndValueAssertionPairs = {
       'app-route-response-rules .row select[formcontrolname="target"]': 'body',

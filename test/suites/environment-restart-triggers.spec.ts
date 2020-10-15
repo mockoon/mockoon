@@ -2,14 +2,12 @@ import { Tests } from 'test/lib/tests';
 
 describe('Environment "restart needed" indicator', () => {
   const tests = new Tests('basic-data');
-  tests.runHooks();
 
   it('Start environment', async () => {
     await tests.helpers.startEnvironment();
   });
 
   it('Add a route and check that a restart is needed', async () => {
-    await tests.app.client.moveTo(null, 100, 0);
     await tests.helpers.addRoute();
 
     await tests.helpers.checkEnvironmentNeedsRestart();

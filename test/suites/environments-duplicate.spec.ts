@@ -2,7 +2,6 @@ import { Tests } from 'test/lib/tests';
 
 describe('Duplicate an environment', () => {
   const tests = new Tests('basic-data');
-  tests.runHooks();
 
   it('Open environment menu', async () => {
     await tests.helpers.toggleEnvironmentMenu();
@@ -24,9 +23,9 @@ describe('Duplicate an environment', () => {
   });
 
   it('Select second environment', async () => {
-    await tests.app.client
-      .element('.environments-menu .menu-list .nav-item:nth-of-type(2)')
-      .click();
+    await tests.helpers.elementClick(
+      '.environments-menu .menu-list .nav-item:nth-of-type(2)'
+    );
   });
 
   it('Verify duplicated environment selected', async () => {

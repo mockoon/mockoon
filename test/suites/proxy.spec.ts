@@ -38,7 +38,6 @@ const getDisabledProxyCall: HttpCall = {
 
 describe('Proxy', () => {
   const tests = new Tests('proxy');
-  tests.runHooks();
 
   it('Add headers', async () => {
     await tests.helpers.switchViewInHeader('ENV_SETTINGS');
