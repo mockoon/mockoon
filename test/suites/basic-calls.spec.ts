@@ -42,7 +42,6 @@ const cases: HttpCall[] = [
 
 describe('Basic endpoint calls', () => {
   const tests = new Tests('basic-data');
-  tests.runHooks();
 
   it('Start default environment', async () => {
     await tests.helpers.startEnvironment();

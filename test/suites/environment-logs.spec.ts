@@ -43,7 +43,6 @@ const binaryCall: HttpCall = {
 describe('Environment logs', () => {
   describe('Verify environment logs content', () => {
     const tests = new Tests('environment-logs');
-    tests.runHooks();
 
     it('Start first environment', async () => {
       await tests.helpers.startEnvironment();
@@ -58,7 +57,10 @@ describe('Environment logs', () => {
       it('Environment logs menu shows a call that was caught by the application', async () => {
         await tests.helpers.selectEnvironmentLogEntry(1);
         await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
-        await tests.helpers.environmentLogMenuPathEqual('/prefix/endpoint/1', 1);
+        await tests.helpers.environmentLogMenuPathEqual(
+          '/prefix/endpoint/1',
+          1
+        );
         await tests.helpers.environmentLogMenuCheckIcon('CAUGHT', 1);
       });
 
@@ -225,7 +227,7 @@ describe('Environment logs', () => {
       });
 
       it('Mocking removed the prefix', async () => {
-        await tests.helpers.checkActiveRoute('GET\n/test')
+        await tests.helpers.checkActiveRoute('GET\n/test');
       });
     });
 
@@ -278,7 +280,6 @@ describe('Environment logs', () => {
 
   describe('Verify "view last body sent" link behavior', () => {
     const tests = new Tests('environment-logs');
-    tests.runHooks();
 
     it('Start first environment', async () => {
       await tests.helpers.startEnvironment();
@@ -332,7 +333,6 @@ describe('Environment logs', () => {
   describe('Environments logs UI behavior', () => {
     describe('Navigate in environments logs', () => {
       const tests = new Tests('environment-logs');
-      tests.runHooks();
 
       it('Start first environment', async () => {
         await tests.helpers.startEnvironment();
@@ -362,12 +362,10 @@ describe('Environment logs', () => {
       });
 
       it('Open request body in editor', async () => {
-        await tests.app.client
-          .element(
-            '.environment-logs-content-request .environment-logs-content-title .btn.btn-link'
-          )
-          .click();
-        await tests.app.client.waitForExist(
+        await tests.helpers.elementClick(
+          '.environment-logs-content-request .environment-logs-content-title .btn.btn-link'
+        );
+        await tests.helpers.waitElementExist(
           `.modal-dialog .modal-body .editor`
         );
         await tests.helpers.closeModal();
@@ -375,12 +373,10 @@ describe('Environment logs', () => {
 
       it('Open response body in editor', async () => {
         await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
-        await tests.app.client
-          .element(
-            '.environment-logs-content-response .environment-logs-content-title .btn.btn-link'
-          )
-          .click();
-        await tests.app.client.waitForExist(
+        await tests.helpers.elementClick(
+          '.environment-logs-content-response .environment-logs-content-title .btn.btn-link'
+        );
+        await tests.helpers.waitElementExist(
           `.modal-dialog .modal-body .editor`
         );
         await tests.helpers.closeModal();
@@ -395,7 +391,6 @@ describe('Environment logs', () => {
 
   describe('Select different log items in different environments', () => {
     const tests = new Tests('environment-logs');
-    tests.runHooks();
 
     it('Start first environment', async () => {
       await tests.helpers.startEnvironment();

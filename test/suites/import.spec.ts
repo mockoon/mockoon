@@ -40,11 +40,10 @@ describe('Environments import', () => {
   describe('Import from older version (< 1.7.0)', () => {
     oldImportCases.forEach((testCase) => {
       describe(testCase.desc, () => {
-        const tests = new Tests('import');
-        tests.runHooks(true, false);
+        const tests = new Tests('import', true, true, false);
 
         it('Should import the export file', async () => {
-          tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+          tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
             {
               method: 'showOpenDialog',
               value: { filePaths: [testCase.exportFile] }
@@ -72,11 +71,10 @@ describe('Environments import', () => {
     });
 
     describe('v1.6.0 with single route', () => {
-      const tests = new Tests('import');
-      tests.runHooks(true, false);
+      const tests = new Tests('import', true, true, false);
 
       it('Should reject the export file when version is different', async () => {
-        tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+        tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
           {
             method: 'showOpenDialog',
             value: {
@@ -103,11 +101,10 @@ describe('Environments import', () => {
 
   describe('Import new format (>= 1.7.0)', () => {
     describe('Environment import from file', () => {
-      const tests = new Tests('import');
-      tests.runHooks(true, false);
+      const tests = new Tests('import', true, true, false);
 
       it('Should be able to import multiple environments from the same file and migrate them', async () => {
-        tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+        tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
           {
             method: 'showOpenDialog',
             value: { filePaths: ['./test/data/import/new/full-export.json'] }
@@ -130,13 +127,11 @@ describe('Environments import', () => {
           ['0.lastMigration', '1.lastMigration'],
           [HighestMigrationId, HighestMigrationId]
         );
-
       });
     });
 
     describe('Multiple environments import from clipboard', () => {
-      const tests = new Tests('import');
-      tests.runHooks(true, false);
+      const tests = new Tests('import', true, true, false);
 
       it('Should import an environment from clipboard', async () => {
         const fileContent = await fs.readFile(
@@ -155,8 +150,7 @@ describe('Environments import', () => {
     });
 
     describe('Route import from clipboard - same version', () => {
-      const tests = new Tests('import');
-      tests.runHooks(true, false);
+      const tests = new Tests('import', true, true, false);
 
       it('Should import a route from clipboard and create an environment if has none', async () => {
         const fileContent = await fs.readFile(
@@ -178,8 +172,7 @@ describe('Environments import', () => {
     });
 
     describe('Route import from clipboard - different version', () => {
-      const tests = new Tests('import');
-      tests.runHooks(true, false);
+      const tests = new Tests('import', true, true, false);
 
       it('Should reject a route if version is different', async () => {
         const fileContent = await fs.readFile(

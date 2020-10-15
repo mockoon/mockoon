@@ -1,9 +1,7 @@
 import { Tests } from 'test/lib/tests';
 
 describe('Welcome modal', () => {
-  const tests = new Tests('welcome-modal');
-  tests.runHooks(false, false);
-  tests.waitForWindowReady();
+  const tests = new Tests('welcome-modal', true, true, false);
 
   it('Open window with Mockoon title', async () => {
     await tests.app.webContents.getTitle().should.eventually.equal('Mockoon');
