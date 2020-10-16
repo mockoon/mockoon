@@ -37,6 +37,9 @@ export class IpcService {
         case 'START_ENVIRONMENT':
           this.environmentsService.toggleActiveEnvironment();
           break;
+        case 'START_ALL_ENVIRONMENTS':
+          this.environmentsService.toggleAllEnvironments();
+          break;
         case 'DUPLICATE_ENVIRONMENT':
           this.environmentsService.duplicateEnvironment();
           break;

@@ -210,11 +210,13 @@ export function updateEnvironmentAction(properties: EnvironmentProperties) {
  * @param properties - properties to update
  */
 export function updateEnvironmentStatusAction(
-  properties: EnvironmentStatusProperties
+  properties: EnvironmentStatusProperties,
+  environmentUUID,
 ) {
   return <const>{
     type: ActionTypes.UPDATE_ENVIRONMENT_STATUS,
-    properties
+    properties,
+    environmentUUID,
   };
 }
 

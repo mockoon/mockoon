@@ -28,7 +28,8 @@ import { ToastsService } from 'src/app/services/toasts.service';
 import { pemFiles } from 'src/app/ssl';
 import {
   logRequestAction,
-  updateEnvironmentStatusAction
+  updateEnvironmentStatusAction,
+  setActiveEnvironmentAction,
 } from 'src/app/stores/actions';
 import { Store } from 'src/app/stores/store';
 import { Environment } from 'src/app/types/environment.type';
@@ -93,7 +94,7 @@ export class ServerService {
 
       this.instances[environment.uuid] = serverInstance;
       this.store.update(
-        updateEnvironmentStatusAction({ running: true, needRestart: false })
+        updateEnvironmentStatusAction({ running: true, needRestart: false }, environment.uuid),
       );
     });
 
@@ -142,7 +143,7 @@ export class ServerService {
 
         delete this.instances[environmentUUID];
         this.store.update(
-          updateEnvironmentStatusAction({ running: false, needRestart: false })
+          updateEnvironmentStatusAction({ running: false, needRestart: false }, environmentUUID)
         );
       });
     }
