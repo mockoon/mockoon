@@ -386,7 +386,7 @@ export class EnvironmentsService {
 
     // check if environments should be started or stopped. If at least one env is turned off, we'll turn all on
     const shouldStart = Object.keys(environmentsStatus)
-      .some(uuid => !environmentsStatus[uuid].running);
+      .some(uuid => !environmentsStatus[uuid].running || environmentsStatus[uuid].needRestart);
 
     environments.map(environment => {
       const environmentState = environmentsStatus[environment.uuid];
