@@ -488,17 +488,4 @@ export class ServerService {
       this.sendError(res, err, false, 500);
     });
   }
-
-  /**
-   * Make sure environment is active
-   *
-   * @param uuid - uuid of environment
-   */
-  private setActiveEnvironment (uuid) {
-    if (this.store.getActiveEnvironment().uuid !== uuid) {
-      this.store.update(
-        setActiveEnvironmentAction(uuid)
-      );
-    }
-  }
 }
