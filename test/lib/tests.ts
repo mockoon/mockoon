@@ -1,6 +1,7 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import chaiExclude from 'chai-exclude';
+import { IpcRenderer } from 'electron';
 import { constants, promises as fs } from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
@@ -12,32 +13,39 @@ const electronPath: any = require('electron');
 
 export class Tests {
   public app: Application;
+  public ipcRenderer: IpcRenderer;
   public helpers: Helpers;
 
-  constructor(private dataFileName: string, private hasSettings = true) {
+  constructor(
+    private dataFileName: string,
+    private hasSettings: boolean = true,
+    private waitUntilWindowReady: boolean = true,
+    private waitUntilEnvironmentLoaded: boolean = true,
+    private alterSettings: any = null
+  ) {
     this.helpers = new Helpers(this);
+
     chai.should();
     chai.use(chaiAsPromised);
     chai.use(chaiExclude);
+
+    this.runHooks();
   }
 
   /**
    * Before and after hooks to run prior to the tests
    */
-  public runHooks(
-    waitUntilWindowReady = true,
-    waitUntilEnvironmentLoaded = true,
-    alterSettings = null
-  ) {
+  private runHooks() {
     // copy data files before starting tests
     before(async () => {
       await this.prepareStorageFolder();
       await this.copyEnvironments();
-      await this.copySettings(alterSettings);
+      await this.copySettings(this.alterSettings);
 
       this.app = new Application({
         path: electronPath,
         quitTimeout: 2000,
+        waitTimeout: 500,
         args: [
           '-r',
           path.join(__dirname, './electron-mocks.js'),
@@ -46,10 +54,12 @@ export class Tests {
         ],
         webdriverOptions: {
           deprecationWarnings: false
-        }
+        },
+        chromeDriverArgs: [`user-data-dir=${path.resolve('./tmp')}`]
       });
-
       await this.app.start();
+      // there is a typing error in Spectron?
+      this.ipcRenderer = (this.app.electron as any).ipcRenderer;
     });
 
     after(async () => {
@@ -58,11 +68,11 @@ export class Tests {
       }
     });
 
-    if (waitUntilWindowReady) {
+    if (this.waitUntilWindowReady) {
       this.waitForWindowReady();
     }
 
-    if (waitUntilEnvironmentLoaded) {
+    if (this.waitUntilEnvironmentLoaded) {
       this.waitForEnvironmentLoaded();
     }
   }
@@ -70,7 +80,7 @@ export class Tests {
   /**
    * Wait for window to be ready and environments loaded
    */
-  public waitForWindowReady() {
+  private waitForWindowReady() {
     it('Should wait for window to be ready', async () => {
       await this.app.client.waitUntilWindowLoaded(10000);
     });
@@ -79,7 +89,7 @@ export class Tests {
   /**
    * Wait for environment to be loaded by checking for active environment menu item
    */
-  public waitForEnvironmentLoaded() {
+  private waitForEnvironmentLoaded() {
     it('Should load the environment', async () => {
       await this.helpers.assertHasActiveEnvironment();
     });

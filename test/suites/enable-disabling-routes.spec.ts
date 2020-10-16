@@ -24,7 +24,6 @@ const getAnswerCall: HttpCall[] = [
 
 describe('Enable/disable routes', () => {
   const tests = new Tests('basic-data');
-  tests.runHooks();
 
   it('Enabling environment', async () => {
     await tests.helpers.startEnvironment();
@@ -32,9 +31,8 @@ describe('Enable/disable routes', () => {
 
   it('Call untouched route', async () => {
     await tests.helpers.selectRoute(2);
-    await tests.app.client.waitForExist(
+    await tests.helpers.waitElementExist(
       '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled',
-      null,
       true
     );
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall[0], 3000);
@@ -42,7 +40,7 @@ describe('Enable/disable routes', () => {
 
   it('Disabling route /answer', async () => {
     await tests.helpers.disableRoute();
-    await tests.app.client.waitForExist(
+    await tests.helpers.waitElementExist(
       '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled'
     );
     await tests.helpers.restartEnvironment();
@@ -54,9 +52,8 @@ describe('Enable/disable routes', () => {
 
   it('Re-enable route', async () => {
     await tests.helpers.disableRoute();
-    await tests.app.client.waitForExist(
+    await tests.helpers.waitElementExist(
       '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled',
-      null,
       true
     );
     await tests.helpers.restartEnvironment();

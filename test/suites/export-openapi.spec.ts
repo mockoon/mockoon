@@ -5,12 +5,11 @@ import { v1 as uuid } from 'uuid';
 
 describe('OpenAPI export', () => {
   const tests = new Tests('export-openapi');
-  tests.runHooks(true, true);
 
   const filePath = `./tmp/storage/${uuid()}.json`;
 
   it('Should export the environment and match the reference file', async () => {
-    tests.app.electron.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+    tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
       {
         method: 'showSaveDialog',
         value: { filePath }

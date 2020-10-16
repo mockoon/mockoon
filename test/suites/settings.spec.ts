@@ -37,17 +37,16 @@ const fakerLocaleSelect = '.modal-dialog select#faker-locale';
 describe('Settings', () => {
   describe('Route path truncate', () => {
     const tests = new Tests('settings');
-    tests.runHooks();
 
     it('Path should be truncated by default', async () => {
-      await tests.app.client.waitForExist(
+      await tests.helpers.waitElementExist(
         '.routes-menu .nav.menu-list .nav-item:nth-child(2) .route-path.ellipsis'
       );
     });
 
     it('Disable route path truncate in settings and verify persistence', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.app.client.element(truncateRoutePathCheckbox).click();
+      await tests.helpers.elementClick(truncateRoutePathCheckbox);
       await tests.helpers.closeModal();
 
       // wait for settings save
@@ -60,7 +59,7 @@ describe('Settings', () => {
     });
 
     it('Path should not be truncated after setting update', async () => {
-      await tests.app.client.waitForExist(
+      await tests.helpers.waitElementExist(
         '.routes-menu .nav.menu-list .nav-item:nth-child(2) .route-path.text-break'
       );
     });
@@ -68,11 +67,10 @@ describe('Settings', () => {
 
   describe('Analytics disable', () => {
     const tests = new Tests('settings');
-    tests.runHooks();
 
     it('Disable analytics in settings and verify persistence', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.app.client.element(analyticsCheckbox).click();
+      await tests.helpers.elementClick(analyticsCheckbox);
       await tests.helpers.closeModal();
 
       // wait for settings save
@@ -87,7 +85,6 @@ describe('Settings', () => {
 
   describe('Log body truncate', () => {
     const tests = new Tests('settings');
-    tests.runHooks();
 
     it('Start the environment', async () => {
       await tests.helpers.startEnvironment();
@@ -96,7 +93,7 @@ describe('Settings', () => {
 
     it('Set log body size to 100', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.app.client.element(bodySizeInput).setValue('100');
+      await tests.helpers.setElementValue(bodySizeInput, '100');
       await tests.helpers.closeModal();
 
       // wait for settings save
@@ -128,7 +125,7 @@ describe('Settings', () => {
 
     it('Set log body size to 1000', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.app.client.element(bodySizeInput).setValue('1000');
+      await tests.helpers.setElementValue(bodySizeInput, '1000');
       await tests.helpers.closeModal();
 
       // wait for settings save
@@ -161,7 +158,6 @@ describe('Settings', () => {
 
   describe('Faker.js', () => {
     const tests = new Tests('settings');
-    tests.runHooks();
 
     it('Verify Faker.js initial settings', async () => {
       // wait for settings save
@@ -180,8 +176,12 @@ describe('Settings', () => {
 
     it('Change Faker.js settings and verify persistence', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.app.client.element(fakerSeedInput).setValue('1234');
-      await tests.app.client.selectByValue(fakerLocaleSelect, 'en_US');
+      await tests.helpers.setElementValue(fakerSeedInput, '1234');
+      await tests.helpers.selectByAttribute(
+        fakerLocaleSelect,
+        'value',
+        'en_US'
+      );
       await tests.helpers.closeModal();
 
       // wait for settings save
