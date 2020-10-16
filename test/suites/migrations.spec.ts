@@ -9,8 +9,6 @@ describe('Environments migrations', () => {
     const filesPath = 'migrations/pre-1.7.0';
     const tests = new Tests(filesPath);
 
-    tests.runHooks();
-
     it('Should add "lastMigration" property to the environment and remove it from the settings', async () => {
       await tests.helpers.waitForAutosave();
 
@@ -33,8 +31,6 @@ describe('Environments migrations', () => {
     const filesPath = 'migrations/9';
     const tests = new Tests(filesPath);
 
-    tests.runHooks();
-
     it('Should add "label" property to route responses', async () => {
       await tests.helpers.waitForAutosave();
 
@@ -51,8 +47,6 @@ describe('Environments migrations', () => {
     const filesPath = 'migrations/10';
     const tests = new Tests(filesPath);
 
-    tests.runHooks();
-
     it('Should add "proxyReqHeaders" and "proxyResHeaders" headers properties to environments', async () => {
       await tests.helpers.waitForAutosave();
 
@@ -68,8 +62,6 @@ describe('Environments migrations', () => {
   describe('No. 11', () => {
     const filesPath = 'migrations/11';
     const tests = new Tests(filesPath);
-
-    tests.runHooks();
 
     it('Should add "disableTemplating" at false to route responses', async () => {
       await tests.helpers.waitForAutosave();
@@ -93,8 +85,6 @@ describe('Environments migrations', () => {
   describe('No. 12', () => {
     const filesPath = 'migrations/12';
     const tests = new Tests(filesPath);
-
-    tests.runHooks();
 
     it('Should add "rulesOperator" at OR to route responses', async () => {
       await tests.helpers.waitForAutosave();

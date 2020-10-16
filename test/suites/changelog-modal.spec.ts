@@ -3,8 +3,7 @@ import { Tests } from 'test/lib/tests';
 
 describe('Changelog modal', () => {
   describe('Show changelog modal if never shown (software update)', () => {
-    const tests = new Tests('changelog-modal/never-shown');
-    tests.runHooks(true, false);
+    const tests = new Tests('changelog-modal/never-shown', true, true, false);
 
     it('Should show the changelog modal', async () => {
       await tests.app.client.waitUntilTextExists(
@@ -27,8 +26,7 @@ describe('Changelog modal', () => {
   });
 
   describe('Show changelog modal if last changelog shown is from older version', () => {
-    const tests = new Tests('changelog-modal/shown');
-    tests.runHooks(true, false);
+    const tests = new Tests('changelog-modal/shown', true, true, false);
 
     it('Should show the changelog modal', async () => {
       await tests.app.client.waitUntilTextExists(
@@ -51,15 +49,15 @@ describe('Changelog modal', () => {
   });
 
   describe('Do not show changelog modal if it is a fresh install', () => {
-    const tests = new Tests('changelog-modal/fresh-install', false);
-    tests.runHooks(true, false);
+    const tests = new Tests(
+      'changelog-modal/fresh-install',
+      false,
+      true,
+      false
+    );
 
     it('Should show the welcome modal only', async () => {
-      await tests.app.client
-        .elements('.modal-dialog')
-        .should.eventually.have.property('value')
-        .to.be.an('Array')
-        .that.have.lengthOf(1);
+      await tests.helpers.countElements('.modal-dialog', 1);
 
       await tests.app.client.waitUntilTextExists(
         '.modal-title',
@@ -80,11 +78,12 @@ describe('Changelog modal', () => {
   });
 
   describe('Do not show changelog modal if same version already shown', () => {
-    const tests = new Tests('changelog-modal/shown');
-    tests.runHooks(true, false, { lastChangelog: Config.appVersion });
+    const tests = new Tests('changelog-modal/shown', true, true, false, {
+      lastChangelog: Config.appVersion
+    });
 
     it('Should not show the changelog modal', async () => {
-      await tests.app.client.waitForExist('.modal-title', 10000, true);
+      await tests.helpers.waitElementExist('.modal-title', true);
 
       // wait for settings save (does not happen here)
       await tests.app.client.pause(2000);

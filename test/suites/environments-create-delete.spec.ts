@@ -3,7 +3,6 @@ import { Tests } from 'test/lib/tests';
 
 describe('Create and delete environments', () => {
   const tests = new Tests('basic-data');
-  tests.runHooks();
 
   it('Add an environment', async () => {
     // open environment menu for all the following tests
@@ -24,7 +23,7 @@ describe('Create and delete environments', () => {
   });
 
   it('Added environment should remain and be active', async () => {
-    const envName = await tests.app.client.getText(
+    const envName = await tests.helpers.getElementText(
       '.environments-menu .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type'
     );
     expect(envName).to.equal('New environment');
@@ -39,7 +38,7 @@ describe('Create and delete environments', () => {
     await tests.helpers.countEnvironments(0);
     await tests.helpers.countRoutes(0);
 
-    await tests.app.client.waitForExist(
+    await tests.helpers.waitElementExist(
       '.header input[placeholder="No environment"]'
     );
   });

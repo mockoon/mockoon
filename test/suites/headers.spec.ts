@@ -53,7 +53,6 @@ const getFileNoHeader: HttpCall = {
 
 describe('Global headers', () => {
   const tests = new Tests('headers');
-  tests.runHooks();
 
   it('Add header on route', async () => {
     await tests.helpers.switchTab('HEADERS');
@@ -85,7 +84,6 @@ describe('Global headers', () => {
 
 describe('File headers', () => {
   const tests = new Tests('headers');
-  tests.runHooks();
 
   it('Call /file should get XML content-type from route header', async () => {
     await tests.helpers.startEnvironment();

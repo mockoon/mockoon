@@ -103,7 +103,8 @@ const init = function () {
     show: isTesting ? true : false,
     webPreferences: {
       nodeIntegration: true,
-      devTools: isDev ? true : false
+      devTools: isDev ? true : false,
+      enableRemoteModule: true
     }
   });
 
@@ -344,7 +345,9 @@ const createAppMenu = function () {
           {
             label: 'Export current environment to a file (JSON)',
             click: function () {
-              mainWindow.webContents.send('keydown', { action: 'EXPORT_FILE_SELECTED' });
+              mainWindow.webContents.send('keydown', {
+                action: 'EXPORT_FILE_SELECTED'
+              });
             }
           }
         ]

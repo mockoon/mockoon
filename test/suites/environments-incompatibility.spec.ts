@@ -2,10 +2,9 @@ import { Tests } from 'test/lib/tests';
 
 describe('Environments incompatibility', () => {
   const tests = new Tests('migrations/incompatible');
-  tests.runHooks();
 
   it('Should display the incompatible environment with special design', async () => {
-    await tests.app.client.waitForExist(
+    await tests.helpers.waitElementExist(
       '.environments-menu .menu-list .nav-item:nth-child(1).pattern-danger'
     );
   });
@@ -24,7 +23,7 @@ describe('Environments incompatibility', () => {
       '.environments-menu .menu-list .nav-item:nth-child(1) .nav-link'
     );
 
-    await tests.app.client.waitForExist('.context-menu', 5000, true);
+    await tests.helpers.waitElementExist('.context-menu', true);
   });
 
   it('Should not select the incompatible environment if all other environment have been deleted', async () => {
