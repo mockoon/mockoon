@@ -386,17 +386,19 @@ export class EnvironmentsService {
 
     // check if environments should be started or stopped. If at least one env is turned off, we'll turn all on
     const shouldStart = Object.keys(environmentsStatus)
-      .map(uuid => environmentsStatus[uuid].running)
-      .some(status => !status);
+      .some(uuid => !environmentsStatus[uuid].running);
 
     environments.map(environment => {
       const environmentState = environmentsStatus[environment.uuid];
-      this.logger.info(
-        `start toggle environment ${environment.name}`,
-      );
 
       if (shouldStart) {
         if (!environmentState.running || environmentState.needRestart) {
+
+          // if needs restart, we need to stop first to prevent EADDRINUSE errors
+          if (environmentState.needRestart) {
+            this.serverService.stop(environment.uuid);
+          }
+
           this.serverService.start(environment);
         }
       } else {
