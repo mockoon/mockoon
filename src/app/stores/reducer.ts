@@ -502,8 +502,8 @@ export function environmentReducer(
         ...state.environmentsStatus
       };
 
-      newEnvironmentsStatus[state.activeEnvironmentUUID] = {
-        ...state.environmentsStatus[state.activeEnvironmentUUID],
+      newEnvironmentsStatus[action.environmentUUID] = {
+        ...state.environmentsStatus[action.environmentUUID],
         ...action.properties
       };
 

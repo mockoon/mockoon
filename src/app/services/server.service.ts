@@ -93,9 +93,8 @@ export class ServerService {
       );
 
       this.instances[environment.uuid] = serverInstance;
-      this.setActiveEnvironment(environment.uuid);
       this.store.update(
-        updateEnvironmentStatusAction({ running: true, needRestart: false })
+        updateEnvironmentStatusAction({ running: true, needRestart: false }, environment.uuid),
       );
     });
 
@@ -143,9 +142,8 @@ export class ServerService {
         this.logger.info(`Server ${environmentUUID} has been stopped`);
 
         delete this.instances[environmentUUID];
-        this.setActiveEnvironment(environmentUUID);
         this.store.update(
-          updateEnvironmentStatusAction({ running: false, needRestart: false })
+          updateEnvironmentStatusAction({ running: false, needRestart: false }, environmentUUID)
         );
       });
     }
