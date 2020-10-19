@@ -48,7 +48,7 @@
     "killable": "1.0.1",
     "mime-types": "2.1.26",
     "mkdirp": "1.0.3",
-    "object-path": "0.11.4",
+    "object-path": "0.11.5",
     "qs": "6.9.3",
     "request": "2.88.2",
     "semver": "7.1.3"
