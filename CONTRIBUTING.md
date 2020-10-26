@@ -1,18 +1,22 @@
 # Contributing to Mockoon
 
-There are many ways to contribute to Mockoon: opening bugs or issues, submitting pull requests, suggesting new features...
+There are many ways to contribute to Mockoon: opening bugs or issues, submitting pull requests, suggesting new features, etc. All contributions are welcome but, please note that Mockoon promise is to be simple, easy to use, and fast. So, not all features are worth implementing and, the maintainers may choose not to implement features that are out of Mockoon's scope, too complicated (especially UX wise) or, that didn't gather enough attention from the community. But we are open to discussion :)
 
-Before contributing please check the opened and unassigned issues. Any pull request should link to an opened issue. Pull requests not solving issues may not be accepted.
-If you want to contribute significant changes please discuss with the maintainers before starting to work.
-Please note that Mockoon promise is to be simple, easy to use, and fast. So not all features are worth implementing and maintainer may chose to not implement features that are out of Mockoon's scope.
+In case of doubt, you can always reach a maintainer on the [official chat](https://spectrum.chat/mockoon?tab=posts) to discuss your ideas or ask for support. 
 
-> Prerequisites:
-> - Node.js ^12.x.x
+## Contribution rules
 
-### Find an issue to work on
+The following rules apply to all contributions:
+
+- Always search among the opened and closed issues. Assigned issues are already being worked on, and, most of the time, cannot be reassigned.
+- Bug reports, enhancements, and features must be discussed with the maintainers regarding the implementation, changes to the UI, etc.
+- Pull requests must refer to an open issue. Pull requests not solving existing issues may not be accepted.
+- Issues and PR must follow the provided templates.
+
+## Find an issue to work on
 
 - Check for **opened unassigned** issues or open a new one (after searching for closed issues).
-- Comment on the issue and request to work on it.
+- Comment on the issue and request to work on it so it can be assigned to you.
 - After discussing the implementation, the issue will be assigned to you by a maintainer. As a rule, the assignee is the person working on the issue.
 
 Please respect this workflow to ensure that:
@@ -20,7 +24,7 @@ Please respect this workflow to ensure that:
 - It hasn't been already done/rejected.
 - You are the only one working on an issue.
 
-### Run the application in dev mode
+## Run the application in dev mode
 
 - Clone the repository: `git@github.com:mockoon/mockoon.git`
 - Run `npm install`.
@@ -28,7 +32,7 @@ Please respect this workflow to ensure that:
 
 You will get hot reload on both Angular and Electron applications.
 
-### Work on your feature or bugfix
+## Work on your feature or bugfix
 
 - Start your `feature` or `fix` from `master`
 - Cover it with spectron tests. You will find them in the `test` folder. Please try to cover at least the easiest test cases of your feature.
@@ -39,20 +43,20 @@ Branches naming convention:
 - features and enhancements: `feature/name-or-issue-number`
 - bug fixes: `fix/name-or-issue-number`
 
-### Run the tests
+## Run the tests
 
 Tests are written with Spectron and you can run them using `npm run test`. These tests will also be run on each commit or pull request by CircleCI.
 
 When running the tests locally, you will first need to run `npm run build:dev` in order to have an application build to test against.
 
-### Open a pull request
+## Open a pull request
 
 Open a pull request to be merge in the `master` branch. All branches should start from `master` and must be merged into `master`.
 Ask maintainers to review the code and be prepared to rework your code if it does not match the style or do not follow the way it's usually done (typing, reducer, etc).
 
 ---
 
-### **[Maintainers only]** Build and package the application for production
+## **[Maintainers only]** Build and package the application for production
 
 - Increment the version (which follows [semver](https://semver.org/)) in package.json file.
 - Push.
@@ -70,7 +74,7 @@ Note that Windows and Mac OS versions need to be signed (and notarized) when pac
 
 **/!\\ Auto update depends on GitHub release proper taging (`vx.x.x`) and binaries correct naming (as set in `package.json` and `update.service.ts`). Do not change them. /!\\**
 
-### Distribute the application
+## Distribute the application
 
 Only maintainers (@255kb) are entitled to build and package the application with Windows code signing and macOS certificates.
 
