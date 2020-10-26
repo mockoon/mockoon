@@ -1,6 +1,26 @@
-![Mockoon logo](https://mockoon.com/images/logo.png)
-
-[![Download app](https://img.shields.io/badge/Download%20app-Go-green.svg?style=flat-square&colorB=1997c6)](https://mockoon.com/#download) [![Website](https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6)](https://mockoon.com/) [![Newsletter](https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square)](http://eepurl.com/dskB2X) [![Twitter](https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2)](https://twitter.com/GetMockoon) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/mockoon)
+<div align="center">
+  <a href="https://mockoon.com" alt="mockoon logo">
+    <img width="200" height="200" src="https://mockoon.com/images/logo-square.png">
+  </a>
+  <br>
+  <br>
+  <a href="https://mockoon.com/#download">
+    <img src="https://img.shields.io/badge/Download%20app-Go-green.svg?style=flat-square&colorB=1997c6"/>
+  </a>
+  <a href="https://mockoon.com/">
+    <img src="https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6"/>
+  </a>
+  <a href="http://eepurl.com/dskB2X">
+    <img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/>
+  </a>
+  <a href="https://twitter.com/GetMockoon">
+    <img src="https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2"/>
+  </a>
+  <br>
+  <a href="https://spectrum.chat/mockoon">
+    <img src="https://withspectrum.github.io/badge/badge.svg"/>
+  </a>
+</div>
 
 Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.
 It has been built with Electron and can be used on Windows (exe), Linux (deb, rpm, Appimage and Snap) and MacOS (dmg or brew). You can download it here: [mockoon.com](https://mockoon.com)
