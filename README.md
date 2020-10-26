@@ -59,12 +59,12 @@ You will find the [documentation](https://mockoon.com/docs/latest) on the offici
 
 ## Contributing
 
-If you are interested in contributing to Mockoon, please take a look at the document [CONTRIBUTING](https://github.com/mockoon/mockoon/blob/master/CONTRIBUTING.md).
+If you are interested in contributing to Mockoon, please take a look at the [contributing guidelines](https://github.com/mockoon/mockoon/blob/master/CONTRIBUTING.md).
 
 Please also take a look at our [Code of Conduct](https://github.com/mockoon/mockoon/blob/master/CODE_OF_CONDUCT.md).
 
 ## Roadmap
 
-If you want to know what will be coming in the next release you can check the [milestones](https://github.com/mockoon/mockoon/milestones) and the [project "Roadmap"](https://github.com/orgs/mockoon/projects/2).
+If you want to know what will be coming in the next release you can check the [project "Roadmap"](https://github.com/orgs/mockoon/projects/2).
 
 New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).
