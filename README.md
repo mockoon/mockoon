@@ -3,7 +3,6 @@
     <img width="200" height="200" src="https://mockoon.com/images/logo-square.png">
   </a>
   <br>
-  <br>
   <a href="https://mockoon.com/#download">
     <img src="https://img.shields.io/badge/Download%20app-Go-green.svg?style=flat-square&colorB=1997c6"/>
   </a>
@@ -20,6 +19,7 @@
   <a href="https://spectrum.chat/mockoon">
     <img src="https://withspectrum.github.io/badge/badge.svg"/>
   </a>
+  <br>
 </div>
 
 Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.
