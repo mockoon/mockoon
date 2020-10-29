@@ -245,7 +245,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       documentation: [''],
       method: [''],
       endpoint: [''],
-      enableRandomStatusCode: [false],
+      enableRandomStatusCode: [false]
     });
 
     this.activeRouteResponseForm = this.formBuilder.group({
