@@ -253,6 +253,14 @@
                             placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" ValidPath
                             formControlName="endpoint"
                             [focusOnEvent]="focusableInputs.ROUTE_PATH">
+
+                          <div class="form-inline pl-4">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input" id="enableRandomStatusCode" formControlName="enableRandomStatusCode">
+                              <label class="custom-control-label" for="enableRandomStatusCode">Enable random status Code</label>
+                            </div>
+                          </div>
+
                           <div *ngIf="environmentsStatus$ | async as environmentsStatus" class="input-group-prepend" ngbTooltip="Open route in browser (GET method only)">
                             <button
                               class="btn btn-link" [ngClass]="{'is-primary': !environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'}"
