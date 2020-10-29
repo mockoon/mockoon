@@ -334,7 +334,8 @@ export class AppComponent implements OnInit, AfterViewInit {
           {
             documentation: activeRoute.documentation,
             method: activeRoute.method,
-            endpoint: activeRoute.endpoint
+            endpoint: activeRoute.endpoint,
+            enableRandomStatusCode: activeRoute.enableRandomStatusCode
           },
           { emitEvent: false }
         );
