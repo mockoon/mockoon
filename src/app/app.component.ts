@@ -673,4 +673,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       toggleRandomResponse(uuid)
     );
   }
+
+  /**
+   * get Enable/disable random response
+   */
+  public getRandomResponse(): boolean {
+    return this.store.getActiveRoute().randomResponse;
+  }
 }

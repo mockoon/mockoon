@@ -292,8 +292,8 @@
 
                             <button type="button" class="btn btn-custom" (click)="toggleRandomResponse(activeRoute.uuid)">
                               <i
-                                [ngClass]="{'text-primary': activeRoute.randomResponse}"
-                                class="material-icons" ngbTooltip="Random response">shuffle</i>
+                                [ngClass]="{'text-primary': getRandomResponse()}"
+                                class="material-icons" ngbTooltip="Random response (will disable the rules)">shuffle</i>
                             </button>
 
                             <button type="button" class="btn btn-custom dropdown-toggle dropdown-toggle-split mr-1"
@@ -456,6 +456,14 @@
                                 <span *ngIf="activeRouteResponseLastLog$ | async as activeRouteResponseLastLog" class="btn btn-link btn-icon text-primary view-body-link" (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)">View last body sent</span>
                               </ng-container>
                             </ng-container>
+
+                            <ng-container subheading>
+                              <ng-container *ngIf="getRandomResponse()"><span class="text-warning">Activating random responses disable the rules</span></ng-container>
+                              <ng-container *ngIf="!getRandomResponse()">
+                                <span *ngIf="activeRouteResponseLastLog$ | async as activeRouteResponseLastLog" class="btn btn-link btn-icon text-primary view-body-link" (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)">View last body sent</span>
+                              </ng-container>
+                            </ng-container>
+
                           </app-title-separator>
 
                           <div class="flex-fill" *ngIf="bodyEditorConfig$ | async as bodyEditorConfig">
