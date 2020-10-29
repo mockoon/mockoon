@@ -254,13 +254,6 @@
                             formControlName="endpoint"
                             [focusOnEvent]="focusableInputs.ROUTE_PATH">
 
-                          <div class="form-inline pl-4">
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="randomResponse" formControlName="randomResponse">
-                              <label class="custom-control-label" for="randomResponse">Enable random status code</label>
-                            </div>
-                          </div>
-
                           <div *ngIf="environmentsStatus$ | async as environmentsStatus" class="input-group-prepend" ngbTooltip="Open route in browser (GET method only)">
                             <button
                               class="btn btn-link" [ngClass]="{'is-primary': !environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'}"
@@ -294,8 +287,15 @@
                           <!-- Responses dropdown -->
                           <div *ngIf="activeRouteResponse$ | async as activeRouteResponse" class="btn-group dropdown mr-1" ngbDropdown>
                             <button type="button" class="btn btn-custom" (click)="addRouteResponse()">
-                              <i class="material-icons">add</i> <span class="d-none d-xl-inline">Add response</span>
+                              <i class="material-icons" ngbTooltip="Add response">add</i>
                             </button>
+
+                            <button type="button" class="btn btn-custom" (click)="toggleRandomResponse(activeRoute.uuid)">
+                              <i
+                                [ngClass]="{'text-primary': activeRoute.randomResponse}"
+                                class="material-icons" ngbTooltip="Random response">shuffle</i>
+                            </button>
+
                             <button type="button" class="btn btn-custom dropdown-toggle dropdown-toggle-split mr-1"
                               role="button" id="route-responses-dropdown" aria-haspopup="true" aria-expanded="false"
                               ngbDropdownToggle>

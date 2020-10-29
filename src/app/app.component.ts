@@ -47,7 +47,7 @@ import { IpcService } from 'src/app/services/ipc.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { UIService } from 'src/app/services/ui.service';
-import { clearLogsAction, updateUIStateAction } from 'src/app/stores/actions';
+import { clearLogsAction, updateUIStateAction, toggleRandomResponse } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import {
   DuplicatedRoutesTypes,
@@ -244,8 +244,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.activeRouteForm = this.formBuilder.group({
       documentation: [''],
       method: [''],
-      endpoint: [''],
-      randomResponse: [false]
+      endpoint: ['']
     });
 
     this.activeRouteResponseForm = this.formBuilder.group({
@@ -334,8 +333,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           {
             documentation: activeRoute.documentation,
             method: activeRoute.method,
-            endpoint: activeRoute.endpoint,
-            randomResponse: activeRoute.randomResponse
+            endpoint: activeRoute.endpoint
           },
           { emitEvent: false }
         );
@@ -665,5 +663,14 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   public duplicateRouteResponse() {
     this.environmentsService.duplicateRouteResponse();
+  }
+
+  /**
+   * Enable/disable random response
+   */
+  public toggleRandomResponse(uuid: string) {
+    this.store.update(
+      toggleRandomResponse(uuid)
+    );
   }
 }

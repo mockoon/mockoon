@@ -51,7 +51,8 @@ export const enum ActionTypes {
   REMOVE_TOAST,
   SET_USER_ID,
   UPDATE_SETTINGS,
-  UPDATE_UI_STATE
+  UPDATE_UI_STATE,
+  TOGGLE_RANDOM_RESPONSE
 }
 
 /**
@@ -438,6 +439,16 @@ export function updateUIStateAction(properties: UIStateProperties) {
   };
 }
 
+/**
+ * Enable/disable random response
+ */
+export function toggleRandomResponse(uuid: string) {
+  return <const>{
+    type: ActionTypes.TOGGLE_RANDOM_RESPONSE,
+    uuid
+  };
+}
+
 export type Actions =
   | ReturnType<typeof setActiveTabAction>
   | ReturnType<typeof setActiveViewAction>
@@ -468,4 +479,5 @@ export type Actions =
   | ReturnType<typeof removeToastAction>
   | ReturnType<typeof setUserIdAction>
   | ReturnType<typeof updateUIStateAction>
-  | ReturnType<typeof updateSettingsAction>;
+  | ReturnType<typeof updateSettingsAction>
+  | ReturnType<typeof toggleRandomResponse>;
