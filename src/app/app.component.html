@@ -459,9 +459,6 @@
 
                             <ng-container subheading>
                               <ng-container *ngIf="getRandomResponse()"><span class="text-warning">Activating random responses disable the rules</span></ng-container>
-                              <ng-container *ngIf="!getRandomResponse()">
-                                <span *ngIf="activeRouteResponseLastLog$ | async as activeRouteResponseLastLog" class="btn btn-link btn-icon text-primary view-body-link" (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)">View last body sent</span>
-                              </ng-container>
                             </ng-container>
 
                           </app-title-separator>
