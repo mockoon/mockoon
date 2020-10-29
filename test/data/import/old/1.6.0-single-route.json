@@ -8,6 +8,7 @@
       "documentation": "",
       "method": "get",
       "endpoint": "",
+      "enableRandomStatusCode": false,
       "responses": [
           {
               "uuid": "816fce72-182b-11ea-a5a0-15df2a5a02df",

@@ -16,22 +16,23 @@
                     "documentation": "",
                     "method": "get",
                     "endpoint": "answer",
+                    "enableRandomStatusCode": false,
                     "responses": [
-                        {
-                            "uuid": "2b442242-182a-11ea-9403-175bcb1c5f7f",
-                            "statusCode": "200",
-                            "latency": 0,
-                            "filePath": "",
-                            "sendFileAsBody": false,
-                            "headers": [
-                                {
-                                    "key": "Content-Type",
-                                    "value": "application/json"
-                                }
-                            ],
-                            "body": "{\n  \"response\": 42\n}",
-                            "rules": []
-                        }
+                      {
+                        "uuid": "2b442242-182a-11ea-9403-175bcb1c5f7f",
+                        "statusCode": "200",
+                        "latency": 0,
+                        "filePath": "",
+                        "sendFileAsBody": false,
+                        "headers": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ],
+                        "body": "{\n  \"response\": 42\n}",
+                        "rules": []
+                      }
                     ],
                     "enabled": true
                 }

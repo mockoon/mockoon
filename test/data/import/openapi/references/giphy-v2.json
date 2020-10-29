@@ -12,6 +12,7 @@
         "documentation": "Get GIFs by ID",
         "method": "get",
         "endpoint": "gifs",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1fec841-e7d4-11ea-a5ec-979674ac1a4b",
@@ -86,6 +87,7 @@
         "documentation": "Random GIF",
         "method": "get",
         "endpoint": "gifs/random",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1feef55-e7d4-11ea-a5ec-979674ac1a4b",
@@ -160,6 +162,7 @@
         "documentation": "Search GIFs",
         "method": "get",
         "endpoint": "gifs/search",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1feef5b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -234,6 +237,7 @@
         "documentation": "Translate phrase to GIF",
         "method": "get",
         "endpoint": "gifs/translate",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1feef61-e7d4-11ea-a5ec-979674ac1a4b",
@@ -308,6 +312,7 @@
         "documentation": "Trending GIFs",
         "method": "get",
         "endpoint": "gifs/trending",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1ff1665-e7d4-11ea-a5ec-979674ac1a4b",
@@ -382,6 +387,7 @@
         "documentation": "Get GIF by Id",
         "method": "get",
         "endpoint": "gifs/:gifId",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1ff166b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -456,6 +462,7 @@
         "documentation": "Random Sticker",
         "method": "get",
         "endpoint": "stickers/random",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1ff3d75-e7d4-11ea-a5ec-979674ac1a4b",
@@ -530,6 +537,7 @@
         "documentation": "Search Stickers",
         "method": "get",
         "endpoint": "stickers/search",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1ff3d7b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -604,6 +612,7 @@
         "documentation": "Translate phrase to Sticker",
         "method": "get",
         "endpoint": "stickers/translate",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d1ff3d81-e7d4-11ea-a5ec-979674ac1a4b",
@@ -678,6 +687,7 @@
         "documentation": "Trending Stickers",
         "method": "get",
         "endpoint": "stickers/trending",
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "d20000c5-e7d4-11ea-a5ec-979674ac1a4b",

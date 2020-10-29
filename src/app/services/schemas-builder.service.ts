@@ -101,7 +101,6 @@ export class SchemasBuilderService {
           ...this.buildRoute(),
           method: 'get',
           endpoint: 'users',
-          enableRandomStatusCode: false,
           documentation:
             'Generate random body (JSON, text, CSV, etc) with templating',
           responses: [

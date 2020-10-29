@@ -12,6 +12,7 @@
         "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
         "documentation": "Test documentation",
         "enabled": true,
+        "enableRandomStatusCode": false,
         "responses": [
           {
             "uuid": "505a77b1-34c7-4af8-adde-ed00b8dd29bf",
