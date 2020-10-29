@@ -12,7 +12,7 @@
         "documentation": "Returns Docket information",
         "method": "get",
         "endpoint": "docket.:response_format",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "b8701e61-e7d4-11ea-a5ec-979674ac1a4b",
@@ -61,7 +61,7 @@
         "documentation": "Returns Document information",
         "method": "get",
         "endpoint": "document.:response_format",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "b8701e65-e7d4-11ea-a5ec-979674ac1a4b",
@@ -110,7 +110,7 @@
         "documentation": "Search for Documents",
         "method": "get",
         "endpoint": "documents.:response_format",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "b8701e69-e7d4-11ea-a5ec-979674ac1a4b",

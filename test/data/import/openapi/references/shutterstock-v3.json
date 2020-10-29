@@ -12,7 +12,7 @@
         "documentation": "List audio tracks",
         "method": "get",
         "endpoint": "v2/audio",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d4711-e7d4-11ea-a5ec-979674ac1a4b",
@@ -74,7 +74,7 @@
         "documentation": "List audio collections",
         "method": "get",
         "endpoint": "v2/audio/collections",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d4716-e7d4-11ea-a5ec-979674ac1a4b",
@@ -136,7 +136,7 @@
         "documentation": "Create audio collections",
         "method": "post",
         "endpoint": "v2/audio/collections",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d471b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -211,7 +211,7 @@
         "documentation": "Delete audio collections",
         "method": "delete",
         "endpoint": "v2/audio/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d4721-e7d4-11ea-a5ec-979674ac1a4b",
@@ -286,7 +286,7 @@
         "documentation": "Get the details of audio collections",
         "method": "get",
         "endpoint": "v2/audio/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d4727-e7d4-11ea-a5ec-979674ac1a4b",
@@ -361,7 +361,7 @@
         "documentation": "Rename audio collections",
         "method": "post",
         "endpoint": "v2/audio/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d472d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -436,7 +436,7 @@
         "documentation": "Remove audio tracks from collections",
         "method": "delete",
         "endpoint": "v2/audio/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d4733-e7d4-11ea-a5ec-979674ac1a4b",
@@ -511,7 +511,7 @@
         "documentation": "Get the contents of audio collections",
         "method": "get",
         "endpoint": "v2/audio/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d4739-e7d4-11ea-a5ec-979674ac1a4b",
@@ -573,7 +573,7 @@
         "documentation": "Add audio tracks to collections",
         "method": "post",
         "endpoint": "v2/audio/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d473e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -648,7 +648,7 @@
         "documentation": "List audio genres",
         "method": "get",
         "endpoint": "v2/audio/genres",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e20-e7d4-11ea-a5ec-979674ac1a4b",
@@ -671,7 +671,7 @@
         "documentation": "List audio instruments",
         "method": "get",
         "endpoint": "v2/audio/instruments",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e22-e7d4-11ea-a5ec-979674ac1a4b",
@@ -694,7 +694,7 @@
         "documentation": "List audio licenses",
         "method": "get",
         "endpoint": "v2/audio/licenses",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e24-e7d4-11ea-a5ec-979674ac1a4b",
@@ -756,7 +756,7 @@
         "documentation": "License audio tracks",
         "method": "post",
         "endpoint": "v2/audio/licenses",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e29-e7d4-11ea-a5ec-979674ac1a4b",
@@ -818,7 +818,7 @@
         "documentation": "Download audio tracks",
         "method": "post",
         "endpoint": "v2/audio/licenses/:id/downloads",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e2e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -880,7 +880,7 @@
         "documentation": "List audio moods",
         "method": "get",
         "endpoint": "v2/audio/moods",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e33-e7d4-11ea-a5ec-979674ac1a4b",
@@ -903,7 +903,7 @@
         "documentation": "Search for tracks",
         "method": "get",
         "endpoint": "v2/audio/search",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e35-e7d4-11ea-a5ec-979674ac1a4b",
@@ -965,7 +965,7 @@
         "documentation": "Get details about audio tracks",
         "method": "get",
         "endpoint": "v2/audio/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e3a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1027,7 +1027,7 @@
         "documentation": "Get details about multiple contributors",
         "method": "get",
         "endpoint": "v2/contributors",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e3f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1089,7 +1089,7 @@
         "documentation": "Get details about a single contributor",
         "method": "get",
         "endpoint": "v2/contributors/:contributor_id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e44-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1151,7 +1151,7 @@
         "documentation": "List contributors' collections",
         "method": "get",
         "endpoint": "v2/contributors/:contributor_id/collections",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e49-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1226,7 +1226,7 @@
         "documentation": "Get details about contributors' collections",
         "method": "get",
         "endpoint": "v2/contributors/:contributor_id/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e4f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1301,7 +1301,7 @@
         "documentation": "Get the items in contributors' collections",
         "method": "get",
         "endpoint": "v2/contributors/:contributor_id/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e55-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1376,7 +1376,7 @@
         "documentation": "Upload images",
         "method": "post",
         "endpoint": "v2/cv/images",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e5b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1464,7 +1464,7 @@
         "documentation": "List similar images",
         "method": "get",
         "endpoint": "v2/cv/similar/images",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98d6e62-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1526,7 +1526,7 @@
         "documentation": "List similar videos",
         "method": "get",
         "endpoint": "v2/cv/similar/videos",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98dbc44-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1588,7 +1588,7 @@
         "documentation": "License editorial content",
         "method": "post",
         "endpoint": "v2/editorial/licenses",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98dbc49-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1663,7 +1663,7 @@
         "documentation": "Get editorial livefeed list",
         "method": "get",
         "endpoint": "v2/editorial/livefeeds",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98dbc4f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1738,7 +1738,7 @@
         "documentation": "Get editorial livefeed",
         "method": "get",
         "endpoint": "v2/editorial/livefeeds/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98dbc55-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1813,7 +1813,7 @@
         "documentation": "Get editorial livefeed items",
         "method": "get",
         "endpoint": "v2/editorial/livefeeds/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98dbc5b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1888,7 +1888,7 @@
         "documentation": "Search editorial content",
         "method": "get",
         "endpoint": "v2/editorial/search",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98de354-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1963,7 +1963,7 @@
         "documentation": "Get editorial content details",
         "method": "get",
         "endpoint": "v2/editorial/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98de35a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2038,7 +2038,7 @@
         "documentation": "List images",
         "method": "get",
         "endpoint": "v2/images",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98de360-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2100,7 +2100,7 @@
         "documentation": "Upload ephemeral images",
         "method": "post",
         "endpoint": "v2/images",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98de365-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2175,7 +2175,7 @@
         "documentation": "List image categories",
         "method": "get",
         "endpoint": "v2/images/categories",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98de36b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2237,7 +2237,7 @@
         "documentation": "List image collections",
         "method": "get",
         "endpoint": "v2/images/collections",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a64-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2299,7 +2299,7 @@
         "documentation": "Create image collections",
         "method": "post",
         "endpoint": "v2/images/collections",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a69-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2374,7 +2374,7 @@
         "documentation": "List featured image collections",
         "method": "get",
         "endpoint": "v2/images/collections/featured",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a6f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2436,7 +2436,7 @@
         "documentation": "Get the details of featured image collections",
         "method": "get",
         "endpoint": "v2/images/collections/featured/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a74-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2511,7 +2511,7 @@
         "documentation": "Get the contents of featured image collections",
         "method": "get",
         "endpoint": "v2/images/collections/featured/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a7a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2586,7 +2586,7 @@
         "documentation": "Delete image collections",
         "method": "delete",
         "endpoint": "v2/images/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a80-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2661,7 +2661,7 @@
         "documentation": "Get the details of image collections",
         "method": "get",
         "endpoint": "v2/images/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a86-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2723,7 +2723,7 @@
         "documentation": "Rename image collections",
         "method": "post",
         "endpoint": "v2/images/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a8b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2798,7 +2798,7 @@
         "documentation": "Remove images from collections",
         "method": "delete",
         "endpoint": "v2/images/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a91-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2873,7 +2873,7 @@
         "documentation": "Get the contents of image collections",
         "method": "get",
         "endpoint": "v2/images/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a97-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2935,7 +2935,7 @@
         "documentation": "Add images to collections",
         "method": "post",
         "endpoint": "v2/images/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0a9c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3010,7 +3010,7 @@
         "documentation": "List image licenses",
         "method": "get",
         "endpoint": "v2/images/licenses",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0aa2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3072,7 +3072,7 @@
         "documentation": "License images",
         "method": "post",
         "endpoint": "v2/images/licenses",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0aa7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3134,7 +3134,7 @@
         "documentation": "Download images",
         "method": "post",
         "endpoint": "v2/images/licenses/:id/downloads",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0aac-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3196,7 +3196,7 @@
         "documentation": "List recommended images",
         "method": "get",
         "endpoint": "v2/images/recommendations",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0ab1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3258,7 +3258,7 @@
         "documentation": "Search for images",
         "method": "get",
         "endpoint": "v2/images/search",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e0ab6-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3320,7 +3320,7 @@
         "documentation": "List updated images",
         "method": "get",
         "endpoint": "v2/images/updated",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e3174-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3343,7 +3343,7 @@
         "documentation": "Get details about images",
         "method": "get",
         "endpoint": "v2/images/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e3176-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3405,7 +3405,7 @@
         "documentation": "List similar images",
         "method": "get",
         "endpoint": "v2/images/:id/similar",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e317b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3467,7 +3467,7 @@
         "documentation": "Get access tokens",
         "method": "post",
         "endpoint": "v2/oauth/access_token",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e5884-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3529,7 +3529,7 @@
         "documentation": "Authorize applications",
         "method": "get",
         "endpoint": "v2/oauth/authorize",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e5889-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3604,7 +3604,7 @@
         "documentation": "Echo text",
         "method": "get",
         "endpoint": "v2/test",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e588f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3666,7 +3666,7 @@
         "documentation": "Validate input",
         "method": "get",
         "endpoint": "v2/test/validate",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e5894-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3728,7 +3728,7 @@
         "documentation": "Get user details",
         "method": "get",
         "endpoint": "v2/user",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e5899-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3790,7 +3790,7 @@
         "documentation": "Get access token details",
         "method": "get",
         "endpoint": "v2/user/access_token",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e589e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3852,7 +3852,7 @@
         "documentation": "List user subscriptions",
         "method": "get",
         "endpoint": "v2/user/subscriptions",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e58a3-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3914,7 +3914,7 @@
         "documentation": "List videos",
         "method": "get",
         "endpoint": "v2/videos",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e58a8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3976,7 +3976,7 @@
         "documentation": "List video categories",
         "method": "get",
         "endpoint": "v2/videos/categories",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7f94-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4038,7 +4038,7 @@
         "documentation": "List video collections",
         "method": "get",
         "endpoint": "v2/videos/collections",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7f99-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4100,7 +4100,7 @@
         "documentation": "Create video collections",
         "method": "post",
         "endpoint": "v2/videos/collections",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7f9e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4175,7 +4175,7 @@
         "documentation": "Delete video collections",
         "method": "delete",
         "endpoint": "v2/videos/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7fa4-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4250,7 +4250,7 @@
         "documentation": "Get the details of video collections",
         "method": "get",
         "endpoint": "v2/videos/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7faa-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4312,7 +4312,7 @@
         "documentation": "Rename video collections",
         "method": "post",
         "endpoint": "v2/videos/collections/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7faf-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4387,7 +4387,7 @@
         "documentation": "Remove videos from collections",
         "method": "delete",
         "endpoint": "v2/videos/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7fb5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4462,7 +4462,7 @@
         "documentation": "Get the contents of video collections",
         "method": "get",
         "endpoint": "v2/videos/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7fbb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4524,7 +4524,7 @@
         "documentation": "Add videos to collections",
         "method": "post",
         "endpoint": "v2/videos/collections/:id/items",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7fc0-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4599,7 +4599,7 @@
         "documentation": "List video licenses",
         "method": "get",
         "endpoint": "v2/videos/licenses",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7fc6-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4661,7 +4661,7 @@
         "documentation": "License videos",
         "method": "post",
         "endpoint": "v2/videos/licenses",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7fcb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4723,7 +4723,7 @@
         "documentation": "Download videos",
         "method": "post",
         "endpoint": "v2/videos/licenses/:id/downloads",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7fd0-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4785,7 +4785,7 @@
         "documentation": "Search for videos",
         "method": "get",
         "endpoint": "v2/videos/search",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98e7fd5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4860,7 +4860,7 @@
         "documentation": "List updated videos",
         "method": "get",
         "endpoint": "v2/videos/updated",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98ea6a5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4883,7 +4883,7 @@
         "documentation": "Get details about videos",
         "method": "get",
         "endpoint": "v2/videos/:id",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98ea6a7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4958,7 +4958,7 @@
         "documentation": "List similar videos",
         "method": "get",
         "endpoint": "v2/videos/:id/similar",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f98ea6ad-e7d4-11ea-a5ec-979674ac1a4b",

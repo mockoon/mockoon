@@ -9,7 +9,7 @@
               "endpoint": "answer",
               "documentation": "",
               "enabled": true,
-              "enableRandomStatusCode": false,
+              "randomResponse": false,
               "responses": [
                   {
                       "uuid": "",

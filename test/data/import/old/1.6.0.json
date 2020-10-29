@@ -16,7 +16,7 @@
                     "documentation": "",
                     "method": "get",
                     "endpoint": "answer",
-                    "enableRandomStatusCode": false,
+                    "randomResponse": false,
                     "responses": [
                       {
                         "uuid": "2b442242-182a-11ea-9403-175bcb1c5f7f",

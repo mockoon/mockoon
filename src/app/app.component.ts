@@ -245,7 +245,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       documentation: [''],
       method: [''],
       endpoint: [''],
-      enableRandomStatusCode: [false]
+      randomResponse: [false]
     });
 
     this.activeRouteResponseForm = this.formBuilder.group({
@@ -335,7 +335,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             documentation: activeRoute.documentation,
             method: activeRoute.method,
             endpoint: activeRoute.endpoint,
-            enableRandomStatusCode: activeRoute.enableRandomStatusCode
+            randomResponse: activeRoute.randomResponse
           },
           { emitEvent: false }
         );

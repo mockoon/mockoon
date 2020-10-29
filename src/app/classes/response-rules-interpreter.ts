@@ -18,7 +18,7 @@ export class ResponseRulesInterpreter {
   constructor(
     private routeResponses: RouteResponse[],
     private request: Request,
-    private enableRandomStatusCode: Boolean
+    private randomResponse: Boolean
   ) {
     this.extractTargets();
   }
@@ -28,7 +28,7 @@ export class ResponseRulesInterpreter {
    * If no rule has been fulfilled get the first route response.
    */
   public chooseResponse(): RouteResponse {
-    if (this.enableRandomStatusCode) {
+    if (this.randomResponse) {
       const randomStatus = Math.floor(Math.random() * this.routeResponses.length) + 1;
       let response = this.routeResponses[randomStatus];
 

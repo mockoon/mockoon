@@ -12,7 +12,7 @@
         "documentation": "Add a new pet to the store",
         "method": "post",
         "endpoint": "pet",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fe9f1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -35,7 +35,7 @@
         "documentation": "Update an existing pet",
         "method": "put",
         "endpoint": "pet",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fe9f3-e7d4-11ea-a5ec-979674ac1a4b",
@@ -84,7 +84,7 @@
         "documentation": "Finds Pets by status",
         "method": "get",
         "endpoint": "pet/findByStatus",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fe9f7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -120,7 +120,7 @@
         "documentation": "Finds Pets by tags",
         "method": "get",
         "endpoint": "pet/findByTags",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fe9fa-e7d4-11ea-a5ec-979674ac1a4b",
@@ -156,7 +156,7 @@
         "documentation": "Find pet by ID",
         "method": "get",
         "endpoint": "pet/:petId",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fe9fd-e7d4-11ea-a5ec-979674ac1a4b",
@@ -205,7 +205,7 @@
         "documentation": "Updates a pet in the store with form data",
         "method": "post",
         "endpoint": "pet/:petId",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fea01-e7d4-11ea-a5ec-979674ac1a4b",
@@ -228,7 +228,7 @@
         "documentation": "Deletes a pet",
         "method": "delete",
         "endpoint": "pet/:petId",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fea03-e7d4-11ea-a5ec-979674ac1a4b",
@@ -264,7 +264,7 @@
         "documentation": "uploads an image",
         "method": "post",
         "endpoint": "pet/:petId/uploadImage",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fea06-e7d4-11ea-a5ec-979674ac1a4b",
@@ -287,7 +287,7 @@
         "documentation": "Returns pet inventories by status",
         "method": "get",
         "endpoint": "store/inventory",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fea08-e7d4-11ea-a5ec-979674ac1a4b",
@@ -310,7 +310,7 @@
         "documentation": "Place an order for a pet",
         "method": "post",
         "endpoint": "store/order",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73fea0a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -346,7 +346,7 @@
         "documentation": "Find purchase order by ID",
         "method": "get",
         "endpoint": "store/order/:orderId",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e7401102-e7d4-11ea-a5ec-979674ac1a4b",
@@ -395,7 +395,7 @@
         "documentation": "Delete purchase order by ID",
         "method": "delete",
         "endpoint": "store/order/:orderId",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e7401106-e7d4-11ea-a5ec-979674ac1a4b",
@@ -431,7 +431,7 @@
         "documentation": "Create user",
         "method": "post",
         "endpoint": "user",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e7401109-e7d4-11ea-a5ec-979674ac1a4b",
@@ -454,7 +454,7 @@
         "documentation": "Creates list of users with given input array",
         "method": "post",
         "endpoint": "user/createWithArray",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e740110b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -477,7 +477,7 @@
         "documentation": "Creates list of users with given input array",
         "method": "post",
         "endpoint": "user/createWithList",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e740110d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -500,7 +500,7 @@
         "documentation": "Logs user into the system",
         "method": "get",
         "endpoint": "user/login",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e740110f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -540,7 +540,7 @@
         "documentation": "Logs out current logged in user session",
         "method": "get",
         "endpoint": "user/logout",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e7401112-e7d4-11ea-a5ec-979674ac1a4b",
@@ -563,7 +563,7 @@
         "documentation": "Get user by user name",
         "method": "get",
         "endpoint": "user/:username",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e7401114-e7d4-11ea-a5ec-979674ac1a4b",
@@ -612,7 +612,7 @@
         "documentation": "Updated user",
         "method": "put",
         "endpoint": "user/:username",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e7401118-e7d4-11ea-a5ec-979674ac1a4b",
@@ -648,7 +648,7 @@
         "documentation": "Delete user",
         "method": "delete",
         "endpoint": "user/:username",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e740111b-e7d4-11ea-a5ec-979674ac1a4b",

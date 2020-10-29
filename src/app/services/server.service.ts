@@ -210,7 +210,7 @@ export class ServerService {
               const enabledRouteResponse = new ResponseRulesInterpreter(
                 currentRoute.responses,
                 req,
-                currentRoute.enableRandomStatusCode,
+                currentRoute.randomResponse,
               ).chooseResponse();
 
               // save route and response UUIDs for logs

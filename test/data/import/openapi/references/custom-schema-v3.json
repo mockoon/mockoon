@@ -12,7 +12,7 @@
         "documentation": "",
         "method": "get",
         "endpoint": "endpoint",
-        "enableRandomStatusCode": false,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "a88fc9a1-e7d4-11ea-a5ec-979674ac1a4b",
