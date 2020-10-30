@@ -290,9 +290,9 @@
                               <i class="material-icons" ngbTooltip="Add response">add</i>
                             </button>
 
-                            <button type="button" class="btn btn-custom" (click)="toggleRandomResponse(activeRoute.uuid)">
+                            <button type="button" class="btn btn-custom" (click)="toggleRandomResponse(activeRoute.randomResponse)">
                               <i
-                                [ngClass]="{'text-primary': getRandomResponse()}"
+                                [ngClass]="{'text-primary': activeRoute.randomResponse}"
                                 class="material-icons" ngbTooltip="Random response (will disable the rules)">shuffle</i>
                             </button>
 
@@ -457,9 +457,6 @@
                               </ng-container>
                             </ng-container>
 
-                            <ng-container subheading>
-                              <ng-container *ngIf="getRandomResponse()"><span class="text-warning">Activating random responses disable the rules</span></ng-container>
-                            </ng-container>
 
                           </app-title-separator>
 

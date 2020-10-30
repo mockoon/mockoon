@@ -47,7 +47,7 @@ import { IpcService } from 'src/app/services/ipc.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { UIService } from 'src/app/services/ui.service';
-import { clearLogsAction, updateUIStateAction, toggleRandomResponse } from 'src/app/stores/actions';
+import { clearLogsAction, updateUIStateAction, updateRouteAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import {
   DuplicatedRoutesTypes,
@@ -668,9 +668,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   /**
    * Enable/disable random response
    */
-  public toggleRandomResponse(uuid: string) {
+  public toggleRandomResponse(randomResponse: boolean) {
     this.store.update(
-      toggleRandomResponse(uuid)
+      updateRouteAction({
+        randomResponse: !randomResponse
+      })
     );
   }
 

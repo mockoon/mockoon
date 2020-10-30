@@ -907,38 +907,6 @@ export function environmentReducer(
       break;
     }
 
-    case ActionTypes.TOGGLE_RANDOM_RESPONSE: {
-      const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === state.activeEnvironmentUUID) {
-          const routes = [...environment.routes];
-
-          return {
-            ...environment,
-            routes: routes.map(route => {
-              if (route.uuid === action.uuid) {
-                return {
-                  ...route,
-                  randomResponse: !route.randomResponse
-                };
-              }
-
-              return { ...route };
-            })
-          };
-        }
-
-
-        return environment;
-      });
-
-      newState = {
-        ...state,
-        environments: newEnvironments,
-      };
-
-      break;
-    }
-
     default:
       newState = state;
       break;

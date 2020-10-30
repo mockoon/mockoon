@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 13,
+    "lastMigration": 12,
     "name": "Migration 13",
     "endpointPrefix": "",
     "latency": 0,
@@ -13,7 +13,6 @@
         "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
         "documentation": "Test documentation",
         "enabled": true,
-        "randomResponse": false,
         "responses": [
           {
             "uuid": "505a77b1-34c7-4af8-adde-ed00b8dd29bf",
