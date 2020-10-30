@@ -58,6 +58,7 @@
         "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
         "documentation": "Test documentation",
         "enabled": true,
+
         "responses": [
           {
             "uuid": "8291b7ab-943f-4847-817d-54357c7a5c01",

@@ -13,6 +13,7 @@
         "endpoint": "answer",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "64fcbac2-1ac7-11ea-b8fd-577fb167a4ce",
@@ -52,6 +53,7 @@
         "endpoint": "answer",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "867fe03b-03f9-4c6c-a6bc-30000dddba46",

@@ -65,6 +65,7 @@
                         "endpoint": "answer",
                         "documentation": "",
                         "enabled": true,
+                        "randomResponse": false,
                         "responses": [
                             {
                                 "uuid": "",

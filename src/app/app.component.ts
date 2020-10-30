@@ -47,7 +47,7 @@ import { IpcService } from 'src/app/services/ipc.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastsService } from 'src/app/services/toasts.service';
 import { UIService } from 'src/app/services/ui.service';
-import { clearLogsAction, updateUIStateAction } from 'src/app/stores/actions';
+import { clearLogsAction, updateUIStateAction, updateRouteAction } from 'src/app/stores/actions';
 import { ReducerDirectionType } from 'src/app/stores/reducer';
 import {
   DuplicatedRoutesTypes,
@@ -663,5 +663,23 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   public duplicateRouteResponse() {
     this.environmentsService.duplicateRouteResponse();
+  }
+
+  /**
+   * Enable/disable random response
+   */
+  public toggleRandomResponse(randomResponse: boolean) {
+    this.store.update(
+      updateRouteAction({
+        randomResponse: !randomResponse
+      })
+    );
+  }
+
+  /**
+   * get Enable/disable random response
+   */
+  public getRandomResponse(): boolean {
+    return this.store.getActiveRoute().randomResponse;
   }
 }

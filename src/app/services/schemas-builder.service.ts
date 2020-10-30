@@ -57,7 +57,8 @@ export class SchemasBuilderService {
       method: 'get',
       endpoint: '',
       responses: hasDefaultRouteResponse ? [this.buildRouteResponse()] : [],
-      enabled: true
+      enabled: true,
+      randomResponse: false,
     };
   }
 

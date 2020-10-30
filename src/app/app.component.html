@@ -253,6 +253,7 @@
                             placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" ValidPath
                             formControlName="endpoint"
                             [focusOnEvent]="focusableInputs.ROUTE_PATH">
+
                           <div *ngIf="environmentsStatus$ | async as environmentsStatus" class="input-group-prepend" ngbTooltip="Open route in browser (GET method only)">
                             <button
                               class="btn btn-link" [ngClass]="{'is-primary': !environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'}"
@@ -286,8 +287,15 @@
                           <!-- Responses dropdown -->
                           <div *ngIf="activeRouteResponse$ | async as activeRouteResponse" class="btn-group dropdown mr-1" ngbDropdown>
                             <button type="button" class="btn btn-custom" (click)="addRouteResponse()">
-                              <i class="material-icons">add</i> <span class="d-none d-xl-inline">Add response</span>
+                              <i class="material-icons" ngbTooltip="Add response">add</i>
                             </button>
+
+                            <button type="button" class="btn btn-custom" (click)="toggleRandomResponse(activeRoute.randomResponse)">
+                              <i
+                                [ngClass]="{'text-primary': activeRoute.randomResponse}"
+                                class="material-icons" ngbTooltip="Random response (will disable the rules)">shuffle</i>
+                            </button>
+
                             <button type="button" class="btn btn-custom dropdown-toggle dropdown-toggle-split mr-1"
                               role="button" id="route-responses-dropdown" aria-haspopup="true" aria-expanded="false"
                               ngbDropdownToggle>
@@ -448,6 +456,8 @@
                                 <span *ngIf="activeRouteResponseLastLog$ | async as activeRouteResponseLastLog" class="btn btn-link btn-icon text-primary view-body-link" (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)">View last body sent</span>
                               </ng-container>
                             </ng-container>
+
+
                           </app-title-separator>
 
                           <div class="flex-fill" *ngIf="bodyEditorConfig$ | async as bodyEditorConfig">
