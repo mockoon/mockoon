@@ -198,7 +198,7 @@
 
                   <div class="row">
                     <div class="col">
-                      <app-title-separator heading="CORS" subheading="Automatically handle OPTIONS requests" icon="shuffle" iconClasses="text-info" docLink="cors"></app-title-separator>
+                      <app-title-separator heading="CORS" subheading="Automatically handle OPTIONS requests" icon="multiple_stop" iconClasses="text-info" docLink="cors"></app-title-separator>
 
                       <div class="form-inline pl-4">
                         <div class="custom-control custom-checkbox">
@@ -284,36 +284,39 @@
                     <ng-container *ngIf="activeTab$ | async as activeTab">
                       <div class="row mt-4" id="route-responses-menu">
                         <div class="col d-flex flex-row align-items-center">
-                          <!-- Responses dropdown -->
-                          <div *ngIf="activeRouteResponse$ | async as activeRouteResponse" class="btn-group dropdown mr-1" ngbDropdown>
-                            <button type="button" class="btn btn-custom" (click)="addRouteResponse()">
-                              <i class="material-icons" ngbTooltip="Add response">add</i>
+                          <div *ngIf="activeRouteResponse$ | async as activeRouteResponse" class="btn-group mr-1">
+                            <!-- Route responses button (add / randomize) -->
+                            <button type="button" id="route-response-add" class="btn btn-custom" (click)="addRouteResponse()" ngbTooltip="Add response">
+                              <i class="material-icons">add</i>
                             </button>
 
-                            <button type="button" class="btn btn-custom" (click)="toggleRandomResponse(activeRoute.randomResponse)">
+                            <button type="button" class="btn btn-custom" (click)="toggleRandomResponse(activeRoute.randomResponse)" ngbTooltip="Random response (will disable the rules)">
                               <i
                                 [ngClass]="{'text-primary': activeRoute.randomResponse}"
-                                class="material-icons" ngbTooltip="Random response (will disable the rules)">shuffle</i>
+                                class="material-icons">shuffle</i>
                             </button>
 
-                            <button type="button" class="btn btn-custom dropdown-toggle dropdown-toggle-split mr-1"
-                              role="button" id="route-responses-dropdown" aria-haspopup="true" aria-expanded="false"
-                              ngbDropdownToggle>
-                                <div class="route-responses-dropdown-content">
-                                  <span class="pr-2">{{activeRouteResponseIndex$ | async}}: {{activeRouteResponse?.statusCode}}</span> {{activeRouteResponse?.label}}
-                                </div>
-                            </button>
-
-                            <div class="dropdown-menu route-responses-dropdown-menu" aria-labelledby="route-responses-dropdown" ngbDropdownMenu MousedragDeadzone dragula="routeResponses"
-                            [dragulaModel]="activeRoute.responses">
-                              <button type="button" *ngFor="let routeResponse of activeRoute.responses; index as routeResponseIndex"
-                                class="btn dropdown-item d-flex"
-                                [ngClass]="{'active': activeRouteResponse?.uuid === routeResponse.uuid}"
-                                ngbDropdownItem
-                                (click)="setActiveRouteResponse(routeResponse.uuid)">
-                                <span class="flex-grow-1 mr-2 ellipsis">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}} {{routeResponse.label}}</span>
-                                <span><i *ngIf="routeResponseIndex === 0" class="material-icons text-primary" ngbTooltip="Default response served if no rule matches">flag</i></span>
+                            <!-- Route responses dropdown -->
+                            <div class="btn-group" ngbDropdown>
+                              <button type="button" class="btn btn-custom dropdown-toggle dropdown-toggle-split mr-1"
+                                role="button" id="route-responses-dropdown" aria-haspopup="true" aria-expanded="false"
+                                ngbDropdownToggle>
+                                  <div class="route-responses-dropdown-content">
+                                    <span class="pr-2">{{activeRouteResponseIndex$ | async}}: {{activeRouteResponse?.statusCode}}</span> {{activeRouteResponse?.label}}
+                                  </div>
                               </button>
+
+                              <div class="dropdown-menu route-responses-dropdown-menu" aria-labelledby="route-responses-dropdown" ngbDropdownMenu MousedragDeadzone dragula="routeResponses"
+                              [dragulaModel]="activeRoute.responses">
+                                <button type="button" *ngFor="let routeResponse of activeRoute.responses; index as routeResponseIndex"
+                                  class="btn dropdown-item d-flex"
+                                  [ngClass]="{'active': activeRouteResponse?.uuid === routeResponse.uuid}"
+                                  ngbDropdownItem
+                                  (click)="setActiveRouteResponse(routeResponse.uuid)">
+                                  <span class="flex-grow-1 mr-2 ellipsis">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}} {{routeResponse.label}}</span>
+                                  <span><i *ngIf="routeResponseIndex === 0" class="material-icons text-primary" ngbTooltip="Default response served if no rule matches">flag</i></span>
+                                </button>
+                              </div>
                             </div>
                           </div>
 
@@ -491,7 +494,7 @@
                     <ng-container *ngIf="(activeTab$ | async) === 'RULES'">
                       <div class="row flex-fill mh0">
                         <div class="col scroll-content h-100" #routeResponseRulesContainer>
-                          <app-route-response-rules [activeRouteResponse$]="activeRouteResponse$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
+                          <app-route-response-rules [activeRouteResponse$]="activeRouteResponse$" [activeRoute$]="activeRoute$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
                         </div>
                       </div>
                     </ng-container>

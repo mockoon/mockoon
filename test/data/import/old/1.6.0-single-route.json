@@ -4,27 +4,27 @@
   "checksum": "2ed2b645aa15099b9e417b90d771ff0f",
   "subject": "route",
   "data": {
-      "uuid": "816fce71-182b-11ea-a5a0-15df2a5a02df",
-      "documentation": "",
-      "method": "get",
-      "endpoint": "",
-      "responses": [
+    "uuid": "816fce71-182b-11ea-a5a0-15df2a5a02df",
+    "documentation": "",
+    "method": "get",
+    "endpoint": "",
+    "responses": [
+      {
+        "uuid": "816fce72-182b-11ea-a5a0-15df2a5a02df",
+        "body": "{}",
+        "latency": 0,
+        "statusCode": "200",
+        "headers": [
           {
-              "uuid": "816fce72-182b-11ea-a5a0-15df2a5a02df",
-              "body": "{}",
-              "latency": 0,
-              "statusCode": "200",
-              "headers": [
-                  {
-                      "key": "",
-                      "value": ""
-                  }
-              ],
-              "filePath": "",
-              "sendFileAsBody": false,
-              "rules": []
+            "key": "",
+            "value": ""
           }
-      ],
-      "enabled": true
+        ],
+        "filePath": "",
+        "sendFileAsBody": false,
+        "rules": []
+      }
+    ],
+    "enabled": true
   }
 }

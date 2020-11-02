@@ -1,33 +1,33 @@
 {
   "source": "mockoon:##appVersion##",
   "data": [
-      {
-          "type": "route",
-          "item": {
-              "uuid": "",
-              "method": "get",
-              "endpoint": "answer",
-              "documentation": "",
-              "enabled": true,
-              "responses": [
-                  {
-                      "uuid": "",
-                      "body": "42",
-                      "latency": 0,
-                      "statusCode": "200",
-                      "label": "",
-                      "headers": [
-                          {
-                              "key": "Content-Type",
-                              "value": "text/plain"
-                          }
-                      ],
-                      "filePath": "",
-                      "sendFileAsBody": false,
-                      "rules": []
-                  }
-              ]
+    {
+      "type": "route",
+      "item": {
+        "uuid": "",
+        "method": "get",
+        "endpoint": "answer",
+        "documentation": "",
+        "enabled": true,
+        "responses": [
+          {
+            "uuid": "",
+            "body": "42",
+            "latency": 0,
+            "statusCode": "200",
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
           }
+        ]
       }
+    }
   ]
 }

@@ -1,50 +1,50 @@
 {
-    "id": "mockoon_export",
-    "appVersion": "1.5.1",
-    "checksum": "2dfc9ac23b1f20784e1858a88b6492f5",
-    "subject": "full",
-    "data": [
+  "id": "mockoon_export",
+  "appVersion": "1.5.1",
+  "checksum": "2dfc9ac23b1f20784e1858a88b6492f5",
+  "subject": "full",
+  "data": [
+    {
+      "uuid": "f6fa3560-1829-11ea-94ac-c71e96bf62b9",
+      "name": "Import old v1.5.1",
+      "endpointPrefix": "",
+      "latency": 0,
+      "port": 3000,
+      "routes": [
         {
-            "uuid": "f6fa3560-1829-11ea-94ac-c71e96bf62b9",
-            "name": "Import old v1.5.1",
-            "endpointPrefix": "",
-            "latency": 0,
-            "port": 3000,
-            "routes": [
+          "uuid": "f6fa3561-1829-11ea-94ac-c71e96bf62b9",
+          "documentation": "",
+          "method": "get",
+          "endpoint": "answer",
+          "responses": [
+            {
+              "uuid": "f6fa3562-1829-11ea-94ac-c71e96bf62b9",
+              "statusCode": "200",
+              "latency": 0,
+              "filePath": "",
+              "sendFileAsBody": false,
+              "headers": [
                 {
-                    "uuid": "f6fa3561-1829-11ea-94ac-c71e96bf62b9",
-                    "documentation": "",
-                    "method": "get",
-                    "endpoint": "answer",
-                    "responses": [
-                        {
-                            "uuid": "f6fa3562-1829-11ea-94ac-c71e96bf62b9",
-                            "statusCode": "200",
-                            "latency": 0,
-                            "filePath": "",
-                            "sendFileAsBody": false,
-                            "headers": [
-                                {
-                                    "key": "Content-Type",
-                                    "value": "application/json"
-                                }
-                            ],
-                            "body": "{\n  \"response\": 42\n}",
-                            "rules": []
-                        }
-                    ]
+                  "key": "Content-Type",
+                  "value": "application/json"
                 }
-            ],
-            "proxyMode": false,
-            "proxyHost": "",
-            "https": false,
-            "cors": true,
-            "headers": [
-                {
-                    "key": "",
-                    "value": ""
-                }
-            ]
+              ],
+              "body": "{\n  \"response\": 42\n}",
+              "rules": []
+            }
+          ]
         }
-    ]
+      ],
+      "proxyMode": false,
+      "proxyHost": "",
+      "https": false,
+      "cors": true,
+      "headers": [
+        {
+          "key": "",
+          "value": ""
+        }
+      ]
+    }
+  ]
 }

@@ -4,46 +4,46 @@
   "checksum": "2a06c684e119f2c860d474607f830966",
   "subject": "environment",
   "data": {
-      "uuid": "816fce70-182b-11ea-a5a0-15df2a5a02df",
-      "name": "Import old v1.6.0 single env",
-      "endpointPrefix": "",
-      "latency": 0,
-      "port": 3000,
-      "routes": [
+    "uuid": "816fce70-182b-11ea-a5a0-15df2a5a02df",
+    "name": "Import old v1.6.0 single env",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3000,
+    "routes": [
+      {
+        "uuid": "816fce71-182b-11ea-a5a0-15df2a5a02df",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "",
+        "responses": [
           {
-              "uuid": "816fce71-182b-11ea-a5a0-15df2a5a02df",
-              "documentation": "",
-              "method": "get",
-              "endpoint": "",
-              "responses": [
-                  {
-                      "uuid": "816fce72-182b-11ea-a5a0-15df2a5a02df",
-                      "body": "{}",
-                      "latency": 0,
-                      "statusCode": "200",
-                      "headers": [
-                          {
-                              "key": "",
-                              "value": ""
-                          }
-                      ],
-                      "filePath": "",
-                      "sendFileAsBody": false,
-                      "rules": []
-                  }
-              ],
-              "enabled": true
+            "uuid": "816fce72-182b-11ea-a5a0-15df2a5a02df",
+            "body": "{}",
+            "latency": 0,
+            "statusCode": "200",
+            "headers": [
+              {
+                "key": "",
+                "value": ""
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": []
           }
-      ],
-      "proxyMode": false,
-      "proxyHost": "",
-      "https": false,
-      "cors": true,
-      "headers": [
-          {
-              "key": "Content-Type",
-              "value": "application/json"
-          }
-      ]
+        ],
+        "enabled": true
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ]
   }
 }

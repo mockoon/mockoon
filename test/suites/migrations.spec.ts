@@ -96,4 +96,19 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 13', () => {
+    const filesPath = 'migrations/13';
+    const tests = new Tests(filesPath);
+
+    it('Should add "randomResponse" to the route', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        '0.routes.0.randomResponse',
+        false
+      );
+    });
+  });
 });

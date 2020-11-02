@@ -23,6 +23,7 @@ import {
   LogicalOperators,
   ResponseRule,
   ResponseRuleTargets,
+  Route,
   RouteResponse
 } from 'src/app/types/route.type';
 
@@ -34,6 +35,7 @@ import {
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Input() activeRouteResponse$: Observable<RouteResponse>;
+  @Input() activeRoute$: Observable<Route>;
   @Output() ruleAdded: EventEmitter<any> = new EventEmitter();
   public routeResponse$: Observable<RouteResponse>;
   public form: FormGroup;

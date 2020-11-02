@@ -87,7 +87,7 @@ export class Helpers {
   }
 
   async addRouteResponse() {
-    await this.elementClick('#route-responses-menu .btn-group .btn-custom');
+    await this.elementClick('#route-responses-menu #route-response-add');
   }
 
   async removeRouteResponse() {

@@ -1,7 +1,7 @@
 [
   {
     "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -17,10 +17,10 @@
         "responses": [
           {
             "uuid": "adecd307-1c8c-4846-8e50-a37ec6aaab06",
-            "body": "{}",
+            "body": "{\"response\": \"content\"}",
             "latency": 0,
             "statusCode": 500,
-            "label": "",
+            "label": "Test",
             "headers": [
               {
                 "key": "Content-Type",
@@ -30,7 +30,14 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": [],
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "test",
+                "value": "test",
+                "isRegex": false
+              }
+            ],
             "rulesOperator": "OR"
           }
         ]

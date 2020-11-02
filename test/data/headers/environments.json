@@ -1,7 +1,7 @@
 [
   {
     "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
