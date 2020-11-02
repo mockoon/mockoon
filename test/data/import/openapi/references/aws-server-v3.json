@@ -1,7 +1,7 @@
 [
   {
     "uuid": "852d1a30-e7d4-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "AWS Server Migration Service",
     "endpointPrefix": "",
     "latency": 0,
@@ -12,6 +12,7 @@
         "documentation": "Creates an application. An application consists of one or more server groups. Each server group contain one or more servers.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.CreateApp",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d4140-e7d4-11ea-a5ec-979674ac1a4b",
@@ -34,6 +35,7 @@
         "documentation": "Creates a replication job. The replication job schedules periodic replication runs to replicate your server to AWS. Each replication run creates an Amazon Machine Image (AMI).",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.CreateReplicationJob",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d6851-e7d4-11ea-a5ec-979674ac1a4b",
@@ -56,6 +58,7 @@
         "documentation": "Deletes an existing application. Optionally deletes the launched stack associated with the application and all AWS SMS replication jobs for servers in the application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteApp",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f60-e7d4-11ea-a5ec-979674ac1a4b",
@@ -78,6 +81,7 @@
         "documentation": "Deletes existing launch configuration for an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteAppLaunchConfiguration",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f62-e7d4-11ea-a5ec-979674ac1a4b",
@@ -100,6 +104,7 @@
         "documentation": "Deletes existing replication configuration for an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteAppReplicationConfiguration",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f64-e7d4-11ea-a5ec-979674ac1a4b",
@@ -122,6 +127,7 @@
         "documentation": "<p>Deletes the specified replication job.</p> <p>After you delete a replication job, there are no further replication runs. AWS deletes the contents of the Amazon S3 bucket used to store AWS SMS artifacts. The AMIs created by the replication runs are not deleted.</p>",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteReplicationJob",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f66-e7d4-11ea-a5ec-979674ac1a4b",
@@ -144,6 +150,7 @@
         "documentation": "Deletes all servers from your server catalog.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteServerCatalog",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f68-e7d4-11ea-a5ec-979674ac1a4b",
@@ -166,6 +173,7 @@
         "documentation": "<p>Disassociates the specified connector from AWS SMS.</p> <p>After you disassociate a connector, it is no longer available to support replication jobs.</p>",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DisassociateConnector",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f6a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -188,6 +196,7 @@
         "documentation": "Generates a target change set for a currently launched stack and writes it to an Amazon S3 object in the customer’s Amazon S3 bucket.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GenerateChangeSet",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f6c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -210,6 +219,7 @@
         "documentation": "Generates an Amazon CloudFormation template based on the current launch configuration and writes it to an Amazon S3 object in the customer’s Amazon S3 bucket.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GenerateTemplate",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f6e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -232,6 +242,7 @@
         "documentation": "Retrieve information about an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetApp",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f70-e7d4-11ea-a5ec-979674ac1a4b",
@@ -254,6 +265,7 @@
         "documentation": "Retrieves the application launch configuration associated with an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetAppLaunchConfiguration",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f72-e7d4-11ea-a5ec-979674ac1a4b",
@@ -276,6 +288,7 @@
         "documentation": "Retrieves an application replication configuration associatd with an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetAppReplicationConfiguration",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f74-e7d4-11ea-a5ec-979674ac1a4b",
@@ -298,6 +311,7 @@
         "documentation": "Describes the connectors registered with the AWS SMS.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetConnectors",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852d8f76-e7d4-11ea-a5ec-979674ac1a4b",
@@ -320,6 +334,7 @@
         "documentation": "Describes the specified replication job or all of your replication jobs.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetReplicationJobs",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db671-e7d4-11ea-a5ec-979674ac1a4b",
@@ -342,6 +357,7 @@
         "documentation": "Describes the replication runs for the specified replication job.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetReplicationRuns",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db673-e7d4-11ea-a5ec-979674ac1a4b",
@@ -364,6 +380,7 @@
         "documentation": "<p>Describes the servers in your server catalog.</p> <p>Before you can describe your servers, you must import them using <a>ImportServerCatalog</a>.</p>",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetServers",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db675-e7d4-11ea-a5ec-979674ac1a4b",
@@ -386,6 +403,7 @@
         "documentation": "<p>Gathers a complete list of on-premises servers. Connectors must be installed and monitoring all servers that you want to import.</p> <p>This call returns immediately, but might take additional time to retrieve all the servers.</p>",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.ImportServerCatalog",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db677-e7d4-11ea-a5ec-979674ac1a4b",
@@ -408,6 +426,7 @@
         "documentation": "Launches an application stack.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.LaunchApp",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db679-e7d4-11ea-a5ec-979674ac1a4b",
@@ -430,6 +449,7 @@
         "documentation": "Returns a list of summaries for all applications.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.ListApps",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db67b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -452,6 +472,7 @@
         "documentation": "Creates a launch configuration for an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.PutAppLaunchConfiguration",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db67d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -474,6 +495,7 @@
         "documentation": "Creates or updates a replication configuration for an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.PutAppReplicationConfiguration",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db67f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -496,6 +518,7 @@
         "documentation": "Starts replicating an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StartAppReplication",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db681-e7d4-11ea-a5ec-979674ac1a4b",
@@ -518,6 +541,7 @@
         "documentation": "<p>Starts an on-demand replication run for the specified replication job. This replication run starts immediately. This replication run is in addition to the ones already scheduled.</p> <p>There is a limit on the number of on-demand replications runs you can request in a 24-hour period.</p>",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StartOnDemandReplicationRun",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db683-e7d4-11ea-a5ec-979674ac1a4b",
@@ -540,6 +564,7 @@
         "documentation": "Stops replicating an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StopAppReplication",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db685-e7d4-11ea-a5ec-979674ac1a4b",
@@ -562,6 +587,7 @@
         "documentation": "Terminates the stack for an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.TerminateApp",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db687-e7d4-11ea-a5ec-979674ac1a4b",
@@ -584,6 +610,7 @@
         "documentation": "Updates an application.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.UpdateApp",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db689-e7d4-11ea-a5ec-979674ac1a4b",
@@ -606,6 +633,7 @@
         "documentation": "Updates the specified settings for the specified replication job.",
         "method": "post",
         "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.UpdateReplicationJob",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "852db68b-e7d4-11ea-a5ec-979674ac1a4b",

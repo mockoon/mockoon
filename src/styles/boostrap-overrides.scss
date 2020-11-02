@@ -136,9 +136,9 @@ label {
 .btn-custom {
   @include button-variant(
     $custom-gray,
+    transparent,
     $custom-gray,
-    $custom-gray,
-    $custom-gray,
+    $gray-800,
     $custom-gray,
     $gray-800
   );
@@ -179,16 +179,6 @@ label {
     $input-btn-line-height-xxs,
     $btn-border-radius-xxs
   );
-}
-
-.btn-group {
-  .btn:first-of-type {
-    border-right: 1px solid $gray-800;
-  }
-
-  .btn:last-of-type {
-    border-left: 1px solid $gray-800;
-  }
 }
 
 .custom-select {

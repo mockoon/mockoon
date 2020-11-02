@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -13,6 +13,7 @@
         "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
         "documentation": "Test documentation",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "505a77b1-34c7-4af8-adde-ed00b8dd29bf",
@@ -40,6 +41,7 @@
         "endpoint": "answer",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "057ec98a-dd5d-4dd8-9af9-a99dd7a5c3f5",
@@ -71,6 +73,7 @@
         "endpoint": "dolphins",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",
@@ -103,7 +106,7 @@
   },
   {
     "uuid": "2cbdec80-f284-11e9-a28c-912bdc671019",
-    "lastMigration": 11,
+    "lastMigration": 13,
     "name": "Proxy",
     "endpointPrefix": "",
     "latency": 0,
@@ -124,7 +127,7 @@
   },
   {
     "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-    "lastMigration": 11,
+    "lastMigration": 13,
     "name": "Proxy disabled",
     "endpointPrefix": "",
     "latency": 0,
@@ -136,6 +139,7 @@
         "endpoint": "disabled-proxy",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "5ddcbb6a-e13d-4d4a-ac6f-2e776dc6e3e9",

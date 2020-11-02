@@ -1,7 +1,7 @@
 [
   {
     "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -13,6 +13,7 @@
         "endpoint": "headers",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "ed529d3c-c546-4939-b672-810e2d25427d",
@@ -40,6 +41,7 @@
         "endpoint": "file",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "c8563856-fe44-4970-825e-58cb6f4e7ae9",
@@ -67,6 +69,7 @@
         "endpoint": "file-noheader",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "d1454fdf-6bc3-420e-b255-2693b3ace28d",

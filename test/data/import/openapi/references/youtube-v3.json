@@ -1,7 +1,7 @@
 [
   {
     "uuid": "0c9cbbb0-e7d5-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "YouTube Analytics",
     "endpointPrefix": "",
     "latency": 0,
@@ -12,6 +12,7 @@
         "documentation": "Removes an item from a group.",
         "method": "delete",
         "endpoint": "v2/groupItems",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0c9cbbb1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -34,6 +35,7 @@
         "documentation": "Returns a collection of group items that match the API request parameters.",
         "method": "get",
         "endpoint": "v2/groupItems",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0c9cbbb3-e7d5-11ea-a5ec-979674ac1a4b",
@@ -56,6 +58,7 @@
         "documentation": "Creates a group item.",
         "method": "post",
         "endpoint": "v2/groupItems",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0c9cbbb5-e7d5-11ea-a5ec-979674ac1a4b",
@@ -78,6 +81,7 @@
         "documentation": "Deletes a group.",
         "method": "delete",
         "endpoint": "v2/groups",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0c9cbbb7-e7d5-11ea-a5ec-979674ac1a4b",
@@ -100,6 +104,7 @@
         "documentation": "Returns a collection of groups that match the API request parameters. For\nexample, you can retrieve all groups that the authenticated user owns,\nor you can retrieve one or more groups by their unique IDs.",
         "method": "get",
         "endpoint": "v2/groups",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0c9cbbb9-e7d5-11ea-a5ec-979674ac1a4b",
@@ -122,6 +127,7 @@
         "documentation": "Creates a group.",
         "method": "post",
         "endpoint": "v2/groups",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0c9cbbbb-e7d5-11ea-a5ec-979674ac1a4b",
@@ -144,6 +150,7 @@
         "documentation": "Modifies a group. For example, you could change a group's title.",
         "method": "put",
         "endpoint": "v2/groups",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0c9cbbbd-e7d5-11ea-a5ec-979674ac1a4b",
@@ -166,6 +173,7 @@
         "documentation": "Retrieve your YouTube Analytics reports.",
         "method": "get",
         "endpoint": "v2/reports",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0c9cbbbf-e7d5-11ea-a5ec-979674ac1a4b",

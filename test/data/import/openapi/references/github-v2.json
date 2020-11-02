@@ -1,7 +1,7 @@
 [
   {
     "uuid": "db17bb30-e7d4-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "GitHub",
     "endpointPrefix": "",
     "latency": 0,
@@ -12,6 +12,7 @@
         "documentation": "Lists all the emojis available to use on GitHub.",
         "method": "get",
         "endpoint": "emojis",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db17bb31-e7d4-11ea-a5ec-979674ac1a4b",
@@ -61,6 +62,7 @@
         "documentation": "List public events.",
         "method": "get",
         "endpoint": "events",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db180950-e7d4-11ea-a5ec-979674ac1a4b",
@@ -110,6 +112,7 @@
         "documentation": "List Feeds.\nGitHub provides several timeline resources in Atom format. The Feeds API\n lists all the feeds available to the authenticating user.\n",
         "method": "get",
         "endpoint": "feeds",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db180953-e7d4-11ea-a5ec-979674ac1a4b",
@@ -159,6 +162,7 @@
         "documentation": "List the authenticated user's gists or if called anonymously, this will\nreturn all public gists.\n",
         "method": "get",
         "endpoint": "gists",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db180956-e7d4-11ea-a5ec-979674ac1a4b",
@@ -208,6 +212,7 @@
         "documentation": "Create a gist.",
         "method": "post",
         "endpoint": "gists",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db180959-e7d4-11ea-a5ec-979674ac1a4b",
@@ -257,6 +262,7 @@
         "documentation": "List all public gists.",
         "method": "get",
         "endpoint": "gists/public",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18095c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -306,6 +312,7 @@
         "documentation": "List the authenticated user's starred gists.",
         "method": "get",
         "endpoint": "gists/starred",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183062-e7d4-11ea-a5ec-979674ac1a4b",
@@ -355,6 +362,7 @@
         "documentation": "Delete a gist.",
         "method": "delete",
         "endpoint": "gists/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183065-e7d4-11ea-a5ec-979674ac1a4b",
@@ -404,6 +412,7 @@
         "documentation": "Get a single gist.",
         "method": "get",
         "endpoint": "gists/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183068-e7d4-11ea-a5ec-979674ac1a4b",
@@ -453,6 +462,7 @@
         "documentation": "Edit a gist.",
         "method": "patch",
         "endpoint": "gists/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18306b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -502,6 +512,7 @@
         "documentation": "List comments on a gist.",
         "method": "get",
         "endpoint": "gists/:id/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18306e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -551,6 +562,7 @@
         "documentation": "Create a commen",
         "method": "post",
         "endpoint": "gists/:id/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183071-e7d4-11ea-a5ec-979674ac1a4b",
@@ -600,6 +612,7 @@
         "documentation": "Delete a comment.",
         "method": "delete",
         "endpoint": "gists/:id/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183074-e7d4-11ea-a5ec-979674ac1a4b",
@@ -649,6 +662,7 @@
         "documentation": "Get a single comment.",
         "method": "get",
         "endpoint": "gists/:id/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183077-e7d4-11ea-a5ec-979674ac1a4b",
@@ -698,6 +712,7 @@
         "documentation": "Edit a comment.",
         "method": "patch",
         "endpoint": "gists/:id/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18307a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -747,6 +762,7 @@
         "documentation": "Fork a gist.",
         "method": "post",
         "endpoint": "gists/:id/forks",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18307d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -816,6 +832,7 @@
         "documentation": "Unstar a gist.",
         "method": "delete",
         "endpoint": "gists/:id/star",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183081-e7d4-11ea-a5ec-979674ac1a4b",
@@ -865,6 +882,7 @@
         "documentation": "Check if a gist is starred.",
         "method": "get",
         "endpoint": "gists/:id/star",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183084-e7d4-11ea-a5ec-979674ac1a4b",
@@ -934,6 +952,7 @@
         "documentation": "Star a gist.",
         "method": "put",
         "endpoint": "gists/:id/star",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db183088-e7d4-11ea-a5ec-979674ac1a4b",
@@ -983,6 +1002,7 @@
         "documentation": "Listing available templates.\nList all templates available to pass as an option when creating a repository.\n",
         "method": "get",
         "endpoint": "gitignore/templates",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18308b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1032,6 +1052,7 @@
         "documentation": "Get a single template.",
         "method": "get",
         "endpoint": "gitignore/templates/:language",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db185772-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1081,6 +1102,7 @@
         "documentation": "List issues.\nList all issues across all the authenticated user's visible repositories.\n",
         "method": "get",
         "endpoint": "issues",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db185775-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1130,6 +1152,7 @@
         "documentation": "Find issues by state and keyword.",
         "method": "get",
         "endpoint": "legacy/issues/search/:owner/:repository/:state/:keyword",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db185778-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1179,6 +1202,7 @@
         "documentation": "Find repositories by keyword. Note, this legacy method does not follow the v3 pagination pattern. This method returns up to 100 results per page and pages can be fetched using the start_page parameter.",
         "method": "get",
         "endpoint": "legacy/repos/search/:keyword",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18577b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1228,6 +1252,7 @@
         "documentation": "This API call is added for compatibility reasons only.",
         "method": "get",
         "endpoint": "legacy/user/email/:email",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18577e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1277,6 +1302,7 @@
         "documentation": "Find users by keyword.",
         "method": "get",
         "endpoint": "legacy/user/search/:keyword",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db185781-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1326,6 +1352,7 @@
         "documentation": "Render an arbitrary Markdown document",
         "method": "post",
         "endpoint": "markdown",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db185784-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1375,6 +1402,7 @@
         "documentation": "Render a Markdown document in raw mode",
         "method": "post",
         "endpoint": "markdown/raw",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db185787-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1424,6 +1452,7 @@
         "documentation": "This gives some information about GitHub.com, the service.",
         "method": "get",
         "endpoint": "meta",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18578a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1473,6 +1502,7 @@
         "documentation": "List public events for a network of repositories.",
         "method": "get",
         "endpoint": "networks/:owner/:repo/events",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18578d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1522,6 +1552,7 @@
         "documentation": "List your notifications.\nList all notifications for the current user, grouped by repository.\n",
         "method": "get",
         "endpoint": "notifications",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db185790-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1571,6 +1602,7 @@
         "documentation": "Mark as read.\nMarking a notification as \"read\" removes it from the default view on GitHub.com.\n",
         "method": "put",
         "endpoint": "notifications",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e82-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1620,6 +1652,7 @@
         "documentation": "View a single thread.",
         "method": "get",
         "endpoint": "notifications/threads/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e85-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1669,6 +1702,7 @@
         "documentation": "Mark a thread as read",
         "method": "patch",
         "endpoint": "notifications/threads/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e88-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1718,6 +1752,7 @@
         "documentation": "Delete a Thread Subscription.",
         "method": "delete",
         "endpoint": "notifications/threads/:id/subscription",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e8b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1767,6 +1802,7 @@
         "documentation": "Get a Thread Subscription.",
         "method": "get",
         "endpoint": "notifications/threads/:id/subscription",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e8e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1816,6 +1852,7 @@
         "documentation": "Set a Thread Subscription.\nThis lets you subscribe to a thread, or ignore it. Subscribing to a thread\nis unnecessary if the user is already subscribed to the repository. Ignoring\na thread will mute all future notifications (until you comment or get @mentioned).\n",
         "method": "put",
         "endpoint": "notifications/threads/:id/subscription",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e91-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1865,6 +1902,7 @@
         "documentation": "Get an Organization.",
         "method": "get",
         "endpoint": "orgs/:org",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e94-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1914,6 +1952,7 @@
         "documentation": "Edit an Organization.",
         "method": "patch",
         "endpoint": "orgs/:org",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e97-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1963,6 +2002,7 @@
         "documentation": "List public events for an organization.",
         "method": "get",
         "endpoint": "orgs/:org/events",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e9a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2012,6 +2052,7 @@
         "documentation": "List issues.\nList all issues for a given organization for the authenticated user.\n",
         "method": "get",
         "endpoint": "orgs/:org/issues",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db187e9d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2061,6 +2102,7 @@
         "documentation": "Members list.\nList all users who are members of an organization. A member is a user tha\nbelongs to at least 1 team in the organization. If the authenticated user\nis also an owner of this organization then both concealed and public members\nwill be returned. If the requester is not an owner of the organization the\nquery will be redirected to the public members list.\n",
         "method": "get",
         "endpoint": "orgs/:org/members",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18a592-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2130,6 +2172,7 @@
         "documentation": "Remove a member.\nRemoving a user from this list will remove them from all teams and they\nwill no longer have any access to the organization's repositories.\n",
         "method": "delete",
         "endpoint": "orgs/:org/members/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18a596-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2179,6 +2222,7 @@
         "documentation": "Check if a user is, publicly or privately, a member of the organization.",
         "method": "get",
         "endpoint": "orgs/:org/members/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18a599-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2268,6 +2312,7 @@
         "documentation": "Public members list.\nMembers of an organization can choose to have their membership publicized\nor not.\n",
         "method": "get",
         "endpoint": "orgs/:org/public_members",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18a59e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2317,6 +2362,7 @@
         "documentation": "Conceal a user's membership.",
         "method": "delete",
         "endpoint": "orgs/:org/public_members/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18cca2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2366,6 +2412,7 @@
         "documentation": "Check public membership.",
         "method": "get",
         "endpoint": "orgs/:org/public_members/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18cca5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2435,6 +2482,7 @@
         "documentation": "Publicize a user's membership.",
         "method": "put",
         "endpoint": "orgs/:org/public_members/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18cca9-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2484,6 +2532,7 @@
         "documentation": "List repositories for the specified org.",
         "method": "get",
         "endpoint": "orgs/:org/repos",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccac-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2533,6 +2582,7 @@
         "documentation": "Create a new repository for the authenticated user. OAuth users must supply\nrepo scope.\n",
         "method": "post",
         "endpoint": "orgs/:org/repos",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccaf-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2582,6 +2632,7 @@
         "documentation": "List teams.",
         "method": "get",
         "endpoint": "orgs/:org/teams",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccb2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2631,6 +2682,7 @@
         "documentation": "Create team.\nIn order to create a team, the authenticated user must be an owner of organization.\n",
         "method": "post",
         "endpoint": "orgs/:org/teams",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccb5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2680,6 +2732,7 @@
         "documentation": "Get your current rate limit status\nNote: Accessing this endpoint does not count against your rate limit.\n",
         "method": "get",
         "endpoint": "rate_limit",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccb8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2729,6 +2782,7 @@
         "documentation": "Delete a Repository.\nDeleting a repository requires admin access. If OAuth is used, the delete_repo\nscope is required.\n",
         "method": "delete",
         "endpoint": "repos/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccbb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2778,6 +2832,7 @@
         "documentation": "Get repository.",
         "method": "get",
         "endpoint": "repos/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccbe-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2827,6 +2882,7 @@
         "documentation": "Edit repository.",
         "method": "patch",
         "endpoint": "repos/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccc1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2876,6 +2932,7 @@
         "documentation": "List assignees.\nThis call lists all the available assignees (owner + collaborators) to which\nissues may be assigned.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/assignees",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccc4-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2925,6 +2982,7 @@
         "documentation": "Check assignee.\nYou may also check to see if a particular user is an assignee for a repository.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/assignees/:assignee",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccc7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -2994,6 +3052,7 @@
         "documentation": "Get list of branches",
         "method": "get",
         "endpoint": "repos/:owner/:repo/branches",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18cccb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3043,6 +3102,7 @@
         "documentation": "Get Branch",
         "method": "get",
         "endpoint": "repos/:owner/:repo/branches/:branch",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccce-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3092,6 +3152,7 @@
         "documentation": "List.\nWhen authenticating as an organization owner of an organization-owned\nrepository, all organization owners are included in the list of\ncollaborators. Otherwise, only users with access to the repository are\nreturned in the collaborators list.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/collaborators",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccd1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3141,6 +3202,7 @@
         "documentation": "Remove collaborator.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/collaborators/:user",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccd4-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3190,6 +3252,7 @@
         "documentation": "Check if user is a collaborator",
         "method": "get",
         "endpoint": "repos/:owner/:repo/collaborators/:user",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccd7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3259,6 +3322,7 @@
         "documentation": "Add collaborator.",
         "method": "put",
         "endpoint": "repos/:owner/:repo/collaborators/:user",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccdb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3308,6 +3372,7 @@
         "documentation": "List commit comments for a repository.\nComments are ordered by ascending ID.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18ccde-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3357,6 +3422,7 @@
         "documentation": "Delete a commit comment",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18f3b2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3406,6 +3472,7 @@
         "documentation": "Get a single commit comment.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18f3b5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3455,6 +3522,7 @@
         "documentation": "Update a commit comment.",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18f3b8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3504,6 +3572,7 @@
         "documentation": "List commits on a repository.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/commits",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18f3bb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3553,6 +3622,7 @@
         "documentation": "Get the combined Status for a specific Ref\nThe Combined status endpoint is currently available for developers to preview. During the preview period, the API may change without advance notice. Please see the blog post for full details.\nTo access this endpoint during the preview period, you must provide a custom media type in the Accept header:\napplication/vnd.github.she-hulk-preview+json\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/commits/:ref/status",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18f3be-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3602,6 +3672,7 @@
         "documentation": "Get a single commit.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/commits/:shaCode",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db18f3c1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3651,6 +3722,7 @@
         "documentation": "List comments for a single commitList comments for a single commit.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/commits/:shaCode/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db191ac2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3700,6 +3772,7 @@
         "documentation": "Create a commit comment.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/commits/:shaCode/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1941d2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3749,6 +3822,7 @@
         "documentation": "Compare two commits",
         "method": "get",
         "endpoint": "repos/:owner/:repo/compare/:baseId...:headId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1941d5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3798,6 +3872,7 @@
         "documentation": "Delete a file.\nThis method deletes a file in a repository.\n",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/contents/:path",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968e2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3847,6 +3922,7 @@
         "documentation": "Get contents.\nThis method returns the contents of a file or directory in a repository.\nFiles and symlinks support a custom media type for getting the raw content.\nDirectories and submodules do not support custom media types.\nNote: This API supports files up to 1 megabyte in size.\nHere can be many outcomes. For details see \"http://developer.github.com/v3/repos/contents/\"\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/contents/:path",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968e5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3896,6 +3972,7 @@
         "documentation": "Create a file.",
         "method": "put",
         "endpoint": "repos/:owner/:repo/contents/:path",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968e8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3945,6 +4022,7 @@
         "documentation": "Get list of contributors.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/contributors",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968eb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -3994,6 +4072,7 @@
         "documentation": "Users with pull access can view deployments for a repository",
         "method": "get",
         "endpoint": "repos/:owner/:repo/deployments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968ee-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4043,6 +4122,7 @@
         "documentation": "Users with push access can create a deployment for a given ref",
         "method": "post",
         "endpoint": "repos/:owner/:repo/deployments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968f1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4092,6 +4172,7 @@
         "documentation": "Users with pull access can view deployment statuses for a deployment",
         "method": "get",
         "endpoint": "repos/:owner/:repo/deployments/:id/statuses",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968f4-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4141,6 +4222,7 @@
         "documentation": "Create a Deployment Status\nUsers with push access can create deployment statuses for a given deployment:\n",
         "method": "post",
         "endpoint": "repos/:owner/:repo/deployments/:id/statuses",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968f7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4190,6 +4272,7 @@
         "documentation": "Deprecated. List downloads for a repository.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/downloads",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968fa-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4239,6 +4322,7 @@
         "documentation": "Deprecated. Delete a download.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/downloads/:downloadId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1968fd-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4288,6 +4372,7 @@
         "documentation": "Deprecated. Get a single download.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/downloads/:downloadId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db196900-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4337,6 +4422,7 @@
         "documentation": "Get list of repository events.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/events",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db198ff2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4386,6 +4472,7 @@
         "documentation": "List forks.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/forks",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db198ff5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4435,6 +4522,7 @@
         "documentation": "Create a fork.\nForking a Repository happens asynchronously. Therefore, you may have to wai\na short period before accessing the git objects. If this takes longer than 5\nminutes, be sure to contact Support.\n",
         "method": "post",
         "endpoint": "repos/:owner/:repo/forks",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db198ff8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4484,6 +4572,7 @@
         "documentation": "Create a Blob.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/git/blobs",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db198ffb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4533,6 +4622,7 @@
         "documentation": "Get a Blob.\nSince blobs can be any arbitrary binary data, the input and responses for\nthe blob API takes an encoding parameter that can be either utf-8 or\nbase64. If your data cannot be losslessly sent as a UTF-8 string, you can\nbase64 encode it.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/git/blobs/:shaCode",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db198ffe-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4582,6 +4672,7 @@
         "documentation": "Create a Commit.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/git/commits",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db199001-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4631,6 +4722,7 @@
         "documentation": "Get a Commit.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/git/commits/:shaCode",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db199004-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4680,6 +4772,7 @@
         "documentation": "Get all References",
         "method": "get",
         "endpoint": "repos/:owner/:repo/git/refs",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db199007-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4729,6 +4822,7 @@
         "documentation": "Create a Reference",
         "method": "post",
         "endpoint": "repos/:owner/:repo/git/refs",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19900a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4778,6 +4872,7 @@
         "documentation": "Delete a Reference\nExample: Deleting a branch: DELETE /repos/octocat/Hello-World/git/refs/heads/feature-a\nExample: Deleting a tag:        DELETE /repos/octocat/Hello-World/git/refs/tags/v1.0\n",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/git/refs/:ref",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19900d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4827,6 +4922,7 @@
         "documentation": "Get a Reference",
         "method": "get",
         "endpoint": "repos/:owner/:repo/git/refs/:ref",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db199010-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4876,6 +4972,7 @@
         "documentation": "Update a Reference",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/git/refs/:ref",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db199013-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4925,6 +5022,7 @@
         "documentation": "Create a Tag Object.\nNote that creating a tag object does not create the reference that makes a\ntag in Git. If you want to create an annotated tag in Git, you have to do\nthis call to create the tag object, and then create the refs/tags/[tag]\nreference. If you want to create a lightweight tag, you only have to create\nthe tag reference - this call would be unnecessary.\n",
         "method": "post",
         "endpoint": "repos/:owner/:repo/git/tags",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db199016-e7d4-11ea-a5ec-979674ac1a4b",
@@ -4974,6 +5072,7 @@
         "documentation": "Get a Tag.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/git/tags/:shaCode",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db199019-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5023,6 +5122,7 @@
         "documentation": "Create a Tree.\nThe tree creation API will take nested entries as well. If both a tree and\na nested path modifying that tree are specified, it will overwrite the\ncontents of that tree with the new path contents and write a new tree out.\n",
         "method": "post",
         "endpoint": "repos/:owner/:repo/git/trees",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19901c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5072,6 +5172,7 @@
         "documentation": "Get a Tree.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/git/trees/:shaCode",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19b702-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5121,6 +5222,7 @@
         "documentation": "Get list of hooks.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/hooks",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19b705-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5170,6 +5272,7 @@
         "documentation": "Create a hook.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/hooks",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19b708-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5219,6 +5322,7 @@
         "documentation": "Delete a hook.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/hooks/:hookId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19b70b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5268,6 +5372,7 @@
         "documentation": "Get single hook.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/hooks/:hookId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19b70e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5317,6 +5422,7 @@
         "documentation": "Edit a hook.",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/hooks/:hookId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19b711-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5366,6 +5472,7 @@
         "documentation": "Test a push hook.\nThis will trigger the hook with the latest push to the current repository\nif the hook is subscribed to push events. If the hook is not subscribed\nto push events, the server will respond with 204 but no test POST will\nbe generated.\nNote: Previously /repos/:owner/:repo/hooks/:id/tes\n",
         "method": "post",
         "endpoint": "repos/:owner/:repo/hooks/:hookId/tests",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19b714-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5415,6 +5522,7 @@
         "documentation": "List issues for a repository.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19b717-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5464,6 +5572,7 @@
         "documentation": "Create an issue.\nAny user with pull access to a repository can create an issue.\n",
         "method": "post",
         "endpoint": "repos/:owner/:repo/issues",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19de11-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5513,6 +5622,7 @@
         "documentation": "List comments in a repository.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19de14-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5562,6 +5672,7 @@
         "documentation": "Delete a comment.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/issues/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19de17-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5611,6 +5722,7 @@
         "documentation": "Get a single comment.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19de1a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5660,6 +5772,7 @@
         "documentation": "Edit a comment.",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/issues/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19de1d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5709,6 +5822,7 @@
         "documentation": "List issue events for a repository.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues/events",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db19de20-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5758,6 +5872,7 @@
         "documentation": "Get a single event.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues/events/:eventId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a0522-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5807,6 +5922,7 @@
         "documentation": "Get a single issue",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues/:number",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a0525-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5856,6 +5972,7 @@
         "documentation": "Edit an issue.\nIssue owners and users with push access can edit an issue.\n",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/issues/:number",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a0528-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5905,6 +6022,7 @@
         "documentation": "List comments on an issue.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues/:number/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a052b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -5954,6 +6072,7 @@
         "documentation": "Create a comment.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/issues/:number/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c32-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6003,6 +6122,7 @@
         "documentation": "List events for an issue.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues/:number/events",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c35-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6052,6 +6172,7 @@
         "documentation": "Remove all labels from an issue.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/issues/:number/labels",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c38-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6101,6 +6222,7 @@
         "documentation": "List labels on an issue.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/issues/:number/labels",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c3b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6150,6 +6272,7 @@
         "documentation": "Add labels to an issue.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/issues/:number/labels",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c3e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6199,6 +6322,7 @@
         "documentation": "Replace all labels for an issue.\nSending an empty array ([]) will remove all Labels from the Issue.\n",
         "method": "put",
         "endpoint": "repos/:owner/:repo/issues/:number/labels",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c41-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6248,6 +6372,7 @@
         "documentation": "Remove a label from an issue.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/issues/:number/labels/:name",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c44-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6297,6 +6422,7 @@
         "documentation": "Get list of keys.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/keys",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c47-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6346,6 +6472,7 @@
         "documentation": "Create a key.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/keys",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c4a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6395,6 +6522,7 @@
         "documentation": "Delete a key.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/keys/:keyId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c4d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6444,6 +6572,7 @@
         "documentation": "Get a key",
         "method": "get",
         "endpoint": "repos/:owner/:repo/keys/:keyId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c50-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6493,6 +6622,7 @@
         "documentation": "List all labels for this repository.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/labels",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c53-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6542,6 +6672,7 @@
         "documentation": "Create a label.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/labels",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c56-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6591,6 +6722,7 @@
         "documentation": "Delete a label.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/labels/:name",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c59-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6640,6 +6772,7 @@
         "documentation": "Get a single label.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/labels/:name",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c5c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6689,6 +6822,7 @@
         "documentation": "Update a label.",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/labels/:name",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c5f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6738,6 +6872,7 @@
         "documentation": "List languages.\nList languages for the specified repository. The value on the right of a\nlanguage is the number of bytes of code written in that language.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/languages",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c62-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6787,6 +6922,7 @@
         "documentation": "Perform a merge.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/merges",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a2c65-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6896,6 +7032,7 @@
         "documentation": "List milestones for a repository.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/milestones",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a5345-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6945,6 +7082,7 @@
         "documentation": "Create a milestone.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/milestones",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a5348-e7d4-11ea-a5ec-979674ac1a4b",
@@ -6994,6 +7132,7 @@
         "documentation": "Delete a milestone.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/milestones/:number",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a534b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7043,6 +7182,7 @@
         "documentation": "Get a single milestone.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/milestones/:number",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a534e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7092,6 +7232,7 @@
         "documentation": "Update a milestone.",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/milestones/:number",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a5351-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7141,6 +7282,7 @@
         "documentation": "Get labels for every issue in a milestone.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/milestones/:number/labels",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a5354-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7190,6 +7332,7 @@
         "documentation": "List your notifications in a repository\nList all notifications for the current user.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/notifications",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a5357-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7239,6 +7382,7 @@
         "documentation": "Mark notifications as read in a repository.\nMarking all notifications in a repository as \"read\" removes them from the\ndefault view on GitHub.com.\n",
         "method": "put",
         "endpoint": "repos/:owner/:repo/notifications",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a535a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7288,6 +7432,7 @@
         "documentation": "List pull requests.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/pulls",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a535d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7337,6 +7482,7 @@
         "documentation": "Create a pull request.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/pulls",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a7a52-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7386,6 +7532,7 @@
         "documentation": "List comments in a repository.\nBy default, Review Comments are ordered by ascending ID.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/pulls/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a7a55-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7435,6 +7582,7 @@
         "documentation": "Delete a comment.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/pulls/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a7a58-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7484,6 +7632,7 @@
         "documentation": "Get a single comment.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/pulls/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a7a5b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7533,6 +7682,7 @@
         "documentation": "Edit a comment.",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/pulls/comments/:commentId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a7a5e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7582,6 +7732,7 @@
         "documentation": "Get a single pull request.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/pulls/:number",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a7a61-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7631,6 +7782,7 @@
         "documentation": "Update a pull request.",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/pulls/:number",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a7a64-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7680,6 +7832,7 @@
         "documentation": "List comments on a pull request.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/pulls/:number/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1a7a67-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7729,6 +7882,7 @@
         "documentation": "Create a comment.\n  #TODO Alternative input ( http://developer.github.com/v3/pulls/comments/ )\n  description: |\n    Alternative Input.\n    Instead of passing commit_id, path, and position you can reply to an\n    existing Pull Request Comment like this:\n\n        body\n           Required string\n        in_reply_to\n           Required number - Comment id to reply to.\n",
         "method": "post",
         "endpoint": "repos/:owner/:repo/pulls/:number/comments",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa162-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7778,6 +7932,7 @@
         "documentation": "List commits on a pull request.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/pulls/:number/commits",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa165-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7827,6 +7982,7 @@
         "documentation": "List pull requests files.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/pulls/:number/files",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa168-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7876,6 +8032,7 @@
         "documentation": "Get if a pull request has been merged.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/pulls/:number/merge",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa16b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -7945,6 +8102,7 @@
         "documentation": "Merge a pull request (Merge Button's)",
         "method": "put",
         "endpoint": "repos/:owner/:repo/pulls/:number/merge",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa16f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8014,6 +8172,7 @@
         "documentation": "Get the README.\nThis method returns the preferred README for a repository.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/readme",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa173-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8063,6 +8222,7 @@
         "documentation": "Users with push access to the repository will receive all releases (i.e., published releases and draft releases). Users with pull access will receive published releases only",
         "method": "get",
         "endpoint": "repos/:owner/:repo/releases",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa176-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8112,6 +8272,7 @@
         "documentation": "Create a release\nUsers with push access to the repository can create a release.\n",
         "method": "post",
         "endpoint": "repos/:owner/:repo/releases",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa179-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8161,6 +8322,7 @@
         "documentation": "Delete a release asset",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/releases/assets/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa17c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8210,6 +8372,7 @@
         "documentation": "Get a single release asset",
         "method": "get",
         "endpoint": "repos/:owner/:repo/releases/assets/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa17f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8259,6 +8422,7 @@
         "documentation": "Edit a release asset\nUsers with push access to the repository can edit a release asset.\n",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/releases/assets/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa182-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8308,6 +8472,7 @@
         "documentation": "Users with push access to the repository can delete a release.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/releases/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa185-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8357,6 +8522,7 @@
         "documentation": "Get a single release",
         "method": "get",
         "endpoint": "repos/:owner/:repo/releases/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1aa188-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8406,6 +8572,7 @@
         "documentation": "Users with push access to the repository can edit a release",
         "method": "patch",
         "endpoint": "repos/:owner/:repo/releases/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac872-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8455,6 +8622,7 @@
         "documentation": "List assets for a release",
         "method": "get",
         "endpoint": "repos/:owner/:repo/releases/:id/assets",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac875-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8504,6 +8672,7 @@
         "documentation": "List Stargazers.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/stargazers",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac878-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8553,6 +8722,7 @@
         "documentation": "Get the number of additions and deletions per week.\nReturns a weekly aggregate of the number of additions and deletions pushed\nto a repository.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/stats/code_frequency",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac87b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8602,6 +8772,7 @@
         "documentation": "Get the last year of commit activity data.\nReturns the last year of commit activity grouped by week. The days array\nis a group of commits per day, starting on Sunday.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/stats/commit_activity",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac87e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8651,6 +8822,7 @@
         "documentation": "Get contributors list with additions, deletions, and commit counts.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/stats/contributors",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac881-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8700,6 +8872,7 @@
         "documentation": "Get the weekly commit count for the repo owner and everyone else.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/stats/participation",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac884-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8749,6 +8922,7 @@
         "documentation": "Get the number of commits per hour in each day.\nEach array contains the day number, hour number, and number of commits\n0-6 Sunday - Saturday\n0-23 Hour of day\nNumber of commits\n\nFor example, [2, 14, 25] indicates that there were 25 total commits, during\nthe 2.00pm hour on Tuesdays. All times are based on the time zone of\nindividual commits.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/stats/punch_card",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac887-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8798,6 +8972,7 @@
         "documentation": "List Statuses for a specific Ref.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/statuses/:ref",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac88a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8847,6 +9022,7 @@
         "documentation": "Create a Status.",
         "method": "post",
         "endpoint": "repos/:owner/:repo/statuses/:ref",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac88d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8896,6 +9072,7 @@
         "documentation": "List watchers.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/subscribers",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac890-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8945,6 +9122,7 @@
         "documentation": "Delete a Repository Subscription.",
         "method": "delete",
         "endpoint": "repos/:owner/:repo/subscription",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac893-e7d4-11ea-a5ec-979674ac1a4b",
@@ -8994,6 +9172,7 @@
         "documentation": "Get a Repository Subscription.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/subscription",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1ac896-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9043,6 +9222,7 @@
         "documentation": "Set a Repository Subscription",
         "method": "put",
         "endpoint": "repos/:owner/:repo/subscription",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b1690-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9092,6 +9272,7 @@
         "documentation": "Get list of tags.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/tags",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b1693-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9141,6 +9322,7 @@
         "documentation": "Get list of teams",
         "method": "get",
         "endpoint": "repos/:owner/:repo/teams",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b1696-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9190,6 +9372,7 @@
         "documentation": "List Stargazers. New implementation.",
         "method": "get",
         "endpoint": "repos/:owner/:repo/watchers",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b1699-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9239,6 +9422,7 @@
         "documentation": "Get archive link.\nThis method will return a 302 to a URL to download a tarball or zipball\narchive for a repository. Please make sure your HTTP framework is\nconfigured to follow redirects or you will need to use the Location header\nto make a second GET request.\nNote: For private repositories, these links are temporary and expire quickly.\n",
         "method": "get",
         "endpoint": "repos/:owner/:repo/:archive_format/:path",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b169c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9288,6 +9472,7 @@
         "documentation": "List all public repositories.\nThis provides a dump of every public repository, in the order that they\nwere created.\nNote: Pagination is powered exclusively by the since parameter. is the\nLink header to get the URL for the next page of repositories.\n",
         "method": "get",
         "endpoint": "repositories",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b169f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9337,6 +9522,7 @@
         "documentation": "Search code.",
         "method": "get",
         "endpoint": "search/code",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16a2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9386,6 +9572,7 @@
         "documentation": "Find issues by state and keyword. (This method returns up to 100 results per page.)",
         "method": "get",
         "endpoint": "search/issues",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16a5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9435,6 +9622,7 @@
         "documentation": "Search repositories.",
         "method": "get",
         "endpoint": "search/repositories",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16a8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9484,6 +9672,7 @@
         "documentation": "Search users.",
         "method": "get",
         "endpoint": "search/users",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16ab-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9533,6 +9722,7 @@
         "documentation": "Delete team.\nIn order to delete a team, the authenticated user must be an owner of the\norg that the team is associated with.\n",
         "method": "delete",
         "endpoint": "teams/:teamId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16ae-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9582,6 +9772,7 @@
         "documentation": "Get team.",
         "method": "get",
         "endpoint": "teams/:teamId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16b1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9631,6 +9822,7 @@
         "documentation": "Edit team.\nIn order to edit a team, the authenticated user must be an owner of the org\nthat the team is associated with.\n",
         "method": "patch",
         "endpoint": "teams/:teamId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16b4-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9680,6 +9872,7 @@
         "documentation": "List team members.\nIn order to list members in a team, the authenticated user must be a member\nof the team.\n",
         "method": "get",
         "endpoint": "teams/:teamId/members",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16b7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9729,6 +9922,7 @@
         "documentation": "The \"Remove team member\" API is deprecated and is scheduled for removal in the next major version of the API. We recommend using the Remove team membership API instead. It allows you to remove both active and pending memberships.\n\nRemove team member.\nIn order to remove a user from a team, the authenticated user must have 'admin'\npermissions to the team or be an owner of the org that the team is associated\nwith.\nNOTE This does not delete the user, it just remove them from the team.\n",
         "method": "delete",
         "endpoint": "teams/:teamId/members/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16ba-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9778,6 +9972,7 @@
         "documentation": "The \"Get team member\" API is deprecated and is scheduled for removal in the next major version of the API. We recommend using the Get team membership API instead. It allows you to get both active and pending memberships.\n\nGet team member.\nIn order to get if a user is a member of a team, the authenticated user mus\nbe a member of the team.\n",
         "method": "get",
         "endpoint": "teams/:teamId/members/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b16bd-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9847,6 +10042,7 @@
         "documentation": "The API (described below) is deprecated and is scheduled for removal in the next major version of the API. We recommend using the Add team membership API instead. It allows you to invite new organization members to your teams.\n\nAdd team member.\nIn order to add a user to a team, the authenticated user must have 'admin'\npermissions to the team or be an owner of the org that the team is associated\nwith.\n",
         "method": "put",
         "endpoint": "teams/:teamId/members/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3da3-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9916,6 +10112,7 @@
         "documentation": "Remove team membership.\nIn order to remove a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with. NOTE: This does not delete the user, it just removes their membership from the team.\n",
         "method": "delete",
         "endpoint": "teams/:teamId/memberships/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3da7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -9965,6 +10162,7 @@
         "documentation": "Get team membership.\nIn order to get a user's membership with a team, the authenticated user must be a member of the team or an owner of the team's organization.\n",
         "method": "get",
         "endpoint": "teams/:teamId/memberships/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3daa-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10034,6 +10232,7 @@
         "documentation": "Add team membership.\nIn order to add a membership between a user and a team, the authenticated user must have 'admin' permissions to the team or be an owner of the organization that the team is associated with.\n\nIf the user is already a part of the team's organization (meaning they're on at least one other team in the organization), this endpoint will add the user to the team.\n\nIf the user is completely unaffiliated with the team's organization (meaning they're on none of the organization's teams), this endpoint will send an invitation to the user via email. This newly-created membership will be in the 'pending' state until the user accepts the invitation, at which point the membership will transition to the 'active' state and the user will be added as a member of the team.\n",
         "method": "put",
         "endpoint": "teams/:teamId/memberships/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dae-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10103,6 +10302,7 @@
         "documentation": "List team repos",
         "method": "get",
         "endpoint": "teams/:teamId/repos",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3db2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10152,6 +10352,7 @@
         "documentation": "In order to remove a repository from a team, the authenticated user must be an owner of the org that the team is associated with. NOTE: This does not delete the repository, it just removes it from the team.",
         "method": "delete",
         "endpoint": "teams/:teamId/repos/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3db5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10201,6 +10402,7 @@
         "documentation": "Check if a team manages a repository",
         "method": "get",
         "endpoint": "teams/:teamId/repos/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3db8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10230,6 +10432,7 @@
         "documentation": "In order to add a repository to a team, the authenticated user must be an owner of the org that the team is associated with. Also, the repository must be owned by the organization, or a direct fork of a repository owned by the organization.",
         "method": "put",
         "endpoint": "teams/:teamId/repos/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dba-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10259,6 +10462,7 @@
         "documentation": "Get the authenticated user.",
         "method": "get",
         "endpoint": "user",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dbc-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10308,6 +10512,7 @@
         "documentation": "Update the authenticated user.",
         "method": "patch",
         "endpoint": "user",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dbf-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10357,6 +10562,7 @@
         "documentation": "Delete email address(es).\nYou can include a single email address or an array of addresses.\n",
         "method": "delete",
         "endpoint": "user/emails",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dc2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10406,6 +10612,7 @@
         "documentation": "List email addresses for a user.\nIn the final version of the API, this method will return an array of hashes\nwith extended information for each email address indicating if the address\nhas been verified and if it's primary email address for GitHub.\nUntil API v3 is finalized, use the application/vnd.github.v3 media type to\nget other response format.\n",
         "method": "get",
         "endpoint": "user/emails",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dc5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10455,6 +10662,7 @@
         "documentation": "Add email address(es).\nYou can post a single email address or an array of addresses.\n",
         "method": "post",
         "endpoint": "user/emails",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dc8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10484,6 +10692,7 @@
         "documentation": "List the authenticated user's followers",
         "method": "get",
         "endpoint": "user/followers",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dca-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10533,6 +10742,7 @@
         "documentation": "List who the authenticated user is following.",
         "method": "get",
         "endpoint": "user/following",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dcd-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10582,6 +10792,7 @@
         "documentation": "Unfollow a user.\nUnfollowing a user requires the user to be logged in and authenticated with\nbasic auth or OAuth with the user:follow scope.\n",
         "method": "delete",
         "endpoint": "user/following/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dd0-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10631,6 +10842,7 @@
         "documentation": "Check if you are following a user.",
         "method": "get",
         "endpoint": "user/following/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dd3-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10700,6 +10912,7 @@
         "documentation": "Follow a user.\nFollowing a user requires the user to be logged in and authenticated with\nbasic auth or OAuth with the user:follow scope.\n",
         "method": "put",
         "endpoint": "user/following/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dd7-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10749,6 +10962,7 @@
         "documentation": "List issues.\nList all issues across owned and member repositories for the authenticated\nuser.\n",
         "method": "get",
         "endpoint": "user/issues",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3dda-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10798,6 +11012,7 @@
         "documentation": "List your public keys.\nLists the current user's keys. Management of public keys via the API requires\nthat you are authenticated through basic auth, or OAuth with the 'user', 'write:public_key' scopes.\n",
         "method": "get",
         "endpoint": "user/keys",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3ddd-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10847,6 +11062,7 @@
         "documentation": "Create a public key.",
         "method": "post",
         "endpoint": "user/keys",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3de0-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10896,6 +11112,7 @@
         "documentation": "Delete a public key. Removes a public key. Requires that you are authenticated via Basic Auth or via OAuth with at least admin:public_key scope.",
         "method": "delete",
         "endpoint": "user/keys/:keyId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3de3-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10945,6 +11162,7 @@
         "documentation": "Get a single public key.",
         "method": "get",
         "endpoint": "user/keys/:keyId",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b3de6-e7d4-11ea-a5ec-979674ac1a4b",
@@ -10994,6 +11212,7 @@
         "documentation": "List public and private organizations for the authenticated user.",
         "method": "get",
         "endpoint": "user/orgs",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64b2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11043,6 +11262,7 @@
         "documentation": "List repositories for the authenticated user. Note that this does not include\nrepositories owned by organizations which the user can access. You can lis\nuser organizations and list organization repositories separately.\n",
         "method": "get",
         "endpoint": "user/repos",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64b5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11092,6 +11312,7 @@
         "documentation": "Create a new repository for the authenticated user. OAuth users must supply\nrepo scope.\n",
         "method": "post",
         "endpoint": "user/repos",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64b8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11141,6 +11362,7 @@
         "documentation": "List repositories being starred by the authenticated user.",
         "method": "get",
         "endpoint": "user/starred",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64bb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11190,6 +11412,7 @@
         "documentation": "Unstar a repository",
         "method": "delete",
         "endpoint": "user/starred/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64be-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11239,6 +11462,7 @@
         "documentation": "Check if you are starring a repository.",
         "method": "get",
         "endpoint": "user/starred/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64c1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11308,6 +11532,7 @@
         "documentation": "Star a repository.",
         "method": "put",
         "endpoint": "user/starred/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64c5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11357,6 +11582,7 @@
         "documentation": "List repositories being watched by the authenticated user.",
         "method": "get",
         "endpoint": "user/subscriptions",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64c8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11406,6 +11632,7 @@
         "documentation": "Stop watching a repository",
         "method": "delete",
         "endpoint": "user/subscriptions/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64cb-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11455,6 +11682,7 @@
         "documentation": "Check if you are watching a repository.",
         "method": "get",
         "endpoint": "user/subscriptions/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64ce-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11524,6 +11752,7 @@
         "documentation": "Watch a repository.",
         "method": "put",
         "endpoint": "user/subscriptions/:owner/:repo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64d2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11573,6 +11802,7 @@
         "documentation": "List all of the teams across all of the organizations to which the authenticated user belongs. This method requires user or repo scope when authenticating via OAuth.",
         "method": "get",
         "endpoint": "user/teams",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64d5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11622,6 +11852,7 @@
         "documentation": "Get all users.\nThis provides a dump of every user, in the order that they signed up for GitHub.\nNote: Pagination is powered exclusively by the since parameter. Use the Link\nheader to get the URL for the next page of users.\n",
         "method": "get",
         "endpoint": "users",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64d8-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11671,6 +11902,7 @@
         "documentation": "Get a single user.",
         "method": "get",
         "endpoint": "users/:username",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64db-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11720,6 +11952,7 @@
         "documentation": "If you are authenticated as the given user, you will see your private events. Otherwise, you'll only see public events.",
         "method": "get",
         "endpoint": "users/:username/events",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64de-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11749,6 +11982,7 @@
         "documentation": "This is the user's organization dashboard. You must be authenticated as the user to view this.",
         "method": "get",
         "endpoint": "users/:username/events/orgs/:org",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64e0-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11778,6 +12012,7 @@
         "documentation": "List a user's followers",
         "method": "get",
         "endpoint": "users/:username/followers",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64e2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11827,6 +12062,7 @@
         "documentation": "Check if one user follows another.",
         "method": "get",
         "endpoint": "users/:username/following/:targetUser",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64e5-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11896,6 +12132,7 @@
         "documentation": "List a users gists.",
         "method": "get",
         "endpoint": "users/:username/gists",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64e9-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11945,6 +12182,7 @@
         "documentation": "List public keys for a user.\nLists the verified public keys for a user. This is accessible by anyone.\n",
         "method": "get",
         "endpoint": "users/:username/keys",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64ec-e7d4-11ea-a5ec-979674ac1a4b",
@@ -11994,6 +12232,7 @@
         "documentation": "List all public organizations for a user.",
         "method": "get",
         "endpoint": "users/:username/orgs",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64ef-e7d4-11ea-a5ec-979674ac1a4b",
@@ -12043,6 +12282,7 @@
         "documentation": "These are events that you'll only see public events.",
         "method": "get",
         "endpoint": "users/:username/received_events",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64f2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -12072,6 +12312,7 @@
         "documentation": "List public events that a user has received",
         "method": "get",
         "endpoint": "users/:username/received_events/public",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64f4-e7d4-11ea-a5ec-979674ac1a4b",
@@ -12101,6 +12342,7 @@
         "documentation": "List public repositories for the specified user.",
         "method": "get",
         "endpoint": "users/:username/repos",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64f6-e7d4-11ea-a5ec-979674ac1a4b",
@@ -12150,6 +12392,7 @@
         "documentation": "List repositories being starred by a user.",
         "method": "get",
         "endpoint": "users/:username/starred",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b64f9-e7d4-11ea-a5ec-979674ac1a4b",
@@ -12179,6 +12422,7 @@
         "documentation": "List repositories being watched by a user.",
         "method": "get",
         "endpoint": "users/:username/subscriptions",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "db1b8bc0-e7d4-11ea-a5ec-979674ac1a4b",

@@ -1,101 +1,101 @@
 {
-    "source": "mockoon:1.7.0",
-    "data": [
-        {
-            "type": "environment",
-            "item": {
+  "source": "mockoon:1.7.0",
+  "data": [
+    {
+      "type": "environment",
+      "item": {
+        "uuid": "",
+        "lastMigration": 9,
+        "name": "Import new format 1",
+        "endpointPrefix": "",
+        "latency": 0,
+        "port": 3000,
+        "routes": [
+          {
+            "uuid": "",
+            "method": "get",
+            "endpoint": "answer",
+            "documentation": "",
+            "enabled": true,
+            "responses": [
+              {
                 "uuid": "",
-                "lastMigration": 9,
-                "name": "Import new format 1",
-                "endpointPrefix": "",
+                "body": "{\n  \"response\": 42\n}",
                 "latency": 0,
-                "port": 3000,
-                "routes": [
-                    {
-                        "uuid": "",
-                        "method": "get",
-                        "endpoint": "answer",
-                        "documentation": "",
-                        "enabled": true,
-                        "responses": [
-                            {
-                                "uuid": "",
-                                "body": "{\n  \"response\": 42\n}",
-                                "latency": 0,
-                                "statusCode": "200",
-                                "label": "",
-                                "headers": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application/json"
-                                    }
-                                ],
-                                "filePath": "",
-                                "sendFileAsBody": false,
-                                "rules": []
-                            }
-                        ]
-                    }
-                ],
-                "proxyMode": false,
-                "proxyHost": "",
-                "https": false,
-                "cors": true,
+                "statusCode": "200",
+                "label": "",
                 "headers": [
-                    {
-                        "key": "",
-                        "value": ""
-                    }
-                ]
-            }
-        },
-        {
-            "type": "environment",
-            "item": {
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": []
+              }
+            ]
+          }
+        ],
+        "proxyMode": false,
+        "proxyHost": "",
+        "https": false,
+        "cors": true,
+        "headers": [
+          {
+            "key": "",
+            "value": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "environment",
+      "item": {
+        "uuid": "",
+        "lastMigration": 9,
+        "name": "Import new format 2",
+        "endpointPrefix": "",
+        "latency": 0,
+        "port": 3001,
+        "routes": [
+          {
+            "uuid": "",
+            "method": "get",
+            "endpoint": "answer",
+            "documentation": "",
+            "enabled": true,
+            "responses": [
+              {
                 "uuid": "",
-                "lastMigration": 9,
-                "name": "Import new format 2",
-                "endpointPrefix": "",
+                "body": "{\n  \"response\": 42\n}",
                 "latency": 0,
-                "port": 3001,
-                "routes": [
-                    {
-                        "uuid": "",
-                        "method": "get",
-                        "endpoint": "answer",
-                        "documentation": "",
-                        "enabled": true,
-                        "responses": [
-                            {
-                                "uuid": "",
-                                "body": "{\n  \"response\": 42\n}",
-                                "latency": 0,
-                                "statusCode": "200",
-                                "label": "",
-                                "headers": [
-                                    {
-                                        "key": "Content-Type",
-                                        "value": "application/json"
-                                    }
-                                ],
-                                "filePath": "",
-                                "sendFileAsBody": false,
-                                "rules": []
-                            }
-                        ]
-                    }
-                ],
-                "proxyMode": false,
-                "proxyHost": "",
-                "https": false,
-                "cors": true,
+                "statusCode": "200",
+                "label": "",
                 "headers": [
-                    {
-                        "key": "",
-                        "value": ""
-                    }
-                ]
-            }
-        }
-    ]
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": []
+              }
+            ]
+          }
+        ],
+        "proxyMode": false,
+        "proxyHost": "",
+        "https": false,
+        "cors": true,
+        "headers": [
+          {
+            "key": "",
+            "value": ""
+          }
+        ]
+      }
+    }
+  ]
 }

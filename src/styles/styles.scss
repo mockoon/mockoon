@@ -246,6 +246,11 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green),
   );
 }
 
+.warning-message {
+  font-size: 0.8rem;
+  color: $warning;
+}
+
 resize-column {
   position: absolute;
   width: $resize-separator-width;

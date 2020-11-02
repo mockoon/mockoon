@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -13,6 +13,7 @@
         "endpoint": "dolphins",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",
@@ -40,6 +41,7 @@
         "endpoint": "very/long/endpoint/path/that/will/be/truncated/in/the/menu",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "34eb3510-2886-434a-acb8-4542d67739da",

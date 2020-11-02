@@ -1,7 +1,7 @@
 [
   {
     "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -13,13 +13,14 @@
         "endpoint": "users/:userid",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "adecd307-1c8c-4846-8e50-a37ec6aaab06",
-            "body": "{}",
+            "body": "{\"response\": \"content\"}",
             "latency": 0,
             "statusCode": 500,
-            "label": "",
+            "label": "Test",
             "headers": [
               {
                 "key": "Content-Type",
@@ -29,7 +30,14 @@
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
-            "rules": [],
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "test",
+                "value": "test",
+                "isRegex": false
+              }
+            ],
             "rulesOperator": "OR"
           }
         ]
@@ -40,6 +48,7 @@
         "endpoint": "rules/:id",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "a222bfa1-5f1a-4dd9-af32-e3e503e5251b",
@@ -392,6 +401,7 @@
         "endpoint": "operator/:param1",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "eea47ee2-b04d-40d9-b57e-1342bb59d276",

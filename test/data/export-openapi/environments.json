@@ -1,7 +1,7 @@
 [
   {
     "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "Demo users API V2",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -12,6 +12,7 @@
         "documentation": "Get all users",
         "method": "get",
         "endpoint": "users",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e84c9925-6047-11ea-b4a3-058bbf68d234",
@@ -37,6 +38,7 @@
         "documentation": "Get a user",
         "method": "get",
         "endpoint": "users/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e84c9928-6047-11ea-b4a3-058bbf68d234",
@@ -86,6 +88,7 @@
         "documentation": "Create a user",
         "method": "post",
         "endpoint": "users",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e84c992c-6047-11ea-b4a3-058bbf68d234",
@@ -135,6 +138,7 @@
         "documentation": "Delete a user",
         "method": "delete",
         "endpoint": "users/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e84c9930-6047-11ea-b4a3-058bbf68d234",
@@ -164,6 +168,7 @@
         "documentation": "Set user status",
         "method": "put",
         "endpoint": "users/:id/status/:status",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "27dbe8b1-60b2-11ea-9b62-4340c341e0a1",

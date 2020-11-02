@@ -17,7 +17,8 @@ export class ResponseRulesInterpreter {
 
   constructor(
     private routeResponses: RouteResponse[],
-    private request: Request
+    private request: Request,
+    private randomResponse: boolean
   ) {
     this.extractTargets();
   }
@@ -27,17 +28,24 @@ export class ResponseRulesInterpreter {
    * If no rule has been fulfilled get the first route response.
    */
   public chooseResponse(): RouteResponse {
-    let response = this.routeResponses.find((routeResponse) =>
-      routeResponse.rulesOperator === 'AND'
-        ? !!routeResponse.rules.every(this.isValidRule)
-        : !!routeResponse.rules.find(this.isValidRule)
-    );
+    if (this.randomResponse) {
+      const randomStatus =
+        Math.floor(Math.random() * this.routeResponses.length);
 
-    if (response === undefined) {
-      response = this.routeResponses[0];
+      return this.routeResponses[randomStatus];
+    } else {
+      let response = this.routeResponses.find((routeResponse) =>
+        routeResponse.rulesOperator === 'AND'
+          ? !!routeResponse.rules.every(this.isValidRule)
+          : !!routeResponse.rules.find(this.isValidRule)
+      );
+
+      if (response === undefined) {
+        response = this.routeResponses[0];
+      }
+
+      return response;
     }
-
-    return response;
   }
 
   /**

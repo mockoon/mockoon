@@ -1,7 +1,7 @@
 [
   {
     "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -13,6 +13,7 @@
         "endpoint": "bodyjson-rootlvl",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f71dbb19-562f-4dee-8ee7-023038a45002",
@@ -40,6 +41,7 @@
         "endpoint": "bodyjson-rootlvl-nodefault",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "d8b99c2a-e589-43e4-adda-6b7406d00e88",
@@ -67,6 +69,7 @@
         "endpoint": "bodyjson-full-noparam",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "fbc6c819-8040-4bfb-9f7c-b768b143f13f",
@@ -94,6 +97,7 @@
         "endpoint": "bodyjson-full-emptyparam",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "aa802b24-43f0-497c-9faa-5d9c56333eca",
@@ -121,6 +125,7 @@
         "endpoint": "bodyjson",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "dc345573-e68c-4527-b077-595518ed31f9",
@@ -148,6 +153,7 @@
         "endpoint": "bodyjson-path",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6b21bf09-23de-4d69-98a5-2947f3614873",
@@ -175,6 +181,7 @@
         "endpoint": "bodyform-rootlvl",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "889f0790-fd6f-484c-ad78-46be97df6f73",
@@ -202,6 +209,7 @@
         "endpoint": "bodyform-rootlvl-nodefault",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e73a6950-6ba2-4530-bf3c-bf0936634d0a",
@@ -229,6 +237,7 @@
         "endpoint": "bodyform-full-noparam",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "1381d775-087c-46b5-9889-ba4d8869c67d",
@@ -256,6 +265,7 @@
         "endpoint": "bodyform-full-emptyparam",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "da5c9637-be67-4ab9-9f42-16b803c7222b",
@@ -283,6 +293,7 @@
         "endpoint": "bodyform",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "541beb00-e336-41da-8fae-bb23b0e4fcfd",
@@ -310,6 +321,7 @@
         "endpoint": "bodyform-path",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "964fe42b-d88c-489e-8a48-f2c38e8e625f",
@@ -337,6 +349,7 @@
         "endpoint": "bad-helper",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0b89ebfd-5ea9-4b2b-a739-5fc37d7bb9b5",
@@ -364,6 +377,7 @@
         "endpoint": "templating-syntax-error-body",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f5774351-e283-47db-9095-b107ebeba897",
@@ -391,6 +405,7 @@
         "endpoint": "templating-syntax-error-header",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "0d027239-14fb-4f52-84c3-bd2f2adb25ce",
@@ -422,6 +437,7 @@
         "endpoint": "templating-syntax-error-filepath",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "ca0b0463-144d-47e7-95b1-4dba404315af",
@@ -449,6 +465,7 @@
         "endpoint": "templating-syntax-error-file",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6dcbd142-9042-474a-85e7-fe3867804953",
@@ -476,6 +493,7 @@
         "endpoint": "filepath",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "8d7df75e-68f0-4d64-bd4c-af3ad1827236",
@@ -503,6 +521,7 @@
         "endpoint": "filepath-windows",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "d34f47ae-1343-4e9c-884e-59db780fb0fe",
@@ -530,6 +549,7 @@
         "endpoint": "file-templating",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6dd9dc02-c6d1-4cb3-baf4-491289004eff",
@@ -557,6 +577,7 @@
         "endpoint": "urlparam/:urlparam1",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "965142a3-1bb0-4fa9-a285-f6b15ec97fb6",
@@ -584,6 +605,7 @@
         "endpoint": "queryparam-rootlvl-nodefault",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "8a703d55-19c9-4466-a639-4224dd2dd62e",
@@ -611,6 +633,7 @@
         "endpoint": "queryparam-rootlvl",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "b9c1ec69-8733-4d87-b202-7cb3cdf963a5",
@@ -638,6 +661,7 @@
         "endpoint": "queryparam-rootlvl-arrayitem",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "7fade511-9126-4683-bebc-40eddc35225f",
@@ -665,6 +689,7 @@
         "endpoint": "queryparam-rootlvl-objectproperty",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "958d4d63-dd50-4d0a-86e2-02240aa93baf",
@@ -692,6 +717,7 @@
         "endpoint": "queryparam-rootlvl-array",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "35a46749-1de6-4113-b4d8-7e4e3d883cb4",
@@ -719,6 +745,7 @@
         "endpoint": "queryparam-rootlvl-object",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "633de1f1-2f4a-443e-b7bb-9035a894241a",
@@ -746,6 +773,7 @@
         "endpoint": "queryparam-multiple",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "9fcc2a9e-ec23-42e7-9ec6-44198a6837d4",
@@ -773,6 +801,7 @@
         "endpoint": "queryparam-full-emptypath",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f5b48e6a-6c11-49a4-981f-9c4115535b03",
@@ -800,6 +829,7 @@
         "endpoint": "queryparam-full-nopath",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "319a6738-86f1-47ac-b7b1-37ed832cee8a",
@@ -827,6 +857,7 @@
         "endpoint": "header",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "42a30ea7-2a9e-43d9-973b-fcbd63fb8f88",
@@ -854,6 +885,7 @@
         "endpoint": "cookie",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "a7c54952-0aa7-4d07-82fa-ae451502767d",
@@ -881,6 +913,7 @@
         "endpoint": "hostname",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "a5b1f4b2-46df-48df-ba28-e91862959012",
@@ -908,6 +941,7 @@
         "endpoint": "ip",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "df5409e7-84cc-4606-8d8b-cbd330c153de",
@@ -935,6 +969,7 @@
         "endpoint": "method",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "07d06f07-a469-409b-84e0-0a8e5ede04ab",
@@ -962,6 +997,7 @@
         "endpoint": "oneof",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6666f159-74d7-4d1d-9f43-c70327e45990",
@@ -989,6 +1025,7 @@
         "endpoint": "someof",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "317ab0f2-5cbf-41cb-8735-db474814823b",
@@ -1016,6 +1053,7 @@
         "endpoint": "someofarray",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6037b85b-606b-4368-9659-11527c922bac",
@@ -1043,6 +1081,7 @@
         "endpoint": "now",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "2db126ab-7d19-4129-83fb-6e1be24cd0a0",
@@ -1070,6 +1109,7 @@
         "endpoint": "newline",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "30042a63-f29e-4e1e-b50e-9d157c447b7c",
@@ -1097,6 +1137,7 @@
         "endpoint": "objectid_1",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "67d9190b-7312-4ad4-b8d4-c1cc7d66807c",
@@ -1124,6 +1165,7 @@
         "endpoint": "objectid_2",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "2451572c-d838-4f55-94c8-c615942efea8",
@@ -1151,6 +1193,7 @@
         "endpoint": "base64",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "66435b82-6bd0-401f-b973-7d4e056ac632",
@@ -1178,6 +1221,7 @@
         "endpoint": "faker.missing",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "b0787230-0c16-4739-8727-bf1d6dcb0020",
@@ -1205,6 +1249,7 @@
         "endpoint": "faker.empty",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6461ba6c-b9ea-450f-8345-5a6cf82d640c",
@@ -1232,6 +1277,7 @@
         "endpoint": "faker.wrong-pattern",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f46ea654-ec19-431b-911f-f47fa9ef9b9a",
@@ -1259,6 +1305,7 @@
         "endpoint": "faker.not-exists",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "7e84b9f0-0dc6-4ddc-88e2-06809a92b490",
@@ -1286,6 +1333,7 @@
         "endpoint": "faker.company.companyName",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e4b5c7fe-73fb-492c-89c9-07d8ac003be6",
@@ -1313,6 +1361,7 @@
         "endpoint": "faker.address.streetAddress",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "47ad99a9-fcec-4d95-8329-112a8e5a6808",
@@ -1340,6 +1389,7 @@
         "endpoint": "faker.date.between",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "89f4edf3-9b4c-4b49-9cea-c045c753d774",
@@ -1367,6 +1417,7 @@
         "endpoint": "faker.date.month",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "d1044678-1380-4c36-a6ef-3640a68a07de",
@@ -1394,6 +1445,7 @@
         "endpoint": "faker.finance.amount",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "121419e9-6ee7-4bbe-98cf-64a040c95982",
@@ -1421,6 +1473,7 @@
         "endpoint": "faker.finance.mask",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "b226715f-7f1e-4860-8923-a7727110d984",
@@ -1448,6 +1501,7 @@
         "endpoint": "faker.helpers.userCard",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "ed7013a0-7083-4428-af41-9bf4e3483f87",
@@ -1475,6 +1529,7 @@
         "endpoint": "faker.random.uuid",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "85053bb6-3036-4ee4-96f9-c913bb834341",
@@ -1502,6 +1557,7 @@
         "endpoint": "old.int",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "7c210f15-c696-466e-85e2-ce1b2e2fbd03",
@@ -1529,6 +1585,7 @@
         "endpoint": "old.float",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "8aec4572-9e19-4c76-8b84-513f2fd1cbd7",
@@ -1556,6 +1613,7 @@
         "endpoint": "old.date",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "ed1b54b6-4df5-4e27-b09f-d6d4af793850",
@@ -1583,6 +1641,7 @@
         "endpoint": "old.time",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "4d024ec0-eae4-47fd-99b5-7c29f92d09b3",
@@ -1610,6 +1669,7 @@
         "endpoint": "old.boolean",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f6037254-85c9-4ed0-b424-41e022cffe0f",
@@ -1637,6 +1697,7 @@
         "endpoint": "old.title",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "b370c9f3-0609-4796-a8bc-5beeadd6749b",
@@ -1664,6 +1725,7 @@
         "endpoint": "old.firstName",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "9045c2f7-f1d9-4c91-8d4c-2131c09e16d3",
@@ -1691,6 +1753,7 @@
         "endpoint": "old.lastName",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "3a359842-28b3-4493-b8cb-91979e78d945",
@@ -1718,6 +1781,7 @@
         "endpoint": "old.company",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "ae626499-4071-4e8a-a495-41eba581f48b",
@@ -1745,6 +1809,7 @@
         "endpoint": "old.domain",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "d0fe6b83-4f6d-4e60-99e7-f034e9c123d9",
@@ -1772,6 +1837,7 @@
         "endpoint": "old.tld",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "4f5a462c-2316-4631-9369-a55bdf885830",
@@ -1799,6 +1865,7 @@
         "endpoint": "old.email",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "44aafc3c-9412-4575-9c77-68a34ffe9d21",
@@ -1826,6 +1893,7 @@
         "endpoint": "old.street",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "3f79bc9f-62a3-4000-8daa-e2352815bbfa",
@@ -1853,6 +1921,7 @@
         "endpoint": "old.city",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f1be5135-dd17-474e-9876-93afa4c83ade",
@@ -1880,6 +1949,7 @@
         "endpoint": "old.country",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "5e3ad853-6454-473a-812f-ebf1576700f5",
@@ -1907,6 +1977,7 @@
         "endpoint": "old.countryCode",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "1905587a-976e-4bde-9fd0-19fdbd73f257",
@@ -1934,6 +2005,7 @@
         "endpoint": "old.zipcode",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "d14dfe38-201c-4fd5-87f4-dfee0295f5fb",
@@ -1961,6 +2033,7 @@
         "endpoint": "old.postcode",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "6f914b79-fcfc-4e4a-9bcb-d0605f01014a",
@@ -1988,6 +2061,7 @@
         "endpoint": "old.lat",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f59f3c9c-7ca8-47d3-b9bd-efaba0c14495",
@@ -2015,6 +2089,7 @@
         "endpoint": "old.long",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "64a57ef4-b33e-4d3f-aaef-2d5ed8ad53e4",
@@ -2042,6 +2117,7 @@
         "endpoint": "old.phone",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "1a6313b6-f50e-4f27-8722-cf14dff5ae27",
@@ -2069,6 +2145,7 @@
         "endpoint": "old.color",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "bc5cf071-3c11-447f-b392-8627e7930024",
@@ -2096,6 +2173,7 @@
         "endpoint": "old.hexColor",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "c095b563-f8c9-46b6-8b89-e9e85a8d4aa7",
@@ -2123,6 +2201,7 @@
         "endpoint": "old.guid",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "d24c139e-be1b-4280-b623-bb5e1eb28323",
@@ -2150,6 +2229,7 @@
         "endpoint": "old.ipv4",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "33203059-ce71-4b4e-860f-159164b0f179",
@@ -2177,6 +2257,7 @@
         "endpoint": "old.ipv6",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "e387a70b-d30a-4585-be74-837d49c15758",
@@ -2204,6 +2285,7 @@
         "endpoint": "old.lorem",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "74ac1acf-5d3d-4c18-ac6c-9704012989e5",
@@ -2231,6 +2313,7 @@
         "endpoint": "old.repeat",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "3c917484-bdd1-40c1-81a8-b36a314faf70",
@@ -2258,6 +2341,7 @@
         "endpoint": "old.repeat.inner",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "a51a0315-99d2-407a-9d18-293f2663eb46",
@@ -2285,6 +2369,7 @@
         "endpoint": "old.repeat.invalid",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "05929ae4-c74f-4023-bf38-18ad54804a68",
@@ -2312,6 +2397,7 @@
         "endpoint": "old.switch.urlParam/:param",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "fce44ac2-cfca-4722-930b-5cb0c85250b1",
@@ -2339,6 +2425,7 @@
         "endpoint": "old.switch.urlParam.helper/:param",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "2dfefe9e-9ac7-44c0-b29a-41ce5af7d6b3",
@@ -2366,6 +2453,7 @@
         "endpoint": "old.switch.urlParam.multi/:param1/:param2",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "ec0f78e0-63e7-4efd-8a60-8ba69bff3d01",
@@ -2393,6 +2481,7 @@
         "endpoint": "old.switch.queryParam",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "07db1e8c-01c9-4caf-afc2-ca4a52b41667",
@@ -2420,6 +2509,7 @@
         "endpoint": "old.switch.body",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "31aecc90-b083-48fb-a3c3-281dd767b70d",

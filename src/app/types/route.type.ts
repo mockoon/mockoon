@@ -264,6 +264,7 @@ export type Route = {
   endpoint: string;
   responses: RouteResponse[];
   enabled: boolean;
+  randomResponse: boolean;
 };
 
 export type Header = { key: string; value: string };

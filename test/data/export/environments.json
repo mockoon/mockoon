@@ -1,7 +1,7 @@
 [
   {
     "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "Export env",
     "endpointPrefix": "",
     "latency": 0,
@@ -13,6 +13,7 @@
         "endpoint": "answer",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "64fcbac2-1ac7-11ea-b8fd-577fb167a4ce",
@@ -35,12 +36,12 @@
     "https": false,
     "cors": true,
     "headers": [{ "key": "", "value": "" }],
-    "proxyReqHeaders": [{"key": "", "value":""}],
-    "proxyResHeaders": [{"key": "", "value":""}]
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
   },
   {
     "uuid": "867fe03b-01f9-4c6c-a6bc-30000dddba46",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "Alt export env",
     "endpointPrefix": "",
     "latency": 0,
@@ -52,6 +53,7 @@
         "endpoint": "answer",
         "documentation": "",
         "enabled": true,
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "867fe03b-03f9-4c6c-a6bc-30000dddba46",
@@ -74,7 +76,7 @@
     "https": false,
     "cors": true,
     "headers": [{ "key": "", "value": "" }],
-    "proxyReqHeaders": [{"key": "", "value":""}],
-    "proxyResHeaders": [{"key": "", "value":""}]
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
   }
 ]

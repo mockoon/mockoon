@@ -1,7 +1,7 @@
 [
   {
     "uuid": "01bb3dc0-e7d5-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "Slack",
     "endpointPrefix": "api",
     "latency": 0,
@@ -12,6 +12,7 @@
         "documentation": "Wipes all valid sessions on all devices for a given user",
         "method": "post",
         "endpoint": "admin.users.session.reset",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dc1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -34,6 +35,7 @@
         "documentation": "Checks API calling code.",
         "method": "get",
         "endpoint": "api.test",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dc3-e7d5-11ea-a5ec-979674ac1a4b",
@@ -56,6 +58,7 @@
         "documentation": "Returns list of permissions this app has on a team.",
         "method": "get",
         "endpoint": "apps.permissions.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dc5-e7d5-11ea-a5ec-979674ac1a4b",
@@ -83,6 +86,7 @@
         "documentation": "Allows an app to request additional scopes",
         "method": "get",
         "endpoint": "apps.permissions.request",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dc7-e7d5-11ea-a5ec-979674ac1a4b",
@@ -110,6 +114,7 @@
         "documentation": "Returns list of resource grants this app has on a team.",
         "method": "get",
         "endpoint": "apps.permissions.resources.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dc9-e7d5-11ea-a5ec-979674ac1a4b",
@@ -137,6 +142,7 @@
         "documentation": "Returns list of scopes this app has on a team.",
         "method": "get",
         "endpoint": "apps.permissions.scopes.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dcb-e7d5-11ea-a5ec-979674ac1a4b",
@@ -164,6 +170,7 @@
         "documentation": "Returns list of user grants and corresponding scopes this app has on a team.",
         "method": "get",
         "endpoint": "apps.permissions.users.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dcd-e7d5-11ea-a5ec-979674ac1a4b",
@@ -191,6 +198,7 @@
         "documentation": "Enables an app to trigger a permissions modal to grant an app access to a user access scope.",
         "method": "get",
         "endpoint": "apps.permissions.users.request",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dcf-e7d5-11ea-a5ec-979674ac1a4b",
@@ -218,6 +226,7 @@
         "documentation": "Uninstalls your app from a workspace.",
         "method": "get",
         "endpoint": "apps.uninstall",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dd1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -245,6 +254,7 @@
         "documentation": "Revokes a token.",
         "method": "get",
         "endpoint": "auth.revoke",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dd3-e7d5-11ea-a5ec-979674ac1a4b",
@@ -272,6 +282,7 @@
         "documentation": "Checks authentication & identity.",
         "method": "get",
         "endpoint": "auth.test",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dd5-e7d5-11ea-a5ec-979674ac1a4b",
@@ -294,6 +305,7 @@
         "documentation": "Gets information about a bot user.",
         "method": "get",
         "endpoint": "bots.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dd7-e7d5-11ea-a5ec-979674ac1a4b",
@@ -321,6 +333,7 @@
         "documentation": "Archives a channel.",
         "method": "post",
         "endpoint": "channels.archive",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3dd9-e7d5-11ea-a5ec-979674ac1a4b",
@@ -343,6 +356,7 @@
         "documentation": "Creates a channel.",
         "method": "post",
         "endpoint": "channels.create",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3ddb-e7d5-11ea-a5ec-979674ac1a4b",
@@ -365,6 +379,7 @@
         "documentation": "Fetches history of messages and events from a channel.",
         "method": "get",
         "endpoint": "channels.history",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3ddd-e7d5-11ea-a5ec-979674ac1a4b",
@@ -392,6 +407,7 @@
         "documentation": "Gets information about a channel.",
         "method": "get",
         "endpoint": "channels.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3ddf-e7d5-11ea-a5ec-979674ac1a4b",
@@ -419,6 +435,7 @@
         "documentation": "Invites a user to a channel.",
         "method": "post",
         "endpoint": "channels.invite",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb3de1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -441,6 +458,7 @@
         "documentation": "Joins a channel, creating it if needed.",
         "method": "post",
         "endpoint": "channels.join",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64d1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -463,6 +481,7 @@
         "documentation": "Removes a user from a channel.",
         "method": "post",
         "endpoint": "channels.kick",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64d3-e7d5-11ea-a5ec-979674ac1a4b",
@@ -485,6 +504,7 @@
         "documentation": "Leaves a channel.",
         "method": "post",
         "endpoint": "channels.leave",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64d5-e7d5-11ea-a5ec-979674ac1a4b",
@@ -507,6 +527,7 @@
         "documentation": "Lists all channels in a Slack team.",
         "method": "get",
         "endpoint": "channels.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64d7-e7d5-11ea-a5ec-979674ac1a4b",
@@ -534,6 +555,7 @@
         "documentation": "Sets the read cursor in a channel.",
         "method": "post",
         "endpoint": "channels.mark",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64d9-e7d5-11ea-a5ec-979674ac1a4b",
@@ -556,6 +578,7 @@
         "documentation": "Renames a channel.",
         "method": "post",
         "endpoint": "channels.rename",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64db-e7d5-11ea-a5ec-979674ac1a4b",
@@ -578,6 +601,7 @@
         "documentation": "Retrieve a thread of messages posted to a channel",
         "method": "get",
         "endpoint": "channels.replies",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64dd-e7d5-11ea-a5ec-979674ac1a4b",
@@ -605,6 +629,7 @@
         "documentation": "Sets the purpose for a channel.",
         "method": "post",
         "endpoint": "channels.setPurpose",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64df-e7d5-11ea-a5ec-979674ac1a4b",
@@ -627,6 +652,7 @@
         "documentation": "Sets the topic for a channel.",
         "method": "post",
         "endpoint": "channels.setTopic",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64e1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -649,6 +675,7 @@
         "documentation": "Unarchives a channel.",
         "method": "post",
         "endpoint": "channels.unarchive",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64e3-e7d5-11ea-a5ec-979674ac1a4b",
@@ -671,6 +698,7 @@
         "documentation": "Deletes a message.",
         "method": "post",
         "endpoint": "chat.delete",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64e5-e7d5-11ea-a5ec-979674ac1a4b",
@@ -693,6 +721,7 @@
         "documentation": "Deletes a pending scheduled message from the queue.",
         "method": "post",
         "endpoint": "chat.deleteScheduledMessage",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64e7-e7d5-11ea-a5ec-979674ac1a4b",
@@ -715,6 +744,7 @@
         "documentation": "Retrieve a permalink URL for a specific extant message",
         "method": "get",
         "endpoint": "chat.getPermalink",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64e9-e7d5-11ea-a5ec-979674ac1a4b",
@@ -742,6 +772,7 @@
         "documentation": "Share a me message into a channel.",
         "method": "post",
         "endpoint": "chat.meMessage",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64eb-e7d5-11ea-a5ec-979674ac1a4b",
@@ -764,6 +795,7 @@
         "documentation": "Sends an ephemeral message to a user in a channel.",
         "method": "post",
         "endpoint": "chat.postEphemeral",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64ed-e7d5-11ea-a5ec-979674ac1a4b",
@@ -786,6 +818,7 @@
         "documentation": "Sends a message to a channel.",
         "method": "post",
         "endpoint": "chat.postMessage",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb64ef-e7d5-11ea-a5ec-979674ac1a4b",
@@ -808,6 +841,7 @@
         "documentation": "Schedules a message to be sent to a channel.",
         "method": "post",
         "endpoint": "chat.scheduleMessage",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8be1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -830,6 +864,7 @@
         "documentation": "Returns a list of scheduled messages.",
         "method": "get",
         "endpoint": "chat.scheduledMessages.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8be3-e7d5-11ea-a5ec-979674ac1a4b",
@@ -852,6 +887,7 @@
         "documentation": "Provide custom unfurl behavior for user-posted URLs",
         "method": "post",
         "endpoint": "chat.unfurl",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8be5-e7d5-11ea-a5ec-979674ac1a4b",
@@ -874,6 +910,7 @@
         "documentation": "Updates a message.",
         "method": "post",
         "endpoint": "chat.update",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8be7-e7d5-11ea-a5ec-979674ac1a4b",
@@ -896,6 +933,7 @@
         "documentation": "Archives a conversation.",
         "method": "post",
         "endpoint": "conversations.archive",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8be9-e7d5-11ea-a5ec-979674ac1a4b",
@@ -918,6 +956,7 @@
         "documentation": "Closes a direct message or multi-person direct message.",
         "method": "post",
         "endpoint": "conversations.close",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8beb-e7d5-11ea-a5ec-979674ac1a4b",
@@ -940,6 +979,7 @@
         "documentation": "Initiates a public or private channel-based conversation",
         "method": "post",
         "endpoint": "conversations.create",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bed-e7d5-11ea-a5ec-979674ac1a4b",
@@ -962,6 +1002,7 @@
         "documentation": "Fetches a conversation's history of messages and events.",
         "method": "get",
         "endpoint": "conversations.history",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bef-e7d5-11ea-a5ec-979674ac1a4b",
@@ -989,6 +1030,7 @@
         "documentation": "Retrieve information about a conversation.",
         "method": "get",
         "endpoint": "conversations.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bf1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1016,6 +1058,7 @@
         "documentation": "Invites users to a channel.",
         "method": "post",
         "endpoint": "conversations.invite",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bf3-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1038,6 +1081,7 @@
         "documentation": "Joins an existing conversation.",
         "method": "post",
         "endpoint": "conversations.join",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bf5-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1060,6 +1104,7 @@
         "documentation": "Removes a user from a conversation.",
         "method": "post",
         "endpoint": "conversations.kick",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bf7-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1082,6 +1127,7 @@
         "documentation": "Leaves a conversation.",
         "method": "post",
         "endpoint": "conversations.leave",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bf9-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1104,6 +1150,7 @@
         "documentation": "Lists all channels in a Slack team.",
         "method": "get",
         "endpoint": "conversations.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bfb-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1131,6 +1178,7 @@
         "documentation": "Retrieve members of a conversation.",
         "method": "get",
         "endpoint": "conversations.members",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bfd-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1158,6 +1206,7 @@
         "documentation": "Opens or resumes a direct message or multi-person direct message.",
         "method": "post",
         "endpoint": "conversations.open",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8bff-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1180,6 +1229,7 @@
         "documentation": "Renames a conversation.",
         "method": "post",
         "endpoint": "conversations.rename",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8c01-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1202,6 +1252,7 @@
         "documentation": "Retrieve a thread of messages posted to a conversation",
         "method": "get",
         "endpoint": "conversations.replies",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8c03-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1229,6 +1280,7 @@
         "documentation": "Sets the purpose for a conversation.",
         "method": "post",
         "endpoint": "conversations.setPurpose",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8c05-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1251,6 +1303,7 @@
         "documentation": "Sets the topic for a conversation.",
         "method": "post",
         "endpoint": "conversations.setTopic",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8c07-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1273,6 +1326,7 @@
         "documentation": "Reverses conversation archival.",
         "method": "post",
         "endpoint": "conversations.unarchive",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8c09-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1295,6 +1349,7 @@
         "documentation": "Open a dialog with a user",
         "method": "get",
         "endpoint": "dialog.open",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8c0b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1317,6 +1372,7 @@
         "documentation": "Ends the current user's Do Not Disturb session immediately.",
         "method": "post",
         "endpoint": "dnd.endDnd",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8c0d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1339,6 +1395,7 @@
         "documentation": "Ends the current user's snooze mode immediately.",
         "method": "post",
         "endpoint": "dnd.endSnooze",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bb8c0f-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1361,6 +1418,7 @@
         "documentation": "Retrieves a user's current Do Not Disturb status.",
         "method": "get",
         "endpoint": "dnd.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb2f1-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1388,6 +1446,7 @@
         "documentation": "Turns on Do Not Disturb mode for the current user, or changes its duration.",
         "method": "post",
         "endpoint": "dnd.setSnooze",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb2f3-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1415,6 +1474,7 @@
         "documentation": "Retrieves the Do Not Disturb status for up to 50 users on a team.",
         "method": "get",
         "endpoint": "dnd.teamInfo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb2f5-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1442,6 +1502,7 @@
         "documentation": "Lists custom emoji for a team.",
         "method": "get",
         "endpoint": "emoji.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb2f7-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1469,6 +1530,7 @@
         "documentation": "Deletes an existing comment on a file.",
         "method": "post",
         "endpoint": "files.comments.delete",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb2f9-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1491,6 +1553,7 @@
         "documentation": "Deletes a file.",
         "method": "post",
         "endpoint": "files.delete",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb2fb-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1513,6 +1576,7 @@
         "documentation": "Gets information about a team file.",
         "method": "get",
         "endpoint": "files.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb2fd-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1540,6 +1604,7 @@
         "documentation": "Lists & filters team files.",
         "method": "get",
         "endpoint": "files.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb2ff-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1567,6 +1632,7 @@
         "documentation": "Revokes public/external sharing access for a file",
         "method": "post",
         "endpoint": "files.revokePublicURL",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb301-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1589,6 +1655,7 @@
         "documentation": "Enables a file for public/external sharing.",
         "method": "post",
         "endpoint": "files.sharedPublicURL",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbb303-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1611,6 +1678,7 @@
         "documentation": "Uploads or creates a file.",
         "method": "post",
         "endpoint": "files.upload",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda01-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1638,6 +1706,7 @@
         "documentation": "Archives a private channel.",
         "method": "post",
         "endpoint": "groups.archive",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda03-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1660,6 +1729,7 @@
         "documentation": "Creates a private channel.",
         "method": "post",
         "endpoint": "groups.create",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda05-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1682,6 +1752,7 @@
         "documentation": "Clones and archives a private channel.",
         "method": "post",
         "endpoint": "groups.createChild",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda07-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1709,6 +1780,7 @@
         "documentation": "Fetches history of messages and events from a private channel.",
         "method": "get",
         "endpoint": "groups.history",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda09-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1736,6 +1808,7 @@
         "documentation": "Gets information about a private channel.",
         "method": "get",
         "endpoint": "groups.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda0b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1763,6 +1836,7 @@
         "documentation": "Invites a user to a private channel.",
         "method": "post",
         "endpoint": "groups.invite",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda0d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1785,6 +1859,7 @@
         "documentation": "Removes a user from a private channel.",
         "method": "post",
         "endpoint": "groups.kick",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda0f-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1807,6 +1882,7 @@
         "documentation": "Leaves a private channel.",
         "method": "post",
         "endpoint": "groups.leave",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda11-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1829,6 +1905,7 @@
         "documentation": "Lists private channels that the calling user has access to.",
         "method": "get",
         "endpoint": "groups.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda13-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1856,6 +1933,7 @@
         "documentation": "Sets the read cursor in a private channel.",
         "method": "post",
         "endpoint": "groups.mark",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda15-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1878,6 +1956,7 @@
         "documentation": "Opens a private channel.",
         "method": "post",
         "endpoint": "groups.open",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda17-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1900,6 +1979,7 @@
         "documentation": "Renames a private channel.",
         "method": "post",
         "endpoint": "groups.rename",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda19-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1922,6 +2002,7 @@
         "documentation": "Retrieve a thread of messages posted to a private channel",
         "method": "get",
         "endpoint": "groups.replies",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda1b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1949,6 +2030,7 @@
         "documentation": "Sets the purpose for a private channel.",
         "method": "post",
         "endpoint": "groups.setPurpose",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bbda1d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1971,6 +2053,7 @@
         "documentation": "Sets the topic for a private channel.",
         "method": "post",
         "endpoint": "groups.setTopic",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0111-e7d5-11ea-a5ec-979674ac1a4b",
@@ -1993,6 +2076,7 @@
         "documentation": "Unarchives a private channel.",
         "method": "post",
         "endpoint": "groups.unarchive",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0113-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2015,6 +2099,7 @@
         "documentation": "Close a direct message channel.",
         "method": "post",
         "endpoint": "im.close",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0115-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2037,6 +2122,7 @@
         "documentation": "Fetches history of messages and events from direct message channel.",
         "method": "get",
         "endpoint": "im.history",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0117-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2064,6 +2150,7 @@
         "documentation": "Lists direct message channels for the calling user.",
         "method": "get",
         "endpoint": "im.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0119-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2091,6 +2178,7 @@
         "documentation": "Sets the read cursor in a direct message channel.",
         "method": "post",
         "endpoint": "im.mark",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc011b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2113,6 +2201,7 @@
         "documentation": "Opens a direct message channel.",
         "method": "post",
         "endpoint": "im.open",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc011d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2135,6 +2224,7 @@
         "documentation": "Retrieve a thread of messages posted to a direct message conversation",
         "method": "get",
         "endpoint": "im.replies",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc011f-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2162,6 +2252,7 @@
         "documentation": "For Enterprise Grid workspaces, map local user IDs to global user IDs",
         "method": "get",
         "endpoint": "migration.exchange",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0121-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2189,6 +2280,7 @@
         "documentation": "Closes a multiparty direct message channel.",
         "method": "post",
         "endpoint": "mpim.close",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0123-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2211,6 +2303,7 @@
         "documentation": "Fetches history of messages and events from a multiparty direct message.",
         "method": "get",
         "endpoint": "mpim.history",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0125-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2238,6 +2331,7 @@
         "documentation": "Lists multiparty direct message channels for the calling user.",
         "method": "get",
         "endpoint": "mpim.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0127-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2265,6 +2359,7 @@
         "documentation": "Sets the read cursor in a multiparty direct message channel.",
         "method": "post",
         "endpoint": "mpim.mark",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0129-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2287,6 +2382,7 @@
         "documentation": "This method opens a multiparty direct message.",
         "method": "post",
         "endpoint": "mpim.open",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc012b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2309,6 +2405,7 @@
         "documentation": "Retrieve a thread of messages posted to a direct message conversation from a multiparty direct message.",
         "method": "get",
         "endpoint": "mpim.replies",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc012d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2336,6 +2433,7 @@
         "documentation": "Exchanges a temporary OAuth verifier code for an access token.",
         "method": "get",
         "endpoint": "oauth.access",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc012f-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2363,6 +2461,7 @@
         "documentation": "Exchanges a temporary OAuth verifier code for a workspace token.",
         "method": "get",
         "endpoint": "oauth.token",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0131-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2390,6 +2489,7 @@
         "documentation": "Pins an item to a channel.",
         "method": "post",
         "endpoint": "pins.add",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0133-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2412,6 +2512,7 @@
         "documentation": "Lists items pinned to a channel.",
         "method": "get",
         "endpoint": "pins.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0135-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2439,6 +2540,7 @@
         "documentation": "Un-pins an item from a channel.",
         "method": "post",
         "endpoint": "pins.remove",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc0137-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2461,6 +2563,7 @@
         "documentation": "Adds a reaction to an item.",
         "method": "post",
         "endpoint": "reactions.add",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2821-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2483,6 +2586,7 @@
         "documentation": "Gets reactions for an item.",
         "method": "get",
         "endpoint": "reactions.get",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2823-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2510,6 +2614,7 @@
         "documentation": "Lists reactions made by a user.",
         "method": "get",
         "endpoint": "reactions.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2825-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2537,6 +2642,7 @@
         "documentation": "Removes a reaction from an item.",
         "method": "post",
         "endpoint": "reactions.remove",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2827-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2559,6 +2665,7 @@
         "documentation": "Creates a reminder.",
         "method": "post",
         "endpoint": "reminders.add",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2829-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2581,6 +2688,7 @@
         "documentation": "Marks a reminder as complete.",
         "method": "post",
         "endpoint": "reminders.complete",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc282b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2603,6 +2711,7 @@
         "documentation": "Deletes a reminder.",
         "method": "post",
         "endpoint": "reminders.delete",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc282d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2625,6 +2734,7 @@
         "documentation": "Gets information about a reminder.",
         "method": "get",
         "endpoint": "reminders.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc282f-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2652,6 +2762,7 @@
         "documentation": "Lists all reminders created by or for a given user.",
         "method": "get",
         "endpoint": "reminders.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2831-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2679,6 +2790,7 @@
         "documentation": "Starts a Real Time Messaging session.",
         "method": "get",
         "endpoint": "rtm.connect",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2833-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2706,6 +2818,7 @@
         "documentation": "Searches for messages matching a query.",
         "method": "get",
         "endpoint": "search.messages",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2835-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2733,6 +2846,7 @@
         "documentation": "Adds a star to an item.",
         "method": "post",
         "endpoint": "stars.add",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2837-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2755,6 +2869,7 @@
         "documentation": "Lists stars for a user.",
         "method": "get",
         "endpoint": "stars.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2839-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2782,6 +2897,7 @@
         "documentation": "Removes a star from an item.",
         "method": "post",
         "endpoint": "stars.remove",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc283b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2804,6 +2920,7 @@
         "documentation": "Gets the access logs for the current team.",
         "method": "get",
         "endpoint": "team.accessLogs",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc283d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2831,6 +2948,7 @@
         "documentation": "Gets billable users information for the current team.",
         "method": "get",
         "endpoint": "team.billableInfo",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc283f-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2858,6 +2976,7 @@
         "documentation": "Gets information about the current team.",
         "method": "get",
         "endpoint": "team.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2841-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2885,6 +3004,7 @@
         "documentation": "Gets the integration logs for the current team.",
         "method": "get",
         "endpoint": "team.integrationLogs",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2843-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2912,6 +3032,7 @@
         "documentation": "Retrieve a team's profile.",
         "method": "get",
         "endpoint": "team.profile.get",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2845-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2939,6 +3060,7 @@
         "documentation": "Create a User Group",
         "method": "post",
         "endpoint": "usergroups.create",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2847-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2961,6 +3083,7 @@
         "documentation": "Disable an existing User Group",
         "method": "post",
         "endpoint": "usergroups.disable",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2849-e7d5-11ea-a5ec-979674ac1a4b",
@@ -2983,6 +3106,7 @@
         "documentation": "Enable a User Group",
         "method": "post",
         "endpoint": "usergroups.enable",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc284b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3005,6 +3129,7 @@
         "documentation": "List all User Groups for a team",
         "method": "get",
         "endpoint": "usergroups.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc284d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3032,6 +3157,7 @@
         "documentation": "Update an existing User Group",
         "method": "post",
         "endpoint": "usergroups.update",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc284f-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3054,6 +3180,7 @@
         "documentation": "List all users in a User Group",
         "method": "get",
         "endpoint": "usergroups.users.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2851-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3081,6 +3208,7 @@
         "documentation": "Update the list of users for a User Group",
         "method": "post",
         "endpoint": "usergroups.users.update",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2853-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3103,6 +3231,7 @@
         "documentation": "List conversations the calling user may access.",
         "method": "get",
         "endpoint": "users.conversations",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2855-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3130,6 +3259,7 @@
         "documentation": "Delete the user profile photo",
         "method": "post",
         "endpoint": "users.deletePhoto",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2857-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3157,6 +3287,7 @@
         "documentation": "Gets user presence information.",
         "method": "get",
         "endpoint": "users.getPresence",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2859-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3184,6 +3315,7 @@
         "documentation": "Get a user's identity.",
         "method": "get",
         "endpoint": "users.identity",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc285b-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3211,6 +3343,7 @@
         "documentation": "Gets information about a user.",
         "method": "get",
         "endpoint": "users.info",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc285d-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3238,6 +3371,7 @@
         "documentation": "Lists all users in a Slack team.",
         "method": "get",
         "endpoint": "users.list",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc285f-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3265,6 +3399,7 @@
         "documentation": "Find a user with an email address.",
         "method": "get",
         "endpoint": "users.lookupByEmail",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2861-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3292,6 +3427,7 @@
         "documentation": "Retrieves a user's profile information.",
         "method": "get",
         "endpoint": "users.profile.get",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2863-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3319,6 +3455,7 @@
         "documentation": "Set the profile information for a user.",
         "method": "post",
         "endpoint": "users.profile.set",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc2865-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3341,6 +3478,7 @@
         "documentation": "Marked a user as active. Deprecated and non-functional.",
         "method": "post",
         "endpoint": "users.setActive",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc4f31-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3363,6 +3501,7 @@
         "documentation": "Set the user profile photo",
         "method": "post",
         "endpoint": "users.setPhoto",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc4f33-e7d5-11ea-a5ec-979674ac1a4b",
@@ -3390,6 +3529,7 @@
         "documentation": "Manually sets user presence.",
         "method": "post",
         "endpoint": "users.setPresence",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "01bc4f35-e7d5-11ea-a5ec-979674ac1a4b",

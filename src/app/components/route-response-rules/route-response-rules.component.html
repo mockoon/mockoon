@@ -8,7 +8,7 @@
         <div class="btn-group btn-group-toggle mr-1" data-toggle="buttons">
           <ng-container *ngFor="let rulesOperatorsItem of rulesOperatorsList">
             <label
-              class="btn btn-xs rules-operator-{{rulesOperatorsItem}}"
+              class="btn btn-xs rules-operator-{{ rulesOperatorsItem }}"
               [ngClass]="{
                 active: rulesOperatorsItem === form.get('rulesOperator').value,
                 'btn-primary':
@@ -113,12 +113,16 @@
         </ng-container>
       </div>
     </div>
-    <button
-      type="button"
-      class="btn btn-link btn-icon mt-2"
-      (click)="addRule()"
-    >
-      <i class="material-icons text-success">add_box</i> Add rule
-    </button>
+    <div class="d-flex align-items-center mt-2">
+      <button type="button" class="btn btn-link btn-icon" (click)="addRule()">
+        <i class="material-icons text-success">add_box</i> Add rule
+      </button>
+      <div
+        *ngIf="(activeRoute$ | async).randomResponse"
+        class="warning-message ml-auto text-center mt-1"
+      >
+        Activating random responses disable the rules
+      </div>
+    </div>
   </ng-container>
 </ng-container>

@@ -1,7 +1,7 @@
 [
   {
     "uuid": "f2046a00-e7d4-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "Swagger Petstore v3",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -12,6 +12,7 @@
         "documentation": "Returns all pets from the system that the user has access to\n",
         "method": "get",
         "endpoint": "pets",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f2046a01-e7d4-11ea-a5ec-979674ac1a4b",
@@ -38,6 +39,7 @@
         "documentation": "Creates a new pet in the store.  Duplicates are allowed",
         "method": "post",
         "endpoint": "pets",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f2046a03-e7d4-11ea-a5ec-979674ac1a4b",
@@ -60,6 +62,7 @@
         "documentation": "Returns a user based on a single ID, if the user does not have access to the pet",
         "method": "get",
         "endpoint": "pets/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f2046a05-e7d4-11ea-a5ec-979674ac1a4b",
@@ -82,6 +85,7 @@
         "documentation": "deletes a single pet based on the ID supplied",
         "method": "delete",
         "endpoint": "pets/:id",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "f2046a07-e7d4-11ea-a5ec-979674ac1a4b",

@@ -254,6 +254,20 @@ export const Migrations: {
         });
       });
     }
+  },
+
+  /**
+   * Add route randomResponse param
+   */
+  {
+    id: 13,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        if (route.randomResponse === undefined) {
+          route.randomResponse = false;
+        }
+      });
+    }
   }
 ];
 

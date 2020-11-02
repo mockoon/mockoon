@@ -1,44 +1,44 @@
 {
-    "id": "mockoon_export",
-    "appVersion": "1.4.0",
-    "checksum": "630efdc70dfcde36fcc6eddda4880c87",
-    "subject": "full",
-    "data": [
+  "id": "mockoon_export",
+  "appVersion": "1.4.0",
+  "checksum": "630efdc70dfcde36fcc6eddda4880c87",
+  "subject": "full",
+  "data": [
+    {
+      "uuid": "dd7b3860-1828-11ea-a72e-71ef8b13978b",
+      "name": "Import old v1.4.0",
+      "endpointPrefix": "",
+      "latency": 0,
+      "port": 3000,
+      "routes": [
         {
-            "uuid": "dd7b3860-1828-11ea-a72e-71ef8b13978b",
-            "name": "Import old v1.4.0",
-            "endpointPrefix": "",
-            "latency": 0,
-            "port": 3000,
-            "routes": [
-                {
-                    "uuid": "dd7b5f70-1828-11ea-a72e-71ef8b13978b",
-                    "documentation": "",
-                    "method": "get",
-                    "endpoint": "answer",
-                    "body": "{\n  \"response\": 42\n}",
-                    "latency": 0,
-                    "statusCode": "200",
-                    "headers": [
-                        {
-                            "key": "Content-Type",
-                            "value": "application/json"
-                        }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false
-                }
-            ],
-            "proxyMode": false,
-            "proxyHost": "",
-            "https": false,
-            "cors": true,
-            "headers": [
-                {
-                    "key": "",
-                    "value": ""
-                }
-            ]
+          "uuid": "dd7b5f70-1828-11ea-a72e-71ef8b13978b",
+          "documentation": "",
+          "method": "get",
+          "endpoint": "answer",
+          "body": "{\n  \"response\": 42\n}",
+          "latency": 0,
+          "statusCode": "200",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false
         }
-    ]
+      ],
+      "proxyMode": false,
+      "proxyHost": "",
+      "https": false,
+      "cors": true,
+      "headers": [
+        {
+          "key": "",
+          "value": ""
+        }
+      ]
+    }
+  ]
 }

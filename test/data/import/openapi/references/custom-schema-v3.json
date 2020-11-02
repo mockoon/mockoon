@@ -1,7 +1,7 @@
 [
   {
     "uuid": "a88fc9a0-e7d4-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 12,
+    "lastMigration": 13,
     "name": "Sample v3 schema",
     "endpointPrefix": "api",
     "latency": 0,
@@ -12,6 +12,7 @@
         "documentation": "",
         "method": "get",
         "endpoint": "endpoint",
+        "randomResponse": false,
         "responses": [
           {
             "uuid": "a88fc9a1-e7d4-11ea-a5ec-979674ac1a4b",
