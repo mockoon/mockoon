@@ -1,5 +1,5 @@
+import { Export } from '@mockoon/commons';
 import { Config } from 'src/app/config';
-import { Export } from 'src/app/types/data.type';
 import { Tests } from 'test/lib/tests';
 import { v1 as uuid } from 'uuid';
 

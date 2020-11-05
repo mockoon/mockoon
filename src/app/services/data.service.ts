@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Response } from 'express';
-import { BINARY_BODY } from 'src/app/constants/server.constants';
+import {
+  BINARY_BODY,
+  Environment,
+  Environments,
+  MockoonResponse,
+  Route
+} from '@mockoon/commons';
 import { AscSort, ObjectValuesFlatten } from 'src/app/libs/utils.lib';
 import { EnvironmentLog } from 'src/app/models/environment-logs.model';
 import { Store } from 'src/app/stores/store';
-import { Environment, Environments } from 'src/app/types/environment.type';
-import { Route } from 'src/app/types/route.type';
 import { parse as urlParse } from 'url';
 import { v1 as uuid } from 'uuid';
 
@@ -18,7 +21,7 @@ export class DataService {
    *
    * @param response
    */
-  public formatLog(response: Response): EnvironmentLog {
+  public formatLog(response: MockoonResponse): EnvironmentLog {
     const request = response.req;
     const flattenedRequestHeaders = ObjectValuesFlatten(request.headers);
     const flattenedResponseHeaders = ObjectValuesFlatten(response.getHeaders());
@@ -41,7 +44,7 @@ export class DataService {
         queryParams: request.query
           ? Object.keys(request.query).map((queryParamName) => ({
               name: queryParamName,
-              value: request.query[queryParamName]
+              value: request.query[queryParamName] as string
             }))
           : [],
         body: request.body,

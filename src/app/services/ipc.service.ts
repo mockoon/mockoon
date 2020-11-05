@@ -8,7 +8,7 @@ import { EnvironmentsService } from 'src/app/services/environments.service';
 import { ImportExportService } from 'src/app/services/import-export.service';
 import { UIService } from 'src/app/services/ui.service';
 import { Store } from 'src/app/stores/store';
-import { ScrollDirection } from 'src/app/types/ui.type';
+import { ScrollDirection } from 'src/app/models/ui.model';
 
 @Injectable({ providedIn: 'root' })
 export class IpcService {

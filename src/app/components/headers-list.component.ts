@@ -1,9 +1,27 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, mergeMap, take, takeUntil, tap } from 'rxjs/operators';
-import { TestHeaderValidity } from 'src/app/libs/utils.lib';
-import { Header, headerNames, headerValues } from 'src/app/types/route.type';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  mergeMap,
+  take,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
+import { Header, TestHeaderValidity } from '@mockoon/commons';
+import { headerValues, headerNames } from 'src/app/constants/routes.constants';
 
 @Component({
   selector: 'app-headers-list',

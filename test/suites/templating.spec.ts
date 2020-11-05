@@ -1084,7 +1084,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         description: 'Helper: countryCode',
         path: '/old.countryCode',
         method: 'GET',
-        testedResponse: { status: 200, body: 'MG' }
+        testedResponse: { status: 200, body: 'MH' }
       },
       {
         description: 'Helper: zipcode',

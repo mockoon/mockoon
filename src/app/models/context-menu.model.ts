@@ -1,4 +1,4 @@
-import { DataSubject } from 'src/app/types/data.type';
+import { DataSubject } from 'src/app/models/data.model';
 
 export type ContextMenuEvent = {
   event: MouseEvent;

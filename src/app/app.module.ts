@@ -30,7 +30,7 @@ import { MousedragDeadzoneDirective } from 'src/app/directives/mousedrag-deadzon
 import { ResizeColumnDirective } from 'src/app/directives/resize-column.directive';
 import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
-import { GlobalErrorHandler } from 'src/app/services/error-handler';
+import { GlobalErrorHandler } from 'src/app/services/global-error-handler';
 import { AppComponent } from './app.component';
 
 @NgModule({

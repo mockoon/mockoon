@@ -7,8 +7,7 @@ import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { UIService } from 'src/app/services/ui.service';
 import { DuplicatedRoutesTypes, EnvironmentsStatuses, Store } from 'src/app/stores/store';
-import { Environment } from 'src/app/types/environment.type';
-import { Route } from 'src/app/types/route.type';
+import { Environment, Route } from '@mockoon/commons';
 
 @Component({
   selector: 'app-routes-menu',

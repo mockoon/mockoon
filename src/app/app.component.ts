@@ -19,25 +19,25 @@ import {
   map,
   tap
 } from 'rxjs/operators';
-import { Logger } from 'src/app/classes/logger';
 import { TimedBoolean } from 'src/app/classes/timed-boolean';
 import { ChangelogModalComponent } from 'src/app/components/changelog-modal.component';
 import { SettingsModalComponent } from 'src/app/components/settings-modal.component';
 import { Config } from 'src/app/config';
 import { INDENT_SIZE } from 'src/app/constants/common.constants';
+import { CORSHeaders, MimeTypesWithTemplating } from '@mockoon/commons';
+import { methods, statusCodes } from 'src/app/constants/routes.constants';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/app/enums/ui.enum';
-import {
-  GetRouteResponseContentType,
-  IsValidURL
-} from 'src/app/libs/utils.lib';
+
 import { HeadersProperties } from 'src/app/models/common.model';
 import { ContextMenuItemPayload } from 'src/app/models/context-menu.model';
+import { DataSubject } from 'src/app/models/data.model';
 import {
   EnvironmentLog,
   EnvironmentLogs
 } from 'src/app/models/environment-logs.model';
 import { Toast } from 'src/app/models/toasts.model';
+import { DraggableContainerNames } from 'src/app/models/ui.model';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvironmentsService } from 'src/app/services/environments.service';
@@ -61,18 +61,8 @@ import {
   TabsNameType,
   ViewsNameType
 } from 'src/app/stores/store';
-import { DataSubject } from 'src/app/types/data.type';
-import { Environment, Environments } from 'src/app/types/environment.type';
-import {
-  CORSHeaders,
-  Header,
-  methods,
-  mimeTypesWithTemplating,
-  Route,
-  RouteResponse,
-  statusCodes
-} from 'src/app/types/route.type';
-import { DraggableContainerNames } from 'src/app/types/ui.type';
+import { Environment, Header, Route, RouteResponse, Environments, IsValidURL, GetRouteResponseContentType } from '@mockoon/commons';
+import { Logger } from 'src/app/classes/logger';
 
 @Component({
   selector: 'app-root',
@@ -558,7 +548,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     return {
       mimeType,
-      supportsTemplating: mimeTypesWithTemplating.indexOf(mimeType) > -1
+      supportsTemplating: MimeTypesWithTemplating.indexOf(mimeType) > -1
     };
   }
 

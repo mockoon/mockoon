@@ -104,7 +104,8 @@ const init = function () {
     webPreferences: {
       nodeIntegration: true,
       devTools: isDev ? true : false,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      spellcheck: false
     }
   });
 
@@ -275,7 +276,7 @@ const createAppMenu = function () {
         accelerator: 'Shift+CmdOrCtrl+A',
         click: function () {
           mainWindow.webContents.send('keydown', {
-            action: 'START_ALL_ENVIRONMENTS',
+            action: 'START_ALL_ENVIRONMENTS'
           });
         }
       },

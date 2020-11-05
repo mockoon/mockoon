@@ -6,8 +6,8 @@ import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { UIService } from 'src/app/services/ui.service';
 import { EnvironmentsStatuses, Store, UIState } from 'src/app/stores/store';
-import { Environment, Environments } from 'src/app/types/environment.type';
-import { ScrollDirection } from 'src/app/types/ui.type';
+import { Environment, Environments } from '@mockoon/commons';
+import { ScrollDirection } from 'src/app/models/ui.model';
 
 @Component({
   selector: 'app-environments-menu',
