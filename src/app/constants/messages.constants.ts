@@ -5,24 +5,18 @@ export const Messages: {
     messageParams: MessageParams
   ) => { message: string; loggerMessage?: string; showToast: boolean };
 } = {
-  CREATING_PROXY: (messageParams) => {
-    return {
-      message: `Creating proxy between localhost:${messageParams.port} and ${messageParams.proxyHost}`,
-      showToast: false
-    };
-  },
-  ENVIRONMENT_STARTED: (messageParams) => {
-    return {
-      message: `Server ${messageParams.uuid} was started successfully on port ${messageParams.port}`,
-      showToast: false
-    };
-  },
-  ENVIRONMENT_STOPPED: (messageParams) => {
-    return {
-      message: `Server ${messageParams.uuid} has been stopped`,
-      showToast: false
-    };
-  },
+  CREATING_PROXY: (messageParams) => ({
+    message: `Creating proxy between localhost:${messageParams.port} and ${messageParams.proxyHost}`,
+    showToast: false
+  }),
+  ENVIRONMENT_STARTED: (messageParams) => ({
+    message: `Server ${messageParams.uuid} was started successfully on port ${messageParams.port}`,
+    showToast: false
+  }),
+  ENVIRONMENT_STOPPED: (messageParams) => ({
+    message: `Server ${messageParams.uuid} has been stopped`,
+    showToast: false
+  }),
   PORT_ALREADY_USED: (messageParams) => {
     const message = `Port ${messageParams.port} is already in use`;
 

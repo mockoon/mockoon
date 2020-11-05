@@ -1,8 +1,8 @@
+import { HighestMigrationId } from '@mockoon/commons';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { Settings } from 'src/app/models/settings.model';
 import { Tests } from 'test/lib/tests';
-import { HighestMigrationId } from '@mockoon/commons';
 
 describe('Environments migrations', () => {
   describe('Pre 1.7.0', () => {

@@ -366,7 +366,7 @@ describe('Environment logs', () => {
           '.environment-logs-content-request .environment-logs-content-title .btn.btn-link'
         );
         await tests.helpers.waitElementExist(
-          `.modal-dialog .modal-body .editor`
+          '.modal-dialog .modal-body .editor'
         );
         await tests.helpers.closeModal();
       });
@@ -377,7 +377,7 @@ describe('Environment logs', () => {
           '.environment-logs-content-response .environment-logs-content-title .btn.btn-link'
         );
         await tests.helpers.waitElementExist(
-          `.modal-dialog .modal-body .editor`
+          '.modal-dialog .modal-body .editor'
         );
         await tests.helpers.closeModal();
       });

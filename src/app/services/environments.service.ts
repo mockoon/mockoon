@@ -87,7 +87,7 @@ export class EnvironmentsService {
             Object.keys(environments).length === 0 &&
             environments.constructor === Object
           ) {
-            this.logger.info(`No Data, building default environment`);
+            this.logger.info('No Data, building default environment');
 
             return of([this.schemasBuilderService.buildDefaultEnvironment()]);
           } else {

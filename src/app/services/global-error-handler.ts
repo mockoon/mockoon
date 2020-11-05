@@ -5,7 +5,7 @@ import { Logger } from 'src/app/classes/logger';
 export class GlobalErrorHandler implements ErrorHandler {
   private logger = new Logger('[APPLICATION]');
 
-  handleError(error) {
+  public handleError(error) {
     const errorInfo =
       typeof error === 'string'
         ? error

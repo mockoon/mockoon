@@ -950,7 +950,8 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: `{"name":"Cedric Schmidt","username":"Michel.Wisoky9","email":"Josh_Terry82@hotmail.com","address":{"street":"Alison Club","suite":"Apt. 108","city":"Aydenstad","zipcode":"69451","geo":{"lat":"34.5379","lng":"-75.7333"}},"phone":"1-367-840-0769","website":"magnolia.net","company":{"name":"Goyette and Sons","catchPhrase":"Seamless context-sensitive artificial intelligence","bs":"optimize bleeding-edge supply-chains"}}`
+          body:
+            '{"name":"Cedric Schmidt","username":"Michel.Wisoky9","email":"Josh_Terry82@hotmail.com","address":{"street":"Alison Club","suite":"Apt. 108","city":"Aydenstad","zipcode":"69451","geo":{"lat":"34.5379","lng":"-75.7333"}},"phone":"1-367-840-0769","website":"magnolia.net","company":{"name":"Goyette and Sons","catchPhrase":"Seamless context-sensitive artificial intelligence","bs":"optimize bleeding-edge supply-chains"}}'
         }
       },
       {
@@ -959,7 +960,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: `e14e4128-01ae-43e4-8790-9992f94b3186`
+          body: 'e14e4128-01ae-43e4-8790-9992f94b3186'
         }
       }
     ]

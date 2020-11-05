@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Environment, Environments, Export, Route, ExportData, ExportDataRoute, ExportDataEnvironment } from '@mockoon/commons';
+import {
+  Environment,
+  Environments,
+  Export,
+  ExportData,
+  ExportDataEnvironment,
+  ExportDataRoute,
+  Route
+} from '@mockoon/commons';
 import { clipboard, remote } from 'electron';
 import { readFile, writeFile } from 'fs';
 import { cloneDeep } from 'lodash';
@@ -8,9 +16,7 @@ import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
 import { Messages } from 'src/app/enums/messages.enum';
-import {
-  OldExport
-} from 'src/app/models/data.model';
+import { OldExport } from 'src/app/models/data.model';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { MigrationService } from 'src/app/services/migration.service';
@@ -54,7 +60,7 @@ export class ImportExportService {
       return;
     }
 
-    this.logger.info(`Exporting all environments to a file`);
+    this.logger.info('Exporting all environments to a file');
 
     const filePath = await this.openSaveDialog('Export all to JSON');
 
@@ -85,7 +91,7 @@ export class ImportExportService {
       return;
     }
 
-    this.logger.info(`Exporting active environment to a file`);
+    this.logger.info('Exporting active environment to a file');
 
     const filePath = await this.openSaveDialog('Export current to JSON');
 
@@ -108,27 +114,6 @@ export class ImportExportService {
           );
         }
       });
-    }
-  }
-
-  /**
-   * Writes JSON data to the specified filePath in Mockoon format.
-   *
-   * @param dataToExport
-   * @param filePath
-   * @param callback
-   */
-  private exportDataToFilePath(dataToExport, filePath, callback) {
-    try {
-      writeFile(
-        filePath,
-        this.prepareExport({ data: dataToExport, subject: 'environment' }),
-        callback
-      );
-    } catch (error) {
-      this.logger.error(`Error while exporting environments: ${error.message}`);
-
-      this.toastService.addToast('error', Errors.EXPORT_ERROR);
     }
   }
 
@@ -208,7 +193,7 @@ export class ImportExportService {
    * Load data from JSON file and import
    */
   public async importFromFile() {
-    this.logger.info(`Importing from file`);
+    this.logger.info('Importing from file');
 
     const dialogResult = await this.dialog.showOpenDialog(
       this.BrowserWindow.getFocusedWindow(),
@@ -243,7 +228,7 @@ export class ImportExportService {
    * Load data from clipboard and import
    */
   public importFromClipboard() {
-    this.logger.info(`Importing from clipboard`);
+    this.logger.info('Importing from clipboard');
 
     try {
       const importedData: Export & OldExport = JSON.parse(clipboard.readText());
@@ -265,7 +250,7 @@ export class ImportExportService {
    * Append imported envs to the env array.
    */
   public async importOpenAPIFile() {
-    this.logger.info(`Importing OpenAPI file`);
+    this.logger.info('Importing OpenAPI file');
 
     const dialogResult = await this.dialog.showOpenDialog(
       this.BrowserWindow.getFocusedWindow(),
@@ -295,7 +280,7 @@ export class ImportExportService {
       return;
     }
 
-    this.logger.info(`Exporting to OpenAPI file`);
+    this.logger.info('Exporting to OpenAPI file');
 
     const filePath = await this.openSaveDialog('Export all to JSON');
 
@@ -324,6 +309,27 @@ export class ImportExportService {
 
         this.toastService.addToast('error', Errors.EXPORT_ERROR);
       }
+    }
+  }
+
+  /**
+   * Writes JSON data to the specified filePath in Mockoon format.
+   *
+   * @param dataToExport
+   * @param filePath
+   * @param callback
+   */
+  private exportDataToFilePath(dataToExport, filePath, callback) {
+    try {
+      writeFile(
+        filePath,
+        this.prepareExport({ data: dataToExport, subject: 'environment' }),
+        callback
+      );
+    } catch (error) {
+      this.logger.error(`Error while exporting environments: ${error.message}`);
+
+      this.toastService.addToast('error', Errors.EXPORT_ERROR);
     }
   }
 

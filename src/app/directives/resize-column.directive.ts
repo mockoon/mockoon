@@ -1,4 +1,11 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  Renderer2
+} from '@angular/core';
 import { filter, first } from 'rxjs/operators';
 import { SettingsProperties } from 'src/app/models/settings.model';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -14,13 +21,15 @@ export type ColumnType = 'routeMenu' | 'envLogs';
  */
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: 'resize-column'
 })
 export class ResizeColumnDirective implements AfterViewInit {
-  @Input() type: ColumnType;
-  @Input() minWidth = 100; // min width in pixels
-  @Input() maxWidthFactor = 0.2; // max width based on body width percentage
+  @Input()
+  public type: ColumnType;
+  @Input()
+  public minWidth = 100; // min width in pixels
+  @Input()
+  public maxWidthFactor = 0.2; // max width based on body width percentage
 
   // Event removers for mousemove / mouseup events to body
   private mouseMoveRemover: Function;
@@ -37,6 +46,21 @@ export class ResizeColumnDirective implements AfterViewInit {
     private store: Store,
     private renderer: Renderer2
   ) {}
+
+  @HostListener('mousedown', ['$event'])
+  public onMouseDown(event) {
+    this.pressed = true;
+    this.startX = event.x;
+    this.startWidth = this.elementRef.nativeElement.parentElement.offsetWidth;
+
+    this.initResizableColumns();
+  }
+
+  // Listen on widow size changes and apply max width
+  @HostListener('window:resize', ['$event'])
+  public onWindowResize(event) {
+    this.applyLimits(this.elementRef.nativeElement.parentElement.offsetWidth);
+  }
 
   ngAfterViewInit() {
     // Init and set size from settings - if that exists
@@ -60,19 +84,6 @@ export class ResizeColumnDirective implements AfterViewInit {
           this.applyLimits(width);
         }
       });
-  }
-
-  @HostListener('mousedown', ['$event']) onMouseDown(event) {
-    this.pressed = true;
-    this.startX = event.x;
-    this.startWidth = this.elementRef.nativeElement.parentElement.offsetWidth;
-
-    this.initResizableColumns();
-  }
-
-  // Listen on widow size changes and apply max width
-  @HostListener('window:resize', ['$event']) onWindowResize(event) {
-    this.applyLimits(this.elementRef.nativeElement.parentElement.offsetWidth);
   }
 
   /**

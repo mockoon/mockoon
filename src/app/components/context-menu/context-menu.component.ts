@@ -1,7 +1,18 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ContentMenuState, ContextMenuItem, ContextMenuItemPayload } from 'src/app/models/context-menu.model';
+import {
+  ContentMenuState,
+  ContextMenuItem,
+  ContextMenuItemPayload
+} from 'src/app/models/context-menu.model';
 import { EventsService } from 'src/app/services/events.service';
 
 @Component({
@@ -11,13 +22,18 @@ import { EventsService } from 'src/app/services/events.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContextMenuComponent implements OnInit {
-  @Output() itemClicked: EventEmitter<
-    ContextMenuItemPayload
-  > = new EventEmitter();
+  @Output()
+  public itemClicked: EventEmitter<ContextMenuItemPayload> = new EventEmitter();
   public menuState$: Observable<ContentMenuState>;
   private timeout: NodeJS.Timer;
 
   constructor(private eventsService: EventsService) {}
+
+  // close on click outside
+  @HostListener('window:click')
+  public onInputChange() {
+    this.reset();
+  }
 
   ngOnInit() {
     this.menuState$ = this.eventsService.contextMenuEvents.pipe(
@@ -51,11 +67,6 @@ export class ContextMenuComponent implements OnInit {
         return menuState;
       })
     );
-  }
-
-  // close on click outside
-  @HostListener('window:click') onInputChange() {
-    this.reset();
   }
 
   public mouseLeave() {

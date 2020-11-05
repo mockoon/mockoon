@@ -40,9 +40,7 @@ export class RemoteConfigService {
   private fetchConfig(): Observable<RemoteConfig> {
     return this.remoteConfig.changes.pipe(
       filterFresh(43_200_000),
-      filter((param: Parameter) => {
-        return param.key === environment.remoteConfig;
-      }),
+      filter((param: Parameter) => param.key === environment.remoteConfig),
       take(1),
       map(parameter => JSON.parse(parameter.asString()))
     );

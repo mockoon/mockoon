@@ -19,7 +19,7 @@ describe('UI interactions', () => {
       await tests.helpers.contextMenuOpen(
         '.environments-menu .nav-item .nav-link.active'
       );
-      await tests.helpers.waitElementExist(`.context-menu`);
+      await tests.helpers.waitElementExist('.context-menu');
     });
 
     it('Opened environment menu item displays full name', async () => {
@@ -43,7 +43,7 @@ describe('UI interactions', () => {
       await tests.helpers.contextMenuOpen(
         '.environments-menu .nav-item .nav-link.active'
       );
-      await tests.helpers.waitElementExist(`.context-menu`);
+      await tests.helpers.waitElementExist('.context-menu');
     });
   });
 

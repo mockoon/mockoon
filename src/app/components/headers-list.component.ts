@@ -9,19 +9,24 @@ import {
   Output
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  Environment,
+  Header,
+  RouteResponse,
+  TestHeaderValidity
+} from '@mockoon/commons';
 import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
+  distinctUntilKeyChanged,
   filter,
   map,
-  mergeMap,
-  take,
   takeUntil,
   tap
 } from 'rxjs/operators';
-import { Header, TestHeaderValidity } from '@mockoon/commons';
-import { headerValues, headerNames } from 'src/app/constants/routes.constants';
+import { headerNames, headerValues } from 'src/app/constants/routes.constants';
+import { HeadersProperties } from 'src/app/models/common.model';
 
 @Component({
   selector: 'app-headers-list',
@@ -29,14 +34,18 @@ import { headerValues, headerNames } from 'src/app/constants/routes.constants';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeadersListComponent implements OnInit, OnDestroy {
-  @Input() dataSubjectUUID$: Observable<string>;
-  @Input() headers$: Observable<Header[]>;
-  @Input() injectedHeaders$: Observable<Header[]>;
-  @Output() headerAdded = new EventEmitter<any>();
-  @Output() headersUpdated = new EventEmitter<Header[]>();
+  @Input()
+  public dataSubject$: Observable<RouteResponse | Environment>;
+  @Input()
+  public headersPropertyName: HeadersProperties;
+  @Input()
+  public injectedHeaders$: Observable<Header[]>;
+  @Output()
+  public headerAdded = new EventEmitter<any>();
+  @Output()
+  public headersUpdated = new EventEmitter<Header[]>();
   public form: FormGroup;
   public testHeaderValidity = TestHeaderValidity;
-  public _headers$: Observable<Header[]>;
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
@@ -50,17 +59,17 @@ export class HeadersListComponent implements OnInit, OnDestroy {
       headers: this.formBuilder.array([])
     });
 
-    // observe initial state of the activeItem
-    this._headers$ = this.dataSubjectUUID$.pipe(
-      filter((uuid) => !!uuid),
-      distinctUntilChanged(),
-      mergeMap(() => {
-        return this.headers$.pipe(take(1));
-      }),
-      tap((headers) => {
-        this.replaceHeaders(headers, false);
-      })
-    );
+    // initialize the form depending on the env/route response headers
+    this.dataSubject$
+      .pipe(
+        filter((uuid) => !!uuid),
+        distinctUntilKeyChanged('uuid'),
+        tap((dataSubject) => {
+          this.replaceHeaders(dataSubject[this.headersPropertyName], false);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
 
     // subscribe to header injection observable
     if (this.injectedHeaders$) {
@@ -91,50 +100,6 @@ export class HeadersListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.unsubscribe();
-  }
-
-  /**
-   * Replace existing header with injected header value, or append injected header
-   */
-  private injectHeaders(headers: Header[]) {
-    const newHeaders = [...this.form.value.headers];
-
-    headers.forEach((header) => {
-      const headerExistsIndex = newHeaders.findIndex(
-        (newHeader) => newHeader.key === header.key
-      );
-
-      if (headerExistsIndex > -1 && !newHeaders[headerExistsIndex].value) {
-        newHeaders[headerExistsIndex] = { ...header };
-      } else if (headerExistsIndex === -1) {
-        newHeaders.push({ ...header });
-      }
-    });
-
-    this.replaceHeaders(newHeaders);
-  }
-
-  /**
-   * Replace all headers in the FormArray
-   */
-  private replaceHeaders(newHeaders: Header[], listenToChanges = true) {
-    this.listenToChanges = listenToChanges;
-    const formHeadersArray = this.form.get('headers') as FormArray;
-
-    formHeadersArray.clear();
-
-    newHeaders.forEach((header) => {
-      formHeadersArray.push(
-        this.formBuilder.group({
-          key: header.key,
-          value: header.value
-        })
-      );
-    });
-
-    this.changeDetectorRef.markForCheck();
-
-    this.listenToChanges = true;
   }
 
   /**
@@ -180,5 +145,49 @@ export class HeadersListComponent implements OnInit, OnDestroy {
    */
   public removeHeader(headerIndex: number) {
     (this.form.get('headers') as FormArray).removeAt(headerIndex);
+  }
+
+  /**
+   * Replace existing header with injected header value, or append injected header
+   */
+  private injectHeaders(headers: Header[]) {
+    const newHeaders = [...this.form.value.headers];
+
+    headers.forEach((header) => {
+      const headerExistsIndex = newHeaders.findIndex(
+        (newHeader) => newHeader.key === header.key
+      );
+
+      if (headerExistsIndex > -1 && !newHeaders[headerExistsIndex].value) {
+        newHeaders[headerExistsIndex] = { ...header };
+      } else if (headerExistsIndex === -1) {
+        newHeaders.push({ ...header });
+      }
+    });
+
+    this.replaceHeaders(newHeaders);
+  }
+
+  /**
+   * Replace all headers in the FormArray
+   */
+  private replaceHeaders(newHeaders: Header[], listenToChanges = true) {
+    this.listenToChanges = listenToChanges;
+    const formHeadersArray = this.form.get('headers') as FormArray;
+
+    formHeadersArray.clear();
+
+    newHeaders.forEach((header) => {
+      formHeadersArray.push(
+        this.formBuilder.group({
+          key: header.key,
+          value: header.value
+        })
+      );
+    });
+
+    this.changeDetectorRef.markForCheck();
+
+    this.listenToChanges = true;
   }
 }

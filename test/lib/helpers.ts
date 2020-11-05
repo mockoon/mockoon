@@ -1,3 +1,9 @@
+import {
+  Environments,
+  Header,
+  LogicalOperators,
+  ResponseRule
+} from '@mockoon/commons';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
@@ -7,12 +13,6 @@ import {
   TabsNameType,
   ViewsNameType
 } from 'src/app/stores/store';
-import { Environments } from 'src/app/types/environment.type';
-import {
-  Header,
-  LogicalOperators,
-  ResponseRule
-} from 'src/app/types/route.type';
 import { fetch } from 'test/lib/fetch';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
@@ -20,77 +20,87 @@ import { Tests } from 'test/lib/tests';
 export class Helpers {
   constructor(private testsInstance: Tests) {}
 
-  async getElement(selector: string) {
+  public async getElement(selector: string) {
     const element = await this.testsInstance.app.client.$(selector);
 
     return element;
   }
 
-  async waitElementExist(selector: string, reverse: boolean = false) {
+  public async waitElementExist(selector: string, reverse: boolean = false) {
     const element = await this.getElement(selector);
     await element.waitForExist({ reverse });
   }
 
-  async elementClick(selector: string, button: 'left' | 'right' = 'left') {
+  public async elementClick(
+    selector: string,
+    button: 'left' | 'right' = 'left'
+  ) {
     const element = await this.getElement(selector);
     await element.click({ button });
   }
 
-  async setElementValue(selector: string, value: string | number | boolean) {
+  public async setElementValue(
+    selector: string,
+    value: string | number | boolean
+  ) {
     const element = await this.getElement(selector);
     await element.setValue(value);
   }
 
-  async selectByAttribute(selector: string, attribute: string, value: string) {
+  public async selectByAttribute(
+    selector: string,
+    attribute: string,
+    value: string
+  ) {
     const element = await this.getElement(selector);
     await element.selectByAttribute(attribute, value);
   }
 
-  async getElementText(selector: string) {
+  public async getElementText(selector: string) {
     const element = await this.getElement(selector);
     const elementText = await element.getText();
 
     return elementText;
   }
 
-  async getElementAttribute(selector: string, attribute: string) {
+  public async getElementAttribute(selector: string, attribute: string) {
     const element = await this.getElement(selector);
     const elementAttribute = await element.getAttribute(attribute);
 
     return elementAttribute;
   }
 
-  async countElements(selector: string, expected: number) {
+  public async countElements(selector: string, expected: number) {
     await this.testsInstance.app.client
       .$$(selector)
       .should.eventually.be.an('Array')
       .that.have.lengthOf(expected);
   }
 
-  async addEnvironment() {
+  public async addEnvironment() {
     await this.elementClick(
       '.environments-menu .nav:first-of-type .nav-item .nav-link.add-environment'
     );
   }
 
-  async removeEnvironment(index: number) {
+  public async removeEnvironment(index: number) {
     await this.contextMenuClickAndConfirm(
       `.environments-menu .menu-list .nav-item:nth-child(${index}) .nav-link`,
       5
     );
   }
 
-  async addRoute() {
+  public async addRoute() {
     await this.elementClick(
       '.routes-menu .nav:first-of-type .nav-item .nav-link'
     );
   }
 
-  async addRouteResponse() {
+  public async addRouteResponse() {
     await this.elementClick('#route-responses-menu #route-response-add');
   }
 
-  async removeRouteResponse() {
+  public async removeRouteResponse() {
     const deleteButtonSelector =
       '#route-responses-menu #route-response-removal-button';
 
@@ -98,38 +108,38 @@ export class Helpers {
     await this.elementClick(deleteButtonSelector);
   }
 
-  async duplicateRouteResponse() {
+  public async duplicateRouteResponse() {
     const duplicationButtonSelector =
       '#route-responses-menu #route-response-duplication-button';
     await this.elementClick(duplicationButtonSelector);
   }
 
-  async countEnvironments(expected: number) {
+  public async countEnvironments(expected: number) {
     await this.countElements(
       '.environments-menu .menu-list .nav-item',
       expected
     );
   }
 
-  async countRoutes(expected: number) {
+  public async countRoutes(expected: number) {
     await this.countElements('.routes-menu .menu-list .nav-item', expected);
   }
 
-  async countRouteResponses(expected: number) {
+  public async countRouteResponses(expected: number) {
     await this.countElements(
       '#route-responses-menu .dropdown-menu .dropdown-item',
       expected
     );
   }
 
-  async countEnvironmentLogsEntries(expected: number) {
+  public async countEnvironmentLogsEntries(expected: number) {
     await this.countElements(
       '.environment-logs-column:nth-child(1) .menu-list .nav-item',
       expected
     );
   }
 
-  async toggleEnvironmentMenu() {
+  public async toggleEnvironmentMenu() {
     await this.elementClick(
       '.environments-menu .nav:first-of-type .nav-item .nav-link.toggle-environments-menu'
     );
@@ -137,11 +147,11 @@ export class Helpers {
     await this.testsInstance.app.client.pause(310);
   }
 
-  async contextMenuOpen(targetMenuItemSelector: string) {
+  public async contextMenuOpen(targetMenuItemSelector: string) {
     await this.elementClick(targetMenuItemSelector, 'right');
   }
 
-  async contextMenuClick(
+  public async contextMenuClick(
     targetMenuItemSelector: string,
     contextMenuItemIndex: number
   ) {
@@ -151,7 +161,7 @@ export class Helpers {
     );
   }
 
-  async contextMenuClickAndConfirm(
+  public async contextMenuClickAndConfirm(
     targetMenuItemSelector: string,
     contextMenuItemIndex: number
   ) {
@@ -165,29 +175,29 @@ export class Helpers {
     );
   }
 
-  async startEnvironment() {
+  public async startEnvironment() {
     await this.elementClick('.btn i[ngbtooltip="Start server"]');
     await this.waitElementExist(
-      `.environments-menu .menu-list .nav-item .nav-link.active.running`
+      '.environments-menu .menu-list .nav-item .nav-link.active.running'
     );
   }
 
-  async stopEnvironment() {
+  public async stopEnvironment() {
     await this.elementClick('.btn i[ngbtooltip="Stop server"]');
     await this.waitElementExist(
-      `.environments-menu .menu-list .nav-item .nav-link.active.running`,
+      '.environments-menu .menu-list .nav-item .nav-link.active.running',
       true
     );
   }
 
-  async restartEnvironment() {
+  public async restartEnvironment() {
     await this.elementClick('.btn i[ngbtooltip="Server needs restart"]');
     await this.waitElementExist(
-      `.environments-menu .menu-list .nav-item .nav-link.active.running`
+      '.environments-menu .menu-list .nav-item .nav-link.active.running'
     );
   }
 
-  async assertEnvironmentServerIconsExists(
+  public async assertEnvironmentServerIconsExists(
     index: number,
     iconName: 'cors' | 'https' | 'proxy-mode'
   ) {
@@ -195,7 +205,7 @@ export class Helpers {
     await this.waitElementExist(selector);
   }
 
-  async assertHasActiveEnvironment(name?: string, reverse = false) {
+  public async assertHasActiveEnvironment(name?: string, reverse = false) {
     const selector = '.environments-menu .nav-item .nav-link.active';
     await this.waitElementExist(selector, reverse);
 
@@ -205,32 +215,32 @@ export class Helpers {
     }
   }
 
-  async checkEnvironmentNeedsRestart() {
+  public async checkEnvironmentNeedsRestart() {
     await this.waitElementExist(
-      `.environments-menu .menu-list .nav-item .nav-link.active.need-restart`
+      '.environments-menu .menu-list .nav-item .nav-link.active.need-restart'
     );
   }
 
-  async checkEnvironmentSelected(index: number) {
+  public async checkEnvironmentSelected(index: number) {
     await this.waitElementExist(
       `.environments-menu .menu-list .nav-item:nth-child(${index}) .nav-link.active`
     );
   }
 
-  async checkNoEnvironmentSelected() {
+  public async checkNoEnvironmentSelected() {
     await this.waitElementExist(
-      `.environments-menu .menu-list .nav-item .nav-link.active`,
+      '.environments-menu .menu-list .nav-item .nav-link.active',
       true
     );
   }
 
-  async selectEnvironment(index: number) {
+  public async selectEnvironment(index: number) {
     await this.elementClick(
       `.environments-menu .menu-list .nav-item:nth-child(${index}) .nav-link`
     );
   }
 
-  async checkActiveRoute(name?: string, reverse = false) {
+  public async checkActiveRoute(name?: string, reverse = false) {
     const selector = '.routes-menu .nav-item .nav-link.active';
     await this.waitElementExist(selector, reverse);
 
@@ -240,20 +250,20 @@ export class Helpers {
     }
   }
 
-  async selectRoute(index: number) {
+  public async selectRoute(index: number) {
     await this.elementClick(
       `.routes-menu .nav.menu-list .nav-item:nth-child(${index})`
     );
   }
 
-  async selectRouteResponse(index: number) {
+  public async selectRouteResponse(index: number) {
     await this.elementClick('#route-responses-menu .dropdown-toggle');
     await this.elementClick(
       `#route-responses-menu .dropdown-menu .dropdown-item:nth-child(${index})`
     );
   }
 
-  async checkToastDisplayed(toastType: ToastTypes, text: string) {
+  public async checkToastDisplayed(toastType: ToastTypes, text: string) {
     const toastSelector = `.toast.toast-${toastType}`;
 
     await this.waitElementExist(toastSelector);
@@ -266,7 +276,7 @@ export class Helpers {
     }
   }
 
-  async switchViewInHeader(viewName: Exclude<ViewsNameType, 'ROUTE'>) {
+  public async switchViewInHeader(viewName: Exclude<ViewsNameType, 'ROUTE'>) {
     const selectors: { [key in typeof viewName]: string } = {
       ENV_LOGS: 'Environment logs',
       ENV_SETTINGS: 'Environment settings'
@@ -277,7 +287,7 @@ export class Helpers {
     );
   }
 
-  async switchTab(tabName: TabsNameType) {
+  public async switchTab(tabName: TabsNameType) {
     const selectors: { [key in typeof tabName]: string } = {
       RESPONSE:
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(1) .nav-link',
@@ -292,19 +302,21 @@ export class Helpers {
     await this.elementClick(selectors[tabName]);
   }
 
-  async selectEnvironmentLogEntry(index: number) {
+  public async selectEnvironmentLogEntry(index: number) {
     await this.elementClick(
       `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${index})`
     );
   }
 
-  async assertEnvironmentLogEntryActive(index: number) {
+  public async assertEnvironmentLogEntryActive(index: number) {
     await this.waitElementExist(
       `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${index}) .nav-link.active`
     );
   }
 
-  async switchTabInEnvironmentLogs(tabName: EnvironmentLogsTabsNameType) {
+  public async switchTabInEnvironmentLogs(
+    tabName: EnvironmentLogsTabsNameType
+  ) {
     const selectors: { [key in typeof tabName]: string } = {
       REQUEST:
         '.environment-logs-content .nav.nav-tabs .nav-item:nth-child(1) .nav-link',
@@ -315,7 +327,7 @@ export class Helpers {
     await this.elementClick(selectors[tabName]);
   }
 
-  async addResponseRule(rule: ResponseRule) {
+  public async addResponseRule(rule: ResponseRule) {
     await this.elementClick('app-route-response-rules .btn.btn-link');
     await this.selectByAttribute(
       'app-route-response-rules .row:last-of-type .form-inline select[formcontrolname="target"]',
@@ -332,7 +344,7 @@ export class Helpers {
     );
   }
 
-  async httpCallAsserterWithPort(httpCall: HttpCall, port: number) {
+  public async httpCallAsserterWithPort(httpCall: HttpCall, port: number) {
     const response = await fetch({
       protocol: 'http',
       port: port,
@@ -377,17 +389,17 @@ export class Helpers {
     }
   }
 
-  async httpCallAsserter(httpCall: HttpCall) {
+  public async httpCallAsserter(httpCall: HttpCall) {
     await this.testsInstance.app.client.pause(100);
     await this.httpCallAsserterWithPort(httpCall, 3000);
   }
 
-  async assertElementValue(selector: string, valueToCompare: string) {
+  public async assertElementValue(selector: string, valueToCompare: string) {
     const element = await this.getElement(selector);
     expect(await element.getValue()).to.equal(valueToCompare);
   }
 
-  async assertActiveEnvironmentPort(expectedPort: number) {
+  public async assertActiveEnvironmentPort(expectedPort: number) {
     const port: string = await this.getElementAttribute(
       'input[formcontrolname="port"]',
       'value'
@@ -395,7 +407,7 @@ export class Helpers {
     await port.should.be.equals(expectedPort.toString());
   }
 
-  async assertActiveEnvironmentName(expectedName: string) {
+  public async assertActiveEnvironmentName(expectedName: string) {
     const environmentName: string = await this.getElementAttribute(
       'input[formcontrolname="name"]',
       'value'
@@ -403,55 +415,55 @@ export class Helpers {
     await environmentName.should.be.equals(expectedName.toString());
   }
 
-  async openSettingsModal() {
+  public async openSettingsModal() {
     await this.sendWebContentsAction('OPEN_SETTINGS');
-    await this.waitElementExist(`.modal-dialog`);
+    await this.waitElementExist('.modal-dialog');
   }
 
-  sendWebContentsAction(actionName: string) {
+  public sendWebContentsAction(actionName: string) {
     this.testsInstance.app.webContents.send('keydown', {
       action: actionName
     });
   }
 
-  async closeModal() {
-    await this.elementClick(`.modal-dialog .modal-footer button`);
+  public async closeModal() {
+    await this.elementClick('.modal-dialog .modal-footer button');
   }
 
-  async assertViewBodyLogButtonPresence(inverted = false) {
+  public async assertViewBodyLogButtonPresence(inverted = false) {
     await this.waitElementExist('.view-body-link', inverted);
   }
 
-  async clickViewBodyLogButton() {
+  public async clickViewBodyLogButton() {
     await this.elementClick('.view-body-link');
   }
 
-  async assertPresenceOnLogsPage() {
+  public async assertPresenceOnLogsPage() {
     await this.waitElementExist('.environment-logs');
   }
 
-  async assertLogsEmpty() {
+  public async assertLogsEmpty() {
     const messageText = await this.getElementText(
       '.environment-logs-column:nth-child(2) .message'
     );
     expect(messageText).to.equal('No records yet');
   }
 
-  async assertNoLogEntrySelected() {
+  public async assertNoLogEntrySelected() {
     const messageText = await this.getElementText(
       '.environment-logs-column:nth-child(2) .message'
     );
     expect(messageText).to.equal('Please select a record');
   }
 
-  async environmentLogBodyContains(str: string) {
+  public async environmentLogBodyContains(str: string) {
     const elementText = await this.getElementText(
-      `div.environment-logs-content-item.pre`
+      'div.environment-logs-content-item.pre'
     );
     expect(elementText).to.equal(str);
   }
 
-  async clearEnvironmentLogs() {
+  public async clearEnvironmentLogs() {
     await this.switchViewInHeader('ENV_LOGS');
     const selector =
       '.main-content > .row >.col .btn.btn-link.btn-icon:last-of-type';
@@ -468,7 +480,7 @@ export class Helpers {
    * @param sectionIndex - includes the titles (General, Headers, etc)
    * @param itemIndex
    */
-  async environmentLogItemEqual(
+  public async environmentLogItemEqual(
     text: string,
     tab: 'request' | 'response',
     sectionIndex: number,
@@ -481,7 +493,7 @@ export class Helpers {
     expect(elementText).to.equal(text);
   }
 
-  async environmentLogMenuMethodEqual(method: string, logIndex: number) {
+  public async environmentLogMenuMethodEqual(method: string, logIndex: number) {
     const selector = `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link .route-method`;
 
     await this.waitElementExist(selector);
@@ -489,7 +501,7 @@ export class Helpers {
     expect(methodText).to.equals(method);
   }
 
-  async environmentLogMenuPathEqual(method: string, logIndex: number) {
+  public async environmentLogMenuPathEqual(method: string, logIndex: number) {
     const selector = `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link .route`;
 
     await this.waitElementExist(selector);
@@ -497,7 +509,7 @@ export class Helpers {
     expect(elementText).to.equals(method);
   }
 
-  async environmentLogMenuCheckIcon(
+  public async environmentLogMenuCheckIcon(
     icon: 'PROXY' | 'CAUGHT',
     logIndex: number,
     inverted = false
@@ -510,13 +522,13 @@ export class Helpers {
     );
   }
 
-  async environmentLogClickMockButton(logIndex: number) {
+  public async environmentLogClickMockButton(logIndex: number) {
     await this.elementClick(
       `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .btn-mock`
     );
   }
 
-  async disableRoute() {
+  public async disableRoute() {
     await this.contextMenuClick(
       '.routes-menu .menu-list .nav-item .nav-link.active',
       3
@@ -526,11 +538,11 @@ export class Helpers {
   /**
    * Wait for data autosave
    */
-  async waitForAutosave() {
+  public async waitForAutosave() {
     await this.testsInstance.app.client.pause(2500);
   }
 
-  async verifyObjectPropertyInFile(
+  public async verifyObjectPropertyInFile(
     filePath: string,
     objectPaths: string | string[],
     values: any | any[],
@@ -542,7 +554,7 @@ export class Helpers {
     this.verifyObjectProperty(environments, objectPaths, values, exists);
   }
 
-  verifyObjectProperty(
+  public verifyObjectProperty(
     object: any,
     objectPaths: string | string[],
     values: any | any[],
@@ -562,7 +574,7 @@ export class Helpers {
     }
   }
 
-  async addHeader(
+  public async addHeader(
     location:
       | 'route-response-headers'
       | 'environment-headers'
@@ -578,15 +590,15 @@ export class Helpers {
     await this.setElementValue(`${inputsSelector}(2)`, header.value);
   }
 
-  async toggleDisableTemplating() {
+  public async toggleDisableTemplating() {
     await this.elementClick("label[for='disableTemplating']");
   }
 
-  async assertRulesOperatorPresence(inverted = false) {
+  public async assertRulesOperatorPresence(inverted = false) {
     await this.waitElementExist('.rules-operator', inverted);
   }
 
-  async assertRulesOperator(operator: LogicalOperators) {
+  public async assertRulesOperator(operator: LogicalOperators) {
     const element = await this.getElement(
       `.rules-operator input[id="rulesOperators${operator}"]`
     );
@@ -594,7 +606,7 @@ export class Helpers {
     expect(selected).to.equals(true);
   }
 
-  async selectRulesOperator(operator: LogicalOperators) {
+  public async selectRulesOperator(operator: LogicalOperators) {
     await this.elementClick(`.rules-operator .rules-operator-${operator}`);
   }
 }

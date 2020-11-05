@@ -60,11 +60,9 @@ export class EnvironmentLogsComponent implements OnInit {
 
     this.activeEnvironmentLog$ = this.activeEnvironmentLogUUID$.pipe(
       withLatestFrom(this.environmentLogs$),
-      map(([activeEnvironmentLogUUID, environmentLogs]) => {
-        return environmentLogs.find(
+      map(([activeEnvironmentLogUUID, environmentLogs]) => environmentLogs.find(
           (environmentLog) => environmentLog.UUID === activeEnvironmentLogUUID
-        );
-      }),
+        )),
       map((environmentLog) => {
         if (environmentLog) {
           if (environmentLog.request.body) {

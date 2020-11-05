@@ -49,24 +49,20 @@ export class DataService {
           : [],
         body: request.body,
         headers: Object.keys(flattenedRequestHeaders)
-          .map((headerName) => {
-            return {
+          .map((headerName) => ({
               key: headerName,
               value: flattenedRequestHeaders[headerName]
-            };
-          })
+            }))
           .sort(AscSort)
       },
       proxied: request.proxied || false,
       response: {
         status: response.statusCode,
         headers: Object.keys(flattenedResponseHeaders)
-          .map((headerName) => {
-            return {
+          .map((headerName) => ({
               key: headerName,
               value: flattenedResponseHeaders[headerName]
-            };
-          })
+            }))
           .sort(AscSort),
         body: response.body,
         binaryBody: response.body === BINARY_BODY

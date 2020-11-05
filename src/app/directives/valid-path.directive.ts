@@ -1,4 +1,11 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output
+} from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 /**
@@ -8,25 +15,27 @@ import { NgModel } from '@angular/forms';
  *
  */
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[ngModel][ValidPath]',
   providers: [NgModel]
 })
 export class ValidPathDirective {
-  @Input() ValidPath: any;
-  @Output() ngModelChange: EventEmitter<any> = new EventEmitter();
+  @Input()
+  public ValidPath: any;
+  @Output()
+  public ngModelChange: EventEmitter<any> = new EventEmitter();
 
-  constructor(private model: NgModel, private el: ElementRef) { }
+  constructor(private model: NgModel, private el: ElementRef) {}
 
-  @HostListener('input', ['$event']) onInputChange(event) {
+  @HostListener('input', ['$event'])
+  public onInputChange(event) {
     const pos = this.el.nativeElement.selectionStart;
     const value = event.target.value;
 
     // remove double slashes
-    let sanitizedValue = value.replace(/[\/\/]{2,}/ig, '/');
+    let sanitizedValue = value.replace(/[\/\/]{2,}/gi, '/');
 
     // Remove leading slash
-    sanitizedValue = sanitizedValue.replace(/^\//ig, '');
+    sanitizedValue = sanitizedValue.replace(/^\//gi, '');
 
     // write new value to the model
     this.model.valueAccessor.writeValue(sanitizedValue);
