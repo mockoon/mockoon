@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
-import { Environments } from 'src/app/types/environment.type';
 import { Tests } from 'test/lib/tests';
+import { Environments } from '@mockoon/commons';
 
 const dataSamplesPath = './test/data/import/openapi/samples/';
 const dataReferencesPath = './test/data/import/openapi/references/';

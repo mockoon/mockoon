@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as faker from 'faker';
+import { SetFakerLocale, SetFakerSeed } from '@mockoon/commons';
 import { distinctUntilChanged, filter, mergeMap, tap } from 'rxjs/operators';
 import { Logger } from 'src/app/classes/logger';
 import { Config } from 'src/app/config';
@@ -76,9 +76,8 @@ export class SettingsService {
             previous.fakerSeed === current.fakerSeed
         ),
         tap((settings) => {
-          // @ts-ignore
-          faker.locale = settings.fakerLocale;
-          faker.seed(settings.fakerSeed);
+          SetFakerLocale(settings.fakerLocale);
+          SetFakerSeed(settings.fakerSeed);
         })
       )
       .subscribe();

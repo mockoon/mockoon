@@ -9,6 +9,13 @@ import {
   Output
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  LogicalOperators,
+  ResponseRule,
+  ResponseRuleTargets,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
@@ -19,13 +26,6 @@ import {
 } from 'rxjs/operators';
 import { SelectOptionsList } from 'src/app/models/common.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
-import {
-  LogicalOperators,
-  ResponseRule,
-  ResponseRuleTargets,
-  Route,
-  RouteResponse
-} from 'src/app/types/route.type';
 
 @Component({
   selector: 'app-route-response-rules',

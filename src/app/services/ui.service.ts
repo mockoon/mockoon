@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { FocusableInputs } from 'src/app/enums/ui.enum';
+import { ScrollDirection } from 'src/app/models/ui.model';
 import { EventsService } from 'src/app/services/events.service';
 import { updateUIStateAction } from 'src/app/stores/actions';
 import { Store, UIStateProperties } from 'src/app/stores/store';
-import { ScrollDirection } from 'src/app/types/ui.type';
 
 @Injectable({ providedIn: 'root' })
 export class UIService {

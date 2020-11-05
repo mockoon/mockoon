@@ -1,24 +1,21 @@
 import { Injectable } from '@angular/core';
 import * as SwaggerParser from '@apidevtools/swagger-parser';
+import {
+  Environment,
+  GetRouteResponseContentType,
+  Header,
+  Method,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import { OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { Logger } from 'src/app/classes/logger';
 import { INDENT_SIZE } from 'src/app/constants/common.constants';
+import { methods, statusCodes } from 'src/app/constants/routes.constants';
 import { Errors } from 'src/app/enums/errors.enum';
-import {
-  GetRouteResponseContentType,
-  RemoveLeadingSlash
-} from 'src/app/libs/utils.lib';
+import { RemoveLeadingSlash } from 'src/app/libs/utils.lib';
 import { SchemasBuilderService } from 'src/app/services/schemas-builder.service';
 import { ToastsService } from 'src/app/services/toasts.service';
-import { Environment } from 'src/app/types/environment.type';
-import {
-  Header,
-  Method,
-  methods,
-  Route,
-  RouteResponse,
-  statusCodes
-} from 'src/app/types/route.type';
 import { parse as urlParse } from 'url';
 
 type ParametersTypes = 'PATH_PARAMETERS' | 'SERVER_VARIABLES';

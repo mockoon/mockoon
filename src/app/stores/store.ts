@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
+import {
+  Environment,
+  Environments,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
+import { INDENT_SIZE } from 'src/app/constants/common.constants';
 import {
   ActiveEnvironmentsLogUUIDs,
   EnvironmentLog,
@@ -10,9 +17,6 @@ import { Settings } from 'src/app/models/settings.model';
 import { Toast } from 'src/app/models/toasts.model';
 import { Actions } from 'src/app/stores/actions';
 import { environmentReducer } from 'src/app/stores/reducer';
-import { Environment, Environments } from 'src/app/types/environment.type';
-import { Route, RouteResponse } from 'src/app/types/route.type';
-import { INDENT_SIZE } from 'src/app/constants/common.constants';
 
 export type ViewsNameType = 'ROUTE' | 'ENV_SETTINGS' | 'ENV_LOGS';
 

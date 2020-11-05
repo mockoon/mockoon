@@ -155,18 +155,6 @@ export const headerNames = [
   'X-Requested-With'
 ];
 
-export const mimeTypesWithTemplating = [
-  'application/json',
-  'text/html',
-  'text/css',
-  'text/csv',
-  'application/javascript',
-  'application/typescript',
-  'text/plain',
-  'application/xhtml+xml',
-  'application/xml'
-];
-
 // values used to suggest
 export const headerValues = [
   // content types
@@ -231,61 +219,3 @@ export const headerValues = [
   'UTF-16LE',
   'UTF-16'
 ];
-
-export type LogicalOperators = 'AND' | 'OR';
-
-export type RouteResponse = {
-  uuid: string;
-  rules: ResponseRule[];
-  rulesOperator: LogicalOperators;
-  statusCode: number;
-  label: string;
-  headers: Header[];
-  body?: string;
-  latency: number;
-  filePath: string;
-  sendFileAsBody: boolean;
-  disableTemplating: boolean;
-};
-
-export type ResponseRule = {
-  target: ResponseRuleTargets;
-  modifier: string;
-  value: string;
-  isRegex: boolean;
-};
-
-export type ResponseRuleTargets = 'body' | 'query' | 'header' | 'params';
-
-export type Route = {
-  uuid: string;
-  documentation: string;
-  method: Method;
-  endpoint: string;
-  responses: RouteResponse[];
-  enabled: boolean;
-  randomResponse: boolean;
-};
-
-export type Header = { key: string; value: string };
-
-export const CORSHeaders: Header[] = [
-  { key: 'Access-Control-Allow-Origin', value: '*' },
-  {
-    key: 'Access-Control-Allow-Methods',
-    value: 'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS'
-  },
-  {
-    key: 'Access-Control-Allow-Headers',
-    value:
-      'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With'
-  }
-];
-
-export type RouteProperties = { [T in keyof Route]?: Route[T] };
-
-export type RouteResponseProperties = {
-  [T in keyof RouteResponse]?: RouteResponse[T];
-};
-
-export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';

@@ -1,9 +1,26 @@
 import { Injectable } from '@angular/core';
+import {
+  Environment,
+  Environments,
+  Header,
+  Method,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import { cloneDeep } from 'lodash';
 import { of } from 'rxjs';
 import { concatMap, mergeMap, tap } from 'rxjs/operators';
-import { Logger } from 'src/app/classes/logger';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
+import { FocusableInputs } from 'src/app/enums/ui.enum';
+import { EnvironmentProperties } from 'src/app/models/environment.model';
+import {
+  RouteProperties,
+  RouteResponseProperties
+} from 'src/app/models/route.model';
+import {
+  DraggableContainerNames,
+  ScrollDirection
+} from 'src/app/models/ui.model';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
 import { MigrationService } from 'src/app/services/migration.service';
@@ -42,24 +59,7 @@ import {
   TabsNameType,
   ViewsNameType
 } from 'src/app/stores/store';
-import {
-  Environment,
-  EnvironmentProperties,
-  Environments
-} from 'src/app/types/environment.type';
-import {
-  Header,
-  Method,
-  Route,
-  RouteProperties,
-  RouteResponse,
-  RouteResponseProperties
-} from 'src/app/types/route.type';
-import {
-  DraggableContainerNames,
-  ScrollDirection
-} from 'src/app/types/ui.type';
-import { FocusableInputs } from 'src/app/enums/ui.enum';
+import { Logger } from 'src/app/classes/logger';
 
 @Injectable({
   providedIn: 'root'

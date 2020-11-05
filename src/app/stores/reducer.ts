@@ -1,9 +1,16 @@
+import {
+  Environment,
+  Environments,
+  GetRouteResponseContentType,
+  HighestMigrationId,
+  ListDuplicatedRouteUUIDs,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import { Config } from 'src/app/config';
-import { HighestMigrationId } from 'src/app/libs/migrations.lib';
 import {
   ArrayContainsObjectKey,
-  GetEditorModeFromContentType,
-  GetRouteResponseContentType
+  GetEditorModeFromContentType
 } from 'src/app/libs/utils.lib';
 import {
   ActiveEnvironmentsLogUUIDs,
@@ -16,8 +23,6 @@ import {
   EnvironmentsStatuses,
   StoreType
 } from 'src/app/stores/store';
-import { Environment, Environments } from 'src/app/types/environment.type';
-import { Route, RouteResponse } from 'src/app/types/route.type';
 
 export type ReducerDirectionType = 'next' | 'previous';
 export type ReducerIndexes = { sourceIndex: number; targetIndex: number };
@@ -457,10 +462,7 @@ export function environmentReducer(
         'proxyMode',
         'proxyHost',
         'https',
-        'cors',
-        'headers',
-        'proxyReqHeaders',
-        'proxyResHeaders'
+        'cors'
       ];
       const activeEnvironmentStatus =
         state.environmentsStatus[state.activeEnvironmentUUID];
@@ -1010,21 +1012,7 @@ function updateDuplicatedRoutes(state: StoreType): DuplicatedRoutesTypes {
   const duplicatedRoutes: DuplicatedRoutesTypes = {};
 
   state.environments.forEach((environment) => {
-    duplicatedRoutes[environment.uuid] = new Set();
-
-    environment.routes.forEach((route: Route, routeIndex: number) => {
-      environment.routes.forEach(
-        (otherRoute: Route, otherRouteIndex: number) => {
-          if (
-            otherRouteIndex > routeIndex &&
-            otherRoute.endpoint === route.endpoint &&
-            otherRoute.method === route.method
-          ) {
-            duplicatedRoutes[environment.uuid].add(otherRoute.uuid);
-          }
-        }
-      );
-    });
+    duplicatedRoutes[environment.uuid] = ListDuplicatedRouteUUIDs(environment);
   });
 
   return duplicatedRoutes;

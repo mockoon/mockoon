@@ -1,4 +1,4 @@
-import { Header } from 'src/app/types/route.type';
+import { Header } from '@mockoon/commons';
 
 export type EnvironmentLogs = { [key: string]: EnvironmentLog[] };
 
