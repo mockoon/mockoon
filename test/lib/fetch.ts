@@ -35,7 +35,7 @@ export const fetch = (params: {
 
     const request = RequestsLibraries[params.protocol](
       {
-        hostname: `localhost`,
+        hostname: 'localhost',
         port: params.port,
         path: params.path,
         method: params.method.toUpperCase(),

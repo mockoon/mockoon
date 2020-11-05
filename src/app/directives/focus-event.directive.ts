@@ -8,14 +8,14 @@ import { EventsService } from 'src/app/services/events.service';
  * Focus an input when an event is emitted with the input's name
  */
 @Directive({
-  // tslint:disable-next-line: directive-selector
   selector: '[focusOnEvent]'
 })
 export class FocusOnEventDirective implements OnInit, OnDestroy {
   @Input() public focusOnEvent: FocusableInputs;
+
   private eventsSubscription: Subscription;
 
-  public constructor(
+  constructor(
     private elementRef: ElementRef,
     private eventsService: EventsService
   ) {}

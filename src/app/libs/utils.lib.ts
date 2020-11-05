@@ -1,5 +1,5 @@
-import { EditorModes } from 'src/app/models/editor.model';
 import { Header } from '@mockoon/commons';
+import { EditorModes } from 'src/app/models/editor.model';
 
 export const AscSort = (a, b) => {
   if (a.key < b.key) {
@@ -20,9 +20,7 @@ export const ArrayContainsObjectKey = (
   return false;
 };
 
-export const RemoveLeadingSlash = (str: string) => {
-  return str.replace(/^\//g, '');
-};
+export const RemoveLeadingSlash = (str: string) => str.replace(/^\//g, '');
 
 /**
  * Transform an headers Array into an object {key: value}
@@ -54,20 +52,16 @@ export const HeadersArrayToObject = (
  */
 export const ObjectValuesFlatten = (
   object: { [key in string]: string[] | string | number }
-): { [key in string]: string } => {
-  return Object.keys(object).reduce<{ [key in string]: string }>(
-    (newObject, key) => {
-      if (Array.isArray(object[key])) {
-        newObject[key] = (object[key] as string[]).join(',');
-      } else {
-        newObject[key] = object[key].toString();
-      }
+): { [key in string]: string } =>
+  Object.keys(object).reduce<{ [key in string]: string }>((newObject, key) => {
+    if (Array.isArray(object[key])) {
+      newObject[key] = (object[key] as string[]).join(',');
+    } else {
+      newObject[key] = object[key].toString();
+    }
 
-      return newObject;
-    },
-    {}
-  );
-};
+    return newObject;
+  }, {});
 
 /**
  * Retrieve the editor mode (Ace editor) from a content type

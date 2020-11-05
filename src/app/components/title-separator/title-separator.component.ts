@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import { shell } from 'electron';
 import { Config } from 'src/app/config';
 
@@ -13,15 +20,24 @@ import { Config } from 'src/app/config';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleSeparatorComponent implements OnInit {
-  @Input() heading: string;
-  @Input() subheading: string;
-  @Input() isFirst = false;
-  @Input() docLink: string;
-  @Input() icon: string;
-  @Input() iconClasses: string;
-  @Input() iconClickable: boolean;
-  @Input() iconTooltip: string;
-  @Output() iconClicked = new EventEmitter<void>();
+  @Input()
+  public heading: string;
+  @Input()
+  public subheading: string;
+  @Input()
+  public isFirst = false;
+  @Input()
+  public docLink: string;
+  @Input()
+  public icon: string;
+  @Input()
+  public iconClasses: string;
+  @Input()
+  public iconClickable: boolean;
+  @Input()
+  public iconTooltip: string;
+  @Output()
+  public iconClicked = new EventEmitter<void>();
 
   constructor() {}
 

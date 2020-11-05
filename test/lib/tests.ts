@@ -150,7 +150,7 @@ export class Tests {
 
     // if no custom file provided for the test, revert to the generic one
     if (!settingsFileExists) {
-      settingssFilePath = `./test/data/settings.json`;
+      settingssFilePath = './test/data/settings.json';
     }
 
     try {

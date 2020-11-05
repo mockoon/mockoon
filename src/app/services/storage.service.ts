@@ -96,8 +96,8 @@ export class StorageService {
         this.saving$.next(true);
       }),
       debounceTime(interval),
-      concatMap((data) => {
-        return this.storageSet$(key, data, null).pipe(
+      concatMap((data) =>
+        this.storageSet$(key, data, null).pipe(
           catchError((error) => {
             const errorMessage = `Error while saving ${key}`;
 
@@ -115,8 +115,8 @@ export class StorageService {
           tap(() => {
             this.saving$.next(false);
           })
-        );
-      })
+        )
+      )
     );
   }
 }

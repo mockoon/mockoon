@@ -41,7 +41,7 @@ export class SettingsService {
             Object.keys(settings).length === 0 &&
             settings.constructor === Object
           ) {
-            this.logger.info(`No Settings, building default settings`);
+            this.logger.info('No Settings, building default settings');
 
             // build default settings (we do not need to show the changelog on a fresh install)
             this.updateSettings({

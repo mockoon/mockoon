@@ -19,7 +19,8 @@ import { Store } from 'src/app/stores/store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsModalComponent implements OnInit {
-  @ViewChild('modal', { static: false }) modal: ElementRef;
+  @ViewChild('modal', { static: false })
+  public modal: ElementRef;
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
   public fakerLocales = FakerLocales;

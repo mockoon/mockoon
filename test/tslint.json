@@ -1,3 +1,0 @@
-{
-  "extends": ["../tslint.json", "tslint-no-unused-expression-chai"]
-}

@@ -1,5 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { shell } from 'electron';
 import { Observable } from 'rxjs';
@@ -15,7 +22,8 @@ import { Store } from 'src/app/stores/store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangelogModalComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal', { static: false }) modal: ElementRef;
+  @ViewChild('modal', { static: false })
+  public modal: ElementRef;
   public appVersion = Config.appVersion;
   public changelog$: Observable<string>;
 

@@ -1,4 +1,11 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -12,7 +19,8 @@ import { EventsService } from 'src/app/services/events.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditorModalComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal', { static: false }) modal: ElementRef;
+  @ViewChild('modal', { static: false })
+  public modal: ElementRef;
   public data$ = new BehaviorSubject<EditorModalData>(null);
   private defaultEditorConfig = {
     options: {

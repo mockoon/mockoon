@@ -6,15 +6,16 @@ import { NgControl } from '@angular/forms';
 // https://stackoverflow.com/questions/36770846/angular-2-prevent-input-and-model-changing-using-directive
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '[InputNumber]'
 })
 export class InputNumberDirective {
-  @Input() InputNumber: { min: number; max: number; canBeEmpty: boolean };
+  @Input()
+  public InputNumber: { min: number; max: number; canBeEmpty: boolean };
 
   constructor(private elementRef: ElementRef, private ngControl: NgControl) {}
 
-  @HostListener('input', ['$event']) onInputChange(e) {
+  @HostListener('input', ['$event'])
+  public onInputChange(e) {
     const value = this.elementRef.nativeElement.value;
 
     // remove everything other than numbers

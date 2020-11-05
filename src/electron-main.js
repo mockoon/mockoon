@@ -13,7 +13,7 @@ const isDev = require('electron-is-dev');
 const app = electron.app;
 const ipcMain = electron.ipcMain;
 const shell = electron.shell;
-const BrowserWindow = electron.BrowserWindow;
+const browserWindow = electron.BrowserWindow;
 let mainWindow;
 let splashScreen;
 
@@ -33,7 +33,7 @@ if (isDev && isServing) {
 }
 
 const createSplashScreen = function () {
-  splashScreen = new BrowserWindow({
+  splashScreen = new browserWindow({
     width: 350,
     maxWidth: 350,
     minWidth: 350,
@@ -68,98 +68,6 @@ const createSplashScreen = function () {
   splashScreen.once('ready-to-show', () => {
     splashScreen.show();
   });
-};
-
-const init = function () {
-  if (!isTesting) {
-    /**
-     * Delay splashscreen launch due to transparency not available directly after app "ready" event
-     * See https://github.com/electron/electron/issues/15947 and https://stackoverflow.com/questions/53538215/cant-succeed-in-making-transparent-window-in-electron-javascript
-     */
-    setTimeout(
-      () => {
-        createSplashScreen();
-      },
-      process.platform === 'linux' ? 500 : 0
-    );
-  }
-
-  const mainWindowState = windowState({
-    defaultWidth: 1024,
-    defaultHeight: 768
-  });
-
-  mainWindow = new BrowserWindow({
-    x: mainWindowState.x,
-    y: mainWindowState.y,
-    minWidth: 1024,
-    minHeight: 768,
-    width: mainWindowState.width,
-    height: mainWindowState.height,
-    title: `Mockoon`,
-    backgroundColor: '#252830',
-    icon: path.join(__dirname, '/icon_512x512x32.png'),
-    // directly show the main window when running the tests
-    show: isTesting ? true : false,
-    webPreferences: {
-      nodeIntegration: true,
-      devTools: isDev ? true : false,
-      enableRemoteModule: true,
-      spellcheck: false
-    }
-  });
-
-  if (isTesting) {
-    mainWindowState.manage(mainWindow);
-    // ensure focus, as manage function does not necessarily focus
-    mainWindow.show();
-  } else {
-    // when main app finished loading, hide splashscreen and show the mainWindow
-    mainWindow.webContents.on('did-finish-load', () => {
-      if (splashScreen) {
-        splashScreen.close();
-      }
-
-      mainWindowState.manage(mainWindow);
-      // ensure focus, as manage function does not necessarily focus
-      mainWindow.show();
-    });
-  }
-
-  // and load the index.html of the app.
-  mainWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file:',
-      slashes: true
-    })
-  );
-
-  // Open the DevTools in dev mode except when running functional tests
-  if (isDev && !isTesting) {
-    mainWindow.webContents.openDevTools();
-  }
-
-  // intercept all links and open in a new window
-  mainWindow.webContents.on('new-window', (event, url) => {
-    event.preventDefault();
-
-    if (url.includes('openexternal::')) {
-      shell.openExternal(url.split('::')[1]);
-    }
-  });
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
-
-  electron.Menu.setApplicationMenu(
-    electron.Menu.buildFromTemplate(createAppMenu())
-  );
 };
 
 const createAppMenu = function () {
@@ -425,6 +333,98 @@ const createAppMenu = function () {
   });
 
   return menu;
+};
+
+const init = function () {
+  if (!isTesting) {
+    /**
+     * Delay splashscreen launch due to transparency not available directly after app "ready" event
+     * See https://github.com/electron/electron/issues/15947 and https://stackoverflow.com/questions/53538215/cant-succeed-in-making-transparent-window-in-electron-javascript
+     */
+    setTimeout(
+      () => {
+        createSplashScreen();
+      },
+      process.platform === 'linux' ? 500 : 0
+    );
+  }
+
+  const mainWindowState = windowState({
+    defaultWidth: 1024,
+    defaultHeight: 768
+  });
+
+  mainWindow = new browserWindow({
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    minWidth: 1024,
+    minHeight: 768,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+    title: 'Mockoon',
+    backgroundColor: '#252830',
+    icon: path.join(__dirname, '/icon_512x512x32.png'),
+    // directly show the main window when running the tests
+    show: isTesting ? true : false,
+    webPreferences: {
+      nodeIntegration: true,
+      devTools: isDev ? true : false,
+      enableRemoteModule: true,
+      spellcheck: false
+    }
+  });
+
+  if (isTesting) {
+    mainWindowState.manage(mainWindow);
+    // ensure focus, as manage function does not necessarily focus
+    mainWindow.show();
+  } else {
+    // when main app finished loading, hide splashscreen and show the mainWindow
+    mainWindow.webContents.on('did-finish-load', () => {
+      if (splashScreen) {
+        splashScreen.close();
+      }
+
+      mainWindowState.manage(mainWindow);
+      // ensure focus, as manage function does not necessarily focus
+      mainWindow.show();
+    });
+  }
+
+  // and load the index.html of the app.
+  mainWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, 'index.html'),
+      protocol: 'file:',
+      slashes: true
+    })
+  );
+
+  // Open the DevTools in dev mode except when running functional tests
+  if (isDev && !isTesting) {
+    mainWindow.webContents.openDevTools();
+  }
+
+  // intercept all links and open in a new window
+  mainWindow.webContents.on('new-window', (event, targetUrl) => {
+    event.preventDefault();
+
+    if (targetUrl.includes('openexternal::')) {
+      shell.openExternal(targetUrl.split('::')[1]);
+    }
+  });
+
+  // Emitted when the window is closed.
+  mainWindow.on('closed', function () {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null;
+  });
+
+  electron.Menu.setApplicationMenu(
+    electron.Menu.buildFromTemplate(createAppMenu())
+  );
 };
 
 const toggleExportMenuItems = function (state) {

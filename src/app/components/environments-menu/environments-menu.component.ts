@@ -1,13 +1,20 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { Environment, Environments } from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import { EnvironmentsContextMenu } from 'src/app/components/context-menu/context-menus';
 import { ContextMenuEvent } from 'src/app/models/context-menu.model';
+import { ScrollDirection } from 'src/app/models/ui.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { UIService } from 'src/app/services/ui.service';
 import { EnvironmentsStatuses, Store, UIState } from 'src/app/stores/store';
-import { Environment, Environments } from '@mockoon/commons';
-import { ScrollDirection } from 'src/app/models/ui.model';
 
 @Component({
   selector: 'app-environments-menu',
@@ -33,6 +40,26 @@ export class EnvironmentsMenuComponent implements OnInit {
     private uiService: UIService
   ) {}
 
+  /**
+   * Detect clicks inside component to avoid closing
+   * Used together with document:click listener
+   */
+  @HostListener('click')
+  public clickInsideMenu() {
+    this.clickOnMenu = true;
+  }
+
+  /**
+   * Listen on document's click to close the menu if user click outside
+   */
+  @HostListener('document:click')
+  public clickOutsideMenu() {
+    if (!this.clickOnMenu) {
+      this.closeIfOpen();
+    }
+    this.clickOnMenu = false;
+  }
+
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.duplicatedEnvironments$ = this.store.select('duplicatedEnvironments');
@@ -46,24 +73,6 @@ export class EnvironmentsMenuComponent implements OnInit {
         scrollDirection
       );
     });
-  }
-
-  /**
-   * Detect clicks inside component to avoid closing
-   * Used together with document:click listener
-   */
-  @HostListener('click') clickInsideMenu() {
-    this.clickOnMenu = true;
-  }
-
-  /**
-   * Listen on document's click to close the menu if user click outside
-   */
-  @HostListener('document:click') clickOutsideMenu() {
-    if (!this.clickOnMenu) {
-      this.closeIfOpen();
-    }
-    this.clickOnMenu = false;
   }
 
   /**

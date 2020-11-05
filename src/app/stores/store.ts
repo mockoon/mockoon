@@ -146,11 +146,14 @@ export class Store {
    * Select active environment status observable
    */
   public selectActiveEnvironmentStatus(): Observable<EnvironmentStatus> {
-    return this.store$.asObservable().pipe(
-      map((store: StoreType) => {
-        return store.environmentsStatus[store.activeEnvironmentUUID];
-      })
-    );
+    return this.store$
+      .asObservable()
+      .pipe(
+        map(
+          (store: StoreType) =>
+            store.environmentsStatus[store.activeEnvironmentUUID]
+        )
+      );
   }
 
   /**

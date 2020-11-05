@@ -25,9 +25,7 @@ export class BannerComponent implements OnInit {
     this.banner$ = this.store.select('settings').pipe(
       filter(Boolean),
       first(),
-      mergeMap(() => {
-        return this.remoteConfigService.get('banner');
-      }),
+      mergeMap(() => this.remoteConfigService.get('banner')),
       filter(
         banner =>
           banner.enabled &&
