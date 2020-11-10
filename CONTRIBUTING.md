@@ -2,7 +2,7 @@
 
 There are many ways to contribute to Mockoon: opening bugs or issues, submitting pull requests, suggesting new features, etc. All contributions are welcome but, please note that Mockoon promise is to be simple, easy to use, and fast. So, not all features are worth implementing and, the maintainers may choose not to implement features that are out of Mockoon's scope, too complicated (especially UX wise) or, that didn't gather enough attention from the community. But we are open to discussion :)
 
-In case of doubt, you can always reach a maintainer on the [official chat](https://spectrum.chat/mockoon?tab=posts) to discuss your ideas or ask for support. 
+You can always discuss your ideas or ask for support on the [official community](https://github.com/mockoon/mockoon/discussions). 
 
 ## Contribution rules
 

@@ -5,7 +5,7 @@ const docsURL = 'https://mockoon.com/docs/latest/';
 
 export const Config = {
   appVersion,
-  feedbackLink: 'https://github.com/mockoon/mockoon/issues',
+  feedbackLink: 'https://github.com/mockoon/mockoon/discussions',
   githubLatestReleaseUrl:
     'https://api.github.com/repos/mockoon/mockoon/releases/latest',
   githubTagReleaseUrl: 'https://github.com/mockoon/mockoon/releases/tag/v',

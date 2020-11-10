@@ -312,14 +312,7 @@ const createAppMenu = function () {
       {
         label: 'Community / Chat',
         click: function () {
-          shell.openExternal('https://spectrum.chat/mockoon');
-        }
-      },
-      { type: 'separator' },
-      {
-        label: 'Send feedback',
-        click: function () {
-          shell.openExternal('https://github.com/mockoon/mockoon/issues');
+          shell.openExternal('https://github.com/mockoon/mockoon/discussions');
         }
       },
       { type: 'separator' },
