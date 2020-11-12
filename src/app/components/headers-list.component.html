@@ -1,7 +1,7 @@
 <ng-container [formGroup]="form">
   <ng-container formArrayName="headers">
     <div
-      class="row headers-list"
+      class="headers-list"
       *ngFor="
         let header of form.get('headers')['controls'];
         index as headerIndex

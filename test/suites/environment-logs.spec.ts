@@ -116,7 +116,7 @@ describe('Environment logs', () => {
           1
         );
         await tests.helpers.environmentLogItemEqual(
-          'requestbody',
+          ' requestbody ',
           'request',
           10,
           1
@@ -156,7 +156,7 @@ describe('Environment logs', () => {
           4
         );
         await tests.helpers.environmentLogItemEqual(
-          'responsebody',
+          ' responsebody ',
           'response',
           6,
           1
@@ -322,7 +322,7 @@ describe('Environment logs', () => {
         1
       );
       await tests.helpers.environmentLogItemEqual(
-        'responsebody',
+        ' responsebody ',
         'response',
         6,
         1

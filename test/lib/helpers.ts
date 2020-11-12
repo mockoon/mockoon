@@ -330,16 +330,16 @@ export class Helpers {
   public async addResponseRule(rule: ResponseRule) {
     await this.elementClick('app-route-response-rules .btn.btn-link');
     await this.selectByAttribute(
-      'app-route-response-rules .row:last-of-type .form-inline select[formcontrolname="target"]',
+      'app-route-response-rules .rule-item:last-of-type .form-inline select[formcontrolname="target"]',
       'value',
       rule.target
     );
     await this.setElementValue(
-      'app-route-response-rules .row:last-of-type .form-inline input[formcontrolname="modifier"]',
+      'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="modifier"]',
       rule.modifier
     );
     await this.setElementValue(
-      'app-route-response-rules .row:last-of-type .form-inline input[formcontrolname="value"]',
+      'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="value"]',
       rule.value
     );
   }
@@ -466,7 +466,7 @@ export class Helpers {
   public async clearEnvironmentLogs() {
     await this.switchViewInHeader('ENV_LOGS');
     const selector =
-      '.main-content > .row >.col .btn.btn-link.btn-icon:last-of-type';
+      '.main-content > div:first-of-type .btn.btn-link.btn-icon:last-of-type';
     // click twice to confirm (cannot double click)
     await this.elementClick(selector);
     await this.elementClick(selector);
@@ -583,7 +583,7 @@ export class Helpers {
     header: Header
   ) {
     const headersComponentSelector = `app-headers-list#${location}`;
-    const inputsSelector = `${headersComponentSelector} .row.headers-list:last-of-type input:nth-of-type`;
+    const inputsSelector = `${headersComponentSelector} .headers-list:last-of-type input:nth-of-type`;
 
     await this.elementClick(`${headersComponentSelector} button`);
     await this.setElementValue(`${inputsSelector}(1)`, header.key);

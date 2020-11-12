@@ -27,28 +27,28 @@ describe('Duplicate a route response', () => {
     await tests.helpers.switchTab('HEADERS');
 
     await tests.helpers.countElements(
-      '#route-response-headers .row.headers-list',
+      '#route-response-headers .headers-list',
       1
     );
 
     await tests.helpers.assertElementValue(
-      '#route-response-headers .row.headers-list:first-child .form-control:first-child',
+      '#route-response-headers .headers-list:first-child .form-control:first-child',
       'Content-Type'
     );
     await tests.helpers.assertElementValue(
-      '#route-response-headers .row.headers-list:first-child .form-control:nth-child(2)',
+      '#route-response-headers .headers-list:first-child .form-control:nth-child(2)',
       'application/json'
     );
   });
 
   it('Verify duplicated route response rules', async () => {
     await tests.helpers.switchTab('RULES');
-    await tests.helpers.countElements('app-route-response-rules .row', 1);
+    await tests.helpers.countElements('app-route-response-rules .rule-item', 1);
 
     const selectorAndValueAssertionPairs = {
-      'app-route-response-rules .row select[formcontrolname="target"]': 'body',
-      'app-route-response-rules .row input[formcontrolname="modifier"]': 'test',
-      'app-route-response-rules .row input[formcontrolname="value"]': 'test'
+      'app-route-response-rules .rule-item select[formcontrolname="target"]': 'body',
+      'app-route-response-rules .rule-item input[formcontrolname="modifier"]': 'test',
+      'app-route-response-rules .rule-item input[formcontrolname="value"]': 'test'
     };
 
     for (const selector of Object.keys(selectorAndValueAssertionPairs)) {

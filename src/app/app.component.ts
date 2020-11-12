@@ -102,7 +102,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   public environments$: Observable<Environments>;
   public environmentsLogs$: Observable<EnvironmentLogs>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
-  public hasEnvironmentHeaders = this.environmentsService.hasEnvironmentHeaders;
   public Infinity = Infinity;
   public isValidURL = IsValidURL;
   public methods = methods;
