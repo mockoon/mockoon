@@ -1,27 +1,27 @@
-$white:  #fff;
-$gray-100: #EEF0F3;
-$gray-200: #D8DBDF;
-$gray-300: #B8BCC4;
-$gray-400: #A7ACBA;
-$gray-500: #878C9A;
-$gray-600: #777C8C;
-$gray-700: #5A6073;
-$gray-800: #454A5B;
+$white: #fff;
+$gray-100: #eef0f3;
+$gray-200: #d8dbdf;
+$gray-300: #b8bcc4;
+$gray-400: #a7acba;
+$gray-500: #878c9a;
+$gray-600: #777c8c;
+$gray-700: #5a6073;
+$gray-800: #454a5b;
 $gray-900: #252830;
 $custom-gray: lighten($gray-900, 7%);
-$black:  #000;
+$black: #000;
 
-$blue:    #03a9f4;
-$dark-blue:    #0d5aa7;
-$indigo:  #6610f2;
-$purple:  #6f42c1;
-$pink:    #e83e8c;
-$red:     #f33628;
-$orange:  #ff9800;
-$yellow:  #ffc107;
-$green:   #4caf50;
-$teal:    rgb(209, 228, 231);
-$cyan:    #17a2b8;
+$blue: #03a9f4;
+$dark-blue: #0d5aa7;
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #e83e8c;
+$red: #f33628;
+$orange: #ff9800;
+$yellow: #ffc107;
+$green: #4caf50;
+$teal: rgb(209, 228, 231);
+$cyan: #17a2b8;
 
 $colors: (
   blue: $blue,
@@ -37,7 +37,7 @@ $colors: (
   white: $white,
   gray: $gray-600,
   gray-dark: $gray-900,
-  custom-gray: $custom-gray,
+  custom-gray: $custom-gray
 );
 
 $theme-colors: (
@@ -57,76 +57,79 @@ $theme-colors: (
   teal: $teal
 );
 
-$body-bg:       $gray-900;
-$body-color:    $gray-300;
-$line-height-base:            1.5 !default;
+$body-bg: $gray-900;
+$body-color: $gray-300;
+$line-height-base: 1.5 !default;
 
-$font-size-base:              1rem;
-$font-size-lg:                ($font-size-base * 1.25);
-$font-size-sm:                ($font-size-base * .875);
-$font-size-xs:   .80rem;
-$font-size-xxs:   .75rem;
+$font-size-base: 1rem;
+$font-size-lg: ($font-size-base * 1.25);
+$font-size-sm: ($font-size-base * 0.875);
+$font-size-xs: 0.8rem;
+$font-size-xxs: 0.75rem;
 
-$font-weight-light:           300;
-$font-weight-normal:          400;
-$font-weight-bold:            700;
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
 
 $grid-gutter-width: 0;
 
-$border-radius-xs:       .2rem;
-$border-radius-xxs:       .1rem;
-$border-width:                1px !default;
-$component-active-color:      $white;
-$component-active-bg:    $custom-gray;
+$border-radius-xs: 0.2rem;
+$border-radius-xxs: 0.1rem;
+$border-width: 1px !default;
+$component-active-color: $white;
+$component-active-bg: $custom-gray;
 
 $hr-border-color: lighten($gray-900, 2%);
 
-$input-btn-padding-y:         .375rem !default;
-$input-btn-padding-x-xs:               .4rem;
-$input-btn-padding-y-xs:               .2rem;
-$input-btn-padding-x-xxs:               .3rem;
-$input-btn-padding-y-xxs:               .1rem;
-$input-btn-line-height-xs:              1.3;
-$input-btn-line-height-xxs:              1.25;
-$input-btn-line-height:       $line-height-base !default;
+$input-btn-padding-y: 0.375rem !default;
+$input-btn-padding-x-xs: 0.4rem;
+$input-btn-padding-y-xs: 0.2rem;
+$input-btn-padding-x-xxs: 0.3rem;
+$input-btn-padding-y-xxs: 0.1rem;
+$input-btn-line-height-xs: 1.3;
+$input-btn-line-height-xxs: 1.25;
+$input-btn-line-height: $line-height-base !default;
 
-
-$input-btn-focus-box-shadow:           none;
-$input-box-shadow:           none;
-$btn-focus-box-shadow:           none;
-$btn-active-box-shadow:          none;
+$input-btn-focus-box-shadow: none;
+$input-box-shadow: none;
+$btn-focus-box-shadow: none;
+$btn-active-box-shadow: none;
 $custom-select-focus-box-shadow: none;
 
-$btn-border-radius:              0;
-$btn-border-radius-xs:           $border-radius-xs;
-$btn-border-radius-xxs:          $border-radius-xxs;
-$input-bg:                       $custom-gray;
-$input-line-height:              $input-btn-line-height !default;
-$input-disabled-bg:              $custom-gray;
-$input-color:                    $gray-200;
-$input-btn-border-width:      $border-width !default;
-$input-border-color:             transparent;
-$input-border-radius:            0;
-$input-border-width:                    $input-btn-border-width !default;
-$input-focus-border-color:       $gray-800;
-$input-focus-color:              $gray-100;
-$input-placeholder-color:        $gray-500;
-$input-group-addon-bg:           transparent;
-$input-padding-y:                       $input-btn-padding-y !default;
-$input-height-border:                   $input-border-width * 2 !default;
-$input-height:                   calc(#{$input-line-height * 1em} + #{$input-padding-y * 2} + #{$input-height-border}) !default;
-$custom-select-bg:               $custom-gray;
+$btn-border-radius: 0;
+$btn-border-radius-xs: $border-radius-xs;
+$btn-border-radius-xxs: $border-radius-xxs;
+$input-bg: $custom-gray;
+$input-line-height: $input-btn-line-height !default;
+$input-disabled-bg: $custom-gray;
+$input-color: $gray-200;
+$input-btn-border-width: $border-width !default;
+$input-border-color: transparent;
+$input-border-radius: 0;
+$input-border-width: $input-btn-border-width !default;
+$input-focus-border-color: $gray-800;
+$input-focus-color: $gray-100;
+$input-placeholder-color: $gray-500;
+$input-group-addon-bg: transparent;
+$input-padding-y: $input-btn-padding-y !default;
+$input-height-border: $input-border-width * 2 !default;
+$input-height: calc(
+  #{$input-line-height * 1em} + #{$input-padding-y * 2} + #{$input-height-border}
+) !default;
+$custom-select-bg: $custom-gray;
 $custom-select-indicator-color: $gray-600;
 $custom-select-border-radius: 0;
 $custom-select-focus-border-color: $gray-800;
-$custom-select-height: calc(#{$input-line-height * 1em} + #{$input-padding-y * 2} + #{$input-height-border});
-$nav-tabs-border-color:                       lighten($gray-900, 2%);
+$custom-select-height: calc(
+  #{$input-line-height * 1em} + #{$input-padding-y * 2} + #{$input-height-border}
+);
+$nav-tabs-border-color: lighten($gray-900, 2%);
 
-$nav-tabs-border-radius:                      0;
-$nav-tabs-link-active-color:                  $custom-gray;
-$nav-tabs-link-active-bg:                     $component-active-bg;
+$nav-tabs-border-radius: 0;
+$nav-tabs-link-active-color: $custom-gray;
+$nav-tabs-link-active-bg: $component-active-bg;
 
-$nav-pills-border-radius:     0;
+$nav-pills-border-radius: 0;
 
 $custom-control-indicator-bg: $custom-gray;
 
@@ -135,33 +138,33 @@ $modal-content-border-color: lighten($gray-900, 4%);
 $modal-content-border-radius: none;
 $modal-content-box-shadow-xs: none;
 $modal-content-box-shadow-sm-up: none;
-$modal-backdrop-opacity: .8;
+$modal-backdrop-opacity: 0.8;
 $modal-header-border-color: lighten($gray-900, 4%);
 
 $tooltip-color: $gray-200;
 $tooltip-bg: darken($gray-900, 8%);
 
-$text-muted:                  $gray-500;
+$text-muted: $gray-500;
 
-$code-color:                  $gray-600;
+$code-color: $gray-600;
 
-$dropdown-padding-y:                0;
-$dropdown-color:                    $gray-300;
-$dropdown-bg:                       $input-bg;
-$dropdown-border-color:             $gray-800;
-$dropdown-border-radius:            0;
-$dropdown-box-shadow:               none;
-$dropdown-link-color:               $gray-300;
-$dropdown-link-hover-color:         $component-active-color;
-$dropdown-link-hover-bg:            lighten($component-active-bg, 2%);
-$dropdown-link-active-color:        $component-active-color;
-$dropdown-link-active-bg:           lighten($component-active-bg, 2%);
-$dropdown-item-padding-y:           5px;
-$dropdown-item-padding-x:           10px;
+$dropdown-padding-y: 0;
+$dropdown-color: $gray-300;
+$dropdown-bg: $input-bg;
+$dropdown-border-color: $gray-800;
+$dropdown-border-radius: 0;
+$dropdown-box-shadow: none;
+$dropdown-link-color: $gray-300;
+$dropdown-link-hover-color: $component-active-color;
+$dropdown-link-hover-bg: lighten($component-active-bg, 2%);
+$dropdown-link-active-color: $component-active-color;
+$dropdown-link-active-bg: lighten($component-active-bg, 2%);
+$dropdown-item-padding-y: 5px;
+$dropdown-item-padding-x: 10px;
 
-$toast-color:                       $gray-100;
-$toast-border-radius:               .4rem;
-$toast-padding-x:                   .4rem;
-$toast-padding-y:                   .25rem;
+$toast-color: $gray-100;
+$toast-border-radius: 0.4rem;
+$toast-padding-x: 0.4rem;
+$toast-padding-y: 0.25rem;
 
 $spacer: 1rem !default;

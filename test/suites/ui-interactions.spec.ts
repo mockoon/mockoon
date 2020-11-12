@@ -72,7 +72,7 @@ describe('UI interactions', () => {
     const tests = new Tests('ui');
 
     const environmentHeadersSelector =
-      'app-headers-list#environment-headers .row.headers-list';
+      'app-headers-list#environment-headers .headers-list';
 
     it('Switch to environment settings and check headers count', async () => {
       await tests.helpers.switchViewInHeader('ENV_SETTINGS');

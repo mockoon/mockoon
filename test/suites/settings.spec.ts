@@ -110,7 +110,7 @@ describe('Settings', () => {
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(1);
       await tests.helpers.selectEnvironmentLogEntry(1);
-      await tests.helpers.environmentLogBodyContains(str);
+      await tests.helpers.environmentLogBodyContains(` ${str} `);
     });
 
     it('Truncate request body of 101 characters', async () => {
@@ -119,7 +119,7 @@ describe('Settings', () => {
       await tests.helpers.countEnvironmentLogsEntries(2);
       await tests.helpers.selectEnvironmentLogEntry(1);
       await tests.helpers.environmentLogBodyContains(
-        `${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED --------`
+        ` ${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED -------- `
       );
     });
 
@@ -142,7 +142,7 @@ describe('Settings', () => {
       await tests.helpers.httpCallAsserter(generateCall(str));
       await tests.helpers.countEnvironmentLogsEntries(3);
       await tests.helpers.selectEnvironmentLogEntry(1);
-      await tests.helpers.environmentLogBodyContains(str);
+      await tests.helpers.environmentLogBodyContains(` ${str} `);
     });
 
     it('Truncate request body of 1001 characters', async () => {
@@ -151,7 +151,7 @@ describe('Settings', () => {
       await tests.helpers.countEnvironmentLogsEntries(4);
       await tests.helpers.selectEnvironmentLogEntry(1);
       await tests.helpers.environmentLogBodyContains(
-        `${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED --------`
+        ` ${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED -------- `
       );
     });
   });

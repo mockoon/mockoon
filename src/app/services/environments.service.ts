@@ -427,18 +427,6 @@ export class EnvironmentsService {
   }
 
   /**
-   * Check if active environment has headers
-   */
-  public hasEnvironmentHeaders() {
-    const activeEnvironment = this.store.getActiveEnvironment();
-
-    return (
-      activeEnvironment &&
-      activeEnvironment.headers.some((header) => !!header.key)
-    );
-  }
-
-  /**
    * Create a route based on a environment log entry
    */
   public createRouteFromLog(logUUID?: string) {

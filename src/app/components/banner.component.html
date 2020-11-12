@@ -1,9 +1,16 @@
 <ng-container *ngIf="banner$ | async as banner">
-  <span [ngClass]="banner.classes" [ngStyle]="banner.styles" (click)="openLink(banner)">
+  <span
+    class="clickable"
+    [ngClass]="banner.classes"
+    [ngStyle]="banner.styles"
+    (click)="openLink(banner)"
+  >
     <span *ngIf="banner.iconName">
-      <i class="material-icons">{{banner.iconName}}</i>
+      <i class="material-icons">{{ banner.iconName }}</i>
     </span>
-    {{banner.text}}
+    {{ banner.text }}
   </span>
-  <span class="text-secondary" (click)="dismissBanner(banner)"><i class="material-icons">close</i></span>
+  <span class="text-secondary clickable" (click)="dismissBanner(banner)"
+    ><i class="material-icons">close</i></span
+  >
 </ng-container>

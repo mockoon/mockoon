@@ -88,8 +88,8 @@ input,
 }
 
 .column-width {
-  min-width: $menu-width;
-  max-width: $menu-width;
+  min-width: 25%;
+  max-width: 25%;
 }
 
 .menu-list {
@@ -138,14 +138,6 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green),
 
 .header {
   background-color: lighten($gray-900, 3%);
-}
-
-.transition {
-  transition: all ease-in-out 200ms;
-}
-
-.dimmed {
-  opacity: 0.5;
 }
 
 .position-relative {
