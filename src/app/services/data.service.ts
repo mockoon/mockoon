@@ -3,13 +3,11 @@ import {
   BINARY_BODY,
   Environment,
   Environments,
-  MockoonResponse,
-  Route
+  Route,
+  Transaction
 } from '@mockoon/commons';
-import { AscSort, ObjectValuesFlatten } from 'src/app/libs/utils.lib';
 import { EnvironmentLog } from 'src/app/models/environment-logs.model';
 import { Store } from 'src/app/stores/store';
-import { parse as urlParse } from 'url';
 import { v1 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
@@ -21,51 +19,27 @@ export class DataService {
    *
    * @param response
    */
-  public formatLog(response: MockoonResponse): EnvironmentLog {
-    const request = response.req;
-    const flattenedRequestHeaders = ObjectValuesFlatten(request.headers);
-    const flattenedResponseHeaders = ObjectValuesFlatten(response.getHeaders());
-
+  public formatLog(transaction: Transaction): EnvironmentLog {
     return {
       UUID: uuid(),
-      routeUUID: response.routeUUID,
-      routeResponseUUID: response.routeResponseUUID,
+      routeUUID: transaction.routeUUID,
+      routeResponseUUID: transaction.routeResponseUUID,
       timestamp: new Date(),
-      method: request.method,
-      route: request.route ? request.route.path : null,
-      url: urlParse(request.originalUrl).pathname,
+      method: transaction.request.method,
+      route: transaction.request.route,
+      url: transaction.request.urlPath,
       request: {
-        params: request.params
-          ? Object.keys(request.params).map((paramName) => ({
-              name: paramName,
-              value: request.params[paramName]
-            }))
-          : [],
-        queryParams: request.query
-          ? Object.keys(request.query).map((queryParamName) => ({
-              name: queryParamName,
-              value: request.query[queryParamName] as string
-            }))
-          : [],
-        body: request.body,
-        headers: Object.keys(flattenedRequestHeaders)
-          .map((headerName) => ({
-              key: headerName,
-              value: flattenedRequestHeaders[headerName]
-            }))
-          .sort(AscSort)
+        params: transaction.request.params,
+        queryParams: transaction.request.queryParams,
+        body: transaction.request.body,
+        headers: transaction.request.headers
       },
-      proxied: request.proxied || false,
+      proxied: transaction.proxied,
       response: {
-        status: response.statusCode,
-        headers: Object.keys(flattenedResponseHeaders)
-          .map((headerName) => ({
-              key: headerName,
-              value: flattenedResponseHeaders[headerName]
-            }))
-          .sort(AscSort),
-        body: response.body,
-        binaryBody: response.body === BINARY_BODY
+        status: transaction.response.statusCode,
+        headers: transaction.response.headers,
+        body: transaction.response.body,
+        binaryBody: transaction.response.body === BINARY_BODY
       }
     };
   }

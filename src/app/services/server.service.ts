@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Environment, MockoonResponse, MockoonServer } from '@mockoon/commons';
+import { Environment, MockoonServer, Transaction } from '@mockoon/commons';
 import { Logger } from 'src/app/classes/logger';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { MessageParams } from 'src/app/models/messages.model';
@@ -112,9 +112,9 @@ export class ServerService extends Logger {
       );
     });
 
-    server.on('response-close', (response: MockoonResponse) => {
+    server.on('transaction-complete', (transaction: Transaction) => {
       this.store.update(
-        logRequestAction(environment.uuid, this.dataService.formatLog(response))
+        logRequestAction(environment.uuid, this.dataService.formatLog(transaction))
       );
     });
   }
