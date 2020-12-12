@@ -22,6 +22,10 @@ const args = process.argv.slice(1);
 const isServing = args.some((val) => val === '--serve');
 const isTesting = args.some((val) => val === '--tests');
 
+if (!isDev) {
+  process.env.NODE_ENV = 'production';
+}
+
 // set local data folder when in dev mode or running tests
 if (isTesting || isDev) {
   app.setPath('userData', path.resolve('./tmp'));
