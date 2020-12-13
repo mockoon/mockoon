@@ -133,7 +133,7 @@ describe('UI interactions', () => {
 
     it('Headers tab shows the header count', async () => {
       const headersTabSelector =
-        '#route-responses-menu .nav.nav-tabs [data-testid="headers-tab"]';
+        '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2)';
 
       let text = await tests.helpers.getElementText(headersTabSelector);
       expect(text).to.equal('Headers (1)');
@@ -181,7 +181,7 @@ describe('UI interactions', () => {
 
     it('Rules tab shows the rule count', async () => {
       const rulesTabSelector =
-        '#route-responses-menu .nav.nav-tabs [data-testid="rules-tab"]';
+        '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(3)';
 
       let text = await tests.helpers.getElementText(rulesTabSelector);
       expect(text).to.equal('Rules');
