@@ -91,8 +91,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   public activeRouteResponseForm: FormGroup;
   public activeRouteResponseIndex$: Observable<number>;
   public activeRouteResponseLastLog$: Observable<EnvironmentLog>;
-  public activeRouteResponseHeadersLabelSuffix$: Observable<string>;
-  public activeRouteResponseRulesLabelSuffix$: Observable<string>;
+  public activeRouteResponseHeaderCount$: Observable<number>;
+  public activeRouteResponseRuleCount$: Observable<number>;
   public injectedHeaders$: Observable<Header[]>;
   public activeTab$: Observable<TabsNameType>;
   public activeView$: Observable<ViewsNameType>;
@@ -189,6 +189,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.activeRoute$ = this.store.selectActiveRoute();
     this.activeRouteResponse$ = this.store.selectActiveRouteResponse();
     this.activeRouteResponseIndex$ = this.store.selectActiveRouteResponseIndex();
+    this.activeRouteResponseHeaderCount$ = this.store.selectActiveRouteResponseHeaderCount();
+    this.activeRouteResponseRuleCount$ = this.store.selectActiveRouteResponseRuleCount();
     this.activeTab$ = this.store.select('activeTab');
     this.activeView$ = this.store.select('activeView');
     this.activeEnvironmentState$ = this.store.selectActiveEnvironmentStatus();
@@ -199,9 +201,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.environmentsLogs$ = this.store.select('environmentsLogs');
     this.activeRouteResponseLastLog$ = this.store.selectActiveRouteResponseLastLog();
     this.toasts$ = this.store.select('toasts');
-
-    this.activeRouteResponseHeadersLabelSuffix$ = this.selectActiveRouteResponseHeadersLabelSuffix();
-    this.activeRouteResponseRulesLabelSuffix$ = this.selectActiveRouteResponseRulesLabelSuffix();
 
     this.initFormValues();
   }
@@ -654,17 +653,5 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   private toggleRoute(routeUUID?: string) {
     this.environmentsService.toggleRoute(routeUUID);
-  }
-
-  private selectActiveRouteResponseHeadersLabelSuffix() {
-    return this.store
-      .selectActiveRouteResponseHeaderCount()
-      .pipe(map((ruleCount) => (ruleCount > 0 ? ` (${ruleCount})` : '')));
-  }
-
-  private selectActiveRouteResponseRulesLabelSuffix() {
-    return this.store
-      .selectActiveRouteResponseRuleCount()
-      .pipe(map((ruleCount) => (ruleCount > 0 ? ` (${ruleCount})` : '')));
   }
 }

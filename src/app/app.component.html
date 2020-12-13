@@ -300,11 +300,11 @@
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" data-testid="headers-tab" [ngClass]="{'active': activeTab === 'HEADERS'}"
-                        (click)="setActiveTab('HEADERS')">Headers{{activeRouteResponseHeadersLabelSuffix$ | async}}</a>
+                        (click)="setActiveTab('HEADERS')">Headers{{(activeRouteResponseHeaderCount$ | async) > 0 ? ' (' + (activeRouteResponseHeaderCount$ | async)+')' : ''}}</a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" data-testid="rules-tab" [ngClass]="{'active': activeTab === 'RULES'}"
-                          (click)="setActiveTab('RULES')">Rules{{activeRouteResponseRulesLabelSuffix$ | async}}</a>
+                          (click)="setActiveTab('RULES')">Rules{{(activeRouteResponseRuleCount$ | async) > 0 ? ' (' + (activeRouteResponseRuleCount$ | async)+')' : ''}}</a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" [ngClass]="{'active': activeTab === 'SETTINGS'}"
