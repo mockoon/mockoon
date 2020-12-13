@@ -165,7 +165,7 @@ describe('UI interactions', () => {
       // this is needed for the tab re-render to complete
       await tests.app.client.pause(100);
       text = await tests.helpers.getElementText(headersTabSelector);
-      expect(text).to.equal('Headers (1)');
+      expect(text).to.equal('Headers');
 
       await tests.helpers.switchTab('HEADERS');
       await tests.helpers.addHeader('route-response-headers', {
@@ -176,7 +176,7 @@ describe('UI interactions', () => {
       // this is needed for the tab re-render to complete
       await tests.app.client.pause(100);
       text = await tests.helpers.getElementText(headersTabSelector);
-      expect(text).to.equal('Headers (2)');
+      expect(text).to.equal('Headers (1)');
     });
 
     it('Rules tab shows the rule count', async () => {

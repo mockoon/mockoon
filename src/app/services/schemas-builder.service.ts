@@ -25,7 +25,7 @@ export class SchemasBuilderService {
       latency: 0,
       statusCode: 200,
       label: '',
-      headers: [this.buildHeader()],
+      headers: [],
       filePath: '',
       sendFileAsBody: false,
       rules: [],
