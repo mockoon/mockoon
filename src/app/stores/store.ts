@@ -258,6 +258,24 @@ export class Store {
   }
 
   /**
+   * Select active route header count observable
+   */
+  public selectActiveRouteResponseHeaderCount(): Observable<number> {
+    return this.selectActiveRouteResponseProperty('headers').pipe(
+      map((headers) => headers.length)
+    );
+  }
+
+  /**
+   * Select active route rule count observable
+   */
+  public selectActiveRouteResponseRuleCount(): Observable<number> {
+    return this.selectActiveRouteResponseProperty('rules').pipe(
+      map((rules) => rules.length)
+    );
+  }
+
+  /**
    * Get environment by uuid
    */
   public getEnvironmentByUUID(UUID: string): Environment {
