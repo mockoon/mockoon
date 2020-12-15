@@ -300,11 +300,21 @@
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" [ngClass]="{'active': activeTab === 'HEADERS'}"
-                        (click)="setActiveTab('HEADERS')">Headers{{(activeRouteResponseHeaderCount$ | async) > 0 ? ' (' + (activeRouteResponseHeaderCount$ | async)+')' : ''}}</a>
+                           (click)="setActiveTab('HEADERS')">
+                          Headers
+                          <ng-container *ngIf="activeRouteResponseHeaderCount$ | async as activeRouteResponseHeaderCount">
+                            ({{activeRouteResponseHeaderCount}})
+                          </ng-container>
+                        </a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" [ngClass]="{'active': activeTab === 'RULES'}"
-                          (click)="setActiveTab('RULES')">Rules{{(activeRouteResponseRuleCount$ | async) > 0 ? ' (' + (activeRouteResponseRuleCount$ | async)+')' : ''}}</a>
+                           (click)="setActiveTab('RULES')">
+                          Rules
+                          <ng-container *ngIf="activeRouteResponseRuleCount$ | async as activeRouteResponseRuleCount">
+                            ({{activeRouteResponseRuleCount}})
+                          </ng-container>
+                        </a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" [ngClass]="{'active': activeTab === 'SETTINGS'}"
