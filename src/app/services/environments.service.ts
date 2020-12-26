@@ -48,6 +48,7 @@ import {
   setActiveTabAction,
   setActiveViewAction,
   setInitialEnvironmentsAction,
+  startRouteMovementToAnotherEnvironmentAction,
   updateEnvironmentAction,
   updateRouteAction,
   updateRouteResponseAction
@@ -476,5 +477,12 @@ export class EnvironmentsService {
         AnalyticsEvents.CREATE_ROUTE_FROM_LOG
       );
     }
+  }
+
+  /**
+   * Sends an event for further process of route movement
+   */
+  startRouteMovementToAnotherEnvironment(routeUUID: string) {
+    this.store.update(startRouteMovementToAnotherEnvironmentAction(routeUUID));
   }
 }

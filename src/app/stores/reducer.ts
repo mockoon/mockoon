@@ -902,6 +902,17 @@ export function environmentReducer(
       break;
     }
 
+    case ActionTypes.START_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT: {
+      newState = {
+        ...state,
+        moveRouteToAnotherEnvironment: {
+          moving: true,
+          routeUUID: action.routeUUID
+        }
+      };
+      break;
+    }
+
     default:
       newState = state;
       break;

@@ -45,6 +45,12 @@ export type UIState = {
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
 
+export type MoveRouteToAnotherEnvironment = {
+  moving: boolean;
+  routeUUID?: string;
+  targetEnvironmentUUID?: string;
+};
+
 export type StoreType = {
   activeTab: TabsNameType;
   activeView: ViewsNameType;
@@ -64,6 +70,7 @@ export type StoreType = {
   userId: string;
   uiState: UIState;
   settings: Settings;
+  moveRouteToAnotherEnvironment: MoveRouteToAnotherEnvironment;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -99,7 +106,8 @@ export class Store {
       environmentsMenuOpened: false,
       appClosing: false
     },
-    settings: null
+    settings: null,
+    moveRouteToAnotherEnvironment: { moving: false }
   });
 
   constructor() {}
