@@ -10,6 +10,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { of } from 'rxjs';
 import { concatMap, mergeMap, tap } from 'rxjs/operators';
+import { Logger } from 'src/app/classes/logger';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/app/enums/ui.enum';
 import { EnvironmentProperties } from 'src/app/models/environment.model';
@@ -35,6 +36,7 @@ import {
   moveEnvironmentsAction,
   moveRouteResponsesAction,
   moveRoutesAction,
+  moveRouteToAnotherEnvironmentAction,
   navigateEnvironmentsAction,
   navigateRoutesAction,
   removeEnvironmentAction,
@@ -60,7 +62,6 @@ import {
   TabsNameType,
   ViewsNameType
 } from 'src/app/stores/store';
-import { Logger } from 'src/app/classes/logger';
 
 @Injectable({
   providedIn: 'root'
@@ -260,6 +261,25 @@ export class EnvironmentsService {
   }
 
   /**
+   * Duplicate a route to another environment
+   */
+  public duplicateRouteInAnotherEnvironment(
+    routeUUID: string,
+    targetEnvironmentUUID: string
+  ) {
+    const routeToDuplicate = this.store.getRouteByUUID(routeUUID);
+
+    if (routeToDuplicate) {
+      const newRoute: Route = this.dataService.renewRouteUUIDs(
+        cloneDeep(routeToDuplicate)
+      );
+      this.store.update(
+        moveRouteToAnotherEnvironmentAction(newRoute, targetEnvironmentUUID)
+      );
+    }
+  }
+
+  /**
    * Remove a route and save
    */
   public removeRoute(routeUUID: string = this.store.get('activeRouteUUID')) {
@@ -386,15 +406,17 @@ export class EnvironmentsService {
     const environmentsStatus = this.store.get('environmentsStatus');
 
     // check if environments should be started or stopped. If at least one env is turned off, we'll turn all on
-    const shouldStart = Object.keys(environmentsStatus)
-      .some(uuid => !environmentsStatus[uuid].running || environmentsStatus[uuid].needRestart);
+    const shouldStart = Object.keys(environmentsStatus).some(
+      (uuid) =>
+        !environmentsStatus[uuid].running ||
+        environmentsStatus[uuid].needRestart
+    );
 
-    environments.map(environment => {
+    environments.map((environment) => {
       const environmentState = environmentsStatus[environment.uuid];
 
       if (shouldStart) {
         if (!environmentState.running || environmentState.needRestart) {
-
           // if needs restart, we need to stop first to prevent EADDRINUSE errors
           if (environmentState.needRestart) {
             this.serverService.stop(environment.uuid);
@@ -482,7 +504,7 @@ export class EnvironmentsService {
   /**
    * Sends an event for further process of route movement
    */
-  startRouteMovementToAnotherEnvironment(routeUUID: string) {
+  public startRouteMovementToAnotherEnvironment(routeUUID: string) {
     this.store.update(startRouteMovementToAnotherEnvironmentAction(routeUUID));
   }
 }

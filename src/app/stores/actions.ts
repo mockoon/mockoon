@@ -53,6 +53,7 @@ export const enum ActionTypes {
   UPDATE_SETTINGS,
   UPDATE_UI_STATE,
   START_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT,
+  FINALIZE_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT,
   MOVE_ROUTE_TO_ANOTHER_ENVIRONMENT
 }
 
@@ -334,16 +335,25 @@ export function startRouteMovementToAnotherEnvironmentAction(
 }
 
 /**
+ * Cancels out route movement
+ */
+export function finalizeRouteMovementToAnotherEnvironmentAction() {
+  return <const>{
+    type: ActionTypes.FINALIZE_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT
+  };
+}
+
+/**
  * Finalizes route movement to another environment
  */
 export function moveRouteToAnotherEnvironmentAction(
-  routeUUID: string,
-  environmentUUID: string
+  route: Route,
+  targetEnvironmentUUID: string
 ) {
   return <const>{
     type: ActionTypes.MOVE_ROUTE_TO_ANOTHER_ENVIRONMENT,
-    routeUUID,
-    environmentUUID
+    route,
+    targetEnvironmentUUID
   };
 }
 
@@ -498,4 +508,5 @@ export type Actions =
   | ReturnType<typeof updateUIStateAction>
   | ReturnType<typeof updateSettingsAction>
   | ReturnType<typeof startRouteMovementToAnotherEnvironmentAction>
+  | ReturnType<typeof finalizeRouteMovementToAnotherEnvironmentAction>
   | ReturnType<typeof moveRouteToAnotherEnvironmentAction>;
