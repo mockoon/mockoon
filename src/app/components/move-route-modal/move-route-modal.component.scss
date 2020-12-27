@@ -1,0 +1,19 @@
+@import 'src/styles/bootstrap-variables.scss';
+
+.modal-header {
+  &__item {
+    pointer-events: none;
+  }
+}
+
+.target-environment {
+  &__item {
+    border-color: $gray-600;
+    background: none;
+
+    &:hover {
+      background: $gray-800;
+      cursor: pointer;
+    }
+  }
+}

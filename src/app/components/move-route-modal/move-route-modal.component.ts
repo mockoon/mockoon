@@ -5,9 +5,13 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { Environment, Route } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { methods } from '../../constants/routes.constants';
+import { EnvironmentsService } from '../../services/environments.service';
+import { finalizeRouteMovementToAnotherEnvironmentAction } from '../../stores/actions';
 import { MoveRouteToAnotherEnvironment, Store } from '../../stores/store';
 
 @Component({
@@ -18,6 +22,17 @@ import { MoveRouteToAnotherEnvironment, Store } from '../../stores/store';
 export class MoveRouteModalComponent implements OnDestroy, AfterViewInit {
   @ViewChild('modal', { static: false })
   public modal: ElementRef;
+  public environments$ = this.store.select('environments').pipe(
+    map((environments: Environment[]) =>
+      environments.filter((environment: Environment) => {
+        return this.activeEnvironment
+          ? this.activeEnvironment.uuid !== environment.uuid
+          : true;
+      })
+    )
+  );
+  public routeToMove: Route;
+  public methods = methods;
 
   private routeMovementState$ = this.store.select(
     'moveRouteToAnotherEnvironment'
@@ -25,17 +40,23 @@ export class MoveRouteModalComponent implements OnDestroy, AfterViewInit {
 
   private routeMovementSubscription: Subscription;
 
-  constructor(private modalService: NgbModal, private store: Store) {}
+  get activeEnvironment() {
+    return this.store.getActiveEnvironment();
+  }
+
+  constructor(
+    private modalService: NgbModal,
+    private store: Store,
+    private environmentsService: EnvironmentsService
+  ) {}
 
   ngAfterViewInit() {
     this.routeMovementSubscription = this.routeMovementState$
       .pipe(
         tap((state: MoveRouteToAnotherEnvironment) => {
           if (state.moving) {
-            this.modalService.open(this.modal, {
-              backdrop: 'static',
-              centered: true
-            });
+            this.extractRouteToMove(state);
+            this.openModal();
           }
         })
       )
@@ -44,5 +65,31 @@ export class MoveRouteModalComponent implements OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     this.routeMovementSubscription.unsubscribe();
+  }
+
+  public closeModal() {
+    this.store.update(finalizeRouteMovementToAnotherEnvironmentAction());
+    this.modalService.dismissAll(false);
+  }
+
+  public chooseTargetEnvironment(targetEnvironment: Environment) {
+    this.environmentsService.duplicateRouteInAnotherEnvironment(
+      this.routeToMove.uuid,
+      targetEnvironment.uuid
+    );
+    this.closeModal();
+  }
+
+  private openModal() {
+    this.modalService.open(this.modal, {
+      backdrop: 'static',
+      centered: true
+    });
+  }
+
+  private extractRouteToMove(state: MoveRouteToAnotherEnvironment) {
+    this.routeToMove = this.activeEnvironment.routes.find(
+      (route: Route) => route.uuid === state.routeUUID
+    );
   }
 }
