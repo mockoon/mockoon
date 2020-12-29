@@ -732,7 +732,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: dateFormat(new Date(), 'yyyy-MM-DD', {
+          body: dateFormat(new Date(), 'yyyy-MM-dd', {
             useAdditionalWeekYearTokens: true,
             useAdditionalDayOfYearTokens: true
           })
