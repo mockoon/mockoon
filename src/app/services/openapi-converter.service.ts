@@ -278,10 +278,12 @@ export class OpenAPIConverterService {
 
           Object.keys(parsedRoute.responses).forEach((responseStatus) => {
             // filter unsupported status codes (i.e. ranges containing "X", 4XX, 5XX, etc)
+            // consider 'default' as 200
             if (
               statusCodes.find(
                 (statusCode) => statusCode.code === parseInt(responseStatus, 10)
-              )
+              ) ||
+              responseStatus === 'default'
             ) {
               const routeResponse: OpenAPIV2.ResponseObject &
                 OpenAPIV3.ResponseObject =
@@ -302,11 +304,15 @@ export class OpenAPIConverterService {
               }
 
               // extract schema
-              if (contentTypeHeaders.includes('application/json')) {
+              const contentTypeHeader = contentTypeHeaders.find((header) =>
+                header.includes('application/json')
+              );
+
+              if (contentTypeHeader) {
                 if (version === 'SWAGGER') {
                   schema = routeResponse.schema;
                 } else if (version === 'OPENAPI_V3') {
-                  schema = routeResponse.content['application/json'].schema;
+                  schema = routeResponse.content[contentTypeHeader].schema;
                 }
               }
 
@@ -321,7 +327,10 @@ export class OpenAPIConverterService {
                       )
                     )
                   : '',
-                statusCode: parseInt(responseStatus, 10),
+                statusCode:
+                  responseStatus === 'default'
+                    ? 200
+                    : parseInt(responseStatus, 10),
                 label: routeResponse.description || '',
                 headers: this.buildResponseHeaders(
                   contentTypeHeaders,
