@@ -30,6 +30,28 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/SchemaObject"
+  /endpoint2:
+    get:
+      responses:
+        default:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SchemaObject"
+  /endpoint3:
+    get:
+      responses:
+        default:
+          description: "Success"
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SchemaObject"
 components:
   schemas:
     SchemaObject:
