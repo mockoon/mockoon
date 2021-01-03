@@ -91,8 +91,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   public activeRouteResponseForm: FormGroup;
   public activeRouteResponseIndex$: Observable<number>;
   public activeRouteResponseLastLog$: Observable<EnvironmentLog>;
-  public activeRouteResponseHeaderCount$: Observable<number>;
-  public activeRouteResponseRuleCount$: Observable<number>;
   public injectedHeaders$: Observable<Header[]>;
   public activeTab$: Observable<TabsNameType>;
   public activeView$: Observable<ViewsNameType>;
@@ -189,8 +187,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.activeRoute$ = this.store.selectActiveRoute();
     this.activeRouteResponse$ = this.store.selectActiveRouteResponse();
     this.activeRouteResponseIndex$ = this.store.selectActiveRouteResponseIndex();
-    this.activeRouteResponseHeaderCount$ = this.store.selectActiveRouteResponseHeaderCount();
-    this.activeRouteResponseRuleCount$ = this.store.selectActiveRouteResponseRuleCount();
     this.activeTab$ = this.store.select('activeTab');
     this.activeView$ = this.store.select('activeView');
     this.activeEnvironmentState$ = this.store.selectActiveEnvironmentStatus();

@@ -255,8 +255,8 @@
 
                 <!-- Route responses navigation tabs -->
                 <div *ngIf="activeTab$ | async as activeTab" class="mt-4" id="route-responses-menu">
-                  <div class="d-flex align-items-center">
-                    <div *ngIf="activeRouteResponse$ | async as activeRouteResponse" class="btn-group mr-1">
+                  <div *ngIf="activeRouteResponse$ | async as activeRouteResponse" class="d-flex align-items-center">
+                    <div class="btn-group mr-1">
                       <!-- Route responses button (add / randomize) -->
                       <button type="button" id="route-response-add" class="btn btn-custom" (click)="addRouteResponse()" ngbTooltip="Add response">
                         <i class="material-icons">add</i>
@@ -301,19 +301,13 @@
                       <li class="nav-item">
                         <a class="nav-link" [ngClass]="{'active': activeTab === 'HEADERS'}"
                            (click)="setActiveTab('HEADERS')">
-                          Headers
-                          <ng-container *ngIf="activeRouteResponseHeaderCount$ | async as activeRouteResponseHeaderCount">
-                            ({{activeRouteResponseHeaderCount}})
-                          </ng-container>
+                          Headers{{ activeRouteResponse?.headers.length ? ' (' + activeRouteResponse?.headers.length + ')': ''}}
                         </a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" [ngClass]="{'active': activeTab === 'RULES'}"
                            (click)="setActiveTab('RULES')">
-                          Rules
-                          <ng-container *ngIf="activeRouteResponseRuleCount$ | async as activeRouteResponseRuleCount">
-                            ({{activeRouteResponseRuleCount}})
-                          </ng-container>
+                          Rules{{ activeRouteResponse?.rules.length ? ' (' + activeRouteResponse?.rules.length + ')': ''}}
                         </a>
                       </li>
                       <li class="nav-item">
