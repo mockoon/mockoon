@@ -347,13 +347,15 @@ export class Store {
    * Get route with the supplied UUID from any
    */
   public getRouteByUUID(routeUUID: string): Route | undefined {
-    let foundRoute: Route = undefined;
+    let foundRoute: Route;
     this.store$.value.environments.some((environment: Environment) => {
       foundRoute = environment.routes.find(
         (route: Route) => route.uuid === routeUUID
       );
+
       return !!foundRoute;
     });
+
     return foundRoute;
   }
 
