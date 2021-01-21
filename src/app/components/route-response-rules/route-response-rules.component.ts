@@ -43,7 +43,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   public routeResponse$: Observable<RouteResponse>;
   public form: FormGroup;
   public responseRuleTargets: SelectOptionsList<ResponseRuleTargets> = [
-    { code: 'body', text: 'Body path (JSON / form data)' },
+    { code: 'body', text: 'Body' },
     { code: 'query', text: 'Query string' },
     { code: 'header', text: 'Header' },
     { code: 'params', text: 'Route params' }
