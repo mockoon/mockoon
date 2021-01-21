@@ -392,6 +392,56 @@
               }
             ],
             "rulesOperator": "OR"
+          },
+          {
+            "uuid": "ca229beb-7853-411f-8cc0-8728a359fc03",
+            "body": "14",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "",
+                "value": "testfullbody",
+                "isRegex": false
+              }
+            ],
+            "rulesOperator": "OR"
+          },
+          {
+            "uuid": "a0c4a865-2424-4313-b721-35b0a2fbb3bc",
+            "body": "15",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "",
+                "value": "body2$",
+                "isRegex": true
+              }
+            ],
+            "rulesOperator": "OR"
           }
         ]
       },
