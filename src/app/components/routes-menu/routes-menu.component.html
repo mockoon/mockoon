@@ -3,35 +3,80 @@
   <div class="routes-menu d-flex flex-column h-100" MousedragDeadzone>
     <ul class="nav menu-header d-flex justify-content-between">
       <li class="nav-item">
-        <a class="nav-link text-primary" (click)="addRoute()" ngbTooltip="Add route">
+        <a
+          class="nav-link text-primary"
+          (click)="addRoute()"
+          ngbTooltip="Add route"
+        >
           <i class="material-icons">add_box</i>
         </a>
       </li>
     </ul>
 
-    <ul class="nav flex-column menu-list" #routesMenu dragula="routes"
-      [dragulaModel]="activeEnvironment.routes">
-      <li class="nav-item" *ngFor="let environmentRoute of activeEnvironment.routes">
-        <a class="nav-link" [ngClass]="{'active': (activeRoute$ | async)?.uuid === environmentRoute.uuid, 'route-disabled': !environmentRoute.enabled}"
+    <ul
+      class="nav flex-column menu-list"
+      #routesMenu
+      cdkDropList
+      (cdkDropListDropped)="reorderRoutes($event)"
+    >
+      <li
+        class="nav-item"
+        *ngFor="let environmentRoute of activeEnvironment.routes"
+        cdkDrag
+        cdkDragLockAxis="y"
+        cdkDragBoundary=".routes-menu .nav.menu-list"
+      >
+        <a
+          class="nav-link"
+          [ngClass]="{
+            active: (activeRoute$ | async)?.uuid === environmentRoute.uuid,
+            'route-disabled': !environmentRoute.enabled
+          }"
           (click)="selectRoute(environmentRoute.uuid)"
-          (contextmenu)="openContextMenu(environmentRoute.uuid, $event)">
-          <div *ngIf="settings$ | async as settings" class="route-path" [ngClass]="{'ellipsis': settings.truncateRouteName, 'text-break': !settings.truncateRouteName}">
-            <span *ngIf="duplicatedRoutes$ | async as duplicatedRoutes" class="text-warning"
-              ngbTooltip="Route is duplicated (same endpoint and method)">
-              <i *ngIf="duplicatedRoutes[activeEnvironment.uuid]?.has(environmentRoute.uuid)"
-                class="material-icons">warning</i>
+          (contextmenu)="openContextMenu(environmentRoute.uuid, $event)"
+        >
+          <div
+            *ngIf="settings$ | async as settings"
+            class="route-path"
+            [ngClass]="{
+              ellipsis: settings.truncateRouteName,
+              'text-break': !settings.truncateRouteName
+            }"
+          >
+            <span
+              *ngIf="duplicatedRoutes$ | async as duplicatedRoutes"
+              class="text-warning"
+              ngbTooltip="Route is duplicated (same endpoint and method)"
+            >
+              <i
+                *ngIf="
+                  duplicatedRoutes[activeEnvironment.uuid]?.has(
+                    environmentRoute.uuid
+                  )
+                "
+                class="material-icons"
+                >warning</i
+              >
             </span>
             <span
-              class="badge badge-default http-method-{{environmentRoute.method}} float-right">{{environmentRoute.method | uppercase}}</span>
-              /{{environmentRoute.endpoint}}
+              class="badge badge-default http-method-{{
+                environmentRoute.method
+              }} float-right"
+              >{{ environmentRoute.method | uppercase }}</span
+            >
+            /{{ environmentRoute.endpoint }}
           </div>
           <div class="menu-subtitle ellipsis">
-            {{environmentRoute.documentation}}
+            {{ environmentRoute.documentation }}
           </div>
         </a>
       </li>
     </ul>
 
-    <resize-column type="routeMenu" [minWidth]="200" [maxWidthFactor]="0.25"></resize-column>
+    <resize-column
+      type="routeMenu"
+      [minWidth]="200"
+      [maxWidthFactor]="0.25"
+    ></resize-column>
   </div>
 </ng-container>

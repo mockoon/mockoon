@@ -19,7 +19,7 @@ import { Store } from 'src/app/stores/store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsModalComponent implements OnInit {
-  @ViewChild('modal', { static: false })
+  @ViewChild('modal')
   public modal: ElementRef;
   public settings$: Observable<Settings>;
   public Infinity = Infinity;

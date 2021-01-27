@@ -24,37 +24,37 @@ $teal: rgb(209, 228, 231);
 $cyan: #17a2b8;
 
 $colors: (
-  blue: $blue,
-  indigo: $indigo,
-  purple: $purple,
-  pink: $pink,
-  red: $red,
-  orange: $orange,
-  yellow: $yellow,
-  green: $green,
-  teal: $teal,
-  cyan: $cyan,
-  white: $white,
-  gray: $gray-600,
-  gray-dark: $gray-900,
-  custom-gray: $custom-gray
+  'blue': $blue,
+  'indigo': $indigo,
+  'purple': $purple,
+  'pink': $pink,
+  'red': $red,
+  'orange': $orange,
+  'yellow': $yellow,
+  'green': $green,
+  'teal': $teal,
+  'cyan': $cyan,
+  'white': $white,
+  'gray': $gray-600,
+  'gray-dark': $gray-900,
+  'custom-gray': $custom-gray
 );
 
 $theme-colors: (
-  primary: $blue,
-  secondary: $gray-600,
-  custom: $custom-gray,
-  success: $green,
-  info: $cyan,
-  warning: $yellow,
-  danger: $red,
-  light: $gray-100,
-  dark: $gray-900,
-  purple: $purple,
-  pink: $pink,
-  orange: $orange,
-  indigo: $indigo,
-  teal: $teal
+  'primary': $blue,
+  'secondary': $gray-600,
+  'custom': $custom-gray,
+  'success': $green,
+  'info': $cyan,
+  'warning': $yellow,
+  'danger': $red,
+  'light': $gray-100,
+  'dark': $gray-900,
+  'purple': $purple,
+  'pink': $pink,
+  'orange': $orange,
+  'indigo': $indigo,
+  'teal': $teal
 );
 
 $body-bg: $gray-900;
@@ -135,7 +135,7 @@ $custom-control-indicator-bg: $custom-gray;
 
 $modal-content-bg: lighten($gray-900, 2%);
 $modal-content-border-color: lighten($gray-900, 4%);
-$modal-content-border-radius: none;
+$modal-content-border-radius: 0px;
 $modal-content-box-shadow-xs: none;
 $modal-content-box-shadow-sm-up: none;
 $modal-backdrop-opacity: 0.8;
@@ -163,7 +163,7 @@ $dropdown-item-padding-y: 5px;
 $dropdown-item-padding-x: 10px;
 
 $toast-color: $gray-100;
-$toast-border-radius: 0.4rem;
+$toast-border-radius: 0px;
 $toast-padding-x: 0.4rem;
 $toast-padding-y: 0.25rem;
 

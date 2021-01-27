@@ -9,7 +9,6 @@ describe('Environment "restart needed" indicator', () => {
 
   it('Add a route and check that a restart is needed', async () => {
     await tests.helpers.addRoute();
-
     await tests.helpers.checkEnvironmentNeedsRestart();
     await tests.helpers.restartEnvironment();
   });

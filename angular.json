@@ -25,6 +25,16 @@
             "customWebpackConfig": {
               "path": "./scripts/extra-webpack.config.js"
             },
+            "aot": true,
+            "allowedCommonJsDependencies": [
+              "mime-types",
+              "faker",
+              "qs",
+              "http-proxy-middleware",
+              "cookie-parser",
+              "electron-log",
+              "src/app/config"
+            ],
             "assets": [
               "src/assets",
               {
@@ -48,19 +58,14 @@
                 "output": "/"
               }
             ],
-            "styles": [
-              "src/styles/styles.scss"
-            ],
-            "scripts": [
-              "node_modules/marked/lib/marked.js"
-            ]
+            "styles": ["src/styles/styles.scss"],
+            "scripts": ["node_modules/marked/lib/marked.js"]
           },
           "configurations": {
             "production": {
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -77,7 +82,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -123,15 +127,15 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
             "exclude": []
           }
         }
       }
     }
   },
-  "defaultProject": "mockoon"
+  "defaultProject": "mockoon",
+  "cli": {
+    "analytics": "28dfb48b-e968-4216-936b-81e6e40b150a"
+  }
 }
