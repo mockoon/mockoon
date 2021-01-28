@@ -100,8 +100,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     (this.form.get('rules') as FormArray).push(
       this.formBuilder.group(<ResponseRule>{
         target: null,
-        modifier: null,
-        value: null,
+        modifier: '',
+        value: '',
         isRegex: false
       })
     );

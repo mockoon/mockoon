@@ -282,6 +282,19 @@ describe('Responses rules', () => {
           status: 200,
           body: '15'
         }
+      },
+      {
+        description: 'Body path to null value',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: { property1: null },
+        testedResponse: {
+          status: 200,
+          body: '16'
+        }
       }
     ];
 
