@@ -14,7 +14,7 @@ export class AuthService {
    */
   public auth() {
     if (environment.production) {
-      this.angularFireAuth.auth.signInAnonymously().then((credentials) => {
+      this.angularFireAuth.signInAnonymously().then((credentials) => {
         if (credentials) {
           this.store.update(setUserIdAction(credentials.user.uid));
         }

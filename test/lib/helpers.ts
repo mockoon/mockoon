@@ -404,7 +404,7 @@ export class Helpers {
       'input[formcontrolname="port"]',
       'value'
     );
-    await port.should.be.equals(expectedPort.toString());
+    port.should.be.equals(expectedPort.toString());
   }
 
   public async assertActiveEnvironmentName(expectedName: string) {
@@ -412,11 +412,11 @@ export class Helpers {
       'input[formcontrolname="name"]',
       'value'
     );
-    await environmentName.should.be.equals(expectedName.toString());
+    environmentName.should.be.equals(expectedName.toString());
   }
 
   public async openSettingsModal() {
-    await this.sendWebContentsAction('OPEN_SETTINGS');
+    this.sendWebContentsAction('OPEN_SETTINGS');
     await this.waitElementExist('.modal-dialog');
   }
 

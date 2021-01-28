@@ -1,7 +1,6 @@
 /* Bootstrap imports */
 @import './bootstrap-variables.scss';
-@import '../../node_modules/bootstrap/scss/bootstrap.scss';
-@import '../../node_modules/dragula/dist/dragula.css';
+@import '~bootstrap/scss/bootstrap';
 
 /* Bootstrap customizations */
 .nav {
