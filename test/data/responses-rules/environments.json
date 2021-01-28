@@ -442,6 +442,31 @@
               }
             ],
             "rulesOperator": "OR"
+          },
+          {
+            "uuid": "2b0efa90-9be4-425e-9548-66d7771d61a6",
+            "body": "16",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [
+              {
+                "target": "body",
+                "modifier": "property1",
+                "value": "",
+                "isRegex": false
+              }
+            ],
+            "rulesOperator": "OR"
           }
         ]
       },
