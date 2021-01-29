@@ -7,7 +7,6 @@ const objectPath = require('object-path');
 const electron = require('electron');
 const windowState = require('electron-window-state');
 const path = require('path');
-const url = require('url');
 const isDev = require('electron-is-dev');
 
 const app = electron.app;
@@ -38,12 +37,12 @@ if (isDev && isServing) {
 
 const createSplashScreen = function () {
   splashScreen = new browserWindow({
-    width: 350,
-    maxWidth: 350,
-    minWidth: 350,
-    height: 150,
-    maxHeight: 150,
-    minHeight: 150,
+    width: 450,
+    maxWidth: 450,
+    minWidth: 450,
+    height: 175,
+    maxHeight: 175,
+    minHeight: 175,
     frame: false,
     transparent: true,
     resizable: false,
@@ -57,13 +56,7 @@ const createSplashScreen = function () {
     icon: path.join(__dirname, '/icon_512x512x32.png')
   });
 
-  splashScreen.loadURL(
-    url.format({
-      pathname: path.join(__dirname, 'splashscreen.html'),
-      protocol: 'file:',
-      slashes: true
-    })
-  );
+  splashScreen.loadURL(`file://${__dirname}/splashscreen.html`);
 
   splashScreen.on('closed', () => {
     splashScreen = null;
@@ -333,17 +326,9 @@ const createAppMenu = function () {
 };
 
 const init = function () {
+  // only show the splashscreen when not running the tests
   if (!isTesting) {
-    /**
-     * Delay splashscreen launch due to transparency not available directly after app "ready" event
-     * See https://github.com/electron/electron/issues/15947 and https://stackoverflow.com/questions/53538215/cant-succeed-in-making-transparent-window-in-electron-javascript
-     */
-    setTimeout(
-      () => {
-        createSplashScreen();
-      },
-      process.platform === 'linux' ? 500 : 0
-    );
+    createSplashScreen();
   }
 
   const mainWindowState = windowState({
@@ -392,13 +377,7 @@ const init = function () {
   }
 
   // and load the index.html of the app.
-  mainWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file:',
-      slashes: true
-    })
-  );
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools in dev mode except when running functional tests
   if (isDev && !isTesting) {
