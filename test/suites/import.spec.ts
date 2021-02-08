@@ -100,6 +100,35 @@ describe('Environments import', () => {
   });
 
   describe('Import new format (>= 1.7.0)', () => {
+    describe('Import environment without route from file', () => {
+      const tests = new Tests('import', true, true, false);
+
+      it('Should be able to import a single environment without route from a file', async () => {
+        tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
+          {
+            method: 'showOpenDialog',
+            value: { filePaths: ['./test/data/import/new/env-no-route.json'] }
+          }
+        ]);
+
+        tests.helpers.sendWebContentsAction('IMPORT_FILE');
+
+        await tests.helpers.assertHasActiveEnvironment();
+        await tests.helpers.countEnvironments(1);
+        await tests.helpers.assertActiveEnvironmentName(
+          'Environment without route'
+        );
+        await tests.helpers.startEnvironment();
+
+        await tests.helpers.waitForAutosave();
+        await tests.helpers.verifyObjectPropertyInFile(
+          './tmp/storage/environments.json',
+          ['0.name'],
+          ['Environment without route']
+        );
+      });
+    });
+
     describe('Environment import from file', () => {
       const tests = new Tests('import', true, true, false);
 

@@ -90,9 +90,23 @@ export class Helpers {
     );
   }
 
+  public async duplicateEnvironment(index: number) {
+    await this.contextMenuClick(
+      `.environments-menu .menu-list .nav-item:nth-of-type(${index})`,
+      3
+    );
+  }
+
   public async addRoute() {
     await this.elementClick(
       '.routes-menu .nav:first-of-type .nav-item .nav-link'
+    );
+  }
+
+  public async removeRoute(index: number) {
+    await this.contextMenuClickAndConfirm(
+      `.routes-menu .menu-list .nav-item:nth-child(${index}) .nav-link`,
+      4
     );
   }
 
