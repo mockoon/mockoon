@@ -14,11 +14,7 @@ describe('Duplicate an environment', () => {
   });
 
   it('Duplicate first environment', async () => {
-    await tests.helpers.contextMenuClick(
-      '.environments-menu .menu-list .nav-item:nth-of-type(1)',
-      3
-    );
-
+    await tests.helpers.duplicateEnvironment(1);
     await tests.helpers.countEnvironments(3);
   });
 
@@ -30,5 +26,37 @@ describe('Duplicate an environment', () => {
 
   it('Verify duplicated environment selected', async () => {
     await tests.helpers.assertActiveEnvironmentPort(3002);
+  });
+});
+
+describe('Duplicate an environment with no route', () => {
+  const tests = new Tests('basic-data');
+
+  it('should remove all routes', async () => {
+    await tests.helpers.removeRoute(1);
+    await tests.helpers.removeRoute(1);
+    await tests.helpers.removeRoute(1);
+    await tests.helpers.countRoutes(0);
+  });
+
+  it('should duplicate the environment', async () => {
+    await tests.helpers.duplicateEnvironment(1);
+    await tests.helpers.countEnvironments(2);
+    await tests.helpers.assertActiveEnvironmentPort(3001);
+    await tests.helpers.assertActiveEnvironmentName('FT env (copy)');
+  });
+
+  it('should be able to start the duplicated environment', async () => {
+    await tests.helpers.startEnvironment();
+
+    await tests.helpers.httpCallAsserterWithPort({
+      description: 'Call server root',
+      path: '/',
+      method: 'GET',
+      testedResponse: {
+        status: 404,
+        body: /Cannot GET \//
+      }
+    }, 3001);
   });
 });
