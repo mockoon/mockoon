@@ -190,6 +190,10 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green),
   top: ($spacer / 2) + 2rem;
   right: $spacer / 2;
 
+  .toast {
+    word-break: break-word;
+  }
+
   .toast-success {
     .toast-body {
       background-color: $green;

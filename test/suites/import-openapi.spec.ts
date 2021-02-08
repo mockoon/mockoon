@@ -45,6 +45,13 @@ const testSuites = [
         filePath: dataSamplesPath + 'custom-schema-v2.yaml',
         referenceFilePath: dataReferencesPath + 'custom-schema-v2.json',
         environmentTitle: 'Sample v2 schema'
+      },
+      {
+        desc: 'Custom schema with no API prefix',
+        filePath: dataSamplesPath + 'custom-schema-no-prefix-v2.yaml',
+        referenceFilePath:
+          dataReferencesPath + 'custom-schema-no-prefix-v2.json',
+        environmentTitle: 'Sample v2 schema'
       }
     ]
   },
@@ -85,6 +92,13 @@ const testSuites = [
         desc: 'Custom schema',
         filePath: dataSamplesPath + 'custom-schema-v3.yaml',
         referenceFilePath: dataReferencesPath + 'custom-schema-v3.json',
+        environmentTitle: 'Sample v3 schema'
+      },
+      {
+        desc: 'Custom schema with no API prefix',
+        filePath: dataSamplesPath + 'custom-schema-no-prefix-v3.yaml',
+        referenceFilePath:
+          dataReferencesPath + 'custom-schema-no-prefix-v3.json',
         environmentTitle: 'Sample v3 schema'
       }
     ]
