@@ -1,0 +1,113 @@
+[
+  {
+    "uuid": "",
+    "lastMigration": 13,
+    "name": "Sample v3 schema",
+    "endpointPrefix": "",
+    "latency": 0,
+    "port": 3000,
+    "routes": [
+      {
+        "uuid": "",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "endpoint",
+        "responses": [
+          {
+            "uuid": "",
+            "body": "[\n  {\n    \"id\": {{faker 'random.number'}},\n    \"order\": {{faker 'random.float'}},\n    \"quantity\": {{faker 'random.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'random.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'random.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "endpoint2",
+        "responses": [
+          {
+            "uuid": "",
+            "body": "[\n  {\n    \"id\": {{faker 'random.number'}},\n    \"order\": {{faker 'random.float'}},\n    \"quantity\": {{faker 'random.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'random.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'random.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "",
+        "documentation": "",
+        "method": "get",
+        "endpoint": "endpoint3",
+        "responses": [
+          {
+            "uuid": "",
+            "body": "[\n  {\n    \"id\": {{faker 'random.number'}},\n    \"order\": {{faker 'random.float'}},\n    \"quantity\": {{faker 'random.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'random.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'random.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [
+              {
+                "key": "Content-Type",
+                "value": "application/json; charset=utf-8"
+              }
+            ],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      }
+    ],
+    "proxyMode": false,
+    "proxyHost": "",
+    "https": false,
+    "cors": true,
+    "headers": [],
+    "proxyReqHeaders": [
+      {
+        "key": "",
+        "value": ""
+      }
+    ],
+    "proxyResHeaders": [
+      {
+        "key": "",
+        "value": ""
+      }
+    ]
+  }
+]

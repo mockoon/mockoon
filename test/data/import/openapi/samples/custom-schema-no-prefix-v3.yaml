@@ -1,0 +1,115 @@
+# Test: primitives, arrays, objects (with or without type: object), refs, example, default, allOf, oneOf, anyOf
+
+openapi: "3.0.0"
+info:
+  title: "Sample v3 schema"
+  description: "Sample v3 schema"
+  version: "1.0.0"
+paths:
+  /endpoint:
+    get:
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SchemaObject"
+  /endpoint2:
+    get:
+      responses:
+        default:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SchemaObject"
+  /endpoint3:
+    get:
+      responses:
+        default:
+          description: "Success"
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SchemaObject"
+components:
+  schemas:
+    SchemaObject:
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        order:
+          type: "number"
+          format: "double"
+        quantity:
+          type: "number"
+          format: "float"
+        datetime:
+          type: "string"
+          format: "date-time"
+        date:
+          type: "string"
+          format: "date"
+        age:
+          type: "integer"
+          default: "32"
+        email:
+          type: "string"
+          format: "email"
+        uuid:
+          type: "string"
+          format: "uuid"
+        tags:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Tag"
+        status:
+          type: "string"
+          description: "Order Status"
+          enum:
+            - "enum1"
+            - "enum2"
+            - "enum3"
+        inProgress:
+          type: "boolean"
+        complete:
+          type: "boolean"
+          example: true
+        categories:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Category"
+        allOfArray:
+          type: "array"
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Category"
+              - $ref: "#/components/schemas/Tag"
+        oneOfArray:
+          type: "array"
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/Tag"
+              - $ref: "#/components/schemas/Category"
+        anyOfArray:
+          type: "array"
+          items:
+            anyOf:
+              - $ref: "#/components/schemas/Category"
+              - $ref: "#/components/schemas/Tag"
+
+    Category:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+    Tag:
+      type: "string"
