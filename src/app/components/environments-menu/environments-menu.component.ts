@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,7 +24,7 @@ import { EnvironmentsStatuses, Store, UIState } from 'src/app/stores/store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentsMenuComponent implements OnInit {
-  @ViewChild('environmentsMenu', { static: false })
+  @ViewChild('environmentsMenu')
   private environmentsMenu: ElementRef;
 
   public activeEnvironment$: Observable<Environment>;
@@ -73,6 +74,19 @@ export class EnvironmentsMenuComponent implements OnInit {
         scrollDirection
       );
     });
+  }
+
+  /**
+   * Callback called when reordering environments
+   *
+   * @param event
+   */
+  public reorderEnvironments(event: CdkDragDrop<string[]>) {
+    this.environmentsService.moveMenuItem(
+      'environments',
+      event.previousIndex,
+      event.currentIndex
+    );
   }
 
   /**

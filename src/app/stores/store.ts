@@ -95,7 +95,7 @@ export class Store {
         tabSize: INDENT_SIZE
       },
       mode: 'json',
-      theme: 'custom_theme'
+      theme: 'editor-theme'
     },
     duplicatedEnvironments: new Set(),
     duplicatedRoutes: {},

@@ -62,3 +62,4 @@ import 'zone.js/dist/zone-patch-electron'; // add zone-patch-electron to patch E
 /**
  * APPLICATION IMPORTS
  */
+import '@angular/localize/init';

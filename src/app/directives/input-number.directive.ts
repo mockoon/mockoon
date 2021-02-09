@@ -10,7 +10,7 @@ import { NgControl } from '@angular/forms';
 })
 export class InputNumberDirective {
   @Input()
-  public InputNumber: { min: number; max: number; canBeEmpty: boolean };
+  public InputNumber: { min: number; max: number; canBeEmpty?: boolean };
 
   constructor(private elementRef: ElementRef, private ngControl: NgControl) {}
 

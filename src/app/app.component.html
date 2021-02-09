@@ -279,13 +279,20 @@
                             </div>
                         </button>
 
-                        <div class="dropdown-menu route-responses-dropdown-menu" aria-labelledby="route-responses-dropdown" ngbDropdownMenu MousedragDeadzone dragula="routeResponses"
-                        [dragulaModel]="activeRoute.responses">
+                        <div class="dropdown-menu route-responses-dropdown-menu" aria-labelledby="route-responses-dropdown"
+                          ngbDropdownMenu
+                          MousedragDeadzone
+                          cdkDropList
+                          (cdkDropListDropped)="reorderRouteResponses($event)"
+                          >
                           <button type="button" *ngFor="let routeResponse of activeRoute.responses; index as routeResponseIndex"
                             class="btn dropdown-item d-flex"
                             [ngClass]="{'active': activeRouteResponse?.uuid === routeResponse.uuid}"
                             ngbDropdownItem
-                            (click)="setActiveRouteResponse(routeResponse.uuid)">
+                            (click)="setActiveRouteResponse(routeResponse.uuid)"
+                            cdkDrag
+                            cdkDragLockAxis="y"
+                            cdkDragBoundary=".dropdown-menu.route-responses-dropdown-menu">
                             <span class="flex-grow-1 mr-2 ellipsis">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}} {{routeResponse.label}}</span>
                             <span><i *ngIf="routeResponseIndex === 0" class="material-icons text-primary" ngbTooltip="Default response served if no rule matches">flag</i></span>
                           </button>
@@ -417,10 +424,13 @@
                       </app-title-separator>
 
                       <div class="flex-fill" *ngIf="bodyEditorConfig$ | async as bodyEditorConfig">
-                        <ace-editor class="h-100" [options]="bodyEditorConfig?.options"
-                          [mode]="bodyEditorConfig?.mode" [theme]="bodyEditorConfig?.theme"
-                          [text]="activeRouteResponseForm.get('body').value"
-                          (textChanged)="activeRouteResponseForm.get('body').setValue($event)"></ace-editor>
+                        <app-editor
+                          class="h-100"
+                          [options]="bodyEditorConfig?.options"
+                          [mode]="bodyEditorConfig?.mode"
+                          [theme]="bodyEditorConfig?.theme"
+                          formControlName="body">
+                        </app-editor>
                       </div>
                     </div>
                   </div>

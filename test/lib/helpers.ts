@@ -90,9 +90,23 @@ export class Helpers {
     );
   }
 
+  public async duplicateEnvironment(index: number) {
+    await this.contextMenuClick(
+      `.environments-menu .menu-list .nav-item:nth-of-type(${index})`,
+      3
+    );
+  }
+
   public async addRoute() {
     await this.elementClick(
       '.routes-menu .nav:first-of-type .nav-item .nav-link'
+    );
+  }
+
+  public async removeRoute(index: number) {
+    await this.contextMenuClickAndConfirm(
+      `.routes-menu .menu-list .nav-item:nth-child(${index}) .nav-link`,
+      4
     );
   }
 
@@ -404,7 +418,7 @@ export class Helpers {
       'input[formcontrolname="port"]',
       'value'
     );
-    await port.should.be.equals(expectedPort.toString());
+    port.should.be.equals(expectedPort.toString());
   }
 
   public async assertActiveEnvironmentName(expectedName: string) {
@@ -412,11 +426,11 @@ export class Helpers {
       'input[formcontrolname="name"]',
       'value'
     );
-    await environmentName.should.be.equals(expectedName.toString());
+    environmentName.should.be.equals(expectedName.toString());
   }
 
   public async openSettingsModal() {
-    await this.sendWebContentsAction('OPEN_SETTINGS');
+    this.sendWebContentsAction('OPEN_SETTINGS');
     await this.waitElementExist('.modal-dialog');
   }
 

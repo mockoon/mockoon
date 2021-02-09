@@ -65,6 +65,8 @@ export class OpenAPIConverterService {
       );
       this.logger.error(`Error while importing OpenAPI file: ${error.message}`);
     }
+
+    return null;
   }
 
   /**
@@ -85,6 +87,8 @@ export class OpenAPIConverterService {
         `${Errors.EXPORT_ERROR}: ${error.message}`
       );
       this.logger.error(`Error while exporting OpenAPI file: ${error.message}`);
+
+      return '';
     }
   }
 
@@ -128,11 +132,8 @@ export class OpenAPIConverterService {
 
     const server: OpenAPIV3.ServerObject[] = parsedAPI.servers;
 
-    newEnvironment.endpointPrefix =
-      server &&
-      server[0] &&
-      server[0].url &&
-      RemoveLeadingSlash(
+    if (server?.[0]?.url) {
+      newEnvironment.endpointPrefix = RemoveLeadingSlash(
         urlParse(
           this.parametersReplace(
             server[0].url,
@@ -141,6 +142,7 @@ export class OpenAPIConverterService {
           )
         ).path
       );
+    }
 
     newEnvironment.name = parsedAPI.info.title || 'OpenAPI import';
 
@@ -431,6 +433,8 @@ export class OpenAPIConverterService {
       } else if (parametersType === 'SERVER_VARIABLES') {
         return parameters[replaceValue].default;
       }
+
+      return '';
     });
   }
 

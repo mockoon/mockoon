@@ -22,7 +22,7 @@ import { Store } from 'src/app/stores/store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangelogModalComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal', { static: false })
+  @ViewChild('modal')
   public modal: ElementRef;
   public appVersion = Config.appVersion;
   public changelog$: Observable<string>;

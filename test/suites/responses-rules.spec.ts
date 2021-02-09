@@ -256,6 +256,45 @@ describe('Responses rules', () => {
           status: 200,
           body: '13'
         }
+      },
+      {
+        description: 'Full body without regex',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: 'testfullbody',
+        testedResponse: {
+          status: 200,
+          body: '14'
+        }
+      },
+      {
+        description: 'Full body with regex',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: 'testfullbody2',
+        testedResponse: {
+          status: 200,
+          body: '15'
+        }
+      },
+      {
+        description: 'Body path to null value',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: { property1: null },
+        testedResponse: {
+          status: 200,
+          body: '16'
+        }
       }
     ];
 

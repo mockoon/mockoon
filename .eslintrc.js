@@ -35,6 +35,7 @@ module.exports = {
     '@angular-eslint/no-outputs-metadata-property': 'error',
     '@angular-eslint/use-lifecycle-interface': 'error',
     '@angular-eslint/use-pipe-transform-interface': 'error',
+    '@angular-eslint/prefer-on-push-component-change-detection': 'error',
     '@typescript-eslint/consistent-type-definitions': 'off',
     '@typescript-eslint/dot-notation': 'off',
     '@typescript-eslint/explicit-member-accessibility': [
@@ -74,7 +75,8 @@ module.exports = {
       'error',
       {
         selector: 'memberLike',
-        format: ['camelCase', 'UPPER_CASE', 'StrictPascalCase', 'snake_case']
+        format: ['camelCase', 'UPPER_CASE', 'StrictPascalCase', 'snake_case'],
+        leadingUnderscore: 'allow'
       }
     ],
     '@typescript-eslint/no-empty-function': 'off',
