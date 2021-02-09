@@ -12,8 +12,12 @@ export function MarkedOptionsFactory(): MarkedOptions {
     return text;
   };
 
+  // Make images responsive
+  renderer.image = (href: string, title: string, text: string) =>
+    `<img src="${href}" class="img-fluid mx-auto d-block" alt="${text}">`;
+
   return {
-    renderer: renderer,
+    renderer,
     gfm: true,
     breaks: false,
     pedantic: false,

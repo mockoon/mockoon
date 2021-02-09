@@ -284,6 +284,31 @@ const createAppMenu = function () {
   });
 
   menu.push({
+    label: 'Tools',
+    submenu: [
+      {
+        label: 'CLI',
+        click: function () {
+          shell.openExternal('https://mockoon.com/cli/');
+        }
+      },
+      {
+        label: 'Docker repository',
+        click: function () {
+          shell.openExternal('https://hub.docker.com/u/mockoon');
+        }
+      },
+      { type: 'separator' },
+      {
+        label: 'Show app data folder',
+        click: function () {
+          shell.showItemInFolder(app.getPath('userData'));
+        }
+      }
+    ]
+  });
+
+  menu.push({
     label: 'Help',
     submenu: [
       {
@@ -299,24 +324,24 @@ const createAppMenu = function () {
         }
       },
       {
+        label: 'Tutorials',
+        click: function () {
+          shell.openExternal('https://mockoon.com/tutorials/');
+        }
+      },
+      {
+        label: 'Get support',
+        click: function () {
+          shell.openExternal('https://mockoon.com/contact/');
+        }
+      },
+      { type: 'separator' },
+      {
         label: 'Release notes',
         click: function () {
           mainWindow.webContents.send('keydown', {
             action: 'OPEN_CHANGELOG'
           });
-        }
-      },
-      {
-        label: 'Community / Chat',
-        click: function () {
-          shell.openExternal('https://github.com/mockoon/mockoon/discussions');
-        }
-      },
-      { type: 'separator' },
-      {
-        label: 'Show app data folder',
-        click: function () {
-          shell.showItemInFolder(app.getPath('userData'));
         }
       }
     ]

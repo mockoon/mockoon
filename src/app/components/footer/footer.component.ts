@@ -31,11 +31,4 @@ export class FooterComponent implements OnInit {
   public applyUpdate() {
     this.updateService.applyUpdate();
   }
-
-  /**
-   * Open the repository for feedback
-   */
-  public openFeedbackLink() {
-    shell.openExternal(Config.feedbackLink);
-  }
 }

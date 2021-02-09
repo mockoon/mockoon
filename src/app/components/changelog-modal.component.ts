@@ -7,7 +7,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { shell } from 'electron';
 import { Observable } from 'rxjs';
 import { filter, first, map, shareReplay, tap } from 'rxjs/operators';
@@ -26,6 +26,11 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
   public modal: ElementRef;
   public appVersion = Config.appVersion;
   public changelog$: Observable<string>;
+  private modalOptions: NgbModalOptions = {
+    backdrop: 'static',
+    centered: true,
+    size: 'xl'
+  };
 
   constructor(
     private modalService: NgbModal,
@@ -71,11 +76,9 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
   }
 
   public showModal() {
-    this.modalService
-      .open(this.modal, { backdrop: 'static', centered: true, size: 'lg' })
-      .result.then(
-        () => {},
-        () => {}
-      );
+    this.modalService.open(this.modal, this.modalOptions).result.then(
+      () => {},
+      () => {}
+    );
   }
 }

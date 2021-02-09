@@ -65,6 +65,7 @@
 
 .modal-body {
   overflow-y: auto;
+  overflow-x: hidden;
   max-height: 65vh;
 }
 .form-control {
