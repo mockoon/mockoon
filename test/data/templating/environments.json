@@ -1085,7 +1085,7 @@
         "responses": [
           {
             "uuid": "2db126ab-7d19-4129-83fb-6e1be24cd0a0",
-            "body": "{{now 'YYYY-MM-DD'}}",
+            "body": "{{now 'yyyy-MM-dd'}}",
             "latency": 0,
             "statusCode": 200,
             "label": "",

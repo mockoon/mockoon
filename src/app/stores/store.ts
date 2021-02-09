@@ -241,15 +241,6 @@ export class Store {
   }
 
   /**
-   * Select active route response property observable
-   */
-  public selectActiveRouteResponseProperty<T extends keyof RouteResponse>(
-    path: T
-  ): Observable<RouteResponse[T]> {
-    return this.selectActiveRouteResponse().pipe(pluck(path));
-  }
-
-  /**
    * Select active route response index observable
    */
   public selectActiveRouteResponseIndex(): Observable<number> {
@@ -262,24 +253,6 @@ export class Store {
             ) + 1
           : null
       )
-    );
-  }
-
-  /**
-   * Select active route header count observable
-   */
-  public selectActiveRouteResponseHeaderCount(): Observable<number> {
-    return this.selectActiveRouteResponseProperty('headers').pipe(
-      map((headers) => headers.length)
-    );
-  }
-
-  /**
-   * Select active route rule count observable
-   */
-  public selectActiveRouteResponseRuleCount(): Observable<number> {
-    return this.selectActiveRouteResponseProperty('rules').pipe(
-      map((rules) => rules.length)
     );
   }
 
