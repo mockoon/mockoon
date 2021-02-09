@@ -948,7 +948,7 @@ export function environmentReducer(
           ...state.environmentsStatus,
           [targetEnvironmentUUID]: {
             ...targetEnvironmentStatus,
-            needRestart: true
+            needRestart: targetEnvironmentStatus.running
           }
         }
       };

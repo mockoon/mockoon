@@ -1,49 +1,28 @@
 <ng-template #modal>
-  <div class="modal-header">
-    <span class="modal-header__item modal-header__method form-control col-2">{{
-      routeToDuplicate.method | uppercase
-    }}</span>
-    <div class="input-group-prepend">
-      <span class="input-group-text">/</span>
-    </div>
-    <span class="modal-header__item form-control modal-header__endpoint">{{
-      routeToDuplicate.endpoint
-    }}</span>
-  </div>
+  <h3 class="modal-header">Move Route</h3>
   <div class="modal-body">
+    <div class="modal-body__environment-information">
+      <span
+        class="environment-information__item environment-information__method form-control col-2"
+        >{{ routeToDuplicate.method | uppercase }}</span
+      >
+      <div class="input-group-prepend">
+        <span class="input-group-text">:</span>
+      </div>
+      <span
+        class="environment-information__item form-control environment-information__endpoint"
+        >{{ routeToDuplicate.endpoint }}</span
+      >
+    </div>
     <div class="target-environment">
-      <h4 class="target-environment__header">Choose target environment</h4>
+      <h5 class="target-environment__header">Choose target environment</h5>
       <ul class="target-environment__list list-group">
         <li
           class="target-environment__item position-relative list-group-item"
           *ngFor="let environment of environments$ | async"
-          (click)='chooseTargetEnvironment(environment)'
+          (click)="chooseTargetEnvironment(environment)"
         >
           <div class="ellipsis environment-name">{{ environment.name }}</div>
-          <div class="menu-subtitle ellipsis">
-            <span
-              >0.0.0.0:{{ environment.port }}/{{ environment.endpointPrefix }}
-            </span>
-          </div>
-          <div
-            *ngIf="environment.proxyMode"
-            class="server-icons server-icons-proxy-mode"
-          >
-            <i class="material-icons" ngbTooltip="Proxy mode enabled"
-              >security</i
-            >
-          </div>
-          <div
-            *ngIf="environment.https"
-            class="server-icons server-icons-https"
-          >
-            <i class="material-icons" ngbTooltip="HTTPS enabled">https</i>
-          </div>
-          <div *ngIf="environment.cors" class="server-icons server-icons-cors">
-            <i class="material-icons" ngbTooltip="CORS enabled"
-              >multiple_stop</i
-            >
-          </div>
         </li>
       </ul>
     </div>
@@ -52,5 +31,5 @@
     <button type="button" class="btn btn-primary" (click)="closeModal()">
       Cancel
     </button>
-  </div></ng-template
->
+  </div>
+</ng-template>

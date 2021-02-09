@@ -8,7 +8,7 @@ import {
 import { Environment, Route } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { methods } from '../../constants/routes.constants';
 import { EnvironmentsService } from '../../services/environments.service';
 import { finalizeRouteDuplicationToAnotherEnvironmentAction } from '../../stores/actions';
@@ -22,14 +22,17 @@ import { DuplicateRouteToAnotherEnvironment, Store } from '../../stores/store';
 export class DuplicateRouteModalComponent implements OnDestroy, AfterViewInit {
   @ViewChild('modal', { static: false })
   public modal: ElementRef;
-  public environments$ = this.store.select('environments').pipe(
-    map((environments: Environment[]) =>
-      environments.filter((environment: Environment) =>
-        this.activeEnvironment
-          ? this.activeEnvironment.uuid !== environment.uuid
-          : true)
-    )
-  );
+  public environments$ = this.store
+    .select('environments')
+    .pipe(
+      map((environments: Environment[]) =>
+        environments.filter((environment: Environment) =>
+          this.activeEnvironment
+            ? this.activeEnvironment.uuid !== environment.uuid
+            : true
+        )
+      )
+    );
   public routeToDuplicate: Route;
   public methods = methods;
 
@@ -47,20 +50,17 @@ export class DuplicateRouteModalComponent implements OnDestroy, AfterViewInit {
     private modalService: NgbModal,
     private store: Store,
     private environmentsService: EnvironmentsService
-  ) {
-  }
+  ) {}
 
   ngAfterViewInit() {
-    this.routeDuplicationSubscription = this.routeDuplicationState$
-      .pipe(
-        tap((state: DuplicateRouteToAnotherEnvironment) => {
-          if (state.moving) {
-            this.extractRouteToDuplicate(state);
-            this.openModal();
-          }
-        })
-      )
-      .subscribe();
+    this.routeDuplicationSubscription = this.routeDuplicationState$.subscribe(
+      (state: DuplicateRouteToAnotherEnvironment) => {
+        if (state.moving) {
+          this.extractRouteToDuplicate(state);
+          this.openModal();
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
