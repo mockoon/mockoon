@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule, SecurityContext } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireRemoteConfigModule } from '@angular/fire/remote-config';
@@ -64,6 +64,7 @@ import { AppComponent } from './app.component';
     HttpClientModule,
     NgbModule,
     MarkdownModule.forRoot({
+      sanitize: SecurityContext.NONE,
       markedOptions: {
         provide: MarkedOptions,
         useFactory: MarkedOptionsFactory
