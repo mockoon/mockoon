@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -17,7 +18,8 @@ import { DuplicateRouteToAnotherEnvironment, Store } from '../../stores/store';
 @Component({
   selector: 'app-duplicate-route-modal',
   templateUrl: './duplicate-route-modal.component.html',
-  styleUrls: ['./duplicate-route-modal.component.scss']
+  styleUrls: ['./duplicate-route-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DuplicateRouteModalComponent implements OnDestroy, AfterViewInit {
   @ViewChild('modal', { static: false })
