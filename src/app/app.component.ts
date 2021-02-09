@@ -356,7 +356,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         break;
       case 'move':
         if (payload.subject === 'route') {
-          this.startRouteMovementToAnotherEnvironment(payload.subjectUUID);
+          this.startRouteDuplicationToAnotherEnvironment(payload.subjectUUID);
         }
         break;
     }
@@ -663,7 +663,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   /**
    * Trigger route movement flow
    */
-  private startRouteMovementToAnotherEnvironment(routeUUID: string) {
-    this.environmentsService.startRouteMovementToAnotherEnvironment(routeUUID);
+  private startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
+    this.environmentsService.startRouteDuplicationToAnotherEnvironment(routeUUID);
   }
 }

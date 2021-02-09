@@ -11,15 +11,15 @@ import { Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { methods } from '../../constants/routes.constants';
 import { EnvironmentsService } from '../../services/environments.service';
-import { finalizeRouteMovementToAnotherEnvironmentAction } from '../../stores/actions';
-import { MoveRouteToAnotherEnvironment, Store } from '../../stores/store';
+import { finalizeRouteDuplicationToAnotherEnvironmentAction } from '../../stores/actions';
+import { DuplicateRouteToAnotherEnvironment, Store } from '../../stores/store';
 
 @Component({
-  selector: 'app-move-route-modal',
-  templateUrl: './move-route-modal.component.html',
-  styleUrls: ['./move-route-modal.component.scss']
+  selector: 'app-duplicate-route-modal',
+  templateUrl: './duplicate-route-modal.component.html',
+  styleUrls: ['./duplicate-route-modal.component.scss']
 })
-export class MoveRouteModalComponent implements OnDestroy, AfterViewInit {
+export class DuplicateRouteModalComponent implements OnDestroy, AfterViewInit {
   @ViewChild('modal', { static: false })
   public modal: ElementRef;
   public environments$ = this.store.select('environments').pipe(
@@ -30,14 +30,14 @@ export class MoveRouteModalComponent implements OnDestroy, AfterViewInit {
           : true)
     )
   );
-  public routeToMove: Route;
+  public routeToDuplicate: Route;
   public methods = methods;
 
-  private routeMovementState$ = this.store.select(
-    'moveRouteToAnotherEnvironment'
+  private routeDuplicationState$ = this.store.select(
+    'duplicateRouteToAnotherEnvironment'
   );
 
-  private routeMovementSubscription: Subscription;
+  private routeDuplicationSubscription: Subscription;
 
   private get activeEnvironment() {
     return this.store.getActiveEnvironment();
@@ -51,11 +51,11 @@ export class MoveRouteModalComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.routeMovementSubscription = this.routeMovementState$
+    this.routeDuplicationSubscription = this.routeDuplicationState$
       .pipe(
-        tap((state: MoveRouteToAnotherEnvironment) => {
+        tap((state: DuplicateRouteToAnotherEnvironment) => {
           if (state.moving) {
-            this.extractRouteToMove(state);
+            this.extractRouteToDuplicate(state);
             this.openModal();
           }
         })
@@ -64,17 +64,17 @@ export class MoveRouteModalComponent implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.routeMovementSubscription.unsubscribe();
+    this.routeDuplicationSubscription.unsubscribe();
   }
 
   public closeModal() {
-    this.store.update(finalizeRouteMovementToAnotherEnvironmentAction());
+    this.store.update(finalizeRouteDuplicationToAnotherEnvironmentAction());
     this.modalService.dismissAll(false);
   }
 
   public chooseTargetEnvironment(targetEnvironment: Environment) {
     this.environmentsService.duplicateRouteInAnotherEnvironment(
-      this.routeToMove.uuid,
+      this.routeToDuplicate.uuid,
       targetEnvironment.uuid
     );
     this.closeModal();
@@ -87,8 +87,8 @@ export class MoveRouteModalComponent implements OnDestroy, AfterViewInit {
     });
   }
 
-  private extractRouteToMove(state: MoveRouteToAnotherEnvironment) {
-    this.routeToMove = this.activeEnvironment.routes.find(
+  private extractRouteToDuplicate(state: DuplicateRouteToAnotherEnvironment) {
+    this.routeToDuplicate = this.activeEnvironment.routes.find(
       (route: Route) => route.uuid === state.routeUUID
     );
   }

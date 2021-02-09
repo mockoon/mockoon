@@ -45,7 +45,7 @@ export type UIState = {
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
 
-export type MoveRouteToAnotherEnvironment = {
+export type DuplicateRouteToAnotherEnvironment = {
   moving: boolean;
   routeUUID?: string;
   targetEnvironmentUUID?: string;
@@ -70,7 +70,7 @@ export type StoreType = {
   userId: string;
   uiState: UIState;
   settings: Settings;
-  moveRouteToAnotherEnvironment: MoveRouteToAnotherEnvironment;
+  duplicateRouteToAnotherEnvironment: DuplicateRouteToAnotherEnvironment;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -107,7 +107,7 @@ export class Store {
       appClosing: false
     },
     settings: null,
-    moveRouteToAnotherEnvironment: { moving: false }
+    duplicateRouteToAnotherEnvironment: { moving: false }
   });
 
   constructor() {}

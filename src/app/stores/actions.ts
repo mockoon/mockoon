@@ -52,9 +52,9 @@ export const enum ActionTypes {
   SET_USER_ID,
   UPDATE_SETTINGS,
   UPDATE_UI_STATE,
-  START_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT,
-  FINALIZE_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT,
-  MOVE_ROUTE_TO_ANOTHER_ENVIRONMENT
+  START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
+  FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
+  DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT
 }
 
 /**
@@ -325,11 +325,11 @@ export function addRouteResponseAction(
 /**
  * Triggers movement of a route to another environment
  */
-export function startRouteMovementToAnotherEnvironmentAction(
+export function startRouteDuplicationToAnotherEnvironmentAction(
   routeUUID: string
 ) {
   return <const>{
-    type: ActionTypes.START_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT,
+    type: ActionTypes.START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
     routeUUID
   };
 }
@@ -337,21 +337,21 @@ export function startRouteMovementToAnotherEnvironmentAction(
 /**
  * Cancels out route movement
  */
-export function finalizeRouteMovementToAnotherEnvironmentAction() {
+export function finalizeRouteDuplicationToAnotherEnvironmentAction() {
   return <const>{
-    type: ActionTypes.FINALIZE_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT
+    type: ActionTypes.FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT
   };
 }
 
 /**
  * Finalizes route movement to another environment
  */
-export function moveRouteToAnotherEnvironmentAction(
+export function duplicateRouteToAnotherEnvironmentAction(
   route: Route,
   targetEnvironmentUUID: string
 ) {
   return <const>{
-    type: ActionTypes.MOVE_ROUTE_TO_ANOTHER_ENVIRONMENT,
+    type: ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT,
     route,
     targetEnvironmentUUID
   };
@@ -507,6 +507,6 @@ export type Actions =
   | ReturnType<typeof setUserIdAction>
   | ReturnType<typeof updateUIStateAction>
   | ReturnType<typeof updateSettingsAction>
-  | ReturnType<typeof startRouteMovementToAnotherEnvironmentAction>
-  | ReturnType<typeof finalizeRouteMovementToAnotherEnvironmentAction>
-  | ReturnType<typeof moveRouteToAnotherEnvironmentAction>;
+  | ReturnType<typeof startRouteDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof finalizeRouteDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>;

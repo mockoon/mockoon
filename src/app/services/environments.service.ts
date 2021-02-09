@@ -36,7 +36,7 @@ import {
   moveEnvironmentsAction,
   moveRouteResponsesAction,
   moveRoutesAction,
-  moveRouteToAnotherEnvironmentAction,
+  duplicateRouteToAnotherEnvironmentAction,
   navigateEnvironmentsAction,
   navigateRoutesAction,
   removeEnvironmentAction,
@@ -50,7 +50,7 @@ import {
   setActiveTabAction,
   setActiveViewAction,
   setInitialEnvironmentsAction,
-  startRouteMovementToAnotherEnvironmentAction,
+  startRouteDuplicationToAnotherEnvironmentAction,
   updateEnvironmentAction,
   updateRouteAction,
   updateRouteResponseAction
@@ -274,7 +274,7 @@ export class EnvironmentsService {
         cloneDeep(routeToDuplicate)
       );
       this.store.update(
-        moveRouteToAnotherEnvironmentAction(newRoute, targetEnvironmentUUID)
+        duplicateRouteToAnotherEnvironmentAction(newRoute, targetEnvironmentUUID)
       );
     }
   }
@@ -504,7 +504,7 @@ export class EnvironmentsService {
   /**
    * Sends an event for further process of route movement
    */
-  public startRouteMovementToAnotherEnvironment(routeUUID: string) {
-    this.store.update(startRouteMovementToAnotherEnvironmentAction(routeUUID));
+  public startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
+    this.store.update(startRouteDuplicationToAnotherEnvironmentAction(routeUUID));
   }
 }

@@ -2,7 +2,7 @@ import { Tests } from 'test/lib/tests';
 import { expect } from 'chai';
 
 
-describe('Move a route', async () => {
+describe('Duplicate a route', async () => {
   const { helpers } = new Tests('basic-data');
 
   it('should verify selected route\'s information on modal', async () => {
@@ -30,7 +30,7 @@ describe('Move a route', async () => {
     expect(targetEnvironmentName).to.equal('New environment');
   });
 
-  it('should move selected route to selected environment', async () => {
+  it('should duplicate selected route to selected environment', async () => {
     await helpers.elementClick('.modal-content .modal-body .target-environment__list .target-environment__item:first-child');
 
     const movedRouteSelector = '.routes-menu .menu-list .nav-item:last-child';
@@ -45,7 +45,7 @@ describe('Move a route', async () => {
     expect(movedRoutePathBadgeText).to.equal('POST');
   });
 
-  it('should move selected route with the same properties', async () => {
+  it('should duplicate selected route with the same properties', async () => {
     await helpers.assertElementValue('.main-content .input-group .custom-select', 'post');
     await helpers.assertElementValue('.main-content .input-group input', 'dolphins');
 

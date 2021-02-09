@@ -902,10 +902,10 @@ export function environmentReducer(
       break;
     }
 
-    case ActionTypes.START_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT: {
+    case ActionTypes.START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
       newState = {
         ...state,
-        moveRouteToAnotherEnvironment: {
+        duplicateRouteToAnotherEnvironment: {
           moving: true,
           routeUUID: action.routeUUID
         }
@@ -913,17 +913,17 @@ export function environmentReducer(
       break;
     }
 
-    case ActionTypes.FINALIZE_ROUTE_MOVEMENT_TO_ANOTHER_ENVIRONMENT: {
+    case ActionTypes.FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
       newState = {
         ...state,
-        moveRouteToAnotherEnvironment: {
+        duplicateRouteToAnotherEnvironment: {
           moving: false
         }
       };
       break;
     }
 
-    case ActionTypes.MOVE_ROUTE_TO_ANOTHER_ENVIRONMENT: {
+    case ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT: {
       const { route, targetEnvironmentUUID } = action;
       const { environments } = state;
       const targetEnvironment = environments.find(
@@ -981,7 +981,7 @@ export function environmentReducer(
       action.type === ActionTypes.ADD_ROUTE ||
       action.type === ActionTypes.REMOVE_ROUTE ||
       action.type === ActionTypes.MOVE_ROUTES ||
-      action.type === ActionTypes.MOVE_ROUTE_TO_ANOTHER_ENVIRONMENT ||
+      action.type === ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT ||
       (action.type === ActionTypes.UPDATE_ROUTE &&
         action.properties &&
         (action.properties.endpoint || action.properties.method))
