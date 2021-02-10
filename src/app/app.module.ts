@@ -32,6 +32,7 @@ import { ValidPathDirective } from 'src/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/app/modules-config/markdown-factory';
 import { GlobalErrorHandler } from 'src/app/services/global-error-handler';
 import { AppComponent } from './app.component';
+import { DuplicateRouteModalComponent } from './components/move-route-modal/duplicate-route-modal.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { AppComponent } from './app.component';
     RoutesMenuComponent,
     TitleSeparatorComponent,
     FooterComponent,
+    DuplicateRouteModalComponent,
     EditorComponent
   ],
   imports: [

@@ -45,6 +45,12 @@ export type UIState = {
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
 
+export type DuplicateRouteToAnotherEnvironment = {
+  moving: boolean;
+  routeUUID?: string;
+  targetEnvironmentUUID?: string;
+};
+
 export type StoreType = {
   activeTab: TabsNameType;
   activeView: ViewsNameType;
@@ -64,6 +70,7 @@ export type StoreType = {
   userId: string;
   uiState: UIState;
   settings: Settings;
+  duplicateRouteToAnotherEnvironment: DuplicateRouteToAnotherEnvironment;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -99,7 +106,8 @@ export class Store {
       environmentsMenuOpened: false,
       appClosing: false
     },
-    settings: null
+    settings: null,
+    duplicateRouteToAnotherEnvironment: { moving: false }
   });
 
   constructor() {}
@@ -306,6 +314,22 @@ export class Store {
         (response) =>
           response.uuid === this.store$.value.activeRouteResponseUUID
       );
+  }
+
+  /**
+   * Get route with the supplied UUID from any
+   */
+  public getRouteByUUID(routeUUID: string): Route | undefined {
+    let foundRoute: Route;
+    this.store$.value.environments.some((environment: Environment) => {
+      foundRoute = environment.routes.find(
+        (route: Route) => route.uuid === routeUUID
+      );
+
+      return !!foundRoute;
+    });
+
+    return foundRoute;
   }
 
   /**

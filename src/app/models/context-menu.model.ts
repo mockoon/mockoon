@@ -10,6 +10,7 @@ export type ContextMenuItemPayload = {
   action:
     | 'delete'
     | 'duplicate'
+    | 'move'
     | 'env_settings'
     | 'env_logs'
     | 'export'

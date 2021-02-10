@@ -51,7 +51,10 @@ export const enum ActionTypes {
   REMOVE_TOAST,
   SET_USER_ID,
   UPDATE_SETTINGS,
-  UPDATE_UI_STATE
+  UPDATE_UI_STATE,
+  START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
+  FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
+  DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT
 }
 
 /**
@@ -211,12 +214,12 @@ export function updateEnvironmentAction(properties: EnvironmentProperties) {
  */
 export function updateEnvironmentStatusAction(
   properties: EnvironmentStatusProperties,
-  environmentUUID,
+  environmentUUID
 ) {
   return <const>{
     type: ActionTypes.UPDATE_ENVIRONMENT_STATUS,
     properties,
-    environmentUUID,
+    environmentUUID
   };
 }
 
@@ -316,6 +319,41 @@ export function addRouteResponseAction(
     type: ActionTypes.ADD_ROUTE_RESPONSE,
     routeResponse,
     isDuplication
+  };
+}
+
+/**
+ * Triggers movement of a route to another environment
+ */
+export function startRouteDuplicationToAnotherEnvironmentAction(
+  routeUUID: string
+) {
+  return <const>{
+    type: ActionTypes.START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
+    routeUUID
+  };
+}
+
+/**
+ * Cancels out route movement
+ */
+export function finalizeRouteDuplicationToAnotherEnvironmentAction() {
+  return <const>{
+    type: ActionTypes.FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT
+  };
+}
+
+/**
+ * Finalizes route movement to another environment
+ */
+export function duplicateRouteToAnotherEnvironmentAction(
+  route: Route,
+  targetEnvironmentUUID: string
+) {
+  return <const>{
+    type: ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT,
+    route,
+    targetEnvironmentUUID
   };
 }
 
@@ -468,4 +506,7 @@ export type Actions =
   | ReturnType<typeof removeToastAction>
   | ReturnType<typeof setUserIdAction>
   | ReturnType<typeof updateUIStateAction>
-  | ReturnType<typeof updateSettingsAction>;
+  | ReturnType<typeof updateSettingsAction>
+  | ReturnType<typeof startRouteDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof finalizeRouteDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>;

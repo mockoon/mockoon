@@ -97,5 +97,14 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       label: 'Confirm deletion'
     },
     confirmColor: 'text-danger'
+  },
+  {
+    payload: {
+      subject: 'route',
+      action: 'move',
+      subjectUUID: routeUUID
+    },
+    label: 'Move route',
+    icon: 'input'
   }
 ];
