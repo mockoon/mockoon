@@ -356,7 +356,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.toggleRoute(payload.subjectUUID);
         }
         break;
-      case 'move':
+      case 'duplicateToEnv':
         if (payload.subject === 'route') {
           this.startRouteDuplicationToAnotherEnvironment(payload.subjectUUID);
         }
@@ -666,6 +666,8 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Trigger route movement flow
    */
   private startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
-    this.environmentsService.startRouteDuplicationToAnotherEnvironment(routeUUID);
+    this.environmentsService.startRouteDuplicationToAnotherEnvironment(
+      routeUUID
+    );
   }
 }

@@ -1,34 +1,33 @@
 <ng-template #modal>
-  <h3 class="modal-header">Move Route</h3>
-  <div class="modal-body">
-    <div class="modal-body__environment-information">
-      <span
-        class="environment-information__item environment-information__method form-control col-2"
-        >{{ routeToDuplicate.method | uppercase }}</span
-      >
-      <div class="input-group-prepend">
-        <span class="input-group-text">:</span>
-      </div>
-      <span
-        class="environment-information__item form-control environment-information__endpoint"
-        >{{ routeToDuplicate.endpoint }}</span
-      >
-    </div>
-    <div class="target-environment">
-      <h5 class="target-environment__header">Choose target environment</h5>
-      <ul class="target-environment__list list-group">
-        <li
-          class="target-environment__item position-relative list-group-item"
-          *ngFor="let environment of environments$ | async"
-          (click)="chooseTargetEnvironment(environment)"
+  <div class="modal-header">
+    <h3 class="modal-title">
+      Choose target environment
+      <br />
+      <small class="text-muted h6"
+        >Route
+        <code
+          >{{ routeToDuplicate.method | uppercase }} /{{
+            routeToDuplicate.endpoint
+          }}</code
         >
-          <div class="ellipsis environment-name">{{ environment.name }}</div>
-        </li>
-      </ul>
-    </div>
+        will be copied to:</small
+      >
+    </h3>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="closeModal()">
+
+  <div class="modal-body p-0">
+    <ul class="list-group">
+      <li
+        class="list-group-item"
+        *ngFor="let environment of environments$ | async"
+        (click)="chooseTargetEnvironment(environment)"
+      >
+        <div class="ellipsis">{{ environment.name }}</div>
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer justify-content-start">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">
       Cancel
     </button>
   </div>

@@ -28,7 +28,7 @@ export const EnvironmentsContextMenu = (
       action: 'duplicate',
       subjectUUID: environmentUUID
     },
-    label: 'Duplicate environment',
+    label: 'Duplicate',
     icon: 'content_copy'
   },
   {
@@ -46,7 +46,7 @@ export const EnvironmentsContextMenu = (
       action: 'delete',
       subjectUUID: environmentUUID
     },
-    label: 'Delete environment',
+    label: 'Delete',
     icon: 'delete',
     confirm: {
       icon: 'error',
@@ -63,8 +63,17 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       action: 'duplicate',
       subjectUUID: routeUUID
     },
-    label: 'Duplicate route',
+    label: 'Duplicate',
     icon: 'content_copy'
+  },
+  {
+    payload: {
+      subject: 'route',
+      action: 'duplicateToEnv',
+      subjectUUID: routeUUID
+    },
+    label: 'Duplicate to environment',
+    icon: 'input'
   },
   {
     payload: {
@@ -81,7 +90,7 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       action: 'toggle',
       subjectUUID: routeUUID
     },
-    label: 'Toggle Route',
+    label: 'Toggle',
     icon: 'power_settings_new'
   },
   {
@@ -90,21 +99,12 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       action: 'delete',
       subjectUUID: routeUUID
     },
-    label: 'Delete route',
+    label: 'Delete',
     icon: 'delete',
     confirm: {
       icon: 'error',
       label: 'Confirm deletion'
     },
     confirmColor: 'text-danger'
-  },
-  {
-    payload: {
-      subject: 'route',
-      action: 'move',
-      subjectUUID: routeUUID
-    },
-    label: 'Move route',
-    icon: 'input'
   }
 ];

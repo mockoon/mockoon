@@ -8,9 +8,8 @@ import {
 } from '@angular/core';
 import { Environment, Route } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { methods } from '../../constants/routes.constants';
 import { EnvironmentsService } from '../../services/environments.service';
 import { finalizeRouteDuplicationToAnotherEnvironmentAction } from '../../stores/actions';
 import { DuplicateRouteToAnotherEnvironment, Store } from '../../stores/store';
@@ -18,13 +17,12 @@ import { DuplicateRouteToAnotherEnvironment, Store } from '../../stores/store';
 @Component({
   selector: 'app-duplicate-route-modal',
   templateUrl: './duplicate-route-modal.component.html',
-  styleUrls: ['./duplicate-route-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DuplicateRouteModalComponent implements OnDestroy, AfterViewInit {
-  @ViewChild('modal', { static: false })
+  @ViewChild('modal')
   public modal: ElementRef;
-  public environments$ = this.store
+  public environments$: Observable<Environment[]> = this.store
     .select('environments')
     .pipe(
       map((environments: Environment[]) =>
@@ -36,7 +34,6 @@ export class DuplicateRouteModalComponent implements OnDestroy, AfterViewInit {
       )
     );
   public routeToDuplicate: Route;
-  public methods = methods;
 
   private routeDuplicationState$ = this.store.select(
     'duplicateRouteToAnotherEnvironment'

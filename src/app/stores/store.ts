@@ -317,7 +317,7 @@ export class Store {
   }
 
   /**
-   * Get route with the supplied UUID from any
+   * Get route with the supplied UUID from any environment
    */
   public getRouteByUUID(routeUUID: string): Route | undefined {
     let foundRoute: Route;

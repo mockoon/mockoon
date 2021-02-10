@@ -222,3 +222,22 @@ label {
 a:not([href]):not([tabindex]) {
   color: $gray-400;
 }
+
+.list-group-item {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+
+  &:first-of-type {
+    border-top: 0;
+  }
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    background: $gray-900;
+    cursor: pointer;
+  }
+}
