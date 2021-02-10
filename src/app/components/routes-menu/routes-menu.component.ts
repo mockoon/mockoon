@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { Environment, Route } from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import { RoutesContextMenu } from 'src/app/components/context-menu/context-menus';
 import { ContextMenuEvent } from 'src/app/models/context-menu.model';
@@ -6,9 +14,11 @@ import { Settings } from 'src/app/models/settings.model';
 import { EnvironmentsService } from 'src/app/services/environments.service';
 import { EventsService } from 'src/app/services/events.service';
 import { UIService } from 'src/app/services/ui.service';
-import { DuplicatedRoutesTypes, EnvironmentsStatuses, Store } from 'src/app/stores/store';
-import { Environment, Route } from '@mockoon/commons';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import {
+  DuplicatedRoutesTypes,
+  EnvironmentsStatuses,
+  Store
+} from 'src/app/stores/store';
 
 @Component({
   selector: 'app-routes-menu',
@@ -81,10 +91,10 @@ export class RoutesMenuComponent implements OnInit {
    */
   public openContextMenu(routeUUID: string, event: MouseEvent) {
     // if right click display context menu
-    if (event && event.which === 3) {
+    if (event && event.button === 2) {
       const menu: ContextMenuEvent = {
         event: event,
-        items: RoutesContextMenu(routeUUID)
+        items: RoutesContextMenu(routeUUID, this.store.get('environments'))
       };
 
       this.eventsService.contextMenuEvents.next(menu);

@@ -131,7 +131,7 @@ describe('Environments export', () => {
     it('Should copy route to clipboard wrapped with export info', async () => {
       await tests.helpers.contextMenuClick(
         '.routes-menu .menu-list .nav-item:first-of-type',
-        2
+        3
       );
 
       const clipboardContent = await tests.app.electron.clipboard.readText();

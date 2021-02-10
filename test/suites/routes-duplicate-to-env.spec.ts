@@ -6,12 +6,28 @@ describe('Duplicate a route to an environment', async () => {
   const firstEnvSelector =
     '.modal-content .modal-body .list-group .list-group-item:first-child';
 
-  it("should verify selected route's information on modal", async () => {
+  it('should assert that menu entry is disabled when only one environment present', async () => {
+    await helpers.assertContextMenuDisabled(
+      '.routes-menu .menu-list .nav-item:last-child .nav-link',
+      2,
+      true
+    );
+  });
+
+  it('should add a new environment and assert that menu entry is enabled', async () => {
     await helpers.toggleEnvironmentMenu();
     await helpers.addEnvironment();
     await helpers.selectEnvironment(1);
     await helpers.toggleEnvironmentMenu();
 
+    await helpers.assertContextMenuDisabled(
+      '.routes-menu .menu-list .nav-item:last-child .nav-link',
+      2,
+      false
+    );
+  });
+
+  it("should open duplication modal and verify selected route's information on modal", async () => {
     await helpers.contextMenuClick(
       '.routes-menu .menu-list .nav-item:last-child .nav-link',
       2

@@ -121,7 +121,7 @@ export class EnvironmentsMenuComponent implements OnInit {
     // if right click display context menu
     if (
       event &&
-      event.which === 3 &&
+      event.button === 2 &&
       !this.store.getEnvironmentStatus()[environmentUUID]
         .disabledForIncompatibility
     ) {

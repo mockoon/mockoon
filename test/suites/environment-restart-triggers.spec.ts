@@ -15,7 +15,7 @@ describe('Environment "restart needed" indicator', () => {
 
   it('Remove a route and check that a restart is needed', async () => {
     const menuTarget = '.routes-menu .menu-list .nav-item:first-of-type';
-    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 4);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 5);
 
     await tests.helpers.checkEnvironmentNeedsRestart();
   });

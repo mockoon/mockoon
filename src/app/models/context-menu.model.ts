@@ -23,9 +23,10 @@ export type ContextMenuItem = {
   payload?: ContextMenuItemPayload;
   icon: string;
   confirmColor?: string;
-  confirm?: ContextMenuItem;
+  confirm?: Omit<ContextMenuItem, 'disabled'>;
   separator?: boolean;
   needConfirm?: boolean;
+  disabled: boolean;
 };
 
 export type ContextMenuPosition = {

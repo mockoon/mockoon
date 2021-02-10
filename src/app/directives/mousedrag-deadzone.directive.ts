@@ -20,7 +20,7 @@ export class MousedragDeadzoneDirective {
   @HostListener('mousemove', ['$event'])
   public onMouseMove(event: MouseEvent) {
     // if left mouse button pressed
-    if (this.lastMouseDownPosition && event.buttons === 1) {
+    if (this.lastMouseDownPosition && event.buttons === 0) {
       const delta = Math.sqrt(
         Math.pow(event.clientX - this.lastMouseDownPosition.x, 2) +
           Math.pow(event.clientY - this.lastMouseDownPosition.y, 2)

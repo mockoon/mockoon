@@ -13,9 +13,9 @@ describe('Create and delete routes', () => {
   it('Remove 3 routes over 4', async () => {
     const menuTarget = '.routes-menu .menu-list .nav-item:first-of-type';
 
-    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 4);
-    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 4);
-    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 4);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 5);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 5);
+    await tests.helpers.contextMenuClickAndConfirm(menuTarget, 5);
 
     await tests.helpers.countRoutes(1);
   });
@@ -30,7 +30,7 @@ describe('Create and delete routes', () => {
   it('Remove last route, active tab should be environment settings', async () => {
     await tests.helpers.contextMenuClickAndConfirm(
       '.routes-menu .menu-list .nav-item:first-of-type',
-      4
+      5
     );
 
     await tests.helpers.countRoutes(0);

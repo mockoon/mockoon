@@ -1,3 +1,4 @@
+import { Environments } from '@mockoon/commons';
 import { ContextMenuItem } from 'src/app/models/context-menu.model';
 
 export const EnvironmentsContextMenu = (
@@ -10,7 +11,8 @@ export const EnvironmentsContextMenu = (
       subjectUUID: environmentUUID
     },
     label: 'Environment logs',
-    icon: 'history'
+    icon: 'history',
+    disabled: false
   },
   {
     payload: {
@@ -20,7 +22,8 @@ export const EnvironmentsContextMenu = (
     },
     label: 'Environment settings',
     icon: 'settings',
-    separator: true
+    separator: true,
+    disabled: false
   },
   {
     payload: {
@@ -29,7 +32,8 @@ export const EnvironmentsContextMenu = (
       subjectUUID: environmentUUID
     },
     label: 'Duplicate',
-    icon: 'content_copy'
+    icon: 'content_copy',
+    disabled: false
   },
   {
     payload: {
@@ -38,7 +42,8 @@ export const EnvironmentsContextMenu = (
       subjectUUID: environmentUUID
     },
     label: 'Copy to clipboard (JSON)',
-    icon: 'assignment'
+    icon: 'assignment',
+    disabled: false
   },
   {
     payload: {
@@ -52,11 +57,15 @@ export const EnvironmentsContextMenu = (
       icon: 'error',
       label: 'Confirm deletion'
     },
-    confirmColor: 'text-danger'
+    confirmColor: 'text-danger',
+    disabled: false
   }
 ];
 
-export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
+export const RoutesContextMenu = (
+  routeUUID: string,
+  environments: Environments
+): ContextMenuItem[] => [
   {
     payload: {
       subject: 'route',
@@ -64,7 +73,8 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       subjectUUID: routeUUID
     },
     label: 'Duplicate',
-    icon: 'content_copy'
+    icon: 'content_copy',
+    disabled: false
   },
   {
     payload: {
@@ -73,7 +83,8 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       subjectUUID: routeUUID
     },
     label: 'Duplicate to environment',
-    icon: 'input'
+    icon: 'input',
+    disabled: environments.length <= 1
   },
   {
     payload: {
@@ -82,7 +93,8 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       subjectUUID: routeUUID
     },
     label: 'Copy to clipboard (JSON)',
-    icon: 'assignment'
+    icon: 'assignment',
+    disabled: false
   },
   {
     payload: {
@@ -91,7 +103,8 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       subjectUUID: routeUUID
     },
     label: 'Toggle',
-    icon: 'power_settings_new'
+    icon: 'power_settings_new',
+    disabled: false
   },
   {
     payload: {
@@ -105,6 +118,7 @@ export const RoutesContextMenu = (routeUUID: string): ContextMenuItem[] => [
       icon: 'error',
       label: 'Confirm deletion'
     },
-    confirmColor: 'text-danger'
+    confirmColor: 'text-danger',
+    disabled: false
   }
 ];

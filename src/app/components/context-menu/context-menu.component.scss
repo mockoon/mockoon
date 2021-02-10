@@ -14,11 +14,15 @@
     color: $gray-400;
     font-size: $font-size-sm;
 
+    &.disabled {
+      color: $gray-600;
+    }
+
     &:not(:last-of-type) {
       border-bottom: 1px solid lighten($gray-900, 11%);
     }
 
-    &:hover {
+    &:hover:not(.disabled) {
       background-color: lighten($gray-900, 12%);
       color: $gray-200;
     }

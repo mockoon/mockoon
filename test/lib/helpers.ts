@@ -106,7 +106,7 @@ export class Helpers {
   public async removeRoute(index: number) {
     await this.contextMenuClickAndConfirm(
       `.routes-menu .menu-list .nav-item:nth-child(${index}) .nav-link`,
-      4
+      5
     );
   }
 
@@ -173,6 +173,23 @@ export class Helpers {
     await this.elementClick(
       `.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`
     );
+  }
+  public async assertContextMenuDisabled(
+    targetMenuItemSelector: string,
+    contextMenuItemIndex: number,
+    disabled: boolean
+  ) {
+    await this.elementClick(targetMenuItemSelector, 'right');
+    const menuEntryClasses = await this.getElementAttribute(
+      `.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`,
+      'class'
+    );
+
+    if (disabled) {
+      expect(menuEntryClasses).to.include('disabled');
+    } else {
+      expect(menuEntryClasses).not.to.include('disabled');
+    }
   }
 
   public async contextMenuClickAndConfirm(
@@ -545,7 +562,7 @@ export class Helpers {
   public async disableRoute() {
     await this.contextMenuClick(
       '.routes-menu .menu-list .nav-item .nav-link.active',
-      3
+      4
     );
   }
 

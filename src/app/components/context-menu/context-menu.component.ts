@@ -87,12 +87,14 @@ export class ContextMenuComponent implements OnInit {
   public action(item: ContextMenuItem, event: any) {
     event.stopPropagation();
 
-    if (item.confirm && !item.needConfirm) {
-      item.needConfirm = true;
-    } else if (!item.confirm || item.needConfirm) {
-      this.itemClicked.emit(item.payload);
+    if (!item.disabled) {
+      if (item.confirm && !item.needConfirm) {
+        item.needConfirm = true;
+      } else if (!item.confirm || item.needConfirm) {
+        this.itemClicked.emit(item.payload);
 
-      this.reset();
+        this.reset();
+      }
     }
   }
 
