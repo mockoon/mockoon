@@ -6,8 +6,9 @@ Thank you to everyone who backed Mockoon. You can join them by visiting my page 
 
 ## Backers via GitHub Sponsors:
 
-- [alrawas](https://github.com/alrawas)
-- [Iron 66](https://github.com/iron66)
+- Elior Boukhobza - https://www.material-theme.com
+
+- [Alrawas](https://github.com/alrawas)
 
 ## One-Time sponsors
 
@@ -23,6 +24,7 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Colin White
 - Cyhung
 - Efe
+- François Grémont
 - Jeremy
 - John
 - Jonatan Gonzalez
@@ -42,6 +44,7 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Serj
 - Silicon Jungles
 - Steve Seidenthal
+- Steven Pollock
 - Thilo
 - Vetle Økland
 - Victor Castro
