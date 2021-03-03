@@ -298,9 +298,9 @@ describe('Responses rules', () => {
       }
     ];
 
-    for (let index = 0; index < testCases.length; index++) {
-      it(testCases[index].description, async () => {
-        await tests.helpers.httpCallAsserter(testCases[index]);
+    for (const testCase of testCases) {
+      it(testCase.description, async () => {
+        await tests.helpers.httpCallAsserter(testCase);
       });
     }
   });
@@ -411,9 +411,9 @@ describe('Responses rules', () => {
       await tests.helpers.assertRulesOperator('AND');
     });
 
-    for (let index = 0; index < testCases.length; index++) {
-      it(testCases[index].description, async () => {
-        await tests.helpers.httpCallAsserter(testCases[index]);
+    for (const testCase of testCases) {
+      it(testCase.description, async () => {
+        await tests.helpers.httpCallAsserter(testCase);
       });
     }
   });

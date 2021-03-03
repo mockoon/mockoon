@@ -11,7 +11,7 @@ import { DuplicatedRoutesTypes, StoreType } from 'src/app/stores/store';
  *
  * @param state
  */
-export const getBodyEditorMode = function (state: StoreType) {
+export const getBodyEditorMode = (state: StoreType) => {
   const currentEnvironment = state.environments.find(
     (environment) => environment.uuid === state.activeEnvironmentUUID
   );
@@ -44,9 +44,7 @@ export const getBodyEditorMode = function (state: StoreType) {
  *
  * @param state
  */
-export const updateDuplicatedEnvironments = function (
-  state: StoreType
-): Set<string> {
+export const updateDuplicatedEnvironments = (state: StoreType): Set<string> => {
   const duplicatedEnvironmentsUUIDs = new Set<string>();
 
   state.environments.forEach((environment, environmentIndex) => {
@@ -71,9 +69,9 @@ export const updateDuplicatedEnvironments = function (
  *
  * @param state
  */
-export const updateDuplicatedRoutes = function (
+export const updateDuplicatedRoutes = (
   state: StoreType
-): DuplicatedRoutesTypes {
+): DuplicatedRoutesTypes => {
   const duplicatedRoutes: DuplicatedRoutesTypes = {};
 
   state.environments.forEach((environment) => {

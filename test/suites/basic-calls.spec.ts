@@ -1,7 +1,7 @@
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
-const cases: HttpCall[] = [
+const testCases: HttpCall[] = [
   {
     description: 'Call GET /answer',
     path: '/answer',
@@ -47,9 +47,9 @@ describe('Basic endpoint calls', () => {
     await tests.helpers.startEnvironment();
   });
 
-  for (let index = 0; index < cases.length; index++) {
-    it(cases[index].description, async () => {
-      await tests.helpers.httpCallAsserter(cases[index]);
+  for (const testCase of testCases) {
+    it(testCase.description, async () => {
+      await tests.helpers.httpCallAsserter(testCase);
     });
   }
 });

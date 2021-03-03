@@ -26,6 +26,7 @@ type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';
  *
  * OpenAPI specifications: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md
  * Swagger specifications: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
+ *
  */
 @Injectable({ providedIn: 'root' })
 export class OpenAPIConverterService {
@@ -449,6 +450,7 @@ export class OpenAPIConverterService {
 
   /**
    * OpenAPI v3 specification type guard
+   *
    * @param parsedAPI
    */
   private isOpenAPIV3(parsedAPI: any): parsedAPI is OpenAPIV3.Document {

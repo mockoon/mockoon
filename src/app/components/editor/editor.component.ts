@@ -72,13 +72,18 @@ export class EditorComponent
     return this.text;
   }
 
+  @Input()
+  public set value(value: string) {
+    this.setText(value);
+  }
+
   public get text() {
     return this._text;
   }
 
   @Input()
-  public set value(value: string) {
-    this.setText(value);
+  public set text(text: string) {
+    this.setText(text);
   }
 
   @Input()
@@ -99,11 +104,6 @@ export class EditorComponent
   @Input()
   public set readOnly(readOnly: any) {
     this.setReadOnly(readOnly);
-  }
-
-  @Input()
-  public set text(text: string) {
-    this.setText(text);
   }
 
   @Input()

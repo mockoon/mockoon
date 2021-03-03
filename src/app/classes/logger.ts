@@ -29,7 +29,7 @@ export class Logger {
     this[level](`${message.loggerMessage || message.message}`);
 
     if (this.toastService && message.showToast) {
-      this.toastService.addToast('error', message.message);
+      this.toastService.addToast(message.toastType, message.message);
     }
   }
 

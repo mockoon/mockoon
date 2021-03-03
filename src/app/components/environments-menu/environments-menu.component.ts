@@ -126,7 +126,7 @@ export class EnvironmentsMenuComponent implements OnInit {
         .disabledForIncompatibility
     ) {
       const menu: ContextMenuEvent = {
-        event: event,
+        event,
         items: EnvironmentsContextMenu(environmentUUID)
       };
 

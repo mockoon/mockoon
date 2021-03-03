@@ -59,11 +59,13 @@
           </a>
         </li>
       </ul>
-      <resize-column
+      <div
+        appResizeColumn
         type="envLogs"
         [minWidth]="150"
         [maxWidthFactor]="0.2"
-      ></resize-column>
+        class="resize-column"
+      ></div>
     </div>
 
     <div class="col h-100 environment-logs-column">

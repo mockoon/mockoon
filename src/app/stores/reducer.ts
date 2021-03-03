@@ -23,10 +23,10 @@ import { EnvironmentsStatuses, StoreType } from 'src/app/stores/store';
 export type ReducerDirectionType = 'next' | 'previous';
 export type ReducerIndexes = { sourceIndex: number; targetIndex: number };
 
-export function environmentReducer(
+export const environmentReducer = (
   state: StoreType,
   action: Actions
-): StoreType {
+): StoreType => {
   let newState: StoreType;
 
   switch (action.type) {
@@ -998,4 +998,4 @@ export function environmentReducer(
   };
 
   return newState;
-}
+};

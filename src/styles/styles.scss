@@ -247,7 +247,7 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green),
   color: $warning;
 }
 
-resize-column {
+.resize-column {
   position: absolute;
   width: $resize-separator-width;
   height: 100%;

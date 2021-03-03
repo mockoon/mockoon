@@ -378,7 +378,7 @@ export class Helpers {
   public async httpCallAsserterWithPort(httpCall: HttpCall, port: number) {
     const response = await fetch({
       protocol: 'http',
-      port: port,
+      port,
       path: httpCall.path,
       method: httpCall.method,
       headers: httpCall.headers,

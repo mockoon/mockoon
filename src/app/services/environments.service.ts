@@ -33,10 +33,10 @@ import {
   addEnvironmentAction,
   addRouteAction,
   addRouteResponseAction,
+  duplicateRouteToAnotherEnvironmentAction,
   moveEnvironmentsAction,
   moveRouteResponsesAction,
   moveRoutesAction,
-  duplicateRouteToAnotherEnvironmentAction,
   navigateEnvironmentsAction,
   navigateRoutesAction,
   removeEnvironmentAction,
@@ -100,7 +100,7 @@ export class EnvironmentsService {
           this.store.update(setInitialEnvironmentsAction(environments));
         }),
         concatMap(() =>
-          this.storageService.saveData(
+          this.storageService.saveData<Environments>(
             this.store.select('environments'),
             'environments',
             2000
@@ -274,7 +274,10 @@ export class EnvironmentsService {
         cloneDeep(routeToDuplicate)
       );
       this.store.update(
-        duplicateRouteToAnotherEnvironmentAction(newRoute, targetEnvironmentUUID)
+        duplicateRouteToAnotherEnvironmentAction(
+          newRoute,
+          targetEnvironmentUUID
+        )
       );
     }
   }
@@ -505,6 +508,8 @@ export class EnvironmentsService {
    * Sends an event for further process of route movement
    */
   public startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
-    this.store.update(startRouteDuplicationToAnotherEnvironmentAction(routeUUID));
+    this.store.update(
+      startRouteDuplicationToAnotherEnvironmentAction(routeUUID)
+    );
   }
 }

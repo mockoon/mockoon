@@ -21,7 +21,7 @@ export type ColumnType = 'routeMenu' | 'envLogs';
  */
 
 @Directive({
-  selector: 'resize-column'
+  selector: '[appResizeColumn]'
 })
 export class ResizeColumnDirective implements AfterViewInit {
   @Input()
@@ -32,8 +32,8 @@ export class ResizeColumnDirective implements AfterViewInit {
   public maxWidthFactor = 0.2; // max width based on body width percentage
 
   // Event removers for mousemove / mouseup events to body
-  private mouseMoveRemover: Function;
-  private mouseUpRemover: Function;
+  private mouseMoveRemover: () => any;
+  private mouseUpRemover: () => any;
 
   private pressed: boolean;
   // The x point where the mousedown event occurred

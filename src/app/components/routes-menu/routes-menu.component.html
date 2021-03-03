@@ -1,6 +1,6 @@
 <!-- Only display the routes menu if there is at least a selected environment -->
 <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
-  <div class="routes-menu d-flex flex-column h-100" MousedragDeadzone>
+  <div class="routes-menu d-flex flex-column h-100" appMousedragDeadzone>
     <ul class="nav menu-header d-flex justify-content-between">
       <li class="nav-item">
         <a
@@ -73,10 +73,12 @@
       </li>
     </ul>
 
-    <resize-column
+    <div
+      appResizeColumn
       type="routeMenu"
       [minWidth]="200"
       [maxWidthFactor]="0.25"
-    ></resize-column>
+      class="resize-column"
+    ></div>
   </div>
 </ng-container>

@@ -1,6 +1,6 @@
 import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 
-export function MarkedOptionsFactory(): MarkedOptions {
+export const MarkedOptionsFactory = (): MarkedOptions => {
   const renderer = new MarkedRenderer();
 
   // Whitelist links domains
@@ -24,4 +24,4 @@ export function MarkedOptionsFactory(): MarkedOptions {
     smartLists: true,
     smartypants: false
   };
-}
+};

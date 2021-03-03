@@ -98,12 +98,12 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
    */
   public addRule() {
     (this.form.get('rules') as FormArray).push(
-      this.formBuilder.group(<ResponseRule>{
+      this.formBuilder.group({
         target: null,
         modifier: '',
         value: '',
         isRegex: false
-      })
+      } as ResponseRule)
     );
 
     this.ruleAdded.emit();
@@ -127,9 +127,9 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
 
     newRules.forEach((rule) => {
       formRulesArray.push(
-        this.formBuilder.group(<ResponseRule>{
+        this.formBuilder.group({
           ...rule
-        })
+        } as ResponseRule)
       );
     });
 

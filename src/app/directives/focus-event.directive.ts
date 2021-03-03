@@ -8,10 +8,10 @@ import { EventsService } from 'src/app/services/events.service';
  * Focus an input when an event is emitted with the input's name
  */
 @Directive({
-  selector: '[focusOnEvent]'
+  selector: '[appFocusOnEvent]'
 })
 export class FocusOnEventDirective implements OnInit, OnDestroy {
-  @Input() public focusOnEvent: FocusableInputs;
+  @Input() public appFocusOnEvent: FocusableInputs;
 
   private eventsSubscription: Subscription;
 
@@ -23,7 +23,7 @@ export class FocusOnEventDirective implements OnInit, OnDestroy {
   public ngOnInit() {
     this.eventsSubscription = this.eventsService.focusInput
       .pipe(
-        filter((input) => input === this.focusOnEvent),
+        filter((input) => input === this.appFocusOnEvent),
         tap(() => {
           this.elementRef.nativeElement.focus();
         })

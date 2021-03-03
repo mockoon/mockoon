@@ -37,7 +37,7 @@
               type="number"
               class="form-control col-4"
               id="log-body-size"
-              [InputNumber]="{ min: 1, max: Infinity }"
+              [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
               placeholder="10000 (default)"
               [ngModel]="settings.logSizeLimit"
               (ngModelChange)="settingsUpdated($event, 'logSizeLimit')"
@@ -102,7 +102,7 @@
               class="form-control col-4"
               id="faker-seed"
               placeholder="Numbers only"
-              [InputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
+              [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
               [ngModel]="settings.fakerSeed"
               (ngModelChange)="settingsUpdated($event, 'fakerSeed')"
             />
