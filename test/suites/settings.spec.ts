@@ -91,7 +91,8 @@ describe('Settings', () => {
 
     it('Set log body size to 100', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.helpers.setElementValue(bodySizeInput, '100');
+      // add to zeros to the default value '1' (setValue is doing a reset too)
+      await tests.helpers.setElementValue(bodySizeInput, '00');
       await tests.helpers.closeModal();
 
       // wait for settings save
@@ -123,7 +124,7 @@ describe('Settings', () => {
 
     it('Set log body size to 1000', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.helpers.setElementValue(bodySizeInput, '1000');
+      await tests.helpers.addElementValue(bodySizeInput, '0');
       await tests.helpers.closeModal();
 
       // wait for settings save

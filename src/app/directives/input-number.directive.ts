@@ -1,49 +1,117 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import {
+  Directive,
+  ElementRef,
+  forwardRef,
+  HostListener,
+  Input,
+  Renderer2
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-// TODO use control value accessor to avoid sending change event with non sanitized data and then with sanitized data
-// https://blog.angularindepth.com/never-again-be-confused-when-implementing-controlvalueaccessor-in-angular-forms-93b9eee9ee83
-// https://stackoverflow.com/questions/36770846/angular-2-prevent-input-and-model-changing-using-directive
-
+/**
+ * This directive is designed to be used together with an input[type=number]
+ */
 @Directive({
-  selector: '[appInputNumber]'
+  selector: '[appInputNumber]',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputNumberDirective),
+      multi: true
+    }
+  ]
 })
-export class InputNumberDirective {
-  @Input()
-  public appInputNumber: { min: number; max: number; canBeEmpty?: boolean };
+export class InputNumberDirective implements ControlValueAccessor {
+  @Input('appInputNumber')
+  public config: {
+    min: number;
+    max: number;
+    canBeEmpty: boolean;
+  };
+  public onChange: (_: any) => void;
+  public onTouched: (_: any) => void;
 
-  constructor(private elementRef: ElementRef, private ngControl: NgControl) {}
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
-  @HostListener('input', ['$event'])
-  public onInputChange(e) {
-    const value = this.elementRef.nativeElement.value;
+  /**
+   * Prevent some characters usually accepted in an input[type=number]
+   */
+  @HostListener('keydown', ['$event'])
+  public handleKeydown(event: KeyboardEvent): void {
+    if (['e', '.', '-', '+'].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
 
+  /**
+   * Handle values entered in the input field
+   */
+  @HostListener('input', ['$event.target.value'])
+  @HostListener('change', ['$event.target.value'])
+  public handleInput(inputValue: string): void {
+    const sanitizedValue = this.sanitize(inputValue);
+
+    this.onChange(sanitizedValue);
+
+    this.renderer.setProperty(
+      this.elementRef.nativeElement,
+      'value',
+      sanitizedValue
+    );
+  }
+
+  /**
+   * Handle writing an initial value to the input.
+   * Can come as other values than number, safer to transform into a string.
+   */
+  public writeValue(value: number | any): void {
+    const sanitizedValue = this.sanitize(String(value));
+
+    this.renderer.setProperty(
+      this.elementRef.nativeElement,
+      'value',
+      sanitizedValue
+    );
+  }
+
+  public registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  /**
+   * Sanitize the number entry:
+   * - remove leading zeros and any other character.
+   * - enforce min and max constraints
+   */
+  private sanitize(value: string): number {
     // remove everything other than numbers
-    let sanitizedValue = value.replace(/[^0-9]/g, '');
+    value = value.replace(/[^0-9]/g, '');
     // remove leading zero
-    sanitizedValue = sanitizedValue.replace(/^0([1-9]+)/g, '$1');
+    value = value.replace(/^0([1-9]+)/g, '$1');
 
-    // if empty put Min
-    if (sanitizedValue === '' && !this.appInputNumber.canBeEmpty) {
-      sanitizedValue = this.appInputNumber.min;
-    } else if (sanitizedValue === '' && this.appInputNumber.canBeEmpty) {
-      // write new value to the model
-      this.ngControl.control.setValue(null);
+    let sanitizedValue: number = parseInt(value, 10);
 
-      return;
+    if (value === undefined || value === null || value === '') {
+      // if empty put Min
+      if (this.config.canBeEmpty) {
+        sanitizedValue = null;
+      } else {
+        sanitizedValue = this.config.min;
+      }
     }
 
     // handle min/max values
-    if (sanitizedValue < this.appInputNumber.min) {
-      sanitizedValue = this.appInputNumber.min;
+    if (sanitizedValue < this.config.min) {
+      sanitizedValue = this.config.min;
     }
-    if (sanitizedValue > this.appInputNumber.max) {
-      sanitizedValue = this.appInputNumber.max;
+    if (sanitizedValue > this.config.max) {
+      sanitizedValue = this.config.max;
     }
 
-    sanitizedValue = parseInt(sanitizedValue, 10);
-
-    // write new value to the model
-    this.ngControl.control.setValue(sanitizedValue);
+    return sanitizedValue;
   }
 }
