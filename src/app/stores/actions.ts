@@ -62,248 +62,228 @@ export const enum ActionTypes {
  *
  * @param activeTab - id of the tab to set as active
  */
-export function setActiveTabAction(activeTab: TabsNameType) {
-  return <const>{
+export const setActiveTabAction = (activeTab: TabsNameType) =>
+  <const>{
     type: ActionTypes.SET_ACTIVE_TAB,
     activeTab
   };
-}
 
 /**
  * Change the active main view
  *
  * @param activeView - id of the view to set as active
  */
-export function setActiveViewAction(activeView: ViewsNameType) {
-  return <const>{
+export const setActiveViewAction = (activeView: ViewsNameType) =>
+  <const>{
     type: ActionTypes.SET_ACTIVE_VIEW,
     activeView
   };
-}
 
 /**
  * Change the active environment logs tab
  *
  * @param activeTab - id of the tab to set as active
  */
-export function setActiveEnvironmentLogTabAction(
+export const setActiveEnvironmentLogTabAction = (
   activeTab: EnvironmentLogsTabsNameType
-) {
-  return <const>{
+) =>
+  <const>{
     type: ActionTypes.SET_ACTIVE_ENVIRONMENT_LOG_TAB,
     activeTab
   };
-}
 
 /**
  * Set the initial environments
  *
  * @param environments - initial environments from storage
  */
-export function setInitialEnvironmentsAction(environments: Environments) {
-  return <const>{
+export const setInitialEnvironmentsAction = (environments: Environments) =>
+  <const>{
     type: ActionTypes.SET_INITIAL_ENVIRONMENTS,
     environments
   };
-}
 
 /**
  * Set the active environment (currently displayed)
  *
  * @param environmentUUID - UUID of the environment to switch to
  */
-export function setActiveEnvironmentAction(environmentUUID: string) {
-  return <const>{
+export const setActiveEnvironmentAction = (environmentUUID: string) =>
+  <const>{
     type: ActionTypes.SET_ACTIVE_ENVIRONMENT,
     environmentUUID
   };
-}
 
 /**
  * Navigate between environments
  *
  * @param direction - direction to which navigate to
  */
-export function navigateEnvironmentsAction(direction: ReducerDirectionType) {
-  return <const>{
+export const navigateEnvironmentsAction = (direction: ReducerDirectionType) =>
+  <const>{
     type: ActionTypes.NAVIGATE_ENVIRONMENTS,
     direction
   };
-}
 
 /**
  * Move an environment
  *
  * @param indexes - indexes to and from which move
  */
-export function moveEnvironmentsAction(indexes: ReducerIndexes) {
-  return <const>{
+export const moveEnvironmentsAction = (indexes: ReducerIndexes) =>
+  <const>{
     type: ActionTypes.MOVE_ENVIRONMENTS,
     indexes
   };
-}
 
 /**
  * Move a route
  *
  * @param indexes - indexes to and from which move
  */
-export function moveRoutesAction(indexes: ReducerIndexes) {
-  return <const>{
+export const moveRoutesAction = (indexes: ReducerIndexes) =>
+  <const>{
     type: ActionTypes.MOVE_ROUTES,
     indexes
   };
-}
 
 /**
  * Move a route response
  *
  * @param indexes - indexes to and from which move
  */
-export function moveRouteResponsesAction(indexes: ReducerIndexes) {
-  return <const>{
+export const moveRouteResponsesAction = (indexes: ReducerIndexes) =>
+  <const>{
     type: ActionTypes.MOVE_ROUTE_RESPONSES,
     indexes
   };
-}
 
 /**
  * Add a new environment
  *
  * @param environment - environment to add
  */
-export function addEnvironmentAction(
+export const addEnvironmentAction = (
   environment: Environment,
   afterUUID?: string
-) {
-  return <const>{
+) =>
+  <const>{
     type: ActionTypes.ADD_ENVIRONMENT,
     environment,
     afterUUID
   };
-}
 
 /**
  * Remove an environment
  *
  * @param environmentUUID - environment UUID to remove
  */
-export function removeEnvironmentAction(environmentUUID: string) {
-  return <const>{
+export const removeEnvironmentAction = (environmentUUID: string) =>
+  <const>{
     type: ActionTypes.REMOVE_ENVIRONMENT,
     environmentUUID
   };
-}
 
 /**
  * Update an environment
  *
  * @param properties - properties to update
  */
-export function updateEnvironmentAction(properties: EnvironmentProperties) {
-  return <const>{
+export const updateEnvironmentAction = (properties: EnvironmentProperties) =>
+  <const>{
     type: ActionTypes.UPDATE_ENVIRONMENT,
     properties
   };
-}
 
 /**
  * Update an environment status
  *
  * @param properties - properties to update
  */
-export function updateEnvironmentStatusAction(
+export const updateEnvironmentStatusAction = (
   properties: EnvironmentStatusProperties,
   environmentUUID
-) {
-  return <const>{
+) =>
+  <const>{
     type: ActionTypes.UPDATE_ENVIRONMENT_STATUS,
     properties,
     environmentUUID
   };
-}
 
 /**
  * Set the active route (currently displayed)
  *
  * @param routeUUID - route UUID to set as active
  */
-export function setActiveRouteAction(routeUUID: string) {
-  return <const>{
+export const setActiveRouteAction = (routeUUID: string) =>
+  <const>{
     type: ActionTypes.SET_ACTIVE_ROUTE,
     routeUUID
   };
-}
 
 /**
  * Navigate between routes
  *
  * @param direction - direction to which navigate to
  */
-export function navigateRoutesAction(direction: ReducerDirectionType) {
-  return <const>{
+export const navigateRoutesAction = (direction: ReducerDirectionType) =>
+  <const>{
     type: ActionTypes.NAVIGATE_ROUTES,
     direction
   };
-}
 
 /**
  * Add a route
  *
  * @param route - route to add
  */
-export function addRouteAction(route: Route, afterUUID?: string) {
-  return <const>{
+export const addRouteAction = (route: Route, afterUUID?: string) =>
+  <const>{
     type: ActionTypes.ADD_ROUTE,
     route,
     afterUUID
   };
-}
 
 /**
  * Remove a route
  *
  * @param routeUUID - route UUID to remove
  */
-export function removeRouteAction(routeUUID: string) {
-  return <const>{
+export const removeRouteAction = (routeUUID: string) =>
+  <const>{
     type: ActionTypes.REMOVE_ROUTE,
     routeUUID
   };
-}
 
 /**
  * Remove the currently selected route response
  */
-export function removeRouteResponseAction() {
-  return <const>{
+export const removeRouteResponseAction = () =>
+  <const>{
     type: ActionTypes.REMOVE_ROUTE_RESPONSE
   };
-}
 
 /**
  * Update a route
  *
  * @param properties - properties to update
  */
-export function updateRouteAction(properties: RouteProperties) {
-  return <const>{
+export const updateRouteAction = (properties: RouteProperties) =>
+  <const>{
     type: ActionTypes.UPDATE_ROUTE,
     properties
   };
-}
 
 /**
  * Set the active route response (currently displayed)
  *
  * @param routeResponseUUID - route response UUID to set as active
  */
-export function setActiveRouteResponseAction(routeResponseUUID: string) {
-  return <const>{
+export const setActiveRouteResponseAction = (routeResponseUUID: string) =>
+  <const>{
     type: ActionTypes.SET_ACTIVE_ROUTE_RESPONSE,
     routeResponseUUID
   };
-}
 
 /**
  * Add a new route response
@@ -311,63 +291,60 @@ export function setActiveRouteResponseAction(routeResponseUUID: string) {
  * @param routeResponse - route response to add
  * @param isDuplication - (optional) indicates if the addition is a duplication.
  */
-export function addRouteResponseAction(
+export const addRouteResponseAction = (
   routeResponse: RouteResponse,
   isDuplication?: boolean
-) {
-  return <const>{
+) =>
+  <const>{
     type: ActionTypes.ADD_ROUTE_RESPONSE,
     routeResponse,
     isDuplication
   };
-}
 
 /**
  * Triggers movement of a route to another environment
  */
-export function startRouteDuplicationToAnotherEnvironmentAction(
+export const startRouteDuplicationToAnotherEnvironmentAction = (
   routeUUID: string
-) {
-  return <const>{
+) =>
+  <const>{
     type: ActionTypes.START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
     routeUUID
   };
-}
 
 /**
  * Cancels out route movement
  */
-export function finalizeRouteDuplicationToAnotherEnvironmentAction() {
-  return <const>{
+export const finalizeRouteDuplicationToAnotherEnvironmentAction = () =>
+  <const>{
     type: ActionTypes.FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT
   };
-}
 
 /**
  * Finalizes route movement to another environment
  */
-export function duplicateRouteToAnotherEnvironmentAction(
+export const duplicateRouteToAnotherEnvironmentAction = (
   route: Route,
   targetEnvironmentUUID: string
-) {
-  return <const>{
+) =>
+  <const>{
     type: ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT,
     route,
     targetEnvironmentUUID
   };
-}
 
 /**
  * Update a route response
  *
  * @param properties - properties to update
  */
-export function updateRouteResponseAction(properties: RouteResponseProperties) {
-  return <const>{
+export const updateRouteResponseAction = (
+  properties: RouteResponseProperties
+) =>
+  <const>{
     type: ActionTypes.UPDATE_ROUTE_RESPONSE,
     properties
   };
-}
 
 /**
  * Log the request (request and response)
@@ -376,28 +353,26 @@ export function updateRouteResponseAction(properties: RouteResponseProperties) {
  *
  * @param logItem - environment log object
  */
-export function logRequestAction(
+export const logRequestAction = (
   environmentUUID: string,
   logItem: EnvironmentLog
-) {
-  return <const>{
+) =>
+  <const>{
     type: ActionTypes.LOG_REQUEST,
     environmentUUID,
     logItem
   };
-}
 
 /**
  * Clear an environment logs
  *
  * @param environmentUUID - environment UUID from which logs must be cleared
  */
-export function clearLogsAction(environmentUUID: string) {
-  return <const>{
+export const clearLogsAction = (environmentUUID: string) =>
+  <const>{
     type: ActionTypes.CLEAR_LOGS,
     environmentUUID
   };
-}
 
 /**
  * Set the active environment log UUID for a given environment
@@ -405,76 +380,70 @@ export function clearLogsAction(environmentUUID: string) {
  * @param environmentUUID - logs environment UUID
  * @param activeEnvironmentLogUUID - environment log UUID to set as active
  */
-export function setActiveEnvironmentLogUUIDAction(
+export const setActiveEnvironmentLogUUIDAction = (
   environmentUUID: string,
   activeEnvironmentLogUUID: string
-) {
-  return <const>{
+) =>
+  <const>{
     type: ActionTypes.SET_ACTIVE_ENVIRONMENT_LOG,
     environmentUUID,
     activeEnvironmentLogUUID
   };
-}
 
 /**
  * Add a toast
  *
  * @param toast - toast to add
  */
-export function addToastAction(toast: Toast) {
-  return <const>{
+export const addToastAction = (toast: Toast) =>
+  <const>{
     type: ActionTypes.ADD_TOAST,
     toast
   };
-}
 
 /**
  * Remove a toast
  *
  * @param toastUUID - toast UUID to remove
  */
-export function removeToastAction(toastUUID: string) {
-  return <const>{
+export const removeToastAction = (toastUUID: string) =>
+  <const>{
     type: ActionTypes.REMOVE_TOAST,
     toastUUID
   };
-}
 
 /**
  * Set the user ID
  *
  * @param userId
  */
-export function setUserIdAction(userId: string) {
-  return <const>{
+export const setUserIdAction = (userId: string) =>
+  <const>{
     type: ActionTypes.SET_USER_ID,
     userId
   };
-}
 
 /**
  * Update user settings
  *
  * @param properties - properties to update
  */
-export function updateSettingsAction(properties: SettingsProperties) {
-  return <const>{
+export const updateSettingsAction = (properties: SettingsProperties) =>
+  <const>{
     type: ActionTypes.UPDATE_SETTINGS,
     properties
   };
-}
 
 /**
  * Update UI state
  *
  * @param properties - properties to update
  */
-export function updateUIStateAction(properties: UIStateProperties) {
-  return <const>{
+export const updateUIStateAction = (properties: UIStateProperties) =>
+  <const>{
     type: ActionTypes.UPDATE_UI_STATE,
     properties
   };
-}
 
 export type Actions =
   | ReturnType<typeof setActiveTabAction>

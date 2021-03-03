@@ -55,7 +55,7 @@
                   0.0.0.0 :</span>
               </div>
               <input type="number" class="form-control col-2" placeholder="port" formControlName="port"
-                [InputNumber]="{ min: 0, max: 65535 }">
+                [appInputNumber]="{ min: 0, max: 65535, canBeEmpty: false }">
               <div class="input-group-prepend" *ngIf="duplicatedEnvironments$ | async as duplicatedEnvironments">
                 <span class="input-group-text text-warning"
                   *ngIf="duplicatedEnvironments?.has(activeEnvironment?.uuid)"
@@ -64,14 +64,14 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">/</span>
               </div>
-              <input type="text" class="form-control" placeholder="prefix" ValidPath
+              <input type="text" class="form-control" placeholder="prefix" appValidPath
                 ngbTooltip="Environment routes prefix" formControlName="endpointPrefix">
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="material-icons">access_time</i></span>
               </div>
               <input type="number" class="form-control col-2"
                 ngbTooltip="Global environment latency applied to all routes (ms)" formControlName="latency"
-                [InputNumber]="{ min: 0, max: Infinity }">
+                [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: false }">
             </div>
           </div>
 
@@ -121,7 +121,7 @@
                 <button
                   *ngIf="(environmentsLogs$ | async)[activeEnvironment.uuid]?.length && activeView === 'ENV_LOGS'"
                   type="button" class="btn btn-link btn-icon pl-2 float-right" (click)="clearEnvironmentLogs()">
-                  <span *ngIf="!(clearEnvironmentLogsRequested$ | async)"><i class="material-icons">delete</i>
+                  <span *ngIf="(clearEnvironmentLogsRequested$ | async) === false"><i class="material-icons">delete</i>
                     Clear</span>
                   <span *ngIf="clearEnvironmentLogsRequested$ | async" class="text-danger"><i
                       class="material-icons">delete</i>
@@ -230,9 +230,9 @@
                     <span class="input-group-text">/</span>
                   </div>
                   <input type="text" class="form-control"
-                    placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" ValidPath
+                    placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" appValidPath
                     formControlName="endpoint"
-                    [focusOnEvent]="focusableInputs.ROUTE_PATH">
+                    [appFocusOnEvent]="focusableInputs.ROUTE_PATH">
 
                   <div *ngIf="environmentsStatus$ | async as environmentsStatus" class="input-group-prepend" ngbTooltip="Open route in browser (GET method only)">
                     <button
@@ -250,8 +250,7 @@
 
                 <!-- Documentation -->
                 <div class="input-group mt-2">
-                  <input type="text" class="form-control" placeholder="Add notes or documentation" ValidPath
-                    formControlName="documentation">
+                  <input type="text" class="form-control" placeholder="Add notes or documentation" formControlName="documentation">
                 </div>
 
                 <!-- Route responses navigation tabs -->
@@ -335,7 +334,7 @@
                     <button *ngIf="activeRoute?.responses.length > 1" type="button"
                             id="route-response-removal-button" class="btn btn-link btn-icon"
                             (click)="deleteCurrentRouteResponse()">
-                      <span *ngIf="!(deleteCurrentRouteResponseRequested$ | async)"
+                      <span *ngIf="(deleteCurrentRouteResponseRequested$ | async) === false"
                             ngbTooltip="Delete response"><i
                         class="material-icons">delete</i></span>
                       <span *ngIf="deleteCurrentRouteResponseRequested$ | async" class="text-danger" ngbTooltip="Confirm deletion"><i
@@ -361,7 +360,7 @@
                       <span class="input-group-text"><i class="material-icons">access_time</i></span>
                     </div>
                     <input type="number" class="form-control col-1" ngbTooltip="Route specific latency (ms)"
-                      [InputNumber]="{min: 0, max: Infinity}" formControlName="latency">
+                      [appInputNumber]="{min: 0, max: Infinity, canBeEmpty: false}" formControlName="latency">
                     <input type="text" class="form-control ml-1" formControlName="label" placeholder="Add label or notes">
                   </div>
 

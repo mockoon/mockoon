@@ -1,20 +1,18 @@
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
-function generateCall(requestBody: any): HttpCall {
-  return {
-    description: 'Call POST dolphins',
-    path: '/dolphins',
-    method: 'POST',
-    body: requestBody,
-    testedResponse: {
-      body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}',
-      status: 200
-    }
-  };
-}
+const generateCall = (requestBody: any): HttpCall => ({
+  description: 'Call POST dolphins',
+  path: '/dolphins',
+  method: 'POST',
+  body: requestBody,
+  testedResponse: {
+    body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}',
+    status: 200
+  }
+});
 
-function makeString(length: number): string {
+const makeString = (length: number): string => {
   let result = '';
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -24,7 +22,7 @@ function makeString(length: number): string {
   }
 
   return result;
-}
+};
 
 const truncateRoutePathCheckbox =
   '.modal-dialog input#truncate-route-name ~ .custom-control-label';

@@ -15,7 +15,6 @@ import { Logger } from 'src/app/classes/logger';
 import { Config } from 'src/app/config';
 import { AnalyticsEvents } from 'src/app/enums/analytics-events.enum';
 import { Errors } from 'src/app/enums/errors.enum';
-import { Messages } from 'src/app/enums/messages.enum';
 import { OldExport } from 'src/app/models/data.model';
 import { DataService } from 'src/app/services/data.service';
 import { EventsService } from 'src/app/services/events.service';
@@ -35,20 +34,22 @@ const oldVersionsMigrationTable = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class ImportExportService {
+export class ImportExportService extends Logger {
   private dialog = remote.dialog;
   private BrowserWindow = remote.BrowserWindow;
   private logger = new Logger('[SERVICE][IMPORT-EXPORT]');
 
   constructor(
+    protected toastService: ToastsService,
     private store: Store,
-    private toastService: ToastsService,
     private eventsService: EventsService,
     private dataService: DataService,
     private migrationService: MigrationService,
     private schemasBuilderService: SchemasBuilderService,
     private openAPIConverterService: OpenAPIConverterService
-  ) {}
+  ) {
+    super('[SERVICE][IMPORT-EXPORT]', toastService);
+  }
 
   /**
    * Export all envs in a json file
@@ -73,7 +74,7 @@ export class ImportExportService {
         if (error) {
           this.toastService.addToast('error', Errors.EXPORT_ERROR);
         } else {
-          this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
+          this.logMessage('info', 'EXPORT_SUCCESS');
 
           this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_FILE);
         }
@@ -104,10 +105,7 @@ export class ImportExportService {
         if (error) {
           this.toastService.addToast('error', Errors.EXPORT_ERROR);
         } else {
-          this.toastService.addToast(
-            'success',
-            Messages.EXPORT_SELECTED_SUCCESS
-          );
+          this.logMessage('info', 'EXPORT_SELECTED_SUCCESS');
 
           this.eventsService.analyticsEvents.next(
             AnalyticsEvents.EXPORT_FILE_SELECTED
@@ -138,10 +136,7 @@ export class ImportExportService {
         })
       );
 
-      this.toastService.addToast(
-        'success',
-        Messages.EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS
-      );
+      this.logMessage('info', 'EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS');
 
       this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_CLIPBOARD);
     } catch (error) {
@@ -175,10 +170,7 @@ export class ImportExportService {
           subject: 'route'
         })
       );
-      this.toastService.addToast(
-        'success',
-        Messages.EXPORT_ROUTE_CLIPBOARD_SUCCESS
-      );
+      this.logMessage('info', 'EXPORT_ROUTE_CLIPBOARD_SUCCESS');
       this.eventsService.analyticsEvents.next(AnalyticsEvents.EXPORT_CLIPBOARD);
     } catch (error) {
       this.logger.error(
@@ -294,8 +286,7 @@ export class ImportExportService {
             if (error) {
               this.toastService.addToast('error', Errors.EXPORT_ERROR);
             } else {
-              this.toastService.addToast('success', Messages.EXPORT_SUCCESS);
-
+              this.logMessage('info', 'EXPORT_SUCCESS');
               this.eventsService.analyticsEvents.next(
                 AnalyticsEvents.EXPORT_FILE
               );
@@ -360,20 +351,23 @@ export class ImportExportService {
       // erase UUID to easier sharing
       dataItem =
         params.subject === 'environment'
-          ? this.dataService.renewEnvironmentUUIDs(<Environment>dataItem, true)
-          : this.dataService.renewRouteUUIDs(<Route>dataItem, true);
+          ? this.dataService.renewEnvironmentUUIDs(
+              dataItem as Environment,
+              true
+            )
+          : this.dataService.renewRouteUUIDs(dataItem as Route, true);
 
-      return <ExportDataRoute | ExportDataEnvironment>{
+      return {
         type: params.subject,
         item: dataItem
-      };
+      } as ExportDataRoute | ExportDataEnvironment;
     });
 
     return JSON.stringify(
-      <Export>{
+      {
         source: `mockoon:${Config.appVersion}`,
         data: dataToExport
-      },
+      } as Export,
       null,
       4
     );
@@ -497,7 +491,7 @@ export class ImportExportService {
       this.BrowserWindow.getFocusedWindow(),
       {
         filters: [{ name: 'JSON', extensions: ['json'] }],
-        title: title
+        title
       }
     );
 

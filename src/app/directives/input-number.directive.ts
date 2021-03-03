@@ -6,11 +6,11 @@ import { NgControl } from '@angular/forms';
 // https://stackoverflow.com/questions/36770846/angular-2-prevent-input-and-model-changing-using-directive
 
 @Directive({
-  selector: '[InputNumber]'
+  selector: '[appInputNumber]'
 })
 export class InputNumberDirective {
   @Input()
-  public InputNumber: { min: number; max: number; canBeEmpty?: boolean };
+  public appInputNumber: { min: number; max: number; canBeEmpty?: boolean };
 
   constructor(private elementRef: ElementRef, private ngControl: NgControl) {}
 
@@ -24,9 +24,9 @@ export class InputNumberDirective {
     sanitizedValue = sanitizedValue.replace(/^0([1-9]+)/g, '$1');
 
     // if empty put Min
-    if (sanitizedValue === '' && !this.InputNumber.canBeEmpty) {
-      sanitizedValue = this.InputNumber.min;
-    } else if (sanitizedValue === '' && this.InputNumber.canBeEmpty) {
+    if (sanitizedValue === '' && !this.appInputNumber.canBeEmpty) {
+      sanitizedValue = this.appInputNumber.min;
+    } else if (sanitizedValue === '' && this.appInputNumber.canBeEmpty) {
       // write new value to the model
       this.ngControl.control.setValue(null);
 
@@ -34,11 +34,11 @@ export class InputNumberDirective {
     }
 
     // handle min/max values
-    if (sanitizedValue < this.InputNumber.min) {
-      sanitizedValue = this.InputNumber.min;
+    if (sanitizedValue < this.appInputNumber.min) {
+      sanitizedValue = this.appInputNumber.min;
     }
-    if (sanitizedValue > this.InputNumber.max) {
-      sanitizedValue = this.InputNumber.max;
+    if (sanitizedValue > this.appInputNumber.max) {
+      sanitizedValue = this.appInputNumber.max;
     }
 
     sanitizedValue = parseInt(sanitizedValue, 10);

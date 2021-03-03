@@ -4,7 +4,7 @@ import { Directive, HostListener } from '@angular/core';
  * Prevent dragging for small mouse moves
  */
 @Directive({
-  selector: '[MousedragDeadzone]'
+  selector: '[appMousedragDeadzone]'
 })
 export class MousedragDeadzoneDirective {
   private dragDeadzone = 10;

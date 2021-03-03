@@ -93,7 +93,7 @@ export class RoutesMenuComponent implements OnInit {
     // if right click display context menu
     if (event && event.button === 2) {
       const menu: ContextMenuEvent = {
-        event: event,
+        event,
         items: RoutesContextMenu(routeUUID, this.store.get('environments'))
       };
 

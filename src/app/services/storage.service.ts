@@ -27,7 +27,7 @@ export class StorageService {
   private storageSet$ = bindNodeCallback(
     (
       key: string,
-      json: object,
+      json: any,
       options: DataOptions,
       callback: (error: any) => void
     ) => storageSet(key, json, options, callback)
@@ -85,7 +85,7 @@ export class StorageService {
    * @param key
    * @param interval
    */
-  public saveData<T extends object>(
+  public saveData<T>(
     source: Observable<T>,
     key: string,
     interval: number

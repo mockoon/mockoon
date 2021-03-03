@@ -15,12 +15,12 @@ import { NgModel } from '@angular/forms';
  *
  */
 @Directive({
-  selector: '[ngModel][ValidPath]',
+  selector: '[ngModel][appValidPath]',
   providers: [NgModel]
 })
 export class ValidPathDirective {
   @Input()
-  public ValidPath: any;
+  public appValidPath: any;
   @Output()
   public ngModelChange: EventEmitter<any> = new EventEmitter();
 

@@ -56,7 +56,7 @@ export class SettingsService {
           }
         }),
         mergeMap(() =>
-          this.storageService.saveData(
+          this.storageService.saveData<Settings>(
             this.store.select('settings'),
             'settings',
             1000
