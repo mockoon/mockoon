@@ -233,4 +233,39 @@ describe('UI interactions', () => {
       expect(text).to.equal('Rules (1)');
     });
   });
+
+  describe('Input number mask', () => {
+    const tests = new Tests('ui');
+    const portSelector = 'input[formcontrolname="port"]';
+
+    it('should allow numbers', async () => {
+      await tests.helpers.setElementValue(portSelector, '1234');
+      await tests.helpers.assertElementValue(portSelector, '1234');
+    });
+
+    it('should prevent entering letters and other characters', async () => {
+      await tests.helpers.addElementValue(portSelector, 'a.e-+');
+      await tests.helpers.assertElementValue(portSelector, '1234');
+    });
+
+    it('should enforce max constraint', async () => {
+      await tests.helpers.setElementValue(portSelector, '1000000');
+      await tests.helpers.assertElementValue(portSelector, '65535');
+    });
+  });
+
+  describe('Valid path mask', () => {
+    const tests = new Tests('ui');
+    const prefixSelector = 'input[formcontrolname="endpointPrefix"]';
+
+    it('should remove leading slash', async () => {
+      await tests.helpers.setElementValue(prefixSelector, '/prefix');
+      await tests.helpers.assertElementValue(prefixSelector, 'prefix');
+    });
+
+    it('should deduplicate slashes', async () => {
+      await tests.helpers.setElementValue(prefixSelector, 'prefix//path');
+      await tests.helpers.assertElementValue(prefixSelector, 'prefix/path');
+    });
+  });
 });

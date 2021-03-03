@@ -39,12 +39,40 @@ export class Helpers {
     await element.click({ button });
   }
 
+  public async getElementValue(selector: string) {
+    const element = await this.getElement(selector);
+    const elementText = await element.getValue();
+
+    return elementText;
+  }
+
+  /**
+   * /!\ element.setValue is doing a "clearValue" first
+   */
   public async setElementValue(
     selector: string,
     value: string | number | boolean
   ) {
     const element = await this.getElement(selector);
     await element.setValue(value);
+  }
+
+  public async addElementValue(
+    selector: string,
+    value: string | number | boolean
+  ) {
+    const element = await this.getElement(selector);
+    await element.addValue(value);
+  }
+
+  public async clearElementValue(selector: string) {
+    const element = await this.getElement(selector);
+    await element.clearValue();
+  }
+
+  public async assertElementValue(selector: string, valueToCompare: string) {
+    const element = await this.getElement(selector);
+    expect(await element.getValue()).to.equal(valueToCompare);
   }
 
   public async selectByAttribute(
@@ -423,11 +451,6 @@ export class Helpers {
   public async httpCallAsserter(httpCall: HttpCall) {
     await this.testsInstance.app.client.pause(100);
     await this.httpCallAsserterWithPort(httpCall, 3000);
-  }
-
-  public async assertElementValue(selector: string, valueToCompare: string) {
-    const element = await this.getElement(selector);
-    expect(await element.getValue()).to.equal(valueToCompare);
   }
 
   public async assertActiveEnvironmentPort(expectedPort: number) {
