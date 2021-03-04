@@ -24,9 +24,9 @@ jobs:
         with:
           node-version: '12.x'
       - name: Get version from package.json
+        id: app-version
         run: |
           PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-          echo $PACKAGE_VERSION
           echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
       - name: Bundle Angular and package application
         run: |
@@ -38,12 +38,12 @@ jobs:
           codesign --verify --deep --strict --verbose=2 ./packages/mac/mockoon.app
       - name: Get binary shasum
         run: |
-          shasum -a 256 ./packages/mockoon.setup.${PACKAGE_VERSION}.dmg
+          shasum -a 256 ./packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.dmg
       - name: Upload macOS dmg
         uses: actions/upload-artifact@v1
         with:
           name: dmg
-          path: ./packages/mockoon.setup.${{env.PACKAGE_VERSION}}.dmg
+          path: ./packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.dmg
 
   build-linux:
     name: Build Linux binaries (deb, rpm, snap, AppImage)
@@ -56,9 +56,9 @@ jobs:
         with:
           node-version: '12.x'
       - name: Get version from package.json
+        id: app-version
         run: |
           PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-          echo $PACKAGE_VERSION
           echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
       - name: Bundle Angular and package application
         run: |
@@ -69,22 +69,22 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: appimage
-          path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.AppImage
+          path: ./packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.AppImage
       - name: Upload Linux deb
         uses: actions/upload-artifact@v1
         with:
           name: deb
-          path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.deb
+          path: ./packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.deb
       - name: Upload Linux rpm
         uses: actions/upload-artifact@v1
         with:
           name: rpm
-          path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.rpm
+          path: ./packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.rpm
       - name: Upload Linux snap
         uses: actions/upload-artifact@v1
         with:
           name: snap
-          path: ./packages/mockoon-${{env.PACKAGE_VERSION}}.snap
+          path: ./packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.snap
 
   build-windows:
     name: Build Windows binary (exe)
@@ -101,9 +101,9 @@ jobs:
         with:
           node-version: '12.x'
       - name: Get version from package.json
+        id: app-version
         run: |
           $PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-          echo $PACKAGE_VERSION
           echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
         shell: pwsh
       - name: Bundle Angular and package application
@@ -116,4 +116,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: exe
-          path: ./packages/mockoon.setup.${{env.PACKAGE_VERSION}}.exe
+          path: ./packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
