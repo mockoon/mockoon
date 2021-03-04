@@ -37,6 +37,7 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Nils
 - Oussama Ghalbzouri
 - Pedro
+- Rafael Braga Nanes
 - Riaz
 - Samja666
 - Sander 
