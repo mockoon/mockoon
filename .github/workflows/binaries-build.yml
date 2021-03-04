@@ -27,7 +27,7 @@ jobs:
         run: |
           PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
           echo $PACKAGE_VERSION
-          echo ::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
       - name: Bundle Angular and package application
         run: |
           npm ci
@@ -59,7 +59,7 @@ jobs:
         run: |
           PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
           echo $PACKAGE_VERSION
-          echo ::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
       - name: Bundle Angular and package application
         run: |
           npm ci
@@ -104,7 +104,7 @@ jobs:
         run: |
           $PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
           echo $PACKAGE_VERSION
-          echo "::set-env name=PACKAGE_VERSION::$PACKAGE_VERSION"
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
         shell: pwsh
       - name: Bundle Angular and package application
         run: |
