@@ -40,7 +40,7 @@ You can check the [complete list](https://mockoon.com/features) on the website.
 
 ## Download
 
-You can get Mockoon [latest release](https://github.com/mockoon/mockoon/releases/latest) directly from this repository or on the official [website](https://mockoon.com/#download). Mockoon is also available through Homebrew `brew cask install mockoon`, Snap store `snap install mockoon`, Chocolatey `choco install mockoon` or AUR `yay -S mockoon-bin` (or any other AUR helper).
+You can get Mockoon [latest release](https://github.com/mockoon/mockoon/releases/latest) directly from this repository or on the official [website](https://mockoon.com/#download). Mockoon is also available through Homebrew `brew install --cask mockoon`, Snap store `snap install mockoon`, Chocolatey `choco install mockoon` or AUR `yay -S mockoon-bin` (or any other AUR helper).
 
 ## Documentation
 
