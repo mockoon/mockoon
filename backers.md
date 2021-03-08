@@ -49,5 +49,6 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Thilo
 - Vetle Økland
 - Victor Castro
+- Volker Richert
 - Yuemuc
 (List from [Buy Me A Coffee](https://www.buymeacoffee.com/255kb) page)
