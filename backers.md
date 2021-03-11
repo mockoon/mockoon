@@ -25,6 +25,7 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Cyhung
 - Efe
 - François Grémont
+- Jakub Ślusarski
 - Jeremy
 - John
 - Jonatan Gonzalez
