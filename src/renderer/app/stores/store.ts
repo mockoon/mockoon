@@ -71,6 +71,7 @@ export type StoreType = {
   uiState: UIState;
   settings: Settings;
   duplicateRouteToAnotherEnvironment: DuplicateRouteToAnotherEnvironment;
+  routesFilter: string;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -107,7 +108,8 @@ export class Store {
       appClosing: false
     },
     settings: null,
-    duplicateRouteToAnotherEnvironment: { moving: false }
+    duplicateRouteToAnotherEnvironment: { moving: false },
+    routesFilter: ''
   });
 
   constructor() {}

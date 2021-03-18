@@ -33,6 +33,7 @@ export const enum ActionTypes {
   REMOVE_ENVIRONMENT,
   UPDATE_ENVIRONMENT,
   UPDATE_ENVIRONMENT_STATUS,
+  UPDATE_ENVIRONMENT_ROUTE_FILTER,
   SET_ACTIVE_ROUTE,
   NAVIGATE_ROUTES,
   MOVE_ROUTES,
@@ -208,6 +209,19 @@ export const updateEnvironmentStatusAction = (
     type: ActionTypes.UPDATE_ENVIRONMENT_STATUS,
     properties,
     environmentUUID
+  };
+
+/**
+ * Update a route filter
+ *
+ * @param properties - properties to update
+ */
+export const updateEnvironmentroutesFilterAction = (
+  routerFilter: string
+) =>
+  <const>{
+    type: ActionTypes.UPDATE_ENVIRONMENT_ROUTE_FILTER,
+    routerFilter
   };
 
 /**
@@ -459,6 +473,7 @@ export type Actions =
   | ReturnType<typeof removeEnvironmentAction>
   | ReturnType<typeof updateEnvironmentAction>
   | ReturnType<typeof updateEnvironmentStatusAction>
+  | ReturnType<typeof updateEnvironmentroutesFilterAction>
   | ReturnType<typeof setActiveRouteAction>
   | ReturnType<typeof navigateRoutesAction>
   | ReturnType<typeof addRouteAction>

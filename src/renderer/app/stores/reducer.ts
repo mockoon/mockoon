@@ -114,7 +114,8 @@ export const environmentReducer = (
             return activeEnvironmentLogsUUID;
           },
           {}
-        )
+        ),
+        routesFilter: ''
       };
       break;
     }
@@ -520,6 +521,14 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.UPDATE_ENVIRONMENT_ROUTE_FILTER: {
+      newState = {
+        ...state,
+        routesFilter: action.routerFilter
+      };
+      break;
+    }
+
     case ActionTypes.REMOVE_ROUTE: {
       const activeEnvironment = state.environments.find(
         (environment) => environment.uuid === state.activeEnvironmentUUID
@@ -663,7 +672,8 @@ export const environmentReducer = (
               ...activeEnvironmentStatus,
               needRestart
             }
-          }
+          },
+          routesFilter: ''
         };
         break;
       }
@@ -958,7 +968,8 @@ export const environmentReducer = (
             ...targetEnvironmentStatus,
             needRestart: targetEnvironmentStatus.running
           }
-        }
+        },
+        routesFilter: ''
       };
       break;
     }
