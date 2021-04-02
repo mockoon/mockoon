@@ -1,0 +1,59 @@
+@import 'src/renderer/styles/bootstrap-variables.scss';
+@import 'src/renderer/styles/variables.scss';
+
+$logs-border: 1px solid lighten($gray-900, 1%);
+
+.environment-logs {
+  border-top: $logs-border;
+
+  &-column {
+    &:first-of-type {
+      min-width: $menu-width;
+      max-width: $menu-width;
+    }
+
+    &:last-of-type {
+      border-left: $logs-border;
+    }
+
+    position: relative; // we need this for the resize-column
+  }
+
+  &-content {
+    overflow-wrap: anywhere;
+
+    &-container {
+      overflow-y: auto;
+    }
+
+    &-title {
+      cursor: pointer;
+      color: darken($gray-300, 40%);
+      font-weight: $font-weight-bold;
+      margin-bottom: 6px;
+
+      &:not(:first-of-type) {
+        margin-top: 10px;
+      }
+    }
+
+    &-item {
+      font-size: $font-size-sm;
+      margin-left: 14px;
+      user-select: text;
+
+      &:not(:first-of-type) {
+        margin-top: 0.25rem;
+      }
+
+      &.pre {
+        white-space: pre-wrap;
+      }
+    }
+  }
+
+  .btn-mock {
+    padding: 0;
+    margin: 0 10px 0 0;
+  }
+}

@@ -23,19 +23,7 @@
         "@angular-eslint/prefer-on-push-component-change-detection": "error",
         "@typescript-eslint/consistent-type-definitions": "off",
         "@typescript-eslint/dot-notation": "off",
-        "@typescript-eslint/naming-convention": [
-          "error",
-          {
-            "selector": "memberLike",
-            "format": [
-              "camelCase",
-              "UPPER_CASE",
-              "StrictPascalCase",
-              "snake_case"
-            ],
-            "leadingUnderscore": "allow"
-          }
-        ],
+        "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/member-ordering": "error",
         "@typescript-eslint/explicit-member-accessibility": [
           "error",
@@ -100,6 +88,12 @@
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {}
+    },
+    {
+      "files": ["*.js"],
+      "parserOptions": {
+        "ecmaVersion": 2017
+      }
     }
   ]
 }

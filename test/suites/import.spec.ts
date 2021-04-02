@@ -1,6 +1,6 @@
 import { HighestMigrationId } from '@mockoon/commons';
 import { promises as fs } from 'fs';
-import { Config } from 'src/app/config';
+import { Config } from 'src/renderer/app/config';
 import { Tests } from 'test/lib/tests';
 
 /**
@@ -43,14 +43,9 @@ describe('Environments import', () => {
         const tests = new Tests('import', true, true, false);
 
         it('Should import the export file', async () => {
-          tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
-            {
-              method: 'showOpenDialog',
-              value: { filePaths: [testCase.exportFile] }
-            }
-          ]);
+          tests.helpers.mockOpenDialog([testCase.exportFile]);
 
-          tests.helpers.sendWebContentsAction('IMPORT_FILE');
+          tests.helpers.selectMenuEntry('IMPORT_FILE');
 
           await tests.helpers.assertHasActiveEnvironment();
           await tests.helpers.assertActiveEnvironmentName(
@@ -74,16 +69,11 @@ describe('Environments import', () => {
       const tests = new Tests('import', true, true, false);
 
       it('Should reject the export file when version is different', async () => {
-        tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
-          {
-            method: 'showOpenDialog',
-            value: {
-              filePaths: ['./test/data/import/old/1.6.0-single-route.json']
-            }
-          }
+        tests.helpers.mockOpenDialog([
+          './test/data/import/old/1.6.0-single-route.json'
         ]);
 
-        tests.helpers.sendWebContentsAction('IMPORT_FILE');
+        tests.helpers.selectMenuEntry('IMPORT_FILE');
 
         await tests.helpers.countEnvironments(0);
         await tests.helpers.countRoutes(0);
@@ -104,14 +94,11 @@ describe('Environments import', () => {
       const tests = new Tests('import', true, true, false);
 
       it('Should be able to import a single environment without route from a file', async () => {
-        tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
-          {
-            method: 'showOpenDialog',
-            value: { filePaths: ['./test/data/import/new/env-no-route.json'] }
-          }
+        tests.helpers.mockOpenDialog([
+          './test/data/import/new/env-no-route.json'
         ]);
 
-        tests.helpers.sendWebContentsAction('IMPORT_FILE');
+        tests.helpers.selectMenuEntry('IMPORT_FILE');
 
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.countEnvironments(1);
@@ -133,14 +120,11 @@ describe('Environments import', () => {
       const tests = new Tests('import', true, true, false);
 
       it('Should be able to import multiple environments from the same file and migrate them', async () => {
-        tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
-          {
-            method: 'showOpenDialog',
-            value: { filePaths: ['./test/data/import/new/full-export.json'] }
-          }
+        tests.helpers.mockOpenDialog([
+          './test/data/import/new/full-export.json'
         ]);
 
-        tests.helpers.sendWebContentsAction('IMPORT_FILE');
+        tests.helpers.selectMenuEntry('IMPORT_FILE');
 
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.countEnvironments(2);
@@ -169,7 +153,7 @@ describe('Environments import', () => {
         );
         tests.app.electron.clipboard.writeText(fileContent);
 
-        tests.helpers.sendWebContentsAction('IMPORT_CLIPBOARD');
+        tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.assertActiveEnvironmentName('Import new format 2');
@@ -191,7 +175,7 @@ describe('Environments import', () => {
           fileContent.replace('##appVersion##', Config.appVersion)
         );
 
-        tests.helpers.sendWebContentsAction('IMPORT_CLIPBOARD');
+        tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.assertActiveEnvironmentName('New environment');
@@ -213,7 +197,7 @@ describe('Environments import', () => {
           fileContent.replace('##appVersion##', '0.0.0')
         );
 
-        tests.helpers.sendWebContentsAction('IMPORT_CLIPBOARD');
+        tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 
         await tests.helpers.countEnvironments(0);
         await tests.helpers.countRoutes(0);

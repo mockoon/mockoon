@@ -1,5 +1,5 @@
 import { Export } from '@mockoon/commons';
-import { Config } from 'src/app/config';
+import { Config } from 'src/renderer/app/config';
 import { Tests } from 'test/lib/tests';
 import { v1 as uuid } from 'uuid';
 
@@ -10,14 +10,9 @@ describe('Environments export', () => {
     const filePath = `./tmp/storage/${uuid()}.json`;
 
     it('Should create an export file with content', async () => {
-      tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
-        {
-          method: 'showSaveDialog',
-          value: { filePath }
-        }
-      ]);
+      tests.helpers.mockSaveDialog(filePath);
 
-      tests.helpers.sendWebContentsAction('EXPORT_FILE');
+      tests.helpers.selectMenuEntry('EXPORT_FILE');
 
       await tests.helpers.checkToastDisplayed(
         'success',
@@ -66,14 +61,9 @@ describe('Environments export', () => {
     const filePath = `./tmp/storage/${uuid()}.json`;
 
     it('Should create an export file with content', async () => {
-      tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
-        {
-          method: 'showSaveDialog',
-          value: { filePath }
-        }
-      ]);
+      tests.helpers.mockSaveDialog(filePath);
 
-      tests.helpers.sendWebContentsAction('EXPORT_FILE_SELECTED');
+      tests.helpers.selectMenuEntry('EXPORT_FILE_SELECTED');
 
       await tests.helpers.checkToastDisplayed(
         'success',

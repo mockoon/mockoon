@@ -6,7 +6,7 @@ import { constants, promises as fs } from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 import { Application } from 'spectron';
-import { Settings } from 'src/app/models/settings.model';
+import { Settings } from 'src/renderer/app/models/settings.model';
 import { Helpers } from 'test/lib/helpers';
 
 const electronPath: any = require('electron');
@@ -44,7 +44,8 @@ export class Tests {
 
       this.app = new Application({
         path: electronPath,
-        quitTimeout: 2000,
+        // quitTimeout is important! (app graceful stop and data saving)
+        quitTimeout: 4000,
         waitTimeout: 500,
         args: [
           '-r',

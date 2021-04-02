@@ -9,14 +9,9 @@ describe('OpenAPI export', () => {
   const filePath = `./tmp/storage/${uuid()}.json`;
 
   it('Should export the environment and match the reference file', async () => {
-    tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
-      {
-        method: 'showSaveDialog',
-        value: { filePath }
-      }
-    ]);
+    tests.helpers.mockSaveDialog(filePath);
 
-    tests.helpers.sendWebContentsAction('EXPORT_OPENAPI_FILE');
+    tests.helpers.selectMenuEntry('EXPORT_OPENAPI_FILE');
 
     // wait for file save
     await tests.app.client.pause(1000);

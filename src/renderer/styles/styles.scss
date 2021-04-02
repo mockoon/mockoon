@@ -1,0 +1,261 @@
+@import './boostrap-overrides.scss';
+@import './fonts.scss';
+@import './variables.scss';
+@import './animations.scss';
+
+// custom scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: lighten($gray-900, 6%);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 20px;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+// ace editor custom scrollbar
+.ace_scrollbar.ace_scrollbar-v::-webkit-scrollbar-thumb {
+  background: lighten($gray-900, 5%);
+}
+
+::selection {
+  background: $blue;
+}
+
+html {
+  // reduce page size reduce everything in bootstrap
+  font-size: 14px;
+}
+
+body {
+  user-select: none;
+  cursor: default;
+  overflow: hidden;
+  letter-spacing: 0.02rem;
+}
+
+html,
+body {
+  height: 100vh;
+}
+
+select,
+input,
+.btn,
+.dropdown-item {
+  transition: all ease-in-out 100ms;
+}
+.dropdown-menu {
+  max-height: 300px;
+  min-width: 180px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar-track {
+    background-color: $custom-gray;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: lighten($gray-900, 10%);
+  }
+}
+
+.h-35 {
+  max-height: 35%;
+}
+
+.main-content {
+  background-color: darken($gray-900, 2%);
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.environments-menu-container {
+  width: $environment-menu-width;
+}
+
+.column-width {
+  min-width: 25%;
+  max-width: 25%;
+}
+
+.menu-list {
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .nav-item {
+    box-shadow: inset 0 -1px 0 0 lighten($gray-900, 3%);
+  }
+}
+
+.menu-header {
+  box-shadow: inset 0 -1px 0 0 lighten($gray-900, 3%);
+}
+
+.menu-subtitle {
+  color: $gray-500;
+  font-size: $small-font-size;
+}
+
+.scroll-content {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.doc-link {
+  cursor: pointer;
+  opacity: 0.5;
+  padding: 0;
+  vertical-align: baseline;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// http methods badges
+$http-methods: ('get', $blue), ('put', $orange), ('post', $green),
+  ('delete', $red), ('head', $purple), ('patch', $teal), ('options', $dark-blue);
+@each $method in $http-methods {
+  .http-method-#{nth($method, 1)} {
+    background-color: #{nth($method, 2)};
+    color: $gray-900;
+  }
+}
+
+.header {
+  background-color: lighten($gray-900, 3%);
+}
+
+.position-relative {
+  position: relative;
+}
+
+.flex-fill {
+  flex: 1;
+}
+
+.form-right {
+  position: absolute;
+  right: 0;
+}
+
+.server-icons {
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  opacity: 0.5;
+
+  i {
+    font-size: 13px;
+  }
+
+  &-proxy-mode {
+    right: 8px;
+    top: -4px;
+    color: $blue;
+  }
+
+  &-https {
+    right: 8px;
+    top: 13px;
+    color: $yellow;
+  }
+
+  &-cors {
+    right: 8px;
+    top: 28px;
+    color: $cyan;
+  }
+}
+
+.toasts-container {
+  z-index: 5000;
+  position: absolute;
+  width: 250px;
+  top: ($spacer / 2) + 2rem;
+  right: $spacer / 2;
+
+  .toast {
+    word-break: break-word;
+  }
+
+  .toast-success {
+    .toast-body {
+      background-color: $green;
+      border-color: lighten($green, 10%);
+    }
+  }
+
+  .toast-warning {
+    .toast-body {
+      background-color: $orange;
+      border-color: lighten($orange, 10%);
+    }
+  }
+
+  .toast-error {
+    .toast-body {
+      background-color: $red;
+      border-color: lighten($red, 10%);
+    }
+  }
+}
+
+.headers-list {
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  margin-top: $spacer / 2;
+}
+
+.message {
+  text-align: center;
+  font-size: $font-size-lg;
+  color: darken($gray-600, 5%);
+  font-weight: $font-weight-light;
+}
+
+.pattern-danger {
+  position: relative;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    #f3362866 0px,
+    #f3362866 16px
+  );
+}
+
+.warning-message {
+  font-size: 0.8rem;
+  color: $warning;
+}
+
+.resize-column {
+  position: absolute;
+  width: $resize-separator-width;
+  height: 100%;
+  right: 0;
+  top: 0;
+  cursor: col-resize;
+
+  &:hover {
+    box-shadow: inset -2px 0 0 0 rgba($blue, 0.1);
+  }
+}

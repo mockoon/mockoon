@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "files": ["app.ts", "preload.ts"],
+  "compilerOptions": {
+    "outDir": "../../dist",
+    "module": "CommonJS",
+    "target": "es2020",
+    "strict": true,
+    "lib": ["es2020", "dom"]
+  }
+}

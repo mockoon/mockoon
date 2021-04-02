@@ -4,47 +4,34 @@
   "newProjectRoot": "projects",
   "projects": {
     "mockoon": {
-      "root": "",
-      "sourceRoot": "src",
+      "root": "src",
+      "sourceRoot": "src/renderer",
       "projectType": "application",
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
         }
       },
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
-            "customWebpackConfig": {
-              "path": "./scripts/extra-webpack.config.js"
-            },
+            "index": "src/renderer/index.html",
+            "main": "src/renderer/main.ts",
+            "tsConfig": "src/renderer/tsconfig.app.json",
+            "polyfills": "src/renderer/polyfills.ts",
             "aot": true,
-            "allowedCommonJsDependencies": [
-              "mime-types",
-              "faker",
-              "qs",
-              "http-proxy-middleware",
-              "cookie-parser",
-              "electron-log",
-              "src/app/config"
-            ],
+            "allowedCommonJsDependencies": ["lodash", "src/renderer/app/config"],
             "assets": [
-              "src/assets",
-              {
-                "glob": "electron-main.js",
-                "input": "src",
-                "output": "/"
-              },
+              "src/renderer/assets",
               {
                 "glob": "splashscreen.html",
-                "input": "src",
+                "input": "src/renderer",
                 "output": "/"
               },
               {
@@ -58,7 +45,7 @@
                 "output": "/"
               }
             ],
-            "styles": ["src/styles/styles.scss"],
+            "styles": ["src/renderer/styles/styles.scss"],
             "scripts": ["node_modules/marked/lib/marked.js"]
           },
           "configurations": {
@@ -73,8 +60,8 @@
               "buildOptimizer": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "src/renderer/environments/environment.ts",
+                  "with": "src/renderer/environments/environment.prod.ts"
                 }
               ]
             },
@@ -89,23 +76,23 @@
               "buildOptimizer": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
+                  "replace": "src/renderer/environments/environment.ts",
+                  "with": "src/renderer/environments/environment.dev.ts"
                 }
               ]
             },
             "development": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
+                  "replace": "src/renderer/environments/environment.ts",
+                  "with": "src/renderer/environments/environment.dev.ts"
                 }
               ]
             }
           }
         },
         "serve": {
-          "builder": "@angular-builders/dev-server:generic",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "mockoon:build"
           },

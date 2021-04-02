@@ -268,4 +268,57 @@ describe('UI interactions', () => {
       await tests.helpers.assertElementValue(prefixSelector, 'prefix/path');
     });
   });
+
+  describe('Headers typeahead', () => {
+    const tests = new Tests('ui');
+    const typeaheadEntrySelector = 'ngb-typeahead-window button:first-of-type';
+
+    const testCases = [
+      {
+        description: 'should use the typeahead in the route headers',
+        headers: 'route-response-headers',
+        preHook: async () => {
+          await tests.helpers.switchTab('HEADERS');
+        }
+      },
+      {
+        description: 'should use the typeahead in the environment headers',
+        headers: 'environment-headers',
+        preHook: async () => {
+          await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+        }
+      },
+      {
+        description: 'should use the typeahead in the proxy request headers',
+        headers: 'proxy-req-headers',
+        preHook: async () => {
+          await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+        }
+      },
+      {
+        description: 'should use the typeahead in the proxy response headers',
+        headers: 'proxy-res-headers',
+        preHook: async () => {
+          await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+        }
+      }
+    ];
+
+    testCases.forEach((testCase) => {
+      const headersSelector = `app-headers-list#${testCase.headers}`;
+      const firstHeaderSelector = `${headersSelector} .headers-list:last-of-type input:nth-of-type(1)`;
+
+      it(testCase.description, async () => {
+        await testCase.preHook();
+        await tests.helpers.elementClick(`${headersSelector} button`);
+        await tests.helpers.setElementValue(firstHeaderSelector, 'typ');
+        await tests.helpers.waitElementExist(typeaheadEntrySelector);
+        await tests.helpers.elementClick(typeaheadEntrySelector);
+        const headerName = await tests.helpers.getElementValue(
+          firstHeaderSelector
+        );
+        expect(headerName).to.equal('Content-Type');
+      });
+    });
+  });
 });

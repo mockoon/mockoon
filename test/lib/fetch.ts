@@ -39,7 +39,8 @@ export const fetch = (params: {
         port: params.port,
         path: params.path,
         method: params.method.toUpperCase(),
-        headers
+        headers,
+        rejectUnauthorized: false
       },
       (response) => {
         let body = '';

@@ -7,12 +7,12 @@ import {
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
-import { ToastTypes } from 'src/app/models/toasts.model';
+import { ToastTypes } from 'src/renderer/app/models/toasts.model';
 import {
   EnvironmentLogsTabsNameType,
   TabsNameType,
   ViewsNameType
-} from 'src/app/stores/store';
+} from 'src/renderer/app/stores/store';
 import { fetch } from 'test/lib/fetch';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
@@ -404,8 +404,11 @@ export class Helpers {
   }
 
   public async httpCallAsserterWithPort(httpCall: HttpCall, port: number) {
+    // allow for UI changes to be propagated
+    await this.testsInstance.app.client.pause(500);
+
     const response = await fetch({
-      protocol: 'http',
+      protocol: httpCall.protocol || 'http',
       port,
       path: httpCall.path,
       method: httpCall.method,
@@ -449,7 +452,6 @@ export class Helpers {
   }
 
   public async httpCallAsserter(httpCall: HttpCall) {
-    await this.testsInstance.app.client.pause(100);
     await this.httpCallAsserterWithPort(httpCall, 3000);
   }
 
@@ -470,14 +472,26 @@ export class Helpers {
   }
 
   public async openSettingsModal() {
-    this.sendWebContentsAction('OPEN_SETTINGS');
+    this.selectMenuEntry('OPEN_SETTINGS');
     await this.waitElementExist('.modal-dialog');
   }
 
-  public sendWebContentsAction(actionName: string) {
-    this.testsInstance.app.webContents.send('keydown', {
-      action: actionName
+  public mockSaveDialog(filePath: string) {
+    this.testsInstance.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', {
+      method: 'showSaveDialog',
+      value: { filePath }
     });
+  }
+
+  public mockOpenDialog(filePath: string[]) {
+    this.testsInstance.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', {
+      method: 'showOpenDialog',
+      value: { filePaths: filePath }
+    });
+  }
+
+  public selectMenuEntry(actionName: string) {
+    this.testsInstance.app.webContents.send('APP_MENU', actionName);
   }
 
   public async closeModal() {
