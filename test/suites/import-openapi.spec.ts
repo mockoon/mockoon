@@ -113,14 +113,9 @@ describe('Swagger/OpenAPI import', () => {
           const tests = new Tests('import', true, true, false);
 
           it('Should import the file', async () => {
-            tests.ipcRenderer.sendSync('SPECTRON_FAKE_DIALOG', [
-              {
-                method: 'showOpenDialog',
-                value: { filePaths: [testCase.filePath] }
-              }
-            ]);
+            tests.helpers.mockOpenDialog([testCase.filePath]);
 
-            tests.helpers.sendWebContentsAction('IMPORT_OPENAPI_FILE');
+            tests.helpers.selectMenuEntry('IMPORT_OPENAPI_FILE');
 
             await tests.helpers.assertHasActiveEnvironment();
             await tests.helpers.assertActiveEnvironmentName(

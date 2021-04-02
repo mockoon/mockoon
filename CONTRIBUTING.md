@@ -28,7 +28,7 @@ Please respect this workflow to ensure that:
 
 - Clone the repository: `git@github.com:mockoon/mockoon.git`
 - Run `npm install`.
-- Run `npm run serve:app` then `npm run serve:electron` when the first command finish (`dist` folder must be available for Electron). Or directly run `npm run serve` which will run both commands in a row.
+- Run `npm run build:watch:renderer`, `npm run build:watch:main` or `npm run build:watch:all`, then `npm run start` when the first two commands finish (`dist` folder must be available for Electron).
 
 You will get hot reload on both Angular and Electron applications.
 
@@ -47,7 +47,7 @@ Branches naming convention:
 
 Tests are written with Spectron and you can run them using `npm run test`. These tests will also be run on each commit or pull request by CircleCI.
 
-When running the tests locally, you will first need to run `npm run build:dev` in order to have an application build to test against.
+When running the tests locally, you will first need to build the application with `npm run build:dev:renderer` and `npm run build:dev:main` in order to have an application build to test against.
 
 ## Open a pull request
 
@@ -64,7 +64,7 @@ Ask maintainers to review the code and be prepared to rework your code if it doe
 
 **/!\\ Mark the release as a pre-release, and only set it as a final release when all binaries are successfully build, tested and uploaded. /!\\**
 
-Binaries build will be automatically triggered through GitHub Actions. It will basically run `npm run build:prod` and package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing (and notarization).
+Binaries build will be automatically triggered through GitHub Actions. It will basically run `npm run build:prod:all` and package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing (and notarization).
 
 Next steps are:
 - Download all the binaries from the GitHub Action, test them and add them to the new GitHub release.

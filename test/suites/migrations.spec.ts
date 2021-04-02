@@ -1,7 +1,7 @@
 import { HighestMigrationId } from '@mockoon/commons';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
-import { Settings } from 'src/app/models/settings.model';
+import { Settings } from 'src/renderer/app/models/settings.model';
 import { Tests } from 'test/lib/tests';
 
 describe('Environments migrations', () => {

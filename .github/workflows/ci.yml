@@ -7,8 +7,6 @@ jobs:
     name: Lint, build and test
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      ELECTRON_DISABLE_SANDBOX: 1
 
     steps:
       - uses: actions/checkout@v2
@@ -20,7 +18,7 @@ jobs:
         run: |
           npm ci
           npm run lint
-          npm run build:ci
+          npm run build:ci:all
       - name: Run tests
         run: |
           export DISPLAY=':99.0'

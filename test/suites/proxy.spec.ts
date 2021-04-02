@@ -4,6 +4,7 @@ import { Tests } from 'test/lib/tests';
 
 const getAnswerCall: HttpCall = {
   description: 'Call GET answer',
+  protocol: 'https',
   path: '/answer',
   method: 'GET',
   testedResponse: {
@@ -18,7 +19,8 @@ const getAnswerCall: HttpCall = {
 
 const get404Call: HttpCall = {
   description: 'Call GET donotexists',
-  path: '/donotexists',
+  protocol: 'https',
+  path: '/donotexists/',
   method: 'GET',
   testedResponse: {
     status: 404,
@@ -32,14 +34,23 @@ const get404Call: HttpCall = {
 
 const getDisabledProxyCall: HttpCall = {
   description: 'Call GET disabled proxy',
+  protocol: 'https',
   path: '/disabled-proxy',
   method: 'GET'
 };
 
-describe('Proxy', () => {
+const externalCall: HttpCall = {
+  description: 'Call GET /about/ on Mockoon website',
+  protocol: 'https',
+  path: '/about/',
+  method: 'GET',
+  testedResponse: { status: 200, body: { contains: 'Meet the team' } }
+};
+
+describe('Proxy (with TLS and proxy headers)', () => {
   const tests = new Tests('proxy');
 
-  it('Add headers', async () => {
+  it('Add environment headers and proxy headers', async () => {
     await tests.helpers.switchViewInHeader('ENV_SETTINGS');
     await tests.helpers.addHeader('environment-headers', {
       key: 'env-header',
@@ -155,5 +166,9 @@ describe('Proxy', () => {
     await expect(response.headers).to.not.include({
       'x-proxy-response-header': 'header value'
     });
+  });
+
+  it('Call external HTTPS API through proxy ', async () => {
+    await tests.helpers.httpCallAsserterWithPort(externalCall, 3001);
   });
 });

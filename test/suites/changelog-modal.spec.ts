@@ -1,4 +1,4 @@
-import { Config } from 'src/app/config';
+import { Config } from 'src/renderer/app/config';
 import { Tests } from 'test/lib/tests';
 
 describe('Changelog modal', () => {

@@ -1,0 +1,489 @@
+<app-context-menu (itemClicked)="contextMenuItemClicked($event)"></app-context-menu>
+
+<app-welcome-modal></app-welcome-modal>
+<app-settings-modal #settingsModal></app-settings-modal>
+<app-changelog-modal #changelogModal></app-changelog-modal>
+<app-editor-modal></app-editor-modal>
+<app-duplicate-route-modal></app-duplicate-route-modal>
+
+<div class="toasts-container">
+  <ngb-toast
+    *ngFor="let toast of toasts$ | async"
+    [class]="'toast-' + toast.type"
+    [autohide]="true" [delay]="5000"
+    (hide)="removeToast(toast.UUID)"
+    (click)="removeToast(toast.UUID)"
+  >
+    {{toast.message}}
+  </ngb-toast>
+</div>
+
+<div class="d-flex flex-column h-100">
+  <div class="d-flex flex-fill mh0">
+    <app-environments-menu class="environments-menu-container h-100"></app-environments-menu>
+
+    <div class="d-flex flex-column flex-fill h-100">
+      <!-- Header: env name +start / env port + prefix -->
+      <div class="header d-flex">
+        <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment; else noActiveEnvironment"
+          [formGroup]="activeEnvironmentForm">
+          <div class="column-width">
+            <div class="input-group">
+              <span *ngIf="activeEnvironmentState$ | async as activeEnvironmentState" class="input-group-prepend">
+                <button class="btn btn-link" type="button"
+                  [ngClass]="{'text-success': !activeEnvironmentState.running && !activeEnvironmentState.needRestart, 'text-danger': activeEnvironmentState.running && !activeEnvironmentState.needRestart, 'text-warning': activeEnvironmentState.running && activeEnvironmentState.needRestart}"
+                  (click)="toggleEnvironment()">
+                  <i class="material-icons"
+                    *ngIf="activeEnvironmentState.running && activeEnvironmentState.needRestart"
+                    ngbTooltip="Server needs restart">refresh</i>
+                  <i class="material-icons"
+                    *ngIf="activeEnvironmentState.running && !activeEnvironmentState.needRestart"
+                    ngbTooltip="Stop server">stop</i>
+                  <i class="material-icons" *ngIf="!activeEnvironmentState.running"
+                    ngbTooltip="Start server">play_arrow</i>
+                </button>
+              </span>
+              <input type="text" class="form-control" formControlName="name">
+            </div>
+          </div>
+
+          <div class="flex-fill">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="material-icons"
+                    ngbTooltip="Server available on all network interfaces (localhost, 127.0.0.1, etc)">power</i>
+                  0.0.0.0 :</span>
+              </div>
+              <input type="number" class="form-control col-2" placeholder="port" formControlName="port"
+                [appInputNumber]="{ min: 0, max: 65535, canBeEmpty: false }">
+              <div class="input-group-prepend" *ngIf="duplicatedEnvironments$ | async as duplicatedEnvironments">
+                <span class="input-group-text text-warning"
+                  *ngIf="duplicatedEnvironments?.has(activeEnvironment?.uuid)"
+                  ngbTooltip="Port is shared with another environment"><i class="material-icons">warning</i></span>
+              </div>
+              <div class="input-group-prepend">
+                <span class="input-group-text">/</span>
+              </div>
+              <input type="text" class="form-control" placeholder="prefix" appValidPath
+                ngbTooltip="Environment routes prefix" formControlName="endpointPrefix">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="material-icons">access_time</i></span>
+              </div>
+              <input type="number" class="form-control col-2"
+                ngbTooltip="Global environment latency applied to all routes (ms)" formControlName="latency"
+                [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: false }">
+            </div>
+          </div>
+
+          <div class="d-flex">
+            <div class="btn btn-link btn-icon"
+              [ngClass]="{'active': (activeView$ | async) === 'ENV_LOGS'}" (click)="setActiveView('ENV_LOGS')"
+              ngbTooltip="Environment logs">
+              <i class="material-icons">history</i>
+            </div>
+            <div class="btn btn-link btn-icon"
+              [ngClass]="{'active': (activeView$ | async) === 'ENV_SETTINGS'}"
+              (click)="setActiveView('ENV_SETTINGS')" ngbTooltip="Environment settings">
+              <i class="material-icons">settings</i>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noActiveEnvironment>
+          <div class="column-width">
+            <div class="input-group">
+              <span class="input-group-prepend">
+                <button class="btn btn-link text-muted" type="button">
+                  <i class="material-icons">play_arrow</i>
+                </button>
+              </span>
+              <input type="text" class="form-control" placeholder="No environment" disabled>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="d-flex flex-fill mh0">
+        <app-routes-menu class="h-100"></app-routes-menu>
+
+        <div *ngIf="activeEnvironment$ | async as activeEnvironment" class="d-flex flex-column flex-fill main-content h-100">
+
+          <ng-container *ngIf="activeView$ | async as activeView">
+
+            <!-- ENVIRONMENT SETTINGS AND LOGS VIEWS -->
+            <ng-container *ngIf="activeView === 'ENV_SETTINGS' || activeView === 'ENV_LOGS'">
+              <!-- title and back button (flexbox container) -->
+              <div>
+                <button *ngIf="activeRoute$ | async" type="button" class="btn btn-link btn-icon pl-2"
+                  (click)="setActiveView('ROUTE')">
+                  <i class="material-icons">arrow_back</i> Back
+                </button>
+                <button
+                  *ngIf="(environmentsLogs$ | async)[activeEnvironment.uuid]?.length && activeView === 'ENV_LOGS'"
+                  type="button" class="btn btn-link btn-icon pl-2 float-right" (click)="clearEnvironmentLogs()">
+                  <span *ngIf="(clearEnvironmentLogsRequested$ | async) === false"><i class="material-icons">delete</i>
+                    Clear</span>
+                  <span *ngIf="clearEnvironmentLogsRequested$ | async" class="text-danger"><i
+                      class="material-icons">delete</i>
+                    Confirm</span>
+                </button>
+              </div>
+
+              <!-- ENVIRONMENT SETTINGS VIEW -->
+              <div *ngIf="activeView === 'ENV_SETTINGS'" class="d-flex flex-column flex-fill mh0 h-100 m-2"
+                [formGroup]="activeEnvironmentForm">
+                <div class="d-flex flex-column h-35">
+                  <app-title-separator heading="Proxy mode" subheading="Non defined routes will be forwarded to the specified host" icon="security" iconClasses="text-primary" [isFirst]="true" docLink="proxy"></app-title-separator>
+
+                  <div class="form-inline pl-4">
+                    <div class="custom-control custom-checkbox mr-4">
+                      <input type="checkbox" class="custom-control-input" id="proxyMode"
+                        formControlName="proxyMode">
+                      <label class="custom-control-label" for="proxyMode">Enable</label>
+                    </div>
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="URL" formControlName="proxyHost">
+                      <div class="input-group-append">
+                        <span class="input-group-text text-warning"
+                          *ngIf="activeEnvironment.proxyMode && activeEnvironment.proxyHost && !isValidURL(activeEnvironment.proxyHost)"
+                          ngbTooltip="The address must be a valid URL"><i class="material-icons">warning</i></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- custom proxy headers -->
+                  <ng-container *ngIf="activeEnvironment.proxyMode">
+                    <div class="pl-4 flex-fill mh0 d-flex">
+                      <div class="d-flex flex-column flex-grow-1">
+                        <div class="mt-2 mb-2">Proxy request headers <i
+                          class="material-icons" ngbTooltip="Headers will be added to the request sent to the proxied server">info</i></div>
+                        <div class="flex-fill h-100 scroll-content" #environmentProxyReqHeadersContainer>
+                          <app-headers-list id="proxy-req-headers" [activeDataSubject$]="activeEnvironment$" headersPropertyName="proxyReqHeaders" (headersUpdated)="headersUpdated('environment', 'proxyReqHeaders', $event)" (headerAdded)="scrollToBottom(environmentProxyReqHeadersContainer)"></app-headers-list>
+                        </div>
+                      </div>
+                      <div class="d-flex flex-column flex-grow-1">
+                        <div class="mt-2 mb-2 pl-2">Proxy response headers <i
+                          class="material-icons" ngbTooltip="Headers will be added to the response received from the proxied server">info</i></div>
+                        <div class="flex-fill h-100 pl-2 scroll-content" #environmentProxyResHeadersContainer>
+                          <app-headers-list id="proxy-res-headers" [activeDataSubject$]="activeEnvironment$" headersPropertyName="proxyResHeaders" (headersUpdated)="headersUpdated('environment', 'proxyResHeaders', $event)" (headerAdded)="scrollToBottom(environmentProxyResHeadersContainer)"></app-headers-list>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <!-- flexbox container -->
+                <div>
+                  <app-title-separator heading="HTTPS" icon="https" iconClasses="text-warning" docLink="https"></app-title-separator>
+
+                  <div class="form-inline pl-4">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="HTTPS" formControlName="https">
+                      <label class="custom-control-label" for="HTTPS">Enable</label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- flexbox container -->
+                <div>
+                  <app-title-separator heading="CORS" subheading="Automatically handle OPTIONS requests" icon="multiple_stop" iconClasses="text-info" docLink="cors"></app-title-separator>
+
+                  <div class="form-inline pl-4">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="CORS" formControlName="cors">
+                      <label class="custom-control-label" for="CORS">Enable</label>
+                    </div>
+                    <button class="btn btn-link btn-icon text-primary form-right settings-add-cors" type="button"
+                      (click)="addCORSHeadersToEnvironment()">Add CORS headers to environment headers
+                      below</button>
+                  </div>
+                </div>
+
+                <div class="flex-fill mh0 d-flex flex-column h-100">
+                  <app-title-separator heading="Environment headers" subheading="Headers will be added to all routes of this environment" icon="featured_play_list" iconClasses="text-purple" docLink="headers"></app-title-separator>
+
+                  <div class="scroll-content flex-fill" #environmentHeadersContainer>
+                    <app-headers-list id="environment-headers" [activeDataSubject$]="activeEnvironment$" headersPropertyName="headers" [injectedHeaders$]="injectedHeaders$" (headersUpdated)="headersUpdated('environment', 'headers', $event)" (headerAdded)="scrollToBottom(environmentHeadersContainer)"></app-headers-list>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ENVIRONMENT LOGS VIEW -->
+              <div *ngIf="activeView === 'ENV_LOGS'" class="d-flex flex-fill h-100 mh0">
+                <app-environment-logs class="flex-fill"></app-environment-logs>
+              </div>
+            </ng-container>
+
+            <!-- ROUTE VIEW -->
+            <div *ngIf="activeView === 'ROUTE'" class="p-2 h-100 d-flex flex-column overflow-hidden">
+              <ng-container *ngIf="activeRoute$ | async as activeRoute" [formGroup]="activeRouteForm">
+
+                <!-- Method + endpoint + warning + delete -->
+                <div class="input-group">
+                  <select class="custom-select col-2" formControlName="method">
+                    <option *ngFor="let method of methods" [value]="method"
+                      [selected]="activeRouteForm.get('method').value === method">{{method | uppercase}}
+                    </option>
+                  </select>
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">/</span>
+                  </div>
+                  <input type="text" class="form-control"
+                    placeholder="Path supports regexes and params: */:var/a(b)?c/[0-9]{1,5}" appValidPath
+                    formControlName="endpoint"
+                    [appFocusOnEvent]="focusableInputs.ROUTE_PATH">
+
+                  <div *ngIf="environmentsStatus$ | async as environmentsStatus" class="input-group-prepend" ngbTooltip="Open route in browser (GET method only)">
+                    <button
+                      class="btn btn-link" [ngClass]="{'is-primary': !environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'}"
+                      (click)="openRouteInBrowser()" [disabled]="!environmentsStatus[activeEnvironment.uuid].running || activeRoute.method !== 'get'">
+                      <i class="material-icons">open_in_new</i>
+                    </button>
+                  </div>
+                  <div class="input-group-prepend">
+                    <span *ngIf="routeHasQueryParams()" class="input-group-text text-warning"
+                      ngbTooltip="Route cannot be declared with query parameters, please add them when you call the route"><i
+                        class="material-icons">warning</i></span>
+                  </div>
+                </div>
+
+                <!-- Documentation -->
+                <div class="input-group mt-2">
+                  <input type="text" class="form-control" placeholder="Add notes or documentation" formControlName="documentation">
+                </div>
+
+                <!-- Route responses navigation tabs -->
+                <div *ngIf="activeTab$ | async as activeTab" class="mt-4" id="route-responses-menu">
+                  <div *ngIf="activeRouteResponse$ | async as activeRouteResponse" class="d-flex align-items-center">
+                    <div class="btn-group mr-1">
+                      <!-- Route responses button (add / randomize) -->
+                      <button type="button" id="route-response-add" class="btn btn-custom" (click)="addRouteResponse()" ngbTooltip="Add response">
+                        <i class="material-icons">add</i>
+                      </button>
+
+                      <button type="button" class="btn btn-custom" (click)="toggleRandomResponse(activeRoute.randomResponse)" ngbTooltip="Random response (will disable the rules)">
+                        <i
+                          [ngClass]="{'text-primary': activeRoute.randomResponse}"
+                          class="material-icons">shuffle</i>
+                      </button>
+
+                      <!-- Route responses dropdown -->
+                      <div class="btn-group" ngbDropdown>
+                        <button type="button" class="btn btn-custom dropdown-toggle dropdown-toggle-split mr-1"
+                          role="button" id="route-responses-dropdown" aria-haspopup="true" aria-expanded="false"
+                          ngbDropdownToggle>
+                            <div class="route-responses-dropdown-content">
+                              <span class="pr-2">{{activeRouteResponseIndex$ | async}}: {{activeRouteResponse?.statusCode}}</span> {{activeRouteResponse?.label}}
+                            </div>
+                        </button>
+
+                        <div class="dropdown-menu route-responses-dropdown-menu" aria-labelledby="route-responses-dropdown"
+                          ngbDropdownMenu
+                          MousedragDeadzone
+                          cdkDropList
+                          (cdkDropListDropped)="reorderRouteResponses($event)"
+                          >
+                          <button type="button" *ngFor="let routeResponse of activeRoute.responses; index as routeResponseIndex"
+                            class="btn dropdown-item d-flex"
+                            [ngClass]="{'active': activeRouteResponse?.uuid === routeResponse.uuid}"
+                            ngbDropdownItem
+                            (click)="setActiveRouteResponse(routeResponse.uuid)"
+                            cdkDrag
+                            cdkDragLockAxis="y"
+                            cdkDragBoundary=".dropdown-menu.route-responses-dropdown-menu">
+                            <span class="flex-grow-1 mr-2 ellipsis">{{routeResponseIndex + 1}}: {{routeResponse.statusCode}} {{routeResponse.label}}</span>
+                            <span><i *ngIf="routeResponseIndex === 0" class="material-icons text-primary" ngbTooltip="Default response served if no rule matches">flag</i></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Response settings -->
+                    <ul class="nav nav-tabs flex-fill">
+                      <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': activeTab === 'RESPONSE'}"
+                        (click)="setActiveTab('RESPONSE')">Status & Body</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': activeTab === 'HEADERS'}"
+                           (click)="setActiveTab('HEADERS')">
+                          Headers{{ activeRouteResponse?.headers.length ? ' (' + activeRouteResponse?.headers.length + ')': ''}}
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': activeTab === 'RULES'}"
+                           (click)="setActiveTab('RULES')">
+                          Rules{{ activeRouteResponse?.rules.length ? ' (' + activeRouteResponse?.rules.length + ')': ''}}
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" [ngClass]="{'active': activeTab === 'SETTINGS'}"
+                          (click)="setActiveTab('SETTINGS')">Settings</a>
+                      </li>
+                    </ul>
+
+                    <!-- Response duplication button -->
+                    <button type="button" id="route-response-duplication-button" class="btn btn-link btn-icon"
+                            (click)="duplicateRouteResponse()">
+                      <span ngbTooltip="Duplicate response">
+                        <i class="material-icons">content_copy</i></span>
+                    </button>
+
+                    <!-- Response delete button -->
+                    <button *ngIf="activeRoute?.responses.length > 1" type="button"
+                            id="route-response-removal-button" class="btn btn-link btn-icon"
+                            (click)="deleteCurrentRouteResponse()">
+                      <span *ngIf="(deleteCurrentRouteResponseRequested$ | async) === false"
+                            ngbTooltip="Delete response"><i
+                        class="material-icons">delete</i></span>
+                      <span *ngIf="deleteCurrentRouteResponseRequested$ | async" class="text-danger" ngbTooltip="Confirm deletion"><i
+                          class="material-icons">delete</i></span>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="activeRouteResponse$ | async as activeRouteResponse">
+
+                <!-- RESPONSE & BODY tab -->
+                <ng-container *ngIf="(activeTab$ | async) === 'RESPONSE'" [formGroup]="activeRouteResponseForm">
+                  <!-- status code + latency -->
+                  <div class="input-group mt-3">
+                    <select class="custom-select col-4" formControlName="statusCode">
+                      <option *ngFor="let statusCode of statusCodes" [ngValue]="statusCode.code"
+                        [selected]="activeRouteResponse.statusCode === statusCode.code">{{statusCode.code}}
+                        -
+                        {{statusCode.text}}</option>
+                    </select>
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="material-icons">access_time</i></span>
+                    </div>
+                    <input type="number" class="form-control col-1" ngbTooltip="Route specific latency (ms)"
+                      [appInputNumber]="{min: 0, max: Infinity, canBeEmpty: false}" formControlName="latency">
+                    <input type="text" class="form-control ml-1" formControlName="label" placeholder="Add label or notes">
+                  </div>
+
+                  <app-title-separator heading="File" subheading="Selecting a file will automatically serve its content with the detected Content-Type" icon="insert_drive_file" iconClasses="text-secondary"></app-title-separator>
+
+                  <!-- body: file -->
+                  <div class="form-inline">
+                    <div class="input-group col-9">
+                      <div class="input-group-prepend">
+                        <button class="btn btn-link" (click)="browseFiles()" ngbTooltip="Browse files">
+                          <i class="material-icons">find_in_page</i>
+                        </button>
+                      </div>
+                      <input type="text" class="form-control" formControlName="filePath">
+                      <div class="input-group-prepend">
+                        <span *ngIf="activeRouteResponse.filePath" class="input-group-text text-danger"
+                          (click)="activeRouteResponseForm.get('filePath').setValue('')"
+                          ngbTooltip="Remove file">
+                          <i class="material-icons">delete</i>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="form-group col-3">
+                      <div *ngIf="activeRouteResponse.filePath" class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="sendFileAsBody"
+                          formControlName="sendFileAsBody">
+                        <label class="custom-control-label" for="sendFileAsBody">Send as body</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    &nbsp;<small *ngIf="activeRouteResponse.filePath" class="text-muted">Detected MIME type:
+                      {{(activeResponseFileMimeType$ | async)?.mimeType || 'unknown'}} <span
+                        *ngIf="(activeResponseFileMimeType$ | async)?.supportsTemplating"> - Supports
+                        templating
+                        <span (click)="openWikiLink('templating')"
+                          class="pl-2 btn btn-link text-primary cp doc-link"><i
+                            class="material-icons">info</i></span></span></small>
+                  </div>
+
+                  <!-- body editor -->
+                  <div class="flex-fill">
+                    <div class="d-flex flex-column h-100">
+                      <app-title-separator icon="subject" iconClasses="text-secondary" iconTooltip="Format body" [iconClickable]="true" (iconClicked)="formatBody()">
+                        <ng-container heading>
+                          Body <small>({{getRouteResponseContentType()}}) </small>
+                          <span
+                            (click)="openWikiLink('templating')"
+                            class="btn btn-link text-primary cp doc-link" ngbTooltip="Open templating documentation"><i
+                              class="material-icons">info</i></span>
+                        </ng-container>
+                        <ng-container subheading>
+                          <ng-container *ngIf="activeRouteResponse.filePath"><span class="text-warning">A file is selected, this
+                            body will not be served</span></ng-container>
+                          <ng-container *ngIf="!activeRouteResponse.filePath">
+                            <span *ngIf="activeRouteResponseLastLog$ | async as activeRouteResponseLastLog" class="btn btn-link btn-icon btn-xs text-primary view-body-link" (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)">View last body sent</span>
+                          </ng-container>
+                        </ng-container>
+                      </app-title-separator>
+
+                      <div class="flex-fill" *ngIf="bodyEditorConfig$ | async as bodyEditorConfig">
+                        <app-editor
+                          class="h-100"
+                          [options]="bodyEditorConfig?.options"
+                          [mode]="bodyEditorConfig?.mode"
+                          [theme]="bodyEditorConfig?.theme"
+                          formControlName="body">
+                        </app-editor>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <!-- HEADERS tab -->
+                <ng-container *ngIf="(activeTab$ | async) === 'HEADERS'">
+                  <div>
+                    <button type="button" class="btn btn-link btn-icon text-primary mb-2"
+                      (click)="setActiveView('ENV_SETTINGS')">Go to environment headers ({{activeEnvironment.headers.length}})</button>
+                  </div>
+
+                  <div class="flex-fill mh0 scroll-content h-100" #routeHeadersContainer>
+                    <app-headers-list id="route-response-headers" [activeDataSubject$]="activeRouteResponse$" headersPropertyName="headers" (headersUpdated)="headersUpdated('routeResponse', 'headers', $event)" (headerAdded)="scrollToBottom(routeHeadersContainer)"></app-headers-list>
+                  </div>
+                </ng-container>
+
+                <!-- RULES tab -->
+                <ng-container *ngIf="(activeTab$ | async) === 'RULES'">
+                  <div class="flex-fill mh0 scroll-content h-100" #routeResponseRulesContainer>
+                    <app-route-response-rules [activeRouteResponse$]="activeRouteResponse$" [activeRoute$]="activeRoute$" (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"></app-route-response-rules>
+                  </div>
+                </ng-container>
+
+                <!-- Route settings tab -->
+                <ng-container *ngIf="(activeTab$ | async) === 'SETTINGS'">
+                  <div class="flex-fill mh0 pt-3 h-100" [formGroup]="activeRouteResponseForm">
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox">
+                        <input
+                          type="checkbox"
+                          class="custom-control-input"
+                          id="disableTemplating"
+                          formControlName="disableTemplating"
+                        />
+                        <label
+                          class="custom-control-label"
+                          for="disableTemplating"
+                        >Disable templating in body or file content.
+                        </label>
+                      </div>
+                      <p class="text-muted"><small>Helpers like {{'{' + '{'}}body{{ '}' + '}' }} won't be interpreted.</small></p>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

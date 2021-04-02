@@ -1,0 +1,29 @@
+@import 'src/renderer/styles/bootstrap-variables.scss';
+@import 'src/renderer/styles/variables.scss';
+
+.footer {
+  color: $gray-400;
+  background-color: lighten($gray-900, 5%);
+  z-index: 15;
+  height: 32px;
+
+  .footer-item {
+    transition: all ease-in-out 200ms;
+
+    &.with-border-left {
+      border-left: 1px solid lighten($gray-900, 8%);
+    }
+
+    &.with-border-right {
+      border-right: 1px solid lighten($gray-900, 8%);
+    }
+
+    &:first-of-type {
+      border-left: none;
+    }
+
+    .footer-save {
+      padding: 0.375rem 0.75rem;
+    }
+  }
+}

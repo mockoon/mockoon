@@ -8,6 +8,7 @@ export type HttpCallResponse = {
 
 export type HttpCall = {
   description?: string;
+  protocol?: 'http' | 'https';
   path: string;
   method: 'GET' | 'POST' | 'PUT' | 'HEAD' | 'OPTIONS';
   headers?: { [key in string]: string | number };
