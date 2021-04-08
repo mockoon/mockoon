@@ -895,7 +895,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Zieme - Reichel'
+          body: 'Johnson - Zieme'
         }
       },
       {
@@ -904,7 +904,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: '013 Feil Wells/31336 Kali Keys Suite 436'
+          body: '901 Caesar Grove/03133 Weber Radial Suite 843'
         }
       },
       {
@@ -913,7 +913,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          // build date with timezone so it works locally and in GitHub Actions
+          // build date with timezone so it works locally and in CI
           body: new Date('1970-01-01T02:00:00.000+02:00').toString()
         }
       },
@@ -923,7 +923,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'March-Jun'
+          body: 'July-Mar'
         }
       },
       {
@@ -932,7 +932,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: '500.87812'
+          body: '500.44345'
         }
       },
       {
@@ -941,7 +941,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: '(...2056944541)'
+          body: '(...8205694454)'
         }
       },
       {
@@ -951,7 +951,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         testedResponse: {
           status: 200,
           body:
-            '{"name":"Cedric Schmidt","username":"Michel.Wisoky9","email":"Josh_Terry82@hotmail.com","address":{"street":"Alison Club","suite":"Apt. 108","city":"Aydenstad","zipcode":"69451","geo":{"lat":"34.5379","lng":"-75.7333"}},"phone":"1-367-840-0769","website":"magnolia.net","company":{"name":"Goyette and Sons","catchPhrase":"Seamless context-sensitive artificial intelligence","bs":"optimize bleeding-edge supply-chains"}}'
+            '{"name":"Robin Satterfield DDS","username":"Michel.Wisoky9","email":"Josh_Terry82@hotmail.com","address":{"street":"Alison Club","suite":"Apt. 108","city":"Aydenstad","zipcode":"69451","geo":{"lat":"34.5379","lng":"-75.7333"}},"phone":"1-367-840-0769","website":"magnolia.net","company":{"name":"Goyette and Sons","catchPhrase":"Seamless context-sensitive artificial intelligence","bs":"optimize bleeding-edge supply-chains"}}'
         }
       },
       {
