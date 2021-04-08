@@ -9,7 +9,7 @@ export const Config = {
   githubAPITagReleaseUrl:
     'https://api.github.com/repos/mockoon/mockoon/releases/tags/v',
   docs: {
-    templating: docsURL + 'templating/',
+    templating: docsURL + 'templating/overview/',
     proxy: docsURL + 'proxy-mode/',
     cors: docsURL + 'cors/',
     https: docsURL + 'https/',
