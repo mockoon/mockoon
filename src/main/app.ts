@@ -36,8 +36,6 @@ import { gt as semverGt } from 'semver';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 
-logCatchErrors();
-
 const streamPipeline = promisify(pipeline);
 const appVersion: string = require('./package.json').version;
 
@@ -52,6 +50,14 @@ if (isTesting || isDev) {
   logTransports.file.resolvePath = (variables: any) =>
     pathJoin(pathResolve('./tmp/logs'), 'main.log');
 }
+
+logCatchErrors({
+  onError: (error: Error) => {
+    logError(error);
+
+    return false;
+  }
+});
 
 if (!isDev) {
   process.env.NODE_ENV = 'production';
