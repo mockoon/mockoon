@@ -217,11 +217,11 @@ export const updateEnvironmentStatusAction = (
  * @param properties - properties to update
  */
 export const updateEnvironmentroutesFilterAction = (
-  routerFilter: string
+  routesFilter: string
 ) =>
   <const>{
     type: ActionTypes.UPDATE_ENVIRONMENT_ROUTE_FILTER,
-    routerFilter
+    routesFilter
   };
 
 /**

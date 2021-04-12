@@ -147,7 +147,8 @@ export const environmentReducer = (
               : null,
           activeTab: 'RESPONSE',
           activeView: 'ROUTE',
-          environments: state.environments
+          environments: state.environments,
+          routesFilter: ''
         };
         break;
       }
@@ -198,7 +199,8 @@ export const environmentReducer = (
             : null,
         activeTab: 'RESPONSE',
         activeView: 'ROUTE',
-        environments: state.environments
+        environments: state.environments,
+        routesFilter: ''
       };
       break;
     }
@@ -404,7 +406,8 @@ export const environmentReducer = (
         activeEnvironmentLogsUUID: {
           ...state.activeEnvironmentLogsUUID,
           [newEnvironment.uuid]: null
-        }
+        },
+        routesFilter: ''
       };
       break;
     }
@@ -427,7 +430,8 @@ export const environmentReducer = (
         environments: newEnvironments,
         environmentsStatus: newEnvironmentsStatus,
         environmentsLogs: newEnvironmentsLogs,
-        activeEnvironmentLogsUUID: newActiveEnvironmentLogsUUID
+        activeEnvironmentLogsUUID: newActiveEnvironmentLogsUUID,
+        routesFilter: ''
       };
 
       if (state.activeEnvironmentUUID === action.environmentUUID) {
@@ -524,7 +528,7 @@ export const environmentReducer = (
     case ActionTypes.UPDATE_ENVIRONMENT_ROUTE_FILTER: {
       newState = {
         ...state,
-        routesFilter: action.routerFilter
+        routesFilter: action.routesFilter
       };
       break;
     }

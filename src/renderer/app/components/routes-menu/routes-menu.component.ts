@@ -3,17 +3,21 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { Environment, Route } from '@mockoon/commons';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, startWith, tap } from 'rxjs/operators';
 import { RoutesContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { Settings } from 'src/renderer/app/models/settings.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { updateEnvironmentroutesFilterAction } from 'src/renderer/app/stores/actions';
 import {
   DuplicatedRoutesTypes,
   EnvironmentsStatuses,
@@ -26,31 +30,81 @@ import {
   styleUrls: ['./routes-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RoutesMenuComponent implements OnInit {
+export class RoutesMenuComponent implements OnInit, OnDestroy {
   @ViewChild('routesMenu') private routesMenu: ElementRef;
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
+  public routeList$: Observable<Route[]>;
   public activeRoute$: Observable<Route>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
+  public routesFilter$: Observable<string>;
+  public routesFilter: FormControl;
+  public dragIsDisabled = false;
+  private routesFilterSubscription: Subscription;
 
   constructor(
     private environmentsService: EnvironmentsService,
     private store: Store,
     private eventsService: EventsService,
-    private uiService: UIService
+    private uiService: UIService,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
+    this.routesFilter = this.formBuilder.control('');
+
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeRoute$ = this.store.selectActiveRoute();
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.settings$ = this.store.select('settings');
+    this.routesFilter$ = this.store.select('routesFilter');
+
+    this.routeList$ = combineLatest([
+      this.store.selectActiveEnvironment().pipe(
+        filter((activeEnvironment) => !!activeEnvironment),
+        distinctUntilChanged(),
+        map((activeEnvironment) => activeEnvironment.routes)
+      ),
+      this.routesFilter$
+    ]).pipe(
+      map(([routes, search]) => {
+        if (search.length === 0) {
+          this.clearFilter();
+        }
+
+        this.dragIsDisabled = search.length > 0;
+        if (search.charAt(0) === '/') {
+          search = search.substring(1);
+        }
+
+        return routes.filter(
+          (route) =>
+            route.endpoint.includes(search) ||
+            route.documentation.includes(search)
+        );
+      })
+    );
 
     this.uiService.scrollRoutesMenu.subscribe((scrollDirection) => {
       this.uiService.scroll(this.routesMenu.nativeElement, scrollDirection);
     });
+
+    this.routesFilterSubscription = this.routesFilter.valueChanges
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(50),
+        startWith(''),
+        tap((search) =>
+          this.store.update(updateEnvironmentroutesFilterAction(search))
+        )
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy() {
+    this.routesFilterSubscription.unsubscribe();
   }
 
   /**
@@ -99,5 +153,12 @@ export class RoutesMenuComponent implements OnInit {
 
       this.eventsService.contextMenuEvents.next(menu);
     }
+  }
+
+  /**
+   * Clear the filter route
+   */
+  public clearFilter() {
+    this.routesFilter.patchValue('');
   }
 }

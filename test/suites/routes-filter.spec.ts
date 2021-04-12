@@ -13,9 +13,6 @@ describe('Routes filter', async () => {
   });
 
   it('Reset routes filter when clicking on the button Clear filter', async () => {
-    await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
-    await tests.app.client.pause(100);
-    await tests.helpers.countRoutes(1);
     await tests.helpers.elementClick('.btn[ngbTooltip="Clear filter"]');
     await tests.app.client.pause(100);
     await tests.helpers.countRoutes(3);
@@ -30,16 +27,12 @@ describe('Routes filter', async () => {
   it('Reset routes filter when switching env', async () => {
     await tests.helpers.duplicateEnvironment(1);
     await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
-    await tests.helpers.elementClick(
-      '.environments-menu .menu-list .nav-item:nth-of-type(2)'
-    );
+    await tests.helpers.selectEnvironment(2);
     await tests.helpers.assertElementValue(routesFilterSelector, '');
   });
 
   it('Reset routes filter when duplicating route to selected environment', async () => {
-    await tests.helpers.elementClick(
-      '.environments-menu .menu-list .nav-item:nth-of-type(1)'
-    );
+    await tests.helpers.selectEnvironment(1);
     await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
     await tests.app.client.pause(100);
     await tests.helpers.countRoutes(1);
@@ -49,8 +42,18 @@ describe('Routes filter', async () => {
     );
     await tests.helpers.elementClick('.modal-content .modal-body .list-group .list-group-item:first-child');
     await tests.helpers.assertElementValue(routesFilterSelector, '');
-    await tests.helpers.elementClick(
-      '.environments-menu .menu-list .nav-item:nth-of-type(1)'
-    );
+  });
+
+  it('Reset routes filter when adding a new environment', async () => {
+    await tests.helpers.toggleEnvironmentMenu();
+    await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
+    await tests.helpers.addEnvironment();
+    await tests.helpers.assertElementValue(routesFilterSelector, '');
+  });
+
+  it('Reset routes filter when removing environment', async () => {
+    await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
+    await tests.helpers.removeEnvironment(3);
+    await tests.helpers.assertElementValue(routesFilterSelector, '');
   });
 });
