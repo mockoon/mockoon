@@ -25,9 +25,8 @@ describe('Routes filter', async () => {
   });
 
   it('Reset routes filter when switching env', async () => {
-    await tests.helpers.duplicateEnvironment(1);
     await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
-    await tests.helpers.selectEnvironment(2);
+    await tests.helpers.duplicateEnvironment(1);
     await tests.helpers.assertElementValue(routesFilterSelector, '');
   });
 
