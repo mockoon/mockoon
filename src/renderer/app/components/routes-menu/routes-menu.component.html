@@ -21,20 +21,16 @@
               placeholder="Filter"
               [formControl]="routesFilter"
             />
-            <div
+            <button
               *ngIf="routesFilter.value.length > 0"
-              class="input-group-prepend"
+              type="button"
+              id="route-filter-clear"
+              (click)="clearFilter()"
+              class="btn btn-custom"
+              ngbTooltip="Clear filter"
             >
-              <button
-                type="button"
-                id="route-filter-clear"
-                (click)="clearFilter()"
-                class="btn btn-custom"
-                ngbTooltip="Clear filter"
-              >
-                <i class="material-icons">clear</i>
-              </button>
-            </div>
+              <i class="material-icons">clear</i>
+            </button>
           </div>
         </li>
       </ul>
