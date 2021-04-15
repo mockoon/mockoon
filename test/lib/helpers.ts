@@ -91,6 +91,11 @@ export class Helpers {
     return elementText;
   }
 
+  public async assertElementText(selector: string, valueToCompare: string) {
+    const elementText = await this.getElementText(selector);
+    expect(elementText).to.equal(valueToCompare);
+  }
+
   public async getElementAttribute(selector: string, attribute: string) {
     const element = await this.getElement(selector);
     const elementAttribute = await element.getAttribute(attribute);

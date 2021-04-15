@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import 'brace';
+import { Editor, UndoManager } from 'brace';
 import 'brace/ext/searchbox';
 import 'brace/index';
 import 'brace/mode/css';
@@ -34,7 +35,6 @@ declare const ace: any;
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       useExisting: forwardRef(() => EditorComponent),
       multi: true
     }
@@ -56,7 +56,7 @@ export class EditorComponent
   private _theme = 'editor-theme';
   private _mode = 'html';
   private _autoUpdateContent = true;
-  private _editor: any;
+  private _editor: Editor;
   private _durationBeforeCallback = 0;
   private _text = '';
 
@@ -66,6 +66,15 @@ export class EditorComponent
       this._editor = ace['edit'](element);
     });
     this._editor.$blockScrolling = Infinity;
+  }
+
+  /**
+   * When uuid changes, reset undo state
+   */
+  @Input()
+  public set uuid(uuid: string) {
+    console.log('uuid changed', uuid);
+    this._editor.getSession().setUndoManager(new UndoManager());
   }
 
   public get value() {

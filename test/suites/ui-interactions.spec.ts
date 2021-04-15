@@ -269,6 +269,23 @@ describe('UI interactions', () => {
     });
   });
 
+  describe('Body editor reset undo state when navigating', () => {
+    const tests = new Tests('ui');
+    const bodySelector = '.ace_content';
+
+    it('should navigate to second route and verify body', async () => {
+      await tests.helpers.selectRoute(2);
+      await tests.helpers.assertElementText(bodySelector, '42');
+    });
+
+    it('should try to undo (ctrl-z) and content should stay the same', async () => {
+      const bodyElement = await tests.app.client.$(bodySelector);
+      await tests.helpers.elementClick(bodySelector);
+      await bodyElement.keys(['Control', 'z']);
+      await tests.helpers.assertElementText(bodySelector, '42');
+    });
+  });
+
   describe('Headers typeahead', () => {
     const tests = new Tests('ui');
     const typeaheadEntrySelector = 'ngb-typeahead-window button:first-of-type';
