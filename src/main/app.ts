@@ -485,7 +485,7 @@ const init = () => {
     // use two timeout as page is still assembling after "dom-ready" event
     mainWindow.webContents.on('dom-ready', () => {
       setTimeout(() => {
-        if (splashScreen) {
+        if (splashScreen && !splashScreen.isDestroyed()) {
           splashScreen.close();
         }
 
