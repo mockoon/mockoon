@@ -17,6 +17,7 @@ jobs:
       ASCPROVIDER: ${{secrets.ASCPROVIDER}}
       CSC_LINK: ${{secrets.MACOS_CSC_LINK}}
       CSC_KEY_PASSWORD: ${{secrets.MACOS_CSC_KEY_PASSWORD}}
+      USE_HARD_LINKS: false
 
     steps:
       - uses: actions/checkout@v2
@@ -49,6 +50,8 @@ jobs:
     name: Build Linux binaries (deb, rpm, snap, AppImage)
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      USE_HARD_LINKS: false
 
     steps:
       - uses: actions/checkout@v2
