@@ -73,7 +73,6 @@ export class EditorComponent
    */
   @Input()
   public set uuid(uuid: string) {
-    console.log('uuid changed', uuid);
     this._editor.getSession().setUndoManager(new UndoManager());
   }
 

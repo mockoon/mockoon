@@ -53,3 +53,27 @@ describe('Basic endpoint calls', () => {
     });
   }
 });
+
+describe('Basic endpoint calls with prefix', () => {
+  const tests = new Tests('basic-data');
+  const prefixInputSelector = 'input[formcontrolname=endpointPrefix]';
+  const testCase: HttpCall = {
+    path: '/api/answer',
+    method: 'GET',
+    testedResponse: {
+      status: 200,
+      body: '42'
+    }
+  };
+  it('should call endpoint successfully with simple prefix', async () => {
+    await tests.helpers.setElementValue(prefixInputSelector, 'api');
+    await tests.helpers.startEnvironment();
+    await tests.helpers.httpCallAsserter(testCase);
+  });
+
+  it('should call endpoint successfully with prefix with a trailing slash', async () => {
+    await tests.helpers.setElementValue(prefixInputSelector, 'api/');
+    await tests.helpers.restartEnvironment();
+    await tests.helpers.httpCallAsserter(testCase);
+  });
+});
