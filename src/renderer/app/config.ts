@@ -14,7 +14,7 @@ export const Config = {
     cors: docsURL + 'cors/',
     https: docsURL + 'https/',
     headers: docsURL + 'response-headers/',
-    rules: docsURL + 'multiple-responses/'
+    rules: docsURL + 'route-responses/multiple-responses/'
   },
   maxLogsPerEnvironment: 50,
   firebaseConfig: {
