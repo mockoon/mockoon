@@ -100,7 +100,6 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
 
     this.routesFilterSubscription = this.routesFilter.valueChanges
       .pipe(
-        tap((search) => console.log('search before distinct', search)),
         debounceTime(10),
         tap((search) =>
           this.store.update(updateEnvironmentroutesFilterAction(search))
