@@ -10,7 +10,13 @@ import {
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Environment, Route } from '@mockoon/commons';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, startWith, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  tap
+} from 'rxjs/operators';
 import { RoutesContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { Settings } from 'src/renderer/app/models/settings.model';
@@ -67,14 +73,15 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         map((activeEnvironment) => activeEnvironment.routes)
       ),
-      this.routesFilter$
+      this.routesFilter$.pipe(
+        tap((search) => {
+          this.routesFilter.patchValue(search, { emitEvent: false });
+        })
+      )
     ]).pipe(
       map(([routes, search]) => {
-        if (search.length === 0) {
-          this.clearFilter();
-        }
-
         this.dragIsDisabled = search.length > 0;
+
         if (search.charAt(0) === '/') {
           search = search.substring(1);
         }
@@ -93,9 +100,8 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
 
     this.routesFilterSubscription = this.routesFilter.valueChanges
       .pipe(
-        distinctUntilChanged(),
-        debounceTime(50),
-        startWith(''),
+        tap((search) => console.log('search before distinct', search)),
+        debounceTime(10),
         tap((search) =>
           this.store.update(updateEnvironmentroutesFilterAction(search))
         )
@@ -159,6 +165,6 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
    * Clear the filter route
    */
   public clearFilter() {
-    this.routesFilter.patchValue('');
+    this.store.update(updateEnvironmentroutesFilterAction(''));
   }
 }
