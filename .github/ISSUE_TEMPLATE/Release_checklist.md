@@ -21,13 +21,17 @@ about: Checklist for releases (admin use only)
 
 **Website:**
 - [ ] Update website package version
-- [ ] Merge release branch on master
+- [ ] Merge release branch on main
+
+**CLI (if applicable):**
+- [ ] Merge release branch on main
+- [ ] Create release
 
 **Distribution:**
 - [ ] Update homebrew cask (PR)
 - [ ] Update Snap Store
 - [ ] Update Arch Linux repository
-- [ ] Update choco
+- [ ] Update choco (automated)
 
 **Misc:**
 - [ ] Close / update Github issues
