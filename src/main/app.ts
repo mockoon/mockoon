@@ -47,6 +47,7 @@ const isTesting = args.some((val) => val === '--tests');
 // set local data folder when in dev mode or running tests
 if (isTesting || isDev) {
   app.setPath('userData', pathResolve('./tmp'));
+
   logTransports.file.resolvePath = (variables: any) =>
     pathJoin(pathResolve('./tmp/logs'), 'main.log');
 }
@@ -538,223 +539,251 @@ const toggleExportMenuItems = (state: boolean) => {
   }
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', () => {
-  init();
+// try getting a lock to ensure only one instance of the application is launched
+const appLock = app.requestSingleInstanceLock();
 
-  app.on('activate', () => {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) init();
-  });
-});
-
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  // stop running servers before closing
-  Object.keys(runningServerInstances).forEach((runningEnvironmentUUID) => {
-    logInfo(
-      `[SERVICE][SERVER]Server ${runningEnvironmentUUID} has been stopped`
-    );
-    runningServerInstances[runningEnvironmentUUID].stop();
-  });
-
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q (except when running tests)
-  if (process.platform !== 'darwin' || isTesting) {
-    app.quit();
-  }
-});
-
-// Quit requested by renderer (when waiting for save to finish)
-ipcMain.on('APP_QUIT', () => {
-  // destroy the window otherwise app.quit() will trigger beforeunload again. Also there is no app.quit for macos
-  mainWindow.destroy();
-});
-
-ipcMain.on('APP_DISABLE_EXPORT', () => {
-  toggleExportMenuItems(false);
-});
-
-ipcMain.on('APP_ENABLE_EXPORT', () => {
-  toggleExportMenuItems(true);
-});
-
-ipcMain.on('APP_LOGS', (event, data) => {
-  if (data.type === 'info') {
-    logInfo(data.message);
-  } else if (data.type === 'error') {
-    logError(data.message);
-  }
-});
-
-ipcMain.on('APP_OPEN_EXTERNAL_LINK', (event, url) => {
-  shell.openExternal(url);
-});
-
-ipcMain.on('APP_SET_FAKER_OPTIONS', (event, data) => {
-  SetFakerLocale(data.locale);
-  SetFakerSeed(data.seed);
-});
-
-ipcMain.handle(
-  'APP_READ_JSON_DATA',
-  async (event, key) => await promisify(storageGet)(key)
-);
-
-ipcMain.handle(
-  'APP_WRITE_JSON_DATA',
-  async (event, key, data) => await promisify(storageSet)(key, data)
-);
-
-ipcMain.handle(
-  'APP_READ_FILE',
-  async (event, filePath) => await fsPromises.readFile(filePath, 'utf-8')
-);
-
-ipcMain.handle(
-  'APP_WRITE_FILE',
-  async (event, filePath, data) =>
-    await fsPromises.writeFile(filePath, data, 'utf-8')
-);
-
-ipcMain.handle('APP_READ_CLIPBOARD', async (event) =>
-  clipboard.readText('clipboard')
-);
-
-ipcMain.handle(
-  'APP_SHOW_OPEN_DIALOG',
-  async (event, options) => await dialog.showOpenDialog(options)
-);
-
-ipcMain.handle(
-  'APP_SHOW_SAVE_DIALOG',
-  async (event, options) => await dialog.showSaveDialog(options)
-);
-
-ipcMain.handle('APP_GET_PLATFORM', (event) => process.platform);
-
-ipcMain.handle('APP_GET_MIME_TYPE', (event, filePath) =>
-  mimeTypeLookup(filePath)
-);
-
-ipcMain.handle(
-  'APP_OPENAPI_DEREFERENCE',
-  async (event, filePath) =>
-    await openAPIDereference(filePath, {
-      dereference: { circular: 'ignore' }
-    })
-);
-
-ipcMain.handle(
-  'APP_OPENAPI_VALIDATE',
-  async (event, data) => await openAPIValidate(data)
-);
-
-ipcMain.handle('APP_START_SERVER', async (event, environment) => {
-  const server = new MockoonServer(environment, {
-    refreshEnvironmentFunction: (environmentUUID) => {
-      const updatedEnvironment = updatedEnvironments[environmentUUID];
-      if (updatedEnvironment) {
-        return updatedEnvironment;
+if (!appLock) {
+  logInfo(
+    '[MAIN]An instance of the application is already running. Stopping process.'
+  );
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
       }
-
-      return null;
+      mainWindow.focus();
     }
   });
 
-  server.once('started', () => {
-    runningServerInstances[environment.uuid] = server;
+  // This method will be called when Electron has finished
+  // initialization and is ready to create browser windows.
+  // Some APIs can only be used after this event occurs.
+  app.on('ready', () => {
+    init();
 
-    mainWindow.webContents.send(
-      'APP_SERVER_EVENT',
-      environment.uuid,
-      'started'
-    );
-  });
-
-  server.once('stopped', () => {
-    delete runningServerInstances[environment.uuid];
-
-    // verify that window is still present as we stop servers when app quits too
-    if (!mainWindow.isDestroyed()) {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        environment.uuid,
-        'stopped'
-      );
-
-      return;
-    }
-  });
-
-  server.once('creating-proxy', () => {
-    mainWindow.webContents.send(
-      'APP_SERVER_EVENT',
-      environment.uuid,
-      'creating-proxy'
-    );
-  });
-
-  server.on('entering-request', () => {
-    mainWindow.webContents.send(
-      'APP_SERVER_EVENT',
-      environment.uuid,
-      'entering-request'
-    );
-  });
-
-  server.on('transaction-complete', (transaction) => {
-    mainWindow.webContents.send(
-      'APP_SERVER_EVENT',
-      environment.uuid,
-      'transaction-complete',
-      { transaction }
-    );
-  });
-
-  server.on('error', (errorCode, originalError) => {
-    mainWindow.webContents.send('APP_SERVER_EVENT', environment.uuid, 'error', {
-      errorCode,
-      originalError
+    app.on('activate', () => {
+      // On macOS it's common to re-create a window in the app when the
+      // dock icon is clicked and there are no other windows open.
+      if (BrowserWindow.getAllWindows().length === 0) init();
     });
   });
 
-  server.start();
-});
+  // Quit when all windows are closed.
+  app.on('window-all-closed', () => {
+    // stop running servers before closing
+    Object.keys(runningServerInstances).forEach((runningEnvironmentUUID) => {
+      logInfo(
+        `[SERVICE][SERVER]Server ${runningEnvironmentUUID} has been stopped`
+      );
+      runningServerInstances[runningEnvironmentUUID].stop();
+    });
 
-ipcMain.handle('APP_STOP_SERVER', async (event, environmentUUID) => {
-  if (runningServerInstances[environmentUUID]) {
-    runningServerInstances[environmentUUID].stop();
-  }
-});
-
-ipcMain.on('APP_WRITE_CLIPBOARD', async (event, data) => {
-  clipboard.writeText(data, 'clipboard');
-});
-
-ipcMain.on('APP_UPDATE_ENVIRONMENT', (event, environments: Environments) => {
-  environments.forEach((environment) => {
-    updatedEnvironments[environment.uuid] = environment;
-  });
-});
-
-ipcMain.on('APP_APPLY_UPDATE', () => {
-  if (updateAvailableVersion) {
-    if (process.platform === 'win32') {
-      spawn(
-        pathJoin(userDataPath, `mockoon.setup.${updateAvailableVersion}.exe`),
-        ['--updated'],
-        {
-          detached: true,
-          stdio: 'ignore'
-        }
-      ).unref();
+    // On OS X it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q (except when running tests)
+    if (process.platform !== 'darwin' || isTesting) {
       app.quit();
-    } else if (process.platform === 'darwin' || process.platform === 'linux') {
-      shell.openExternal('https://mockoon.com/download');
     }
-  }
-});
+  });
+
+  // Quit requested by renderer (when waiting for save to finish)
+  ipcMain.on('APP_QUIT', () => {
+    // destroy the window otherwise app.quit() will trigger beforeunload again. Also there is no app.quit for macos
+    mainWindow.destroy();
+  });
+
+  ipcMain.on('APP_DISABLE_EXPORT', () => {
+    toggleExportMenuItems(false);
+  });
+
+  ipcMain.on('APP_ENABLE_EXPORT', () => {
+    toggleExportMenuItems(true);
+  });
+
+  ipcMain.on('APP_LOGS', (event, data) => {
+    if (data.type === 'info') {
+      logInfo(data.message);
+    } else if (data.type === 'error') {
+      logError(data.message);
+    }
+  });
+
+  ipcMain.on('APP_OPEN_EXTERNAL_LINK', (event, url) => {
+    shell.openExternal(url);
+  });
+
+  ipcMain.on('APP_SET_FAKER_OPTIONS', (event, data) => {
+    SetFakerLocale(data.locale);
+    SetFakerSeed(data.seed);
+  });
+
+  ipcMain.handle(
+    'APP_READ_JSON_DATA',
+    async (event, key) => await promisify(storageGet)(key)
+  );
+
+  ipcMain.handle(
+    'APP_WRITE_JSON_DATA',
+    async (event, key, data) => await promisify(storageSet)(key, data)
+  );
+
+  ipcMain.handle(
+    'APP_READ_FILE',
+    async (event, filePath) => await fsPromises.readFile(filePath, 'utf-8')
+  );
+
+  ipcMain.handle(
+    'APP_WRITE_FILE',
+    async (event, filePath, data) =>
+      await fsPromises.writeFile(filePath, data, 'utf-8')
+  );
+
+  ipcMain.handle('APP_READ_CLIPBOARD', async (event) =>
+    clipboard.readText('clipboard')
+  );
+
+  ipcMain.handle(
+    'APP_SHOW_OPEN_DIALOG',
+    async (event, options) => await dialog.showOpenDialog(options)
+  );
+
+  ipcMain.handle(
+    'APP_SHOW_SAVE_DIALOG',
+    async (event, options) => await dialog.showSaveDialog(options)
+  );
+
+  ipcMain.handle('APP_GET_PLATFORM', (event) => process.platform);
+
+  ipcMain.handle('APP_GET_MIME_TYPE', (event, filePath) =>
+    mimeTypeLookup(filePath)
+  );
+
+  ipcMain.handle(
+    'APP_OPENAPI_DEREFERENCE',
+    async (event, filePath) =>
+      await openAPIDereference(filePath, {
+        dereference: { circular: 'ignore' }
+      })
+  );
+
+  ipcMain.handle(
+    'APP_OPENAPI_VALIDATE',
+    async (event, data) => await openAPIValidate(data)
+  );
+
+  ipcMain.handle('APP_START_SERVER', async (event, environment) => {
+    const server = new MockoonServer(environment, {
+      refreshEnvironmentFunction: (environmentUUID) => {
+        const updatedEnvironment = updatedEnvironments[environmentUUID];
+        if (updatedEnvironment) {
+          return updatedEnvironment;
+        }
+
+        return null;
+      }
+    });
+
+    server.once('started', () => {
+      runningServerInstances[environment.uuid] = server;
+
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'started'
+      );
+    });
+
+    server.once('stopped', () => {
+      delete runningServerInstances[environment.uuid];
+
+      // verify that window is still present as we stop servers when app quits too
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          environment.uuid,
+          'stopped'
+        );
+
+        return;
+      }
+    });
+
+    server.once('creating-proxy', () => {
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'creating-proxy'
+      );
+    });
+
+    server.on('entering-request', () => {
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'entering-request'
+      );
+    });
+
+    server.on('transaction-complete', (transaction) => {
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'transaction-complete',
+        { transaction }
+      );
+    });
+
+    server.on('error', (errorCode, originalError) => {
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'error',
+        {
+          errorCode,
+          originalError
+        }
+      );
+    });
+
+    server.start();
+  });
+
+  ipcMain.handle('APP_STOP_SERVER', async (event, environmentUUID) => {
+    if (runningServerInstances[environmentUUID]) {
+      runningServerInstances[environmentUUID].stop();
+    }
+  });
+
+  ipcMain.on('APP_WRITE_CLIPBOARD', async (event, data) => {
+    clipboard.writeText(data, 'clipboard');
+  });
+
+  ipcMain.on('APP_UPDATE_ENVIRONMENT', (event, environments: Environments) => {
+    environments.forEach((environment) => {
+      updatedEnvironments[environment.uuid] = environment;
+    });
+  });
+
+  ipcMain.on('APP_APPLY_UPDATE', () => {
+    if (updateAvailableVersion) {
+      if (process.platform === 'win32') {
+        spawn(
+          pathJoin(userDataPath, `mockoon.setup.${updateAvailableVersion}.exe`),
+          ['--updated'],
+          {
+            detached: true,
+            stdio: 'ignore'
+          }
+        ).unref();
+        app.quit();
+      } else if (
+        process.platform === 'darwin' ||
+        process.platform === 'linux'
+      ) {
+        shell.openExternal('https://mockoon.com/download');
+      }
+    }
+  });
+}
