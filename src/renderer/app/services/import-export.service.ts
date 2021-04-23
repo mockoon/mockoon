@@ -11,6 +11,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { Config } from 'src/renderer/app/config';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { Errors } from 'src/renderer/app/enums/errors.enum';
 import { OldExport } from 'src/renderer/app/models/data.model';
@@ -25,7 +26,6 @@ import {
   addRouteAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 
 // Last migration done for each version
 const oldVersionsMigrationTable = {

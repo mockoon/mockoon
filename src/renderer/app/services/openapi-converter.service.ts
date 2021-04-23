@@ -9,7 +9,10 @@ import {
 } from '@mockoon/commons';
 import { OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { Logger } from 'src/renderer/app/classes/logger';
-import { INDENT_SIZE } from 'src/renderer/app/constants/common.constants';
+import {
+  INDENT_SIZE,
+  MainAPI
+} from 'src/renderer/app/constants/common.constants';
 import {
   methods,
   statusCodes
@@ -18,7 +21,6 @@ import { Errors } from 'src/renderer/app/enums/errors.enum';
 import { RemoveLeadingSlash } from 'src/renderer/app/libs/utils.lib';
 import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 
 type ParametersTypes = 'PATH_PARAMETERS' | 'SERVER_VARIABLES';
 type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';

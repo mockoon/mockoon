@@ -79,7 +79,8 @@
                 *ngFor="let fakerLocale of fakerLocales"
                 [value]="fakerLocale.code"
                 [selected]="settings.fakerLocale === fakerLocale.code"
-                >{{ fakerLocale.label }}
+              >
+                {{ fakerLocale.label }}
               </option>
             </select>
           </div>

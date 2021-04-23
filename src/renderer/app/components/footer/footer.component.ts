@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 
 @Component({
   selector: 'app-footer',

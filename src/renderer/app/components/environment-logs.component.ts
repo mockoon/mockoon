@@ -1,13 +1,25 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  map,
+  mergeMap,
+  withLatestFrom
+} from 'rxjs/operators';
 import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
-import { EnvironmentLog, EnvironmentLogRequest, EnvironmentLogResponse } from 'src/renderer/app/models/environment-logs.model';
+import {
+  EnvironmentLog,
+  EnvironmentLogRequest,
+  EnvironmentLogResponse
+} from 'src/renderer/app/models/environment-logs.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { setActiveEnvironmentLogUUIDAction } from 'src/renderer/app/stores/actions';
-import { EnvironmentLogsTabsNameType, Store } from 'src/renderer/app/stores/store';
+import {
+  EnvironmentLogsTabsNameType,
+  Store
+} from 'src/renderer/app/stores/store';
 
 type CollapseStates = {
   'request.general': boolean;
@@ -60,9 +72,11 @@ export class EnvironmentLogsComponent implements OnInit {
 
     this.activeEnvironmentLog$ = this.activeEnvironmentLogUUID$.pipe(
       withLatestFrom(this.environmentLogs$),
-      map(([activeEnvironmentLogUUID, environmentLogs]) => environmentLogs.find(
+      map(([activeEnvironmentLogUUID, environmentLogs]) =>
+        environmentLogs.find(
           (environmentLog) => environmentLog.UUID === activeEnvironmentLogUUID
-        )),
+        )
+      ),
       map((environmentLog) => {
         if (environmentLog) {
           if (environmentLog.request.body) {

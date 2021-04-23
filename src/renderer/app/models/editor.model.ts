@@ -9,4 +9,3 @@ export type EditorModalData = {
   title: string;
   editorConfig: any;
 };
-

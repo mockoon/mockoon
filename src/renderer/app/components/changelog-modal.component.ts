@@ -12,9 +12,9 @@ import { Observable } from 'rxjs';
 import { filter, first, map, shareReplay, tap } from 'rxjs/operators';
 import { gt as semverGt } from 'semver';
 import { Config } from 'src/renderer/app/config';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 
 @Component({
   selector: 'app-changelog-modal',

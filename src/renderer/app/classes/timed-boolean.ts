@@ -5,11 +5,10 @@ import { BehaviorSubject } from 'rxjs';
  * Useful for delete buttons switching to confirmation after the first click and reverting to initial state after a duration.
  */
 export class TimedBoolean extends BehaviorSubject<boolean> {
-
   constructor(private initialState = false, private duration = 4000) {
     super(initialState);
 
-    this.subscribe(state => {
+    this.subscribe((state) => {
       if (state !== this.initialState) {
         setTimeout(() => {
           this.next(!state);

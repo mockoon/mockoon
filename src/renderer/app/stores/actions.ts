@@ -12,7 +12,10 @@ import {
 } from 'src/renderer/app/models/route.model';
 import { SettingsProperties } from 'src/renderer/app/models/settings.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import { ReducerDirectionType, ReducerIndexes } from 'src/renderer/app/stores/reducer';
+import {
+  ReducerDirectionType,
+  ReducerIndexes
+} from 'src/renderer/app/stores/reducer';
 import {
   EnvironmentLogsTabsNameType,
   EnvironmentStatusProperties,
@@ -216,9 +219,7 @@ export const updateEnvironmentStatusAction = (
  *
  * @param properties - properties to update
  */
-export const updateEnvironmentroutesFilterAction = (
-  routesFilter: string
-) =>
+export const updateEnvironmentroutesFilterAction = (routesFilter: string) =>
   <const>{
     type: ActionTypes.UPDATE_ENVIRONMENT_ROUTE_FILTER,
     routesFilter

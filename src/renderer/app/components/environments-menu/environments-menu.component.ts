@@ -15,7 +15,11 @@ import { ScrollDirection } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { EnvironmentsStatuses, Store, UIState } from 'src/renderer/app/stores/store';
+import {
+  EnvironmentsStatuses,
+  Store,
+  UIState
+} from 'src/renderer/app/stores/store';
 
 @Component({
   selector: 'app-environments-menu',

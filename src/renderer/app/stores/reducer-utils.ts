@@ -4,7 +4,10 @@ import {
   Route
 } from '@mockoon/commons';
 import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
-import { DuplicatedRoutesTypes, StoreType } from 'src/renderer/app/stores/store';
+import {
+  DuplicatedRoutesTypes,
+  StoreType
+} from 'src/renderer/app/stores/store';
 
 /**
  * Return a Set of the duplicated route UUIDs in an environment

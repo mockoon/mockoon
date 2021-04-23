@@ -3,13 +3,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { ChangelogModalComponent } from 'src/renderer/app/components/changelog-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/settings-modal.component';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ScrollDirection } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
