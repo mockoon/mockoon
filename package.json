@@ -19,6 +19,7 @@
   "main": "app.js",
   "scripts": {
     "lint": "ng lint",
+    "format": "prettier {src,test}/**/*.{ts,js,scss,html} --check",
     "test": "xvfb-maybe ts-mocha --paths -p test/tsconfig.spec.json --timeout 20000 test/suites/**/*.spec.ts",
     "clean-dist": "rm -rf ./dist",
     "clean-packages": "rm -rf ./packages",

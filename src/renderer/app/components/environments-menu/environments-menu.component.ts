@@ -8,7 +8,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { Environment, Environments } from '@mockoon/commons';
-import { Observable } from 'rxjs';
+import { Observable
+ } from 'rxjs';
 import { EnvironmentsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { ScrollDirection } from 'src/renderer/app/models/ui.model';
