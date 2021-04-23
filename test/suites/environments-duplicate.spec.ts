@@ -49,14 +49,17 @@ describe('Duplicate an environment with no route', () => {
   it('should be able to start the duplicated environment', async () => {
     await tests.helpers.startEnvironment();
 
-    await tests.helpers.httpCallAsserterWithPort({
-      description: 'Call server root',
-      path: '/',
-      method: 'GET',
-      testedResponse: {
-        status: 404,
-        body: /Cannot GET \//
-      }
-    }, 3001);
+    await tests.helpers.httpCallAsserterWithPort(
+      {
+        description: 'Call server root',
+        path: '/',
+        method: 'GET',
+        testedResponse: {
+          status: 404,
+          body: /Cannot GET \//
+        }
+      },
+      3001
+    );
   });
 });

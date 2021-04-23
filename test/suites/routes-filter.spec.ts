@@ -1,7 +1,6 @@
 import { Tests } from 'test/lib/tests';
 
 describe('Routes filter', async () => {
-
   const tests = new Tests('basic-data');
   const routesFilterSelector = 'input[id="route-filter"]';
 
@@ -39,7 +38,9 @@ describe('Routes filter', async () => {
       '.routes-menu .menu-list .nav-item:first-child .nav-link',
       2
     );
-    await tests.helpers.elementClick('.modal-content .modal-body .list-group .list-group-item:first-child');
+    await tests.helpers.elementClick(
+      '.modal-content .modal-body .list-group .list-group-item:first-child'
+    );
     await tests.helpers.assertElementValue(routesFilterSelector, '');
   });
 

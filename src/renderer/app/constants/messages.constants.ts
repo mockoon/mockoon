@@ -1,4 +1,7 @@
-import { MessageCodes, MessageParams } from 'src/renderer/app/models/messages.model';
+import {
+  MessageCodes,
+  MessageParams
+} from 'src/renderer/app/models/messages.model';
 import { ToastTypes } from 'src/renderer/app/models/toasts.model';
 
 export const Messages: {

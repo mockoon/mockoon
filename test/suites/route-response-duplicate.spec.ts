@@ -46,9 +46,12 @@ describe('Duplicate a route response', () => {
     await tests.helpers.countElements('app-route-response-rules .rule-item', 1);
 
     const selectorAndValueAssertionPairs = {
-      'app-route-response-rules .rule-item select[formcontrolname="target"]': 'body',
-      'app-route-response-rules .rule-item input[formcontrolname="modifier"]': 'test',
-      'app-route-response-rules .rule-item input[formcontrolname="value"]': 'test'
+      'app-route-response-rules .rule-item select[formcontrolname="target"]':
+        'body',
+      'app-route-response-rules .rule-item input[formcontrolname="modifier"]':
+        'test',
+      'app-route-response-rules .rule-item input[formcontrolname="value"]':
+        'test'
     };
 
     for (const selector of Object.keys(selectorAndValueAssertionPairs)) {
