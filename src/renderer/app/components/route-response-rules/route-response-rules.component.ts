@@ -44,7 +44,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { code: 'body', text: 'Body' },
     { code: 'query', text: 'Query string' },
     { code: 'header', text: 'Header' },
-    { code: 'params', text: 'Route params' }
+    { code: 'params', text: 'Route params' },
+    { code: 'request_number', text: 'Request number (starting at 1)' }
   ];
   public rulesOperatorsList: LogicalOperators[] = ['OR', 'AND'];
   private listenToChanges = true;
