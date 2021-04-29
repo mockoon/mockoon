@@ -56,9 +56,9 @@ describe('Duplicate a route to an environment', async () => {
   });
 
   it('should duplicate selected route with the same properties', async () => {
-    await helpers.assertElementValue(
-      '.main-content .input-group .custom-select',
-      'post'
+    await helpers.assertElementText(
+      'app-custom-select[formcontrolname="method"] .dropdown-toggle-label',
+      'POST'
     );
 
     await helpers.assertElementValue(

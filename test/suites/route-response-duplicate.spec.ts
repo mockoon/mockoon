@@ -11,15 +11,15 @@ describe('Duplicate a route response', () => {
 
   it('Verify duplicated route response label', async () => {
     await tests.helpers.assertElementValue(
-      '.input-group .form-control[formcontrolname="label"]',
+      '.form-control[formcontrolname="label"]',
       'Test (copy)'
     );
   });
 
   it('Verify duplicated route response status code', async () => {
-    await tests.helpers.assertElementValue(
-      '.input-group .custom-select[formcontrolname="statusCode"]',
-      '50: 500'
+    await tests.helpers.assertElementText(
+      'app-custom-select[formcontrolname="statusCode"] .dropdown-toggle-label',
+      '500 - Internal Server Error'
     );
   });
 

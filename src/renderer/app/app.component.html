@@ -457,17 +457,13 @@
               >
                 <!-- Method + endpoint + warning + delete -->
                 <div class="input-group">
-                  <select class="custom-select col-2" formControlName="method">
-                    <option
-                      *ngFor="let method of methods"
-                      [value]="method"
-                      [selected]="
-                        activeRouteForm.get('method').value === method
-                      "
-                    >
-                      {{ method | uppercase }}
-                    </option>
-                  </select>
+                  <app-custom-select
+                    class="col-2"
+                    formControlName="method"
+                    [enableCustomInput]="false"
+                    [items]="methods"
+                    dropdownId="methods"
+                  ></app-custom-select>
                   <div class="input-group-prepend">
                     <span class="input-group-text">/</span>
                   </div>
@@ -571,7 +567,7 @@
                           aria-expanded="false"
                           ngbDropdownToggle
                         >
-                          <div class="route-responses-dropdown-content">
+                          <div class="dropdown-toggle-label">
                             <span class="pr-2"
                               >{{ activeRouteResponseIndex$ | async }}:
                               {{ activeRouteResponse?.statusCode }}</span
@@ -717,23 +713,18 @@
                   [formGroup]="activeRouteResponseForm"
                 >
                   <!-- status code + latency -->
-                  <div class="input-group mt-3">
-                    <select
-                      class="custom-select col-4"
+                  <div class="d-flex mt-3">
+                    <app-custom-select
+                      class="col-3"
                       formControlName="statusCode"
-                    >
-                      <option
-                        *ngFor="let statusCode of statusCodes"
-                        [ngValue]="statusCode.code"
-                        [selected]="
-                          activeRouteResponse.statusCode === statusCode.code
-                        "
-                      >
-                        {{ statusCode.code }}
-                        -
-                        {{ statusCode.text }}
-                      </option>
-                    </select>
+                      customInputPlaceholder="Custom status code (100-999)"
+                      emptyListMessage="Press enter for custom status code"
+                      [isNumber]="true"
+                      [items]="statusCodes"
+                      [validation]="statusCodeValidation"
+                      fixedWidth="350px"
+                      dropdownId="status-code"
+                    ></app-custom-select>
                     <div class="input-group-prepend">
                       <span class="input-group-text"
                         ><i class="material-icons">access_time</i></span

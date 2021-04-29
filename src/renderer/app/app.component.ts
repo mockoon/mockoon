@@ -19,11 +19,6 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import {
-  NgbConfig,
-  NgbTooltipConfig,
-  NgbTypeaheadConfig
-} from '@ng-bootstrap/ng-bootstrap';
 import { from, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -43,9 +38,10 @@ import {
   INDENT_SIZE,
   MainAPI
 } from 'src/renderer/app/constants/common.constants';
+import { StatusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
-  methods,
-  statusCodes
+  Methods,
+  StatusCodes
 } from 'src/renderer/app/constants/routes.constants';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -117,11 +113,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public Infinity = Infinity;
   public isValidURL = IsValidURL;
-  public methods = methods;
+  public methods = Methods;
   public scrollToBottom = this.uiService.scrollToBottom;
-  public statusCodes = statusCodes;
+  public statusCodes = StatusCodes;
   public toasts$: Observable<Toast[]>;
   public focusableInputs = FocusableInputs;
+  public statusCodeValidation = StatusCodeValidation;
   private injectHeaders$ = new Subject<Header[]>();
   private logger = new Logger('[COMPONENT][APP]');
   private closingSubscription: Subscription;
@@ -129,7 +126,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private analyticsService: AnalyticsService,
     private authService: AuthService,
-    private config: NgbTooltipConfig,
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
     private formBuilder: FormBuilder,
@@ -138,13 +134,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     private toastService: ToastsService,
     private uiService: UIService,
     private apiService: ApiService,
-    private storageService: StorageService,
-    private ngbConfig: NgbConfig,
-    private ngbTypeaheadConfig: NgbTypeaheadConfig
-  ) {
-    this.ngbTypeaheadConfig.container = 'body';
-    this.ngbConfig.animation = false;
-  }
+    private storageService: StorageService
+  ) {}
 
   // Listen to widow beforeunload event, and verify that no data saving is in progress
   @HostListener('window:beforeunload', ['$event'])
@@ -173,9 +164,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.injectedHeaders$ = this.injectHeaders$.asObservable();
-
-    // tooltip config
-    this.config.container = 'body';
 
     this.logger.info('Initializing application');
 
@@ -519,6 +507,21 @@ export class AppComponent implements OnInit, AfterViewInit {
         randomResponse: !randomResponse
       })
     );
+  }
+
+  /**
+   * Function for status codes ngFor trackby
+   *
+   * @param index
+   * @param item
+   * @returns
+   */
+  public statusCodesTrackBy(index: number, item: { id?: number; value?: any }) {
+    if (item.id !== undefined) {
+      return item.id;
+    } else {
+      return item.value;
+    }
   }
 
   /**

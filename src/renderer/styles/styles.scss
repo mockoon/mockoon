@@ -58,14 +58,22 @@ input,
 }
 .dropdown-menu {
   max-height: 300px;
-  min-width: 180px;
+  max-width: 350px;
   overflow-y: auto;
 
-  &::-webkit-scrollbar-track {
+  &::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-track {
     background-color: $custom-gray;
   }
-  &::-webkit-scrollbar-thumb {
-    background: lighten($gray-900, 10%);
+  &::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-thumb {
+    background: lighten($gray-900, 15%);
+  }
+}
+
+#route-responses-dropdown {
+  .dropdown-toggle-label {
+    width: 140px;
   }
 }
 
@@ -127,12 +135,23 @@ input,
 }
 
 // http methods badges
-$http-methods: ('get', $blue), ('put', $orange), ('post', $green),
-  ('delete', $red), ('head', $purple), ('patch', $teal), ('options', $dark-blue);
-@each $method in $http-methods {
+$http-methods: ('get', lighten($blue, 5%)), ('put', lighten($orange, 5%)),
+  ('post', lighten($green, 5%)), ('delete', lighten($red, 8%)),
+  ('head', lighten($purple, 12%)), ('patch', $teal),
+  ('options', lighten($dark-blue, 15%));
+$http-methods-light: ('get', lighten($blue, 10%)),
+  ('put', lighten($orange, 10%)), ('post', lighten($green, 10%)),
+  ('delete', lighten($red, 17%)), ('head', lighten($purple, 25%)),
+  ('patch', $teal), ('options', lighten($dark-blue, 30%));
+@each $method in $http-methods-light {
   .http-method-#{nth($method, 1)} {
     background-color: #{nth($method, 2)};
     color: $gray-900;
+  }
+}
+@each $method in $http-methods-light {
+  .http-method-#{nth($method, 1)}-text {
+    color: #{nth($method, 2)};
   }
 }
 
@@ -229,6 +248,14 @@ $http-methods: ('get', $blue), ('put', $orange), ('post', $green),
   font-size: $font-size-lg;
   color: darken($gray-600, 5%);
   font-weight: $font-weight-light;
+
+  &-md {
+    font-size: $font-size-md;
+  }
+
+  &-sm {
+    font-size: $font-size-sm;
+  }
 }
 
 .pattern-danger {

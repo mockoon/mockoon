@@ -1,6 +1,6 @@
 [
   {
-    "uuid": "62e5c5d0-e7d4-11ea-a5ec-979674ac1a4b",
+    "uuid": "3e16e1a0-a802-11eb-9a34-f1c6ade0819b",
     "lastMigration": 13,
     "name": "Amazon CloudFront",
     "endpointPrefix": "",
@@ -8,14 +8,13 @@
     "port": 3000,
     "routes": [
       {
-        "uuid": "62e5ece1-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1708b6-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Creates a new origin access identity. If you're using Amazon S3 for your origin, you can use an origin access identity to require users to access your content using a CloudFront URL instead of the Amazon S3 URL. For more information about how to use origin access identities, see <a href=\"http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html\">Serving Private Content through CloudFront</a> in the <i>Amazon CloudFront Developer Guide</i>.",
         "method": "post",
         "endpoint": "2017-03-25/origin-access-identity/cloudfront",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e5ece0-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708b0-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 201,
@@ -26,19 +25,84 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708b1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "CloudFrontOriginAccessIdentityAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708b2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708b3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "TooManyCloudFrontOriginAccessIdentities",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708b4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708b5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "InconsistentQuantities",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e5ece3-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1708b9-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Lists origin access identities.",
         "method": "get",
         "endpoint": "2017-03-25/origin-access-identity/cloudfront",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e5ece2-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708b7-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -49,19 +113,32 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708b8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e5ecf0-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1708e3-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Creates a new web distribution. Send a <code>POST</code> request to the <code>/<i>CloudFront API version</i>/distribution</code>/<code>distribution ID</code> resource.",
         "method": "post",
         "endpoint": "2017-03-25/distribution",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e5ece4-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708ba-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 201,
@@ -74,7 +151,267 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ece5-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708bb-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "CNAMEAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708bc-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "DistributionAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708bd-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidOrigin",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708be-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "InvalidOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708bf-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c0-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 485,
+            "label": "TooManyTrustedSigners",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 486,
+            "label": "TrustedSignerDoesNotExist",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 487,
+            "label": "InvalidViewerCertificate",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 488,
+            "label": "InvalidMinimumProtocolVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 489,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 490,
+            "label": "TooManyDistributionCNAMEs",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c6-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 491,
+            "label": "TooManyDistributions",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c7-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 492,
+            "label": "InvalidDefaultRootObject",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 493,
+            "label": "InvalidRelativePath",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708c9-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 494,
+            "label": "InvalidErrorCode",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708ca-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 495,
+            "label": "InvalidResponseCode",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708cb-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 496,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708cc-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 497,
+            "label": "InvalidRequiredProtocol",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708cd-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 498,
+            "label": "NoSuchOrigin",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708ce-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 499,
+            "label": "TooManyOrigins",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708cf-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 500,
@@ -87,7 +424,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ece6-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d0-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 501,
@@ -100,7 +437,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ece7-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d1-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 502,
@@ -113,7 +450,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ece8-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d2-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 503,
@@ -126,7 +463,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ece9-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d3-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 504,
@@ -139,7 +476,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecea-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d4-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 505,
@@ -152,7 +489,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5eceb-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d5-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 506,
@@ -165,7 +502,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecec-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d6-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 507,
@@ -178,7 +515,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5eced-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d7-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 508,
@@ -191,7 +528,20 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecee-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708d8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 509,
+            "label": "InvalidProtocolSettings",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708d9-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 510,
@@ -204,7 +554,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecef-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708da-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 511,
@@ -215,19 +565,123 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708db-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 512,
+            "label": "TooManyOriginCustomHeaders",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708dc-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 513,
+            "label": "TooManyQueryStringParameters",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708dd-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 514,
+            "label": "InvalidQueryStringParameters",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708de-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 515,
+            "label": "TooManyDistributionsWithLambdaAssociations",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708df-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 516,
+            "label": "TooManyLambdaFunctionAssociations",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708e0-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 517,
+            "label": "InvalidLambdaFunctionAssociation",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708e1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 518,
+            "label": "InvalidOriginReadTimeout",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708e2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 519,
+            "label": "InvalidOriginKeepaliveTimeout",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e5ecf2-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1708e6-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "List distributions. ",
         "method": "get",
         "endpoint": "2017-03-25/distribution",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e5ecf1-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708e4-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -238,19 +692,32 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708e5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e5ecff-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e170911-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Create a new distribution with tags.",
         "method": "post",
         "endpoint": "2017-03-25/distribution#WithTags",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e5ecf3-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708e7-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 201,
@@ -263,7 +730,267 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecf4-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708e8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "CNAMEAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708e9-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "DistributionAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708ea-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidOrigin",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708eb-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "InvalidOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708ec-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708ed-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 485,
+            "label": "TooManyTrustedSigners",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708ee-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 486,
+            "label": "TrustedSignerDoesNotExist",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708ef-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 487,
+            "label": "InvalidViewerCertificate",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f0-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 488,
+            "label": "InvalidMinimumProtocolVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 489,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 490,
+            "label": "TooManyDistributionCNAMEs",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 491,
+            "label": "TooManyDistributions",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 492,
+            "label": "InvalidDefaultRootObject",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 493,
+            "label": "InvalidRelativePath",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f6-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 494,
+            "label": "InvalidErrorCode",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f7-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 495,
+            "label": "InvalidResponseCode",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 496,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708f9-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 497,
+            "label": "InvalidRequiredProtocol",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708fa-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 498,
+            "label": "NoSuchOrigin",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708fb-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 499,
+            "label": "TooManyOrigins",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1708fc-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 500,
@@ -276,7 +1003,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecf5-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708fd-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 501,
@@ -289,7 +1016,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecf6-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708fe-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 502,
@@ -302,7 +1029,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecf7-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1708ff-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 503,
@@ -315,7 +1042,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecf8-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e170900-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 504,
@@ -328,7 +1055,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecf9-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e170901-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 505,
@@ -341,7 +1068,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecfa-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e170902-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 506,
@@ -354,7 +1081,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecfb-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e170903-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 507,
@@ -367,7 +1094,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecfc-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e170904-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 508,
@@ -380,7 +1107,20 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecfd-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e170905-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 509,
+            "label": "InvalidProtocolSettings",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170906-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 510,
@@ -393,7 +1133,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e5ecfe-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e170907-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 511,
@@ -404,19 +1144,136 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e170908-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 512,
+            "label": "TooManyOriginCustomHeaders",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170909-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 513,
+            "label": "InvalidTagging",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17090a-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 514,
+            "label": "TooManyQueryStringParameters",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17090b-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 515,
+            "label": "InvalidQueryStringParameters",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17090c-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 516,
+            "label": "TooManyDistributionsWithLambdaAssociations",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17090d-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 517,
+            "label": "TooManyLambdaFunctionAssociations",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17090e-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 518,
+            "label": "InvalidLambdaFunctionAssociation",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17090f-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 519,
+            "label": "InvalidOriginReadTimeout",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170910-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 520,
+            "label": "InvalidOriginKeepaliveTimeout",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e5ed01-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e17091a-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Create a new invalidation. ",
         "method": "post",
         "endpoint": "2017-03-25/distribution/:DistributionId/invalidation",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e5ed00-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e170912-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 201,
@@ -427,341 +1284,110 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e170913-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170914-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170915-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170916-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "NoSuchDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170917-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "BatchTooLarge",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170918-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 485,
+            "label": "TooManyInvalidationsInProgress",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e170919-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 486,
+            "label": "InconsistentQuantities",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e5ed03-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e17091f-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Lists invalidation batches. ",
         "method": "get",
         "endpoint": "2017-03-25/distribution/:DistributionId/invalidation",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e5ed02-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e613f0-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "<p>Creates a new RMTP distribution. An RTMP distribution is similar to a web distribution, but an RTMP distribution streams media files using the Adobe Real-Time Messaging Protocol (RTMP) instead of serving files using HTTP. </p> <p>To create a new web distribution, submit a <code>POST</code> request to the <i>CloudFront API version</i>/distribution resource. The request body must include a document with a <i>StreamingDistributionConfig</i> element. The response echoes the <code>StreamingDistributionConfig</code> element and returns other information about the RTMP distribution.</p> <p>To get the status of your request, use the <i>GET StreamingDistribution</i> API action. When the value of <code>Enabled</code> is <code>true</code> and the value of <code>Status</code> is <code>Deployed</code>, your distribution is ready. A distribution usually deploys in less than 15 minutes.</p> <p>For more information about web distributions, see <a href=\"http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-rtmp.html\">Working with RTMP Distributions</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <important> <p>Beginning with the 2012-05-05 version of the CloudFront API, we made substantial changes to the format of the XML document that you include in the request body when you create or update a web distribution or an RTMP distribution, and when you invalidate objects. With previous versions of the API, we discovered that it was too easy to accidentally delete one or more values for an element that accepts multiple values, for example, CNAMEs and trusted signers. Our changes for the 2012-05-05 release are intended to prevent these accidental deletions and to notify you when there's a mismatch between the number of values you say you're specifying in the <code>Quantity</code> element and the number of values specified.</p> </important>",
-        "method": "post",
-        "endpoint": "2017-03-25/streaming-distribution",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e5ed04-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 201,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e613f2-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "List streaming distributions. ",
-        "method": "get",
-        "endpoint": "2017-03-25/streaming-distribution",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e613f1-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e613f4-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Create a new streaming distribution with tags.",
-        "method": "post",
-        "endpoint": "2017-03-25/streaming-distribution#WithTags",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e613f3-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 201,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e613f6-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Delete an origin access identity. ",
-        "method": "delete",
-        "endpoint": "2017-03-25/origin-access-identity/cloudfront/:Id",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e613f5-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 204,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e613f8-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Get the information about an origin access identity. ",
-        "method": "get",
-        "endpoint": "2017-03-25/origin-access-identity/cloudfront/:Id",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e613f7-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e613fa-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Delete a distribution. ",
-        "method": "delete",
-        "endpoint": "2017-03-25/distribution/:Id",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e613f9-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 204,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e613fc-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Get the information about a distribution. ",
-        "method": "get",
-        "endpoint": "2017-03-25/distribution/:Id",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e613fb-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e613fe-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "",
-        "method": "delete",
-        "endpoint": "2017-03-25/service-linked-role/:RoleName",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e613fd-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 204,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e61400-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "<p>Delete a streaming distribution. To delete an RTMP distribution using the CloudFront API, perform the following steps.</p> <p> <b>To delete an RTMP distribution using the CloudFront API</b>:</p> <ol> <li> <p>Disable the RTMP distribution.</p> </li> <li> <p>Submit a <code>GET Streaming Distribution Config</code> request to get the current configuration and the <code>Etag</code> header for the distribution. </p> </li> <li> <p>Update the XML document that was returned in the response to your <code>GET Streaming Distribution Config</code> request to change the value of <code>Enabled</code> to <code>false</code>.</p> </li> <li> <p>Submit a <code>PUT Streaming Distribution Config</code> request to update the configuration for your distribution. In the request body, include the XML document that you updated in Step 3. Then set the value of the HTTP <code>If-Match</code> header to the value of the <code>ETag</code> header that CloudFront returned when you submitted the <code>GET Streaming Distribution Config</code> request in Step 2.</p> </li> <li> <p>Review the response to the <code>PUT Streaming Distribution Config</code> request to confirm that the distribution was successfully disabled.</p> </li> <li> <p>Submit a <code>GET Streaming Distribution Config</code> request to confirm that your changes have propagated. When propagation is complete, the value of <code>Status</code> is <code>Deployed</code>.</p> </li> <li> <p>Submit a <code>DELETE Streaming Distribution</code> request. Set the value of the HTTP <code>If-Match</code> header to the value of the <code>ETag</code> header that CloudFront returned when you submitted the <code>GET Streaming Distribution Config</code> request in Step 2.</p> </li> <li> <p>Review the response to your <code>DELETE Streaming Distribution</code> request to confirm that the distribution was successfully deleted.</p> </li> </ol> <p>For information about deleting a distribution using the CloudFront console, see <a href=\"http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HowToDeleteDistribution.html\">Deleting a Distribution</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>",
-        "method": "delete",
-        "endpoint": "2017-03-25/streaming-distribution/:Id",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e613ff-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 204,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e61402-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Gets information about a specified RTMP distribution, including the distribution configuration.",
-        "method": "get",
-        "endpoint": "2017-03-25/streaming-distribution/:Id",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e61401-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e61404-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Get the configuration information about an origin access identity. ",
-        "method": "get",
-        "endpoint": "2017-03-25/origin-access-identity/cloudfront/:Id/config",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e61403-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e61406-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Update an origin access identity. ",
-        "method": "put",
-        "endpoint": "2017-03-25/origin-access-identity/cloudfront/:Id/config",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e61405-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e61408-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Get the configuration information about a distribution. ",
-        "method": "get",
-        "endpoint": "2017-03-25/distribution/:Id/config",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e61407-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "Success",
-            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true
-      },
-      {
-        "uuid": "62e61415-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "<p>Updates the configuration for a web distribution. Perform the following steps.</p> <p>For information about updating a distribution using the CloudFront console, see <a href=\"http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-creating-console.html\">Creating or Updating a Web Distribution Using the CloudFront Console </a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <p> <b>To update a web distribution using the CloudFront API</b> </p> <ol> <li> <p>Submit a <a>GetDistributionConfig</a> request to get the current configuration and an <code>Etag</code> header for the distribution.</p> <note> <p>If you update the distribution again, you need to get a new <code>Etag</code> header.</p> </note> </li> <li> <p>Update the XML document that was returned in the response to your <code>GetDistributionConfig</code> request to include the desired changes. You can't change the value of <code>CallerReference</code>. If you try to change this value, CloudFront returns an <code>IllegalUpdate</code> error.</p> <important> <p>The new configuration replaces the existing configuration; the values that you specify in an <code>UpdateDistribution</code> request are not merged into the existing configuration. When you add, delete, or replace values in an element that allows multiple values (for example, <code>CNAME</code>), you must specify all of the values that you want to appear in the updated distribution. In addition, you must update the corresponding <code>Quantity</code> element.</p> </important> </li> <li> <p>Submit an <code>UpdateDistribution</code> request to update the configuration for your distribution:</p> <ul> <li> <p>In the request body, include the XML document that you updated in Step 2. The request body must include an XML document with a <code>DistributionConfig</code> element.</p> </li> <li> <p>Set the value of the HTTP <code>If-Match</code> header to the value of the <code>ETag</code> header that CloudFront returned when you submitted the <code>GetDistributionConfig</code> request in Step 1.</p> </li> </ul> </li> <li> <p>Review the response to the <code>UpdateDistribution</code> request to confirm that the configuration was successfully updated.</p> </li> <li> <p>Optional: Submit a <a>GetDistribution</a> request to confirm that your changes have propagated. When propagation is complete, the value of <code>Status</code> is <code>Deployed</code>.</p> <important> <p>Beginning with the 2012-05-05 version of the CloudFront API, we made substantial changes to the format of the XML document that you include in the request body when you create or update a distribution. With previous versions of the API, we discovered that it was too easy to accidentally delete one or more values for an element that accepts multiple values, for example, CNAMEs and trusted signers. Our changes for the 2012-05-05 release are intended to prevent these accidental deletions and to notify you when there's a mismatch between the number of values you say you're specifying in the <code>Quantity</code> element and the number of values you're actually specifying.</p> </important> </li> </ol>",
-        "method": "put",
-        "endpoint": "2017-03-25/distribution/:Id/config",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "62e61409-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e17091b-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -774,7 +1400,1447 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e6140a-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e17091c-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17091d-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "NoSuchDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17091e-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e172fcd-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "<p>Creates a new RMTP distribution. An RTMP distribution is similar to a web distribution, but an RTMP distribution streams media files using the Adobe Real-Time Messaging Protocol (RTMP) instead of serving files using HTTP. </p> <p>To create a new web distribution, submit a <code>POST</code> request to the <i>CloudFront API version</i>/distribution resource. The request body must include a document with a <i>StreamingDistributionConfig</i> element. The response echoes the <code>StreamingDistributionConfig</code> element and returns other information about the RTMP distribution.</p> <p>To get the status of your request, use the <i>GET StreamingDistribution</i> API action. When the value of <code>Enabled</code> is <code>true</code> and the value of <code>Status</code> is <code>Deployed</code>, your distribution is ready. A distribution usually deploys in less than 15 minutes.</p> <p>For more information about web distributions, see <a href=\"http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-rtmp.html\">Working with RTMP Distributions</a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <important> <p>Beginning with the 2012-05-05 version of the CloudFront API, we made substantial changes to the format of the XML document that you include in the request body when you create or update a web distribution or an RTMP distribution, and when you invalidate objects. With previous versions of the API, we discovered that it was too easy to accidentally delete one or more values for an element that accepts multiple values, for example, CNAMEs and trusted signers. Our changes for the 2012-05-05 release are intended to prevent these accidental deletions and to notify you when there's a mismatch between the number of values you say you're specifying in the <code>Quantity</code> element and the number of values specified.</p> </important>",
+        "method": "post",
+        "endpoint": "2017-03-25/streaming-distribution",
+        "responses": [
+          {
+            "uuid": "3e172fc0-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 201,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "CNAMEAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "StreamingDistributionAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidOrigin",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "InvalidOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc6-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 485,
+            "label": "TooManyTrustedSigners",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc7-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 486,
+            "label": "TrustedSignerDoesNotExist",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 487,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fc9-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 488,
+            "label": "TooManyStreamingDistributionCNAMEs",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fca-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 489,
+            "label": "TooManyStreamingDistributions",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fcb-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 490,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fcc-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 491,
+            "label": "InconsistentQuantities",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e172fd0-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "List streaming distributions. ",
+        "method": "get",
+        "endpoint": "2017-03-25/streaming-distribution",
+        "responses": [
+          {
+            "uuid": "3e172fce-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fcf-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e172fdf-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Create a new streaming distribution with tags.",
+        "method": "post",
+        "endpoint": "2017-03-25/streaming-distribution#WithTags",
+        "responses": [
+          {
+            "uuid": "3e172fd1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 201,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fd2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "CNAMEAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fd3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "StreamingDistributionAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fd4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidOrigin",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fd5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "InvalidOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fd6-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fd7-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 485,
+            "label": "TooManyTrustedSigners",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fd8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 486,
+            "label": "TrustedSignerDoesNotExist",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fd9-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 487,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fda-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 488,
+            "label": "TooManyStreamingDistributionCNAMEs",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fdb-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 489,
+            "label": "TooManyStreamingDistributions",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fdc-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 490,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fdd-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 491,
+            "label": "InconsistentQuantities",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fde-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 492,
+            "label": "InvalidTagging",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e172fe6-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Delete an origin access identity. ",
+        "method": "delete",
+        "endpoint": "2017-03-25/origin-access-identity/cloudfront/:Id",
+        "responses": [
+          {
+            "uuid": "3e172fe0-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 204,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fe1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fe2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "InvalidIfMatchVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fe3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "NoSuchCloudFrontOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fe4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "PreconditionFailed",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fe5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "CloudFrontOriginAccessIdentityInUse",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e172fea-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Get the information about an origin access identity. ",
+        "method": "get",
+        "endpoint": "2017-03-25/origin-access-identity/cloudfront/:Id",
+        "responses": [
+          {
+            "uuid": "3e172fe7-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fe8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "NoSuchCloudFrontOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fe9-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e172ff1-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Delete a distribution. ",
+        "method": "delete",
+        "endpoint": "2017-03-25/distribution/:Id",
+        "responses": [
+          {
+            "uuid": "3e172feb-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 204,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fec-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fed-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "DistributionNotDisabled",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fee-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidIfMatchVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fef-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "NoSuchDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ff0-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "PreconditionFailed",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e172ff5-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Get the information about a distribution. ",
+        "method": "get",
+        "endpoint": "2017-03-25/distribution/:Id",
+        "responses": [
+          {
+            "uuid": "3e172ff2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ff3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "NoSuchDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ff4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e172ffb-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "",
+        "method": "delete",
+        "endpoint": "2017-03-25/service-linked-role/:RoleName",
+        "responses": [
+          {
+            "uuid": "3e172ff6-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 204,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ff7-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ff8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ff9-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "ResourceInUse",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ffa-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "NoSuchResource",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e173002-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "<p>Delete a streaming distribution. To delete an RTMP distribution using the CloudFront API, perform the following steps.</p> <p> <b>To delete an RTMP distribution using the CloudFront API</b>:</p> <ol> <li> <p>Disable the RTMP distribution.</p> </li> <li> <p>Submit a <code>GET Streaming Distribution Config</code> request to get the current configuration and the <code>Etag</code> header for the distribution. </p> </li> <li> <p>Update the XML document that was returned in the response to your <code>GET Streaming Distribution Config</code> request to change the value of <code>Enabled</code> to <code>false</code>.</p> </li> <li> <p>Submit a <code>PUT Streaming Distribution Config</code> request to update the configuration for your distribution. In the request body, include the XML document that you updated in Step 3. Then set the value of the HTTP <code>If-Match</code> header to the value of the <code>ETag</code> header that CloudFront returned when you submitted the <code>GET Streaming Distribution Config</code> request in Step 2.</p> </li> <li> <p>Review the response to the <code>PUT Streaming Distribution Config</code> request to confirm that the distribution was successfully disabled.</p> </li> <li> <p>Submit a <code>GET Streaming Distribution Config</code> request to confirm that your changes have propagated. When propagation is complete, the value of <code>Status</code> is <code>Deployed</code>.</p> </li> <li> <p>Submit a <code>DELETE Streaming Distribution</code> request. Set the value of the HTTP <code>If-Match</code> header to the value of the <code>ETag</code> header that CloudFront returned when you submitted the <code>GET Streaming Distribution Config</code> request in Step 2.</p> </li> <li> <p>Review the response to your <code>DELETE Streaming Distribution</code> request to confirm that the distribution was successfully deleted.</p> </li> </ol> <p>For information about deleting a distribution using the CloudFront console, see <a href=\"http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HowToDeleteDistribution.html\">Deleting a Distribution</a> in the <i>Amazon CloudFront Developer Guide</i>.</p>",
+        "method": "delete",
+        "endpoint": "2017-03-25/streaming-distribution/:Id",
+        "responses": [
+          {
+            "uuid": "3e172ffc-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 204,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ffd-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172ffe-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "StreamingDistributionNotDisabled",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e172fff-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidIfMatchVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173000-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "NoSuchStreamingDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173001-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "PreconditionFailed",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e173006-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Gets information about a specified RTMP distribution, including the distribution configuration.",
+        "method": "get",
+        "endpoint": "2017-03-25/streaming-distribution/:Id",
+        "responses": [
+          {
+            "uuid": "3e173003-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173004-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "NoSuchStreamingDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173005-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e17300a-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Get the configuration information about an origin access identity. ",
+        "method": "get",
+        "endpoint": "2017-03-25/origin-access-identity/cloudfront/:Id/config",
+        "responses": [
+          {
+            "uuid": "3e173007-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173008-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "NoSuchCloudFrontOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173009-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e173014-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Update an origin access identity. ",
+        "method": "put",
+        "endpoint": "2017-03-25/origin-access-identity/cloudfront/:Id/config",
+        "responses": [
+          {
+            "uuid": "3e17300b-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17300c-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17300d-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "IllegalUpdate",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17300e-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidIfMatchVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17300f-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173010-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "NoSuchCloudFrontOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173011-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 485,
+            "label": "PreconditionFailed",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173012-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 486,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173013-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 487,
+            "label": "InconsistentQuantities",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e173018-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "Get the configuration information about a distribution. ",
+        "method": "get",
+        "endpoint": "2017-03-25/distribution/:Id/config",
+        "responses": [
+          {
+            "uuid": "3e173015-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173016-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "NoSuchDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173017-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          }
+        ],
+        "enabled": true,
+        "randomResponse": false
+      },
+      {
+        "uuid": "3e173042-a802-11eb-9a34-f1c6ade0819b",
+        "documentation": "<p>Updates the configuration for a web distribution. Perform the following steps.</p> <p>For information about updating a distribution using the CloudFront console, see <a href=\"http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-creating-console.html\">Creating or Updating a Web Distribution Using the CloudFront Console </a> in the <i>Amazon CloudFront Developer Guide</i>.</p> <p> <b>To update a web distribution using the CloudFront API</b> </p> <ol> <li> <p>Submit a <a>GetDistributionConfig</a> request to get the current configuration and an <code>Etag</code> header for the distribution.</p> <note> <p>If you update the distribution again, you need to get a new <code>Etag</code> header.</p> </note> </li> <li> <p>Update the XML document that was returned in the response to your <code>GetDistributionConfig</code> request to include the desired changes. You can't change the value of <code>CallerReference</code>. If you try to change this value, CloudFront returns an <code>IllegalUpdate</code> error.</p> <important> <p>The new configuration replaces the existing configuration; the values that you specify in an <code>UpdateDistribution</code> request are not merged into the existing configuration. When you add, delete, or replace values in an element that allows multiple values (for example, <code>CNAME</code>), you must specify all of the values that you want to appear in the updated distribution. In addition, you must update the corresponding <code>Quantity</code> element.</p> </important> </li> <li> <p>Submit an <code>UpdateDistribution</code> request to update the configuration for your distribution:</p> <ul> <li> <p>In the request body, include the XML document that you updated in Step 2. The request body must include an XML document with a <code>DistributionConfig</code> element.</p> </li> <li> <p>Set the value of the HTTP <code>If-Match</code> header to the value of the <code>ETag</code> header that CloudFront returned when you submitted the <code>GetDistributionConfig</code> request in Step 1.</p> </li> </ul> </li> <li> <p>Review the response to the <code>UpdateDistribution</code> request to confirm that the configuration was successfully updated.</p> </li> <li> <p>Optional: Submit a <a>GetDistribution</a> request to confirm that your changes have propagated. When propagation is complete, the value of <code>Status</code> is <code>Deployed</code>.</p> <important> <p>Beginning with the 2012-05-05 version of the CloudFront API, we made substantial changes to the format of the XML document that you include in the request body when you create or update a distribution. With previous versions of the API, we discovered that it was too easy to accidentally delete one or more values for an element that accepts multiple values, for example, CNAMEs and trusted signers. Our changes for the 2012-05-05 release are intended to prevent these accidental deletions and to notify you when there's a mismatch between the number of values you say you're specifying in the <code>Quantity</code> element and the number of values you're actually specifying.</p> </important> </li> </ol>",
+        "method": "put",
+        "endpoint": "2017-03-25/distribution/:Id/config",
+        "responses": [
+          {
+            "uuid": "3e173019-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 200,
+            "label": "Success",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17301a-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17301b-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "CNAMEAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17301c-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "IllegalUpdate",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17301d-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "InvalidIfMatchVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17301e-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17301f-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 485,
+            "label": "NoSuchDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173020-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 486,
+            "label": "PreconditionFailed",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173021-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 487,
+            "label": "TooManyDistributionCNAMEs",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173022-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 488,
+            "label": "InvalidDefaultRootObject",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173023-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 489,
+            "label": "InvalidRelativePath",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173024-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 490,
+            "label": "InvalidErrorCode",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173025-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 491,
+            "label": "InvalidResponseCode",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173026-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 492,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173027-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 493,
+            "label": "InvalidOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173028-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 494,
+            "label": "TooManyTrustedSigners",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173029-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 495,
+            "label": "TrustedSignerDoesNotExist",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17302a-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 496,
+            "label": "InvalidViewerCertificate",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17302b-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 497,
+            "label": "InvalidMinimumProtocolVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17302c-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 498,
+            "label": "InvalidRequiredProtocol",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17302d-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 499,
+            "label": "NoSuchOrigin",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17302e-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 500,
@@ -787,7 +2853,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e6140b-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e17302f-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 501,
@@ -800,7 +2866,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e6140c-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173030-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 502,
@@ -813,7 +2879,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e6140d-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173031-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 503,
@@ -826,7 +2892,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e6140e-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173032-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 504,
@@ -839,7 +2905,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e6140f-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173033-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 505,
@@ -852,7 +2918,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e61410-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173034-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 506,
@@ -865,7 +2931,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e61411-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173035-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 507,
@@ -878,7 +2944,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e61412-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173036-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 508,
@@ -891,7 +2957,20 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e61413-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173037-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 509,
+            "label": "InvalidGeoRestrictionParameter",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173038-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 510,
@@ -904,7 +2983,7 @@
             "disableTemplating": false
           },
           {
-            "uuid": "62e61414-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173039-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 511,
@@ -915,19 +2994,123 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e17303a-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 512,
+            "label": "TooManyOriginCustomHeaders",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17303b-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 513,
+            "label": "TooManyQueryStringParameters",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17303c-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 514,
+            "label": "InvalidQueryStringParameters",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17303d-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 515,
+            "label": "TooManyDistributionsWithLambdaAssociations",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17303e-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 516,
+            "label": "TooManyLambdaFunctionAssociations",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17303f-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 517,
+            "label": "InvalidLambdaFunctionAssociation",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173040-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 518,
+            "label": "InvalidOriginReadTimeout",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173041-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 519,
+            "label": "InvalidOriginKeepaliveTimeout",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e61417-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e173047-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Get the information about an invalidation. ",
         "method": "get",
         "endpoint": "2017-03-25/distribution/:DistributionId/invalidation/:Id",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e61416-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173043-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -938,19 +3121,58 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e173044-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "NoSuchInvalidation",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173045-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "NoSuchDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e173046-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e61419-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e17304b-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Get the configuration information about a streaming distribution. ",
         "method": "get",
         "endpoint": "2017-03-25/streaming-distribution/:Id/config",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e61418-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e173048-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -961,19 +3183,45 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e173049-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "NoSuchStreamingDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e17304a-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e6141b-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1756de-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Update a streaming distribution. ",
         "method": "put",
         "endpoint": "2017-03-25/streaming-distribution/:Id/config",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e6141a-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1756d0-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -984,19 +3232,188 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "CNAMEAlreadyExists",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "IllegalUpdate",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "InvalidIfMatchVersion",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 484,
+            "label": "MissingBody",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d6-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 485,
+            "label": "NoSuchStreamingDistribution",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d7-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 486,
+            "label": "PreconditionFailed",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d8-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 487,
+            "label": "TooManyStreamingDistributionCNAMEs",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756d9-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 488,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756da-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 489,
+            "label": "InvalidOriginAccessIdentity",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756db-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 490,
+            "label": "TooManyTrustedSigners",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756dc-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 491,
+            "label": "TrustedSignerDoesNotExist",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756dd-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 492,
+            "label": "InconsistentQuantities",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e6141d-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1756e2-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "List the distributions that are associated with a specified AWS WAF web ACL. ",
         "method": "get",
         "endpoint": "2017-03-25/distributionsByWebACLId/:WebACLId",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e6141c-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1756df-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -1007,19 +3424,45 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756e0-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756e1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "InvalidWebACLId",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e6141f-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1756e8-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "List tags for a CloudFront resource.",
         "method": "get",
         "endpoint": "2017-03-25/tagging#Resource",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e6141e-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1756e3-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 200,
@@ -1030,19 +3473,71 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756e4-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756e5-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756e6-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidTagging",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756e7-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "NoSuchResource",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e61421-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1756ee-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Add tags to a CloudFront resource.",
         "method": "post",
         "endpoint": "2017-03-25/tagging#Operation=Tag&Resource",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e61420-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1756e9-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 204,
@@ -1053,19 +3548,71 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756ea-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756eb-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756ec-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidTagging",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756ed-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "NoSuchResource",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       },
       {
-        "uuid": "62e61423-e7d4-11ea-a5ec-979674ac1a4b",
+        "uuid": "3e1756f4-a802-11eb-9a34-f1c6ade0819b",
         "documentation": "Remove tags from a CloudFront resource.",
         "method": "post",
         "endpoint": "2017-03-25/tagging#Operation=Untag&Resource",
-        "randomResponse": false,
         "responses": [
           {
-            "uuid": "62e61422-e7d4-11ea-a5ec-979674ac1a4b",
+            "uuid": "3e1756ef-a802-11eb-9a34-f1c6ade0819b",
             "body": "",
             "latency": 0,
             "statusCode": 204,
@@ -1076,9 +3623,62 @@
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756f0-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 480,
+            "label": "AccessDenied",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756f1-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 481,
+            "label": "InvalidArgument",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756f2-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 482,
+            "label": "InvalidTagging",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
+          },
+          {
+            "uuid": "3e1756f3-a802-11eb-9a34-f1c6ade0819b",
+            "body": "",
+            "latency": 0,
+            "statusCode": 483,
+            "label": "NoSuchResource",
+            "headers": [{ "key": "Content-Type", "value": "text/xml" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "rules": [],
+            "rulesOperator": "OR",
+            "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "randomResponse": false
       }
     ],
     "proxyMode": false,
