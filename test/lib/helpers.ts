@@ -174,7 +174,7 @@ export class Helpers {
 
   public async countRouteResponses(expected: number) {
     await this.countElements(
-      '#route-responses-menu .dropdown-menu .dropdown-item',
+      '.route-responses-dropdown-menu .dropdown-item',
       expected
     );
   }
@@ -323,7 +323,7 @@ export class Helpers {
   public async selectRouteResponse(index: number) {
     await this.elementClick('#route-responses-menu .dropdown-toggle');
     await this.elementClick(
-      `#route-responses-menu .dropdown-menu .dropdown-item:nth-child(${index})`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index})`
     );
   }
 
@@ -681,5 +681,53 @@ export class Helpers {
 
   public async selectRulesOperator(operator: LogicalOperators) {
     await this.elementClick(`.rules-operator .rules-operator-${operator}`);
+  }
+
+  public async openDropdown(dropdownId: string) {
+    await this.elementClick(`#${dropdownId}-dropdown`);
+  }
+
+  public async selectDropdownItem(dropdownId: string, index: number) {
+    await this.elementClick(
+      `#${dropdownId}-dropdown-menu .dropdown-menu-content button:nth-of-type(${index})`
+    );
+  }
+
+  public async setDropdownInputValue(dropdownId: string, value: string) {
+    await this.setElementValue(
+      `#${dropdownId}-dropdown-menu .form-control`,
+      value
+    );
+  }
+
+  public async assertDropdownItemsNumber(
+    dropdownId: string,
+    expectedNumber: number
+  ) {
+    await this.countElements(
+      `#${dropdownId}-dropdown-menu .dropdown-menu-content button`,
+      expectedNumber
+    );
+  }
+
+  public async assertDropdownItemText(
+    dropdownId: string,
+    itemIndex: number,
+    expectedText: string
+  ) {
+    await this.assertElementText(
+      `#${dropdownId}-dropdown-menu .dropdown-menu-content button:nth-of-type(${itemIndex})`,
+      expectedText
+    );
+  }
+
+  public async assertDropdownToggleText(
+    dropdownId: string,
+    expectedText: string
+  ) {
+    await this.assertElementText(
+      `#${dropdownId}-dropdown .dropdown-toggle`,
+      expectedText
+    );
   }
 }

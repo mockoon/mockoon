@@ -338,4 +338,142 @@ describe('UI interactions', () => {
       });
     });
   });
+
+  describe('Status code dropdown', () => {
+    const tests = new Tests('ui');
+    const dropdownId = 'status-code';
+
+    it('should be able to select a status code by clicking', async () => {
+      await tests.helpers.openDropdown(dropdownId);
+      await tests.helpers.selectDropdownItem(dropdownId, 1);
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.responses.0.statusCode'],
+        [100]
+      );
+    });
+
+    it('should be able to filter status codes and select the last one', async () => {
+      await tests.helpers.openDropdown(dropdownId);
+      await tests.helpers.setDropdownInputValue(dropdownId, '45');
+      await tests.app.client.pause(100);
+      await tests.helpers.assertDropdownItemsNumber(dropdownId, 2);
+      await tests.helpers.assertDropdownItemText(
+        dropdownId,
+        1,
+        '450 - Blocked by Windows Parental Controls (Microsoft)'
+      );
+      await tests.helpers.assertDropdownItemText(
+        dropdownId,
+        2,
+        '451 - Unavailable For Legal Reasons'
+      );
+      await tests.helpers.selectDropdownItem(dropdownId, 2);
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.responses.0.statusCode'],
+        [451]
+      );
+    });
+
+    it('should be able to select a status code with keyboard arrows', async () => {
+      await tests.helpers.openDropdown(dropdownId);
+      await tests.app.client.pause(100);
+
+      await tests.app.client.keys(['ArrowUp', 'Enter']);
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.responses.0.statusCode'],
+        [561]
+      );
+      await tests.helpers.assertDropdownToggleText(
+        dropdownId,
+        '561 - Unauthorized (AWS ELB)'
+      );
+    });
+
+    it('should be able to filter status codes and select one with keyboard arrows', async () => {
+      await tests.helpers.openDropdown(dropdownId);
+      await tests.helpers.setDropdownInputValue(dropdownId, '30');
+      await tests.app.client.pause(100);
+
+      await tests.app.client.keys(['ArrowDown', 'ArrowDown', 'Enter']);
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.responses.0.statusCode'],
+        [301]
+      );
+      await tests.helpers.assertDropdownToggleText(
+        dropdownId,
+        '301 - Moved Permanently'
+      );
+    });
+
+    it('should be able to enter a custom status codes', async () => {
+      await tests.helpers.openDropdown(dropdownId);
+      await tests.helpers.setDropdownInputValue(dropdownId, '999');
+      await tests.app.client.pause(100);
+      await tests.helpers.assertDropdownItemsNumber(dropdownId, 0);
+      await tests.helpers.assertElementText(
+        `#${dropdownId}-dropdown-menu .message`,
+        'Press enter for custom status code'
+      );
+
+      await tests.app.client.keys(['Enter']);
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.responses.0.statusCode'],
+        [999]
+      );
+    });
+
+    it('should not be able to enter a custom status codes out of bounds', async () => {
+      await tests.helpers.openDropdown(dropdownId);
+      await tests.helpers.setDropdownInputValue(dropdownId, '99');
+      await tests.app.client.keys(['Enter']);
+
+      await tests.app.client.pause(100);
+
+      await tests.helpers.assertDropdownToggleText(dropdownId, '999 - Unknown');
+    });
+  });
+
+  describe('HTTP methods dropdown', () => {
+    const tests = new Tests('ui');
+    const dropdownId = 'methods';
+
+    it('should be able to select a method by clicking', async () => {
+      await tests.helpers.openDropdown(dropdownId);
+      await tests.helpers.selectDropdownItem(dropdownId, 3);
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.method'],
+        ['put']
+      );
+    });
+
+    it('should be able to select a method by navigating with keyboard', async () => {
+      await tests.helpers.openDropdown(dropdownId);
+      await tests.app.client.keys(['ArrowUp', 'Enter']);
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.method'],
+        ['options']
+      );
+    });
+  });
 });

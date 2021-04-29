@@ -47,8 +47,7 @@ describe('Settings', () => {
       await tests.helpers.elementClick(truncateRoutePathCheckbox);
       await tests.helpers.closeModal();
 
-      // wait for settings save
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'truncateRouteName',
@@ -71,8 +70,7 @@ describe('Settings', () => {
       await tests.helpers.elementClick(analyticsCheckbox);
       await tests.helpers.closeModal();
 
-      // wait for settings save
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'analytics',
@@ -95,8 +93,7 @@ describe('Settings', () => {
       await tests.helpers.setElementValue(bodySizeInput, '00');
       await tests.helpers.closeModal();
 
-      // wait for settings save
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'logSizeLimit',
@@ -127,8 +124,7 @@ describe('Settings', () => {
       await tests.helpers.addElementValue(bodySizeInput, '0');
       await tests.helpers.closeModal();
 
-      // wait for settings save
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'logSizeLimit',
@@ -159,8 +155,7 @@ describe('Settings', () => {
     const tests = new Tests('settings');
 
     it('Verify Faker.js initial settings', async () => {
-      // wait for settings save
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'fakerSeed',
@@ -183,8 +178,7 @@ describe('Settings', () => {
       );
       await tests.helpers.closeModal();
 
-      // wait for settings save
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',
         'fakerLocale',

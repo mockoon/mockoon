@@ -1,0 +1,73 @@
+<div
+  id="{{ dropdownId }}-dropdown"
+  ngbDropdown
+  #dropdown="ngbDropdown"
+  (openChange)="onDropdownOpenChange($event)"
+>
+  <button
+    type="button"
+    class="btn btn-custom dropdown-toggle mr-1"
+    role="button"
+    ngbDropdownToggle
+  >
+    <div
+      *ngIf="selectedItem$ | async as selectedItem"
+      class="dropdown-toggle-label"
+    >
+      <span [ngClass]="selectedItem.classes">{{ selectedItem.label }}</span>
+    </div>
+  </button>
+
+  <div
+    id="{{ dropdownId }}-dropdown-menu"
+    class="dropdown-menu"
+    [ngStyle]="{ 'min-width': fixedWidth, 'max-width': fixedWidth }"
+    ngbDropdownMenu
+  >
+    <div *ngIf="enableCustomInput" class="custom-value">
+      <input
+        #customValueInput
+        type="text"
+        [placeholder]="customInputPlaceholder"
+        class="form-control"
+        [formControl]="customValue"
+        (keydown)="enterCustomValue($event)"
+        [mask]="validation.mask"
+        [patterns]="validation.maskPatterns"
+      />
+    </div>
+
+    <div class="dropdown-menu-content">
+      <ng-container *ngIf="filteredItems$ | async as itemsList">
+        <ng-container *ngIf="itemsList.length > 0; else emptyList">
+          <ng-container *ngFor="let item of itemsList">
+            <ng-container [ngSwitch]="item.category">
+              <h6 *ngSwitchCase="true" class="dropdown-header">
+                {{ item.label }}
+              </h6>
+
+              <button
+                *ngSwitchDefault
+                #dropdownMenuItems
+                type="button"
+                class="btn dropdown-item d-flex"
+                ngbDropdownItem
+                (click)="setValue(item)"
+                (keydown)="itemKeydown(item, $event)"
+              >
+                <span
+                  class="flex-grow-1 mr-2 ellipsis"
+                  [ngClass]="item.classes"
+                  >{{ item.label }}</span
+                >
+              </button>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-template #emptyList>
+        <div class="message message-md">{{ emptyListMessage }}</div>
+      </ng-template>
+    </div>
+  </div>
+</div>

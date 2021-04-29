@@ -119,6 +119,7 @@
     "lodash": "4.17.21",
     "mocha": "8.3.2",
     "ngx-markdown": "11.1.2",
+    "ngx-mask": "11.1.5",
     "openapi-types": "7.2.3",
     "prettier": "2.2.1",
     "prettier-plugin-organize-imports": "1.1.1",

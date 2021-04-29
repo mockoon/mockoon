@@ -11,8 +11,7 @@ describe('Changelog modal', () => {
         `Release notes v${Config.appVersion}`
       );
 
-      // wait for settings save
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
     });
 
     it('Should save the current version as the last shown', async () => {
@@ -34,8 +33,7 @@ describe('Changelog modal', () => {
         `Release notes v${Config.appVersion}`
       );
 
-      // wait for settings save
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
     });
 
     it('Should save the current version as the last shown', async () => {
@@ -64,8 +62,7 @@ describe('Changelog modal', () => {
         'Welcome new Mockoon user!'
       );
 
-      // wait for settings save (does not happen here)
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
     });
 
     it('Should have the current version as the last shown', async () => {
@@ -85,8 +82,7 @@ describe('Changelog modal', () => {
     it('Should not show the changelog modal', async () => {
       await tests.helpers.waitElementExist('.modal-title', true);
 
-      // wait for settings save (does not happen here)
-      await tests.app.client.pause(2000);
+      await tests.helpers.waitForAutosave();
     });
 
     it('Should still have the current version as the last shown', async () => {

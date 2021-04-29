@@ -1,75 +1,163 @@
-export const methods = [
-  'get',
-  'post',
-  'put',
-  'patch',
-  'delete',
-  'head',
-  'options'
+import { DropdownItems } from 'src/renderer/app/models/common.model';
+
+export const Methods: DropdownItems = [
+  {
+    value: 'get',
+    label: 'GET',
+    classes: 'http-method-get-text'
+  },
+  {
+    value: 'post',
+    label: 'POST',
+    classes: 'http-method-post-text'
+  },
+  {
+    value: 'put',
+    label: 'PUT',
+    classes: 'http-method-put-text'
+  },
+  {
+    value: 'patch',
+    label: 'PATCH',
+    classes: 'http-method-patch-text'
+  },
+  {
+    value: 'delete',
+    label: 'DELETE',
+    classes: 'http-method-delete-text'
+  },
+  {
+    value: 'head',
+    label: 'HEAD',
+    classes: 'http-method-head-text'
+  },
+  {
+    value: 'options',
+    label: 'OPTIONS',
+    classes: 'http-method-options-text'
+  }
 ];
 
-export const statusCodes = [
-  { code: 100, text: 'Continue' },
-  { code: 101, text: 'Switching Protocols' },
-  { code: 102, text: 'Processing' },
-  { code: 200, text: 'OK' },
-  { code: 201, text: 'Created' },
-  { code: 202, text: 'Accepted' },
-  { code: 203, text: 'Non-Authoritative Information' },
-  { code: 204, text: 'No Content' },
-  { code: 205, text: 'Reset Content' },
-  { code: 206, text: 'Partial Content' },
-  { code: 207, text: 'Multi-Status' },
-  { code: 208, text: 'Already Reported' },
-  { code: 226, text: 'IM Used' },
-  { code: 300, text: 'Multiple Choices' },
-  { code: 301, text: 'Moved Permanently' },
-  { code: 302, text: 'Found' },
-  { code: 303, text: 'See Other' },
-  { code: 304, text: 'Not Modified' },
-  { code: 305, text: 'Use Proxy' },
-  { code: 306, text: '(Unused)' },
-  { code: 307, text: 'Temporary Redirect' },
-  { code: 308, text: 'Permanent Redirect' },
-  { code: 400, text: 'Bad Request' },
-  { code: 401, text: 'Unauthorized' },
-  { code: 402, text: 'Payment Required' },
-  { code: 403, text: 'Forbidden' },
-  { code: 404, text: 'Not Found' },
-  { code: 405, text: 'Method Not Allowed' },
-  { code: 406, text: 'Not Acceptable' },
-  { code: 407, text: 'Proxy Authentication Required' },
-  { code: 408, text: 'Request Timeout' },
-  { code: 409, text: 'Conflict' },
-  { code: 410, text: 'Gone' },
-  { code: 411, text: 'Length Required' },
-  { code: 412, text: 'Precondition Failed' },
-  { code: 413, text: 'Payload Too Large' },
-  { code: 414, text: 'URI Too Long' },
-  { code: 415, text: 'Unsupported Media Type' },
-  { code: 416, text: 'Range Not Satisfiable' },
-  { code: 417, text: 'Expectation Failed' },
-  { code: 418, text: "I'm a teapot" },
-  { code: 421, text: 'Misdirected Request' },
-  { code: 422, text: 'Unprocessable Entity' },
-  { code: 423, text: 'Locked' },
-  { code: 424, text: 'Failed Dependency' },
-  { code: 426, text: 'Upgrade Required' },
-  { code: 428, text: 'Precondition Required' },
-  { code: 429, text: 'Too Many Requests' },
-  { code: 431, text: 'Request Header Fields Too Large' },
-  { code: 451, text: 'Unavailable For Legal Reasons' },
-  { code: 500, text: 'Internal Server Error' },
-  { code: 501, text: 'Not Implemented' },
-  { code: 502, text: 'Bad Gateway' },
-  { code: 503, text: 'Service Unavailable' },
-  { code: 504, text: 'Gateway Timeout' },
-  { code: 505, text: 'HTTP Version Not Supported' },
-  { code: 506, text: 'Variant Also Negotiates' },
-  { code: 507, text: 'Insufficient Storage' },
-  { code: 508, text: 'Loop Detected' },
-  { code: 510, text: 'Not Extended' },
-  { code: 511, text: 'Network Authentication Required' }
+export const StatusCodes: DropdownItems = [
+  { category: true, label: '1xx - Information responses' },
+  { value: 100, label: '100 - Continue' },
+  { value: 101, label: '101 - Switching Protocols' },
+  { value: 102, label: '102 - Processing' },
+  {
+    value: 103,
+    label: '103 - Early Hints'
+  },
+  { category: true, label: '2xx - Successful responses' },
+  { value: 200, label: '200 - OK' },
+  { value: 201, label: '201 - Created' },
+  { value: 202, label: '202 - Accepted' },
+  { value: 203, label: '203 - Non-Authoritative Information' },
+  { value: 204, label: '204 - No Content' },
+  { value: 205, label: '205 - Reset Content' },
+  { value: 206, label: '206 - Partial Content' },
+  { value: 207, label: '207 - Multi-Status' },
+  { value: 208, label: '208 - Already Reported' },
+  { value: 218, label: '218 - This is fine (Apache Web Server)' },
+  { value: 226, label: '226 - IM Used' },
+  { category: true, label: '3xx - Redirection messages' },
+  { value: 300, label: '300 - Multiple Choices' },
+  { value: 301, label: '301 - Moved Permanently' },
+  { value: 302, label: '302 - Found' },
+  { value: 303, label: '303 - See Other' },
+  { value: 304, label: '304 - Not Modified' },
+  { value: 305, label: '305 - Use Proxy' },
+  { value: 306, label: '306 - Switch Proxy' },
+  { value: 307, label: '307 - Temporary Redirect' },
+  { value: 308, label: '308 - Permanent Redirect' },
+  { category: true, label: '4xx - Client error responses' },
+  { value: 400, label: '400 - Bad Request' },
+  { value: 401, label: '401 - Unauthorized' },
+  { value: 402, label: '402 - Payment Required' },
+  { value: 403, label: '403 - Forbidden' },
+  { value: 404, label: '404 - Not Found' },
+  { value: 405, label: '405 - Method Not Allowed' },
+  { value: 406, label: '406 - Not Acceptable' },
+  { value: 407, label: '407 - Proxy Authentication Required' },
+  { value: 408, label: '408 - Request Timeout' },
+  { value: 409, label: '409 - Conflict' },
+  { value: 410, label: '410 - Gone' },
+  { value: 411, label: '411 - Length Required' },
+  { value: 412, label: '412 - Precondition Failed' },
+  { value: 413, label: '413 - Payload Too Large' },
+  { value: 414, label: '414 - URI Too Long' },
+  { value: 415, label: '415 - Unsupported Media Type' },
+  { value: 416, label: '416 - Range Not Satisfiable' },
+  { value: 417, label: '417 - Expectation Failed' },
+  { value: 418, label: "418 - I'm A Teapot" },
+  { value: 419, label: '419 - Page Expired (Laravel Framework)' },
+  { value: 420, label: '420 - Method Failure (Spring Framework)' },
+  { value: 421, label: '421 - Misdirected Request' },
+  { value: 422, label: '422 - Unprocessable Entity' },
+  { value: 423, label: '423 - Locked' },
+  { value: 424, label: '424 - Failed Dependency' },
+  { value: 425, label: '425 - Too Early' },
+  { value: 426, label: '426 - Upgrade Required' },
+  { value: 428, label: '428 - Precondition Required' },
+  { value: 429, label: '429 - Too Many Requests' },
+  {
+    value: 430,
+    label: '430 - Request Header Fields Too Large (Shopify)'
+  },
+  { value: 431, label: '431 - Request Header Fields Too Large' },
+  { value: 440, label: '440 - Login Time-out (IIS)' },
+  { value: 444, label: '444 - No Response (nginx)' },
+  { value: 449, label: '449 - Retry With (IIS)' },
+  {
+    value: 450,
+    label: '450 - Blocked by Windows Parental Controls (Microsoft)'
+  },
+  { value: 451, label: '451 - Unavailable For Legal Reasons' },
+  {
+    value: 460,
+    label: '460 - Client closed connection (AWS ELB)'
+  },
+  { value: 494, label: '494 - Request Header Too Large (nginx)' },
+  { value: 495, label: '495 - SSL Certificate Error (nginx)' },
+  { value: 496, label: '496 - SSL Certificate Required (nginx)' },
+  {
+    value: 497,
+    label: '497 - HTTP Request Sent to HTTPS Port (nginx)'
+  },
+  { value: 499, label: '499 - Client Closed Request (nginx)' },
+  { category: true, label: '5xx - Server error responses' },
+  { value: 500, label: '500 - Internal Server Error' },
+  { value: 501, label: '501 - Not Implemented' },
+  { value: 502, label: '502 - Bad Gateway' },
+  { value: 503, label: '503 - Service Unavailable' },
+  { value: 504, label: '504 - Gateway Timeout' },
+  { value: 505, label: '505 - HTTP Version Not Supported' },
+  { value: 506, label: '506 - Variant Also Negotiates' },
+  { value: 507, label: '507 - Insufficient Storage' },
+  { value: 508, label: '508 - Loop Detected' },
+  {
+    value: 509,
+    label: '509 - Bandwidth Limit Exceeded (Apache Web Server)'
+  },
+  { value: 510, label: '510 - Not Extended' },
+  { value: 511, label: '511 - Network Authentication Required' },
+  {
+    value: 520,
+    label: '520 - Web Server Returned An Unknown Error (Cloudflare)'
+  },
+  { value: 521, label: '521 - Web Server Is Down (Cloudflare)' },
+  { value: 522, label: '522 - Connection Timed Out (Cloudflare)' },
+  {
+    value: 523,
+    label: '523 - Origin Is Unreachable (Cloudflare)'
+  },
+  { value: 524, label: '524 - A Timeout Occurred (Cloudflare)' },
+  { value: 525, label: '525 - SSL Handshake Failed (Cloudflare)' },
+  {
+    value: 526,
+    label: '526 - Invalid SSL Certificate (Cloudflare)'
+  },
+  { value: 527, label: '527 - Railgun Error (Cloudflare)' },
+  { value: 561, label: '561 - Unauthorized (AWS ELB)' }
 ];
 
 export const headerNames = [

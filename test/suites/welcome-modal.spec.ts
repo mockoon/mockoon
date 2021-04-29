@@ -13,8 +13,7 @@ describe('Welcome modal', () => {
       'Welcome new Mockoon user!'
     );
 
-    // wait for settings save
-    await tests.app.client.pause(2000);
+    await tests.helpers.waitForAutosave();
   });
 
   it('Close welcome modal, check for persistence', async () => {

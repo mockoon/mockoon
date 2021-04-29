@@ -7,11 +7,19 @@ import { AngularFireRemoteConfigModule } from '@angular/fire/remote-config';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbConfig,
+  NgbDropdownConfig,
+  NgbModule,
+  NgbTooltipConfig,
+  NgbTypeaheadConfig
+} from '@ng-bootstrap/ng-bootstrap';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
+import { NgxMaskModule } from 'ngx-mask';
 import { BannerComponent } from 'src/renderer/app/components/banner.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/changelog-modal.component';
 import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/context-menu.component';
+import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { EditorModalComponent } from 'src/renderer/app/components/editor-modal/editor-modal.component';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { EnvironmentLogsComponent } from 'src/renderer/app/components/environment-logs.component';
@@ -29,7 +37,11 @@ import { InputNumberDirective } from 'src/renderer/app/directives/input-number.d
 import { MousedragDeadzoneDirective } from 'src/renderer/app/directives/mousedrag-deadzone.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
-import { MarkedOptionsFactory } from 'src/renderer/app/modules-config/markdown-factory';
+import { MarkedOptionsFactory } from 'src/renderer/app/modules-config/markdown.config';
+import { NgbDropdownConfigFactory } from 'src/renderer/app/modules-config/ngb-dropdown.config';
+import { NgbTooltipConfigFactory } from 'src/renderer/app/modules-config/ngb-tooltip.config';
+import { NgbTypeaheadConfigFactory } from 'src/renderer/app/modules-config/ngb-typeahead.config';
+import { NgbConfigFactory } from 'src/renderer/app/modules-config/ngb.config';
 import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handler';
 import { AppComponent } from './app.component';
 import { DuplicateRouteModalComponent } from './components/move-route-modal/duplicate-route-modal.component';
@@ -56,7 +68,8 @@ import { DuplicateRouteModalComponent } from './components/move-route-modal/dupl
     TitleSeparatorComponent,
     FooterComponent,
     DuplicateRouteModalComponent,
-    EditorComponent
+    EditorComponent,
+    CustomSelectComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -75,9 +88,32 @@ import { DuplicateRouteModalComponent } from './components/move-route-modal/dupl
     AngularFireModule.initializeApp(Config.firebaseConfig),
     AngularFireAuthModule,
     AngularFireRemoteConfigModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMaskModule.forRoot()
   ],
-  providers: [{ provide: ErrorHandler, useClass: GlobalErrorHandler }],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
+    },
+    {
+      provide: NgbConfig,
+      useFactory: NgbConfigFactory
+    },
+    {
+      provide: NgbTypeaheadConfig,
+      useFactory: NgbTypeaheadConfigFactory
+    },
+    {
+      provide: NgbTooltipConfig,
+      useFactory: NgbTooltipConfigFactory,
+      deps: [NgbConfig]
+    },
+    {
+      provide: NgbDropdownConfig,
+      useFactory: NgbDropdownConfigFactory
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
