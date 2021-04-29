@@ -60,20 +60,28 @@
               </select>
 
               <input
-                *ngIf="form.get(['rules', ruleIndex, 'target']).value !== 'request_number'"
+                *ngIf="
+                  form.get(['rules', ruleIndex, 'target']).value !==
+                  'request_number'
+                "
                 type="text"
                 class="form-control col-3"
                 placeholder="object path or empty for full body"
                 formControlName="modifier"
               />
 
-              <div class="input-group-prepend" *ngIf="form.get(['rules', ruleIndex, 'target']).value !== 'request_number'">
+              <div
+                class="input-group-prepend"
+                *ngIf="
+                  form.get(['rules', ruleIndex, 'target']).value !==
+                  'request_number'
+                "
+              >
                 <span
                   class="input-group-text"
                   [ngbTooltip]="
                     'equals or includes (if ' +
-                    (form.get(['rules', ruleIndex, 'target']).value ||
-                      'name') +
+                    (form.get(['rules', ruleIndex, 'target']).value || 'name') +
                     ' is an array)'
                   "
                   >=</span
@@ -87,7 +95,13 @@
                 formControlName="value"
               />
 
-              <div class="custom-control custom-checkbox ml-2" *ngIf="form.get(['rules', ruleIndex, 'target']).value !== 'request_number'">
+              <div
+                class="custom-control custom-checkbox ml-2"
+                *ngIf="
+                  form.get(['rules', ruleIndex, 'target']).value !==
+                  'request_number'
+                "
+              >
                 <input
                   type="checkbox"
                   class="custom-control-input"
