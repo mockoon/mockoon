@@ -1,7 +1,7 @@
 [
   {
     "uuid": "d1fec840-e7d4-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 13,
+    "lastMigration": 14,
     "name": "Giphy",
     "endpointPrefix": "v1",
     "latency": 0,
@@ -80,7 +80,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d1feef5a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -155,7 +156,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d1feef60-e7d4-11ea-a5ec-979674ac1a4b",
@@ -230,7 +232,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d1ff1664-e7d4-11ea-a5ec-979674ac1a4b",
@@ -305,7 +308,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d1ff166a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -380,7 +384,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d1ff3d74-e7d4-11ea-a5ec-979674ac1a4b",
@@ -455,7 +460,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d1ff3d7a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -530,7 +536,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d1ff3d80-e7d4-11ea-a5ec-979674ac1a4b",
@@ -605,7 +612,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d20000c4-e7d4-11ea-a5ec-979674ac1a4b",
@@ -680,7 +688,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       },
       {
         "uuid": "d20027d4-e7d4-11ea-a5ec-979674ac1a4b",
@@ -755,7 +764,8 @@
             "disableTemplating": false
           }
         ],
-        "enabled": true
+        "enabled": true,
+        "sequentialResponse": false
       }
     ],
     "proxyMode": false,

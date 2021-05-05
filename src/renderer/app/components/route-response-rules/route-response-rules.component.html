@@ -62,8 +62,18 @@
               <input
                 type="text"
                 class="form-control col-3"
-                placeholder="object path or empty for full body"
+                [placeholder]="
+                  modifierPlaceholders[
+                    form.get(['rules', ruleIndex, 'target']).value
+                  ]
+                "
                 formControlName="modifier"
+                [attr.disabled]="
+                  form.get(['rules', ruleIndex, 'target']).value ===
+                  'request_number'
+                    ? true
+                    : null
+                "
               />
 
               <div class="input-group-prepend">
@@ -118,12 +128,14 @@
       <button type="button" class="btn btn-link btn-icon" (click)="addRule()">
         <i class="material-icons text-success">add_box</i> Add rule
       </button>
-      <div
-        *ngIf="(activeRoute$ | async).randomResponse"
-        class="warning-message ml-auto text-center mt-1"
-      >
-        Activating random responses disable the rules
-      </div>
+      <ng-container *ngIf="activeRoute$ | async as activeRoute">
+        <div
+          *ngIf="activeRoute.randomResponse || activeRoute.sequentialResponse"
+          class="warning-message ml-auto text-center mt-1"
+        >
+          Activating random or sequential responses disable the rules
+        </div>
+      </ng-container>
     </div>
   </ng-container>
 </ng-container>

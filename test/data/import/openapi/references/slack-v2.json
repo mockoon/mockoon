@@ -1,7 +1,7 @@
 [
   {
     "uuid": "",
-    "lastMigration": 13,
+    "lastMigration": 14,
     "name": "Slack",
     "endpointPrefix": "api",
     "latency": 0,
@@ -19,12 +19,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -37,12 +32,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -51,7 +41,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -65,12 +56,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Standard success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -83,12 +69,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Artificial error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -97,7 +78,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -143,7 +125,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -189,7 +172,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -235,7 +219,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -281,7 +266,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -327,7 +313,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -373,7 +360,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -419,7 +407,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -465,7 +454,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -479,12 +469,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Standard success response when used with a user token",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -497,12 +482,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Standard failure response when used with an invalid token",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -511,7 +491,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -557,7 +538,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -571,12 +553,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -589,12 +566,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -603,7 +575,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -617,12 +590,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response resulting in a new channel",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -635,12 +603,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Example error response when an invalid name is provided",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -649,7 +612,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -695,7 +659,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -741,7 +706,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -755,12 +721,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -773,12 +734,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "A somewhat typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -787,7 +743,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -801,12 +758,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -819,12 +771,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -833,7 +780,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -847,12 +795,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -865,12 +808,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -879,7 +817,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -893,12 +832,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -911,12 +845,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -925,7 +854,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -971,7 +901,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -985,12 +916,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1003,12 +929,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1017,7 +938,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1031,12 +953,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1049,12 +966,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1063,7 +975,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1109,7 +1022,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1123,12 +1037,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1141,12 +1050,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1155,7 +1059,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1169,12 +1074,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1187,12 +1087,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1201,7 +1096,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1215,12 +1111,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1233,12 +1124,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1247,7 +1133,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1261,12 +1148,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1279,12 +1161,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1293,7 +1170,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1307,12 +1185,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1325,12 +1198,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response if no message is found",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1339,7 +1207,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1385,7 +1254,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1399,12 +1269,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1417,12 +1282,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1431,7 +1291,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1445,12 +1306,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1463,12 +1319,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1477,7 +1328,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1491,12 +1343,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1509,12 +1356,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response if too many attachments are included",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1523,7 +1365,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1537,12 +1380,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1555,12 +1393,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response if the `post_at` is invalid (ex. in the past or too far into the future)",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1569,7 +1402,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1583,12 +1417,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1601,12 +1430,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response if the channel passed is invalid",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1615,7 +1439,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1629,12 +1454,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical, minimal success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1647,12 +1467,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1661,7 +1476,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1675,12 +1491,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1693,12 +1504,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1707,7 +1513,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1721,12 +1528,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1739,12 +1541,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1753,7 +1550,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1767,12 +1565,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1785,12 +1578,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1799,7 +1587,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1813,12 +1602,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "If successful, the command returns a rather stark [conversation object](/types/conversation)",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1831,12 +1615,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response when name already in use",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1845,7 +1624,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1891,7 +1671,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1937,7 +1718,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1951,12 +1733,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response when an invitation is extended",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1969,12 +1746,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response when an invite is attempted on a conversation type that does not support it",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -1983,7 +1755,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -1997,12 +1770,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2015,12 +1783,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response if the conversation is archived and cannot be joined",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2029,7 +1792,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2043,12 +1807,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2061,12 +1820,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response when you attempt to kick yourself from a channel",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2075,7 +1829,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2089,12 +1844,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2107,12 +1857,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response when attempting to leave a workspace's \"general\" channel",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2121,7 +1866,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2167,7 +1913,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2213,7 +1960,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2227,12 +1975,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2245,12 +1988,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2259,7 +1997,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2273,12 +2012,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2291,12 +2025,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response when the calling user is not a member of the conversation",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2305,7 +2034,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2351,7 +2081,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2365,12 +2096,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2383,12 +2109,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2397,7 +2118,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2411,12 +2133,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2429,12 +2146,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2443,7 +2155,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2457,12 +2170,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2475,12 +2183,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2489,7 +2192,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2503,12 +2207,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response is quite minimal.",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2521,12 +2220,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response, before getting to any possible validation errors.",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2535,7 +2229,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2549,12 +2244,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2567,12 +2257,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2581,7 +2266,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2595,12 +2281,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2613,12 +2294,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2627,7 +2303,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2673,7 +2350,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2719,7 +2397,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2765,7 +2444,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2811,7 +2491,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2825,12 +2506,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Standard success response is very simple",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2843,12 +2519,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Standard failure response when used with an invalid token",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2857,7 +2528,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2871,12 +2543,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2889,12 +2556,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -2903,7 +2565,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2949,7 +2612,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -2995,7 +2659,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3009,12 +2674,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3027,12 +2687,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3041,7 +2696,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3055,12 +2711,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3073,12 +2724,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3087,7 +2733,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3133,7 +2780,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3147,12 +2795,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3165,12 +2808,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3179,7 +2817,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3193,12 +2832,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3211,12 +2845,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3225,7 +2854,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3271,7 +2901,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3317,7 +2948,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3363,7 +2995,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3377,12 +3010,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3395,12 +3023,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3409,7 +3032,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3423,12 +3047,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3441,12 +3060,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3455,7 +3069,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3469,12 +3084,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3487,12 +3097,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3501,7 +3106,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3547,7 +3153,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3561,12 +3168,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3579,12 +3181,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3593,7 +3190,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3607,12 +3205,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3625,12 +3218,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3639,7 +3227,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3653,12 +3242,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3671,12 +3255,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3685,7 +3264,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3731,7 +3311,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3745,12 +3326,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3763,12 +3339,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3777,7 +3348,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3791,12 +3363,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3809,12 +3376,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3823,7 +3385,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3837,12 +3400,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3855,12 +3413,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3869,7 +3422,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3883,12 +3437,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3901,12 +3450,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -3915,7 +3459,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -3961,7 +3506,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4007,7 +3553,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4021,12 +3568,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4039,12 +3581,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4053,7 +3590,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4067,12 +3605,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4085,12 +3618,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4099,7 +3627,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4145,7 +3674,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4191,7 +3721,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4205,12 +3736,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4223,12 +3749,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4237,7 +3758,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4283,7 +3805,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4329,7 +3852,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4343,12 +3867,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4361,12 +3880,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4375,7 +3889,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4389,12 +3904,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4407,12 +3917,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4421,7 +3926,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4467,7 +3973,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4513,7 +4020,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4559,7 +4067,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4573,12 +4082,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4591,12 +4095,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4605,7 +4104,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4651,7 +4151,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4665,12 +4166,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4683,12 +4179,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4697,7 +4188,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4711,12 +4203,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4729,12 +4216,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4743,7 +4225,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4789,7 +4272,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4835,7 +4319,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4849,12 +4334,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4867,12 +4347,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4881,7 +4356,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4895,12 +4371,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4913,12 +4384,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4927,7 +4393,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4941,12 +4408,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4959,12 +4421,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -4973,7 +4430,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -4987,12 +4445,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5005,12 +4458,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5019,7 +4467,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5065,7 +4514,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5111,7 +4561,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5157,7 +4608,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5203,7 +4655,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5217,12 +4670,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5235,12 +4683,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5249,7 +4692,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5295,7 +4739,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5309,12 +4754,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5327,12 +4767,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5341,7 +4776,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5387,7 +4823,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5433,7 +4870,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5479,7 +4917,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5525,7 +4964,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5571,7 +5011,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5585,12 +5026,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5603,12 +5039,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5617,7 +5048,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5631,12 +5063,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5649,12 +5076,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5663,7 +5085,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5677,12 +5100,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5695,12 +5113,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5709,7 +5122,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5755,7 +5169,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5769,12 +5184,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5787,12 +5197,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5801,7 +5206,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5847,7 +5253,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5861,12 +5268,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5879,12 +5281,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -5893,7 +5290,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5939,7 +5337,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -5985,7 +5384,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6031,7 +5431,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6077,7 +5478,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6123,7 +5525,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6169,7 +5572,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6215,7 +5619,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6261,7 +5666,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6275,12 +5681,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -6293,12 +5694,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -6307,7 +5703,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6321,12 +5718,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -6339,12 +5731,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -6353,7 +5740,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6399,7 +5787,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -6413,12 +5802,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical success response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -6431,12 +5815,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Typical error response",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -6445,7 +5824,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       }
     ],
     "proxyMode": false,
@@ -6453,17 +5833,7 @@
     "https": false,
     "cors": true,
     "headers": [],
-    "proxyReqHeaders": [
-      {
-        "key": "",
-        "value": ""
-      }
-    ],
-    "proxyResHeaders": [
-      {
-        "key": "",
-        "value": ""
-      }
-    ]
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
   }
 ]

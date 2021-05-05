@@ -72,6 +72,7 @@
   letter-spacing: 0.02rem;
   background-clip: border-box;
 
+  &:disabled,
   &[readonly] {
     color: $text-muted;
   }
@@ -155,6 +156,7 @@ label {
   &:not(:disabled):not(.disabled):active:focus,
   &:not(:disabled):not(.disabled).active:focus,
   .show > &.dropdown-toggle:focus {
+    color: $gray-500;
     box-shadow: none;
   }
 }
@@ -200,6 +202,10 @@ label {
 
 .mh0 {
   min-height: 0;
+}
+
+.mw0 {
+  min-width: 0;
 }
 
 .dropdown {

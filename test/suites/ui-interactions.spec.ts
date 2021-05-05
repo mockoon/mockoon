@@ -476,4 +476,70 @@ describe('UI interactions', () => {
       );
     });
   });
+
+  describe('Response rules random or sequential', () => {
+    const tests = new Tests('ui');
+    const randomResponseSelector = '#route-responses-random';
+    const sequentialResponseSelector = '#route-responses-sequential';
+
+    it('should enable random responses', async () => {
+      await tests.helpers.elementClick(randomResponseSelector);
+      await tests.helpers.assertHasClass(
+        `${randomResponseSelector} i`,
+        'text-primary'
+      );
+      await tests.helpers.assertHasClass(
+        `${sequentialResponseSelector} i`,
+        'text-primary',
+        true
+      );
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.randomResponse', '0.routes.0.sequentialResponse'],
+        [true, false]
+      );
+    });
+
+    it('should enable sequential responses and random responses should be disabled', async () => {
+      await tests.helpers.elementClick(sequentialResponseSelector);
+      await tests.helpers.assertHasClass(
+        `${randomResponseSelector} i`,
+        'text-primary',
+        true
+      );
+      await tests.helpers.assertHasClass(
+        `${sequentialResponseSelector} i`,
+        'text-primary'
+      );
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.randomResponse', '0.routes.0.sequentialResponse'],
+        [false, true]
+      );
+    });
+
+    it('should re-enable random responses and sequential responses should be disabled', async () => {
+      await tests.helpers.elementClick(randomResponseSelector);
+      await tests.helpers.assertHasClass(
+        `${randomResponseSelector} i`,
+        'text-primary'
+      );
+      await tests.helpers.assertHasClass(
+        `${sequentialResponseSelector} i`,
+        'text-primary',
+        true
+      );
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.routes.0.randomResponse', '0.routes.0.sequentialResponse'],
+        [true, false]
+      );
+    });
+  });
 });

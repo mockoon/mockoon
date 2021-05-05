@@ -1,14 +1,15 @@
+import { expect } from 'chai';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
 describe('Responses rules', () => {
-  const tests = new Tests('responses-rules');
-
-  it('Start default environment', async () => {
-    await tests.helpers.startEnvironment();
-  });
-
   describe('Create, update, delete and test basic rules', async () => {
+    const tests = new Tests('responses-rules');
+
+    it('Start default environment', async () => {
+      await tests.helpers.startEnvironment();
+    });
+
     it('Add a route response with status 200', async () => {
       await tests.helpers.selectRoute(1);
       await tests.helpers.countRouteResponses(1);
@@ -88,6 +89,8 @@ describe('Responses rules', () => {
   });
 
   describe('Test advanced rules', async () => {
+    const tests = new Tests('responses-rules');
+
     const testCases: HttpCall[] = [
       {
         description: 'Query string object with regex',
@@ -298,6 +301,10 @@ describe('Responses rules', () => {
       }
     ];
 
+    it('Start default environment', async () => {
+      await tests.helpers.startEnvironment();
+    });
+
     for (const testCase of testCases) {
       it(testCase.description, async () => {
         await tests.helpers.httpCallAsserter(testCase);
@@ -306,6 +313,7 @@ describe('Responses rules', () => {
   });
 
   describe('Rules operator', async () => {
+    const tests = new Tests('responses-rules');
     const testCases: HttpCall[] = [
       {
         description: 'Call fulfill 2nd response OR first rule',
@@ -363,6 +371,10 @@ describe('Responses rules', () => {
       }
     ];
 
+    it('Start default environment', async () => {
+      await tests.helpers.startEnvironment();
+    });
+
     it('Add 2 OR rules on response 2, verify operator switch presence', async () => {
       await tests.helpers.selectRoute(3);
       await tests.helpers.selectRouteResponse(2);
@@ -409,6 +421,87 @@ describe('Responses rules', () => {
       await tests.helpers.assertRulesOperator('OR');
       await tests.helpers.selectRulesOperator('AND');
       await tests.helpers.assertRulesOperator('AND');
+    });
+
+    for (const testCase of testCases) {
+      it(testCase.description, async () => {
+        await tests.helpers.httpCallAsserter(testCase);
+      });
+    }
+  });
+
+  describe('Random responses', async () => {
+    const tests = new Tests('responses-rules');
+    const testCase: HttpCall = {
+      description: 'Call the random response endpoint',
+      path: '/random-sequential',
+      method: 'GET'
+    };
+    const statuses = [];
+
+    it('should start default environment and enable random responses', async () => {
+      await tests.helpers.startEnvironment();
+      await tests.helpers.selectRoute(4);
+      await tests.helpers.elementClick('#route-responses-random');
+    });
+
+    it('should call the random endpoint 20 times and have at least one of each statuses', async () => {
+      for (let calls = 0; calls < 20; calls++) {
+        const response = await tests.helpers.httpCallAsserter(testCase);
+
+        statuses.push(response.status);
+      }
+
+      expect(statuses).to.include(201);
+      expect(statuses).to.include(202);
+      expect(statuses).to.include(204);
+    });
+  });
+
+  describe('Sequential responses', async () => {
+    const tests = new Tests('responses-rules');
+    const testCases: HttpCall[] = [
+      {
+        description:
+          'should call the sequential responses endpoint and get a 201',
+        path: '/random-sequential',
+        method: 'GET',
+        testedResponse: { status: 201 }
+      },
+      {
+        description:
+          'should call the sequential responses endpoint and get a 202',
+        path: '/random-sequential',
+        method: 'GET',
+        testedResponse: { status: 202 }
+      },
+      {
+        description:
+          'should call the sequential responses endpoint and get a 204',
+        path: '/random-sequential',
+        method: 'GET',
+        testedResponse: { status: 204 }
+      },
+      {
+        description:
+          'should call the sequential responses endpoint and get a 201',
+        path: '/random-sequential',
+        method: 'GET',
+        testedResponse: { status: 201 }
+      },
+      {
+        description:
+          'should call the sequential responses endpoint and get a 202',
+        path: '/random-sequential',
+        method: 'GET',
+        testedResponse: { status: 202 }
+      }
+    ];
+
+    it('should start default environment and enable random responses', async () => {
+      await tests.helpers.startEnvironment();
+      await tests.helpers.selectRoute(4);
+      await tests.helpers.elementClick('#route-responses-sequential');
     });
 
     for (const testCase of testCases) {

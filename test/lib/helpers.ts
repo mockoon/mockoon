@@ -213,16 +213,11 @@ export class Helpers {
     disabled: boolean
   ) {
     await this.elementClick(targetMenuItemSelector, 'right');
-    const menuEntryClasses = await this.getElementAttribute(
+    await this.assertHasClass(
       `.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`,
-      'class'
+      'disabled',
+      !disabled
     );
-
-    if (disabled) {
-      expect(menuEntryClasses).to.include('disabled');
-    } else {
-      expect(menuEntryClasses).not.to.include('disabled');
-    }
   }
 
   public async contextMenuClickAndConfirm(
@@ -237,6 +232,20 @@ export class Helpers {
     await this.elementClick(
       `.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`
     );
+  }
+
+  public async assertHasClass(
+    selector: string,
+    hasClass: string,
+    inverted = false
+  ) {
+    const classes = await this.getElementAttribute(selector, 'class');
+
+    if (inverted) {
+      expect(classes).not.to.include(hasClass);
+    } else {
+      expect(classes).to.include(hasClass);
+    }
   }
 
   public async startEnvironment() {
@@ -457,7 +466,7 @@ export class Helpers {
   }
 
   public async httpCallAsserter(httpCall: HttpCall) {
-    await this.httpCallAsserterWithPort(httpCall, 3000);
+    return await this.httpCallAsserterWithPort(httpCall, 3000);
   }
 
   public async assertActiveEnvironmentPort(expectedPort: number) {
