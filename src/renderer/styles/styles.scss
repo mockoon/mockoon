@@ -71,12 +71,6 @@ input,
   }
 }
 
-#route-responses-dropdown {
-  .dropdown-toggle-label {
-    width: 140px;
-  }
-}
-
 .h-35 {
   max-height: 35%;
 }
@@ -284,5 +278,15 @@ $http-methods-light: ('get', lighten($blue, 10%)),
 
   &:hover {
     box-shadow: inset -2px 0 0 0 rgba($blue, 0.1);
+  }
+}
+
+#route-responses-menu {
+  display: grid;
+  grid-template-columns: 30% auto min-content min-content;
+
+  .route-responses-buttons {
+    display: grid;
+    grid-template-columns: min-content auto min-content min-content;
   }
 }

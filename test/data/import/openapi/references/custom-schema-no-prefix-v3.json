@@ -1,7 +1,7 @@
 [
   {
     "uuid": "",
-    "lastMigration": 13,
+    "lastMigration": 14,
     "name": "Sample v3 schema",
     "endpointPrefix": "",
     "latency": 0,
@@ -19,12 +19,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Success",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -33,7 +28,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -47,12 +43,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "Success",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
@@ -61,7 +52,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       },
       {
         "uuid": "",
@@ -89,7 +81,8 @@
           }
         ],
         "enabled": true,
-        "randomResponse": false
+        "randomResponse": false,
+        "sequentialResponse": false
       }
     ],
     "proxyMode": false,
@@ -97,17 +90,7 @@
     "https": false,
     "cors": true,
     "headers": [],
-    "proxyReqHeaders": [
-      {
-        "key": "",
-        "value": ""
-      }
-    ],
-    "proxyResHeaders": [
-      {
-        "key": "",
-        "value": ""
-      }
-    ]
+    "proxyReqHeaders": [{ "key": "", "value": "" }],
+    "proxyResHeaders": [{ "key": "", "value": "" }]
   }
 ]

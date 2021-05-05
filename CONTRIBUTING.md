@@ -43,6 +43,13 @@ Branches naming convention:
 - features and enhancements: `feature/name-or-issue-number`
 - bug fixes: `fix/name-or-issue-number`
 
+## Adding migrations
+
+When a feature or bugfix requires a change in the data model (`Environment`, `Route`, `RouteResponse`, etc.) you must add a new migration:
+- Add a new migration function in the @mockoon/commons library `/src/libs/migrations.ts` file.
+- Add a new test for the migration in the main repository mockoon/mockoon `/test/data/migrations/{MIGRATION_ID}/environments.json` and `/test/suites/migrations.spec.ts` files.
+- Use the script `/scripts/migrate-tests.js` in the main repository in order to migrate the tests' `environments.json` samples to the latest migration. Please note that some folders/sample files marked with a `.do-not-update-files` must never be migrated.
+
 ## Run the tests
 
 Tests are written with Spectron and you can run them using `npm run test`. These tests will also be run on each commit or pull request by CircleCI.

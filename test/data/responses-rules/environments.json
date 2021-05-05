@@ -1,7 +1,7 @@
 [
   {
     "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
-    "lastMigration": 13,
+    "lastMigration": 14,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -21,12 +21,7 @@
             "latency": 0,
             "statusCode": 500,
             "label": "Test",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -40,7 +35,8 @@
             ],
             "rulesOperator": "OR"
           }
-        ]
+        ],
+        "sequentialResponse": false
       },
       {
         "uuid": "8329a6ce-cd63-4a9f-bac8-b6e2f7f9b2ce",
@@ -56,12 +52,7 @@
             "latency": 0,
             "statusCode": 404,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -74,12 +65,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -99,12 +85,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -124,12 +105,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -149,12 +125,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -174,12 +145,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -199,12 +165,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -224,12 +185,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -249,12 +205,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -274,12 +225,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -299,12 +245,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -324,12 +265,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -349,12 +285,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -374,12 +305,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -399,12 +325,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -424,12 +345,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -449,12 +365,7 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -468,7 +379,8 @@
             ],
             "rulesOperator": "OR"
           }
-        ]
+        ],
+        "sequentialResponse": false
       },
       {
         "uuid": "cdc1ec69-6bd5-47c5-bd17-38fdd9c717d3",
@@ -484,12 +396,7 @@
             "latency": 0,
             "statusCode": 500,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -502,12 +409,7 @@
             "latency": 0,
             "statusCode": 201,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
@@ -520,31 +422,72 @@
             "latency": 0,
             "statusCode": 202,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
             "rulesOperator": "OR"
           }
-        ]
+        ],
+        "sequentialResponse": false
+      },
+      {
+        "uuid": "2dcd4a1a-c909-4fbd-a8d1-1f8eb4b9ff08",
+        "method": "get",
+        "endpoint": "random-sequential",
+        "documentation": "",
+        "enabled": true,
+        "randomResponse": false,
+        "responses": [
+          {
+            "uuid": "254a8524-8093-4f6d-90b4-8bce05c23157",
+            "body": "created",
+            "latency": 0,
+            "statusCode": 201,
+            "label": "",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          },
+          {
+            "uuid": "4c194fbd-db07-4c6f-b890-16306801c309",
+            "body": "accepted",
+            "latency": 0,
+            "statusCode": 202,
+            "label": "",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          },
+          {
+            "uuid": "2b63a833-d63d-4c48-abb9-24dfed94149f",
+            "body": "no content",
+            "latency": 0,
+            "statusCode": 204,
+            "label": "",
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+            "filePath": "",
+            "sendFileAsBody": false,
+            "disableTemplating": false,
+            "rules": [],
+            "rulesOperator": "OR"
+          }
+        ],
+        "sequentialResponse": false
       }
     ],
     "proxyMode": false,
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [
-      {
-        "key": "Content-Type",
-        "value": "application/json"
-      }
-    ],
+    "headers": [{ "key": "Content-Type", "value": "application/json" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }]
   }

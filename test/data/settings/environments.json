@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 13,
+    "lastMigration": 14,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -21,19 +21,15 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
             "rulesOperator": "OR"
           }
-        ]
+        ],
+        "sequentialResponse": false
       },
       {
         "uuid": "e929ed63-9c47-4ef0-9192-894de0a104ea",
@@ -49,31 +45,22 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
             "rulesOperator": "OR"
           }
-        ]
+        ],
+        "sequentialResponse": false
       }
     ],
     "proxyMode": false,
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [
-      {
-        "key": "",
-        "value": ""
-      }
-    ],
+    "headers": [{ "key": "", "value": "" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }]
   }

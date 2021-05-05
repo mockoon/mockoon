@@ -1,7 +1,7 @@
 [
   {
     "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
-    "lastMigration": 13,
+    "lastMigration": 14,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -21,19 +21,15 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
             "filePath": "",
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
             "rulesOperator": "OR"
           }
-        ]
+        ],
+        "sequentialResponse": false
       },
       {
         "uuid": "101957a1-2557-41ff-a42c-00af00f7ad66",
@@ -49,19 +45,15 @@
             "latency": 0,
             "statusCode": 200,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "application/xml"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "application/xml" }],
             "filePath": "./test/data/test.pdf",
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
             "rulesOperator": "OR"
           }
-        ]
+        ],
+        "sequentialResponse": false
       },
       {
         "uuid": "c2f80546-b6ea-44bd-9748-9dd923653f3a",
@@ -84,19 +76,15 @@
             "rules": [],
             "rulesOperator": "OR"
           }
-        ]
+        ],
+        "sequentialResponse": false
       }
     ],
     "proxyMode": false,
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [
-      {
-        "key": "Content-Type",
-        "value": "text/plain"
-      }
-    ],
+    "headers": [{ "key": "Content-Type", "value": "text/plain" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }]
   }

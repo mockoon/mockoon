@@ -111,4 +111,19 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 14', () => {
+    const filesPath = 'migrations/14';
+    const tests = new Tests(filesPath);
+
+    it('Should add "sequentialResponse" to the route', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        '0.routes.0.sequentialResponse',
+        false
+      );
+    });
+  });
 });

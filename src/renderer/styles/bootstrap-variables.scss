@@ -102,7 +102,7 @@ $btn-border-radius-xs: $border-radius-xs;
 $btn-border-radius-xxs: $border-radius-xxs;
 $input-bg: $custom-gray;
 $input-line-height: $input-btn-line-height !default;
-$input-disabled-bg: $custom-gray;
+$input-disabled-bg: lighten($gray-900, 3%);
 $input-color: $gray-200;
 $input-btn-border-width: $border-width !default;
 $input-border-color: transparent;

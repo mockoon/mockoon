@@ -1,7 +1,7 @@
 [
   {
     "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-    "lastMigration": 13,
+    "lastMigration": 14,
     "name": "Environment logs 1",
     "endpointPrefix": "prefix",
     "latency": 0,
@@ -22,14 +22,8 @@
             "statusCode": 200,
             "label": "",
             "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              },
-              {
-                "key": "route-header",
-                "value": "route-header"
-              }
+              { "key": "Content-Type", "value": "text/plain" },
+              { "key": "route-header", "value": "route-header" }
             ],
             "filePath": "",
             "sendFileAsBody": false,
@@ -43,12 +37,7 @@
             "latency": 0,
             "statusCode": 201,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [
@@ -68,19 +57,15 @@
             "latency": 0,
             "statusCode": 204,
             "label": "",
-            "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              }
-            ],
+            "headers": [{ "key": "Content-Type", "value": "text/plain" }],
             "filePath": "",
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
             "disableTemplating": false
           }
-        ]
+        ],
+        "sequentialResponse": false
       },
       {
         "uuid": "08f2985c-26d7-477d-bd71-f4c47e203e14",
@@ -103,25 +88,21 @@
             "rulesOperator": "OR",
             "disableTemplating": false
           }
-        ]
+        ],
+        "sequentialResponse": false
       }
     ],
     "proxyMode": false,
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [
-      {
-        "key": "global-header",
-        "value": "global-header"
-      }
-    ],
+    "headers": [{ "key": "global-header", "value": "global-header" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }]
   },
   {
     "uuid": "5f5ec26d-9a10-4b34-95a8-a9e4dff5ca41",
-    "lastMigration": 11,
+    "lastMigration": 14,
     "name": "Environment logs 2",
     "endpointPrefix": "prefix",
     "latency": 0,
@@ -142,14 +123,8 @@
             "statusCode": 200,
             "label": "",
             "headers": [
-              {
-                "key": "Content-Type",
-                "value": "text/plain"
-              },
-              {
-                "key": "route-header",
-                "value": "route-header"
-              }
+              { "key": "Content-Type", "value": "text/plain" },
+              { "key": "route-header", "value": "route-header" }
             ],
             "filePath": "",
             "sendFileAsBody": false,
@@ -157,19 +132,15 @@
             "rulesOperator": "OR",
             "disableTemplating": false
           }
-        ]
+        ],
+        "sequentialResponse": false
       }
     ],
     "proxyMode": false,
     "proxyHost": "",
     "https": false,
     "cors": true,
-    "headers": [
-      {
-        "key": "global-header",
-        "value": "global-header"
-      }
-    ],
+    "headers": [{ "key": "global-header", "value": "global-header" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }]
   }
