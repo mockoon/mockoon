@@ -46,7 +46,7 @@ export const Messages: {
     };
   },
   PORT_INVALID: (messageParams) => ({
-    message: 'This port is invalid',
+    message: 'This port is invalid or access is denied',
     loggerMessage: `Error when starting the server ${messageParams.uuid}: ${messageParams.error.message}`,
     showToast: true,
     toastType: 'error'
