@@ -65,7 +65,7 @@
                 [placeholder]="
                   modifierPlaceholders[
                     form.get(['rules', ruleIndex, 'target']).value
-                  ]
+                  ] || ''
                 "
                 formControlName="modifier"
                 [attr.disabled]="
