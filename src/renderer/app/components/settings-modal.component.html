@@ -86,9 +86,8 @@
           </div>
           <p class="text-muted">
             <small
-              >Choose Faker.js's primary locale. Most of the time, Faker.js will
-              fallback to English ('en') for helpers not covered by this
-              locale.</small
+              >Set Faker.js's primary locale. Faker.js will fallback to
+              "English" for helpers not covered by this locale.</small
             >
           </p>
         </div>
@@ -102,7 +101,7 @@
               type="number"
               class="form-control col-4"
               id="faker-seed"
-              placeholder="Numbers only"
+              placeholder="Number or empty for no seed"
               [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
               [ngModel]="settings.fakerSeed"
               (ngModelChange)="settingsUpdated($event, 'fakerSeed')"
@@ -110,8 +109,8 @@
           </div>
           <p class="text-muted">
             <small
-              >Set Faker.js's seed. By setting a seed, faker.js will always
-              generate the same data.</small
+              >By setting a seed, Faker.js will always generate the same data.
+              Application must be restarted after removing the seed.</small
             >
           </p>
         </div>

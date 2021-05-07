@@ -951,7 +951,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         testedResponse: {
           status: 200,
           body:
-            '{"name":"Robin Satterfield DDS","username":"Michel.Wisoky9","email":"Josh_Terry82@hotmail.com","address":{"street":"Alison Club","suite":"Apt. 108","city":"Aydenstad","zipcode":"69451","geo":{"lat":"34.5379","lng":"-75.7333"}},"phone":"1-367-840-0769","website":"magnolia.net","company":{"name":"Goyette and Sons","catchPhrase":"Seamless context-sensitive artificial intelligence","bs":"optimize bleeding-edge supply-chains"}}'
+            '{"name":"Robin Satterfield DDS","username":"Michel.Wisoky9","email":"Josh_Terry82@hotmail.com","address":{"street":"Alison Club","suite":"Apt. 108","city":"Boylestad","zipcode":"69451","geo":{"lat":"34.5379","lng":"-75.7333"}},"phone":"1-367-840-0769","website":"magnolia.net","company":{"name":"Goyette and Sons","catchPhrase":"Seamless context-sensitive artificial intelligence","bs":"optimize bleeding-edge supply-chains"}}'
         }
       },
       {
@@ -1070,7 +1070,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         description: 'Helper: city',
         path: '/old.city',
         method: 'GET',
-        testedResponse: { status: 200, body: 'Timmyborough' }
+        testedResponse: { status: 200, body: 'Walterborough' }
       },
       {
         description: 'Helper: country',
