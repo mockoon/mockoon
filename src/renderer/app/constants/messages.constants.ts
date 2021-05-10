@@ -6,16 +6,12 @@ import { ToastTypes } from 'src/renderer/app/models/toasts.model';
 
 export const Messages: {
   [key in MessageCodes]:
-    | ((
-        messageParams: MessageParams
-      ) => {
+    | ((messageParams: MessageParams) => {
         message: string;
         loggerMessage?: string;
         showToast: false;
       })
-    | ((
-        messageParams: MessageParams
-      ) => {
+    | ((messageParams: MessageParams) => {
         message: string;
         loggerMessage?: string;
         showToast: true;

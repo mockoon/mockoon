@@ -69,14 +69,15 @@ export class AnalyticsService {
     );
 
     // debounce entering request events every 2mn
-    const enteringRequestEventsbservable = this.eventsService.analyticsEvents.pipe(
-      filter(
-        (collectParams) =>
-          collectParams.action ===
-          AnalyticsEvents.SERVER_ENTERING_REQUEST.action
-      ),
-      debounceTime(29 * 60 * 1000)
-    );
+    const enteringRequestEventsbservable =
+      this.eventsService.analyticsEvents.pipe(
+        filter(
+          (collectParams) =>
+            collectParams.action ===
+            AnalyticsEvents.SERVER_ENTERING_REQUEST.action
+        ),
+        debounceTime(29 * 60 * 1000)
+      );
 
     merge(allEventsObservable, enteringRequestEventsbservable).subscribe(
       (event) => {

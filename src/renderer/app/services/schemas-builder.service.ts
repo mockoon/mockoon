@@ -113,8 +113,7 @@ export class SchemasBuilderService {
               ...this.buildRouteResponse(),
               label:
                 "Creates 10 random users, or the amount specified in the 'total' query param",
-              body:
-                '{\n  "Templating example": "For more information about templating, click the blue \'i\' above this editor",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'random.number\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'name.firstName\' }}",\n        "lastname": "{{ faker \'name.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'random.number\' 5) }}\n            {\n              "id": "{{ faker \'random.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
+              body: '{\n  "Templating example": "For more information about templating, click the blue \'i\' above this editor",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'random.number\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'name.firstName\' }}",\n        "lastname": "{{ faker \'name.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'random.number\' 5) }}\n            {\n              "id": "{{ faker \'random.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
             }
           ]
         },
@@ -127,14 +126,12 @@ export class SchemasBuilderService {
             {
               ...this.buildRouteResponse(),
               label: 'Default response',
-              body:
-                '{\n  "Rules example": "Default response. Served if route param \'param1\' is not present."\n}'
+              body: '{\n  "Rules example": "Default response. Served if route param \'param1\' is not present."\n}'
             },
             {
               ...this.buildRouteResponse(),
               label: 'Content XYZ',
-              body:
-                "{\n  \"Rules example\": \"Content XYZ. Served if route param 'param1' equals 'xyz'. (See in 'Rules' tab)\"\n}",
+              body: "{\n  \"Rules example\": \"Content XYZ. Served if route param 'param1' equals 'xyz'. (See in 'Rules' tab)\"\n}",
               rules: [
                 {
                   target: 'params',
@@ -148,8 +145,7 @@ export class SchemasBuilderService {
               ...this.buildRouteResponse(),
               statusCode: 404,
               label: 'Content not found',
-              body:
-                "{\n  \"Rules example\": \"Content not found. Served if route param 'param1' is not equal to 'xyz'. (See in 'Rules' tab)\"\n}\n",
+              body: "{\n  \"Rules example\": \"Content not found. Served if route param 'param1' is not equal to 'xyz'. (See in 'Rules' tab)\"\n}\n",
               rules: [
                 {
                   target: 'params',
@@ -186,8 +182,7 @@ export class SchemasBuilderService {
             {
               ...this.buildRouteResponse(),
               headers: [{ key: 'Content-Type', value: 'text/plain' }],
-              body:
-                "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/routing"
+              body: "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/routing"
             }
           ]
         },
@@ -200,8 +195,7 @@ export class SchemasBuilderService {
             {
               ...this.buildRouteResponse(),
               headers: [{ key: 'Content-Type', value: 'text/plain' }],
-              body:
-                "Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings ('cog' icon in the upper right corner). \nTo learn more: https://mockoon.com/docs/latest/proxy-mode\n\nAs always, all entering requests, and responses from the proxied server will be recorded ('clock' icon in the upper right corner).\nTo learn more: https://mockoon.com/docs/latest/requests-logging"
+              body: "Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings ('cog' icon in the upper right corner). \nTo learn more: https://mockoon.com/docs/latest/proxy-mode\n\nAs always, all entering requests, and responses from the proxied server will be recorded ('clock' icon in the upper right corner).\nTo learn more: https://mockoon.com/docs/latest/requests-logging"
             }
           ]
         }

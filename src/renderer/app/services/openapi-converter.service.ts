@@ -47,12 +47,8 @@ export class OpenAPIConverterService {
     this.logger.info(`Started importing OpenAPI file '${filePath}' import`);
 
     try {
-      const parsedAPI:
-        | OpenAPIV2.Document
-        | OpenAPIV3.Document = await MainAPI.invoke(
-        'APP_OPENAPI_DEREFERENCE',
-        filePath
-      );
+      const parsedAPI: OpenAPIV2.Document | OpenAPIV3.Document =
+        await MainAPI.invoke('APP_OPENAPI_DEREFERENCE', filePath);
 
       if (this.isSwagger(parsedAPI)) {
         return this.convertFromSwagger(parsedAPI);

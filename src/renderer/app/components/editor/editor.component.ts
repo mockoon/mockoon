@@ -42,7 +42,8 @@ declare const ace: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditorComponent
-  implements ControlValueAccessor, OnInit, OnDestroy {
+  implements ControlValueAccessor, OnInit, OnDestroy
+{
   @Output()
   public textChanged = new EventEmitter();
   @Output()

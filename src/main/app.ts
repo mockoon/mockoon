@@ -530,12 +530,15 @@ const toggleExportMenuItems = (state: boolean) => {
     objectPathHas(menu, 'items.2.submenu.items.0.submenu.items.2') &&
     objectPathHas(menu, 'items.2.submenu.items.2.submenu.items.1')
   ) {
-    ((menu.items[2].submenu as Menu).items[0]
-      .submenu as Menu).items[2].enabled = state;
-    ((menu.items[2].submenu as Menu).items[0]
-      .submenu as Menu).items[3].enabled = state;
-    ((menu.items[2].submenu as Menu).items[2]
-      .submenu as Menu).items[1].enabled = state;
+    (
+      (menu.items[2].submenu as Menu).items[0].submenu as Menu
+    ).items[2].enabled = state;
+    (
+      (menu.items[2].submenu as Menu).items[0].submenu as Menu
+    ).items[3].enabled = state;
+    (
+      (menu.items[2].submenu as Menu).items[2].submenu as Menu
+    ).items[1].enabled = state;
   }
 };
 
