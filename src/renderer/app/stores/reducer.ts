@@ -60,21 +60,22 @@ export const environmentReducer = (
     case ActionTypes.SET_INITIAL_ENVIRONMENTS: {
       const newEnvironments: Environments = action.environments;
 
-      const newEnvironmentsStatus = newEnvironments.reduce<EnvironmentsStatuses>(
-        (environmentsStatus, environment) => {
-          // create status and check if environment has not been migrated on a more recent Mockoon version
-          environmentsStatus[environment.uuid] = {
-            running: false,
-            needRestart: false,
-            disabledForIncompatibility:
-              !!environment.lastMigration &&
-              environment.lastMigration > HighestMigrationId
-          };
+      const newEnvironmentsStatus =
+        newEnvironments.reduce<EnvironmentsStatuses>(
+          (environmentsStatus, environment) => {
+            // create status and check if environment has not been migrated on a more recent Mockoon version
+            environmentsStatus[environment.uuid] = {
+              running: false,
+              needRestart: false,
+              disabledForIncompatibility:
+                !!environment.lastMigration &&
+                environment.lastMigration > HighestMigrationId
+            };
 
-          return environmentsStatus;
-        },
-        {}
-      );
+            return environmentsStatus;
+          },
+          {}
+        );
 
       // find first non disabled environment
       const activeEnvironment = newEnvironments.find(
@@ -107,14 +108,15 @@ export const environmentReducer = (
           },
           {}
         ),
-        activeEnvironmentLogsUUID: newEnvironments.reduce<ActiveEnvironmentsLogUUIDs>(
-          (activeEnvironmentLogsUUID, environment) => {
-            activeEnvironmentLogsUUID[environment.uuid] = null;
+        activeEnvironmentLogsUUID:
+          newEnvironments.reduce<ActiveEnvironmentsLogUUIDs>(
+            (activeEnvironmentLogsUUID, environment) => {
+              activeEnvironmentLogsUUID[environment.uuid] = null;
 
-            return activeEnvironmentLogsUUID;
-          },
-          {}
-        ),
+              return activeEnvironmentLogsUUID;
+            },
+            {}
+          ),
         routesFilter: ''
       };
       break;

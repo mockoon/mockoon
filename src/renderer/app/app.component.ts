@@ -193,7 +193,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         supportsTemplating: MimeTypesWithTemplating.indexOf(mimeType) > -1
       }))
     );
-    this.activeRouteResponseIndex$ = this.store.selectActiveRouteResponseIndex();
+    this.activeRouteResponseIndex$ =
+      this.store.selectActiveRouteResponseIndex();
     this.activeTab$ = this.store.select('activeTab');
     this.activeView$ = this.store.select('activeView');
     this.activeEnvironmentState$ = this.store.selectActiveEnvironmentStatus();
@@ -202,7 +203,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.duplicatedEnvironments$ = this.store.select('duplicatedEnvironments');
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
     this.environmentsLogs$ = this.store.select('environmentsLogs');
-    this.activeRouteResponseLastLog$ = this.store.selectActiveRouteResponseLastLog();
+    this.activeRouteResponseLastLog$ =
+      this.store.selectActiveRouteResponseLastLog();
     this.toasts$ = this.store.select('toasts');
 
     this.initFormValues();

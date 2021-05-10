@@ -5,8 +5,7 @@ import { Tests } from 'test/lib/tests';
 
 const testSuites: { name: string; tests: HttpCall[] }[] = [
   {
-    name:
-      'Body helper: text/plain Content-Type (incompatible with path search)',
+    name: 'Body helper: text/plain Content-Type (incompatible with path search)',
     tests: [
       {
         description: 'Body path, default value',
@@ -180,8 +179,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         },
         testedResponse: {
           status: 200,
-          body:
-            '{"teststring":"stringcontent","testboolean":true,"testnumber":5,"testnull":null}'
+          body: '{"teststring":"stringcontent","testboolean":true,"testnumber":5,"testnull":null}'
         }
       },
       {
@@ -254,8 +252,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         },
         testedResponse: {
           status: 200,
-          body:
-            '{ "response": {"teststring":"stringcontent","testboolean":true,"testnumber":5,"testnull":null} }'
+          body: '{ "response": {"teststring":"stringcontent","testboolean":true,"testnumber":5,"testnull":null} }'
         }
       },
       {
@@ -380,8 +377,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body:
-          'param1%5B%5D=content1&param1%5B%5D=content2&param1%5B%5D=content3',
+        body: 'param1%5B%5D=content1&param1%5B%5D=content2&param1%5B%5D=content3',
         testedResponse: {
           status: 200,
           body: '["content1","content2","content3"]'
@@ -433,8 +429,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body:
-          'param1%5B%5D=content1&param1%5B%5D=content2&param1%5B%5D=content3',
+        body: 'param1%5B%5D=content1&param1%5B%5D=content2&param1%5B%5D=content3',
         testedResponse: {
           status: 200,
           body: '{ "response": ["content1","content2","content3"] }'
@@ -562,8 +557,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description: 'Helper: queryParam item in array, root level',
-        path:
-          '/queryparam-rootlvl-arrayitem?paramarray[]=test1&paramarray[]=test2',
+        path: '/queryparam-rootlvl-arrayitem?paramarray[]=test1&paramarray[]=test2',
         method: 'GET',
         testedResponse: {
           status: 200,
@@ -572,8 +566,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description: 'Helper: queryParam property in object, root level',
-        path:
-          '/queryparam-rootlvl-objectproperty?paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        path: '/queryparam-rootlvl-objectproperty?paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
         method: 'GET',
         testedResponse: {
           status: 200,
@@ -591,8 +584,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description: 'Helper: queryParam sub object, root level',
-        path:
-          '/queryparam-rootlvl-object?paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        path: '/queryparam-rootlvl-object?paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
         method: 'GET',
         testedResponse: {
           status: 200,
@@ -601,35 +593,29 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description: 'Helper: queryParam multiple fetch, deep level',
-        path:
-          '/queryparam-multiple?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        path: '/queryparam-multiple?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
         method: 'GET',
         testedResponse: {
           status: 200,
-          body:
-            '{ "param1": "param1value","arrayitem": "test2","objprop": "testprop2","fullarray": ["test1","test2"],"fullobj": {"prop1":"testprop1","prop2":"testprop2"} }'
+          body: '{ "param1": "param1value","arrayitem": "test2","objprop": "testprop2","fullarray": ["test1","test2"],"fullobj": {"prop1":"testprop1","prop2":"testprop2"} }'
         }
       },
       {
         description: 'Helper: queryParam full object with empty path param',
-        path:
-          '/queryparam-full-emptypath?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        path: '/queryparam-full-emptypath?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
         method: 'GET',
         testedResponse: {
           status: 200,
-          body:
-            '{"param1":"param1value","paramarray":["test1","test2"],"paramobj":{"prop1":"testprop1","prop2":"testprop2"}}'
+          body: '{"param1":"param1value","paramarray":["test1","test2"],"paramobj":{"prop1":"testprop1","prop2":"testprop2"}}'
         }
       },
       {
         description: 'Helper: queryParam full object with no path param',
-        path:
-          '/queryparam-full-nopath?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
+        path: '/queryparam-full-nopath?param1=param1value&paramarray[]=test1&paramarray[]=test2&paramobj[prop1]=testprop1&paramobj[prop2]=testprop2',
         method: 'GET',
         testedResponse: {
           status: 200,
-          body:
-            '{"param1":"param1value","paramarray":["test1","test2"],"paramobj":{"prop1":"testprop1","prop2":"testprop2"}}'
+          body: '{"param1":"param1value","paramarray":["test1","test2"],"paramobj":{"prop1":"testprop1","prop2":"testprop2"}}'
         }
       },
       {
@@ -772,8 +758,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         body: 'test',
         testedResponse: {
           status: 200,
-          body:
-            'dGVzdA==dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0dGVzdA=='
+          body: 'dGVzdA==dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0dGVzdHRlc3R0ZXN0dGVzdA=='
         }
       },
       {
@@ -950,8 +935,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body:
-            '{"name":"Robin Satterfield DDS","username":"Michel.Wisoky9","email":"Josh_Terry82@hotmail.com","address":{"street":"Alison Club","suite":"Apt. 108","city":"Boylestad","zipcode":"69451","geo":{"lat":"34.5379","lng":"-75.7333"}},"phone":"1-367-840-0769","website":"magnolia.net","company":{"name":"Goyette and Sons","catchPhrase":"Seamless context-sensitive artificial intelligence","bs":"optimize bleeding-edge supply-chains"}}'
+          body: '{"name":"Robin Satterfield DDS","username":"Michel.Wisoky9","email":"Josh_Terry82@hotmail.com","address":{"street":"Alison Club","suite":"Apt. 108","city":"Boylestad","zipcode":"69451","geo":{"lat":"34.5379","lng":"-75.7333"}},"phone":"1-367-840-0769","website":"magnolia.net","company":{"name":"Goyette and Sons","catchPhrase":"Seamless context-sensitive artificial intelligence","bs":"optimize bleeding-edge supply-chains"}}'
         }
       },
       {
@@ -1159,8 +1143,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body:
-            'Sunt qui similique ut quam natus consequatur sit vel et nostrum ut.'
+          body: 'Sunt qui similique ut quam natus consequatur sit vel et nostrum ut.'
         }
       },
       {

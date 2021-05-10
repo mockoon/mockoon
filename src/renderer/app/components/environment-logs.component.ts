@@ -80,15 +80,13 @@ export class EnvironmentLogsComponent implements OnInit {
       map((environmentLog) => {
         if (environmentLog) {
           if (environmentLog.request.body) {
-            environmentLog.request.truncatedBody = this.dataService.truncateBody(
-              environmentLog.request.body
-            );
+            environmentLog.request.truncatedBody =
+              this.dataService.truncateBody(environmentLog.request.body);
           }
 
           if (environmentLog.response.body) {
-            environmentLog.response.truncatedBody = this.dataService.truncateBody(
-              environmentLog.response.body
-            );
+            environmentLog.response.truncatedBody =
+              this.dataService.truncateBody(environmentLog.response.body);
           }
         }
 

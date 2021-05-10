@@ -107,9 +107,8 @@
               <div
                 class="environment-logs-content-title"
                 (click)="
-                  collapseStates['request.general'] = !collapseStates[
-                    'request.general'
-                  ]
+                  collapseStates['request.general'] =
+                    !collapseStates['request.general']
                 "
               >
                 <i
@@ -143,9 +142,8 @@
               <div
                 class="environment-logs-content-title"
                 (click)="
-                  collapseStates['request.headers'] = !collapseStates[
-                    'request.headers'
-                  ]
+                  collapseStates['request.headers'] =
+                    !collapseStates['request.headers']
                 "
               >
                 <i
@@ -180,9 +178,8 @@
               <div
                 class="environment-logs-content-title"
                 (click)="
-                  collapseStates['request.routeParams'] = !collapseStates[
-                    'request.routeParams'
-                  ]
+                  collapseStates['request.routeParams'] =
+                    !collapseStates['request.routeParams']
                 "
               >
                 <i
@@ -216,9 +213,8 @@
               <div
                 class="environment-logs-content-title"
                 (click)="
-                  collapseStates['request.queryParams'] = !collapseStates[
-                    'request.queryParams'
-                  ]
+                  collapseStates['request.queryParams'] =
+                    !collapseStates['request.queryParams']
                 "
               >
                 <i
@@ -252,9 +248,8 @@
               <div class="environment-logs-content-title d-flex">
                 <div
                   (click)="
-                    collapseStates['request.body'] = !collapseStates[
-                      'request.body'
-                    ]
+                    collapseStates['request.body'] =
+                      !collapseStates['request.body']
                   "
                 >
                   <i
@@ -278,7 +273,12 @@
                 <div class="ml-auto">
                   <span
                     *ngIf="selectedLog?.request?.truncatedBody"
-                    class="btn btn-link btn-icon text-primary p-0 environment-logs-open-request-body"
+                    class="
+                      btn btn-link btn-icon
+                      text-primary
+                      p-0
+                      environment-logs-open-request-body
+                    "
                     (click)="viewBodyInEditor(selectedLog.request, 'request')"
                     >View full body in editor</span
                   >
@@ -301,9 +301,8 @@
               <div
                 class="environment-logs-content-title"
                 (click)="
-                  collapseStates['response.general'] = !collapseStates[
-                    'response.general'
-                  ]
+                  collapseStates['response.general'] =
+                    !collapseStates['response.general']
                 "
               >
                 <i
@@ -328,9 +327,8 @@
               <div
                 class="environment-logs-content-title"
                 (click)="
-                  collapseStates['response.headers'] = !collapseStates[
-                    'response.headers'
-                  ]
+                  collapseStates['response.headers'] =
+                    !collapseStates['response.headers']
                 "
               >
                 <i
@@ -365,9 +363,8 @@
               <div class="environment-logs-content-title d-flex">
                 <div
                   (click)="
-                    collapseStates['response.body'] = !collapseStates[
-                      'response.body'
-                    ]
+                    collapseStates['response.body'] =
+                      !collapseStates['response.body']
                   "
                 >
                   <i
@@ -391,7 +388,12 @@
                 <div *ngIf="!selectedLog.response.binaryBody" class="ml-auto">
                   <span
                     *ngIf="selectedLog?.response?.truncatedBody"
-                    class="btn btn-link btn-icon text-primary p-0 environment-logs-open-response-body"
+                    class="
+                      btn btn-link btn-icon
+                      text-primary
+                      p-0
+                      environment-logs-open-response-body
+                    "
                     (click)="viewBodyInEditor(selectedLog.response, 'response')"
                     >View full body in editor</span
                   >

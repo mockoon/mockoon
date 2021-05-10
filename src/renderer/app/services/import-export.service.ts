@@ -380,9 +380,8 @@ export class ImportExportService extends Logger {
         this.migrationService
           .migrateEnvironments([data.item])
           .subscribe(([migratedEnvironment]) => {
-            migratedEnvironment = this.dataService.renewEnvironmentUUIDs(
-              migratedEnvironment
-            );
+            migratedEnvironment =
+              this.dataService.renewEnvironmentUUIDs(migratedEnvironment);
             this.logger.info(
               `Importing environment ${migratedEnvironment.uuid}`
             );
