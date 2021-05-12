@@ -17,6 +17,17 @@ const getAnswerCall: HttpCall = {
   }
 };
 
+const getPrefixedAnswerCall: HttpCall = {
+  description: 'Call GET answer',
+  protocol: 'https',
+  path: '/prefix/answer',
+  method: 'GET',
+  testedResponse: {
+    body: '42',
+    status: 200
+  }
+};
+
 const get404Call: HttpCall = {
   description: 'Call GET donotexists',
   protocol: 'https',
@@ -170,5 +181,20 @@ describe('Proxy (with TLS and proxy headers)', () => {
 
   it('Call external HTTPS API through proxy ', async () => {
     await tests.helpers.httpCallAsserterWithPort(externalCall, 3001);
+  });
+});
+
+describe('Proxy with prefix removed.', () => {
+  const tests = new Tests('proxy');
+
+  it('Start environments', async () => {
+    await tests.helpers.selectEnvironment(1);
+    await tests.helpers.startEnvironment();
+    await tests.helpers.selectEnvironment(4);
+    await tests.helpers.startEnvironment();
+  });
+
+  it('Call /prefix/answer', async () => {
+    await tests.helpers.httpCallAsserterWithPort(getPrefixedAnswerCall, 3003);
   });
 });

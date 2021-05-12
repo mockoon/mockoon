@@ -84,6 +84,7 @@ export class SchemasBuilderService {
       routes: hasDefaultRoute ? [this.buildRoute()] : [],
       proxyMode: false,
       proxyHost: '',
+      proxyRemovePrefix: false,
       https: false,
       cors: true,
       headers: hasDefaultHeader

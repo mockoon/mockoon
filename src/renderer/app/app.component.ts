@@ -559,6 +559,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       latency: [''],
       proxyMode: [''],
       proxyHost: [''],
+      proxyRemovePrefix: [''],
       https: [''],
       cors: ['']
     });
@@ -633,6 +634,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             latency: activeEnvironment.latency,
             proxyMode: activeEnvironment.proxyMode,
             proxyHost: activeEnvironment.proxyHost,
+            proxyRemovePrefix: activeEnvironment.proxyRemovePrefix,
             https: activeEnvironment.https,
             cors: activeEnvironment.cors
           },

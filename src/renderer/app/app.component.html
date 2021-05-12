@@ -259,7 +259,7 @@
                         >Enable</label
                       >
                     </div>
-                    <div class="input-group">
+                    <div class="input-group mr-4">
                       <input
                         type="text"
                         class="form-control"
@@ -277,6 +277,31 @@
                           ngbTooltip="The address must be a valid URL"
                           ><i class="material-icons">warning</i></span
                         >
+                      </div>
+                    </div>
+                    <div class="form-inline">
+                      <div class="custom-control custom-checkbox">
+                        <div class="input-group">
+                          <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="proxyRemovePrefix"
+                            formControlName="proxyRemovePrefix"
+                          />
+                          <label
+                            class="custom-control-label"
+                            for="proxyRemovePrefix"
+                          >
+                            Remove Prefix
+                          </label>
+                          <div class="input-group-append ml-1">
+                            <i
+                              class="material-icons"
+                              ngbTooltip="When enabled the prefix value of the environment will not be sent to the remote proxy."
+                              >info</i
+                            >
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

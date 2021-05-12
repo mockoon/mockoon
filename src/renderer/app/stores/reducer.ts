@@ -472,6 +472,7 @@ export const environmentReducer = (
         'endpointPrefix',
         'proxyMode',
         'proxyHost',
+        'proxyRemovePrefix',
         'https',
         'cors'
       ];
