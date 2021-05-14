@@ -11,7 +11,7 @@ export type HttpCall = {
   protocol?: 'http' | 'https';
   path: string;
   method: 'GET' | 'POST' | 'PUT' | 'HEAD' | 'OPTIONS';
-  headers?: { [key in string]: string | number };
+  headers?: { [key in string]: string | string[] | number };
   cookie?: string;
   body?: any;
   testedResponse?: HttpCallResponse;

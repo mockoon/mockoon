@@ -9,8 +9,21 @@ const getHeaders: HttpCall = {
     status: 200,
     headers: {
       'content-type': 'application/json; charset=utf-8',
-      'route-header': 'route-header',
+      'route-header': 'route-header1, route-header2',
       'global-header': 'global-header'
+    }
+  }
+};
+
+const getDuplicatedHeaders: HttpCall = {
+  description: 'Call GET headers',
+  path: '/headers',
+  method: 'GET',
+  testedResponse: {
+    status: 200,
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'global-header': 'global-header1, global-header2'
     }
   }
 };
@@ -59,7 +72,11 @@ describe('Global headers', () => {
 
     await tests.helpers.addHeader('route-response-headers', {
       key: 'route-header',
-      value: 'route-header'
+      value: 'route-header1'
+    });
+    await tests.helpers.addHeader('route-response-headers', {
+      key: 'route-header',
+      value: 'route-header2'
     });
   });
 
@@ -79,6 +96,29 @@ describe('Global headers', () => {
 
   it('Call /donotexists should return a 404 with global headers', async () => {
     await tests.helpers.httpCallAsserterWithPort(getDoNotExists, 3000);
+  });
+});
+
+describe('Global duplicated headers', () => {
+  const tests = new Tests('headers');
+
+  it('Add duplicated headers on environment', async () => {
+    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+
+    await tests.helpers.addHeader('environment-headers', {
+      key: 'global-header',
+      value: 'global-header1'
+    });
+
+    await tests.helpers.addHeader('environment-headers', {
+      key: 'global-header',
+      value: 'global-header2'
+    });
+  });
+
+  it('Call /headers, we should get an array of headers', async () => {
+    await tests.helpers.startEnvironment();
+    await tests.helpers.httpCallAsserterWithPort(getDuplicatedHeaders, 3000);
   });
 });
 
