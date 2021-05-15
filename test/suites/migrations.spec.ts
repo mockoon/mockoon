@@ -137,8 +137,7 @@ describe('Environments migrations', () => {
       await tests.helpers.verifyObjectPropertyInFile(
         './tmp/storage/environments.json',
         ['0.proxyRemovePrefix'],
-        false,
-        true
+        false
       );
     });
   });
