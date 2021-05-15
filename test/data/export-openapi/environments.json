@@ -1,7 +1,7 @@
 [
   {
     "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-    "lastMigration": 14,
+    "lastMigration": 15,
     "name": "Demo users API V2",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -201,6 +201,7 @@
       { "key": "Content-Type", "value": "application/json" }
     ],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }]
+    "proxyResHeaders": [{ "key": "", "value": "" }],
+    "proxyRemovePrefix": false
   }
 ]

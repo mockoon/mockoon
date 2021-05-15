@@ -1,7 +1,7 @@
 [
   {
     "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
-    "lastMigration": 14,
+    "lastMigration": 15,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -489,6 +489,7 @@
     "cors": true,
     "headers": [{ "key": "Content-Type", "value": "application/json" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }]
+    "proxyResHeaders": [{ "key": "", "value": "" }],
+    "proxyRemovePrefix": false
   }
 ]

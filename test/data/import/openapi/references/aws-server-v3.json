@@ -1,7 +1,7 @@
 [
   {
     "uuid": "00c259b0-a802-11eb-8344-e578768b170e",
-    "lastMigration": 14,
+    "lastMigration": 15,
     "name": "AWS Server Migration Service",
     "endpointPrefix": "",
     "latency": 0,
@@ -2415,6 +2415,7 @@
     "cors": true,
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }]
+    "proxyResHeaders": [{ "key": "", "value": "" }],
+    "proxyRemovePrefix": false
   }
 ]
