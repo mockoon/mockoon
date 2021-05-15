@@ -1,7 +1,7 @@
 [
   {
     "uuid": "",
-    "lastMigration": 14,
+    "lastMigration": 15,
     "name": "Slack",
     "endpointPrefix": "api",
     "latency": 0,
@@ -5834,6 +5834,7 @@
     "cors": true,
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }]
+    "proxyResHeaders": [{ "key": "", "value": "" }],
+    "proxyRemovePrefix": false
   }
 ]

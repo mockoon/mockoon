@@ -1,7 +1,7 @@
 [
   {
     "uuid": "d1fec840-e7d4-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 14,
+    "lastMigration": 15,
     "name": "Giphy",
     "endpointPrefix": "v1",
     "latency": 0,
@@ -774,6 +774,7 @@
     "cors": true,
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }]
+    "proxyResHeaders": [{ "key": "", "value": "" }],
+    "proxyRemovePrefix": false
   }
 ]

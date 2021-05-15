@@ -126,4 +126,19 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 15', () => {
+    const filesPath = 'migrations/15';
+    const tests = new Tests(filesPath);
+
+    it('Should add "proxyRemovePrefix" properties to environments', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.proxyRemovePrefix'],
+        false
+      );
+    });
+  });
 });

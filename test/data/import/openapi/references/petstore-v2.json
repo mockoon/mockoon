@@ -1,7 +1,7 @@
 [
   {
     "uuid": "",
-    "lastMigration": 14,
+    "lastMigration": 15,
     "name": "Swagger Petstore v2",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -706,6 +706,7 @@
     "cors": true,
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }]
+    "proxyResHeaders": [{ "key": "", "value": "" }],
+    "proxyRemovePrefix": false
   }
 ]

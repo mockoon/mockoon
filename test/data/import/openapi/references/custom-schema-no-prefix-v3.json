@@ -1,7 +1,7 @@
 [
   {
     "uuid": "",
-    "lastMigration": 14,
+    "lastMigration": 15,
     "name": "Sample v3 schema",
     "endpointPrefix": "",
     "latency": 0,
@@ -91,6 +91,7 @@
     "cors": true,
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }]
+    "proxyResHeaders": [{ "key": "", "value": "" }],
+    "proxyRemovePrefix": false
   }
 ]
