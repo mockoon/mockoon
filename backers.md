@@ -6,9 +6,8 @@ Thank you to everyone who backed Mockoon. You can join them by visiting my page 
 
 ## Backers via GitHub Sponsors:
 
-- Elior Boukhobza - https://www.material-theme.com
-
-- [Alrawas](https://github.com/alrawas)
+- [mallowigi](https://github.com/mallowigi)
+- [mingyuchoo](https://github.com/mingyuchoo)
 
 ## One-Time sponsors
 
@@ -20,9 +19,11 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Andres Saa
 - Andrey Kozlov
 - Валентин Радчук
+- Barefootdeveloper
 - Buckley Robinson
 - Colin White
 - Cyhung
+- Dwi Satria
 - Efe
 - François Grémont
 - Jakub Ślusarski
@@ -52,4 +53,5 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Victor Castro
 - Volker Richert
 - Yuemuc
-(List from [Buy Me A Coffee](https://www.buymeacoffee.com/255kb) page)
+
+(List from GitHub one-time sponsors and [Buy Me A Coffee](https://www.buymeacoffee.com/255kb) page)
