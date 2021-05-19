@@ -87,6 +87,20 @@ export class EnvironmentLogsComponent implements OnInit {
           if (environmentLog.response.body) {
             environmentLog.response.truncatedBody =
               this.dataService.truncateBody(environmentLog.response.body);
+
+            const contentEncoding = environmentLog.response.headers.find(
+              (header) => header.key.toLowerCase() === 'content-encoding'
+            )?.value;
+
+            if (
+              contentEncoding === 'gzip' ||
+              contentEncoding === 'br' ||
+              contentEncoding === 'deflate'
+            ) {
+              environmentLog.response.bodyState = 'unzipped';
+            } else {
+              environmentLog.response.bodyState = 'raw';
+            }
           }
         }
 

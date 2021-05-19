@@ -474,10 +474,23 @@ export class EnvironmentsService {
       if (log.response) {
         const headers: Header[] = [];
         log.response.headers.forEach((header) => {
+          if (
+            header.key === 'content-encoding' ||
+            header.key === 'content-length'
+          )
+            return;
+
           headers.push(
             this.schemasBuilderService.buildHeader(header.key, header.value)
           );
         });
+
+        headers.push(
+          this.schemasBuilderService.buildHeader(
+            'content-length',
+            log.response.body.length.toString()
+          )
+        );
 
         routeResponse = {
           ...this.schemasBuilderService.buildRouteResponse(),
