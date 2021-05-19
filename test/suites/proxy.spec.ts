@@ -86,16 +86,6 @@ describe('Proxy (with TLS and proxy headers)', () => {
       value: 'header value'
     });
 
-    // add duplicated headers
-    await tests.helpers.addHeader('proxy-req-headers', {
-      key: 'Link',
-      value: 'link1'
-    });
-    await tests.helpers.addHeader('proxy-req-headers', {
-      key: 'Link',
-      value: 'link2'
-    });
-
     await tests.helpers.addHeader('proxy-res-headers', {
       key: 'Set-Cookie',
       value: 'cookie1=cookievalue1'
@@ -134,17 +124,12 @@ describe('Proxy (with TLS and proxy headers)', () => {
     await tests.helpers.switchViewInHeader('ENV_LOGS');
     await tests.helpers.selectEnvironmentLogEntry(1);
     await tests.helpers.switchTabInEnvironmentLogs('REQUEST');
-    await tests.helpers.environmentLogItemEqual(
-      'Link: link1, link2',
-      'request',
-      4,
-      4
-    );
+
     await tests.helpers.environmentLogItemEqual(
       'X-proxy-request-header: header value',
       'request',
       4,
-      5
+      4
     );
   });
 
