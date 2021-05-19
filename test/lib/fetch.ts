@@ -12,7 +12,7 @@ export const fetch = (params: {
   port: number;
   path: string;
   method: 'GET' | 'POST' | 'PUT' | 'HEAD' | 'OPTIONS';
-  headers: { [key in string]: string | number };
+  headers: { [key in string]: string | string[] | number };
   body: any;
   cookie: string;
 }): Promise<HttpCallResponse> => {

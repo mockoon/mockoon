@@ -437,10 +437,20 @@ export class Helpers {
           Object.keys(httpCall.testedResponse.headers).forEach((headerName) => {
             const responseHeader = response.headers[headerName];
 
-            expect(responseHeader).to.not.be.undefined;
-            expect(responseHeader).to.include(
-              httpCall.testedResponse.headers[headerName]
-            );
+            if (Array.isArray(httpCall.testedResponse.headers[headerName])) {
+              (httpCall.testedResponse.headers[headerName] as string[]).forEach(
+                (expectedHeader) => {
+                  expect(responseHeader)
+                    .to.be.be.an('Array')
+                    .that.include(expectedHeader);
+                }
+              );
+            } else {
+              expect(responseHeader).to.not.be.undefined;
+              expect(responseHeader).to.include(
+                httpCall.testedResponse.headers[headerName]
+              );
+            }
           });
         } else if (
           propertyName === 'body' &&
