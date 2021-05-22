@@ -56,6 +56,10 @@ If you are interested in contributing to Mockoon, please take a look at the [con
 
 Please also take a look at our [Code of Conduct](https://github.com/mockoon/mockoon/blob/main/CODE_OF_CONDUCT.md).
 
+## Contributor over time
+
+[![Contributor over time](https://contributor-graph-api.apiseven.com/contributors-svg?chart=contributorOverTime&repo=mockoon/mockoon)](https://www.apiseven.com/en/contributor-graph?chart=contributorOverTime&repo=mockoon/mockoon)
+
 ## Roadmap
 
 If you want to know what will be coming in the next release you can check the global [Roadmap](https://github.com/orgs/mockoon/projects/2).
