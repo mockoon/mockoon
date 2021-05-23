@@ -81,6 +81,7 @@ export class SchemasBuilderService {
       endpointPrefix: '',
       latency: 0,
       port: this.dataService.getNewEnvironmentPort(),
+      hostname: '0.0.0.0',
       routes: hasDefaultRoute ? [this.buildRoute()] : [],
       proxyMode: false,
       proxyHost: '',
