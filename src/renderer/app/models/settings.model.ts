@@ -5,7 +5,7 @@ export type Settings = {
   analytics: boolean;
   bannerDismissed: string[];
   logSizeLimit: number;
-  maxLogsPerEnvironment: number,
+  maxLogsPerEnvironment: number;
   truncateRouteName: boolean;
   routeMenuSize: number;
   logsMenuSize: number;
