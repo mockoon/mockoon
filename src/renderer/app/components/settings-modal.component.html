@@ -27,7 +27,26 @@
             >
           </div>
         </div>
-
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text pl-0"
+                >Maximum Environment History:</span
+              >
+            </div>
+            <input
+              type="number"
+              class="form-control col-1"
+              id="log-max-count"
+              [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
+              [ngModel]="settings.maxLogsPerEnvironment"
+              (ngModelChange)="settingsUpdated($event, 'maxLogsPerEnvironment')"
+            />
+            <div class="input-group-prepend">
+              <span class="input-group-text pl-0">&nbsp;logs</span>
+            </div>
+          </div>
+        </div>
         <div class="form-group">
           <div class="input-group">
             <div class="input-group-prepend">
@@ -35,7 +54,7 @@
             </div>
             <input
               type="number"
-              class="form-control col-4"
+              class="form-control col-2"
               id="log-body-size"
               [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
               placeholder="10000 (default)"

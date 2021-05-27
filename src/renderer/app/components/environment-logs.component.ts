@@ -63,8 +63,7 @@ export class EnvironmentLogsComponent implements OnInit {
 
   ngOnInit() {
     this.environmentLogs$ = this.store
-      .selectActiveEnvironmentLogs()
-      .pipe(distinctUntilChanged());
+      .selectActiveEnvironmentLogs();
 
     this.activeEnvironmentLogUUID$ = this.environmentLogs$.pipe(
       mergeMap(() => this.store.selectActiveEnvironmentLogUUID())

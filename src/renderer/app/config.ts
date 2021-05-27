@@ -16,7 +16,7 @@ export const Config = {
     headers: docsURL + 'response-headers/',
     rules: docsURL + 'route-responses/multiple-responses/'
   },
-  maxLogsPerEnvironment: 50,
+  defaultMaxLogsPerEnvironment: 50,
   firebaseConfig: {
     apiKey: 'AIzaSyCIkzTtimLebXjf-gfCQ6iwCVFsYRhCRvs',
     authDomain: 'mockoon-ba3e2.firebaseapp.com',

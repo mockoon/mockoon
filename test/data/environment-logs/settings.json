@@ -1,0 +1,11 @@
+{
+  "welcomeShown": true,
+  "analytics": true,
+  "bannerDismissed": [],
+  "maxLogsPerEnvironment": 2,
+  "logSizeLimit": 10000,
+  "truncateRouteName": true,
+  "fakerLocale": "en",
+  "fakerSeed": 1,
+  "lastChangelog": "9999.9.9"
+}
