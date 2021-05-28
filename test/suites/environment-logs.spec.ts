@@ -399,28 +399,22 @@ describe('Environment logs', () => {
         await tests.helpers.assertLogsEmpty();
       });
 
-      it(endpointCall.description, async () => {
-        await tests.helpers.httpCallAsserter(endpointCall);
-      });
+      for (let i = 0; i < 5; ++i) {
+        it(endpointCall.description, async () => {
+          await tests.helpers.httpCallAsserter(endpointCall);
+        });
+      }
 
-      it('Has 1 log', async () => {
-        await tests.helpers.assertLogCount(1);
-      });
-
-      it(endpointCall.description, async () => {
-        await tests.helpers.httpCallAsserter(endpointCall);
-      });
-
-      it('Has 2 logs', async () => {
-        await tests.helpers.assertLogCount(2);
+      it('Has 5 logs', async () => {
+        await tests.helpers.countEnvironmentLogsEntries(5);
       });
 
       it(endpointCall.description, async () => {
         await tests.helpers.httpCallAsserter(endpointCall);
       });
 
-      it('Still has 2 logs', async () => {
-        await tests.helpers.assertLogCount(2);
+      it('Still has 5 logs', async () => {
+        await tests.helpers.countEnvironmentLogsEntries(5);
       });
     });
   });

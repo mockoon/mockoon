@@ -26,12 +26,6 @@ export class Helpers {
     return element;
   }
 
-  public async getElements(selector: string) {
-    const elements = await this.testsInstance.app.client.$$(selector);
-
-    return elements;
-  }
-
   public async waitElementExist(selector: string, reverse: boolean = false) {
     const element = await this.getElement(selector);
     await element.waitForExist({ reverse });
@@ -538,17 +532,6 @@ export class Helpers {
 
   public async assertPresenceOnLogsPage() {
     await this.waitElementExist('.environment-logs');
-  }
-
-  public async assertLogCount(expected: number) {
-    const logNav = await this.getElements(
-      '.environment-logs-column > .nav > .nav-item'
-    );
-    const count = logNav.length;
-    expect(count).to.equal(
-      expected,
-      `Expected ${expected} logs but found ${count}`
-    );
   }
 
   public async assertLogsEmpty() {
