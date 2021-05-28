@@ -844,11 +844,13 @@ export const environmentReducer = (
       newEnvironmentsLogs[action.environmentUUID].unshift(action.logItem);
 
       // remove one at the end if we reach maximum
-      while (
+      if (
         newEnvironmentsLogs[action.environmentUUID].length >
         state.settings.maxLogsPerEnvironment
       ) {
-        newEnvironmentsLogs[action.environmentUUID].pop();
+        newEnvironmentsLogs[action.environmentUUID] = newEnvironmentsLogs[
+          action.environmentUUID
+        ].slice(0, state.settings.maxLogsPerEnvironment);
       }
 
       newState = {
