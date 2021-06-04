@@ -47,12 +47,7 @@ export class Tests {
         // quitTimeout is important! (app graceful stop and data saving)
         quitTimeout: 4000,
         waitTimeout: 500,
-        args: [
-          '-r',
-          path.join(__dirname, './electron-mocks.js'),
-          './dist',
-          '--tests'
-        ],
+        args: ['-r', path.join(__dirname, './electron-mocks.js'), './dist'],
         webdriverOptions: {
           deprecationWarnings: false
         },

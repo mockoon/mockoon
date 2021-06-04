@@ -4,7 +4,7 @@
   "compilerOptions": {
     "outDir": "../../dist",
     "module": "CommonJS",
-    "target": "es2020",
+    "target": "es2018",
     "strict": true,
     "lib": ["es2020", "dom"]
   }
