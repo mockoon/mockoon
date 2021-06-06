@@ -47,6 +47,18 @@ export const Messages: {
     showToast: true,
     toastType: 'error'
   }),
+  HOSTNAME_UNAVAILABLE: (messageParams) => ({
+    message: 'Provided hostname/address not available',
+    loggerMessage: `Error when starting the server ${messageParams.uuid}: ${messageParams.error.message}`,
+    showToast: true,
+    toastType: 'error'
+  }),
+  HOSTNAME_UNKNOWN: (messageParams) => ({
+    message: 'Unknown hostname/address provided',
+    loggerMessage: `Error getting address information ${messageParams.uuid}: ${messageParams.error.message}`,
+    showToast: true,
+    toastType: 'error'
+  }),
   REQUEST_BODY_PARSE: (messageParams) => {
     const message = `Error while parsing entering body: ${messageParams.error.message}`;
 

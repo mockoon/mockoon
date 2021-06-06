@@ -49,11 +49,8 @@ describe('Environment answers on all hostnames', async () => {
     if (testedNicTypes.indexOf(nicType.toLowerCase()) === -1) {
       continue;
     }
-    for (const address of nics[nicType]) {
-      if (address.family !== 'IPv4') {
-        continue;
-      }
 
+    for (const address of nics[nicType].filter((f) => f.family === 'IPv4')) {
       it(`Answers on ${address.address}`, async () => {
         await tests.helpers.httpCallAssertWithPortAndHostname(
           endpointCall,
@@ -100,11 +97,7 @@ describe('Environment answers on localhost only', async () => {
     if (testedNicTypes.indexOf(nicType.toLowerCase()) === -1) {
       continue;
     }
-    for (const address of nics[nicType]) {
-      if (address.family !== 'IPv4') {
-        continue;
-      }
-
+    for (const address of nics[nicType].filter((a) => a.family === 'IPv4')) {
       it(`Does not answer on ${address.address}`, async () => {
         await expect(
           tests.helpers.httpCallAssertWithPortAndHostname(
