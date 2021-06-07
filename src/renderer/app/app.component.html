@@ -382,7 +382,6 @@
                     heading="Server Settings"
                     icon="storage"
                     iconClasses="text-primary"
-                    docLink="https"
                   ></app-title-separator>
 
                   <div class="form-inline pl-4">
@@ -394,7 +393,12 @@
                         formControlName="https"
                       />
                       <label class="custom-control-label" for="HTTPS"
-                        >HTTPS</label
+                        >HTTPS
+                        <span
+                          (click)="openWikiLink('https')"
+                          class="pl-2 btn btn-link text-primary cp doc-link"
+                          ><i class="material-icons">info</i></span
+                        ></label
                       >
                     </div>
                     <div class="custom-control custom-checkbox">
