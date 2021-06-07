@@ -418,10 +418,19 @@ export class Helpers {
   }
 
   public async httpCallAsserterWithPort(httpCall: HttpCall, port: number) {
+    await this.httpCallAssertWithPortAndHostname(httpCall, port, 'localhost');
+  }
+
+  public async httpCallAssertWithPortAndHostname(
+    httpCall: HttpCall,
+    port: number,
+    hostname: string
+  ) {
     // allow for UI changes to be propagated
     await this.testsInstance.app.client.pause(500);
 
     const response = await fetch({
+      hostname,
       protocol: httpCall.protocol || 'http',
       port,
       path: httpCall.path,

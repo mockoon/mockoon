@@ -119,6 +119,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public toasts$: Observable<Toast[]>;
   public focusableInputs = FocusableInputs;
   public statusCodeValidation = StatusCodeValidation;
+  public hostnameTooltip$: Observable<string>;
   private injectHeaders$ = new Subject<Header[]>();
   private logger = new Logger('[COMPONENT][APP]');
   private closingSubscription: Subscription;
@@ -206,6 +207,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.activeRouteResponseLastLog$ =
       this.store.selectActiveRouteResponseLastLog();
     this.toasts$ = this.store.select('toasts');
+    this.hostnameTooltip$ = this.activeEnvironment$.pipe(
+      map((environment) =>
+        environment.hostname === '0.0.0.0'
+          ? 'Server available on all network interfaces (localhost, 127.0.0.1, etc)'
+          : `Server available on ${environment.hostname}`
+      )
+    );
 
     this.initFormValues();
   }
@@ -561,6 +569,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       proxyHost: [''],
       proxyRemovePrefix: [''],
       https: [''],
+      localhostOnly: [''],
       cors: ['']
     });
 
@@ -584,9 +593,19 @@ export class AppComponent implements OnInit, AfterViewInit {
     // send new activeEnvironmentForm values to the store, one by one
     merge(
       ...Object.keys(this.activeEnvironmentForm.controls).map((controlName) =>
-        this.activeEnvironmentForm
-          .get(controlName)
-          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
+        this.activeEnvironmentForm.get(controlName).valueChanges.pipe(
+          map((newValue) => {
+            if (controlName === 'localhostOnly') {
+              return {
+                hostname: newValue === true ? '127.0.0.1' : '0.0.0.0'
+              };
+            }
+
+            return {
+              [controlName]: newValue
+            };
+          })
+        )
       )
     ).subscribe((newProperty) => {
       this.environmentsService.updateActiveEnvironment(newProperty);
@@ -636,6 +655,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             proxyHost: activeEnvironment.proxyHost,
             proxyRemovePrefix: activeEnvironment.proxyRemovePrefix,
             https: activeEnvironment.https,
+            localhostOnly: activeEnvironment.hostname === '127.0.0.1',
             cors: activeEnvironment.cors
           },
           { emitEvent: false }

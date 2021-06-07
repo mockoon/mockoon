@@ -97,10 +97,9 @@
                 <span class="input-group-text"
                   ><i
                     class="material-icons"
-                    ngbTooltip="Server available on all network interfaces (localhost, 127.0.0.1, etc)"
+                    [ngbTooltip]="hostnameTooltip$ | async"
                     >power</i
-                  >
-                  0.0.0.0 :</span
+                  >&nbsp; {{ activeEnvironment.hostname }} :</span
                 >
               </div>
               <input
@@ -380,14 +379,14 @@
                 <!-- flexbox container -->
                 <div>
                   <app-title-separator
-                    heading="HTTPS"
-                    icon="https"
-                    iconClasses="text-warning"
+                    heading="Server Settings"
+                    icon="storage"
+                    iconClasses="text-primary"
                     docLink="https"
                   ></app-title-separator>
 
                   <div class="form-inline pl-4">
-                    <div class="custom-control custom-checkbox">
+                    <div class="custom-control custom-checkbox mr-4">
                       <input
                         type="checkbox"
                         class="custom-control-input"
@@ -395,7 +394,18 @@
                         formControlName="https"
                       />
                       <label class="custom-control-label" for="HTTPS"
-                        >Enable</label
+                        >HTTPS</label
+                      >
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="localhostOnly"
+                        formControlName="localhostOnly"
+                      />
+                      <label class="custom-control-label" for="localhostOnly"
+                        >Localhost Only</label
                       >
                     </div>
                   </div>

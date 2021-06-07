@@ -141,4 +141,19 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 16', () => {
+    const filesPath = 'migrations/16';
+    const tests = new Tests(filesPath);
+
+    it('Should add "hostname" properties to environments', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        ['0.hostname'],
+        '0.0.0.0'
+      );
+    });
+  });
 });
