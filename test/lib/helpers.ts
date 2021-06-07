@@ -418,7 +418,11 @@ export class Helpers {
   }
 
   public async httpCallAsserterWithPort(httpCall: HttpCall, port: number) {
-    await this.httpCallAssertWithPortAndHostname(httpCall, port, 'localhost');
+    return await this.httpCallAssertWithPortAndHostname(
+      httpCall,
+      port,
+      'localhost'
+    );
   }
 
   public async httpCallAssertWithPortAndHostname(
