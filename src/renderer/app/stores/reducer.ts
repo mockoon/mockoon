@@ -474,6 +474,7 @@ export const environmentReducer = (
         'proxyHost',
         'proxyRemovePrefix',
         'https',
+        'hostname',
         'cors'
       ];
       const activeEnvironmentStatus =

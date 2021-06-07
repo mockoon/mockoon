@@ -1,7 +1,7 @@
 [
   {
     "uuid": "",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "Sample v3 schema",
     "endpointPrefix": "api",
     "latency": 0,
@@ -92,6 +92,7 @@
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false
+    "proxyRemovePrefix": false,
+    "hostname": "0.0.0.0"
   }
 ]

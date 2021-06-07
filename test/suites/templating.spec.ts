@@ -673,7 +673,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: '::ffff:127.0.0.1'
+          body: '127.0.0.1'
         }
       },
       {

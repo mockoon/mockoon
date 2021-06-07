@@ -8,6 +8,7 @@ const RequestsLibraries = {
 };
 
 export const fetch = (params: {
+  hostname: string;
   protocol: 'http' | 'https';
   port: number;
   path: string;
@@ -20,6 +21,8 @@ export const fetch = (params: {
     typeof params.body === 'string'
       ? params.body
       : JSON.stringify(params.body || {});
+
+  params.hostname = params.hostname ?? 'localhost';
 
   return new Promise((resolve, reject) => {
     const headers = {
@@ -35,7 +38,7 @@ export const fetch = (params: {
 
     const request = RequestsLibraries[params.protocol](
       {
-        hostname: 'localhost',
+        hostname: params.hostname,
         port: params.port,
         path: params.path,
         method: params.method.toUpperCase(),
