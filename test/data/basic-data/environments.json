@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -87,6 +87,7 @@
     "headers": [{ "key": "", "value": "" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false
+    "proxyRemovePrefix": false,
+    "hostname": "0.0.0.0"
   }
 ]

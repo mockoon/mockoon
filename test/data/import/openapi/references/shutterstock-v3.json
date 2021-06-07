@@ -1,7 +1,7 @@
 [
   {
     "uuid": "f98d4710-e7d4-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "Shutterstock API Explorer",
     "endpointPrefix": "",
     "latency": 0,
@@ -5100,6 +5100,7 @@
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false
+    "proxyRemovePrefix": false,
+    "hostname": "0.0.0.0"
   }
 ]

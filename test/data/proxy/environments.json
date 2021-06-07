@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -45,11 +45,12 @@
     "cors": true,
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }]
+    "proxyResHeaders": [{ "key": "", "value": "" }],
+    "hostname": "0.0.0.0"
   },
   {
     "uuid": "2cbdec80-f284-11e9-a28c-912bdc671019",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "Proxy",
     "endpointPrefix": "",
     "latency": 0,
@@ -62,11 +63,12 @@
     "cors": true,
     "headers": [{ "key": "Content-Type", "value": "application/json" }],
     "proxyReqHeaders": [],
-    "proxyResHeaders": []
+    "proxyResHeaders": [],
+    "hostname": "0.0.0.0"
   },
   {
     "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "Proxy disabled",
     "endpointPrefix": "",
     "latency": 0,
@@ -106,11 +108,12 @@
     "proxyReqHeaders": [],
     "proxyResHeaders": [
       { "key": "x-proxy-response-header", "value": "header value" }
-    ]
+    ],
+    "hostname": "0.0.0.0"
   },
   {
     "uuid": "2cbdec80-f284-11e9-a28c-912bdc671020",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "Proxy removes prefix",
     "endpointPrefix": "prefix",
     "latency": 0,
@@ -123,6 +126,7 @@
     "cors": true,
     "headers": [{ "key": "Content-Type", "value": "application/json" }],
     "proxyReqHeaders": [],
-    "proxyResHeaders": []
+    "proxyResHeaders": [],
+    "hostname": "0.0.0.0"
   }
 ]

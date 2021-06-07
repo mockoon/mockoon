@@ -1,7 +1,7 @@
 [
   {
     "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "Export env",
     "endpointPrefix": "",
     "latency": 0,
@@ -39,11 +39,12 @@
     "headers": [{ "key": "", "value": "" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false
+    "proxyRemovePrefix": false,
+    "hostname": "0.0.0.0"
   },
   {
     "uuid": "867fe03b-01f9-4c6c-a6bc-30000dddba46",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "Alt export env",
     "endpointPrefix": "",
     "latency": 0,
@@ -81,6 +82,7 @@
     "headers": [{ "key": "", "value": "" }],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false
+    "proxyRemovePrefix": false,
+    "hostname": "0.0.0.0"
   }
 ]

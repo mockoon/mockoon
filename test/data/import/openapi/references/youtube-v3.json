@@ -1,7 +1,7 @@
 [
   {
     "uuid": "0c9cbbb0-e7d5-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "YouTube Analytics",
     "endpointPrefix": "",
     "latency": 0,
@@ -207,6 +207,7 @@
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false
+    "proxyRemovePrefix": false,
+    "hostname": "0.0.0.0"
   }
 ]

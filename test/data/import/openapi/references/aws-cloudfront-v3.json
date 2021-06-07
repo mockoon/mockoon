@@ -1,7 +1,7 @@
 [
   {
     "uuid": "3e16e1a0-a802-11eb-9a34-f1c6ade0819b",
-    "lastMigration": 15,
+    "lastMigration": 16,
     "name": "Amazon CloudFront",
     "endpointPrefix": "",
     "latency": 0,
@@ -3716,6 +3716,7 @@
     "headers": [],
     "proxyReqHeaders": [{ "key": "", "value": "" }],
     "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false
+    "proxyRemovePrefix": false,
+    "hostname": "0.0.0.0"
   }
 ]
