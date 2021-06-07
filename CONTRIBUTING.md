@@ -52,9 +52,9 @@ When a feature or bugfix requires a change in the data model (`Environment`, `Ro
 
 ## Run the tests
 
-Tests are written with Spectron and you can run them using `npm run test`. These tests will also be run on each commit or pull request by CircleCI.
+Tests are written with Spectron and you can run them using `npm run test`. These tests will also be run on each commit or pull request in the CI environment.
 
-When running the tests locally, you will first need to build the application with `npm run build:dev:renderer` and `npm run build:dev:main` in order to have an application build to test against.
+When running the tests locally, you will first need to build the application with `npm run build:ci:renderer` and `npm run build:ci:main`, or `npm run build:ci:all`, in order to have an application build to test against.
 
 ## Open a pull request
 
