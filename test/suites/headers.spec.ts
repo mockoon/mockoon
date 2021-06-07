@@ -147,11 +147,13 @@ describe('Duplicated Set-Cookie header', () => {
 
   it('Add duplicated Set-Cookie headers on route', async () => {
     await tests.helpers.switchTab('HEADERS');
+    await tests.app.client.pause(50);
 
     await tests.helpers.addHeader('route-response-headers', {
       key: 'Set-Cookie',
       value: 'routecookie1=routecookie1value'
     });
+    await tests.app.client.pause(50);
 
     await tests.helpers.addHeader('route-response-headers', {
       key: 'Set-Cookie',
@@ -162,10 +164,13 @@ describe('Duplicated Set-Cookie header', () => {
   it('Add duplicated Set-Cookie headers on environment', async () => {
     await tests.helpers.switchViewInHeader('ENV_SETTINGS');
 
+    await tests.app.client.pause(50);
+
     await tests.helpers.addHeader('environment-headers', {
       key: 'Set-Cookie',
       value: 'envcookie1=envcookie1value'
     });
+    await tests.app.client.pause(50);
 
     await tests.helpers.addHeader('environment-headers', {
       key: 'Set-Cookie',
