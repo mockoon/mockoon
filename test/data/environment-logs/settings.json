@@ -2,7 +2,6 @@
   "welcomeShown": true,
   "analytics": true,
   "bannerDismissed": [],
-  "maxLogsPerEnvironment": 5,
   "logSizeLimit": 10000,
   "truncateRouteName": true,
   "fakerLocale": "en",

@@ -390,6 +390,13 @@ describe('Environment logs', () => {
     describe('Environment logs are limited to maximum number specified', () => {
       const tests = new Tests('environment-logs');
 
+      it('Changes log setting', async () => {
+        await tests.helpers.openSettingsModal();
+        // Add 0 to default value of 1
+        await tests.helpers.setElementValue('input[id="log-max-count"]', 0);
+        await tests.helpers.closeModal();
+      });
+
       it('Start first environment', async () => {
         await tests.helpers.startEnvironment();
       });
@@ -399,22 +406,22 @@ describe('Environment logs', () => {
         await tests.helpers.assertLogsEmpty();
       });
 
-      for (let i = 0; i < 5; ++i) {
+      for (let i = 0; i < 10; ++i) {
         it(endpointCall.description, async () => {
           await tests.helpers.httpCallAsserter(endpointCall);
         });
       }
 
-      it('Has 5 logs', async () => {
-        await tests.helpers.countEnvironmentLogsEntries(5);
+      it('Has 10 logs', async () => {
+        await tests.helpers.countEnvironmentLogsEntries(10);
       });
 
       it(endpointCall.description, async () => {
         await tests.helpers.httpCallAsserter(endpointCall);
       });
 
-      it('Still has 5 logs', async () => {
-        await tests.helpers.countEnvironmentLogsEntries(5);
+      it('Still has 10 logs', async () => {
+        await tests.helpers.countEnvironmentLogsEntries(10);
       });
     });
   });
