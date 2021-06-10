@@ -387,6 +387,43 @@ describe('Environment logs', () => {
         await tests.helpers.assertLogsEmpty();
       });
     });
+    describe('Environment logs are limited to maximum number specified', () => {
+      const tests = new Tests('environment-logs');
+
+      it('Changes log setting', async () => {
+        await tests.helpers.openSettingsModal();
+        // Add 0 to default value of 1
+        await tests.helpers.setElementValue('input[id="log-max-count"]', 0);
+        await tests.helpers.closeModal();
+      });
+
+      it('Start first environment', async () => {
+        await tests.helpers.startEnvironment();
+      });
+
+      it('Verify "no records" message presence', async () => {
+        await tests.helpers.switchViewInHeader('ENV_LOGS');
+        await tests.helpers.assertLogsEmpty();
+      });
+
+      for (let i = 0; i < 10; ++i) {
+        it(endpointCall.description, async () => {
+          await tests.helpers.httpCallAsserter(endpointCall);
+        });
+      }
+
+      it('Has 10 logs', async () => {
+        await tests.helpers.countEnvironmentLogsEntries(10);
+      });
+
+      it(endpointCall.description, async () => {
+        await tests.helpers.httpCallAsserter(endpointCall);
+      });
+
+      it('Still has 10 logs', async () => {
+        await tests.helpers.countEnvironmentLogsEntries(10);
+      });
+    });
   });
 
   describe('Select different log items in different environments', () => {

@@ -22,6 +22,7 @@ export class SettingsService {
     analytics: true,
     bannerDismissed: [],
     logSizeLimit: 10000,
+    maxLogsPerEnvironment: Config.defaultMaxLogsPerEnvironment,
     truncateRouteName: true,
     routeMenuSize: undefined,
     logsMenuSize: undefined,
