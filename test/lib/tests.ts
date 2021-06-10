@@ -135,23 +135,23 @@ export class Tests {
    */
   private async copySettings(alterSettings: any) {
     const settingsDestFilePath = './tmp/storage/settings.json';
-    let settingssFilePath = `./test/data/${this.dataFileName}/settings.json`;
+    let settingsFilePath = `./test/data/${this.dataFileName}/settings.json`;
     let settingsFileExists = true;
 
     try {
-      await fs.access(settingssFilePath, constants.F_OK);
+      await fs.access(settingsFilePath, constants.F_OK);
     } catch (error) {
       settingsFileExists = false;
     }
 
     // if no custom file provided for the test, revert to the generic one
     if (!settingsFileExists) {
-      settingssFilePath = './test/data/settings.json';
+      settingsFilePath = './test/data/settings.json';
     }
 
     try {
       if (this.hasSettings) {
-        await fs.copyFile(settingssFilePath, settingsDestFilePath);
+        await fs.copyFile(settingsFilePath, settingsDestFilePath);
 
         if (alterSettings) {
           const settingsFile = await fs.readFile(settingsDestFilePath, 'utf-8');

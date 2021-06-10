@@ -1,11 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import {
-  distinctUntilChanged,
-  map,
-  mergeMap,
-  withLatestFrom
-} from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
 import {
   EnvironmentLog,
@@ -62,9 +57,7 @@ export class EnvironmentLogsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.environmentLogs$ = this.store
-      .selectActiveEnvironmentLogs()
-      .pipe(distinctUntilChanged());
+    this.environmentLogs$ = this.store.selectActiveEnvironmentLogs();
 
     this.activeEnvironmentLogUUID$ = this.environmentLogs$.pipe(
       mergeMap(() => this.store.selectActiveEnvironmentLogUUID())

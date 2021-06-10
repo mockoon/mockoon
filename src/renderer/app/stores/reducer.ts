@@ -5,7 +5,6 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import { Config } from 'src/renderer/app/config';
 import { ArrayContainsObjectKey } from 'src/renderer/app/libs/utils.lib';
 import {
   ActiveEnvironmentsLogUUIDs,
@@ -847,10 +846,12 @@ export const environmentReducer = (
 
       // remove one at the end if we reach maximum
       if (
-        newEnvironmentsLogs[action.environmentUUID].length >=
-        Config.maxLogsPerEnvironment
+        newEnvironmentsLogs[action.environmentUUID].length >
+        state.settings.maxLogsPerEnvironment
       ) {
-        newEnvironmentsLogs[action.environmentUUID].pop();
+        newEnvironmentsLogs[action.environmentUUID] = newEnvironmentsLogs[
+          action.environmentUUID
+        ].slice(0, state.settings.maxLogsPerEnvironment);
       }
 
       newState = {
