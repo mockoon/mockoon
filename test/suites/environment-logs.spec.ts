@@ -387,6 +387,7 @@ describe('Environment logs', () => {
         await tests.helpers.assertLogsEmpty();
       });
     });
+
     describe('Environment logs are limited to maximum number specified', () => {
       const tests = new Tests('environment-logs');
 

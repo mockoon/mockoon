@@ -79,6 +79,23 @@ describe('Settings', () => {
     });
   });
 
+  describe('Environment log entries maximum', () => {
+    const tests = new Tests('settings');
+
+    it('should modify the limit and verify the settings file', async () => {
+      await tests.helpers.openSettingsModal();
+      await tests.helpers.setElementValue('input[id="log-max-count"]', '000');
+      await tests.helpers.closeModal();
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'maxLogsPerEnvironment',
+        1000
+      );
+    });
+  });
+
   describe('Log body truncate', () => {
     const tests = new Tests('settings');
 
