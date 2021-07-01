@@ -14,6 +14,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
+      - name: Update NPM
+        run: |
+          npm install -g npm@latest
       - name: NPM install, lint and build
         run: |
           npm ci
