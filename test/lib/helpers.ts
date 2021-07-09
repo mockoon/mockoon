@@ -598,6 +598,26 @@ export class Helpers {
     expect(elementText).to.equal(text);
   }
 
+  /**
+   * Assert text in environment logs item title
+   *
+   * @param text
+   * @param tab
+   * @param sectionIndex - includes the titles (General, Headers, etc)
+   * @param itemIndex
+   */
+  public async environmentLogItemTitleEqual(
+    text: string,
+    tab: 'request' | 'response',
+    sectionIndex: number
+  ) {
+    const selector = `.environment-logs-content-${tab} div:nth-child(${sectionIndex}) div:first-child`;
+
+    await this.waitElementExist(selector);
+    const elementText = await this.getElementText(selector);
+    expect(elementText).to.contains(text);
+  }
+
   public async environmentLogMenuMethodEqual(method: string, logIndex: number) {
     const selector = `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link .route-method`;
 
@@ -693,6 +713,36 @@ export class Helpers {
     await this.elementClick(`${headersComponentSelector} button`);
     await this.setElementValue(`${inputsSelector}(1)`, header.key);
     await this.setElementValue(`${inputsSelector}(2)`, header.value);
+  }
+
+  /**
+   * Return chosen headers list key values as an object
+   *
+   * @param location
+   */
+  public async getHeadersValues(
+    location:
+      | 'route-response-headers'
+      | 'environment-headers'
+      | 'proxy-req-headers'
+      | 'proxy-res-headers'
+  ) {
+    const keyInputs = await this.testsInstance.app.client.$$(
+      `app-headers-list#${location} .headers-list input:first-of-type`
+    );
+    const valueInputs = await this.testsInstance.app.client.$$(
+      `app-headers-list#${location} .headers-list input:last-of-type`
+    );
+    const headers = {};
+
+    for (let index = 0; index < keyInputs.length; index++) {
+      const key = (await keyInputs[index].getValue()).toLowerCase();
+      const value = (await valueInputs[index].getValue()).toLowerCase();
+
+      headers[key] = value;
+    }
+
+    return headers;
   }
 
   public async toggleDisableTemplating() {

@@ -383,7 +383,11 @@
                     class="material-icons"
                     >unfold_more</i
                   >
-                  Body ({{ !selectedLog.response?.body ? 'none' : 'raw' }})
+                  Body ({{
+                    !selectedLog.response?.bodyState
+                      ? 'none'
+                      : selectedLog.response?.bodyState
+                  }})
                 </div>
                 <div *ngIf="!selectedLog.response.binaryBody" class="ml-auto">
                   <span
