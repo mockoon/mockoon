@@ -16,7 +16,7 @@ export type EnvironmentLogResponse = {
   body: string;
   truncatedBody?: string;
   binaryBody: boolean;
-  bodyState?: string;
+  bodyState?: 'unzipped' | 'raw';
 };
 
 export type EnvironmentLog = {

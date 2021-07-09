@@ -180,6 +180,7 @@ describe('Duplicated Set-Cookie header', () => {
 
   it('Call /headers, we should get an array of Set-Cookie headers', async () => {
     await tests.helpers.startEnvironment();
+    await tests.app.client.pause(500);
     await tests.helpers.httpCallAsserterWithPort(
       getDuplicatedSetCookieHeaders,
       3000

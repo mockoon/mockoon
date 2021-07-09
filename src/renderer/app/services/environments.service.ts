@@ -473,12 +473,17 @@ export class EnvironmentsService {
 
       if (log.response) {
         const headers: Header[] = [];
+        console.log(log.response.headers);
         log.response.headers.forEach((header) => {
           if (
-            header.key === 'content-encoding' ||
-            header.key === 'content-length'
-          )
+            [
+              'content-encoding',
+              'transfer-encoding',
+              'content-length'
+            ].includes(header.key)
+          ) {
             return;
+          }
 
           headers.push(
             this.schemasBuilderService.buildHeader(header.key, header.value)
