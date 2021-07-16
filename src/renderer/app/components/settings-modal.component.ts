@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
+import { Config } from 'src/renderer/app/config';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
 import { Settings } from 'src/renderer/app/models/settings.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
@@ -52,5 +54,9 @@ export class SettingsModalComponent implements OnInit {
         () => {},
         () => {}
       );
+  }
+
+  public openWikiLink(linkName: string) {
+    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.docs[linkName]);
   }
 }

@@ -3,5 +3,6 @@
   "analytics": true,
   "lastMigration": 8,
   "bannerDismissed": [],
-  "logSizeLimit": 10000
+  "logSizeLimit": 10000,
+  "enableTelemetry": true
 }

@@ -1,10 +1,13 @@
-import { environment } from 'src/renderer/environments/environment';
-
 const appVersion: string = require('../../../package.json').version;
-const docsURL = 'https://mockoon.com/docs/latest/';
+const websiteURL = 'https://mockoon.com/';
+const docsURL = `${websiteURL}docs/latest/`;
 
 export const Config = {
   appVersion,
+  telemetry: {
+    sessionDuration: 3_600_000, // 1h
+    functionName: 'telemetry'
+  },
   githubTagReleaseUrl: 'https://github.com/mockoon/mockoon/releases/tag/v',
   githubAPITagReleaseUrl:
     'https://api.github.com/repos/mockoon/mockoon/releases/tags/v',
@@ -14,7 +17,8 @@ export const Config = {
     cors: docsURL + 'cors/',
     https: docsURL + 'https/',
     headers: docsURL + 'response-headers/',
-    rules: docsURL + 'route-responses/multiple-responses/'
+    rules: docsURL + 'route-responses/multiple-responses/',
+    faq: websiteURL + 'faq/'
   },
   defaultMaxLogsPerEnvironment: 50,
   firebaseConfig: {
@@ -24,7 +28,6 @@ export const Config = {
     projectId: 'mockoon-ba3e2',
     storageBucket: 'mockoon-ba3e2.appspot.com',
     messagingSenderId: '902702764744',
-    appId: '1:902702764744:web:599e8dc8d6a1ef6542cbfd',
-    measurementId: environment.firebaseMeasurementId
+    appId: '1:902702764744:web:599e8dc8d6a1ef6542cbfd'
   }
 };

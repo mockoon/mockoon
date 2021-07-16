@@ -72,6 +72,8 @@ export const initIPCListeners = (
     applyUpdate();
   });
 
+  ipcMain.handle('APP_GET_OS', () => process.platform);
+
   ipcMain.handle(
     'APP_READ_JSON_DATA',
     async (event, key) => await promisify(storageGet)(key)

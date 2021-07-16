@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { combineLatest, merge } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { merge } from 'rxjs';
+import { debounceTime, filter, first, tap } from 'rxjs/operators';
 import { Config } from 'src/renderer/app/config';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
+import { Settings } from 'src/renderer/app/models/settings.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { LocalStorageService } from 'src/renderer/app/services/local-storage.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { environment } from 'src/renderer/environments/environment';
 
@@ -44,21 +46,27 @@ export class AnalyticsService {
   constructor(
     private http: HttpClient,
     private eventsService: EventsService,
-    private store: Store
+    private store: Store,
+    private localStorageService: LocalStorageService
   ) {}
 
   public init() {
-    combineLatest(this.store.select('userId'), this.store.select('settings'))
-      .pipe(filter(([userId, settings]) => !!userId && !!settings))
-      .subscribe(([userId, settings]) => {
-        this.servicesReady = true;
+    this.store
+      .select('settings')
+      .pipe(
+        filter<Settings>(Boolean),
+        first(),
+        tap((settings) => {
+          this.servicesReady = true;
 
-        this.queue.forEach((item) => {
-          this.makeRequest(item);
-        });
+          this.queue.forEach((item) => {
+            this.makeRequest(item);
+          });
 
-        this.queue = [];
-      });
+          this.queue = [];
+        })
+      )
+      .subscribe();
 
     const allEventsObservable = this.eventsService.analyticsEvents.pipe(
       filter(
@@ -141,7 +149,10 @@ export class AnalyticsService {
       payload += `${key}=${this.payload[key]}`;
     });
 
-    payload += '&cid=' + this.store.get('userId') + this.getCustomDimensions();
+    payload +=
+      '&cid=' +
+      this.localStorageService.getItem('installationId') +
+      this.getCustomDimensions();
 
     return payload;
   }

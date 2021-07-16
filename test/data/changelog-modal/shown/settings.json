@@ -6,5 +6,6 @@
   "truncateRouteName": true,
   "fakerLocale": "en",
   "fakerSeed": null,
-  "lastChangelog": "1.0.0"
+  "lastChangelog": "1.0.0",
+  "enableTelemetry": true
 }
