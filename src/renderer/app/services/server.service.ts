@@ -6,6 +6,7 @@ import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import {
   logRequestAction,
@@ -20,7 +21,8 @@ export class ServerService extends Logger {
     private dataService: DataService,
     private store: Store,
     private eventsService: EventsService,
-    private zone: NgZone
+    private zone: NgZone,
+    private telemetryService: TelemetryService
   ) {
     super('[SERVICE][SERVER]', toastService);
 
@@ -98,6 +100,7 @@ export class ServerService extends Logger {
           this.eventsService.analyticsEvents.next(
             AnalyticsEvents.SERVER_ENTERING_REQUEST
           );
+          this.telemetryService.sendEvent();
           break;
 
         case 'transaction-complete':

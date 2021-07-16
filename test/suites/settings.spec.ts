@@ -96,6 +96,25 @@ describe('Settings', () => {
     });
   });
 
+  describe('Disable telemetry', () => {
+    const tests = new Tests('settings');
+
+    it('should disable telemetry and verify the settings file', async () => {
+      await tests.helpers.openSettingsModal();
+      await tests.helpers.elementClick(
+        '.modal-dialog input#enableTelemetry ~ .custom-control-label'
+      );
+      await tests.helpers.closeModal();
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'enableTelemetry',
+        false
+      );
+    });
+  });
+
   describe('Log body truncate', () => {
     const tests = new Tests('settings');
 

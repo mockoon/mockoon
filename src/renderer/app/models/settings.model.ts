@@ -12,6 +12,7 @@ export type Settings = {
   fakerLocale: FakerAvailableLocales;
   fakerSeed: number;
   lastChangelog: string;
+  enableTelemetry: boolean;
 };
 
 export interface PreMigrationSettings extends Settings {

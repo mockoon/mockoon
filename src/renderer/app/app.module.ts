@@ -1,8 +1,16 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule, SecurityContext } from '@angular/core';
+import {
+  ErrorHandler,
+  NgModule,
+  Provider,
+  SecurityContext
+} from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
+import {
+  AngularFireFunctionsModule,
+  USE_EMULATOR
+} from '@angular/fire/functions';
 import { AngularFireRemoteConfigModule } from '@angular/fire/remote-config';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -43,8 +51,37 @@ import { NgbTooltipConfigFactory } from 'src/renderer/app/modules-config/ngb-too
 import { NgbTypeaheadConfigFactory } from 'src/renderer/app/modules-config/ngb-typeahead.config';
 import { NgbConfigFactory } from 'src/renderer/app/modules-config/ngb.config';
 import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handler';
+import { environment } from 'src/renderer/environments/environment';
 import { AppComponent } from './app.component';
 import { DuplicateRouteModalComponent } from './components/move-route-modal/duplicate-route-modal.component';
+
+const providers: Provider[] = [
+  {
+    provide: ErrorHandler,
+    useClass: GlobalErrorHandler
+  },
+  {
+    provide: NgbConfig,
+    useFactory: NgbConfigFactory
+  },
+  {
+    provide: NgbTypeaheadConfig,
+    useFactory: NgbTypeaheadConfigFactory
+  },
+  {
+    provide: NgbTooltipConfig,
+    useFactory: NgbTooltipConfigFactory,
+    deps: [NgbConfig]
+  },
+  {
+    provide: NgbDropdownConfig,
+    useFactory: NgbDropdownConfigFactory
+  }
+];
+
+if (environment.useFirebaseEmulator) {
+  providers.push({ provide: USE_EMULATOR, useValue: ['localhost', 5001] });
+}
 
 @NgModule({
   declarations: [
@@ -86,34 +123,12 @@ import { DuplicateRouteModalComponent } from './components/move-route-modal/dupl
       }
     }),
     AngularFireModule.initializeApp(Config.firebaseConfig),
-    AngularFireAuthModule,
     AngularFireRemoteConfigModule,
+    AngularFireFunctionsModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot()
   ],
-  providers: [
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler
-    },
-    {
-      provide: NgbConfig,
-      useFactory: NgbConfigFactory
-    },
-    {
-      provide: NgbTypeaheadConfig,
-      useFactory: NgbTypeaheadConfigFactory
-    },
-    {
-      provide: NgbTooltipConfig,
-      useFactory: NgbTooltipConfigFactory,
-      deps: [NgbConfig]
-    },
-    {
-      provide: NgbDropdownConfig,
-      useFactory: NgbDropdownConfigFactory
-    }
-  ],
+  providers,
   bootstrap: [AppComponent]
 })
 export class AppModule {}

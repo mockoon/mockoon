@@ -9,6 +9,7 @@ import {
   SettingsProperties
 } from 'src/renderer/app/models/settings.model';
 import { StorageService } from 'src/renderer/app/services/storage.service';
+import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -28,11 +29,16 @@ export class SettingsService {
     logsMenuSize: undefined,
     fakerLocale: 'en',
     fakerSeed: null,
-    lastChangelog: null
+    lastChangelog: null,
+    enableTelemetry: true
   };
   private storageKey = 'settings';
 
-  constructor(private store: Store, private storageService: StorageService) {
+  constructor(
+    private store: Store,
+    private storageService: StorageService,
+    private telemetryService: TelemetryService
+  ) {
     // get existing settings from storage or create default one. Start saving after loading the data
     this.storageService
       .loadData<PreMigrationSettings>(this.storageKey)
@@ -43,6 +49,8 @@ export class SettingsService {
             settings.constructor === Object
           ) {
             this.logger.info('No Settings, building default settings');
+
+            this.telemetryService.setFirstSession();
 
             // build default settings (we do not need to show the changelog on a fresh install)
             this.updateSettings({

@@ -146,7 +146,7 @@
       </div>
 
       <app-title-separator
-        heading="Analytics"
+        heading="Analytics & telemetry"
         icon="show_chart"
         iconClasses="text-primary"
       ></app-title-separator>
@@ -171,6 +171,34 @@
               >We are using a basic Google Analytics setup, none of your
               data/content is kept anywhere and it helps us improve Mockoon
               :)</small
+            >
+          </p>
+        </div>
+      </div>
+
+      <div class="pl-3">
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="enableTelemetry"
+              name="enableTelemetry"
+              [ngModel]="settings.enableTelemetry"
+              (ngModelChange)="settingsUpdated($event, 'enableTelemetry')"
+            />
+            <label class="custom-control-label" for="enableTelemetry"
+              >Enable telemetry (restart needed)</label
+            >
+          </div>
+          <p class="text-muted">
+            <small
+              >Our custom telemetry system is collecting a minimal amount of
+              information and no personal data. Read more in our FAQ<span
+                (click)="openWikiLink('faq')"
+                class="pl-2 btn btn-link text-primary cp doc-link"
+                ><i class="material-icons">info</i></span
+              ></small
             >
           </p>
         </div>

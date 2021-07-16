@@ -23,5 +23,6 @@ export const IPCHandlerChannels = [
   'APP_START_SERVER',
   'APP_STOP_SERVER',
   'APP_WRITE_FILE',
-  'APP_WRITE_JSON_DATA'
+  'APP_WRITE_JSON_DATA',
+  'APP_GET_OS'
 ];

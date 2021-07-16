@@ -10,4 +10,6 @@ export type Banner = {
 
 export type RemoteConfig = {
   banner: Banner;
+  enableTelemetry: boolean;
+  geoipEndpoint: string;
 };

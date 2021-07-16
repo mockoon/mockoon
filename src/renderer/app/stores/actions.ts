@@ -428,17 +428,6 @@ export const removeToastAction = (toastUUID: string) =>
   };
 
 /**
- * Set the user ID
- *
- * @param userId
- */
-export const setUserIdAction = (userId: string) =>
-  <const>{
-    type: ActionTypes.SET_USER_ID,
-    userId
-  };
-
-/**
  * Update user settings
  *
  * @param properties - properties to update
@@ -489,7 +478,6 @@ export type Actions =
   | ReturnType<typeof setActiveEnvironmentLogUUIDAction>
   | ReturnType<typeof addToastAction>
   | ReturnType<typeof removeToastAction>
-  | ReturnType<typeof setUserIdAction>
   | ReturnType<typeof updateUIStateAction>
   | ReturnType<typeof updateSettingsAction>
   | ReturnType<typeof startRouteDuplicationToAnotherEnvironmentAction>

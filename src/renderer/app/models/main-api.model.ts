@@ -43,6 +43,7 @@ export interface MainAPIModel {
   invoke(channel: 'APP_OPENAPI_VALIDATE', data: any): Promise<OpenAPI.Document>;
   invoke(channel: 'APP_START_SERVER', environment: Environment): Promise<any>;
   invoke(channel: 'APP_STOP_SERVER', environmentUUID: string): Promise<any>;
+  invoke(channel: 'APP_GET_OS'): Promise<string>;
 
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
   send(

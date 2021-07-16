@@ -473,7 +473,6 @@ export class EnvironmentsService {
 
       if (log.response) {
         const headers: Header[] = [];
-        console.log(log.response.headers);
         log.response.headers.forEach((header) => {
           if (
             [
