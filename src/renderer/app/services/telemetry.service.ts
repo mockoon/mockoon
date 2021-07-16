@@ -4,7 +4,6 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
 import {
   combineLatest,
-  EMPTY,
   from,
   Observable,
   of,
@@ -112,7 +111,7 @@ export class TelemetryService {
             ...this.session,
             environmentsCount: environments.length
           })
-          .pipe(catchError(() => EMPTY));
+          .pipe(catchError(() => of(true)));
       }),
       tap(() => {
         // reset session start time after it has been sent
