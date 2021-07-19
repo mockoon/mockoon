@@ -153,7 +153,6 @@ describe('Duplicated Set-Cookie header', () => {
       key: 'Set-Cookie',
       value: 'routecookie1=routecookie1value'
     });
-    await tests.app.client.pause(50);
 
     await tests.helpers.addHeader('route-response-headers', {
       key: 'Set-Cookie',
@@ -164,13 +163,10 @@ describe('Duplicated Set-Cookie header', () => {
   it('Add duplicated Set-Cookie headers on environment', async () => {
     await tests.helpers.switchViewInHeader('ENV_SETTINGS');
 
-    await tests.app.client.pause(50);
-
     await tests.helpers.addHeader('environment-headers', {
       key: 'Set-Cookie',
       value: 'envcookie1=envcookie1value'
     });
-    await tests.app.client.pause(50);
 
     await tests.helpers.addHeader('environment-headers', {
       key: 'Set-Cookie',
@@ -180,7 +176,6 @@ describe('Duplicated Set-Cookie header', () => {
 
   it('Call /headers, we should get an array of Set-Cookie headers', async () => {
     await tests.helpers.startEnvironment();
-    await tests.app.client.pause(500);
     await tests.helpers.httpCallAsserterWithPort(
       getDuplicatedSetCookieHeaders,
       3000

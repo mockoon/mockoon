@@ -54,6 +54,8 @@ export class Helpers {
     value: string | number | boolean
   ) {
     const element = await this.getElement(selector);
+    // ensure we unfocus previously selected fields (on Linux, using setValue, previous fields with typeaheads may still show the menu and not be immediately unfocused)
+    await element.click();
     await element.setValue(value);
   }
 

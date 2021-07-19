@@ -105,7 +105,6 @@ describe('Proxy (with TLS and proxy headers)', () => {
   });
 
   it('Call /answer', async () => {
-    await tests.app.client.pause(500);
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
   });
 
