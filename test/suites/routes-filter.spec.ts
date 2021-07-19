@@ -45,9 +45,10 @@ describe('Routes filter', async () => {
   });
 
   it('Reset routes filter when adding a new environment', async () => {
-    await tests.helpers.toggleEnvironmentMenu();
     await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
+    await tests.helpers.toggleEnvironmentMenu();
     await tests.helpers.addEnvironment();
+    await tests.helpers.toggleEnvironmentMenu();
     await tests.helpers.assertElementValue(routesFilterSelector, '');
   });
 
