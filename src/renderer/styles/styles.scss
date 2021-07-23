@@ -103,6 +103,11 @@ input,
   }
 }
 
+// avoid list style when dragging (item is created outside of a .nav)
+.nav-item {
+  list-style: none;
+}
+
 .menu-header {
   box-shadow: inset 0 -1px 0 0 lighten($gray-900, 3%);
 }

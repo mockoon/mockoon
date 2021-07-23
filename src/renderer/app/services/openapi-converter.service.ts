@@ -283,8 +283,9 @@ export class OpenAPIConverterService {
               responseStatus === 'default'
             ) {
               const routeResponse: OpenAPIV2.ResponseObject &
-                OpenAPIV3.ResponseObject =
-                parsedRoute.responses[responseStatus];
+                OpenAPIV3.ResponseObject = parsedRoute.responses[
+                responseStatus
+              ] as OpenAPIV2.ResponseObject & OpenAPIV3.ResponseObject;
 
               let contentTypeHeaders: string[] = [];
               let schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject;
