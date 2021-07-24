@@ -36,7 +36,8 @@ export class SchemasBuilderService {
       sendFileAsBody: false,
       rules: [],
       rulesOperator: 'OR',
-      disableTemplating: false
+      disableTemplating: false,
+      fallbackTo404: false
     };
   }
 
