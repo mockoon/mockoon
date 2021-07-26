@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
 import {
+  BehaviorSubject,
   combineLatest,
   from,
   Observable,
@@ -13,13 +14,14 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  debounceTime,
+  distinctUntilChanged,
   filter,
   first,
   map,
   startWith,
   switchMap,
-  tap
+  tap,
+  throttleTime
 } from 'rxjs/operators';
 import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -44,7 +46,8 @@ export class TelemetryService {
     environmentsCount: null
   };
   private event$ = new Subject();
-  private closeSession$ = new Subject();
+  private closeSession$ = new BehaviorSubject<boolean>(false);
+  private sessionInProgress$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     private remoteConfigService: RemoteConfigService,
@@ -80,8 +83,11 @@ export class TelemetryService {
         this.event$.pipe(
           // immediately start the event observable
           startWith(undefined as void),
-          debounceTime(1000),
+          throttleTime(1000, undefined, { trailing: true }),
+          filter(() => !this.closeSession$.value),
           tap(() => {
+            this.sessionInProgress$.next(true);
+
             // start a new session if we are not already in one
             if (!this.session.startTime) {
               this.session.startTime = new Date().toISOString();
@@ -99,11 +105,11 @@ export class TelemetryService {
           return race(
             timer(Config.telemetry.sessionDuration),
             timer(differenceInMilliseconds(midnight, now)),
-            this.closeSession$
+            this.closeSession$.pipe(filter((closeSession) => closeSession))
           );
         }
       ),
-      switchMap(() => {
+      switchMap((v) => {
         const environments = this.store.get('environments');
 
         return this.firebaseFunctions
@@ -114,11 +120,20 @@ export class TelemetryService {
           .pipe(catchError(() => of(true)));
       }),
       tap(() => {
+        this.sessionInProgress$.next(false);
+
         // reset session start time after it has been sent
         this.session.startTime = null;
         this.session.firstSession = false;
       })
     );
+  }
+
+  /**
+   * Session in progress observable value
+   */
+  public sessionInProgress() {
+    return this.sessionInProgress$.asObservable().pipe(distinctUntilChanged());
   }
 
   /**
@@ -139,7 +154,7 @@ export class TelemetryService {
    * Send an event to manually close the session (app close)
    */
   public closeSession() {
-    this.closeSession$.next();
+    this.closeSession$.next(true);
   }
 
   /**
