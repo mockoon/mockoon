@@ -19,15 +19,14 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import { from, merge, Observable, Subject, Subscription } from 'rxjs';
+import { from, merge, Observable, Subject } from 'rxjs';
 import {
   distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
   map,
   mergeMap,
-  pluck,
-  tap
+  pluck
 } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
@@ -55,17 +54,16 @@ import {
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { AnalyticsService } from 'src/renderer/app/services/analytics.service';
 import { ApiService } from 'src/renderer/app/services/api.service';
+import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
-import { StorageService } from 'src/renderer/app/services/storage.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   clearLogsAction,
-  updateRouteAction,
-  updateUIStateAction
+  updateRouteAction
 } from 'src/renderer/app/stores/actions';
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import {
@@ -122,7 +120,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   public hostnameTooltip$: Observable<string>;
   private injectHeaders$ = new Subject<Header[]>();
   private logger = new Logger('[COMPONENT][APP]');
-  private closingSubscription: Subscription;
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -135,7 +132,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private toastService: ToastsService,
     private uiService: UIService,
     private apiService: ApiService,
-    private storageService: StorageService
+    private appQuitService: AppQuitService
   ) {}
 
   @HostListener('document:click')
@@ -143,33 +140,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.telemetryService.sendEvent();
   }
 
-  // Listen to widow beforeunload event, and verify that no data saving is in progress
-  @HostListener('window:beforeunload', ['$event'])
-  public onBeforeUnload(event: BeforeUnloadEvent) {
-    if (this.storageService.isSaving()) {
-      if (!this.closingSubscription) {
-        this.logger.info('App closing. Waiting for save to finish.');
-
-        this.store.update(updateUIStateAction({ appClosing: true }));
-
-        this.closingSubscription = this.storageService
-          .saving()
-          .pipe(
-            filter((saving) => !saving),
-            tap(() => {
-              MainAPI.send('APP_QUIT');
-              window.onbeforeunload = null;
-            })
-          )
-          .subscribe();
-      }
-
-      event.returnValue = '';
-    }
-    this.telemetryService.closeSession();
-  }
-
   ngOnInit() {
+    this.appQuitService.init().subscribe();
     this.injectedHeaders$ = this.injectHeaders$.asObservable();
 
     this.logger.info('Initializing application');

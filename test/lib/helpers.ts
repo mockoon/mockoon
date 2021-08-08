@@ -495,17 +495,15 @@ export class Helpers {
   }
 
   public async assertActiveEnvironmentPort(expectedPort: number) {
-    const port: string = await this.getElementAttribute(
-      'input[formcontrolname="port"]',
-      'value'
+    const port: string = await this.getElementValue(
+      'input[formcontrolname="port"]'
     );
     port.should.be.equals(expectedPort.toString());
   }
 
   public async assertActiveEnvironmentName(expectedName: string) {
-    const environmentName: string = await this.getElementAttribute(
-      'input[formcontrolname="name"]',
-      'value'
+    const environmentName: string = await this.getElementValue(
+      'input[formcontrolname="name"]'
     );
     environmentName.should.be.equals(expectedName.toString());
   }

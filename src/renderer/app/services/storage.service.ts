@@ -26,13 +26,6 @@ export class StorageService {
   }
 
   /**
-   * Saving in progress observable value
-   */
-  public isSaving(): boolean {
-    return this.saving$.value;
-  }
-
-  /**
    * Load data from JSON storage.
    * Handles storage failure.
    *

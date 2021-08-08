@@ -85,11 +85,10 @@ describe('UI interactions', () => {
         it(`Row 1 input ${
           index + 1
         } should be equal to ${expected}`, async () => {
-          const value = await tests.helpers.getElementAttribute(
+          const value = await tests.helpers.getElementValue(
             `${environmentHeadersSelector}:nth-of-type(1) input:nth-of-type(${
               index + 1
-            })`,
-            'value'
+            })`
           );
           expect(value).to.equal(expected);
         });
@@ -116,11 +115,10 @@ describe('UI interactions', () => {
         it(`Row ${Math.ceil((index + 1) / 2)} input ${
           index + 1
         } should be equal to ${expected}`, async () => {
-          const value = await tests.helpers.getElementAttribute(
+          const value = await tests.helpers.getElementValue(
             `${environmentHeadersSelector}:nth-of-type(${Math.ceil(
               (index + 1) / 2
-            )}) input:nth-of-type(${(index + 1) % 2 === 0 ? 2 : 1})`,
-            'value'
+            )}) input:nth-of-type(${(index + 1) % 2 === 0 ? 2 : 1})`
           );
           expect(value).to.equal(expected);
         });

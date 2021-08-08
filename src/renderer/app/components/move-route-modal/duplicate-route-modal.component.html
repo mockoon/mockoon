@@ -23,6 +23,11 @@
         (click)="chooseTargetEnvironment(environment)"
       >
         <div class="ellipsis">{{ environment.name }}</div>
+        <div class="menu-subtitle ellipsis">
+          {{ environment.hostname }}:{{ environment.port }}/{{
+            environment.endpointPrefix
+          }}
+        </div>
       </li>
     </ul>
   </div>
