@@ -48,8 +48,8 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "10.0.2",
-    "@mockoon/commons": "2.3.0",
-    "@mockoon/commons-server": "2.6.0",
+    "@mockoon/commons": "2.4.0",
+    "@mockoon/commons-server": "2.7.0",
     "axios": "0.21.1",
     "electron-json-storage": "4.5.0",
     "electron-log": "4.3.5",
