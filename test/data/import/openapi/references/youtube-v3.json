@@ -1,7 +1,7 @@
 [
   {
     "uuid": "0c9cbbb0-e7d5-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "YouTube Analytics",
     "endpointPrefix": "",
     "latency": 0,
@@ -25,7 +25,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -49,7 +50,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -73,7 +75,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -97,7 +100,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -121,7 +125,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -145,7 +150,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -169,7 +175,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -193,7 +200,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,

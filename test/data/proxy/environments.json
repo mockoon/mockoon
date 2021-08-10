@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -32,7 +32,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -50,7 +51,7 @@
   },
   {
     "uuid": "2cbdec80-f284-11e9-a28c-912bdc671019",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "Proxy",
     "endpointPrefix": "",
     "latency": 0,
@@ -68,7 +69,7 @@
   },
   {
     "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "Proxy disabled",
     "endpointPrefix": "",
     "latency": 0,
@@ -93,7 +94,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -113,7 +115,7 @@
   },
   {
     "uuid": "2cbdec80-f284-11e9-a28c-912bdc671020",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "Proxy removes prefix",
     "endpointPrefix": "prefix",
     "latency": 0,

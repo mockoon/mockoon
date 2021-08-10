@@ -1,7 +1,7 @@
 [
   {
     "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "Demo users API V2",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -28,7 +28,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -59,7 +60,8 @@
               }
             ],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "e84c9929-6047-11ea-b4a3-058bbf68d234",
@@ -79,7 +81,8 @@
               }
             ],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -110,7 +113,8 @@
               }
             ],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "e84c992d-6047-11ea-b4a3-058bbf68d234",
@@ -130,7 +134,8 @@
               }
             ],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -161,7 +166,8 @@
               }
             ],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -185,7 +191,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
