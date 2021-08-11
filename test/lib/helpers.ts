@@ -749,10 +749,6 @@ export class Helpers {
     await this.elementClick("label[for='disableTemplating']");
   }
 
-  public async toggleFallbackTo404() {
-    await this.elementClick("label[for='fallbackTo404']");
-  }
-
   public async assertRulesOperatorPresence(inverted = false) {
     await this.waitElementExist('.rules-operator', inverted);
   }
