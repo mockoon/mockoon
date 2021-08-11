@@ -1,7 +1,7 @@
 [
   {
     "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "Environment logs 1",
     "endpointPrefix": "prefix",
     "latency": 0,
@@ -29,7 +29,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "10e32786-2fc9-4490-9f85-b4fe1763717a",
@@ -49,7 +50,8 @@
               }
             ],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "31f4e399-4878-4bbe-bf86-6fcaf29e5bba",
@@ -62,7 +64,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -86,7 +89,8 @@
             "sendFileAsBody": true,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -104,7 +108,7 @@
   },
   {
     "uuid": "5f5ec26d-9a10-4b34-95a8-a9e4dff5ca41",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "Environment logs 2",
     "endpointPrefix": "prefix",
     "latency": 0,
@@ -132,7 +136,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false

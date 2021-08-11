@@ -1,7 +1,7 @@
 [
   {
     "uuid": "",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "Swagger Petstore v2",
     "endpointPrefix": "v2",
     "latency": 0,
@@ -24,7 +24,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -48,7 +49,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -61,7 +63,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -74,7 +77,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -98,7 +102,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -111,7 +116,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -135,7 +141,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -148,7 +155,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -172,7 +180,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -185,7 +194,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -198,7 +208,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -222,7 +233,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -246,7 +258,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -259,7 +272,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -283,7 +297,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -307,7 +322,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -331,7 +347,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -344,7 +361,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -368,7 +386,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -381,7 +400,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -394,7 +414,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -418,7 +439,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -431,7 +453,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -455,7 +478,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -479,7 +503,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -503,7 +528,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -531,7 +557,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -544,7 +571,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -568,7 +596,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -592,7 +621,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -605,7 +635,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -618,7 +649,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -642,7 +674,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -655,7 +688,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,
@@ -679,7 +713,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           },
           {
             "uuid": "",
@@ -692,7 +727,8 @@
             "sendFileAsBody": false,
             "rules": [],
             "rulesOperator": "OR",
-            "disableTemplating": false
+            "disableTemplating": false,
+            "fallbackTo404": false
           }
         ],
         "enabled": true,

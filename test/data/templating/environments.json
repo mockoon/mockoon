@@ -1,7 +1,7 @@
 [
   {
     "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -26,7 +26,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -50,7 +51,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -74,7 +76,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -98,7 +101,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -122,7 +126,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -146,7 +151,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -170,7 +176,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -194,7 +201,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -218,7 +226,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -242,7 +251,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -266,7 +276,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -290,7 +301,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -314,7 +326,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -338,7 +351,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -365,7 +379,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -389,7 +404,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -413,7 +429,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -437,7 +454,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -461,7 +479,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -485,7 +504,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -509,7 +529,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -533,7 +554,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -557,7 +579,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -581,7 +604,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -605,7 +629,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -629,7 +654,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -653,7 +679,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -677,7 +704,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -701,7 +729,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -725,7 +754,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -749,7 +779,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -773,7 +804,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -797,7 +829,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -821,7 +854,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -845,7 +879,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -869,7 +904,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -893,7 +929,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -917,7 +954,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -941,7 +979,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -965,7 +1004,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -989,7 +1029,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1013,7 +1054,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1037,7 +1079,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1061,7 +1104,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1085,7 +1129,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1109,7 +1154,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1133,7 +1179,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1157,7 +1204,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1181,7 +1229,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1205,7 +1254,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1229,7 +1279,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1253,7 +1304,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1277,7 +1329,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1301,7 +1354,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1325,7 +1379,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1349,7 +1404,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1373,7 +1429,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1397,7 +1454,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1421,7 +1479,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1445,7 +1504,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1469,7 +1529,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1493,7 +1554,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1517,7 +1579,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1541,7 +1604,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1565,7 +1629,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1589,7 +1654,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1613,7 +1679,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1637,7 +1704,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1661,7 +1729,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1685,7 +1754,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1709,7 +1779,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1733,7 +1804,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1757,7 +1829,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1781,7 +1854,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1805,7 +1879,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1829,7 +1904,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1853,7 +1929,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1877,7 +1954,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1901,7 +1979,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1925,7 +2004,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1949,7 +2029,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1973,7 +2054,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -1997,7 +2079,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -2021,7 +2104,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -2045,7 +2129,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -2069,7 +2154,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -2093,7 +2179,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -2117,7 +2204,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -2141,7 +2229,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -2165,7 +2254,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false

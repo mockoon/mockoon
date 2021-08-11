@@ -1,7 +1,7 @@
 [
   {
     "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-    "lastMigration": 16,
+    "lastMigration": 17,
     "name": "FT env",
     "endpointPrefix": "",
     "latency": 0,
@@ -26,7 +26,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -50,7 +51,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
@@ -74,7 +76,8 @@
             "sendFileAsBody": false,
             "disableTemplating": false,
             "rules": [],
-            "rulesOperator": "OR"
+            "rulesOperator": "OR",
+            "fallbackTo404": false
           }
         ],
         "sequentialResponse": false
