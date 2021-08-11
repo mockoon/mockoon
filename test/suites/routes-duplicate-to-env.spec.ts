@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { resolve } from 'path';
 import { Tests } from 'test/lib/tests';
 
 describe('Duplicate a route to an environment', async () => {
@@ -15,10 +16,11 @@ describe('Duplicate a route to an environment', async () => {
   });
 
   it('should add a new environment and assert that menu entry is enabled', async () => {
-    await helpers.toggleEnvironmentMenu();
+    helpers.mockDialog('showSaveDialog', [
+      resolve('./tmp/storage/new-env-test.json')
+    ]);
     await helpers.addEnvironment();
     await helpers.selectEnvironment(1);
-    await helpers.toggleEnvironmentMenu();
 
     await helpers.assertContextMenuDisabled(
       '.routes-menu .menu-list .nav-item:last-child .nav-link',

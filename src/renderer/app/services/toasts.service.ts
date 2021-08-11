@@ -5,7 +5,7 @@ import {
   removeToastAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { v1 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class ToastsService {

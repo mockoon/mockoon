@@ -5,41 +5,11 @@ describe('UI interactions', () => {
   describe('Environments menu', () => {
     const tests = new Tests('ui');
 
-    it('Collapsed environment menu item displays first two characters of name', async () => {
-      await tests.helpers.assertHasActiveEnvironment(' FT');
-    });
-
-    it('Collapsed environment menu item displays all icons', async () => {
-      await tests.helpers.assertEnvironmentServerIconsExists(1, 'cors');
-      await tests.helpers.assertEnvironmentServerIconsExists(1, 'https');
-      await tests.helpers.assertEnvironmentServerIconsExists(1, 'proxy-mode');
-    });
-
-    it('Collapsed environment menu item has a context menu', async () => {
-      await tests.helpers.contextMenuOpen(
-        '.environments-menu .nav-item .nav-link.active'
-      );
-      await tests.helpers.waitElementExist('.context-menu');
-    });
-
-    it('Opened environment menu item displays full name', async () => {
-      await tests.helpers.toggleEnvironmentMenu();
+    it('Verify environments men item content', async () => {
       await tests.helpers.assertHasActiveEnvironment('FT env');
-    });
-
-    it('Opened environment menu has button to add an environment', async () => {
-      await tests.helpers.waitElementExist(
-        '.environments-menu .nav:first-of-type .nav-item .nav-link.add-environment'
-      );
-    });
-
-    it('Opened environment menu item displays all icons', async () => {
       await tests.helpers.assertEnvironmentServerIconsExists(1, 'cors');
       await tests.helpers.assertEnvironmentServerIconsExists(1, 'https');
       await tests.helpers.assertEnvironmentServerIconsExists(1, 'proxy-mode');
-    });
-
-    it('Opened environment menu item has a context menu', async () => {
       await tests.helpers.contextMenuOpen(
         '.environments-menu .nav-item .nav-link.active'
       );
@@ -347,9 +317,9 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.responses.0.statusCode'],
-        [100]
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.statusCode',
+        100
       );
     });
 
@@ -372,9 +342,9 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.responses.0.statusCode'],
-        [451]
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.statusCode',
+        451
       );
     });
 
@@ -386,9 +356,9 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.responses.0.statusCode'],
-        [561]
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.statusCode',
+        561
       );
       await tests.helpers.assertDropdownToggleText(
         dropdownId,
@@ -405,9 +375,9 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.responses.0.statusCode'],
-        [301]
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.statusCode',
+        301
       );
       await tests.helpers.assertDropdownToggleText(
         dropdownId,
@@ -429,9 +399,9 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.responses.0.statusCode'],
-        [999]
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.statusCode',
+        999
       );
     });
 
@@ -456,9 +426,9 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.method'],
-        ['put']
+        './tmp/storage/environment-0.json',
+        'routes.0.method',
+        'put'
       );
     });
 
@@ -468,9 +438,9 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.method'],
-        ['options']
+        './tmp/storage/environment-0.json',
+        'routes.0.method',
+        'options'
       );
     });
   });
@@ -494,8 +464,8 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.randomResponse', '0.routes.0.sequentialResponse'],
+        './tmp/storage/environment-0.json',
+        ['routes.0.randomResponse', 'routes.0.sequentialResponse'],
         [true, false]
       );
     });
@@ -514,8 +484,8 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.randomResponse', '0.routes.0.sequentialResponse'],
+        './tmp/storage/environment-0.json',
+        ['routes.0.randomResponse', 'routes.0.sequentialResponse'],
         [false, true]
       );
     });
@@ -534,8 +504,8 @@ describe('UI interactions', () => {
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.routes.0.randomResponse', '0.routes.0.sequentialResponse'],
+        './tmp/storage/environment-0.json',
+        ['routes.0.randomResponse', 'routes.0.sequentialResponse'],
         [true, false]
       );
     });

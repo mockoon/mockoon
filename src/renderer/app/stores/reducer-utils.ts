@@ -106,3 +106,22 @@ export const updateDuplicatedRoutes = (
 
   return duplicatedRoutes;
 };
+
+/**
+ * Create a copy of the array and move a specific index
+ * from one index to another
+ *
+ * @param items
+ * @returns
+ */
+export const moveArrayItem = <T>(
+  items: T[],
+  sourceIndex: number,
+  targetIndex: number
+): T[] => {
+  const newItems = items.slice();
+
+  newItems.splice(targetIndex, 0, newItems.splice(sourceIndex, 1)[0]);
+
+  return newItems;
+};

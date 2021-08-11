@@ -1,23 +1,15 @@
-import {
-  Environment,
-  Environments,
-  HighestMigrationId,
-  Route,
-  RouteResponse
-} from '@mockoon/commons';
+import { Environment, Route, RouteResponse } from '@mockoon/commons';
 import { ArrayContainsObjectKey } from 'src/renderer/app/libs/utils.lib';
-import {
-  ActiveEnvironmentsLogUUIDs,
-  EnvironmentLogs
-} from 'src/renderer/app/models/environment-logs.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import {
   getBodyEditorMode,
+  moveArrayItem,
   updateDuplicatedEnvironments,
   updateDuplicatedRoutes
 } from 'src/renderer/app/stores/reducer-utils';
 import { EnvironmentsStatuses, StoreType } from 'src/renderer/app/stores/store';
+import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 export type ReducerDirectionType = 'next' | 'previous';
 export type ReducerIndexes = { sourceIndex: number; targetIndex: number };
@@ -56,77 +48,8 @@ export const environmentReducer = (
       break;
     }
 
-    case ActionTypes.SET_INITIAL_ENVIRONMENTS: {
-      const newEnvironments: Environments = action.environments;
-
-      const newEnvironmentsStatus =
-        newEnvironments.reduce<EnvironmentsStatuses>(
-          (environmentsStatus, environment) => {
-            // create status and check if environment has not been migrated on a more recent Mockoon version
-            environmentsStatus[environment.uuid] = {
-              running: false,
-              needRestart: false,
-              disabledForIncompatibility:
-                !!environment.lastMigration &&
-                environment.lastMigration > HighestMigrationId
-            };
-
-            return environmentsStatus;
-          },
-          {}
-        );
-
-      // find first non disabled environment
-      const activeEnvironment = newEnvironments.find(
-        (environment) =>
-          !newEnvironmentsStatus[environment.uuid].disabledForIncompatibility
-      );
-
-      newState = {
-        ...state,
-        activeEnvironmentUUID: activeEnvironment
-          ? activeEnvironment.uuid
-          : null,
-        activeRouteUUID:
-          activeEnvironment && activeEnvironment.routes.length
-            ? activeEnvironment.routes[0].uuid
-            : null,
-        activeRouteResponseUUID:
-          activeEnvironment &&
-          activeEnvironment.routes.length &&
-          activeEnvironment.routes[0].responses.length
-            ? activeEnvironment.routes[0].responses[0].uuid
-            : null,
-        environments: newEnvironments,
-        environmentsStatus: newEnvironmentsStatus,
-        environmentsLogs: newEnvironments.reduce<EnvironmentLogs>(
-          (environmentsLogs, environment) => {
-            environmentsLogs[environment.uuid] = [];
-
-            return environmentsLogs;
-          },
-          {}
-        ),
-        activeEnvironmentLogsUUID:
-          newEnvironments.reduce<ActiveEnvironmentsLogUUIDs>(
-            (activeEnvironmentLogsUUID, environment) => {
-              activeEnvironmentLogsUUID[environment.uuid] = null;
-
-              return activeEnvironmentLogsUUID;
-            },
-            {}
-          ),
-        routesFilter: ''
-      };
-      break;
-    }
-
     case ActionTypes.SET_ACTIVE_ENVIRONMENT: {
-      if (
-        action.environmentUUID !== state.activeEnvironmentUUID &&
-        !state.environmentsStatus[action.environmentUUID]
-          .disabledForIncompatibility
-      ) {
+      if (action.environmentUUID !== state.activeEnvironmentUUID) {
         const activeEnvironment = action.environmentUUID
           ? state.environments.find(
               (environment) => environment.uuid === action.environmentUUID
@@ -180,13 +103,6 @@ export const environmentReducer = (
         break;
       }
 
-      if (
-        state.environmentsStatus[newEnvironment.uuid].disabledForIncompatibility
-      ) {
-        newState = state;
-        break;
-      }
-
       newState = {
         ...state,
         activeEnvironmentUUID: newEnvironment.uuid,
@@ -207,16 +123,21 @@ export const environmentReducer = (
     }
 
     case ActionTypes.MOVE_ENVIRONMENTS: {
-      const newEnvironments = state.environments.slice();
-      newEnvironments.splice(
-        action.indexes.targetIndex,
-        0,
-        newEnvironments.splice(action.indexes.sourceIndex, 1)[0]
-      );
-
       newState = {
         ...state,
-        environments: newEnvironments
+        environments: moveArrayItem<Environment>(
+          state.environments,
+          action.indexes.sourceIndex,
+          action.indexes.targetIndex
+        ),
+        settings: {
+          ...state.settings,
+          environments: moveArrayItem<EnvironmentDescriptor>(
+            state.settings.environments,
+            action.indexes.sourceIndex,
+            action.indexes.targetIndex
+          )
+        }
       };
       break;
     }
@@ -233,16 +154,13 @@ export const environmentReducer = (
 
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === state.activeEnvironmentUUID) {
-          const newRoutes = environment.routes.slice();
-          newRoutes.splice(
-            action.indexes.targetIndex,
-            0,
-            newRoutes.splice(action.indexes.sourceIndex, 1)[0]
-          );
-
           return {
             ...environment,
-            routes: newRoutes
+            routes: moveArrayItem<Route>(
+              environment.routes,
+              action.indexes.sourceIndex,
+              action.indexes.targetIndex
+            )
           };
         }
 
@@ -268,16 +186,13 @@ export const environmentReducer = (
         if (environment.uuid === state.activeEnvironmentUUID) {
           const newRoutes = environment.routes.map((route) => {
             if (route.uuid === state.activeRouteUUID) {
-              const newRouteResponses = route.responses.slice();
-              newRouteResponses.splice(
-                action.indexes.targetIndex,
-                0,
-                newRouteResponses.splice(action.indexes.sourceIndex, 1)[0]
-              );
-
               return {
                 ...route,
-                responses: newRouteResponses
+                responses: moveArrayItem<RouteResponse>(
+                  route.responses,
+                  action.indexes.sourceIndex,
+                  action.indexes.targetIndex
+                )
               };
             }
 
@@ -363,6 +278,9 @@ export const environmentReducer = (
 
     case ActionTypes.ADD_ENVIRONMENT: {
       const newEnvironment: Environment = action.environment;
+      const activeEnvironment: Environment = action.activeEnvironment
+        ? action.activeEnvironment
+        : newEnvironment;
       const afterUUID = action.afterUUID;
 
       const environments = [...state.environments];
@@ -378,16 +296,27 @@ export const environmentReducer = (
       }
       environments.splice(afterIndex + 1, 0, newEnvironment);
 
+      let newSettings = state.settings;
+      if (action.filePath) {
+        newSettings = {
+          ...state.settings,
+          environments: [
+            ...state.settings.environments,
+            { uuid: newEnvironment.uuid, path: action.filePath }
+          ]
+        };
+      }
+
       newState = {
         ...state,
-        activeEnvironmentUUID: newEnvironment.uuid,
-        activeRouteUUID: newEnvironment.routes.length
-          ? newEnvironment.routes[0].uuid
+        activeEnvironmentUUID: activeEnvironment.uuid,
+        activeRouteUUID: activeEnvironment.routes.length
+          ? activeEnvironment.routes[0].uuid
           : null,
         activeRouteResponseUUID:
-          newEnvironment.routes.length &&
-          newEnvironment.routes[0].responses.length
-            ? newEnvironment.routes[0].responses[0].uuid
+          activeEnvironment.routes.length &&
+          activeEnvironment.routes[0].responses.length
+            ? activeEnvironment.routes[0].responses[0].uuid
             : null,
         activeTab: 'RESPONSE',
         activeView: 'ROUTE',
@@ -396,8 +325,7 @@ export const environmentReducer = (
           ...state.environmentsStatus,
           [newEnvironment.uuid]: {
             running: false,
-            needRestart: false,
-            disabledForIncompatibility: false
+            needRestart: false
           }
         },
         environmentsLogs: {
@@ -408,7 +336,8 @@ export const environmentReducer = (
           ...state.activeEnvironmentLogsUUID,
           [newEnvironment.uuid]: null
         },
-        routesFilter: ''
+        routesFilter: '',
+        settings: newSettings
       };
       break;
     }
@@ -432,15 +361,17 @@ export const environmentReducer = (
         environmentsStatus: newEnvironmentsStatus,
         environmentsLogs: newEnvironmentsLogs,
         activeEnvironmentLogsUUID: newActiveEnvironmentLogsUUID,
-        routesFilter: ''
+        routesFilter: '',
+        settings: {
+          ...state.settings,
+          environments: state.settings.environments.filter(
+            (environment) => environment.uuid !== action.environmentUUID
+          )
+        }
       };
 
       if (state.activeEnvironmentUUID === action.environmentUUID) {
-        if (
-          newEnvironments.length &&
-          !state.environmentsStatus[newEnvironments[0].uuid]
-            .disabledForIncompatibility
-        ) {
+        if (newEnvironments.length) {
           newState = {
             ...newState,
             activeEnvironmentUUID: newEnvironments[0].uuid,
@@ -987,7 +918,6 @@ export const environmentReducer = (
       mode: getBodyEditorMode(newState)
     },
     duplicatedEnvironments:
-      action.type === ActionTypes.SET_INITIAL_ENVIRONMENTS ||
       action.type === ActionTypes.ADD_ENVIRONMENT ||
       action.type === ActionTypes.REMOVE_ENVIRONMENT ||
       action.type === ActionTypes.MOVE_ENVIRONMENTS ||
@@ -997,7 +927,6 @@ export const environmentReducer = (
         ? updateDuplicatedEnvironments(newState)
         : newState.duplicatedEnvironments,
     duplicatedRoutes:
-      action.type === ActionTypes.SET_INITIAL_ENVIRONMENTS ||
       action.type === ActionTypes.ADD_ROUTE ||
       action.type === ActionTypes.REMOVE_ROUTE ||
       action.type === ActionTypes.MOVE_ROUTES ||

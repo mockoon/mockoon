@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
 import { Tests } from 'test/lib/tests';
-import { v1 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 describe('OpenAPI export', () => {
   const tests = new Tests('export-openapi');
@@ -9,12 +9,11 @@ describe('OpenAPI export', () => {
   const filePath = `./tmp/storage/${uuid()}.json`;
 
   it('Should export the environment and match the reference file', async () => {
-    tests.helpers.mockSaveDialog(filePath);
+    tests.helpers.mockDialog('showSaveDialog', [filePath]);
 
     tests.helpers.selectMenuEntry('EXPORT_OPENAPI_FILE');
 
-    // wait for file save
-    await tests.app.client.pause(1000);
+    await tests.helpers.waitForAutosave();
 
     const exportedFile = await fs.readFile(filePath);
     const referenceFile = await fs.readFile(

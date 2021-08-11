@@ -10,9 +10,9 @@ import { Observable } from 'rxjs';
 import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
-import { Settings } from 'src/renderer/app/models/settings.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Settings } from 'src/shared/models/settings.model';
 
 @Component({
   selector: 'app-settings-modal',

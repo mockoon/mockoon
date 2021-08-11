@@ -1,713 +1,711 @@
-[
-  {
-    "uuid": "",
-    "lastMigration": 16,
-    "name": "Swagger Petstore v2",
-    "endpointPrefix": "v2",
-    "latency": 0,
-    "port": 3000,
-    "routes": [
-      {
-        "uuid": "",
-        "documentation": "Add a new pet to the store",
-        "method": "post",
-        "endpoint": "pet",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 405,
-            "label": "Invalid input",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Update an existing pet",
-        "method": "put",
-        "endpoint": "pet",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid ID supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "Pet not found",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 405,
-            "label": "Validation exception",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Finds Pets by status",
-        "method": "get",
-        "endpoint": "pet/findByStatus",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "[\n  {\n    \"id\": {{faker 'random.number'}},\n    \"category\": {\n      \"id\": {{faker 'random.number'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'random.number'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid status value",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Finds Pets by tags",
-        "method": "get",
-        "endpoint": "pet/findByTags",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "[\n  {\n    \"id\": {{faker 'random.number'}},\n    \"category\": {\n      \"id\": {{faker 'random.number'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'random.number'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid tag value",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Find pet by ID",
-        "method": "get",
-        "endpoint": "pet/:petId",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "{\n  \"id\": {{faker 'random.number'}},\n  \"category\": {\n    \"id\": {{faker 'random.number'}},\n    \"name\": \"\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"\"\n  ],\n  \"tags\": [\n    {\n      \"id\": {{faker 'random.number'}},\n      \"name\": \"\"\n    }\n  ],\n  \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid ID supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "Pet not found",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Updates a pet in the store with form data",
-        "method": "post",
-        "endpoint": "pet/:petId",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 405,
-            "label": "Invalid input",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Deletes a pet",
-        "method": "delete",
-        "endpoint": "pet/:petId",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid ID supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "Pet not found",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "uploads an image",
-        "method": "post",
-        "endpoint": "pet/:petId/uploadImage",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"type\": \"\",\n  \"message\": \"\"\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Returns pet inventories by status",
-        "method": "get",
-        "endpoint": "store/inventory",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "{}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Place an order for a pet",
-        "method": "post",
-        "endpoint": "store/order",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "{\n  \"id\": {{faker 'random.number'}},\n  \"petId\": {{faker 'random.number'}},\n  \"quantity\": {{faker 'random.number'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'random.boolean'}}\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid Order",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Find purchase order by ID",
-        "method": "get",
-        "endpoint": "store/order/:orderId",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "{\n  \"id\": {{faker 'random.number'}},\n  \"petId\": {{faker 'random.number'}},\n  \"quantity\": {{faker 'random.number'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'random.boolean'}}\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid ID supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "Order not found",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Delete purchase order by ID",
-        "method": "delete",
-        "endpoint": "store/order/:orderId",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid ID supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "Order not found",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Create user",
-        "method": "post",
-        "endpoint": "user",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Creates list of users with given input array",
-        "method": "post",
-        "endpoint": "user/createWithArray",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Creates list of users with given input array",
-        "method": "post",
-        "endpoint": "user/createWithList",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Logs user into the system",
-        "method": "get",
-        "endpoint": "user/login",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "\"\"",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "X-Rate-Limit", "value": "" },
-              { "key": "X-Expires-After", "value": "" }
-            ],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid username/password supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Logs out current logged in user session",
-        "method": "get",
-        "endpoint": "user/logout",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Get user by user name",
-        "method": "get",
-        "endpoint": "user/:username",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "{\n  \"id\": {{faker 'random.number'}},\n  \"username\": \"\",\n  \"firstName\": \"\",\n  \"lastName\": \"\",\n  \"email\": \"\",\n  \"password\": \"\",\n  \"phone\": \"\",\n  \"userStatus\": {{faker 'random.number'}}\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "successful operation",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid username supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "User not found",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Updated user",
-        "method": "put",
-        "endpoint": "user/:username",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid user supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "User not found",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Delete user",
-        "method": "delete",
-        "endpoint": "user/:username",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Invalid username supplied",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          },
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "User not found",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      }
-    ],
-    "proxyMode": false,
-    "proxyHost": "",
-    "https": false,
-    "cors": true,
-    "headers": [],
-    "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false,
-    "hostname": "0.0.0.0"
-  }
-]
+{
+  "uuid": "",
+  "lastMigration": 16,
+  "name": "Swagger Petstore v2",
+  "endpointPrefix": "v2",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "",
+      "documentation": "Add a new pet to the store",
+      "method": "post",
+      "endpoint": "pet",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 405,
+          "label": "Invalid input",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Update an existing pet",
+      "method": "put",
+      "endpoint": "pet",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid ID supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Pet not found",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 405,
+          "label": "Validation exception",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Finds Pets by status",
+      "method": "get",
+      "endpoint": "pet/findByStatus",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "[\n  {\n    \"id\": {{faker 'random.number'}},\n    \"category\": {\n      \"id\": {{faker 'random.number'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'random.number'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid status value",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Finds Pets by tags",
+      "method": "get",
+      "endpoint": "pet/findByTags",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "[\n  {\n    \"id\": {{faker 'random.number'}},\n    \"category\": {\n      \"id\": {{faker 'random.number'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'random.number'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid tag value",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Find pet by ID",
+      "method": "get",
+      "endpoint": "pet/:petId",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "{\n  \"id\": {{faker 'random.number'}},\n  \"category\": {\n    \"id\": {{faker 'random.number'}},\n    \"name\": \"\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"\"\n  ],\n  \"tags\": [\n    {\n      \"id\": {{faker 'random.number'}},\n      \"name\": \"\"\n    }\n  ],\n  \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid ID supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Pet not found",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Updates a pet in the store with form data",
+      "method": "post",
+      "endpoint": "pet/:petId",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 405,
+          "label": "Invalid input",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Deletes a pet",
+      "method": "delete",
+      "endpoint": "pet/:petId",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid ID supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Pet not found",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "uploads an image",
+      "method": "post",
+      "endpoint": "pet/:petId/uploadImage",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"type\": \"\",\n  \"message\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Returns pet inventories by status",
+      "method": "get",
+      "endpoint": "store/inventory",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Place an order for a pet",
+      "method": "post",
+      "endpoint": "store/order",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "{\n  \"id\": {{faker 'random.number'}},\n  \"petId\": {{faker 'random.number'}},\n  \"quantity\": {{faker 'random.number'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'random.boolean'}}\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid Order",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Find purchase order by ID",
+      "method": "get",
+      "endpoint": "store/order/:orderId",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "{\n  \"id\": {{faker 'random.number'}},\n  \"petId\": {{faker 'random.number'}},\n  \"quantity\": {{faker 'random.number'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'random.boolean'}}\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid ID supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Order not found",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Delete purchase order by ID",
+      "method": "delete",
+      "endpoint": "store/order/:orderId",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid ID supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Order not found",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Create user",
+      "method": "post",
+      "endpoint": "user",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Creates list of users with given input array",
+      "method": "post",
+      "endpoint": "user/createWithArray",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Creates list of users with given input array",
+      "method": "post",
+      "endpoint": "user/createWithList",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Logs user into the system",
+      "method": "get",
+      "endpoint": "user/login",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "\"\"",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "X-Rate-Limit", "value": "" },
+            { "key": "X-Expires-After", "value": "" }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid username/password supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Logs out current logged in user session",
+      "method": "get",
+      "endpoint": "user/logout",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Get user by user name",
+      "method": "get",
+      "endpoint": "user/:username",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "{\n  \"id\": {{faker 'random.number'}},\n  \"username\": \"\",\n  \"firstName\": \"\",\n  \"lastName\": \"\",\n  \"email\": \"\",\n  \"password\": \"\",\n  \"phone\": \"\",\n  \"userStatus\": {{faker 'random.number'}}\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "successful operation",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid username supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "User not found",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Updated user",
+      "method": "put",
+      "endpoint": "user/:username",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid user supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "User not found",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Delete user",
+      "method": "delete",
+      "endpoint": "user/:username",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Invalid username supplied",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        },
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "User not found",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

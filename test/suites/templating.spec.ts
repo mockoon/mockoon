@@ -1304,7 +1304,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
 
 describe('Templating', () => {
   describe('Helpers', () => {
-    const tests = new Tests('templating');
+    const tests = new Tests('templating', true, true, true, { fakerSeed: 1 });
 
     it('Start default environment', async () => {
       await tests.helpers.startEnvironment();
@@ -1322,7 +1322,7 @@ describe('Templating', () => {
   });
 
   describe('Disable route response templating', () => {
-    const tests = new Tests('templating');
+    const tests = new Tests('templating', true, true, true, { fakerSeed: 1 });
 
     it('Start default environment', async () => {
       await tests.helpers.startEnvironment();
@@ -1333,6 +1333,7 @@ describe('Templating', () => {
       await tests.helpers.switchTab('SETTINGS');
       await tests.helpers.toggleDisableTemplating();
 
+      await tests.helpers.waitForAutosave();
       await tests.helpers.httpCallAsserter({
         path: '/bodyjson-rootlvl',
         method: 'POST',
@@ -1348,6 +1349,7 @@ describe('Templating', () => {
       await tests.helpers.selectRoute(20);
       await tests.helpers.switchTab('SETTINGS');
       await tests.helpers.toggleDisableTemplating();
+      await tests.helpers.waitForAutosave();
       await tests.helpers.httpCallAsserter({
         path: '/file-templating',
         method: 'GET',

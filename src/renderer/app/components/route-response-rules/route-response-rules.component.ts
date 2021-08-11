@@ -24,6 +24,7 @@ import {
 } from 'rxjs/operators';
 import { SelectOptionsList } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
 
 @Component({
   selector: 'app-route-response-rules',
@@ -64,7 +65,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private schemasBuilderService: SchemasBuilderService
   ) {}
 
   ngOnInit() {
@@ -105,12 +107,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
    */
   public addRule() {
     this.rules.push(
-      this.formBuilder.group({
-        target: null,
-        modifier: '',
-        value: '',
-        isRegex: false
-      } as ResponseRule)
+      this.formBuilder.group(this.schemasBuilderService.buildResponseRule())
     );
 
     this.ruleAdded.emit();

@@ -1,19 +1,22 @@
+import { resolve } from 'path';
 import { Tests } from 'test/lib/tests';
 
 describe('Duplicate an environment', () => {
   const tests = new Tests('basic-data');
 
-  it('Open environment menu', async () => {
-    await tests.helpers.toggleEnvironmentMenu();
-  });
-
   it('Add an environment', async () => {
     await tests.helpers.countEnvironments(1);
+    tests.helpers.mockDialog('showSaveDialog', [
+      resolve('./tmp/storage/new-env-test.json')
+    ]);
     await tests.helpers.addEnvironment();
     await tests.helpers.countEnvironments(2);
   });
 
   it('Duplicate first environment', async () => {
+    tests.helpers.mockDialog('showSaveDialog', [
+      resolve('./tmp/storage/dup-env-test.json')
+    ]);
     await tests.helpers.duplicateEnvironment(1);
     await tests.helpers.countEnvironments(3);
   });
@@ -40,6 +43,9 @@ describe('Duplicate an environment with no route', () => {
   });
 
   it('should duplicate the environment', async () => {
+    tests.helpers.mockDialog('showSaveDialog', [
+      resolve('./tmp/storage/dup-env2-test.json')
+    ]);
     await tests.helpers.duplicateEnvironment(1);
     await tests.helpers.countEnvironments(2);
     await tests.helpers.assertActiveEnvironmentPort(3001);

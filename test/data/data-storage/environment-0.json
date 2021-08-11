@@ -1,0 +1,18 @@
+{
+  "uuid": "6d67bab2-886e-4635-9f9b-8bc1983c49c0",
+  "lastMigration": 16,
+  "name": "FT env",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

@@ -1,8 +1,18 @@
 {
+  "lastMigration": 8,
   "welcomeShown": true,
   "analytics": true,
-  "lastMigration": 8,
   "bannerDismissed": [],
   "logSizeLimit": 10000,
-  "enableTelemetry": true
+  "maxLogsPerEnvironment": 50,
+  "truncateRouteName": true,
+  "environmentMenuSize": 100,
+  "routeMenuSize": 200,
+  "logsMenuSize": 150,
+  "fakerLocale": "en",
+  "fakerSeed": null,
+  "lastChangelog": "9999.9.9",
+  "environments": [],
+  "enableTelemetry": true,
+  "storagePrettyPrint": true
 }

@@ -1,5 +1,4 @@
 import { app, BrowserWindow, Menu, shell } from 'electron';
-import { has as objectPathHas } from 'object-path';
 
 export const createMenu = (mainWindow: BrowserWindow): Menu => {
   const menu: any = [
@@ -11,6 +10,43 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
           accelerator: 'CmdOrCtrl+,',
           click: () => {
             mainWindow.webContents.send('APP_MENU', 'OPEN_SETTINGS');
+          }
+        },
+        { type: 'separator' }
+      ]
+    },
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'New environment',
+          accelerator: 'CmdOrCtrl+N',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'NEW_ENVIRONMENT');
+          }
+        },
+        {
+          label: 'Open environment',
+          accelerator: 'CmdOrCtrl+O',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'OPEN_ENVIRONMENT');
+          }
+        },
+        {
+          id: 'DUPLICATE_ENVIRONMENT',
+          label: 'Duplicate current environment',
+          accelerator: 'CmdOrCtrl+D',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'DUPLICATE_ENVIRONMENT');
+          }
+        },
+        { type: 'separator' },
+        {
+          id: 'CLOSE_ENVIRONMENT',
+          label: 'Close active environment',
+          accelerator: 'CmdOrCtrl+F4',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'CLOSE_ENVIRONMENT');
           }
         },
         { type: 'separator' }
@@ -28,7 +64,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
 
   menu[0].submenu.push({ label: 'Quit', role: 'quit' });
 
-  // add edit menu for mac (for copy paste)
+  // add edit menu for mac (for copy/paste)
   if (process.platform === 'darwin') {
     menu.push({
       label: 'Edit',
@@ -48,33 +84,19 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
     });
   }
 
-  // add actions menu, send action through web contents
   menu.push({
-    label: 'Actions',
+    label: 'Routes',
     submenu: [
       {
-        label: 'Add new environment',
-        accelerator: 'Shift+CmdOrCtrl+E',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'NEW_ENVIRONMENT');
-        }
-      },
-      {
+        id: 'NEW_ROUTE',
         label: 'Add new route',
         accelerator: 'Shift+CmdOrCtrl+R',
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'NEW_ROUTE');
         }
       },
-      { type: 'separator' },
       {
-        label: 'Duplicate current environment',
-        accelerator: 'CmdOrCtrl+D',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'DUPLICATE_ENVIRONMENT');
-        }
-      },
-      {
+        id: 'DUPLICATE_ROUTE',
         label: 'Duplicate current route',
         accelerator: 'Shift+CmdOrCtrl+D',
         click: () => {
@@ -83,21 +105,21 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       },
       { type: 'separator' },
       {
-        label: 'Delete current environment',
-        accelerator: 'Alt+CmdOrCtrl+U',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'DELETE_ENVIRONMENT');
-        }
-      },
-      {
+        id: 'DELETE_ROUTE',
         label: 'Delete current route',
         accelerator: 'Alt+Shift+CmdOrCtrl+U',
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'DELETE_ROUTE');
         }
-      },
-      { type: 'separator' },
+      }
+    ]
+  });
+
+  menu.push({
+    label: 'Run',
+    submenu: [
       {
+        id: 'START_ENVIRONMENT',
         label: 'Start/Stop/Reload current environment',
         accelerator: 'Shift+CmdOrCtrl+S',
         click: () => {
@@ -105,14 +127,21 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
+        id: 'START_ALL_ENVIRONMENTS',
         label: 'Start/Stop/Reload all environments',
         accelerator: 'Shift+CmdOrCtrl+A',
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'START_ALL_ENVIRONMENTS');
         }
-      },
-      { type: 'separator' },
+      }
+    ]
+  });
+
+  menu.push({
+    label: 'Navigate',
+    submenu: [
       {
+        id: 'PREVIOUS_ENVIRONMENT',
         label: 'Select previous environment',
         accelerator: 'CmdOrCtrl+Up',
         click: () => {
@@ -120,6 +149,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
+        id: 'NEXT_ENVIRONMENT',
         label: 'Select next environment',
         accelerator: 'CmdOrCtrl+Down',
         click: () => {
@@ -127,6 +157,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
+        id: 'PREVIOUS_ROUTE',
         label: 'Select previous route',
         accelerator: 'Shift+CmdOrCtrl+Up',
         click: () => {
@@ -134,6 +165,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
+        id: 'NEXT_ROUTE',
         label: 'Select next route',
         accelerator: 'Shift+CmdOrCtrl+Down',
         click: () => {
@@ -162,13 +194,14 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
             }
           },
           {
+            id: 'EXPORT_FILE',
             label: 'Export all environments to a file (JSON)',
-            accelerator: 'CmdOrCtrl+O',
             click: () => {
               mainWindow.webContents.send('APP_MENU', 'EXPORT_FILE');
             }
           },
           {
+            id: 'EXPORT_FILE_SELECTED',
             label: 'Export current environment to a file (JSON)',
             click: () => {
               mainWindow.webContents.send('APP_MENU', 'EXPORT_FILE_SELECTED');
@@ -187,6 +220,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
             }
           },
           {
+            id: 'EXPORT_OPENAPI_FILE',
             label: 'Export current environment to OpenAPI v3 (JSON)',
             click: () => {
               mainWindow.webContents.send('APP_MENU', 'EXPORT_OPENAPI_FILE');
@@ -262,22 +296,41 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
   return Menu.buildFromTemplate(menu);
 };
 
-export const toggleExportMenuItems = (state: boolean) => {
+export const toggleEnvironmentMenuItems = (state: boolean) => {
   const menu = Menu.getApplicationMenu();
+  [
+    'DUPLICATE_ENVIRONMENT',
+    'CLOSE_ENVIRONMENT',
+    'NEW_ROUTE',
+    'DUPLICATE_ROUTE',
+    'DELETE_ROUTE',
+    'START_ENVIRONMENT',
+    'START_ALL_ENVIRONMENTS',
+    'PREVIOUS_ENVIRONMENT',
+    'NEXT_ENVIRONMENT',
+    'PREVIOUS_ROUTE',
+    'NEXT_ROUTE',
+    'EXPORT_FILE',
+    'EXPORT_FILE_SELECTED',
+    'EXPORT_OPENAPI_FILE'
+  ].forEach((id) => {
+    const menuItem = menu?.getMenuItemById(id);
 
-  if (
-    menu &&
-    objectPathHas(menu, 'items.2.submenu.items.0.submenu.items.2') &&
-    objectPathHas(menu, 'items.2.submenu.items.2.submenu.items.1')
-  ) {
-    (
-      (menu.items[2].submenu as Menu).items[0].submenu as Menu
-    ).items[2].enabled = state;
-    (
-      (menu.items[2].submenu as Menu).items[0].submenu as Menu
-    ).items[3].enabled = state;
-    (
-      (menu.items[2].submenu as Menu).items[2].submenu as Menu
-    ).items[1].enabled = state;
-  }
+    if (menuItem) {
+      menuItem.enabled = state;
+    }
+  });
+};
+
+export const toggleRouteMenuItems = (state: boolean) => {
+  const menu = Menu.getApplicationMenu();
+  ['DUPLICATE_ROUTE', 'DELETE_ROUTE', 'PREVIOUS_ROUTE', 'NEXT_ROUTE'].forEach(
+    (id) => {
+      const menuItem = menu?.getMenuItemById(id);
+
+      if (menuItem) {
+        menuItem.enabled = state;
+      }
+    }
+  );
 };

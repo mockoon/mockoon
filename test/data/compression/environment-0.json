@@ -1,0 +1,18 @@
+{
+  "uuid": "f98d0d37-b586-4a57-bbe5-3699bc46ebbe",
+  "lastMigration": 16,
+  "name": "Compression (proxy)",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3004,
+  "routes": [],
+  "proxyMode": true,
+  "proxyRemovePrefix": true,
+  "proxyHost": "http://localhost:3999/",
+  "https": false,
+  "cors": true,
+  "headers": [{ "key": "Content-Type", "value": "application/json" }],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "hostname": "0.0.0.0"
+}

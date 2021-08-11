@@ -146,6 +146,31 @@
       </div>
 
       <app-title-separator
+        heading="Storage"
+        icon="save"
+        iconClasses="text-primary"
+      ></app-title-separator>
+
+      <div class="pl-3">
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="storage-pretty-print"
+              name="storagePrettyPrint"
+              [ngModel]="settings.storagePrettyPrint"
+              (ngModelChange)="settingsUpdated($event, 'storagePrettyPrint')"
+            />
+            <label class="custom-control-label" for="storage-pretty-print"
+              >pretty print JSON storage files (settings and
+              environments)</label
+            >
+          </div>
+        </div>
+      </div>
+
+      <app-title-separator
         heading="Analytics & telemetry"
         icon="show_chart"
         iconClasses="text-primary"

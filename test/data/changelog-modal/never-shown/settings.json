@@ -3,8 +3,14 @@
   "analytics": true,
   "bannerDismissed": [],
   "logSizeLimit": 10000,
+  "maxLogsPerEnvironment": 50,
   "truncateRouteName": true,
+  "environmentMenuSize": 100,
+  "routeMenuSize": 200,
+  "logsMenuSize": 150,
   "fakerLocale": "en",
   "fakerSeed": null,
-  "enableTelemetry": true
+  "environments": [],
+  "enableTelemetry": true,
+  "storagePrettyPrint": true
 }

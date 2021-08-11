@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { Tests } from 'test/lib/tests';
 
 describe('Routes filter', async () => {
@@ -25,6 +26,9 @@ describe('Routes filter', async () => {
 
   it('Reset routes filter when switching env', async () => {
     await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
+    tests.helpers.mockDialog('showSaveDialog', [
+      resolve('./tmp/storage/dup-env1-test.json')
+    ]);
     await tests.helpers.duplicateEnvironment(1);
     await tests.helpers.assertElementValue(routesFilterSelector, '');
   });
@@ -46,15 +50,16 @@ describe('Routes filter', async () => {
 
   it('Reset routes filter when adding a new environment', async () => {
     await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
-    await tests.helpers.toggleEnvironmentMenu();
+    tests.helpers.mockDialog('showSaveDialog', [
+      resolve('./tmp/storage/new-env1-test.json')
+    ]);
     await tests.helpers.addEnvironment();
-    await tests.helpers.toggleEnvironmentMenu();
     await tests.helpers.assertElementValue(routesFilterSelector, '');
   });
 
   it('Reset routes filter when removing environment', async () => {
     await tests.helpers.setElementValue(routesFilterSelector, '/dolphins');
-    await tests.helpers.removeEnvironment(3);
+    await tests.helpers.closeEnvironment(3);
     await tests.helpers.assertElementValue(routesFilterSelector, '');
   });
 });

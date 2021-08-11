@@ -1,7 +1,7 @@
 import { HighestMigrationId } from '@mockoon/commons';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
-import { Settings } from 'src/renderer/app/models/settings.model';
+import { Settings } from 'src/shared/models/settings.model';
 import { Tests } from 'test/lib/tests';
 
 describe('Environments migrations', () => {
@@ -13,8 +13,8 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        '0.lastMigration',
+        './tmp/storage/environment-0.json',
+        'lastMigration',
         HighestMigrationId
       );
 
@@ -35,8 +35,8 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        '0.routes.0.responses.0.label',
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.label',
         null,
         true
       );
@@ -51,8 +51,8 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.proxyReqHeaders.0.key', '0.proxyResHeaders.0.key'],
+        './tmp/storage/environment-0.json',
+        ['proxyReqHeaders.0.key', 'proxyResHeaders.0.key'],
         null,
         true
       );
@@ -67,16 +67,16 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        '0.routes.0.responses.0.disableTemplating',
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.disableTemplating',
         false
       );
     });
 
     it('Should convert "statusCode" to number', async () => {
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        '0.routes.0.responses.0.statusCode',
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.statusCode',
         200
       );
     });
@@ -90,8 +90,8 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        '0.routes.0.responses.0.rulesOperator',
+        './tmp/storage/environment-0.json',
+        'routes.0.responses.0.rulesOperator',
         'OR'
       );
     });
@@ -105,8 +105,8 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        '0.routes.0.randomResponse',
+        './tmp/storage/environment-0.json',
+        'routes.0.randomResponse',
         false
       );
     });
@@ -120,8 +120,8 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        '0.routes.0.sequentialResponse',
+        './tmp/storage/environment-0.json',
+        'routes.0.sequentialResponse',
         false
       );
     });
@@ -135,8 +135,8 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.proxyRemovePrefix'],
+        './tmp/storage/environment-0.json',
+        ['proxyRemovePrefix'],
         false
       );
     });
@@ -150,8 +150,8 @@ describe('Environments migrations', () => {
       await tests.helpers.waitForAutosave();
 
       await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/environments.json',
-        ['0.hostname'],
+        './tmp/storage/environment-0.json',
+        ['hostname'],
         '0.0.0.0'
       );
     });

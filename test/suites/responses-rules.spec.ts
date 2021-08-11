@@ -18,6 +18,7 @@ describe('Responses rules', () => {
     });
 
     it('Route with multiple responses and no rules defined should return the first response', async () => {
+      await tests.helpers.waitForAutosave();
       await tests.helpers.httpCallAsserter({
         path: '/users/1',
         method: 'GET',
@@ -36,6 +37,9 @@ describe('Responses rules', () => {
         value: '10',
         isRegex: false
       });
+
+      await tests.helpers.waitForAutosave();
+
       await tests.helpers.httpCallAsserter({
         path: '/users/10',
         method: 'GET',
@@ -54,6 +58,9 @@ describe('Responses rules', () => {
         value: '5',
         isRegex: false
       });
+
+      await tests.helpers.waitForAutosave();
+
       await tests.helpers.httpCallAsserter({
         path: '/users/10?userid=5',
         method: 'GET',
@@ -71,6 +78,9 @@ describe('Responses rules', () => {
         value: 'application/xhtml+xml',
         isRegex: false
       });
+
+      await tests.helpers.waitForAutosave();
+
       await tests.helpers.httpCallAsserter({
         path: '/users/1234',
         headers: { Accept: 'application/xhtml+xml' },
@@ -421,6 +431,7 @@ describe('Responses rules', () => {
       await tests.helpers.assertRulesOperator('OR');
       await tests.helpers.selectRulesOperator('AND');
       await tests.helpers.assertRulesOperator('AND');
+      await tests.helpers.waitForAutosave();
     });
 
     for (const testCase of testCases) {
@@ -443,6 +454,7 @@ describe('Responses rules', () => {
       await tests.helpers.startEnvironment();
       await tests.helpers.selectRoute(4);
       await tests.helpers.elementClick('#route-responses-random');
+      await tests.helpers.waitForAutosave();
     });
 
     it('should call the random endpoint 20 times and have at least one of each statuses', async () => {
@@ -502,6 +514,7 @@ describe('Responses rules', () => {
       await tests.helpers.startEnvironment();
       await tests.helpers.selectRoute(4);
       await tests.helpers.elementClick('#route-responses-sequential');
+      await tests.helpers.waitForAutosave();
     });
 
     for (const testCase of testCases) {

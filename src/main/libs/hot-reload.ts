@@ -19,7 +19,9 @@ export const hotReload = (mainWindow: BrowserWindow) => {
         relaunching = true;
       }
     } else {
-      mainWindow.webContents.reloadIgnoringCache();
+      setTimeout(() => {
+        mainWindow.webContents.reloadIgnoringCache();
+      }, 500);
     }
   });
 };
