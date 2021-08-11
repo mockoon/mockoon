@@ -44,7 +44,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-package-win.bat
+.package-win
 wip.md
 
 .env
