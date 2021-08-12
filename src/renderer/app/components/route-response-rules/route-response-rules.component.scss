@@ -2,30 +2,20 @@
 @import 'src/renderer/styles/variables.scss';
 
 .rules {
-  .rules-operator {
-    border-right: 1px solid $gray-600;
-    // calculate half item from top (input height + top spacer)
-    margin-top: calc(#{$input-height} / 2 + (#{$spacer} * 0.5));
-    // calculate half item from bottom (input height) minus border (to reach the horizontal line)
-    margin-bottom: calc((#{$input-height} - 2px) / 2);
+  .rules-bracket {
+    background-image: linear-gradient($gray-500, $gray-500),
+      linear-gradient($gray-500, $gray-500);
+    background-repeat: no-repeat;
+    background-size: 8px 3px;
+    background-position: top left, bottom left;
+    border-left: 3px solid $gray-500;
+    margin: $spacer / 2;
+    width: 11px;
   }
+}
 
-  .rule-item {
-    &:not(:only-child) {
-      padding-left: 20px;
-      position: relative;
-
-      &::before {
-        content: '';
-        width: 20px;
-        height: 50%;
-        position: absolute;
-        left: 0;
-        box-shadow: 0 1px 0 0 inset $gray-600;
-        top: calc(#{$input-height} / 2);
-        display: inline-block;
-        line-height: 50%;
-      }
-    }
+.rule-item {
+  &:not(:first-of-type) {
+    margin-top: $spacer / 2;
   }
 }
