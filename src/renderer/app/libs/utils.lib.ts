@@ -36,3 +36,14 @@ export const GetEditorModeFromContentType = (
     return 'text';
   }
 };
+
+export const ArrayMoveItem = (
+  arr: any[],
+  sourceIndex: number,
+  targetIndex: number
+) => {
+  const newArray = arr.slice();
+  newArray.splice(targetIndex, 0, newArray.splice(sourceIndex, 1)[0]);
+
+  return newArray;
+};
