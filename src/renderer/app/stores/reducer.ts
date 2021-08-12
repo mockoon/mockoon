@@ -5,7 +5,10 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import { ArrayContainsObjectKey } from 'src/renderer/app/libs/utils.lib';
+import {
+  ArrayContainsObjectKey,
+  ArrayMoveItem
+} from 'src/renderer/app/libs/utils.lib';
 import {
   ActiveEnvironmentsLogUUIDs,
   EnvironmentLogs
@@ -207,11 +210,10 @@ export const environmentReducer = (
     }
 
     case ActionTypes.MOVE_ENVIRONMENTS: {
-      const newEnvironments = state.environments.slice();
-      newEnvironments.splice(
-        action.indexes.targetIndex,
-        0,
-        newEnvironments.splice(action.indexes.sourceIndex, 1)[0]
+      const newEnvironments = ArrayMoveItem(
+        state.environments,
+        action.indexes.sourceIndex,
+        action.indexes.targetIndex
       );
 
       newState = {
@@ -233,11 +235,10 @@ export const environmentReducer = (
 
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === state.activeEnvironmentUUID) {
-          const newRoutes = environment.routes.slice();
-          newRoutes.splice(
-            action.indexes.targetIndex,
-            0,
-            newRoutes.splice(action.indexes.sourceIndex, 1)[0]
+          const newRoutes = ArrayMoveItem(
+            environment.routes,
+            action.indexes.sourceIndex,
+            action.indexes.targetIndex
           );
 
           return {
@@ -268,11 +269,10 @@ export const environmentReducer = (
         if (environment.uuid === state.activeEnvironmentUUID) {
           const newRoutes = environment.routes.map((route) => {
             if (route.uuid === state.activeRouteUUID) {
-              const newRouteResponses = route.responses.slice();
-              newRouteResponses.splice(
-                action.indexes.targetIndex,
-                0,
-                newRouteResponses.splice(action.indexes.sourceIndex, 1)[0]
+              const newRouteResponses = ArrayMoveItem(
+                route.responses,
+                action.indexes.sourceIndex,
+                action.indexes.targetIndex
               );
 
               return {

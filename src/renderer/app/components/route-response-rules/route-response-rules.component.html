@@ -32,7 +32,11 @@
           </ng-container>
         </div>
       </div>
-      <div class="rules-list flex-grow-1">
+      <div
+        class="rules-list flex-grow-1"
+        cdkDropList
+        (cdkDropListDropped)="reorderResponseRules($event)"
+      >
         <ng-container formArrayName="rules">
           <div
             class="rule-item mt-2"
@@ -41,6 +45,9 @@
               index as ruleIndex
             "
             [formGroupName]="ruleIndex"
+            cdkDrag
+            cdkDragLockAxis="y"
+            cdkDragBoundary=".rules-list"
           >
             <div class="col form-inline">
               <select
