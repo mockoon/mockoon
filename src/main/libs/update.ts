@@ -9,11 +9,26 @@ import { pipeline } from 'stream';
 import { promisify } from 'util';
 
 declare const appVersion: string;
-const userDataPath = app.getPath('userData');
 let updateAvailableVersion: string;
 const isNotPortable = !process.env.PORTABLE_EXECUTABLE_DIR;
 
+/**
+ * Tell the renderer that an update is available.
+ * dom-ready may have been fired already or not.
+ * APP_UPDATE_AVAILABLE can be emitted safely twice.
+ *
+ * @param mainWindow
+ */
+const notifyUpdate = (mainWindow: BrowserWindow) => {
+  mainWindow.webContents.send('APP_UPDATE_AVAILABLE');
+
+  mainWindow.webContents.once('dom-ready', () => {
+    mainWindow.webContents.send('APP_UPDATE_AVAILABLE');
+  });
+};
+
 export const checkForUpdate = async (mainWindow: BrowserWindow) => {
+  const userDataPath = app.getPath('userData');
   const streamPipeline = promisify(pipeline);
   const githubLatestReleaseUrl =
     'https://api.github.com/repos/mockoon/mockoon/releases/latest';
@@ -49,7 +64,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
       try {
         await fsPromises.access(updateFilePath);
         logInfo('[MAIN][UPDATE]Binary file already downloaded');
-        mainWindow.webContents.send('APP_UPDATE_AVAILABLE');
+        notifyUpdate(mainWindow);
         updateAvailableVersion = latestVersion;
 
         return;
@@ -64,7 +79,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
         );
         await streamPipeline(response.data, createWriteStream(updateFilePath));
         logInfo('[MAIN][UPDATE]Binary file ready');
-        mainWindow.webContents.send('APP_UPDATE_AVAILABLE');
+        notifyUpdate(mainWindow);
         updateAvailableVersion = latestVersion;
       } catch (error) {
         logError(
@@ -72,7 +87,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
         );
       }
     } else {
-      mainWindow.webContents.send('APP_UPDATE_AVAILABLE');
+      notifyUpdate(mainWindow);
       updateAvailableVersion = latestVersion;
     }
   } else {
@@ -81,6 +96,8 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
 };
 
 export const applyUpdate = () => {
+  const userDataPath = app.getPath('userData');
+
   if (updateAvailableVersion) {
     if (process.platform === 'win32' && isNotPortable) {
       spawn(
@@ -93,7 +110,7 @@ export const applyUpdate = () => {
       ).unref();
 
       app.quit();
-    } else if (process.platform === 'darwin' || process.platform === 'linux') {
+    } else {
       shell.openExternal('https://mockoon.com/download');
     }
   }
