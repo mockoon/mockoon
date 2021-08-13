@@ -6,12 +6,15 @@
     "app": "dist"
   },
   "win": {
-    "target": "nsis",
+    "target": [{ "target": "nsis" }, { "target": "portable" }],
     "publisherName": "Guillaume Monnet",
     "rfc3161TimeStampServer": "http://timestamp.digicert.com"
   },
   "nsis": {
     "artifactName": "mockoon.setup.${version}.${ext}"
+  },
+  "portable": {
+    "artifactName": "mockoon.portable.${version}.${ext}"
   },
   "mac": {
     "target": "dmg",

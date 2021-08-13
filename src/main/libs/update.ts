@@ -11,6 +11,7 @@ import { promisify } from 'util';
 declare const appVersion: string;
 const userDataPath = app.getPath('userData');
 let updateAvailableVersion: string;
+const isNotPortable = !process.env.PORTABLE_EXECUTABLE_DIR;
 
 export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   const streamPipeline = promisify(pipeline);
@@ -41,7 +42,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   if (semverGt(latestVersion, appVersion)) {
     logInfo(`[MAIN][UPDATE]Found a new version v${latestVersion}`);
 
-    if (process.platform === 'win32') {
+    if (process.platform === 'win32' && isNotPortable) {
       const binaryFilename = `mockoon.setup.${latestVersion}.exe`;
       const updateFilePath = pathJoin(userDataPath, binaryFilename);
 
@@ -81,7 +82,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
 
 export const applyUpdate = () => {
   if (updateAvailableVersion) {
-    if (process.platform === 'win32') {
+    if (process.platform === 'win32' && isNotPortable) {
       spawn(
         pathJoin(userDataPath, `mockoon.setup.${updateAvailableVersion}.exe`),
         ['--updated'],
