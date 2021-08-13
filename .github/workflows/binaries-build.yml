@@ -128,6 +128,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: exe
-          path: |
-            ./packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
-            ./packages/mockoon.portable.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
+          path: ./packages/mockoon.*.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
