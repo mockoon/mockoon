@@ -156,4 +156,19 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 17', () => {
+    const filesPath = 'migrations/17';
+    const tests = new Tests(filesPath);
+
+    it('Should add "fallbackTo404" at false to route responses', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environments.json',
+        '0.routes.0.responses.0.fallbackTo404',
+        false
+      );
+    });
+  });
 });

@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,6 +23,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
+import { MoveArrayItem } from 'src/renderer/app/libs/utils.lib';
 import { SelectOptionsList } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
@@ -111,6 +113,15 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     );
 
     this.ruleAdded.emit();
+  }
+
+  public reorderResponseRules(event: CdkDragDrop<string[]>) {
+    const responseRules = MoveArrayItem<ResponseRule>(
+      this.rules.value,
+      event.previousIndex,
+      event.currentIndex
+    );
+    this.replaceRules(responseRules, true);
   }
 
   /**

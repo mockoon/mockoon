@@ -1,10 +1,12 @@
 import { Environment, Route, RouteResponse } from '@mockoon/commons';
-import { ArrayContainsObjectKey } from 'src/renderer/app/libs/utils.lib';
+import {
+  ArrayContainsObjectKey,
+  MoveArrayItem
+} from 'src/renderer/app/libs/utils.lib';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import {
   getBodyEditorMode,
-  moveArrayItem,
   updateDuplicatedEnvironments,
   updateDuplicatedRoutes
 } from 'src/renderer/app/stores/reducer-utils';
@@ -125,14 +127,14 @@ export const environmentReducer = (
     case ActionTypes.MOVE_ENVIRONMENTS: {
       newState = {
         ...state,
-        environments: moveArrayItem<Environment>(
+        environments: MoveArrayItem<Environment>(
           state.environments,
           action.indexes.sourceIndex,
           action.indexes.targetIndex
         ),
         settings: {
           ...state.settings,
-          environments: moveArrayItem<EnvironmentDescriptor>(
+          environments: MoveArrayItem<EnvironmentDescriptor>(
             state.settings.environments,
             action.indexes.sourceIndex,
             action.indexes.targetIndex
@@ -156,7 +158,7 @@ export const environmentReducer = (
         if (environment.uuid === state.activeEnvironmentUUID) {
           return {
             ...environment,
-            routes: moveArrayItem<Route>(
+            routes: MoveArrayItem<Route>(
               environment.routes,
               action.indexes.sourceIndex,
               action.indexes.targetIndex
@@ -188,7 +190,7 @@ export const environmentReducer = (
             if (route.uuid === state.activeRouteUUID) {
               return {
                 ...route,
-                responses: moveArrayItem<RouteResponse>(
+                responses: MoveArrayItem<RouteResponse>(
                   route.responses,
                   action.indexes.sourceIndex,
                   action.indexes.targetIndex

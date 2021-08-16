@@ -14,12 +14,22 @@ import { checkForUpdate } from './libs/update';
 declare const isTesting: boolean;
 declare const isDev: boolean;
 
-// set local data folder when in dev mode or running tests
-if (isTesting || isDev) {
-  app.setPath('userData', pathResolve('./tmp'));
+const setAppAndLogPath = (path: string) => {
+  app.setPath('userData', path);
 
   logTransports.file.resolvePath = (variables: any) =>
-    pathJoin(pathResolve('./tmp/logs'), 'main.log');
+    pathJoin(path, '/logs', 'main.log');
+};
+
+// set local data folder when in dev mode or running tests
+if (isTesting || isDev) {
+  setAppAndLogPath(pathResolve('./tmp'));
+}
+
+// set local data folder when is portable mode
+const portableExecDir = process.env.PORTABLE_EXECUTABLE_DIR;
+if (portableExecDir) {
+  setAppAndLogPath(pathJoin(portableExecDir, 'mockoon-data'));
 }
 
 // log uncaught errors

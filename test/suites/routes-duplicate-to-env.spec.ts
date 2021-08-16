@@ -4,8 +4,11 @@ import { Tests } from 'test/lib/tests';
 
 describe('Duplicate a route to an environment', async () => {
   const { helpers } = new Tests('basic-data');
-  const firstEnvSelector =
-    '.modal-content .modal-body .list-group .list-group-item:first-child';
+
+  const envNameSelector =
+    '.modal-content .modal-body .list-group .list-group-item:first-child div:first-of-type';
+  const envHostnameSelector =
+    '.modal-content .modal-body .list-group .list-group-item:first-child div:last-of-type';
 
   it('should assert that menu entry is disabled when only one environment present', async () => {
     await helpers.assertContextMenuDisabled(
@@ -43,15 +46,17 @@ describe('Duplicate a route to an environment', async () => {
 
     expect(targetRoute).to.include('POST /dolphins');
 
-    const targetEnvironmentName = await helpers.getElementText(
-      firstEnvSelector
-    );
-
+    const targetEnvironmentName = await helpers.getElementText(envNameSelector);
     expect(targetEnvironmentName).to.equal('New environment');
+
+    const targetEnvironmentHostname = await helpers.getElementText(
+      envHostnameSelector
+    );
+    expect(targetEnvironmentHostname).to.equal('0.0.0.0:3001/');
   });
 
   it('should duplicate selected route to selected environment', async () => {
-    await helpers.elementClick(firstEnvSelector);
+    await helpers.elementClick(envNameSelector);
 
     await helpers.assertActiveEnvironmentName('New environment');
     await helpers.checkActiveRoute('POST\n/dolphins');

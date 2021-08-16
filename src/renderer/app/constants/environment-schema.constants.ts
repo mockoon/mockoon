@@ -56,7 +56,8 @@ export const RouteResponseDefault: RouteResponse = {
   sendFileAsBody: false,
   rules: [],
   rulesOperator: 'OR',
-  disableTemplating: false
+  disableTemplating: false,
+  fallbackTo404: false
 };
 
 export const ResponseRuleDefault: ResponseRule = {

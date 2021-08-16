@@ -128,6 +128,10 @@ input,
   }
 }
 
+.cursor-grab {
+  cursor: grab;
+}
+
 // http methods badges
 $http-methods: ('get', lighten($blue, 5%)), ('put', lighten($orange, 5%)),
   ('post', lighten($green, 5%)), ('delete', lighten($red, 8%)),

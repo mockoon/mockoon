@@ -581,7 +581,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       sendFileAsBody: [''],
       body: [''],
       rules: this.formBuilder.array([]),
-      disableTemplating: [false]
+      disableTemplating: [false],
+      fallbackTo404: [false]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -693,7 +694,8 @@ export class AppComponent implements OnInit, AfterViewInit {
             sendFileAsBody: activeRouteResponse.sendFileAsBody,
             body: activeRouteResponse.body,
             rules: activeRouteResponse.rules,
-            disableTemplating: activeRouteResponse.disableTemplating
+            disableTemplating: activeRouteResponse.disableTemplating,
+            fallbackTo404: activeRouteResponse.fallbackTo404
           },
           { emitEvent: false }
         );
