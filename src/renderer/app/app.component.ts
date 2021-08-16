@@ -26,7 +26,8 @@ import {
   filter,
   map,
   mergeMap,
-  pluck
+  pluck,
+  tap
 } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
@@ -118,6 +119,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   public focusableInputs = FocusableInputs;
   public statusCodeValidation = StatusCodeValidation;
   public hostnameTooltip$: Observable<string>;
+  public os: string;
   private injectHeaders$ = new Subject<Header[]>();
   private logger = new Logger('[COMPONENT][APP]');
 
@@ -140,11 +142,31 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.telemetryService.sendEvent();
   }
 
+  @HostListener('document:keydown', ['$event'])
+  public focusRouteFilterInput(event: KeyboardEvent) {
+    if (
+      ((event.ctrlKey && this.os !== 'darwin') ||
+        (event.metaKey && this.os === 'darwin')) &&
+      event.shiftKey &&
+      event.key.toLowerCase() === 'f'
+    ) {
+      this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
+    }
+  }
+
   ngOnInit() {
     this.appQuitService.init().subscribe();
     this.injectedHeaders$ = this.injectHeaders$.asObservable();
 
     this.logger.info('Initializing application');
+
+    from(MainAPI.invoke('APP_GET_OS'))
+      .pipe(
+        tap((os) => {
+          this.os = os;
+        })
+      )
+      .subscribe();
 
     this.initForms();
 

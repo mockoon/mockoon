@@ -13,13 +13,19 @@
           </a>
         </li>
         <li class="nav-item flex-grow-1">
-          <div class="input-group">
+          <div class="input-group" *ngIf="os$ | async as os">
             <input
               type="text"
               class="form-control"
               id="route-filter"
               placeholder="Filter"
               [formControl]="routesFilter"
+              [ngbTooltip]="
+                'Filter routes (' +
+                (os === 'darwin' ? 'Cmd' : 'Ctrl') +
+                '+Shift+F)'
+              "
+              [appFocusOnEvent]="focusableInputs.ROUTE_FILTER"
             />
             <button
               *ngIf="routesFilter.value.length > 0"
