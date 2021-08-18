@@ -116,5 +116,28 @@ export const Messages: {
     message: 'Route has been successfully copied to the clipboard',
     showToast: true,
     toastType: 'success'
+  }),
+  ENVIRONMENT_FILE_IN_USE: () => ({
+    message: 'This environment file is already in use',
+    showToast: true,
+    toastType: 'error'
+  }),
+  FIRST_LOAD_DEMO_ENVIRONMENT: () => ({
+    message: 'First load, adding demo environment',
+    showToast: false
+  }),
+  ENVIRONMENT_MORE_RECENT_VERSION: (messageParams) => ({
+    message: `Environment "${
+      messageParams.name || messageParams.uuid
+    }" was created with a more recent version of Mockoon. Please upgrade.`,
+    showToast: true,
+    toastType: 'warning'
+  }),
+  ENVIRONMENT_MIGRATION_FAILED: (messageParams) => ({
+    message: `Migration of environment "${
+      messageParams.name || messageParams.uuid
+    }" failed. The environment was automatically repaired and migrated to the latest version.`,
+    showToast: true,
+    toastType: 'warning'
   })
 };

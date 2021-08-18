@@ -1,3 +1,4 @@
+import { promises as fs } from 'fs';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
@@ -158,6 +159,7 @@ describe('Duplicated Set-Cookie header', () => {
       key: 'Set-Cookie',
       value: 'routecookie2=routecookie2value'
     });
+    await tests.app.client.pause(100);
   });
 
   it('Add duplicated Set-Cookie headers on environment', async () => {
@@ -172,6 +174,7 @@ describe('Duplicated Set-Cookie header', () => {
       key: 'Set-Cookie',
       value: 'envcookie2=envcookie2value'
     });
+    await tests.app.client.pause(100);
   });
 
   it('Call /headers, we should get an array of Set-Cookie headers', async () => {
@@ -187,6 +190,7 @@ describe('File headers', () => {
   const tests = new Tests('headers');
 
   it('Call /file should get XML content-type from route header', async () => {
+    await fs.copyFile('./test/data/test.pdf', './tmp/storage/test.pdf');
     await tests.helpers.startEnvironment();
 
     await tests.helpers.httpCallAsserterWithPort(getFile, 3000);
@@ -212,6 +216,9 @@ describe('CORS headers', () => {
       key: 'Access-Control-Allow-Origin',
       value: 'https://mockoon.com'
     });
+
+    await tests.helpers.waitForAutosave();
+
     await tests.helpers.httpCallAsserterWithPort(
       getOverriddenCORSHeaders,
       3000

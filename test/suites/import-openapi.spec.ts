@@ -1,6 +1,7 @@
 import { Environments } from '@mockoon/commons';
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
+import { parse as pathParse, resolve } from 'path';
 import { Tests } from 'test/lib/tests';
 
 const dataSamplesPath = './test/data/import/openapi/samples/';
@@ -111,9 +112,13 @@ describe('Swagger/OpenAPI import', () => {
       testSuite.tests.forEach((testCase) => {
         describe(testCase.desc, () => {
           const tests = new Tests('import', true, true, false);
+          const filename = pathParse(testCase.filePath).name;
 
           it('Should import the file', async () => {
-            tests.helpers.mockOpenDialog([testCase.filePath]);
+            tests.helpers.mockDialog('showOpenDialog', [testCase.filePath]);
+            tests.helpers.mockDialog('showSaveDialog', [
+              resolve(`./tmp/storage/${filename}.json`)
+            ]);
 
             tests.helpers.selectMenuEntry('IMPORT_OPENAPI_FILE');
 
@@ -123,11 +128,11 @@ describe('Swagger/OpenAPI import', () => {
             );
           });
 
-          it('Environments.json file content should match reference file', async () => {
+          it('Environment file content should match reference file', async () => {
             await tests.helpers.waitForAutosave();
 
             const environmentFile = await fs.readFile(
-              './tmp/storage/environments.json'
+              `./tmp/storage/${filename}.json`
             );
             const referenceEnvironmentFile = await fs.readFile(
               testCase.referenceFilePath

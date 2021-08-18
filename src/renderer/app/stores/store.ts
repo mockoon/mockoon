@@ -6,17 +6,17 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
+import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { INDENT_SIZE } from 'src/renderer/app/constants/common.constants';
 import {
   ActiveEnvironmentsLogUUIDs,
   EnvironmentLog,
   EnvironmentLogs
 } from 'src/renderer/app/models/environment-logs.model';
-import { Settings } from 'src/renderer/app/models/settings.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Actions } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
+import { Settings } from 'src/shared/models/settings.model';
 
 export type ViewsNameType = 'ROUTE' | 'ENV_SETTINGS' | 'ENV_LOGS';
 
@@ -27,7 +27,6 @@ export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 export type EnvironmentStatus = {
   running: boolean;
   needRestart: boolean;
-  disabledForIncompatibility: boolean;
 };
 
 export type EnvironmentStatusProperties = {
@@ -39,8 +38,7 @@ export type EnvironmentsStatuses = { [key: string]: EnvironmentStatus };
 export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
 
 export type UIState = {
-  environmentsMenuOpened: boolean;
-  appClosing: boolean;
+  closing: boolean;
 };
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
@@ -102,8 +100,7 @@ export class Store {
     environmentsLogs: {},
     toasts: [],
     uiState: {
-      environmentsMenuOpened: false,
-      appClosing: false
+      closing: false
     },
     settings: null,
     duplicateRouteToAnotherEnvironment: { moving: false },
@@ -116,7 +113,7 @@ export class Store {
    * Select store element
    */
   public select<T extends keyof StoreType>(path: T): Observable<StoreType[T]> {
-    return this.store$.asObservable().pipe(pluck(path));
+    return this.store$.asObservable().pipe(pluck(path), distinctUntilChanged());
   }
 
   /**

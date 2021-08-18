@@ -1,0 +1,18 @@
+{
+  "uuid": "2cbdec80-f284-11e9-a28c-912bdc671020",
+  "lastMigration": 17,
+  "name": "Proxy removes prefix",
+  "endpointPrefix": "prefix",
+  "latency": 0,
+  "port": 3003,
+  "routes": [],
+  "proxyMode": true,
+  "proxyRemovePrefix": true,
+  "proxyHost": "https://127.0.0.1:3000",
+  "https": true,
+  "cors": true,
+  "headers": [{ "key": "Content-Type", "value": "application/json" }],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "hostname": "0.0.0.0"
+}

@@ -55,7 +55,7 @@ const initApp = () => {
   if (isDev) {
     // when serving (dev mode) enable hot reloading
     import('./libs/hot-reload').then((hotReloadModule) => {
-      hotReloadModule.hotReload(mainWindow);
+      hotReloadModule.hotReload();
     });
   }
 };

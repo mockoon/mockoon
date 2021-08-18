@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, from, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, from, Observable, of } from 'rxjs';
 import {
   catchError,
-  concatMap,
-  debounceTime,
   distinctUntilChanged,
+  mergeMap,
   tap
 } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
@@ -26,13 +25,25 @@ export class StorageService {
   }
 
   /**
+   * Set saving in progress to true
+   */
+  public initiateSaving() {
+    this.saving$.next(true);
+  }
+
+  /**
    * Load data from JSON storage.
    * Handles storage failure.
    *
-   * @param key
+   * A custom path can be passed to load from a different directory than the storage folder.
+   * This is especially useful for loading individual environments.
+   * When using `path` put the `key` at `null`.
+   *
+   * @param key - storage key
+   * @param path - storage file full path, key will be ignored
    */
-  public loadData<T>(key: string): Observable<T> {
-    return from(MainAPI.invoke<T>('APP_READ_JSON_DATA', key)).pipe(
+  public loadData<T>(key: string, path?: string): Observable<T> {
+    return from(MainAPI.invoke<T>('APP_READ_JSON_DATA', key, path)).pipe(
       catchError((error) => {
         const errorMessage = `Error while loading ${key}`;
 
@@ -51,27 +62,39 @@ export class StorageService {
   }
 
   /**
-   * Save date from a source using JSON storage.
-   * Wait for the data to be saved before triggering a new save.
+   * Save data to a file.
+   * Switch saving flag during save.
    * Handles storage failure.
    *
-   * @param source
-   * @param key
-   * @param interval
+   * A custom path can be passed to save in a different directory than the storage folder.
+   * This is especially useful for saving individual environments.
+   * When using `path` put the `key` at `null`.
+   *
+   * @param key - storage key
+   * @param data - data to save
+   * @param path - storage file full path, key will be ignored
+   * @returns
    */
   public saveData<T>(
-    source: Observable<T>,
     key: string,
-    interval: number
-  ): Observable<void> {
-    return source.pipe(
-      distinctUntilChanged(),
-      tap(() => {
-        this.saving$.next(true);
-      }),
-      debounceTime(interval),
-      concatMap((data) =>
-        from(MainAPI.invoke<T>('APP_WRITE_JSON_DATA', key, data)).pipe(
+    data: T,
+    path?: string,
+    storagePrettyPrint?: boolean
+  ) {
+    return of(true).pipe(
+      mergeMap(() =>
+        from(
+          MainAPI.invoke<T>(
+            'APP_WRITE_JSON_DATA',
+            key,
+            data,
+            path,
+            storagePrettyPrint
+          )
+        ).pipe(
+          tap(() => {
+            this.saving$.next(false);
+          }),
           catchError((error) => {
             const errorMessage = `Error while saving ${key}`;
 
@@ -85,9 +108,6 @@ export class StorageService {
             );
 
             return EMPTY;
-          }),
-          tap(() => {
-            this.saving$.next(false);
           })
         )
       )

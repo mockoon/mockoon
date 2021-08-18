@@ -14,13 +14,13 @@ import { Store } from 'src/renderer/app/stores/store';
 export class FooterComponent implements OnInit {
   public updateAvailable$: BehaviorSubject<boolean>;
   public platform$ = from(MainAPI.invoke('APP_GET_PLATFORM'));
-  public appClosing$: Observable<boolean>;
+  public closing$: Observable<boolean>;
 
   constructor(private store: Store, private eventsService: EventsService) {}
 
   ngOnInit() {
     this.updateAvailable$ = this.eventsService.updateAvailable$;
-    this.appClosing$ = this.store.select('uiState').pipe(pluck('appClosing'));
+    this.closing$ = this.store.select('uiState').pipe(pluck('closing'));
   }
 
   /**

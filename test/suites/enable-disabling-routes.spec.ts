@@ -47,6 +47,7 @@ describe('Enable/disable routes', () => {
   });
 
   it('Call disabled route', async () => {
+    await tests.helpers.waitForAutosave();
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall[1], 3000);
   });
 
@@ -60,6 +61,7 @@ describe('Enable/disable routes', () => {
   });
 
   it('Call reenabled route', async () => {
+    await tests.helpers.waitForAutosave();
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall[0], 3000);
   });
 });

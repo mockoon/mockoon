@@ -1,6 +1,5 @@
 @import './boostrap-overrides.scss';
 @import './fonts.scss';
-@import './variables.scss';
 @import './animations.scss';
 
 // custom scrollbar
@@ -83,10 +82,6 @@ input,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.environments-menu-container {
-  width: $environment-menu-width;
 }
 
 .column-width {
@@ -175,36 +170,6 @@ $http-methods-light: ('get', lighten($blue, 10%)),
   right: 0;
 }
 
-.server-icons {
-  position: absolute;
-  display: block;
-  width: 10px;
-  height: 10px;
-  opacity: 0.5;
-
-  i {
-    font-size: 13px;
-  }
-
-  &-proxy-mode {
-    right: 8px;
-    top: -4px;
-    color: $blue;
-  }
-
-  &-https {
-    right: 8px;
-    top: 13px;
-    color: $yellow;
-  }
-
-  &-cors {
-    right: 8px;
-    top: 28px;
-    color: $cyan;
-  }
-}
-
 .toasts-container {
   z-index: 5000;
   position: absolute;
@@ -261,17 +226,6 @@ $http-methods-light: ('get', lighten($blue, 10%)),
   }
 }
 
-.pattern-danger {
-  position: relative;
-  background: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 8px,
-    #f3362866 0px,
-    #f3362866 16px
-  );
-}
-
 .warning-message {
   font-size: 0.8rem;
   color: $warning;
@@ -279,7 +233,7 @@ $http-methods-light: ('get', lighten($blue, 10%)),
 
 .resize-column {
   position: absolute;
-  width: $resize-separator-width;
+  width: 4px;
   height: 100%;
   right: 0;
   top: 0;

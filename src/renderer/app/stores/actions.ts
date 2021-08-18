@@ -1,9 +1,4 @@
-import {
-  Environment,
-  Environments,
-  Route,
-  RouteResponse
-} from '@mockoon/commons';
+import { Environment, Route, RouteResponse } from '@mockoon/commons';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
 import {
@@ -28,7 +23,6 @@ export const enum ActionTypes {
   SET_ACTIVE_TAB,
   SET_ACTIVE_VIEW,
   SET_ACTIVE_ENVIRONMENT_LOG_TAB,
-  SET_INITIAL_ENVIRONMENTS,
   SET_ACTIVE_ENVIRONMENT,
   NAVIGATE_ENVIRONMENTS,
   MOVE_ENVIRONMENTS,
@@ -97,17 +91,6 @@ export const setActiveEnvironmentLogTabAction = (
   };
 
 /**
- * Set the initial environments
- *
- * @param environments - initial environments from storage
- */
-export const setInitialEnvironmentsAction = (environments: Environments) =>
-  <const>{
-    type: ActionTypes.SET_INITIAL_ENVIRONMENTS,
-    environments
-  };
-
-/**
  * Set the active environment (currently displayed)
  *
  * @param environmentUUID - UUID of the environment to switch to
@@ -166,15 +149,20 @@ export const moveRouteResponsesAction = (indexes: ReducerIndexes) =>
  * Add a new environment
  *
  * @param environment - environment to add
+ * @param options.activeEnvironmentUUID - if provided, keep another environment active instead of the one being added
  */
 export const addEnvironmentAction = (
   environment: Environment,
-  afterUUID?: string
+  options?: {
+    filePath?: string;
+    afterUUID?: string;
+    activeEnvironment?: Environment;
+  }
 ) =>
   <const>{
     type: ActionTypes.ADD_ENVIRONMENT,
     environment,
-    afterUUID
+    ...options
   };
 
 /**
@@ -452,7 +440,6 @@ export const updateUIStateAction = (properties: UIStateProperties) =>
 export type Actions =
   | ReturnType<typeof setActiveTabAction>
   | ReturnType<typeof setActiveViewAction>
-  | ReturnType<typeof setInitialEnvironmentsAction>
   | ReturnType<typeof setActiveEnvironmentLogTabAction>
   | ReturnType<typeof setActiveEnvironmentAction>
   | ReturnType<typeof navigateEnvironmentsAction>

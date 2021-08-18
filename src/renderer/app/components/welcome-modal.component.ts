@@ -10,10 +10,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
-import { Settings } from 'src/renderer/app/models/settings.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Settings } from 'src/shared/models/settings.model';
 
 @Component({
   selector: 'app-welcome-modal',
@@ -42,8 +42,6 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
       .pipe(filter<Settings>(Boolean), first())
       .subscribe((settings) => {
         if (!settings.welcomeShown) {
-          this.settingsService.updateSettings({ welcomeShown: true });
-
           this.modalService
             .open(this.modal, { backdrop: 'static', centered: true })
             .result.then(
@@ -66,6 +64,7 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
 
   public closeModal() {
     this.modalService.dismissAll();
+    this.settingsService.updateSettings({ welcomeShown: true });
     this.eventsService.analyticsEvents.next(
       AnalyticsEvents.APPLICATION_FIRST_LOAD
     );

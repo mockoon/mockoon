@@ -1,8 +1,7 @@
 import { watch } from 'chokidar';
-import { app, BrowserWindow } from 'electron';
-import { basename } from 'path';
+import { app } from 'electron';
 
-export const hotReload = (mainWindow: BrowserWindow) => {
+export const hotReload = () => {
   let relaunching = false;
 
   const watcher = watch(__dirname, { ignored: '**/*.map' });
@@ -11,15 +10,11 @@ export const hotReload = (mainWindow: BrowserWindow) => {
     watcher.close();
   });
 
-  watcher.on('change', (path) => {
-    if (['app.js', 'preload.js'].includes(basename(path))) {
-      if (!relaunching) {
-        app.relaunch();
-        app.exit(0);
-        relaunching = true;
-      }
-    } else {
-      mainWindow.webContents.reloadIgnoringCache();
+  watcher.on('change', () => {
+    if (!relaunching) {
+      app.relaunch();
+      app.exit(0);
+      relaunching = true;
     }
   });
 };

@@ -2,28 +2,6 @@ import { Config } from 'src/renderer/app/config';
 import { Tests } from 'test/lib/tests';
 
 describe('Changelog modal', () => {
-  describe('Show changelog modal if never shown (software update)', () => {
-    const tests = new Tests('changelog-modal/never-shown', true, true, false);
-
-    it('Should show the changelog modal', async () => {
-      await tests.app.client.waitUntilTextExists(
-        '.modal-title',
-        `Release notes v${Config.appVersion}`
-      );
-
-      await tests.helpers.waitForAutosave();
-    });
-
-    it('Should save the current version as the last shown', async () => {
-      await tests.helpers.closeModal();
-      await tests.helpers.verifyObjectPropertyInFile(
-        './tmp/storage/settings.json',
-        'lastChangelog',
-        Config.appVersion
-      );
-    });
-  });
-
   describe('Show changelog modal if last changelog shown is from older version', () => {
     const tests = new Tests('changelog-modal/shown', true, true, false);
 

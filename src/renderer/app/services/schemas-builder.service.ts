@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import {
   Environment,
+  EnvironmentDefault,
   Header,
-  HighestMigrationId,
+  ResponseRule,
+  ResponseRuleDefault,
   Route,
-  RouteResponse
+  RouteDefault,
+  RouteResponse,
+  RouteResponseDefault
 } from '@mockoon/commons';
 import { cloneDeep } from 'lodash';
 import { DataService } from 'src/renderer/app/services/data.service';
-import { v1 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class SchemasBuilderService {
@@ -26,18 +30,16 @@ export class SchemasBuilderService {
    */
   public buildRouteResponse(): RouteResponse {
     return {
-      uuid: uuid(),
-      body: '{}',
-      latency: 0,
-      statusCode: 200,
-      label: '',
-      headers: [],
-      filePath: '',
-      sendFileAsBody: false,
-      rules: [],
-      rulesOperator: 'OR',
-      disableTemplating: false,
-      fallbackTo404: false
+      ...RouteResponseDefault
+    };
+  }
+
+  /**
+   * Build a new response rule
+   */
+  public buildResponseRule(): ResponseRule {
+    return {
+      ...ResponseRuleDefault
     };
   }
 
@@ -57,14 +59,8 @@ export class SchemasBuilderService {
    */
   public buildRoute(hasDefaultRouteResponse = true): Route {
     return {
-      uuid: uuid(),
-      documentation: '',
-      method: 'get',
-      endpoint: '',
-      responses: hasDefaultRouteResponse ? [this.buildRouteResponse()] : [],
-      enabled: true,
-      randomResponse: false,
-      sequentialResponse: false
+      ...RouteDefault,
+      responses: hasDefaultRouteResponse ? [this.buildRouteResponse()] : []
     };
   }
 
@@ -76,19 +72,9 @@ export class SchemasBuilderService {
     hasDefaultHeader = true
   ): Environment {
     return {
-      uuid: uuid(),
-      lastMigration: HighestMigrationId,
-      name: 'New environment',
-      endpointPrefix: '',
-      latency: 0,
+      ...EnvironmentDefault,
       port: this.dataService.getNewEnvironmentPort(),
-      hostname: '0.0.0.0',
       routes: hasDefaultRoute ? [this.buildRoute()] : [],
-      proxyMode: false,
-      proxyHost: '',
-      proxyRemovePrefix: false,
-      https: false,
-      cors: true,
       headers: hasDefaultHeader
         ? [this.buildHeader('Content-Type', 'application/json')]
         : [],
@@ -98,9 +84,9 @@ export class SchemasBuilderService {
   }
 
   /**
-   * Build a default environment when starting the application for the first time
+   * Build a demo environment when starting the application for the first time
    */
-  public buildDefaultEnvironment(): Environment {
+  public buildDemoEnvironment(): Environment {
     return {
       ...this.buildEnvironment(),
       name: 'Demo API',

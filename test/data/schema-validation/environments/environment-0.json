@@ -1,0 +1,58 @@
+{
+  "uuid": "f4c71709-2157-4cde-b832-7ed1c26d0533",
+  "lastMigration": 16,
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "non-uuid",
+      "method": "get",
+      "endpoint": "test",
+      "documentation": "Test documentation",
+      "enabled": null,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "d6c5277e-2d1c-4540-83e9-c571ea29cda9",
+          "body": "",
+          "latency": 0,
+          "statusCode": 99,
+          "label": "",
+          "headers": [
+            { "unknown": true },
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "mod",
+              "value": "val",
+              "isRegex": true
+            },
+            {
+              "target": "invalid",
+              "modifier": "mod",
+              "value": "val",
+              "isRegex": true
+            }
+          ],
+          "rulesOperator": "DUMMY",
+          "disableTemplating": false
+        }
+      ],
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

@@ -11,7 +11,7 @@ import { SettingsProperties } from 'src/renderer/app/models/settings.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
 
-export type ColumnType = 'routeMenu' | 'envLogs';
+export type ColumnType = 'environments' | 'routes' | 'logs';
 
 /**
  * Allows the resizing of the parent element using CSS.
@@ -39,6 +39,11 @@ export class ResizeColumnDirective implements AfterViewInit {
   // The x point where the mousedown event occurred
   private startX: number;
   private startWidth: number;
+  private settingProperties = {
+    environments: 'environmentMenuSize',
+    routes: 'routeMenuSize',
+    logs: 'logsMenuSize'
+  };
 
   constructor(
     private elementRef: ElementRef,
@@ -71,13 +76,7 @@ export class ResizeColumnDirective implements AfterViewInit {
         first()
       )
       .subscribe((settings) => {
-        let width: number;
-
-        if (this.type === 'routeMenu') {
-          width = settings.routeMenuSize;
-        } else {
-          width = settings.logsMenuSize;
-        }
+        const width = settings[this.settingProperties[this.type]];
 
         if (typeof width !== 'undefined') {
           // finally update width if needed
@@ -148,14 +147,10 @@ export class ResizeColumnDirective implements AfterViewInit {
   }
 
   private saveSettings(width: number) {
-    let settingsProperties: SettingsProperties;
-    if (this.type === 'routeMenu') {
-      settingsProperties = { routeMenuSize: width };
-    } else {
-      settingsProperties = { logsMenuSize: width };
-    }
+    const newSettings: SettingsProperties = {};
+    newSettings[this.settingProperties[this.type]] = width;
 
-    this.settingsService.updateSettings(settingsProperties);
+    this.settingsService.updateSettings(newSettings);
   }
 
   /**
