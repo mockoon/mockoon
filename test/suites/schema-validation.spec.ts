@@ -215,6 +215,7 @@ describe('Schema validation', () => {
       ]);
       tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 
+      await tests.app.client.pause(500);
       await tests.helpers.countEnvironments(1);
       await tests.helpers.countRoutes(1);
 
@@ -301,6 +302,7 @@ describe('Schema validation', () => {
       ]);
 
       tests.helpers.selectMenuEntry('IMPORT_FILE');
+      await tests.app.client.pause(500);
       await tests.helpers.countEnvironments(4);
       await tests.helpers.assertHasActiveEnvironment('uuid dedup import');
 
