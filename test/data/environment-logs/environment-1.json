@@ -1,0 +1,47 @@
+{
+  "uuid": "5f5ec26d-9a10-4b34-95a8-a9e4dff5ca41",
+  "lastMigration": 17,
+  "name": "Environment logs 2",
+  "endpointPrefix": "prefix",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "c60595a6-f82b-4d01-b1c1-9a51d2e52bbf",
+      "method": "get",
+      "endpoint": "endpoint/:param1",
+      "documentation": "Test endpoint",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "399508f1-304d-4dab-a140-5d9a04695509",
+          "body": "responsebody",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            { "key": "Content-Type", "value": "text/plain" },
+            { "key": "route-header", "value": "route-header" }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [{ "key": "global-header", "value": "global-header" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

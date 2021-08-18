@@ -1,32 +1,27 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import {
-  IPCHandlerChannels,
-  IPCListenerChannels
+  IPCMainHandlerChannels,
+  IPCMainListenerChannels,
+  IPCRendererHandlerChannels
 } from './constants/ipc.constants';
 
 declare const isTesting: boolean;
 
 const api = {
   send: (channel: string, ...data: any[]) => {
-    if (IPCListenerChannels.includes(channel)) {
+    if (IPCMainListenerChannels.includes(channel)) {
       ipcRenderer.send(channel, ...data);
     }
   },
   invoke: (channel: string, ...data: any[]) => {
-    if (IPCHandlerChannels.includes(channel)) {
+    if (IPCMainHandlerChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, ...data);
     }
 
     return Promise.reject('Invalid channel');
   },
   receive: (channel: string, callback: (...args: any[]) => any) => {
-    const validChannels = [
-      'APP_MENU',
-      'APP_SERVER_EVENT',
-      'APP_UPDATE_AVAILABLE'
-    ];
-
-    if (validChannels.includes(channel)) {
+    if (IPCRendererHandlerChannels.includes(channel)) {
       ipcRenderer.on(channel, (event, ...args) => callback(...args));
     }
   }

@@ -1,20 +1,35 @@
 import { Injectable } from '@angular/core';
 import {
   Environment,
-  Environments,
+  EnvironmentSchema,
   Header,
+  HighestMigrationId,
   Method,
   Route,
   RouteResponse
 } from '@mockoon/commons';
 import { cloneDeep } from 'lodash';
-import { of } from 'rxjs';
-import { concatMap, debounceTime, mergeMap, tap } from 'rxjs/operators';
+import { EMPTY, forkJoin, from, Observable, of, throwError } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  filter,
+  first,
+  map,
+  mergeMap,
+  pairwise,
+  startWith,
+  switchMap,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
+import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
+import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
   RouteProperties,
   RouteResponseProperties
@@ -24,11 +39,12 @@ import {
   ScrollDirection
 } from 'src/renderer/app/models/ui.model';
 import { DataService } from 'src/renderer/app/services/data.service';
+import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { MigrationService } from 'src/renderer/app/services/migration.service';
 import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
+import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   addEnvironmentAction,
@@ -50,11 +66,12 @@ import {
   setActiveRouteResponseAction,
   setActiveTabAction,
   setActiveViewAction,
-  setInitialEnvironmentsAction,
   startRouteDuplicationToAnotherEnvironmentAction,
   updateEnvironmentAction,
   updateRouteAction,
-  updateRouteResponseAction
+  updateRouteResponseAction,
+  updateSettingsAction,
+  updateUIStateAction
 } from 'src/renderer/app/stores/actions';
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import {
@@ -63,57 +80,167 @@ import {
   TabsNameType,
   ViewsNameType
 } from 'src/renderer/app/stores/store';
+import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EnvironmentsService {
-  private storageKey = 'environments';
-  private logger = new Logger('[SERVICE][ENVIRONMENTS]');
-
+export class EnvironmentsService extends Logger {
   constructor(
     private dataService: DataService,
     private eventsService: EventsService,
     private store: Store,
     private serverService: ServerService,
-    private migrationService: MigrationService,
     private schemasBuilderService: SchemasBuilderService,
     private uiService: UIService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private dialogsService: DialogsService,
+    protected toastService: ToastsService
   ) {
-    // get existing environments from storage or create default one, start saving after loading the data
-    this.storageService
-      .loadData<Environments>(this.storageKey)
-      .pipe(
-        mergeMap((environments) => {
-          if (
-            Object.keys(environments).length === 0 &&
-            environments.constructor === Object
-          ) {
-            this.logger.info('No Data, building default environment');
+    super('[SERVICE][ENVIRONMENTS]', toastService);
+  }
 
-            return of([this.schemasBuilderService.buildDefaultEnvironment()]);
-          } else {
-            return this.migrationService.migrateEnvironments(environments);
-          }
-        }),
-        tap((environments) => {
-          this.store.update(setInitialEnvironmentsAction(environments));
-        }),
-        concatMap(() =>
-          this.storageService.saveData<Environments>(
-            this.store.select('environments').pipe(
-              debounceTime(100),
-              tap((environments) => {
-                MainAPI.send('APP_UPDATE_ENVIRONMENT', environments);
-              })
-            ),
-            'environments',
-            2000
+  /**
+   * Load environments after waiting for the settings to load
+   *
+   * @returns
+   */
+  public loadEnvironments(): Observable<
+    { environment: Environment; path: string }[]
+  > {
+    return forkJoin([
+      this.store.select('settings').pipe(
+        filter((settings) => !!settings),
+        first()
+      ),
+      from(MainAPI.invoke('APP_BUILD_STORAGE_FILEPATH', 'demo'))
+    ]).pipe(
+      switchMap(([settings, demoFilePath]) => {
+        if (!settings.environments.length && !settings.welcomeShown) {
+          this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
+
+          const defaultEnvironment =
+            this.schemasBuilderService.buildDemoEnvironment();
+
+          return of([
+            {
+              environment: defaultEnvironment,
+              path: demoFilePath
+            }
+          ]);
+        }
+
+        return forkJoin(
+          settings.environments.map((environmentItem) =>
+            this.storageService
+              .loadData<Environment>(null, environmentItem.path)
+              .pipe(
+                map((environment) =>
+                  environment
+                    ? {
+                        environment,
+                        path: environmentItem.path
+                      }
+                    : null
+                )
+              )
+          )
+        );
+      }),
+      // filter empty environments (file not found) and environments migrated with more recent app version (or lastMigration do not exists < v1.7.0)
+      map((environmentsData) =>
+        environmentsData.filter(
+          (environmentData) =>
+            !!environmentData &&
+            (environmentData.environment.lastMigration === undefined ||
+              environmentData.environment.lastMigration <= HighestMigrationId)
+        )
+      ),
+      tap((environmentsData) => {
+        environmentsData.forEach((environmentData) => {
+          const validatedEnvironment =
+            this.dataService.migrateAndValidateEnvironment(
+              environmentData.environment
+            );
+          // deduplicate UUIDs
+          environmentData.environment = this.dataService.deduplicateUUIDs(
+            validatedEnvironment,
+            this.store.get('environments')
+          );
+
+          this.store.update(
+            addEnvironmentAction(
+              environmentData.environment,
+              // keep the first environment as active during load
+              { activeEnvironment: environmentsData[0].environment }
+            )
+          );
+        });
+
+        this.store.update(
+          updateSettingsAction({
+            environments: environmentsData.map((environmentData) => ({
+              uuid: environmentData.environment.uuid,
+              path: environmentData.path
+            }))
+          })
+        );
+      })
+    );
+  }
+
+  /**
+   * Subscribe to initiate saving environments changes.
+   * Listen to environments and settings updates, and save environments in each path defined in the settings.
+   *
+   * @returns
+   */
+  public saveEnvironments(): Observable<void> {
+    return this.store.select('environments').pipe(
+      tap(() => {
+        // saving flag must be turned on before the debounceTime, otherwise waiting for save to end before closing won't work
+        this.storageService.initiateSaving();
+      }),
+      debounceTime(Config.storageSaveDelay),
+      // keep previously emitted environments and filter environments that didn't change (startwith + pairwise + map)
+      startWith([]),
+      pairwise(),
+      map(([previousEnvironments, nextEnvironments]) =>
+        nextEnvironments.filter(
+          (nextEnvironment) =>
+            nextEnvironment !==
+            previousEnvironments.find(
+              (previousEnvironment) =>
+                previousEnvironment.uuid === nextEnvironment.uuid
+            )
+        )
+      ),
+      tap((modifiedEnvironments) => {
+        MainAPI.send('APP_UPDATE_ENVIRONMENT', modifiedEnvironments);
+      }),
+      withLatestFrom(
+        this.store.select('settings').pipe(filter((settings) => !!settings))
+      ),
+      mergeMap(([environments, settings]) =>
+        from(environments).pipe(
+          map((environment) => ({
+            data: environment,
+            path: settings.environments.find(
+              (environmentItem) => environmentItem.uuid === environment.uuid
+            )?.path
+          })),
+          filter((environmentInfo) => environmentInfo.path !== undefined),
+          mergeMap((environmentInfo) =>
+            this.storageService.saveData<Environment>(
+              null,
+              environmentInfo.data,
+              environmentInfo.path,
+              settings.storagePrettyPrint
+            )
           )
         )
       )
-      .subscribe();
+    );
   }
 
   /**
@@ -159,28 +286,71 @@ export class EnvironmentsService {
   }
 
   /**
-   * Add a new environment and save it in the store
+   * Add a new default environment, or the one provided, and save it in the store
    */
-  public addEnvironment() {
-    this.store.update(
-      addEnvironmentAction(this.schemasBuilderService.buildEnvironment())
+  public addEnvironment(
+    environment?: Environment,
+    afterUUID?: string
+  ): Observable<string | null> {
+    return from(
+      this.dialogsService.showSaveDialog('Save your new environment')
+    ).pipe(
+      switchMap((filePath) => {
+        if (!filePath) {
+          return EMPTY;
+        }
+
+        if (
+          this.store
+            .get('settings')
+            .environments.find(
+              (environmentItem) => environmentItem.path === filePath
+            ) !== undefined
+        ) {
+          return throwError('ENVIRONMENT_FILE_IN_USE');
+        }
+
+        return of(filePath);
+      }),
+      catchError((errorCode) => {
+        this.logMessage('error', errorCode as MessageCodes);
+
+        return EMPTY;
+      }),
+      tap((filePath) => {
+        let newEnvironment = environment
+          ? EnvironmentSchema.validate(environment).value
+          : this.schemasBuilderService.buildEnvironment();
+
+        // deduplicate UUIDs
+        newEnvironment = this.dataService.deduplicateUUIDs(
+          newEnvironment,
+          this.store.get('environments')
+        );
+
+        this.store.update(
+          addEnvironmentAction(newEnvironment, { filePath, afterUUID })
+        );
+
+        this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
+        this.eventsService.analyticsEvents.next(
+          AnalyticsEvents.CREATE_ENVIRONMENT
+        );
+      })
     );
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ENVIRONMENT);
   }
 
   /**
    * Duplicate an environment, or the active environment and append it at the end of the list.
    */
-  public duplicateEnvironment(environmentUUID?: string) {
-    let environmentToDuplicate = this.store.getActiveEnvironment();
-
+  public duplicateEnvironment(
+    environmentUUID: string = this.store.get('activeEnvironmentUUID')
+  ): Observable<string | null> {
     if (environmentUUID) {
-      environmentToDuplicate = this.store
+      const environmentToDuplicate = this.store
         .get('environments')
         .find((environment) => environment.uuid === environmentUUID);
-    }
 
-    if (environmentToDuplicate) {
       // copy the environment, reset some properties and change name
       let newEnvironment: Environment = {
         ...cloneDeep(environmentToDuplicate),
@@ -190,23 +360,97 @@ export class EnvironmentsService {
 
       newEnvironment = this.dataService.renewEnvironmentUUIDs(newEnvironment);
 
-      this.store.update(
-        addEnvironmentAction(newEnvironment, environmentToDuplicate.uuid)
-      );
+      return this.addEnvironment(newEnvironment, environmentToDuplicate.uuid);
     }
+
+    return EMPTY;
   }
 
   /**
-   * Remove an environment or the current one if not environmentUUID is provided
+   * Open an environment file and add it to the store
+   *
    */
-  public removeEnvironment(
-    environmentUUID: string = this.store.get('activeEnvironmentUUID')
-  ) {
-    if (environmentUUID) {
-      this.serverService.stop(environmentUUID);
+  public openEnvironment(): Observable<Environment> {
+    return from(
+      this.dialogsService.showOpenDialog('Open environment JSON file', 'json')
+    ).pipe(
+      filter((filePath) => {
+        if (!filePath) {
+          return false;
+        }
 
-      this.store.update(removeEnvironmentAction(environmentUUID));
-    }
+        // set environment as active if already opened
+        const openedEnvironment = this.store
+          .get('settings')
+          .environments.find(
+            (environmentItem) => environmentItem.path === filePath
+          );
+
+        if (openedEnvironment !== undefined) {
+          this.store.update(setActiveEnvironmentAction(openedEnvironment.uuid));
+
+          return false;
+        }
+
+        return true;
+      }),
+      switchMap((filePath) =>
+        this.storageService.loadData<Environment>(null, filePath).pipe(
+          tap((environment) => {
+            if (environment.lastMigration > HighestMigrationId) {
+              this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
+                name: environment.name,
+                uuid: environment.uuid
+              });
+
+              return;
+            }
+
+            let validatedEnvironment =
+              this.dataService.migrateAndValidateEnvironment(environment);
+
+            // deduplicate UUIDs
+            validatedEnvironment = this.dataService.deduplicateUUIDs(
+              validatedEnvironment,
+              this.store.get('environments')
+            );
+
+            this.store.update(
+              addEnvironmentAction(validatedEnvironment, {
+                filePath,
+                afterUUID: null
+              })
+            );
+            this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
+          })
+        )
+      )
+    );
+  }
+
+  /**
+   * Close an environment (or the current one) and update the settings
+   *
+   * @param environmentUUID
+   */
+  public closeEnvironment(
+    environmentUUID: string = this.store.get('activeEnvironmentUUID')
+  ): Observable<boolean> {
+    return this.storageService.saving().pipe(
+      tap(() => {
+        this.store.update(updateUIStateAction({ closing: true }));
+      }),
+      filter((saving) => !saving),
+      first(),
+      tap(() => {
+        if (environmentUUID) {
+          this.serverService.stop(environmentUUID);
+
+          this.store.update(removeEnvironmentAction(environmentUUID));
+        }
+        this.store.update(updateUIStateAction({ closing: false }));
+      })
+    );
   }
 
   /**
@@ -387,6 +631,11 @@ export class EnvironmentsService {
    */
   public toggleActiveEnvironment() {
     const activeEnvironment = this.store.getActiveEnvironment();
+    const environmentPath: EnvironmentDescriptor[] =
+      this.store.get('settings').environments;
+    const activeEnvironmentPath = environmentPath.find(
+      (path) => path.uuid === activeEnvironment.uuid
+    ).path;
 
     if (!activeEnvironment) {
       return;
@@ -399,10 +648,10 @@ export class EnvironmentsService {
       this.serverService.stop(activeEnvironment.uuid);
 
       if (activeEnvironmentState.needRestart) {
-        this.serverService.start(activeEnvironment);
+        this.serverService.start(activeEnvironment, activeEnvironmentPath);
       }
     } else {
-      this.serverService.start(activeEnvironment);
+      this.serverService.start(activeEnvironment, activeEnvironmentPath);
       this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_START);
     }
   }
@@ -423,6 +672,11 @@ export class EnvironmentsService {
 
     environments.map((environment) => {
       const environmentState = environmentsStatus[environment.uuid];
+      const environmentPath: EnvironmentDescriptor[] =
+        this.store.get('settings').environments;
+      const activeEnvironmentPath = environmentPath.find(
+        (path) => path.uuid === environment.uuid
+      ).path;
 
       if (shouldStart) {
         if (!environmentState.running || environmentState.needRestart) {
@@ -431,7 +685,7 @@ export class EnvironmentsService {
             this.serverService.stop(environment.uuid);
           }
 
-          this.serverService.start(environment);
+          this.serverService.start(environment, activeEnvironmentPath);
         }
       } else {
         if (environmentState.running) {
@@ -536,5 +790,19 @@ export class EnvironmentsService {
     this.store.update(
       startRouteDuplicationToAnotherEnvironmentAction(routeUUID)
     );
+  }
+
+  /**
+   * Reveal an environment file in a folder
+   *
+   * @param environmentUUID
+   */
+  public showEnvironmentFileInFolder(environmentUUID: string) {
+    const settings = this.store.get('settings');
+    const environmentPath = settings.environments.find(
+      (environment) => environment.uuid === environmentUUID
+    ).path;
+
+    MainAPI.send('APP_SHOW_FILE', environmentPath);
   }
 }

@@ -9,10 +9,12 @@ export type ContextMenuItemPayload = {
   subject: DataSubject;
   action:
     | 'delete'
+    | 'close'
     | 'duplicate'
     | 'duplicateToEnv'
     | 'env_settings'
     | 'env_logs'
+    | 'showInFolder'
     | 'export'
     | 'toggle';
   subjectUUID: string;

@@ -1,14 +1,12 @@
 import { Injectable, NgZone } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 import { ChangelogModalComponent } from 'src/renderer/app/components/changelog-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/settings-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { ScrollDirection } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
-import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +16,6 @@ export class ApiService {
     private eventsService: EventsService,
     private modalService: NgbModal,
     private importExportService: ImportExportService,
-    private uiService: UIService,
     private store: Store,
     private zone: NgZone
   ) {}
@@ -38,8 +35,16 @@ export class ApiService {
       this.zone.run(async () => {
         switch (action) {
           case 'NEW_ENVIRONMENT':
-            this.environmentsService.addEnvironment();
-            this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
+            this.environmentsService.addEnvironment().subscribe();
+            break;
+          case 'OPEN_ENVIRONMENT':
+            this.environmentsService.openEnvironment().subscribe();
+            break;
+          case 'DUPLICATE_ENVIRONMENT':
+            this.environmentsService.duplicateEnvironment().subscribe();
+            break;
+          case 'CLOSE_ENVIRONMENT':
+            this.environmentsService.closeEnvironment().subscribe();
             break;
           case 'NEW_ROUTE':
             this.environmentsService.addRoute();
@@ -50,14 +55,8 @@ export class ApiService {
           case 'START_ALL_ENVIRONMENTS':
             this.environmentsService.toggleAllEnvironments();
             break;
-          case 'DUPLICATE_ENVIRONMENT':
-            this.environmentsService.duplicateEnvironment();
-            break;
           case 'DUPLICATE_ROUTE':
             this.environmentsService.duplicateRoute();
-            break;
-          case 'DELETE_ENVIRONMENT':
-            this.environmentsService.removeEnvironment();
             break;
           case 'DELETE_ROUTE':
             this.environmentsService.removeRoute();
@@ -104,7 +103,7 @@ export class ApiService {
       });
     });
 
-    // listen to environments and enable/disable export menu entries
+    // listen to environments and enable/disable some menu entries
     this.store
       .select('environments')
       .pipe(
@@ -112,8 +111,24 @@ export class ApiService {
         tap((environments) => {
           MainAPI.send(
             environments.length >= 1
-              ? 'APP_ENABLE_EXPORT'
-              : 'APP_DISABLE_EXPORT'
+              ? 'APP_ENABLE_ENVIRONMENT_MENU_ENTRIES'
+              : 'APP_DISABLE_ENVIRONMENT_MENU_ENTRIES'
+          );
+        })
+      )
+      .subscribe();
+
+    this.store
+      .selectActiveEnvironment()
+      .pipe(
+        filter((activeEnvironment) => !!activeEnvironment),
+        distinctUntilChanged(),
+        map((activeEnvironment) => activeEnvironment.routes),
+        tap((routes) => {
+          MainAPI.send(
+            routes.length >= 1
+              ? 'APP_ENABLE_ROUTE_MENU_ENTRIES'
+              : 'APP_DISABLE_ROUTE_MENU_ENTRIES'
           );
         })
       )

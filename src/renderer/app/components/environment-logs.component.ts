@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { Config } from 'src/renderer/app/config';
 import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
 import {
   EnvironmentLog,
@@ -48,6 +49,7 @@ export class EnvironmentLogsComponent implements OnInit {
     'response.headers': false,
     'response.body': false
   };
+  public menuSize = Config.defaultLogsMenuSize;
 
   constructor(
     private store: Store,

@@ -1,13 +1,17 @@
+import { Environment } from '@mockoon/commons';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import chaiExclude from 'chai-exclude';
+import * as chaiUUID from 'chai-uuid';
 import { IpcRenderer } from 'electron';
 import { constants, promises as fs } from 'fs';
+import * as glob from 'glob';
 import * as mkdirp from 'mkdirp';
-import * as path from 'path';
+import { basename, join, resolve, sep } from 'path';
 import { Application } from 'spectron';
-import { Settings } from 'src/renderer/app/models/settings.model';
+import { Settings } from 'src/shared/models/settings.model';
 import { Helpers } from 'test/lib/helpers';
+import { promisify } from 'util';
 
 const electronPath: any = require('electron');
 
@@ -28,6 +32,7 @@ export class Tests {
     chai.should();
     chai.use(chaiAsPromised);
     chai.use(chaiExclude);
+    chai.use(chaiUUID);
 
     this.runHooks();
   }
@@ -44,14 +49,12 @@ export class Tests {
 
       this.app = new Application({
         path: electronPath,
-        // quitTimeout is important! (app graceful stop and data saving)
-        quitTimeout: 4000,
-        waitTimeout: 500,
-        args: ['-r', path.join(__dirname, './electron-mocks.js'), './dist'],
+        waitTimeout: 1000,
+        args: ['-r', join(__dirname, './electron-mocks.js'), './dist'],
         webdriverOptions: {
           deprecationWarnings: false
         },
-        chromeDriverArgs: [`user-data-dir=${path.resolve('./tmp')}`]
+        chromeDriverArgs: [`user-data-dir=${resolve('./tmp')}`]
       });
       await this.app.start();
       // there is a typing error in Spectron?
@@ -59,6 +62,9 @@ export class Tests {
     });
 
     after(async () => {
+      // wait for save before closing
+      await promisify(setTimeout)(2500);
+
       if (this.app && this.app.isRunning()) {
         await this.app.stop();
       }
@@ -110,24 +116,19 @@ export class Tests {
    * Copy environments.json file if exists
    */
   private async copyEnvironments() {
-    const environmentsFilePath =
-      './test/data/' + this.dataFileName + '/environments.json';
-    let environmentsFileExists = true;
+    // list all environment file including from old storage (for migration tests)
+    const environmentFiles = await promisify(glob)(
+      `./test/data/${this.dataFileName}/environment*.json`
+    );
 
     try {
-      await fs.access(environmentsFilePath, constants.F_OK);
-    } catch (error) {
-      environmentsFileExists = false;
-    }
-
-    try {
-      if (environmentsFileExists) {
-        await fs.copyFile(
-          './test/data/' + this.dataFileName + '/environments.json',
-          './tmp/storage/environments.json'
-        );
+      if (environmentFiles) {
+        for (const filePath of environmentFiles) {
+          const filename = basename(filePath);
+          await fs.copyFile(filePath, `./tmp/storage/${filename}`);
+        }
       }
-    } catch (err) {}
+    } catch (error) {}
   }
 
   /**
@@ -153,12 +154,31 @@ export class Tests {
       if (this.hasSettings) {
         await fs.copyFile(settingsFilePath, settingsDestFilePath);
 
+        const settingsFile = await fs.readFile(settingsDestFilePath, 'utf-8');
+        let settings: Settings = JSON.parse(settingsFile);
+
         if (alterSettings) {
-          const settingsFile = await fs.readFile(settingsDestFilePath, 'utf-8');
-          let settings: Settings = JSON.parse(settingsFile);
           settings = { ...settings, ...alterSettings };
-          await fs.writeFile(settingsDestFilePath, JSON.stringify(settings));
         }
+
+        // list environment files (from new storage only)
+        const environmentFiles = await promisify(glob)(
+          './tmp/storage/environment-*.json',
+          { absolute: true }
+        );
+
+        for (const filePath of environmentFiles) {
+          const environment: Environment = JSON.parse(
+            (await fs.readFile(filePath)).toString()
+          );
+
+          settings.environments.push({
+            path: filePath.replace('/', sep),
+            uuid: environment.uuid
+          });
+        }
+
+        await fs.writeFile(settingsDestFilePath, JSON.stringify(settings));
       }
     } catch (err) {}
   }

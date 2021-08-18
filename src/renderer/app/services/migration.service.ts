@@ -42,7 +42,7 @@ export class MigrationService {
    * Migrate one environment.
    * Will automatically check the last migration done on the environment and apply the most recent
    */
-  private migrateEnvironment(environment: Environment) {
+  public migrateEnvironment(environment: Environment) {
     const migrationStartId = this.getMigrationStartId(environment);
 
     if (migrationStartId > -1) {

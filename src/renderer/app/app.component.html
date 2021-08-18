@@ -23,9 +23,7 @@
 
 <div class="d-flex flex-column h-100">
   <div class="d-flex flex-fill mh0">
-    <app-environments-menu
-      class="environments-menu-container h-100"
-    ></app-environments-menu>
+    <app-environments-menu class="h-100"></app-environments-menu>
 
     <div class="d-flex flex-column flex-fill h-100">
       <!-- Header: env name +start / env port + prefix -->
@@ -99,7 +97,7 @@
                     class="material-icons"
                     [ngbTooltip]="hostnameTooltip$ | async"
                     >power</i
-                  >&nbsp; {{ activeEnvironment.hostname }} :</span
+                  >&nbsp; {{ activeEnvironment?.hostname }} :</span
                 >
               </div>
               <input
@@ -202,7 +200,6 @@
               <!-- title and back button (flexbox container) -->
               <div>
                 <button
-                  *ngIf="activeRoute$ | async"
                   type="button"
                   class="btn btn-link btn-icon pl-2"
                   (click)="setActiveView('ROUTE')"
@@ -497,7 +494,7 @@
               class="p-2 h-100 d-flex flex-column overflow-hidden"
             >
               <ng-container
-                *ngIf="activeRoute$ | async as activeRoute"
+                *ngIf="activeRoute$ | async as activeRoute; else noActiveRoute"
                 [formGroup]="activeRouteForm"
               >
                 <!-- Method + endpoint + warning + delete -->
@@ -775,6 +772,10 @@
                   </div>
                 </ng-container>
               </ng-container>
+
+              <ng-template #noActiveRoute>
+                <p class="message mt-4">No route defined</p>
+              </ng-template>
 
               <ng-container
                 *ngIf="activeRouteResponse$ | async as activeRouteResponse"

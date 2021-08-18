@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+import { promises as fs } from 'fs';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
@@ -31,6 +33,8 @@ const analyticsCheckbox =
 const bodySizeInput = '.modal-dialog input#log-body-size';
 const fakerSeedInput = '.modal-dialog input#faker-seed';
 const fakerLocaleSelect = '.modal-dialog select#faker-locale';
+const prettyPrintCheckbox =
+  '.modal-dialog input#storage-pretty-print ~ .custom-control-label';
 
 describe('Settings', () => {
   describe('Route path truncate', () => {
@@ -225,6 +229,43 @@ describe('Settings', () => {
         'fakerSeed',
         1234
       );
+    });
+  });
+
+  describe('Storage pretty printing', () => {
+    const tests = new Tests('settings');
+
+    it('Verify default value', async () => {
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'storagePrettyPrint',
+        true
+      );
+    });
+
+    it('Verify pretty printing of settings', async () => {
+      const fileContent: string = (
+        await fs.readFile('./tmp/storage/settings.json')
+      ).toString();
+      expect(fileContent).to.matches(new RegExp('^{\n'));
+    });
+
+    it('Change prettyPrint setting and verify persistence and no pretty printing', async () => {
+      await tests.helpers.openSettingsModal();
+      await tests.helpers.elementClick(prettyPrintCheckbox);
+      await tests.helpers.closeModal();
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'storagePrettyPrint',
+        false
+      );
+      const fileContent: string = (
+        await fs.readFile('./tmp/storage/settings.json')
+      ).toString();
+      expect(fileContent).to.matches(new RegExp('^{"'));
     });
   });
 });

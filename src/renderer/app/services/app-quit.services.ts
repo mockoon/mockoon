@@ -6,6 +6,7 @@ import { StorageService } from 'src/renderer/app/services/storage.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { environment } from 'src/renderer/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -40,22 +41,29 @@ export class AppQuitService {
       tap(() => {
         this.closing = true;
 
-        this.store.update(updateUIStateAction({ appClosing: true }));
+        this.store.update(updateUIStateAction({ closing: true }));
 
         this.telemetryService.closeSession();
       }),
-      switchMap(() =>
-        race(
-          // ensure that app closes after 10s even if something fail on the telemetry or storage side
-          timer(10000),
-          combineLatest([
-            this.storageService.saving().pipe(filter((saving) => !saving)),
+      switchMap(() => {
+        const waitFor = [
+          this.storageService.saving().pipe(filter((saving) => !saving))
+        ];
+
+        if (!environment.ci) {
+          waitFor.push(
             this.telemetryService
               .sessionInProgress()
               .pipe(filter((sessionInProgress) => !sessionInProgress))
-          ])
-        )
-      ),
+          );
+        }
+
+        return race(
+          // ensure that app closes after 10s even if something fail on the telemetry or storage side
+          timer(10000),
+          combineLatest(waitFor)
+        );
+      }),
       tap(() => {
         MainAPI.send('APP_QUIT');
       })

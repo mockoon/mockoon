@@ -4,11 +4,11 @@ import { merge } from 'rxjs';
 import { debounceTime, filter, first, tap } from 'rxjs/operators';
 import { Config } from 'src/renderer/app/config';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
-import { Settings } from 'src/renderer/app/models/settings.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { LocalStorageService } from 'src/renderer/app/services/local-storage.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { environment } from 'src/renderer/environments/environment';
+import { Settings } from 'src/shared/models/settings.model';
 
 /**
  * Reference: https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide

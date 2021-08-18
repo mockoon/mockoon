@@ -1,0 +1,46 @@
+{
+  "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
+  "lastMigration": 17,
+  "name": "Proxy disabled",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3002,
+  "routes": [
+    {
+      "uuid": "f8f77188-32d4-4c0a-bd0a-38898b560f40",
+      "method": "get",
+      "endpoint": "disabled-proxy",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "5ddcbb6a-e13d-4d4a-ac6f-2e776dc6e3e9",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyRemovePrefix": false,
+  "proxyHost": "https://127.0.0.1:3000",
+  "https": true,
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [
+    { "key": "x-proxy-response-header", "value": "header value" }
+  ],
+  "hostname": "0.0.0.0"
+}

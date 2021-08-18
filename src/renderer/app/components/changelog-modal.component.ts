@@ -57,10 +57,7 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
         filter((settings) => !!settings),
         first(),
         tap((settings) => {
-          if (
-            !settings.lastChangelog ||
-            semverGt(Config.appVersion, settings.lastChangelog)
-          ) {
+          if (semverGt(Config.appVersion, settings.lastChangelog)) {
             this.showModal();
             this.store.update(
               updateSettingsAction({ lastChangelog: Config.appVersion })
