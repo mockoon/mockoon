@@ -1,33 +1,34 @@
+import { resolve } from 'path';
 import { Tests } from 'test/lib/tests';
 
 describe('Environments incompatibility', () => {
   const tests = new Tests('migrations/incompatible');
 
-  it('Should display the incompatible environment with special design', async () => {
-    await tests.helpers.waitElementExist(
-      '.environments-menu .menu-list .nav-item:nth-child(1).pattern-danger'
+  it('should have only one active environment "FT env 2", incompatible environment should be ignored when app load', async () => {
+    await tests.helpers.countEnvironments(1);
+    await tests.helpers.assertActiveEnvironmentName('FT env 2');
+
+    await tests.helpers.waitForAutosave();
+
+    await tests.helpers.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      ['environments.0.uuid', 'environments.1'],
+      ['45975cc8-256c-43d3-af86-b4239618f83c', undefined]
     );
   });
 
-  it('Should select the first compatible environment by default', async () => {
-    await tests.helpers.checkEnvironmentSelected(2);
-  });
+  it('should be unable to import an incompatible environment', async () => {
+    tests.helpers.mockDialog('showOpenDialog', [
+      './test/data/migrations/incompatible/exported.json'
+    ]);
+    tests.helpers.mockDialog('showSaveDialog', [
+      resolve('./tmp/storage/imported.json')
+    ]);
+    tests.helpers.selectMenuEntry('IMPORT_FILE');
 
-  it('Should make incompatible environment not selectable', async () => {
-    await tests.helpers.selectEnvironment(1);
-    await tests.helpers.checkEnvironmentSelected(2);
-  });
-
-  it('Should disable the context menu', async () => {
-    await tests.helpers.contextMenuOpen(
-      '.environments-menu .menu-list .nav-item:nth-child(1) .nav-link'
+    await tests.helpers.checkToastDisplayed(
+      'warning',
+      'Environment "FT env" was created with a more recent version of Mockoon. Please upgrade.'
     );
-
-    await tests.helpers.waitElementExist('.context-menu', true);
-  });
-
-  it('Should not select the incompatible environment if all other environment have been deleted', async () => {
-    await tests.helpers.removeEnvironment(2);
-    await tests.helpers.checkNoEnvironmentSelected();
   });
 });

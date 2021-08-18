@@ -1,0 +1,17 @@
+{
+  "uuid": "56b5aabb-102a-4ae4-ad77-ad2524d8712a",
+  "lastMigration": 13,
+  "name": "Missing route object",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "proxyMode": true,
+  "proxyHost": "",
+  "https": true,
+  "cors": true,
+  "headers": [{ "key": "Content-Type", "value": "application/xml" }],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

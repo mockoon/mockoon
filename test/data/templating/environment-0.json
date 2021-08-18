@@ -1,0 +1,2272 @@
+{
+  "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
+  "lastMigration": 17,
+  "name": "FT env",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "9bbe34f0-e372-4bf8-98d8-a60fefb12980",
+      "method": "post",
+      "endpoint": "bodyjson-rootlvl",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "f71dbb19-562f-4dee-8ee7-023038a45002",
+          "body": "{{body 'property1' 'defaultvalue'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "0b51d671-78fe-4e45-8535-d7077ea25935",
+      "method": "post",
+      "endpoint": "bodyjson-rootlvl-nodefault",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "d8b99c2a-e589-43e4-adda-6b7406d00e88",
+          "body": "{{body 'property1'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "0b49eaa5-4f7f-4727-bf73-13e38ff0024f",
+      "method": "post",
+      "endpoint": "bodyjson-full-noparam",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "fbc6c819-8040-4bfb-9f7c-b768b143f13f",
+          "body": "{{body}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "ce4b4296-17cc-430d-af55-1bba17fe70a1",
+      "method": "post",
+      "endpoint": "bodyjson-full-emptyparam",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "aa802b24-43f0-497c-9faa-5d9c56333eca",
+          "body": "{{body ''}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "babc1039-6224-4a8a-965f-a7ef422dc8e2",
+      "method": "post",
+      "endpoint": "bodyjson",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "dc345573-e68c-4527-b077-595518ed31f9",
+          "body": "{ \"response\": {{body 'property1' 'defaultvalue'}} }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "15985d8b-3f0a-49d9-a6cf-3ee54121a19e",
+      "method": "post",
+      "endpoint": "bodyjson-path",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "6b21bf09-23de-4d69-98a5-2947f3614873",
+          "body": "{ \"response\": \"{{body 'root.array.2.property1'}}\" }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "05b7a580-bf3e-4b39-bc71-332719f842e0",
+      "method": "post",
+      "endpoint": "bodyform-rootlvl",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "889f0790-fd6f-484c-ad78-46be97df6f73",
+          "body": "{{body 'param1' 'defaultvalue'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "99bcd9cc-638c-455c-a1d0-2d03408e65b8",
+      "method": "post",
+      "endpoint": "bodyform-rootlvl-nodefault",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "e73a6950-6ba2-4530-bf3c-bf0936634d0a",
+          "body": "{{body 'param1'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "afcc82aa-4ea0-4874-a520-6f5491ffef5a",
+      "method": "post",
+      "endpoint": "bodyform-full-noparam",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "1381d775-087c-46b5-9889-ba4d8869c67d",
+          "body": "{{body}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "ecd94987-73d0-490b-8476-3263d2e85e24",
+      "method": "post",
+      "endpoint": "bodyform-full-emptyparam",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "da5c9637-be67-4ab9-9f42-16b803c7222b",
+          "body": "{{body ''}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "3b040ecd-a637-491e-819e-de13cc375831",
+      "method": "post",
+      "endpoint": "bodyform",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "541beb00-e336-41da-8fae-bb23b0e4fcfd",
+          "body": "{ \"response\": {{body 'param1' 'defaultvalue'}} }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "646646ed-dcdc-449e-b2bc-c817605c9feb",
+      "method": "post",
+      "endpoint": "bodyform-path",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "964fe42b-d88c-489e-8a48-f2c38e8e625f",
+          "body": "{ \"response\": {{body 'param1.part1' 'defaultvalue'}} }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "ad945bcc-5aa6-4023-97ca-69848c123ea0",
+      "method": "get",
+      "endpoint": "bad-helper",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "0b89ebfd-5ea9-4b2b-a739-5fc37d7bb9b5",
+          "body": "start{{nonexistinghelpername}}end",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "d5bb6ebe-ae0a-4d25-be1c-145801cfb349",
+      "method": "get",
+      "endpoint": "templating-syntax-error-body",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "f5774351-e283-47db-9095-b107ebeba897",
+          "body": "start{{body 'test'}}}end",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "1a4cbe41-ef87-4f9b-8dd4-a3cf899b1e6e",
+      "method": "get",
+      "endpoint": "templating-syntax-error-header",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "0d027239-14fb-4f52-84c3-bd2f2adb25ce",
+          "body": "body",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            { "key": "Content-Type", "value": "text/plain" },
+            { "key": "test-header", "value": "{{body 'test'}}}" }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "47d09e53-e39d-41c8-ab47-1dee08a8a2d5",
+      "method": "get",
+      "endpoint": "templating-syntax-error-filepath",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "ca0b0463-144d-47e7-95b1-4dba404315af",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "c:/test/{{body 'test'}}}.txt",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "054dec37-f089-4e92-8794-32b04eb6ac58",
+      "method": "get",
+      "endpoint": "templating-syntax-error-file",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "6dcbd142-9042-474a-85e7-fe3867804953",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "./file-templating-error.txt",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "16af46a7-9b69-4f6b-bd6d-0d3866d09482",
+      "method": "get",
+      "endpoint": "filepath",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "8d7df75e-68f0-4d64-bd4c-af3ad1827236",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "./{{body 'test'}}.txt",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "f87f17f2-8cb9-4f2d-9925-7b8b14edfb8c",
+      "method": "get",
+      "endpoint": "filepath-windows",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "d34f47ae-1343-4e9c-884e-59db780fb0fe",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": ".\\{{body 'test'}}.txt",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "570e06b6-dac0-4229-b592-c369c0acfd92",
+      "method": "get",
+      "endpoint": "file-templating",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "6dd9dc02-c6d1-4cb3-baf4-491289004eff",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "./file-templating.txt",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "d321789a-db2a-4cd5-a4d4-f10a7c18860b",
+      "method": "get",
+      "endpoint": "urlparam/:urlparam1",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "965142a3-1bb0-4fa9-a285-f6b15ec97fb6",
+          "body": "{{urlParam 'urlparam1'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "ae5e2150-ebcd-484b-9bca-577f8fb79427",
+      "method": "get",
+      "endpoint": "queryparam-rootlvl-nodefault",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "8a703d55-19c9-4466-a639-4224dd2dd62e",
+          "body": "{{queryParam 'param1'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "cd11c23c-d2b8-47b5-b7fe-832d9f368e7d",
+      "method": "get",
+      "endpoint": "queryparam-rootlvl",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "b9c1ec69-8733-4d87-b202-7cb3cdf963a5",
+          "body": "{{queryParam 'param1' 'defaultqueryparam'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "191326b6-86cf-4d2d-b9d0-7c7f36477068",
+      "method": "get",
+      "endpoint": "queryparam-rootlvl-arrayitem",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "7fade511-9126-4683-bebc-40eddc35225f",
+          "body": "{{queryParam 'paramarray.1'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "7aa9f6c7-9c41-4f79-a0dd-fb08092ddb2f",
+      "method": "get",
+      "endpoint": "queryparam-rootlvl-objectproperty",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "958d4d63-dd50-4d0a-86e2-02240aa93baf",
+          "body": "{{queryParam 'paramobj.prop2'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "d222954a-948a-4400-86c8-c55edd4b263b",
+      "method": "get",
+      "endpoint": "queryparam-rootlvl-array",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "35a46749-1de6-4113-b4d8-7e4e3d883cb4",
+          "body": "{{queryParam 'paramarray'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "00afbc63-059d-4d9b-bed8-f39f5014140e",
+      "method": "get",
+      "endpoint": "queryparam-rootlvl-object",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "633de1f1-2f4a-443e-b7bb-9035a894241a",
+          "body": "{{queryParam 'paramobj'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "a40b60eb-f791-4aff-af38-fe99ef37a400",
+      "method": "get",
+      "endpoint": "queryparam-multiple",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "9fcc2a9e-ec23-42e7-9ec6-44198a6837d4",
+          "body": "{ \"param1\": \"{{queryParam 'param1'}}\",\"arrayitem\": \"{{queryParam 'paramarray.1'}}\",\"objprop\": \"{{queryParam 'paramobj.prop2'}}\",\"fullarray\": {{queryParam 'paramarray'}},\"fullobj\": {{queryParam 'paramobj'}} }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "2b2e4953-9f9d-4f9c-91bd-02972132e708",
+      "method": "get",
+      "endpoint": "queryparam-full-emptypath",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "f5b48e6a-6c11-49a4-981f-9c4115535b03",
+          "body": "{{queryParam ''}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "037afb95-11b6-4b7f-91d1-ad64030094c4",
+      "method": "get",
+      "endpoint": "queryparam-full-nopath",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "319a6738-86f1-47ac-b7b1-37ed832cee8a",
+          "body": "{{queryParam}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "9668ef0f-bfd3-4dc7-9942-efe324c5b5e1",
+      "method": "get",
+      "endpoint": "header",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "42a30ea7-2a9e-43d9-973b-fcbd63fb8f88",
+          "body": "{{header 'header1' 'defaultheader'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "f41d404f-68ee-4df5-9b96-9394de52bf9d",
+      "method": "get",
+      "endpoint": "cookie",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "a7c54952-0aa7-4d07-82fa-ae451502767d",
+          "body": "{{cookie 'cookie1' 'defaultcookie'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "42cfea8a-2e95-4286-9eec-3aad82e39c5d",
+      "method": "get",
+      "endpoint": "hostname",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "a5b1f4b2-46df-48df-ba28-e91862959012",
+          "body": "{{hostname}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "29bd91e1-b39b-4923-b1cb-ff4af7b83389",
+      "method": "get",
+      "endpoint": "ip",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "df5409e7-84cc-4606-8d8b-cbd330c153de",
+          "body": "{{ip}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "31bf072a-1770-443c-bc43-d20843378e9e",
+      "method": "get",
+      "endpoint": "method",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "07d06f07-a469-409b-84e0-0a8e5ede04ab",
+          "body": "{{method}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "4ac60644-b7ce-4b67-a350-359a1be91b42",
+      "method": "get",
+      "endpoint": "oneof",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "6666f159-74d7-4d1d-9f43-c70327e45990",
+          "body": "{{oneOf (array 'testitem1')}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "cd81ccb9-23b6-4d4a-ae3c-77107c9e4072",
+      "method": "get",
+      "endpoint": "someof",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "317ab0f2-5cbf-41cb-8735-db474814823b",
+          "body": "{{someOf (array 'testitem' 'testitem') 2 2}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "6873f30d-58e1-425a-a22f-334dbbb10e57",
+      "method": "get",
+      "endpoint": "someofarray",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "6037b85b-606b-4368-9659-11527c922bac",
+          "body": "{{someOf (array 'testitem' 'testitem') 2 2 true}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "fef44065-1a70-4fdd-8876-b32f0b5a088b",
+      "method": "get",
+      "endpoint": "now",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "2db126ab-7d19-4129-83fb-6e1be24cd0a0",
+          "body": "{{now 'yyyy-MM-dd'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "deb123f8-8c31-4652-9399-a64ab69b75c1",
+      "method": "get",
+      "endpoint": "newline",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "30042a63-f29e-4e1e-b50e-9d157c447b7c",
+          "body": "{{newline}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "921c9906-ea2b-42fa-abe2-55f21200ad2e",
+      "method": "get",
+      "endpoint": "objectid_1",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "67d9190b-7312-4ad4-b8d4-c1cc7d66807c",
+          "body": "{{objectId}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "13839664-6752-482d-8ce2-fc7ae301dc11",
+      "method": "get",
+      "endpoint": "objectid_2",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "2451572c-d838-4f55-94c8-c615942efea8",
+          "body": "{{objectId '54495ad94c934721ede76d90'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "51993754-4d1d-4723-902f-c3ebc8c86e24",
+      "method": "get",
+      "endpoint": "base64",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "66435b82-6bd0-401f-b973-7d4e056ac632",
+          "body": "{{base64 (body)}}{{# base64}}{{# repeat 10 comma=false}}{{body}}{{/ repeat}}{{/ base64}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "b6bb0705-040a-4fb2-b706-434c7680a9b1",
+      "method": "get",
+      "endpoint": "faker.missing",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "b0787230-0c16-4739-8727-bf1d6dcb0020",
+          "body": "{{faker}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "86628886-a98d-4b77-903a-eff54e813ded",
+      "method": "get",
+      "endpoint": "faker.empty",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "6461ba6c-b9ea-450f-8345-5a6cf82d640c",
+          "body": "{{faker ''}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "070b7e63-0999-4c0c-8dbb-b76b0040782c",
+      "method": "get",
+      "endpoint": "faker.wrong-pattern",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "f46ea654-ec19-431b-911f-f47fa9ef9b9a",
+          "body": "{{faker 'abcd'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "1bd09e3f-c96a-4ed0-beb5-44bd4b9dd110",
+      "method": "get",
+      "endpoint": "faker.not-exists",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "7e84b9f0-0dc6-4ddc-88e2-06809a92b490",
+          "body": "{{faker 'abcd.efgh'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "ee318822-cd24-481b-9dc6-2ea7299a068b",
+      "method": "get",
+      "endpoint": "faker.company.companyName",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "e4b5c7fe-73fb-492c-89c9-07d8ac003be6",
+          "body": "{{faker 'company.companyName' 1}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "dfb5b6f7-d638-4851-b4fa-19580d0c2c24",
+      "method": "get",
+      "endpoint": "faker.address.streetAddress",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "47ad99a9-fcec-4d95-8329-112a8e5a6808",
+          "body": "{{faker 'address.streetAddress'}}/{{faker 'address.streetAddress' true}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "9371d5b8-9385-4f55-ab3f-2815dc81de79",
+      "method": "get",
+      "endpoint": "faker.date.between",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "89f4edf3-9b4c-4b49-9cea-c045c753d774",
+          "body": "{{faker 'date.between' '01 Jan 1970 00:00:00 GMT' '01 Jan 1970 00:00:00 GMT'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "220d036a-c4c4-4fe5-8ec8-8a13ee10d0ec",
+      "method": "get",
+      "endpoint": "faker.date.month",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "d1044678-1380-4c36-a6ef-3640a68a07de",
+          "body": "{{faker 'date.month' abbr=false}}-{{faker 'date.month' abbr=true}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "e7e86377-481a-4be7-a8a9-d512080624c6",
+      "method": "get",
+      "endpoint": "faker.finance.amount",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "121419e9-6ee7-4bbe-98cf-64a040c95982",
+          "body": "{{faker 'finance.amount' 500 501 5 £}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "c39b2008-58e2-4cc7-855c-50f99018d57b",
+      "method": "get",
+      "endpoint": "faker.finance.mask",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "b226715f-7f1e-4860-8923-a7727110d984",
+          "body": "{{faker 'finance.mask' 10 true true}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "c72b1b93-0825-4532-bff9-93d02626ac11",
+      "method": "get",
+      "endpoint": "faker.helpers.userCard",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "ed7013a0-7083-4428-af41-9bf4e3483f87",
+          "body": "{{faker 'helpers.userCard'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "a0ff8a92-b38d-441e-9cba-8d9c77416e11",
+      "method": "get",
+      "endpoint": "faker.random.uuid",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "85053bb6-3036-4ee4-96f9-c913bb834341",
+          "body": "{{faker 'random.uuid'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "226676a7-7be1-4a4e-8c42-3382a129d131",
+      "method": "get",
+      "endpoint": "old.int",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "7c210f15-c696-466e-85e2-ce1b2e2fbd03",
+          "body": "{{int 10 30}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "d9eaa5cd-2219-4b07-ad49-87f6ea097dd5",
+      "method": "get",
+      "endpoint": "old.float",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "8aec4572-9e19-4c76-8b84-513f2fd1cbd7",
+          "body": "{{float 0 1}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "c21f31d5-7f54-493b-b296-7e1e90a15934",
+      "method": "get",
+      "endpoint": "old.date",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "ed1b54b6-4df5-4e27-b09f-d6d4af793850",
+          "body": "{{date '2020-05-23T20:57:48+00:00' '2020-06-23T20:57:48+00:00' 'YYYY-MM-dd HH:mm:ss'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "720765c2-014c-41ca-86a3-0895c4ead040",
+      "method": "get",
+      "endpoint": "old.time",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "4d024ec0-eae4-47fd-99b5-7c29f92d09b3",
+          "body": "{{time '12:00' '14:00' 'HH:mm:ss'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "f600cd5f-c535-447b-a117-02d6d3242e97",
+      "method": "get",
+      "endpoint": "old.boolean",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "f6037254-85c9-4ed0-b424-41e022cffe0f",
+          "body": "{{boolean}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "2ca237a4-c9bc-48bd-abd9-b9cea90d6061",
+      "method": "get",
+      "endpoint": "old.title",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "b370c9f3-0609-4796-a8bc-5beeadd6749b",
+          "body": "{{title}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "b87c7e1f-2b3b-466d-ae29-24bd4619cee9",
+      "method": "get",
+      "endpoint": "old.firstName",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "9045c2f7-f1d9-4c91-8d4c-2131c09e16d3",
+          "body": "{{firstName}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "1b39dd4b-9b19-43cc-a5dc-bf9d5591595b",
+      "method": "get",
+      "endpoint": "old.lastName",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "3a359842-28b3-4493-b8cb-91979e78d945",
+          "body": "{{lastName}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "38858c04-2715-41dd-974d-a032b4a9824f",
+      "method": "get",
+      "endpoint": "old.company",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "ae626499-4071-4e8a-a495-41eba581f48b",
+          "body": "{{company}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "cc363394-f985-4632-a364-1479f34ce941",
+      "method": "get",
+      "endpoint": "old.domain",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "d0fe6b83-4f6d-4e60-99e7-f034e9c123d9",
+          "body": "{{domain}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "fafeb2d2-43dc-4c26-965b-37da3385fb1d",
+      "method": "get",
+      "endpoint": "old.tld",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "4f5a462c-2316-4631-9369-a55bdf885830",
+          "body": "{{tld}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "4e00c419-6fe7-444f-bf6b-2726d131e0d1",
+      "method": "get",
+      "endpoint": "old.email",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "44aafc3c-9412-4575-9c77-68a34ffe9d21",
+          "body": "{{email}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "36d5884d-c362-4206-b2d6-f8d2b50af86f",
+      "method": "get",
+      "endpoint": "old.street",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "3f79bc9f-62a3-4000-8daa-e2352815bbfa",
+          "body": "{{street}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "ba81ac62-6edd-4248-a955-34bed0911635",
+      "method": "get",
+      "endpoint": "old.city",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "f1be5135-dd17-474e-9876-93afa4c83ade",
+          "body": "{{city}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "b4ab5392-14d7-4f88-9bfc-3861e2fc5248",
+      "method": "get",
+      "endpoint": "old.country",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "5e3ad853-6454-473a-812f-ebf1576700f5",
+          "body": "{{country}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "edc69a5d-6a37-43fc-9ce8-bab731d82631",
+      "method": "get",
+      "endpoint": "old.countryCode",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "1905587a-976e-4bde-9fd0-19fdbd73f257",
+          "body": "{{countryCode}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "d679fb73-e673-413e-a64b-8bffde664e80",
+      "method": "get",
+      "endpoint": "old.zipcode",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "d14dfe38-201c-4fd5-87f4-dfee0295f5fb",
+          "body": "{{zipcode}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "6e758ab2-cbe8-4e21-a270-9264e2bb0b58",
+      "method": "get",
+      "endpoint": "old.postcode",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "6f914b79-fcfc-4e4a-9bcb-d0605f01014a",
+          "body": "{{postcode}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "cc3dea53-b554-413e-b595-aad43131a805",
+      "method": "get",
+      "endpoint": "old.lat",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "f59f3c9c-7ca8-47d3-b9bd-efaba0c14495",
+          "body": "{{lat}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "5edd6f78-36e4-4364-a4f9-09e8b7dde077",
+      "method": "get",
+      "endpoint": "old.long",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "64a57ef4-b33e-4d3f-aaef-2d5ed8ad53e4",
+          "body": "{{long}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "fc1a66e9-97b2-4092-9dcc-79711c270558",
+      "method": "get",
+      "endpoint": "old.phone",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "1a6313b6-f50e-4f27-8722-cf14dff5ae27",
+          "body": "{{phone}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "3774bdec-c27b-46e4-8bb4-e2ea7463e4f8",
+      "method": "get",
+      "endpoint": "old.color",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "bc5cf071-3c11-447f-b392-8627e7930024",
+          "body": "{{color}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "1f5a381d-a0c1-4719-a2ea-516416361ec0",
+      "method": "get",
+      "endpoint": "old.hexColor",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "c095b563-f8c9-46b6-8b89-e9e85a8d4aa7",
+          "body": "{{hexColor}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "ad250d91-a968-42db-9e50-96ad88e26f51",
+      "method": "get",
+      "endpoint": "old.guid",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "d24c139e-be1b-4280-b623-bb5e1eb28323",
+          "body": "{{guid}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "97131b4d-740f-4406-ba5d-536756ce1b6e",
+      "method": "get",
+      "endpoint": "old.ipv4",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "33203059-ce71-4b4e-860f-159164b0f179",
+          "body": "{{ipv4}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "7d811e93-90d4-4e08-b983-939d42ab724b",
+      "method": "get",
+      "endpoint": "old.ipv6",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "e387a70b-d30a-4585-be74-837d49c15758",
+          "body": "{{ipv6}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "51165f22-dccd-4d0f-b935-7cc23ae6cf6a",
+      "method": "get",
+      "endpoint": "old.lorem",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "74ac1acf-5d3d-4c18-ac6c-9704012989e5",
+          "body": "{{lorem 12}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "68303f6a-24f0-441c-b34a-a0af2329533a",
+      "method": "get",
+      "endpoint": "old.repeat",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "3c917484-bdd1-40c1-81a8-b36a314faf70",
+          "body": "{{#repeat 5}}test{{/repeat}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "88654696-6cac-47ed-aa22-291bce508381",
+      "method": "get",
+      "endpoint": "old.repeat.inner",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "a51a0315-99d2-407a-9d18-293f2663eb46",
+          "body": "{{#repeat 5}}{{faker 'name.firstName'}}{{/repeat}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "181a577f-74f8-42b5-b5d6-082ca6c7c078",
+      "method": "get",
+      "endpoint": "old.repeat.invalid",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "05929ae4-c74f-4023-bf38-18ad54804a68",
+          "body": "{{#repeat}}test{{/repeat}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "3c11320c-f877-4d33-8c8b-cc00e39ebf48",
+      "method": "get",
+      "endpoint": "old.switch.urlParam/:param",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "fce44ac2-cfca-4722-930b-5cb0c85250b1",
+          "body": "{{#switch (urlParam 'param')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "2788d9f7-4e73-4a50-9369-094614a7b954",
+      "method": "get",
+      "endpoint": "old.switch.urlParam.helper/:param",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "2dfefe9e-9ac7-44c0-b29a-41ce5af7d6b3",
+          "body": "{{#switch (urlParam 'param')}}{{#case '1'}}{{method}}{{/case}}{{#case '2'}}casecontent2{{/case}}{{#default}}defaultcontent{{method}}{{/default}}{{/switch}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "e15f86c5-038e-4556-aa66-b71e9a02128a",
+      "method": "get",
+      "endpoint": "old.switch.urlParam.multi/:param1/:param2",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "ec0f78e0-63e7-4efd-8a60-8ba69bff3d01",
+          "body": "{{#switch (urlParam 'param1')}}{{#case '1'}}switch1casecontent1{{/case}}{{#case '2'}}switch1casecontent2{{/case}}{{#default}}switch1defaultcontent{{/default}}{{/switch}}{{#switch (urlParam 'param2')}}{{#case '1'}}switch2casecontent1{{/case}}{{#case '2'}}switch2casecontent2{{/case}}{{#default}}switch2defaultcontent{{/default}}{{/switch}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "4baa34c8-097a-4841-a978-e15789f48480",
+      "method": "get",
+      "endpoint": "old.switch.queryParam",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "07db1e8c-01c9-4caf-afc2-ca4a52b41667",
+          "body": "{{#switch (queryParam 'qp')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "5c78c723-050e-40b9-b7e0-d216cd2738ff",
+      "method": "get",
+      "endpoint": "old.switch.body",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "31aecc90-b083-48fb-a3c3-281dd767b70d",
+          "body": "{{#switch (body 'prop')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#case true}}casecontenttrue{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

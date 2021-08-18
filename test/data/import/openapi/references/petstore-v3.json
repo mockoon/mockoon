@@ -1,181 +1,179 @@
-[
-  {
-    "uuid": "",
-    "lastMigration": 17,
-    "name": "Swagger Petstore v3",
-    "endpointPrefix": "v2",
-    "latency": 0,
-    "port": 3000,
-    "routes": [
-      {
-        "uuid": "",
-        "documentation": "Returns all pets from the system that the user has access to\n",
-        "method": "get",
-        "endpoint": "pets",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "[\n  {\n    \"name\": \"\",\n    \"tag\": \"\"\n  }\n]",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "pet response",
-            "headers": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "X-Rate-Limit", "value": "" },
-              { "key": "X-Expires-After", "value": "" }
-            ],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "",
-            "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "unexpected error",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Creates a new pet in the store.  Duplicates are allowed",
-        "method": "post",
-        "endpoint": "pets",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "{\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "pet response",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "",
-            "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "unexpected error",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "Returns a user based on a single ID, if the user does not have access to the pet",
-        "method": "get",
-        "endpoint": "pets/:id",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "{\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "pet response",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "",
-            "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "unexpected error",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "",
-        "documentation": "deletes a single pet based on the ID supplied",
-        "method": "delete",
-        "endpoint": "pets/:id",
-        "responses": [
-          {
-            "uuid": "",
-            "body": "",
-            "latency": 0,
-            "statusCode": 204,
-            "label": "pet deleted",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "",
-            "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "unexpected error",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          }
-        ],
-        "enabled": true,
-        "randomResponse": false,
-        "sequentialResponse": false
-      }
-    ],
-    "proxyMode": false,
-    "proxyHost": "",
-    "https": false,
-    "cors": true,
-    "headers": [],
-    "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false,
-    "hostname": "0.0.0.0"
-  }
-]
+{
+  "uuid": "",
+  "lastMigration": 17,
+  "name": "Swagger Petstore v3",
+  "endpointPrefix": "v2",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "",
+      "documentation": "Returns all pets from the system that the user has access to\n",
+      "method": "get",
+      "endpoint": "pets",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "[\n  {\n    \"name\": \"\",\n    \"tag\": \"\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "pet response",
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "X-Rate-Limit", "value": "" },
+            { "key": "X-Expires-After", "value": "" }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "",
+          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "unexpected error",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Creates a new pet in the store.  Duplicates are allowed",
+      "method": "post",
+      "endpoint": "pets",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "{\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "pet response",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "",
+          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "unexpected error",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "Returns a user based on a single ID, if the user does not have access to the pet",
+      "method": "get",
+      "endpoint": "pets/:id",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "{\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "pet response",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "",
+          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "unexpected error",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "",
+      "documentation": "deletes a single pet based on the ID supplied",
+      "method": "delete",
+      "endpoint": "pets/:id",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "",
+          "latency": 0,
+          "statusCode": 204,
+          "label": "pet deleted",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "",
+          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "unexpected error",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

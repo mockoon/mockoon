@@ -56,9 +56,11 @@ import { Toast } from 'src/renderer/app/models/toasts.model';
 import { AnalyticsService } from 'src/renderer/app/services/analytics.service';
 import { ApiService } from 'src/renderer/app/services/api.service';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
+import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -134,8 +136,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     private toastService: ToastsService,
     private uiService: UIService,
     private apiService: ApiService,
+    private settingsService: SettingsService,
+    private dialogsService: DialogsService,
     private appQuitService: AppQuitService
-  ) {}
+  ) {
+    this.settingsService.loadSettings().subscribe();
+    this.settingsService.saveSettings().subscribe();
+    this.environmentsService.loadEnvironments().subscribe();
+    this.environmentsService.saveEnvironments().subscribe();
+  }
 
   @HostListener('document:click')
   public documentClick() {
@@ -206,6 +215,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.store.selectActiveRouteResponseLastLog();
     this.toasts$ = this.store.select('toasts');
     this.hostnameTooltip$ = this.activeEnvironment$.pipe(
+      filter((environment) => !!environment),
       map((environment) =>
         environment.hostname === '0.0.0.0'
           ? 'Server available on all network interfaces (localhost, 127.0.0.1, etc)'
@@ -314,14 +324,10 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Open file browsing dialog
    */
   public async browseFiles() {
-    const dialogResult = await MainAPI.invoke('APP_SHOW_OPEN_DIALOG', {
-      title: 'Choose a file'
-    });
+    const filePath = await this.dialogsService.showOpenDialog('Choose a file');
 
-    if (dialogResult.filePaths && dialogResult.filePaths[0]) {
-      this.activeRouteResponseForm
-        .get('filePath')
-        .setValue(dialogResult.filePaths[0]);
+    if (filePath) {
+      this.activeRouteResponseForm.get('filePath').setValue(filePath);
     }
   }
 
@@ -359,7 +365,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (payload.subject === 'route') {
           this.environmentsService.duplicateRoute(payload.subjectUUID);
         } else if (payload.subject === 'environment') {
-          this.environmentsService.duplicateEnvironment(payload.subjectUUID);
+          this.environmentsService
+            .duplicateEnvironment(payload.subjectUUID)
+            .subscribe();
         }
         break;
       case 'export':
@@ -368,9 +376,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       case 'delete':
         if (payload.subject === 'route') {
           this.environmentsService.removeRoute(payload.subjectUUID);
-        } else if (payload.subject === 'environment') {
-          this.environmentsService.removeEnvironment(payload.subjectUUID);
         }
+        break;
+      case 'close':
+        this.environmentsService
+          .closeEnvironment(payload.subjectUUID)
+          .subscribe();
         break;
       case 'toggle':
         if (payload.subject === 'route') {
@@ -380,6 +391,13 @@ export class AppComponent implements OnInit, AfterViewInit {
       case 'duplicateToEnv':
         if (payload.subject === 'route') {
           this.startRouteDuplicationToAnotherEnvironment(payload.subjectUUID);
+        }
+        break;
+      case 'showInFolder':
+        if (payload.subject === 'environment') {
+          this.environmentsService.showEnvironmentFileInFolder(
+            payload.subjectUUID
+          );
         }
         break;
     }

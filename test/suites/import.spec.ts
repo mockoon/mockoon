@@ -1,5 +1,6 @@
 import { HighestMigrationId } from '@mockoon/commons';
 import { promises as fs } from 'fs';
+import { basename, resolve } from 'path';
 import { Config } from 'src/renderer/app/config';
 import { Tests } from 'test/lib/tests';
 
@@ -41,10 +42,13 @@ describe('Environments import', () => {
     oldImportCases.forEach((testCase) => {
       describe(testCase.desc, () => {
         const tests = new Tests('import', true, true, false);
+        const filename = basename(testCase.exportFile);
 
         it('Should import the export file', async () => {
-          tests.helpers.mockOpenDialog([testCase.exportFile]);
-
+          tests.helpers.mockDialog('showOpenDialog', [testCase.exportFile]);
+          tests.helpers.mockDialog('showSaveDialog', [
+            resolve(`./tmp/storage/${filename}`)
+          ]);
           tests.helpers.selectMenuEntry('IMPORT_FILE');
 
           await tests.helpers.assertHasActiveEnvironment();
@@ -57,8 +61,8 @@ describe('Environments import', () => {
           await tests.helpers.waitForAutosave();
 
           await tests.helpers.verifyObjectPropertyInFile(
-            './tmp/storage/environments.json',
-            '0.lastMigration',
+            `./tmp/storage/${filename}`,
+            'lastMigration',
             HighestMigrationId
           );
         });
@@ -69,8 +73,11 @@ describe('Environments import', () => {
       const tests = new Tests('import', true, true, false);
 
       it('Should reject the export file when version is different', async () => {
-        tests.helpers.mockOpenDialog([
+        tests.helpers.mockDialog('showOpenDialog', [
           './test/data/import/old/1.6.0-single-route.json'
+        ]);
+        tests.helpers.mockDialog('showSaveDialog', [
+          resolve('./tmp/storage/1.6.0-single-route.json')
         ]);
 
         tests.helpers.selectMenuEntry('IMPORT_FILE');
@@ -78,12 +85,16 @@ describe('Environments import', () => {
         await tests.helpers.countEnvironments(0);
         await tests.helpers.countRoutes(0);
 
+        await tests.helpers.checkToastDisplayed(
+          'warning',
+          'Some routes were not imported.'
+        );
+
         await tests.helpers.waitForAutosave();
 
-        await tests.helpers.verifyObjectPropertyInFile(
-          './tmp/storage/environments.json',
-          '0',
-          undefined
+        await tests.helpers.assertFileNotExists(
+          './tmp/storage/1.6.0-single-route.json',
+          'ENOENT: no such file or directory'
         );
       });
     });
@@ -94,8 +105,11 @@ describe('Environments import', () => {
       const tests = new Tests('import', true, true, false);
 
       it('Should be able to import a single environment without route from a file', async () => {
-        tests.helpers.mockOpenDialog([
+        tests.helpers.mockDialog('showOpenDialog', [
           './test/data/import/new/env-no-route.json'
+        ]);
+        tests.helpers.mockDialog('showSaveDialog', [
+          resolve('./tmp/storage/env-no-route.json')
         ]);
 
         tests.helpers.selectMenuEntry('IMPORT_FILE');
@@ -109,19 +123,22 @@ describe('Environments import', () => {
 
         await tests.helpers.waitForAutosave();
         await tests.helpers.verifyObjectPropertyInFile(
-          './tmp/storage/environments.json',
-          ['0.name'],
-          ['Environment without route']
+          './tmp/storage/env-no-route.json',
+          'name',
+          'Environment without route'
         );
       });
     });
 
     describe('Environment import from file', () => {
       const tests = new Tests('import', true, true, false);
-
       it('Should be able to import multiple environments from the same file and migrate them', async () => {
-        tests.helpers.mockOpenDialog([
+        tests.helpers.mockDialog('showOpenDialog', [
           './test/data/import/new/full-export.json'
+        ]);
+        tests.helpers.mockDialog('showSaveDialog', [
+          resolve('./tmp/storage/full-export-1.json'),
+          resolve('./tmp/storage/full-export-2.json')
         ]);
 
         tests.helpers.selectMenuEntry('IMPORT_FILE');
@@ -136,9 +153,14 @@ describe('Environments import', () => {
 
         await tests.helpers.waitForAutosave();
         await tests.helpers.verifyObjectPropertyInFile(
-          './tmp/storage/environments.json',
-          ['0.lastMigration', '1.lastMigration'],
-          [HighestMigrationId, HighestMigrationId]
+          './tmp/storage/full-export-1.json',
+          'lastMigration',
+          HighestMigrationId
+        );
+        await tests.helpers.verifyObjectPropertyInFile(
+          './tmp/storage/full-export-2.json',
+          'lastMigration',
+          HighestMigrationId
         );
       });
     });
@@ -152,6 +174,11 @@ describe('Environments import', () => {
           'utf-8'
         );
         tests.app.electron.clipboard.writeText(fileContent);
+
+        tests.helpers.mockDialog('showSaveDialog', [
+          resolve('./tmp/storage/full-export-1.json'),
+          resolve('./tmp/storage/full-export-2.json')
+        ]);
 
         tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 
@@ -174,6 +201,10 @@ describe('Environments import', () => {
         tests.app.electron.clipboard.writeText(
           fileContent.replace('##appVersion##', Config.appVersion)
         );
+
+        tests.helpers.mockDialog('showSaveDialog', [
+          resolve('./tmp/storage/route-export.json')
+        ]);
 
         tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 

@@ -1,53 +1,34 @@
 @import 'src/renderer/styles/bootstrap-variables.scss';
-@import 'src/renderer/styles/variables.scss';
 
 .environments-menu {
-  z-index: 10;
   background: $gray-900;
-  width: $environment-menu-width;
-  min-width: $environment-menu-width;
-  transition: all 300ms ease-in-out;
+  border-right: 1px solid lighten($gray-900, 2%);
+  min-width: 100px;
+  // initial width
+  width: 150px;
 
-  .add-environment-container {
-    transition: transform 250ms ease-in-out, opacity 500ms ease-in-out;
-    position: absolute;
-    transform: translateX(-200px);
-    opacity: 0;
-  }
+  position: relative; // we need this for the resize-column
 
-  .toggle-environments-menu {
+  .server-icons {
+    opacity: 0.7;
+    font-size: 12px;
+    line-height: 16px;
+
     i {
-      font-size: 20px;
-    }
-  }
-
-  &.opened {
-    width: $environment-menu-width-opened;
-    min-width: $environment-menu-width-opened;
-    box-shadow: inset -1px 0 0 0 lighten($gray-900, 5%),
-      2px 0 3px 1px darken($gray-900, 5%);
-
-    .add-environment-container {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-
-  &:not(.opened) {
-    box-shadow: inset -1px 0 0 0 lighten($gray-900, 5%);
-
-    .menu-list {
-      .nav-link {
-        padding-right: 18px;
-        padding-left: 0;
-      }
+      font-size: 12px;
+      vertical-align: middle;
     }
 
-    .environment-name {
-      font-size: 20px;
-      text-align: center;
-      padding-top: 4px;
-      padding-bottom: 3px;
+    &-proxy-mode {
+      color: $blue;
+    }
+
+    &-https {
+      color: $yellow;
+    }
+
+    &-cors {
+      color: $cyan;
     }
   }
 }

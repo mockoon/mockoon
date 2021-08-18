@@ -1,180 +1,178 @@
-[
-  {
-    "uuid": "b8701e60-e7d4-11ea-a5ec-979674ac1a4b",
-    "lastMigration": 17,
-    "name": "Regulations.gov",
-    "endpointPrefix": "regulations/v3",
-    "latency": 0,
-    "port": 3000,
-    "routes": [
-      {
-        "uuid": "b8701e64-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Returns Docket information",
-        "method": "get",
-        "endpoint": "docket.:response_format",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "b8701e61-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "No response was specified",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "b8701e62-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Bad request. The content is either empty or has been withdrawn.",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "b8701e63-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "File not found.",
-            "headers": [{ "key": "Content-Type", "value": "application/json" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          }
-        ],
-        "enabled": true,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "b8701e68-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Returns Document information",
-        "method": "get",
-        "endpoint": "document.:response_format",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "b8701e65-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "No response was specified",
-            "headers": [{ "key": "Content-Type", "value": "*/*" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "b8701e66-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Bad request. The document is only available for comment via Regulations.gov.",
-            "headers": [{ "key": "Content-Type", "value": "*/*" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "b8701e67-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "File not found.",
-            "headers": [{ "key": "Content-Type", "value": "*/*" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          }
-        ],
-        "enabled": true,
-        "sequentialResponse": false
-      },
-      {
-        "uuid": "b8701e6c-e7d4-11ea-a5ec-979674ac1a4b",
-        "documentation": "Search for Documents",
-        "method": "get",
-        "endpoint": "documents.:response_format",
-        "randomResponse": false,
-        "responses": [
-          {
-            "uuid": "b8701e69-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 200,
-            "label": "No response was specified",
-            "headers": [{ "key": "Content-Type", "value": "*/*" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "b8701e6a-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 400,
-            "label": "Bad request. The document is only available for comment via Regulations.gov.",
-            "headers": [{ "key": "Content-Type", "value": "*/*" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          },
-          {
-            "uuid": "b8701e6b-e7d4-11ea-a5ec-979674ac1a4b",
-            "body": "",
-            "latency": 0,
-            "statusCode": 404,
-            "label": "File not found.",
-            "headers": [{ "key": "Content-Type", "value": "*/*" }],
-            "filePath": "",
-            "sendFileAsBody": false,
-            "rules": [],
-            "rulesOperator": "OR",
-            "disableTemplating": false,
-            "fallbackTo404": false
-          }
-        ],
-        "enabled": true,
-        "sequentialResponse": false
-      }
-    ],
-    "proxyMode": false,
-    "proxyHost": "",
-    "https": false,
-    "cors": true,
-    "headers": [],
-    "proxyReqHeaders": [{ "key": "", "value": "" }],
-    "proxyResHeaders": [{ "key": "", "value": "" }],
-    "proxyRemovePrefix": false,
-    "hostname": "0.0.0.0"
-  }
-]
+{
+  "uuid": "b8701e60-e7d4-11ea-a5ec-979674ac1a4b",
+  "lastMigration": 17,
+  "name": "Regulations.gov",
+  "endpointPrefix": "regulations/v3",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "b8701e64-e7d4-11ea-a5ec-979674ac1a4b",
+      "documentation": "Returns Docket information",
+      "method": "get",
+      "endpoint": "docket.:response_format",
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "b8701e61-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "No response was specified",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "b8701e62-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Bad request. The content is either empty or has been withdrawn.",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "b8701e63-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "File not found.",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "b8701e68-e7d4-11ea-a5ec-979674ac1a4b",
+      "documentation": "Returns Document information",
+      "method": "get",
+      "endpoint": "document.:response_format",
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "b8701e65-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "No response was specified",
+          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "b8701e66-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Bad request. The document is only available for comment via Regulations.gov.",
+          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "b8701e67-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "File not found.",
+          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "b8701e6c-e7d4-11ea-a5ec-979674ac1a4b",
+      "documentation": "Search for Documents",
+      "method": "get",
+      "endpoint": "documents.:response_format",
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "b8701e69-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "No response was specified",
+          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "b8701e6a-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Bad request. The document is only available for comment via Regulations.gov.",
+          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "b8701e6b-e7d4-11ea-a5ec-979674ac1a4b",
+          "body": "",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "File not found.",
+          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

@@ -88,7 +88,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/renderer/environments/environment.ts",
-                  "with": "src/renderer/environments/environment.dev.ts"
+                  "with": "src/renderer/environments/environment.ci.ts"
                 }
               ]
             },

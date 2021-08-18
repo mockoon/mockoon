@@ -9,5 +9,6 @@ export const environment: AppEnvironment = {
   production: false,
   analyticsID: 'xxxxxx',
   remoteConfig: 'dev',
-  useFirebaseEmulator: true
+  useFirebaseEmulator: true,
+  ci: false
 };

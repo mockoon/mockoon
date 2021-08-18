@@ -3,16 +3,92 @@ import {
   BINARY_BODY,
   Environment,
   Environments,
+  EnvironmentSchema,
+  HighestMigrationId,
   Route,
   Transaction
 } from '@mockoon/commons';
+import { Logger } from 'src/renderer/app/classes/logger';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
+import { MigrationService } from 'src/renderer/app/services/migration.service';
+import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { v1 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
-export class DataService {
-  constructor(private store: Store) {}
+export class DataService extends Logger {
+  constructor(
+    protected toastsService: ToastsService,
+    private store: Store,
+    private migrationService: MigrationService
+  ) {
+    super('[SERVICE][DATA]', toastsService);
+  }
+
+  /**
+   * Migrate an environment and validate it against the schema
+   * If migration fails something is missing, it will "repair" the environment
+   * using the schema.
+   *
+   * @param environment
+   * @returns
+   */
+  public migrateAndValidateEnvironment(environment: Environment): Environment {
+    let migratedEnvironment: Environment;
+
+    try {
+      migratedEnvironment =
+        this.migrationService.migrateEnvironment(environment);
+    } catch (error) {
+      this.logMessage('error', 'ENVIRONMENT_MIGRATION_FAILED', {
+        name: environment.name,
+        uuid: environment.uuid
+      });
+      migratedEnvironment = environment;
+      migratedEnvironment.lastMigration = HighestMigrationId;
+    }
+
+    return EnvironmentSchema.validate(migratedEnvironment).value;
+  }
+
+  public deduplicateUUIDs(
+    newEnvironment: Environment,
+    environments: Environments
+  ): Environment {
+    const UUIDs: { [key in string]: true } = {};
+    environments.forEach((environment) => {
+      UUIDs[environment.uuid] = true;
+      environment.routes.forEach((route) => {
+        UUIDs[route.uuid] = true;
+
+        route.responses.forEach((response) => {
+          UUIDs[response.uuid] = true;
+        });
+      });
+    });
+
+    if (UUIDs[newEnvironment.uuid]) {
+      newEnvironment.uuid = uuid();
+    }
+    UUIDs[newEnvironment.uuid] = true;
+
+    newEnvironment.routes.forEach((route) => {
+      if (UUIDs[route.uuid]) {
+        route.uuid = uuid();
+      }
+
+      UUIDs[route.uuid] = true;
+
+      route.responses.forEach((response) => {
+        if (UUIDs[response.uuid]) {
+          response.uuid = uuid();
+        }
+        UUIDs[response.uuid] = true;
+      });
+    });
+
+    return newEnvironment;
+  }
 
   /**
    * Format request/response to EnvironmentLog to be consumed by the UI
@@ -77,29 +153,15 @@ export class DataService {
   }
 
   /**
-   * Renew all environments UUIDs
-   *
-   * @param environments
-   * @param subject
-   */
-  public renewEnvironmentsUUIDs(environments: Environments, erase = false) {
-    environments.forEach((environment) => {
-      this.renewEnvironmentUUIDs(environment, erase);
-    });
-
-    return environments;
-  }
-
-  /**
    * Renew one environment UUIDs
    *
    * @param params
    */
-  public renewEnvironmentUUIDs(environment: Environment, erase = false) {
-    environment.uuid = erase ? '' : uuid();
+  public renewEnvironmentUUIDs(environment: Environment) {
+    environment.uuid = uuid();
 
     environment.routes.forEach((route) => {
-      this.renewRouteUUIDs(route, erase);
+      this.renewRouteUUIDs(route);
     });
 
     return environment;
@@ -110,11 +172,11 @@ export class DataService {
    *
    * @param params
    */
-  public renewRouteUUIDs(route: Route, erase = false) {
-    route.uuid = erase ? '' : uuid();
+  public renewRouteUUIDs(route: Route) {
+    route.uuid = uuid();
 
     route.responses.forEach((routeResponse) => {
-      routeResponse.uuid = erase ? '' : uuid();
+      routeResponse.uuid = uuid();
     });
 
     return route;

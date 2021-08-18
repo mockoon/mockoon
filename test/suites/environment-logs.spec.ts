@@ -1,3 +1,4 @@
+import { promises as fs } from 'fs';
 import { HttpCall } from 'test/lib/models';
 import { Tests } from 'test/lib/tests';
 
@@ -232,11 +233,12 @@ describe('Environment logs', () => {
     });
 
     describe('Verify environment logs after GET call to /prefix/file (binary)', () => {
-      it(errorCall.description, async () => {
+      it(binaryCall.description, async () => {
+        await fs.copyFile('./test/data/test.pdf', './tmp/storage/test.pdf');
         await tests.helpers.httpCallAsserter(binaryCall);
       });
 
-      it('Environment logs have two entries', async () => {
+      it('Environment logs have 3 entries', async () => {
         await tests.helpers.switchViewInHeader('ENV_LOGS');
         await tests.helpers.countEnvironmentLogsEntries(3);
       });

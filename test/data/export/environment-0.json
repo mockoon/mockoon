@@ -1,0 +1,44 @@
+{
+  "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
+  "lastMigration": 17,
+  "name": "Export env",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "64fcbac1-1ac7-11ea-b8fd-577fb167a4ce",
+      "method": "get",
+      "endpoint": "answer",
+      "documentation": "",
+      "enabled": true,
+      "randomResponse": false,
+      "responses": [
+        {
+          "uuid": "64fcbac2-1ac7-11ea-b8fd-577fb167a4ce",
+          "body": "{\n  \"response\": 42\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0"
+}

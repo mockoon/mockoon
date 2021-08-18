@@ -34,8 +34,8 @@ export class ServerService extends Logger {
    *
    * @param environment
    */
-  public async start(environment: Environment) {
-    MainAPI.invoke('APP_START_SERVER', environment);
+  public async start(environment: Environment, environmentPath: string) {
+    MainAPI.invoke('APP_START_SERVER', environment, environmentPath);
   }
 
   /**
