@@ -3,13 +3,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Environment, Route } from '@mockoon/commons';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { combineLatest, from, Observable, Subscription } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -19,6 +20,8 @@ import {
 } from 'rxjs/operators';
 import { RoutesContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
 import { Config } from 'src/renderer/app/config';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -48,6 +51,8 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public routesFilter$: Observable<string>;
   public routesFilter: FormControl;
   public dragIsDisabled = false;
+  public focusableInputs = FocusableInputs;
+  public os$: Observable<string>;
   public menuSize = Config.defaultRouteMenuSize;
   private routesFilterSubscription: Subscription;
 
@@ -59,7 +64,15 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder
   ) {}
 
+  @HostListener('keydown', ['$event'])
+  public escapeFilterInput(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.clearFilter();
+    }
+  }
+
   ngOnInit() {
+    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
     this.routesFilter = this.formBuilder.control('');
 
     this.activeEnvironment$ = this.store.selectActiveEnvironment();

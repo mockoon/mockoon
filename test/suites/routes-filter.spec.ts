@@ -1,9 +1,26 @@
+import { expect } from 'chai';
 import { resolve } from 'path';
 import { Tests } from 'test/lib/tests';
 
-describe('Routes filter', async () => {
+describe('Routes filter', () => {
   const tests = new Tests('basic-data');
   const routesFilterSelector = 'input[id="route-filter"]';
+
+  it('should get focused when pressing ctrl + shift + f', async () => {
+    const routeFilter = await tests.helpers.getElement(routesFilterSelector);
+    await tests.app.client.keys(['Control', 'Shift', 'f']);
+    // disable ctrl and shift
+    expect(await routeFilter.isFocused()).to.equal(true);
+    await tests.app.client.keys(['Control', 'Shift']);
+  });
+
+  it('should get cleared when pressing escape while focused', async () => {
+    const routeFilter = await tests.helpers.getElement(routesFilterSelector);
+    await tests.helpers.setElementValue(routesFilterSelector, 'dolphins');
+    await tests.helpers.elementClick(routesFilterSelector);
+    await tests.app.client.keys(['Escape']);
+    await tests.helpers.assertElementValue(routesFilterSelector, '');
+  });
 
   it('Filter route by name dolphins', async () => {
     await tests.helpers.countRoutes(3);
