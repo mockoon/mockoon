@@ -51,6 +51,8 @@ describe('Environments import', () => {
           ]);
           tests.helpers.selectMenuEntry('IMPORT_FILE');
 
+          await tests.app.client.pause(500);
+
           await tests.helpers.assertHasActiveEnvironment();
           await tests.helpers.assertActiveEnvironmentName(
             testCase.environmentTitle
@@ -81,6 +83,8 @@ describe('Environments import', () => {
         ]);
 
         tests.helpers.selectMenuEntry('IMPORT_FILE');
+
+        await tests.app.client.pause(500);
 
         await tests.helpers.countEnvironments(0);
         await tests.helpers.countRoutes(0);
@@ -114,6 +118,8 @@ describe('Environments import', () => {
 
         tests.helpers.selectMenuEntry('IMPORT_FILE');
 
+        await tests.app.client.pause(500);
+
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.countEnvironments(1);
         await tests.helpers.assertActiveEnvironmentName(
@@ -142,6 +148,8 @@ describe('Environments import', () => {
         ]);
 
         tests.helpers.selectMenuEntry('IMPORT_FILE');
+
+        await tests.app.client.pause(500);
 
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.countEnvironments(2);
@@ -182,6 +190,8 @@ describe('Environments import', () => {
 
         tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 
+        await tests.app.client.pause(500);
+
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.assertActiveEnvironmentName('Import new format 2');
 
@@ -208,6 +218,8 @@ describe('Environments import', () => {
 
         tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 
+        await tests.app.client.pause(500);
+
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.assertActiveEnvironmentName('New environment');
         await tests.helpers.checkActiveRoute('GET\n/answer');
@@ -229,6 +241,8 @@ describe('Environments import', () => {
         );
 
         tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
+
+        await tests.app.client.pause(500);
 
         await tests.helpers.countEnvironments(0);
         await tests.helpers.countRoutes(0);

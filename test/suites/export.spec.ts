@@ -14,6 +14,8 @@ describe('Environments export', () => {
 
       tests.helpers.selectMenuEntry('EXPORT_FILE');
 
+      await tests.app.client.pause(500);
+
       await tests.helpers.checkToastDisplayed(
         'success',
         'Environments have been successfully exported'
@@ -48,6 +50,8 @@ describe('Environments export', () => {
       tests.helpers.mockDialog('showSaveDialog', [filePath]);
 
       tests.helpers.selectMenuEntry('EXPORT_FILE_SELECTED');
+
+      await tests.app.client.pause(500);
 
       await tests.helpers.checkToastDisplayed(
         'success',

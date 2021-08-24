@@ -26,6 +26,8 @@ describe('Environments incompatibility', () => {
     ]);
     tests.helpers.selectMenuEntry('IMPORT_FILE');
 
+    await tests.app.client.pause(500);
+
     await tests.helpers.checkToastDisplayed(
       'warning',
       'Environment "FT env" was created with a more recent version of Mockoon. Please upgrade.'

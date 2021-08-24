@@ -122,6 +122,8 @@ describe('Swagger/OpenAPI import', () => {
 
             tests.helpers.selectMenuEntry('IMPORT_OPENAPI_FILE');
 
+            await tests.app.client.pause(500);
+
             await tests.helpers.assertHasActiveEnvironment();
             await tests.helpers.assertActiveEnvironmentName(
               testCase.environmentTitle
