@@ -7,6 +7,8 @@ import {
   transports as logTransports
 } from 'electron-log';
 import { join as pathJoin, resolve as pathResolve } from 'path';
+import { argv } from 'process';
+import { parseProtocolArgs, registerProtocol } from './libs/custom-protocol';
 import { clearIPCChannels, initIPCListeners } from './libs/ipc';
 import { initMainWindow } from './libs/main-window';
 import { checkForUpdate } from './libs/update';
@@ -17,8 +19,7 @@ declare const isDev: boolean;
 const setAppAndLogPath = (path: string) => {
   app.setPath('userData', path);
 
-  logTransports.file.resolvePath = (variables: any) =>
-    pathJoin(path, '/logs', 'main.log');
+  logTransports.file.resolvePath = () => pathJoin(path, '/logs', 'main.log');
 };
 
 // set local data folder when in dev mode or running tests
@@ -66,8 +67,16 @@ if (!appLock) {
   );
   app.quit();
 } else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
-    // Someone tried to run a second instance, we should focus our window.
+  logInfo('app load argv:' + JSON.stringify(argv));
+  parseProtocolArgs(argv);
+
+  // Someone tried to run a second instance, we should focus our window. Also triggered on windows when a custom protocol is triggered (mockoon://)
+  app.on('second-instance', (event, args) => {
+    if (process.platform === 'win32') {
+      logInfo('second instance args:' + JSON.stringify(args));
+      parseProtocolArgs(args);
+    }
+
     if (mainWindow) {
       if (mainWindow.isMinimized()) {
         mainWindow.restore();
@@ -80,6 +89,7 @@ if (!appLock) {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
+    registerProtocol();
     initApp();
 
     checkForUpdate(mainWindow);
@@ -110,5 +120,11 @@ if (!appLock) {
     if (process.platform !== 'darwin' || isTesting) {
       app.quit();
     }
+  });
+
+  app.on('open-url', (event, url) => {
+    event.preventDefault();
+    logInfo('open Url args: ' + url);
+    parseProtocolArgs([url]);
   });
 }

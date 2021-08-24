@@ -75,6 +75,7 @@
     "@angular/core": "12.2.1",
     "@angular/fire": "6.1.5",
     "@angular/forms": "12.2.1",
+    "@angular/localize": "12.2.1",
     "@angular/platform-browser": "12.2.1",
     "@angular/platform-browser-dynamic": "12.2.1",
     "@ng-bootstrap/ng-bootstrap": "10.0.0",

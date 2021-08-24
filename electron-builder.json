@@ -52,5 +52,12 @@
       "Categories": "Development"
     }
   },
-  "afterSign": "scripts/notarize.js"
+  "afterSign": "scripts/notarize.js",
+  "protocols": [
+    {
+      "name": "Mockoon",
+      "schemes": ["mockoon"],
+      "role": "Editor"
+    }
+  ]
 }
