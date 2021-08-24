@@ -303,7 +303,7 @@ describe('Schema validation', () => {
       ]);
 
       tests.helpers.selectMenuEntry('IMPORT_FILE');
-      
+
       await tests.app.client.pause(500);
 
       await tests.helpers.countEnvironments(4);
