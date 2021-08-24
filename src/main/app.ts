@@ -53,6 +53,9 @@ const initApp = () => {
   mainWindow = initMainWindow();
   initIPCListeners(mainWindow, runningServerInstances);
 
+  logInfo('app load argv:' + JSON.stringify(argv));
+  parseProtocolArgs(argv, mainWindow);
+
   if (isDev) {
     // when serving (dev mode) enable hot reloading
     import('./libs/hot-reload').then((hotReloadModule) => {
@@ -67,14 +70,11 @@ if (!appLock) {
   );
   app.quit();
 } else {
-  logInfo('app load argv:' + JSON.stringify(argv));
-  parseProtocolArgs(argv);
-
   // Someone tried to run a second instance, we should focus our window. Also triggered on windows when a custom protocol is triggered (mockoon://)
   app.on('second-instance', (event, args) => {
     if (process.platform === 'win32') {
       logInfo('second instance args:' + JSON.stringify(args));
-      parseProtocolArgs(args);
+      parseProtocolArgs(args, mainWindow);
     }
 
     if (mainWindow) {
@@ -125,6 +125,6 @@ if (!appLock) {
   app.on('open-url', (event, url) => {
     event.preventDefault();
     logInfo('open Url args: ' + url);
-    parseProtocolArgs([url]);
+    parseProtocolArgs([url], mainWindow);
   });
 }

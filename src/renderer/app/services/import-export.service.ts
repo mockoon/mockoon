@@ -188,6 +188,10 @@ export class ImportExportService extends Logger {
     }
   }
 
+  public importFromUrl(url: string) {
+    const file =
+  }
+
   /**
    * Load data from JSON file and import
    */
