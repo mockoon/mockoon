@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
+import { Logger } from 'src/renderer/app/classes/logger';
 import { ChangelogModalComponent } from 'src/renderer/app/components/changelog-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/settings-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -11,6 +12,8 @@ import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
+  private logger = new Logger('[SERVICE][IMPORT-EXPORT]');
+
   constructor(
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
@@ -105,10 +108,12 @@ export class ApiService {
 
     // listen to custom protocol queries
     MainAPI.receive('APP_CUSTOM_PROTOCOL', (action, parameters) => {
+      this.logger.info('action: ' + action + ' parameters :' + parameters);
       this.zone.run(() => {
         switch (action) {
           case 'load-export-data':
-            this.importExportService.importFromUrl();
+            this.logger.info('api service : ' + parameters.url);
+            this.importExportService.importFromUrl(parameters.url);
             break;
         }
       });

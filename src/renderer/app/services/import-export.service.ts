@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   Environment,
@@ -49,7 +50,8 @@ export class ImportExportService extends Logger {
     private schemasBuilderService: SchemasBuilderService,
     private openAPIConverterService: OpenAPIConverterService,
     private dialogsService: DialogsService,
-    private environmentsService: EnvironmentsService
+    private environmentsService: EnvironmentsService,
+    private http: HttpClient
   ) {
     super('[SERVICE][IMPORT-EXPORT]', toastService);
   }
@@ -189,7 +191,10 @@ export class ImportExportService extends Logger {
   }
 
   public importFromUrl(url: string) {
-    const file =
+    this.logger.info('import initiated, url= ' + url);
+    this.http
+      .get<Export & OldExport>(url)
+      .subscribe((data) => this.import(data));
   }
 
   /**

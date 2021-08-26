@@ -36,5 +36,5 @@ export const IPCRendererHandlerChannels = [
   'APP_MENU',
   'APP_SERVER_EVENT',
   'APP_UPDATE_AVAILABLE',
-  'CUSTOM_PROTOCOL'
+  'APP_CUSTOM_PROTOCOL'
 ];

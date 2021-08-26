@@ -13,7 +13,7 @@ import {
   SaveDialogReturnValue
 } from 'electron';
 import { OpenAPI, OpenAPIV2, OpenAPIV3 } from 'openapi-types';
-import { protocolAction } from 'src/shared/models/protocol.model';
+import { ProtocolAction } from 'src/shared/models/protocol.model';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 export interface MainAPIModel {
@@ -103,6 +103,6 @@ export interface MainAPIModel {
   receive(channel: 'APP_UPDATE_AVAILABLE', listener: () => void): void;
   receive(
     channel: 'APP_CUSTOM_PROTOCOL',
-    listener: (action: protocolAction, parameters?: string[]) => void
+    listener: (action: ProtocolAction, parameters: { url: string }) => void
   ): void;
 }

@@ -1,1 +1,1 @@
-export type protocolAction = 'load-export-data';
+export type ProtocolAction = 'load-export-data';
