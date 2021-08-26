@@ -11,7 +11,9 @@ export const parseProtocolArgs = (
   args: string[],
   mainWindow: BrowserWindow
 ) => {
-  const target = args.find((arg) => arg.startsWith('mockoon://'));
+  const target = args
+    .find((arg) => arg.startsWith('mockoon://'))
+    ?.split('mockoon://')[1];
 
   if (target) {
     const parts = target.match(/^([a-z\-]*)\/\?(.*)/);
