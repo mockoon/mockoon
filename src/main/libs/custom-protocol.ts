@@ -16,7 +16,7 @@ export const parseProtocolArgs = (
     ?.split('mockoon://')[1];
 
   if (target) {
-    const parts = target.match(/^([a-z\-]*)\/\?(.*)/);
+    const parts = target.match(/^([a-z\-]*)\/?\?(.*)/);
 
     if (parts) {
       const action = parts[1];

@@ -7,7 +7,6 @@ import {
   transports as logTransports
 } from 'electron-log';
 import { join as pathJoin, resolve as pathResolve } from 'path';
-import { argv } from 'process';
 import { parseProtocolArgs, registerProtocol } from './libs/custom-protocol';
 import { clearIPCChannels, initIPCListeners } from './libs/ipc';
 import { initMainWindow } from './libs/main-window';
@@ -52,9 +51,6 @@ const appLock = app.requestSingleInstanceLock();
 const initApp = () => {
   mainWindow = initMainWindow();
   initIPCListeners(mainWindow, runningServerInstances);
-
-  logInfo('app load argv:' + JSON.stringify(argv));
-  parseProtocolArgs(argv, mainWindow);
 
   if (isDev) {
     // when serving (dev mode) enable hot reloading

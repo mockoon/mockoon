@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
-import { Logger } from 'src/renderer/app/classes/logger';
 import { ChangelogModalComponent } from 'src/renderer/app/components/changelog-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/settings-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -9,6 +8,7 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Logger } from '../classes/logger';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -113,7 +113,7 @@ export class ApiService {
         switch (action) {
           case 'load-export-data':
             this.logger.info('api service : ' + parameters.url);
-            this.importExportService.importFromUrl(parameters.url);
+            this.importExportService.importFromUrl(parameters.url).subscribe();
             break;
         }
       });

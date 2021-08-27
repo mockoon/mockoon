@@ -12,6 +12,8 @@ import {
   RouteSchema
 } from '@mockoon/commons';
 import { cloneDeep } from 'lodash';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -190,11 +192,15 @@ export class ImportExportService extends Logger {
     }
   }
 
-  public importFromUrl(url: string) {
+  public importFromUrl(url: string): Observable<Export & OldExport> {
     this.logger.info('import initiated, url= ' + url);
-    this.http
-      .get<Export & OldExport>(url)
-      .subscribe((data) => this.import(data));
+
+    return this.http.get(url, { responseType: 'text' }).pipe(
+      map<string, Export & OldExport>((data) => JSON.parse(data)),
+      tap((data) => {
+        this.import(data);
+      })
+    );
   }
 
   /**

@@ -1,6 +1,9 @@
 import { BrowserWindow, Menu, shell } from 'electron';
+import { info as logInfo } from 'electron-log';
 import * as windowState from 'electron-window-state';
 import { join as pathJoin } from 'path';
+import { argv } from 'process';
+import { parseProtocolArgs } from './custom-protocol';
 import { createMenu } from './menu';
 import { createSplashScreen } from './splashscreen';
 
@@ -65,6 +68,9 @@ export const initMainWindow = () => {
           mainWindowState.manage(mainWindow);
           // ensure focus, as manage function does not necessarily focus
           mainWindow.show();
+
+          logInfo('app load argv:' + JSON.stringify(argv));
+          parseProtocolArgs(argv, mainWindow);
 
           // Open the DevTools in dev mode except when running functional tests
           if (isDev && !isTesting) {
