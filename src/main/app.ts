@@ -90,6 +90,14 @@ if (!appLock) {
 
     checkForUpdate(mainWindow);
 
+    app.on('open-url', (event, url) => {
+      event.preventDefault();
+
+      logInfo('open Url args: ' + url);
+
+      parseProtocolArgs([url], mainWindow);
+    });
+
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
@@ -116,11 +124,5 @@ if (!appLock) {
     if (process.platform !== 'darwin' || isTesting) {
       app.quit();
     }
-  });
-
-  app.on('open-url', (event, url) => {
-    event.preventDefault();
-    logInfo('open Url args: ' + url);
-    parseProtocolArgs([url], mainWindow);
   });
 }
