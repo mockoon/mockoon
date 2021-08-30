@@ -9,7 +9,7 @@ import {
 import { join as pathJoin, resolve as pathResolve } from 'path';
 import { parseProtocolArgs, registerProtocol } from './libs/custom-protocol';
 import { clearIPCChannels, initIPCListeners } from './libs/ipc';
-import { initMainWindow } from './libs/main-window';
+import { initMainWindow, saveOpenUrlArgs } from './libs/main-window';
 import { checkForUpdate } from './libs/update';
 
 declare const isTesting: boolean;
@@ -90,14 +90,6 @@ if (!appLock) {
 
     checkForUpdate(mainWindow);
 
-    app.on('open-url', (event, url) => {
-      event.preventDefault();
-
-      logInfo('open Url args: ' + url);
-
-      parseProtocolArgs([url], mainWindow);
-    });
-
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
@@ -123,6 +115,18 @@ if (!appLock) {
     // to stay active until the user quits explicitly with Cmd + Q (except when running tests)
     if (process.platform !== 'darwin' || isTesting) {
       app.quit();
+    }
+  });
+
+  app.on('open-url', (event, url) => {
+    event.preventDefault();
+    logInfo('open Url args: ' + url);
+
+    // if mainWindow is not ready yet (macos startup), store the url in the custom protocol lib
+    if (!mainWindow) {
+      saveOpenUrlArgs([url]);
+    } else {
+      parseProtocolArgs([url], mainWindow);
     }
   });
 }

@@ -10,6 +10,13 @@ import { createSplashScreen } from './splashscreen';
 declare const isTesting: boolean;
 declare const isDev: boolean;
 
+// store URL received in open-url event when app is closed (macos only)
+let openUrlArgs: string[];
+
+export const saveOpenUrlArgs = (url: string[]) => {
+  openUrlArgs = url;
+};
+
 export const initMainWindow = () => {
   let splashScreen: BrowserWindow;
 
@@ -70,7 +77,7 @@ export const initMainWindow = () => {
           mainWindow.show();
 
           logInfo('app load argv:' + JSON.stringify(argv));
-          parseProtocolArgs(argv, mainWindow);
+          parseProtocolArgs(openUrlArgs || argv, mainWindow);
 
           // Open the DevTools in dev mode except when running functional tests
           if (isDev && !isTesting) {
