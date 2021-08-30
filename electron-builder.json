@@ -5,7 +5,12 @@
     "output": "packages",
     "buildResources": "build-res"
   },
-  "files": ["package.json", "dist/**/*", "node_modules"],
+  "files": [
+    "package.json",
+    "dist/**/*",
+    "node_modules",
+    "build-res/icon_512x512x32.png"
+  ],
   "win": {
     "target": [{ "target": "nsis" }, { "target": "portable" }],
     "publisherName": "Guillaume Monnet",
@@ -45,7 +50,7 @@
       }
     ],
     "category": "Development",
-    "icon": "build",
+    "icon": "build-res",
     "artifactName": "mockoon-${version}.${ext}",
     "desktop": {
       "Name": "Mockoon",

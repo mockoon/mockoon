@@ -40,11 +40,6 @@
                 "glob": "splashscreen.html",
                 "input": "src/renderer",
                 "output": "/"
-              },
-              {
-                "glob": "icon_512x512x32.png",
-                "input": "build/",
-                "output": "/"
               }
             ],
             "styles": ["src/renderer/styles/styles.scss"],
