@@ -16,7 +16,7 @@
   "browserslist": [
     "Chrome >= 80"
   ],
-  "main": "app.js",
+  "main": "./dist/app.js",
   "scripts": {
     "lint": "ng lint",
     "format": "prettier {src,test}/**/*.{ts,js,scss,html} --check",

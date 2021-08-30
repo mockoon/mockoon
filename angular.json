@@ -42,11 +42,6 @@
                 "output": "/"
               },
               {
-                "glob": "package.json",
-                "input": ".",
-                "output": "/"
-              },
-              {
                 "glob": "icon_512x512x32.png",
                 "input": "build/",
                 "output": "/"

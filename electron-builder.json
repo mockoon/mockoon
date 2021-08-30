@@ -3,8 +3,9 @@
   "productName": "Mockoon",
   "directories": {
     "output": "packages",
-    "app": "dist"
+    "buildResources": "build-res"
   },
+  "files": ["package.json", "dist/**/*", "node_modules"],
   "win": {
     "target": [{ "target": "nsis" }, { "target": "portable" }],
     "publisherName": "Guillaume Monnet",
