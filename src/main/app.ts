@@ -68,7 +68,7 @@ if (!appLock) {
 } else {
   // Someone tried to run a second instance, we should focus our window. Also triggered on windows when a custom protocol is triggered (mockoon://)
   app.on('second-instance', (event, args) => {
-    if (process.platform === 'win32') {
+    if (process.platform === 'win32' || process.platform === 'linux') {
       logInfo('second instance args:' + JSON.stringify(args));
       parseProtocolArgs(args, mainWindow);
     }
