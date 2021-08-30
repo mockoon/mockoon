@@ -4,16 +4,5 @@
   <dict>
     <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
     <true/>
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>mockoon</string>
-        </array>
-        <key>CFBundleURLName</key>
-        <string>Mockoon</string>
-      </dict>
-    </array>
   </dict>
 </plist>
