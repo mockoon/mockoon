@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   Environment,
@@ -11,6 +12,8 @@ import {
   RouteSchema
 } from '@mockoon/commons';
 import { cloneDeep } from 'lodash';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -49,7 +52,8 @@ export class ImportExportService extends Logger {
     private schemasBuilderService: SchemasBuilderService,
     private openAPIConverterService: OpenAPIConverterService,
     private dialogsService: DialogsService,
-    private environmentsService: EnvironmentsService
+    private environmentsService: EnvironmentsService,
+    private http: HttpClient
   ) {
     super('[SERVICE][IMPORT-EXPORT]', toastService);
   }
@@ -186,6 +190,23 @@ export class ImportExportService extends Logger {
 
       this.toastService.addToast('error', Errors.EXPORT_ROUTE_CLIPBOARD_ERROR);
     }
+  }
+
+  /**
+   * Load data from an URL (used for custom protocol)
+   *
+   * @param url
+   * @returns
+   */
+  public importFromUrl(url: string): Observable<Export & OldExport> {
+    this.logger.info(`Importing from URL: ${url}`);
+
+    return this.http.get(url, { responseType: 'text' }).pipe(
+      map<string, Export & OldExport>((data) => JSON.parse(data)),
+      tap((data) => {
+        this.import(data);
+      })
+    );
   }
 
   /**

@@ -103,6 +103,17 @@ export class ApiService {
       });
     });
 
+    // listen to custom protocol queries
+    MainAPI.receive('APP_CUSTOM_PROTOCOL', (action, parameters) => {
+      this.zone.run(() => {
+        switch (action) {
+          case 'load-export-data':
+            this.importExportService.importFromUrl(parameters.url).subscribe();
+            break;
+        }
+      });
+    });
+
     // listen to environments and enable/disable some menu entries
     this.store
       .select('environments')

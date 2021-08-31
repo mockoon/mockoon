@@ -35,5 +35,6 @@ export const IPCMainHandlerChannels = [
 export const IPCRendererHandlerChannels = [
   'APP_MENU',
   'APP_SERVER_EVENT',
-  'APP_UPDATE_AVAILABLE'
+  'APP_UPDATE_AVAILABLE',
+  'APP_CUSTOM_PROTOCOL'
 ];

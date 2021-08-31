@@ -16,7 +16,7 @@
   "browserslist": [
     "Chrome >= 80"
   ],
-  "main": "app.js",
+  "main": "./dist/app.js",
   "scripts": {
     "lint": "ng lint",
     "format": "prettier {src,test}/**/*.{ts,js,scss,html} --check",
@@ -35,7 +35,7 @@
     "build:dev:all": "npm run clean-dist && npm run build:dev:renderer && npm run build:dev:main",
     "build:ci:all": "npm run clean-dist && npm run build:ci:renderer && npm run build:ci:main",
     "build:prod:all": "npm run clean-dist && npm run build:prod:renderer && npm run build:prod:main",
-    "start": "electron ./dist --remote-debugging-port=8888",
+    "start": "electron . --remote-debugging-port=8888",
     "package:win": "npm run clean-packages && electron-builder --publish never --win --config electron-builder.json",
     "package:linux": "npm run clean-packages && electron-builder --publish never --linux --config electron-builder.json",
     "package:mac": "npm run clean-packages && electron-builder --publish never --mac --config electron-builder.json"
@@ -75,6 +75,7 @@
     "@angular/core": "12.2.1",
     "@angular/fire": "6.1.5",
     "@angular/forms": "12.2.1",
+    "@angular/localize": "12.2.1",
     "@angular/platform-browser": "12.2.1",
     "@angular/platform-browser-dynamic": "12.2.1",
     "@ng-bootstrap/ng-bootstrap": "10.0.0",

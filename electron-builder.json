@@ -3,8 +3,14 @@
   "productName": "Mockoon",
   "directories": {
     "output": "packages",
-    "app": "dist"
+    "buildResources": "build-res"
   },
+  "files": [
+    "package.json",
+    "dist/**/*",
+    "node_modules",
+    "build-res/icon_512x512x32.png"
+  ],
   "win": {
     "target": [{ "target": "nsis" }, { "target": "portable" }],
     "publisherName": "Guillaume Monnet",
@@ -22,8 +28,8 @@
     "artifactName": "mockoon.setup.${version}.${ext}",
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
-    "entitlements": "build/entitlements.mac.plist",
-    "entitlementsInherit": "build/entitlements.mac.plist"
+    "entitlements": "build-res/entitlements.mac.plist",
+    "entitlementsInherit": "build-res/entitlements.mac.plist"
   },
   "dmg": {
     "sign": false
@@ -44,7 +50,7 @@
       }
     ],
     "category": "Development",
-    "icon": "build",
+    "icon": "build-res",
     "artifactName": "mockoon-${version}.${ext}",
     "desktop": {
       "Name": "Mockoon",
@@ -52,5 +58,12 @@
       "Categories": "Development"
     }
   },
-  "afterSign": "scripts/notarize.js"
+  "afterSign": "scripts/notarize.js",
+  "protocols": [
+    {
+      "name": "Mockoon",
+      "schemes": ["mockoon"],
+      "role": "Editor"
+    }
+  ]
 }
