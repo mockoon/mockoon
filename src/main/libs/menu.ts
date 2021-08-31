@@ -246,6 +246,12 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
           shell.openExternal('https://hub.docker.com/u/mockoon');
         }
       },
+      {
+        label: 'Mock samples',
+        click: () => {
+          shell.openExternal('https://mockoon.com/mock-samples/');
+        }
+      },
       { type: 'separator' },
       {
         label: 'Show app data folder',
