@@ -1,5 +1,4 @@
 import { BrowserWindow, Menu, shell } from 'electron';
-import { info as logInfo } from 'electron-log';
 import * as windowState from 'electron-window-state';
 import { join as pathJoin } from 'path';
 import { argv } from 'process';
@@ -12,6 +11,17 @@ declare const isDev: boolean;
 
 // store URL received in open-url event when app is closed (macos only)
 let openUrlArgs: string[];
+
+const showMainWindow = (
+  mainWindowState: windowState.State,
+  mainWindow: BrowserWindow
+) => {
+  mainWindowState.manage(mainWindow);
+  // ensure focus, as manage function does not necessarily focus
+  mainWindow.show();
+
+  parseProtocolArgs(openUrlArgs || argv, mainWindow);
+};
 
 export const saveOpenUrlArgs = (url: string[]) => {
   openUrlArgs = url;
@@ -58,9 +68,7 @@ export const initMainWindow = () => {
   });
 
   if (isTesting) {
-    mainWindowState.manage(mainWindow);
-    // ensure focus, as manage function does not necessarily focus
-    mainWindow.show();
+    showMainWindow(mainWindowState, mainWindow);
   } else {
     // when main app finished loading, hide splashscreen and show the mainWindow
     // use two timeout as page is still assembling after "dom-ready" event
@@ -72,12 +80,7 @@ export const initMainWindow = () => {
 
         // adding a timeout diff (100ms) between splashscreen close and mainWindow.show to fix a bug: https://github.com/electron/electron/issues/27353
         setTimeout(() => {
-          mainWindowState.manage(mainWindow);
-          // ensure focus, as manage function does not necessarily focus
-          mainWindow.show();
-
-          logInfo('app load argv:' + JSON.stringify(argv));
-          parseProtocolArgs(openUrlArgs || argv, mainWindow);
+          showMainWindow(mainWindowState, mainWindow);
 
           // Open the DevTools in dev mode except when running functional tests
           if (isDev && !isTesting) {

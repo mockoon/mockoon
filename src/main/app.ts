@@ -69,7 +69,6 @@ if (!appLock) {
   // Someone tried to run a second instance, we should focus our window. Also triggered on windows when a custom protocol is triggered (mockoon://)
   app.on('second-instance', (event, args) => {
     if (process.platform === 'win32' || process.platform === 'linux') {
-      logInfo('second instance args:' + JSON.stringify(args));
       parseProtocolArgs(args, mainWindow);
     }
 
@@ -120,7 +119,6 @@ if (!appLock) {
 
   app.on('open-url', (event, url) => {
     event.preventDefault();
-    logInfo('open Url args: ' + url);
 
     // if mainWindow is not ready yet (macos startup), store the url in the custom protocol lib
     if (!mainWindow) {

@@ -8,12 +8,9 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { Logger } from '../classes/logger';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private logger = new Logger('[SERVICE][IMPORT-EXPORT]');
-
   constructor(
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
@@ -108,11 +105,9 @@ export class ApiService {
 
     // listen to custom protocol queries
     MainAPI.receive('APP_CUSTOM_PROTOCOL', (action, parameters) => {
-      this.logger.info('action: ' + action + ' parameters :' + parameters);
       this.zone.run(() => {
         switch (action) {
           case 'load-export-data':
-            this.logger.info('api service : ' + parameters.url);
             this.importExportService.importFromUrl(parameters.url).subscribe();
             break;
         }

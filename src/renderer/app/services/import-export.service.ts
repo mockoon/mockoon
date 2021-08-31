@@ -192,8 +192,14 @@ export class ImportExportService extends Logger {
     }
   }
 
+  /**
+   * Load data from an URL (used for custom protocol)
+   *
+   * @param url
+   * @returns
+   */
   public importFromUrl(url: string): Observable<Export & OldExport> {
-    this.logger.info('import initiated, url= ' + url);
+    this.logger.info(`Importing from URL: ${url}`);
 
     return this.http.get(url, { responseType: 'text' }).pipe(
       map<string, Export & OldExport>((data) => JSON.parse(data)),

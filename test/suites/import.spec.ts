@@ -235,4 +235,22 @@ describe('Environments import', () => {
       });
     });
   });
+
+  describe('Import with custom protocol mockoon://', () => {
+    const tests = new Tests('import', true, true, false);
+
+    it('should be able to import after a custom protocol URL was triggered', async () => {
+      // custom protocol cannot be directly tested (click on a link, app launch, etc) and require the app to be packaged.
+      tests.helpers.mockDialog('showSaveDialog', [
+        resolve('./tmp/storage/notion.json')
+      ]);
+      tests.app.webContents.send('APP_CUSTOM_PROTOCOL', 'load-export-data', {
+        url: 'https://raw.githubusercontent.com/mockoon/mock-samples/main/apis/notion.json'
+      });
+      await tests.app.client.pause(500);
+      await tests.helpers.assertActiveEnvironmentName(
+        'Notion API - Public Beta'
+      );
+    });
+  });
 });
