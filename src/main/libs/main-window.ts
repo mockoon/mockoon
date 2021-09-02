@@ -92,7 +92,7 @@ export const initMainWindow = () => {
   }
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/renderer/index.html`);
 
   // intercept all links and open in a new window
   mainWindow.webContents.on('new-window', (event, targetUrl) => {

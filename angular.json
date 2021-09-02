@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/renderer",
             "index": "src/renderer/index.html",
             "main": "src/renderer/main.ts",
             "tsConfig": "src/renderer/tsconfig.app.json",
