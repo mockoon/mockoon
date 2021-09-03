@@ -31,7 +31,7 @@
     "build:dev:renderer": "ng build --configuration=development --output-hashing=all",
     "build:ci:renderer": "ng build --configuration=ci",
     "build:prod:renderer": "ng build --configuration=production",
-    "build:watch:all": "concurrently \"npm run build:watch:renderer\" \"wait-on -d 10000 ./dist && npm run build:watch:main\"",
+    "build:watch:all": "npm run clean-dist && concurrently \"npm run build:watch:renderer\" \"npm run build:watch:main\"",
     "build:dev:all": "npm run clean-dist && npm run build:dev:renderer && npm run build:dev:main",
     "build:ci:all": "npm run clean-dist && npm run build:ci:renderer && npm run build:ci:main",
     "build:prod:all": "npm run clean-dist && npm run build:prod:renderer && npm run build:prod:main",

@@ -190,7 +190,7 @@ describe('Environments import', () => {
 
         tests.helpers.selectMenuEntry('IMPORT_CLIPBOARD');
 
-        await tests.app.client.pause(500);
+        await tests.app.client.pause(1000);
 
         await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.assertActiveEnvironmentName('Import new format 2');

@@ -49,7 +49,7 @@ export class Tests {
 
       this.app = new Application({
         path: electronPath,
-        waitTimeout: 1000,
+        waitTimeout: 2000,
         args: ['-r', join(__dirname, './electron-mocks.js'), '.'],
         webdriverOptions: {
           deprecationWarnings: false

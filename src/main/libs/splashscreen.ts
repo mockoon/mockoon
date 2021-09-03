@@ -22,7 +22,7 @@ export const createSplashScreen = () => {
     icon: pathJoin(__dirname, '/icon_512x512x32.png')
   });
 
-  splashScreen.loadURL(`file://${__dirname}/splashscreen.html`);
+  splashScreen.loadURL(`file://${__dirname}/renderer/splashscreen.html`);
 
   splashScreen.on('closed', () => {
     splashScreen.destroy();
