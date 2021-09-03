@@ -27,8 +27,6 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
   public appVersion = Config.appVersion;
   public changelog$: Observable<string>;
   private modalOptions: NgbModalOptions = {
-    backdrop: 'static',
-    centered: true,
     size: 'xl'
   };
 
@@ -76,9 +74,6 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
   }
 
   public showModal() {
-    this.modalService.open(this.modal, this.modalOptions).result.then(
-      () => {},
-      () => {}
-    );
+    this.modalService.open(this.modal, this.modalOptions);
   }
 }

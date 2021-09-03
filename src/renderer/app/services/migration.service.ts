@@ -1,42 +1,13 @@
 import { Injectable } from '@angular/core';
-import {
-  Environment,
-  Environments,
-  HighestMigrationId,
-  Migrations
-} from '@mockoon/commons';
-import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { Environment, HighestMigrationId, Migrations } from '@mockoon/commons';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
-import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
 export class MigrationService {
   private logger = new Logger('[SERVICE][MIGRATION]');
 
-  constructor(private settingsService: SettingsService, private store: Store) {}
-
-  /**
-   * Check if each environment needs to be migrated.
-   *
-   * @param environments - environments to migrate
-   */
-  public migrateEnvironments(
-    environments: Environments
-  ): Observable<Environments> {
-    // migration depends on settings being ready
-    return this.store.select('settings').pipe(
-      first((settings) => !!settings),
-      map(() => {
-        environments.forEach((environment) => {
-          this.migrateEnvironment(environment);
-        });
-
-        return environments;
-      })
-    );
-  }
+  constructor(private settingsService: SettingsService) {}
 
   /**
    * Migrate one environment.
@@ -49,6 +20,7 @@ export class MigrationService {
       this.logger.info(
         `Migrating environment ${environment.uuid} starting at ${migrationStartId}`
       );
+
       Migrations.forEach((migration) => {
         if (migration.id > migrationStartId) {
           migration.migrationFunction(environment);

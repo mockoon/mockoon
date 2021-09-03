@@ -322,4 +322,56 @@ describe('Schema validation', () => {
       expect(envContent.routes[0].responses[0].uuid).to.be.a.uuid('v4');
     });
   });
+
+  describe('Mockoon format identifier', () => {
+    const tests = new Tests(
+      'schema-validation/missing-identifier',
+      true,
+      true,
+      false
+    );
+
+    it('should prompt before opening an environment where identifier (lastmigration) is missing', async () => {
+      await fs.copyFile(
+        './test/data/schema-validation/missing-identifier/env-to-load.json',
+        './tmp/storage/env-to-load.json'
+      );
+      tests.helpers.mockDialog('showOpenDialog', [
+        resolve('./tmp/storage/env-to-load.json')
+      ]);
+      await tests.helpers.openEnvironment();
+
+      await tests.app.client.waitUntilTextExists(
+        '.modal-title',
+        'Confirm file opening'
+      );
+    });
+
+    it('should not open the file if cancel is clicked', async () => {
+      await tests.helpers.elementClick('.modal-footer .btn:last-of-type');
+      await tests.helpers.countEnvironments(0);
+    });
+
+    it('should open the file and fix the schema if confirm is clicked', async () => {
+      tests.helpers.mockDialog('showOpenDialog', [
+        resolve('./tmp/storage/env-to-load.json')
+      ]);
+      await tests.helpers.openEnvironment();
+
+      await tests.app.client.waitUntilTextExists(
+        '.modal-title',
+        'Confirm file opening'
+      );
+      await tests.helpers.elementClick('.modal-footer .btn:first-of-type');
+      await tests.helpers.countEnvironments(1);
+      await tests.helpers.assertActiveEnvironmentName('missing identifier');
+
+      await tests.helpers.waitForAutosave();
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/env-to-load.json',
+        ['lastMigration'],
+        [HighestMigrationId]
+      );
+    });
+  });
 });

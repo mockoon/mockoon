@@ -80,10 +80,7 @@ export class DuplicateRouteModalComponent implements OnDestroy, AfterViewInit {
   }
 
   private openModal() {
-    this.modalService.open(this.modal, {
-      backdrop: 'static',
-      centered: true
-    });
+    this.modalService.open(this.modal);
   }
 
   private extractRouteToDuplicate(state: DuplicateRouteToAnotherEnvironment) {

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   Environment,
-  EnvironmentSchema,
   Header,
   HighestMigrationId,
   Method,
@@ -158,15 +157,10 @@ export class EnvironmentsService extends Logger {
       ),
       tap((environmentsData) => {
         environmentsData.forEach((environmentData) => {
-          const validatedEnvironment =
+          environmentData.environment =
             this.dataService.migrateAndValidateEnvironment(
               environmentData.environment
             );
-          // deduplicate UUIDs
-          environmentData.environment = this.dataService.deduplicateUUIDs(
-            validatedEnvironment,
-            this.store.get('environments')
-          );
 
           this.store.update(
             addEnvironmentAction(
@@ -318,15 +312,9 @@ export class EnvironmentsService extends Logger {
         return EMPTY;
       }),
       tap((filePath) => {
-        let newEnvironment = environment
-          ? EnvironmentSchema.validate(environment).value
+        const newEnvironment = environment
+          ? environment
           : this.schemasBuilderService.buildEnvironment();
-
-        // deduplicate UUIDs
-        newEnvironment = this.dataService.deduplicateUUIDs(
-          newEnvironment,
-          this.store.get('environments')
-        );
 
         this.store.update(
           addEnvironmentAction(newEnvironment, { filePath, afterUUID })
@@ -397,6 +385,18 @@ export class EnvironmentsService extends Logger {
       switchMap((filePath) =>
         this.storageService.loadData<Environment>(null, filePath).pipe(
           tap((environment) => {
+            if (environment.lastMigration === undefined) {
+              this.eventsService.confirmModalEvents.next({
+                title: 'Confirm file opening',
+                text: 'This file does not seem to be a valid Mockoon file. Open it anyway?',
+                confirmCallback: () => {
+                  this.validateAndAddToStore(environment, filePath);
+                }
+              });
+
+              return;
+            }
+
             if (environment.lastMigration > HighestMigrationId) {
               this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
                 name: environment.name,
@@ -406,22 +406,7 @@ export class EnvironmentsService extends Logger {
               return;
             }
 
-            let validatedEnvironment =
-              this.dataService.migrateAndValidateEnvironment(environment);
-
-            // deduplicate UUIDs
-            validatedEnvironment = this.dataService.deduplicateUUIDs(
-              validatedEnvironment,
-              this.store.get('environments')
-            );
-
-            this.store.update(
-              addEnvironmentAction(validatedEnvironment, {
-                filePath,
-                afterUUID: null
-              })
-            );
-            this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
+            this.validateAndAddToStore(environment, filePath);
           })
         )
       )
@@ -804,5 +789,24 @@ export class EnvironmentsService extends Logger {
     ).path;
 
     MainAPI.send('APP_SHOW_FILE', environmentPath);
+  }
+
+  /**
+   * Validate/migrate and add the environment to the store.
+   *
+   * @param environment
+   * @param filePath
+   */
+  private validateAndAddToStore(environment: Environment, filePath: string) {
+    const validatedEnvironment =
+      this.dataService.migrateAndValidateEnvironment(environment);
+
+    this.store.update(
+      addEnvironmentAction(validatedEnvironment, {
+        filePath,
+        afterUUID: null
+      })
+    );
+    this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
   }
 }

@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   NgbConfig,
   NgbDropdownConfig,
+  NgbModalConfig,
   NgbModule,
   NgbTooltipConfig,
   NgbTypeaheadConfig
@@ -26,6 +27,7 @@ import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { NgxMaskModule } from 'ngx-mask';
 import { BannerComponent } from 'src/renderer/app/components/banner.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/changelog-modal.component';
+import { ConfirmModalComponent } from 'src/renderer/app/components/confirm-modal/confirm-modal.component';
 import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/context-menu.component';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { EditorModalComponent } from 'src/renderer/app/components/editor-modal/editor-modal.component';
@@ -47,6 +49,7 @@ import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/renderer/app/modules-config/markdown.config';
 import { NgbDropdownConfigFactory } from 'src/renderer/app/modules-config/ngb-dropdown.config';
+import { NgbModalConfigFactory } from 'src/renderer/app/modules-config/ngb-modal.config';
 import { NgbTooltipConfigFactory } from 'src/renderer/app/modules-config/ngb-tooltip.config';
 import { NgbTypeaheadConfigFactory } from 'src/renderer/app/modules-config/ngb-typeahead.config';
 import { NgbConfigFactory } from 'src/renderer/app/modules-config/ngb.config';
@@ -76,6 +79,10 @@ const providers: Provider[] = [
   {
     provide: NgbDropdownConfig,
     useFactory: NgbDropdownConfigFactory
+  },
+  {
+    provide: NgbModalConfig,
+    useFactory: NgbModalConfigFactory
   }
 ];
 
@@ -96,6 +103,7 @@ if (environment.useFirebaseEmulator) {
     SettingsModalComponent,
     ChangelogModalComponent,
     EditorModalComponent,
+    ConfirmModalComponent,
     EnvironmentLogsComponent,
     HeadersListComponent,
     BannerComponent,
