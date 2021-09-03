@@ -42,12 +42,7 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
       .pipe(filter<Settings>(Boolean), first())
       .subscribe((settings) => {
         if (!settings.welcomeShown) {
-          this.modalService
-            .open(this.modal, { backdrop: 'static', centered: true })
-            .result.then(
-              () => {},
-              () => {}
-            );
+          this.modalService.open(this.modal);
         }
       });
   }

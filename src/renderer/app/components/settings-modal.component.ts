@@ -48,12 +48,9 @@ export class SettingsModalComponent implements OnInit {
   }
 
   public showModal() {
-    this.modalService
-      .open(this.modal, { backdrop: 'static', centered: true, size: 'lg' })
-      .result.then(
-        () => {},
-        () => {}
-      );
+    this.modalService.open(this.modal, {
+      size: 'lg'
+    });
   }
 
   public openWikiLink(linkName: string) {

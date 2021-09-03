@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   BINARY_BODY,
   Environment,
-  Environments,
   EnvironmentSchema,
   HighestMigrationId,
   Route,
@@ -44,50 +43,16 @@ export class DataService extends Logger {
         name: environment.name,
         uuid: environment.uuid
       });
+
       migratedEnvironment = environment;
       migratedEnvironment.lastMigration = HighestMigrationId;
     }
 
-    return EnvironmentSchema.validate(migratedEnvironment).value;
-  }
+    const validatedEnvironment =
+      EnvironmentSchema.validate(migratedEnvironment).value;
 
-  public deduplicateUUIDs(
-    newEnvironment: Environment,
-    environments: Environments
-  ): Environment {
-    const UUIDs: { [key in string]: true } = {};
-    environments.forEach((environment) => {
-      UUIDs[environment.uuid] = true;
-      environment.routes.forEach((route) => {
-        UUIDs[route.uuid] = true;
-
-        route.responses.forEach((response) => {
-          UUIDs[response.uuid] = true;
-        });
-      });
-    });
-
-    if (UUIDs[newEnvironment.uuid]) {
-      newEnvironment.uuid = uuid();
-    }
-    UUIDs[newEnvironment.uuid] = true;
-
-    newEnvironment.routes.forEach((route) => {
-      if (UUIDs[route.uuid]) {
-        route.uuid = uuid();
-      }
-
-      UUIDs[route.uuid] = true;
-
-      route.responses.forEach((response) => {
-        if (UUIDs[response.uuid]) {
-          response.uuid = uuid();
-        }
-        UUIDs[response.uuid] = true;
-      });
-    });
-
-    return newEnvironment;
+    // deduplicate UUIDs
+    return this.deduplicateUUIDs(validatedEnvironment);
   }
 
   /**
@@ -197,5 +162,51 @@ export class DataService extends Logger {
     }
 
     return body;
+  }
+
+  /**
+   * Verify that an environment does not contain any duplicated UUID (verify also against all other loaded envs).
+   * Will renew UUIDs if needed.
+   *
+   * @param newEnvironment
+   * @param environments
+   * @returns
+   */
+  private deduplicateUUIDs(newEnvironment: Environment): Environment {
+    const UUIDs: { [key in string]: true } = {};
+    const environments = this.store.get('environments');
+
+    environments.forEach((environment) => {
+      UUIDs[environment.uuid] = true;
+      environment.routes.forEach((route) => {
+        UUIDs[route.uuid] = true;
+
+        route.responses.forEach((response) => {
+          UUIDs[response.uuid] = true;
+        });
+      });
+    });
+
+    if (UUIDs[newEnvironment.uuid]) {
+      newEnvironment.uuid = uuid();
+    }
+    UUIDs[newEnvironment.uuid] = true;
+
+    newEnvironment.routes.forEach((route) => {
+      if (UUIDs[route.uuid]) {
+        route.uuid = uuid();
+      }
+
+      UUIDs[route.uuid] = true;
+
+      route.responses.forEach((response) => {
+        if (UUIDs[response.uuid]) {
+          response.uuid = uuid();
+        }
+        UUIDs[response.uuid] = true;
+      });
+    });
+
+    return newEnvironment;
   }
 }

@@ -45,16 +45,9 @@ export class EditorModalComponent implements OnInit, AfterViewInit {
     this.eventsService.editorModalEvents
       .pipe(
         tap((editorModalEvent) => {
-          this.modalService
-            .open(this.modal, {
-              backdrop: 'static',
-              centered: true,
-              size: 'lg'
-            })
-            .result.then(
-              () => {},
-              () => {}
-            );
+          this.modalService.open(this.modal, {
+            size: 'lg'
+          });
 
           this.data$.next({
             content: editorModalEvent.content,

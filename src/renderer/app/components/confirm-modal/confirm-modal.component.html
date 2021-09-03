@@ -1,0 +1,20 @@
+<ng-template #modal let-close="close">
+  <ng-container *ngIf="confirmModalEvent$ | async as confirmModalEvent">
+    <div class="modal-header">
+      <h4 class="modal-title">{{ confirmModalEvent?.title }}</h4>
+    </div>
+    <div class="modal-body">{{ confirmModalEvent?.text }}</div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="close(confirmModalEvent.confirmCallback)"
+      >
+        Confirm
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="close()">
+        Cancel
+      </button>
+    </div>
+  </ng-container>
+</ng-template>

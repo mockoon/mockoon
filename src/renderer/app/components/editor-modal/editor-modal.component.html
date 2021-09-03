@@ -1,4 +1,4 @@
-<ng-template #modal let-close="close" let-d="dismiss">
+<ng-template #modal let-close="close">
   <ng-container *ngIf="data$ | async as data">
     <div class="modal-header">
       <h4 class="modal-title">{{ data.title | titlecase }}</h4>

@@ -404,32 +404,29 @@ export class ImportExportService extends Logger {
           return;
         }
 
-        this.migrationService
-          .migrateEnvironments([data.item])
-          .subscribe(([migratedEnvironment]) => {
-            this.logger.info(
-              `Importing environment ${migratedEnvironment.uuid}`
-            );
+        const migratedEnvironment =
+          this.dataService.migrateAndValidateEnvironment(data.item);
 
-            this.environmentsService
-              .addEnvironment(migratedEnvironment)
-              .subscribe();
-          });
+        this.logger.info(`Importing environment ${migratedEnvironment.uuid}`);
+
+        this.environmentsService
+          .addEnvironment(migratedEnvironment)
+          .subscribe();
       } else if (
         // routes cannot be migrated yet so we check the appVersion
         data.type === 'route' &&
         dataToImportVersion === Config.appVersion
       ) {
-        // other cases do not renew UUIDs as duplicated ones will be handled by the env service. Here we don't really care about always renewing the uuids for single routes
+        data.item = RouteSchema.validate(data.item).value;
+
+        // other cases do not renew UUIDs as duplicated ones will be handled by the data service. Here we don't really care about always renewing the uuids for single routes
         data.item = this.dataService.renewRouteUUIDs(data.item);
 
         this.logger.info(`Importing route ${data.item.uuid}`);
 
         // if has a current environment append imported route
         if (this.store.get('activeEnvironmentUUID')) {
-          this.store.update(
-            RouteSchema.validate(addRouteAction(data.item)).value
-          );
+          this.store.update(addRouteAction(data.item));
         } else {
           const newEnvironment: Environment = {
             ...this.schemasBuilderService.buildEnvironment(),
