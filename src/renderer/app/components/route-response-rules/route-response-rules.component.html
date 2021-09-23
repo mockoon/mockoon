@@ -1,12 +1,12 @@
-<ng-container *ngIf="routeResponse$ | async">
-  <ng-container [formGroup]="form">
-    <div class="rules mt-2 d-flex">
+<ng-container *ngIf='routeResponse$ | async'>
+  <ng-container [formGroup]='form'>
+    <div class='rules mt-2 d-flex'>
       <ng-container *ngIf="form.get('rules').value.length > 1">
-        <div class="rules-operator d-flex flex-column justify-content-center">
-          <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <ng-container *ngFor="let rulesOperatorsItem of rulesOperatorsList">
+        <div class='rules-operator d-flex flex-column justify-content-center'>
+          <div class='btn-group btn-group-toggle' data-toggle='buttons'>
+            <ng-container *ngFor='let rulesOperatorsItem of rulesOperatorsList'>
               <label
-                class="btn btn-xs rules-operator-{{ rulesOperatorsItem }}"
+                class='btn btn-xs rules-operator-{{ rulesOperatorsItem }}'
                 [ngClass]="{
                   active:
                     rulesOperatorsItem === form.get('rulesOperator').value,
@@ -17,11 +17,11 @@
                 }"
               >
                 <input
-                  type="radio"
-                  formControlName="rulesOperator"
-                  id="rulesOperators{{ rulesOperatorsItem }}"
-                  [value]="rulesOperatorsItem"
-                  autocomplete="off"
+                  type='radio'
+                  formControlName='rulesOperator'
+                  id='rulesOperators{{ rulesOperatorsItem }}'
+                  [value]='rulesOperatorsItem'
+                  autocomplete='off'
                   [checked]="
                     rulesOperatorsItem === form.get('rulesOperator').value
                   "
@@ -32,52 +32,52 @@
           </div>
         </div>
 
-        <div class="rules-bracket"></div>
+        <div class='rules-bracket'></div>
       </ng-container>
 
       <div
-        class="rules-list flex-grow-1"
+        class='rules-list flex-grow-1'
         cdkDropList
-        (cdkDropListDropped)="reorderResponseRules($event)"
+        (cdkDropListDropped)='reorderResponseRules($event)'
       >
-        <ng-container formArrayName="rules">
+        <ng-container formArrayName='rules'>
           <div
-            class="rule-item"
+            class='rule-item'
             *ngFor="
               let rule of form.get('rules')['controls'];
               index as ruleIndex
             "
-            [formGroupName]="ruleIndex"
+            [formGroupName]='ruleIndex'
             cdkDrag
-            cdkDragLockAxis="y"
-            cdkDragBoundary=".rules-list"
+            cdkDragLockAxis='y'
+            cdkDragBoundary='.rules-list'
           >
-            <div class="col form-inline">
+            <div class='col form-inline'>
               <select
-                class="custom-select col-3 mr-1"
-                formControlName="target"
+                class='custom-select col-3 mr-1'
+                formControlName='target'
                 #targetFormControl
               >
                 <option
-                  *ngFor="let responseRuleTarget of responseRuleTargets"
-                  [value]="responseRuleTarget.code"
-                  [selected]="
+                  *ngFor='let responseRuleTarget of responseRuleTargets'
+                  [value]='responseRuleTarget.code'
+                  [selected]='
                     targetFormControl.value === responseRuleTarget.code
-                  "
+                  '
                 >
                   {{ responseRuleTarget.text }}
                 </option>
               </select>
 
               <input
-                type="text"
-                class="form-control col-3"
+                type='text'
+                class='form-control col-3 mr-1'
                 [placeholder]="
                   modifierPlaceholders[
                     form.get(['rules', ruleIndex, 'target']).value
                   ] || ''
                 "
-                formControlName="modifier"
+                formControlName='modifier'
                 [attr.disabled]="
                   form.get(['rules', ruleIndex, 'target']).value ===
                   'request_number'
@@ -86,58 +86,53 @@
                 "
               />
 
-              <div class="input-group-prepend">
-                <span
-                  class="input-group-text"
-                  [ngbTooltip]="
-                    'equals or includes (if ' +
-                    (form.get(['rules', ruleIndex, 'modifier']).value ||
-                      'name') +
-                    ' is an array)'
-                  "
-                  >=</span
+              <select class='custom-select col-2 mr-1'
+                      formControlName='operator'
+                      #operatorFormControl
+              >
+                <option
+                  *ngFor='let responseRuleOperator of responseRuleOperators'
+                  [value]='responseRuleOperator.code'
+                  [selected]='
+              operatorFormControl.value === responseRuleOperator.code
+              '
                 >
-              </div>
+                  {{ responseRuleOperator.text }}
+                </option>
+              </select>
+
 
               <input
-                type="text"
-                class="form-control col-2"
-                placeholder="value"
-                formControlName="value"
+                type='text'
+                class='form-control col-2'
+                placeholder='value'
+                formControlName='value'
+
+                [attr.disabled]="
+                        form.get(['rules', ruleIndex, 'operator']) && form.get(['rules', ruleIndex, 'operator']).value ===
+                        'null'
+                          ? true
+                          : null"
               />
 
-              <div class="custom-control custom-checkbox ml-2">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="isRegex{{ ruleIndex }}"
-                  formControlName="isRegex"
-                />
-                <label
-                  class="custom-control-label"
-                  for="isRegex{{ ruleIndex }}"
-                  ngbTooltip="Value is a regex"
-                  >(.*)</label
-                >
-              </div>
 
-              <div class="input-group-prepend clickable ml-auto">
+              <div class='input-group-prepend clickable ml-auto'>
                 <span
-                  class="input-group-text p-1 text-danger"
-                  (click)="removeRule(ruleIndex)"
-                  ngbTooltip="Remove"
-                  ><i class="material-icons">delete</i></span
+                  class='input-group-text p-1 text-danger'
+                  (click)='removeRule(ruleIndex)'
+                  ngbTooltip='Remove'
+                ><i class='material-icons'>delete</i></span
                 >
               </div>
 
               <div
                 *ngIf="form.get('rules').value.length > 1"
-                class="input-group-prepend clickable"
-                ngbTooltip="Reorder"
+                class='input-group-prepend clickable'
+                ngbTooltip='Reorder'
                 cdkDragHandle
               >
-                <span class="input-group-text p-1 cursor-grab text-muted">
-                  <i class="material-icons">drag_indicator</i>
+                <span class='input-group-text p-1 cursor-grab text-muted'>
+                  <i class='material-icons'>drag_indicator</i>
                 </span>
               </div>
             </div>
@@ -145,14 +140,14 @@
         </ng-container>
       </div>
     </div>
-    <div class="d-flex align-items-center mt-2">
-      <button type="button" class="btn btn-link btn-icon" (click)="addRule()">
-        <i class="material-icons text-success">add_box</i> Add rule
+    <div class='d-flex align-items-center mt-2'>
+      <button type='button' class='btn btn-link btn-icon' (click)='addRule()'>
+        <i class='material-icons text-success'>add_box</i> Add rule
       </button>
-      <ng-container *ngIf="activeRoute$ | async as activeRoute">
+      <ng-container *ngIf='activeRoute$ | async as activeRoute'>
         <div
-          *ngIf="activeRoute.randomResponse || activeRoute.sequentialResponse"
-          class="warning-message ml-auto text-center mt-1"
+          *ngIf='activeRoute.randomResponse || activeRoute.sequentialResponse'
+          class='warning-message ml-auto text-center mt-1'
         >
           Activating random or sequential responses disable the rules
         </div>

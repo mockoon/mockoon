@@ -126,7 +126,7 @@ export class SchemasBuilderService {
                   target: 'params',
                   modifier: 'param1',
                   value: 'xyz',
-                  isRegex: false
+                  operator: 'equals'
                 }
               ]
             },
@@ -140,7 +140,7 @@ export class SchemasBuilderService {
                   target: 'params',
                   modifier: 'param1',
                   value: '^(?!.*xyz).*$',
-                  isRegex: true
+                  operator: 'regex'
                 }
               ]
             }
