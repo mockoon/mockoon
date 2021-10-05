@@ -25,7 +25,9 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Cyhung
 - Dwi Satria
 - Efe
+- Emadashi
 - François Grémont
+- Jakub Bartkowiak
 - Jakub Ślusarski
 - Jeremy
 - John
@@ -41,6 +43,8 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Pedro
 - Rafael Braga Nanes
 - Riaz
+- Roybarberuk
+- Samer Samer
 - Samja666
 - Sander 
 - Sebastián Díaz
@@ -52,6 +56,7 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Vetle Økland
 - Victor Castro
 - Volker Richert
+- Xutzin
 - Yuemuc
 
 (List from GitHub one-time sponsors and [Buy Me A Coffee](https://www.buymeacoffee.com/255kb) page)
