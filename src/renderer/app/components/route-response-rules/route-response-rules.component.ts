@@ -27,6 +27,7 @@ import { MoveArrayItem } from 'src/renderer/app/libs/utils.lib';
 import { SelectOptionsList } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
+import { ResponseRuleOperators } from '../../../../../../commons/src';
 
 @Component({
   selector: 'app-route-response-rules',
@@ -49,6 +50,12 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { code: 'header', text: 'Header' },
     { code: 'params', text: 'Route params' },
     { code: 'request_number', text: 'Request number (starting at 1)' }
+  ];
+  public responseRuleOperators: SelectOptionsList<ResponseRuleOperators> = [
+    { code: 'equals', text: 'equals' },
+    { code: 'regex', text: 'regex match' },
+    { code: 'null', text: 'null' },
+    { code: 'empty_array', text: 'empty array' }
   ];
   public modifierPlaceholders = {
     body: 'Object path or empty for full body',

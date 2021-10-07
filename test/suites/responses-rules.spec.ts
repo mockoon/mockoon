@@ -35,7 +35,7 @@ describe('Responses rules', () => {
         modifier: 'userid',
         target: 'params',
         value: '10',
-        isRegex: false
+        operator: 'equals'
       });
 
       await tests.helpers.waitForAutosave();
@@ -56,7 +56,7 @@ describe('Responses rules', () => {
         modifier: 'userid',
         target: 'query',
         value: '5',
-        isRegex: false
+        operator: 'equals'
       });
 
       await tests.helpers.waitForAutosave();
@@ -76,7 +76,7 @@ describe('Responses rules', () => {
         modifier: 'Accept',
         target: 'header',
         value: 'application/xhtml+xml',
-        isRegex: false
+        operator: 'equals'
       });
 
       await tests.helpers.waitForAutosave();
@@ -393,14 +393,14 @@ describe('Responses rules', () => {
         modifier: 'param1',
         target: 'params',
         value: 'param1value',
-        isRegex: false
+        operator: 'equals'
       });
       await tests.helpers.assertRulesOperatorPresence(true);
       await tests.helpers.addResponseRule({
         modifier: 'qp1',
         target: 'query',
         value: 'qp1value',
-        isRegex: false
+        operator: 'equals'
       });
       await tests.helpers.assertRulesOperatorPresence();
       await tests.helpers.assertRulesOperator('OR');
@@ -413,19 +413,19 @@ describe('Responses rules', () => {
         modifier: 'param1',
         target: 'params',
         value: 'param1value2',
-        isRegex: false
+        operator: 'equals'
       });
       await tests.helpers.addResponseRule({
         modifier: 'qp2',
         target: 'query',
         value: 'qp2value',
-        isRegex: false
+        operator: 'equals'
       });
       await tests.helpers.addResponseRule({
         modifier: 'qp3',
         target: 'query',
         value: 'qp3value',
-        isRegex: false
+        operator: 'equals'
       });
       await tests.helpers.assertRulesOperatorPresence();
       await tests.helpers.assertRulesOperator('OR');
