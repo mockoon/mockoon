@@ -159,7 +159,7 @@ describe('UI interactions', () => {
         modifier: 'var',
         target: 'params',
         value: '10',
-        isRegex: false
+        operator: 'equals'
       });
 
       // this is needed for the tab re-render to complete
@@ -171,7 +171,7 @@ describe('UI interactions', () => {
         modifier: 'test',
         target: 'query',
         value: 'true',
-        isRegex: false
+        operator: 'equals'
       });
 
       // this is needed for the tab re-render to complete
@@ -192,7 +192,7 @@ describe('UI interactions', () => {
         modifier: 'var',
         target: 'params',
         value: '10',
-        isRegex: false
+        operator: 'equals'
       });
 
       // this is needed for the tab re-render to complete

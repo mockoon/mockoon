@@ -71,7 +71,7 @@
 
               <input
                 type="text"
-                class="form-control col-3"
+                class="form-control col-3 mr-1"
                 [placeholder]="
                   modifierPlaceholders[
                     form.get(['rules', ruleIndex, 'target']).value
@@ -86,40 +86,39 @@
                 "
               />
 
-              <div class="input-group-prepend">
-                <span
-                  class="input-group-text"
-                  [ngbTooltip]="
-                    'equals or includes (if ' +
-                    (form.get(['rules', ruleIndex, 'modifier']).value ||
-                      'name') +
-                    ' is an array)'
+              <select
+                class="custom-select col-2 mr-1"
+                formControlName="operator"
+                #operatorFormControl
+              >
+                <option
+                  *ngFor="let responseRuleOperator of responseRuleOperators"
+                  [value]="responseRuleOperator.code"
+                  [selected]="
+                    operatorFormControl.value === responseRuleOperator.code
                   "
-                  >=</span
                 >
-              </div>
+                  {{ responseRuleOperator.text }}
+                </option>
+              </select>
 
               <input
                 type="text"
                 class="form-control col-2"
-                placeholder="value"
+                [placeholder]="
+                  valuePlaceholders[
+                    form.get(['rules', ruleIndex, 'operator']).value
+                  ] || ''
+                "
                 formControlName="value"
+                [attr.disabled]="
+                  form.get(['rules', ruleIndex, 'operator']).value === 'null' ||
+                  form.get(['rules', ruleIndex, 'operator']).value ===
+                    'empty_array'
+                    ? true
+                    : null
+                "
               />
-
-              <div class="custom-control custom-checkbox ml-2">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="isRegex{{ ruleIndex }}"
-                  formControlName="isRegex"
-                />
-                <label
-                  class="custom-control-label"
-                  for="isRegex{{ ruleIndex }}"
-                  ngbTooltip="Value is a regex"
-                  >(.*)</label
-                >
-              </div>
 
               <div class="input-group-prepend clickable ml-auto">
                 <span

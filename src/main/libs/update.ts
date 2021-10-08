@@ -34,7 +34,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
     'https://api.github.com/repos/mockoon/mockoon/releases/latest';
   const githubBinaryDownloadUrl =
     'https://github.com/mockoon/mockoon/releases/download/';
-  let releaseResponse;
+  let releaseResponse: { data: { tag_name: string } };
 
   try {
     // try to remove existing old update
@@ -46,7 +46,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
 
   try {
     releaseResponse = await axios.get(githubLatestReleaseUrl);
-  } catch (error) {
+  } catch (error: any) {
     logError(`[MAIN][UPDATE]Error while checking for update: ${error.message}`);
 
     return;
@@ -81,7 +81,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
         logInfo('[MAIN][UPDATE]Binary file ready');
         notifyUpdate(mainWindow);
         updateAvailableVersion = latestVersion;
-      } catch (error) {
+      } catch (error: any) {
         logError(
           `[MAIN][UPDATE]Error while downloading the binary: ${error.message}`
         );

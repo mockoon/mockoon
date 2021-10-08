@@ -171,4 +171,24 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 18', () => {
+    const filesPath = 'migrations/18';
+    const tests = new Tests(filesPath);
+
+    it('Should remove `isRegex` from rules and `operator` property to "equals" by default or "regex" if `isRegex` was true', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environment-0.json',
+        [
+          'routes.0.responses.0.rules.0.isRegex',
+          'routes.0.responses.0.rules.0.operator',
+          'routes.0.responses.0.rules.1.isRegex',
+          'routes.0.responses.0.rules.1.operator'
+        ],
+        [undefined, 'equals', undefined, 'regex']
+      );
+    });
+  });
 });

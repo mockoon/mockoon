@@ -8,7 +8,7 @@ export type Banner = {
   iconName?: string;
 };
 
-export type RemoteConfig = {
+export type RemoteConfigData = {
   banner: Banner;
   enableTelemetry: boolean;
   geoipEndpoint: string;

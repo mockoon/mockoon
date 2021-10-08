@@ -1,6 +1,6 @@
 {
   "uuid": "867fe03b-01f9-4c6c-a6bc-30000dddba46",
-  "lastMigration": 17,
+  "lastMigration": 18,
   "name": "Alt export env",
   "endpointPrefix": "",
   "latency": 0,

@@ -1,6 +1,6 @@
 {
   "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-  "lastMigration": 17,
+  "lastMigration": 18,
   "name": "Demo users API V2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -55,7 +55,7 @@
               "target": "params",
               "modifier": "id",
               "value": "1",
-              "isRegex": false
+              "operator": "equals"
             }
           ],
           "rulesOperator": "OR",
@@ -76,7 +76,7 @@
               "target": "params",
               "modifier": "id",
               "value": "2",
-              "isRegex": false
+              "operator": "equals"
             }
           ],
           "rulesOperator": "OR",
@@ -108,7 +108,7 @@
               "target": "body",
               "modifier": "firstname",
               "value": ".+",
-              "isRegex": true
+              "operator": "regex"
             }
           ],
           "rulesOperator": "OR",
@@ -129,7 +129,7 @@
               "target": "body",
               "modifier": "firstname",
               "value": "^$",
-              "isRegex": true
+              "operator": "regex"
             }
           ],
           "rulesOperator": "OR",
@@ -161,7 +161,7 @@
               "target": "body",
               "modifier": "firstname",
               "value": ".*",
-              "isRegex": true
+              "operator": "regex"
             }
           ],
           "rulesOperator": "OR",
