@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallableData } from '@angular/fire/functions';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
 import {
   BehaviorSubject,
@@ -54,7 +54,7 @@ export class TelemetryService {
     private http: HttpClient,
     private localStorageService: LocalStorageService,
     private store: Store,
-    private firebaseFunctions: AngularFireFunctions
+    private firebaseFunctions: Functions
   ) {}
 
   /**
@@ -112,12 +112,13 @@ export class TelemetryService {
       switchMap((v) => {
         const environments = this.store.get('environments');
 
-        return this.firebaseFunctions
-          .httpsCallable(Config.telemetry.functionName)({
-            ...this.session,
-            environmentsCount: environments.length
-          })
-          .pipe(catchError(() => of(true)));
+        return httpsCallableData(
+          this.firebaseFunctions,
+          Config.telemetry.functionName
+        )({
+          ...this.session,
+          environmentsCount: environments.length
+        }).pipe(catchError(() => of(true)));
       }),
       tap(() => {
         this.sessionInProgress$.next(false);

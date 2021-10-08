@@ -1,28 +1,28 @@
 import { Injectable } from '@angular/core';
 import {
-  AngularFireRemoteConfig,
-  filterFresh,
-  Parameter
+  fetchAndActivate,
+  getValueChanges,
+  RemoteConfig
 } from '@angular/fire/remote-config';
-import { Observable } from 'rxjs';
-import { filter, map, pluck, shareReplay, take } from 'rxjs/operators';
-import { RemoteConfig } from 'src/renderer/app/models/remote-config.model';
+import { from, Observable } from 'rxjs';
+import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { RemoteConfigData } from 'src/renderer/app/models/remote-config.model';
 import { environment } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RemoteConfigService {
-  private cache$: Observable<RemoteConfig>;
+  private cache$: Observable<RemoteConfigData>;
 
-  constructor(private remoteConfig: AngularFireRemoteConfig) {}
+  constructor(private firebaseRemoteConfig: RemoteConfig) {}
 
   /**
    * Get a remote config specific property
    *
    * @param path
    */
-  public get<T extends keyof RemoteConfig>(
+  public get<T extends keyof RemoteConfigData>(
     path: T
-  ): Observable<RemoteConfig[T]> {
+  ): Observable<RemoteConfigData[T]> {
     return this.getConfig().pipe(pluck(path));
   }
 
@@ -41,12 +41,12 @@ export class RemoteConfigService {
   /**
    * Fetch the remote config, filter per environment, convert to object
    */
-  private fetchConfig(): Observable<RemoteConfig> {
-    return this.remoteConfig.changes.pipe(
-      filterFresh(43_200_000),
-      filter((param: Parameter) => param.key === environment.remoteConfig),
-      take(1),
-      map((parameter) => JSON.parse(parameter.asString()))
+  private fetchConfig(): Observable<any> {
+    return from(fetchAndActivate(this.firebaseRemoteConfig)).pipe(
+      switchMap(() =>
+        getValueChanges(this.firebaseRemoteConfig, environment.remoteConfig)
+      ),
+      map((config) => JSON.parse(config.asString()))
     );
   }
 }

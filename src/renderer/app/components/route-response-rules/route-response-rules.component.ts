@@ -12,6 +12,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import {
   LogicalOperators,
   ResponseRule,
+  ResponseRuleOperators,
   ResponseRuleTargets,
   Route,
   RouteResponse
@@ -27,7 +28,6 @@ import { MoveArrayItem } from 'src/renderer/app/libs/utils.lib';
 import { SelectOptionsList } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
-import { ResponseRuleOperators } from '../../../../../../commons/src';
 
 @Component({
   selector: 'app-route-response-rules',
@@ -63,6 +63,12 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     header: 'Header name',
     params: 'Route parameter name',
     request_number: ''
+  };
+  public valuePlaceholders = {
+    equals: 'Value',
+    regex: 'Regex (without /../)',
+    null: '',
+    empty_array: ''
   };
   public rulesOperatorsList: LogicalOperators[] = ['OR', 'AND'];
   private listenToChanges = true;

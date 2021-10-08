@@ -1,17 +1,16 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
+import { ErrorHandler, NgModule, SecurityContext } from '@angular/core';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import {
-  ErrorHandler,
-  NgModule,
-  Provider,
-  SecurityContext
-} from '@angular/core';
-import { AngularFireModule } from '@angular/fire';
-import {
-  AngularFireFunctionsModule,
-  USE_EMULATOR
+  connectFunctionsEmulator,
+  getFunctions,
+  provideFunctions
 } from '@angular/fire/functions';
-import { AngularFireRemoteConfigModule } from '@angular/fire/remote-config';
+import {
+  getRemoteConfig,
+  provideRemoteConfig
+} from '@angular/fire/remote-config';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -58,38 +57,6 @@ import { environment } from 'src/renderer/environments/environment';
 import { AppComponent } from './app.component';
 import { DuplicateRouteModalComponent } from './components/move-route-modal/duplicate-route-modal.component';
 
-const providers: Provider[] = [
-  {
-    provide: ErrorHandler,
-    useClass: GlobalErrorHandler
-  },
-  {
-    provide: NgbConfig,
-    useFactory: NgbConfigFactory
-  },
-  {
-    provide: NgbTypeaheadConfig,
-    useFactory: NgbTypeaheadConfigFactory
-  },
-  {
-    provide: NgbTooltipConfig,
-    useFactory: NgbTooltipConfigFactory,
-    deps: [NgbConfig]
-  },
-  {
-    provide: NgbDropdownConfig,
-    useFactory: NgbDropdownConfigFactory
-  },
-  {
-    provide: NgbModalConfig,
-    useFactory: NgbModalConfigFactory
-  }
-];
-
-if (environment.useFirebaseEmulator) {
-  providers.push({ provide: USE_EMULATOR, useValue: ['localhost', 5001] });
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -130,13 +97,55 @@ if (environment.useFirebaseEmulator) {
         useFactory: MarkedOptionsFactory
       }
     }),
-    AngularFireModule.initializeApp(Config.firebaseConfig),
-    AngularFireRemoteConfigModule,
-    AngularFireFunctionsModule,
+    provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
+    provideRemoteConfig(() => {
+      const remoteConfig = getRemoteConfig();
+
+      if (!environment.production) {
+        remoteConfig.settings.minimumFetchIntervalMillis = 1000;
+      }
+
+      return remoteConfig;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions();
+
+      if (environment.useFirebaseEmulator) {
+        connectFunctionsEmulator(functions, 'localhost', 5001);
+      }
+
+      return functions;
+    }),
     ReactiveFormsModule,
     NgxMaskModule.forRoot()
   ],
-  providers,
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
+    },
+    {
+      provide: NgbConfig,
+      useFactory: NgbConfigFactory
+    },
+    {
+      provide: NgbTypeaheadConfig,
+      useFactory: NgbTypeaheadConfigFactory
+    },
+    {
+      provide: NgbTooltipConfig,
+      useFactory: NgbTooltipConfigFactory,
+      deps: [NgbConfig]
+    },
+    {
+      provide: NgbDropdownConfig,
+      useFactory: NgbDropdownConfigFactory
+    },
+    {
+      provide: NgbModalConfig,
+      useFactory: NgbModalConfigFactory
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
