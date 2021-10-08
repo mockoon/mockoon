@@ -51,6 +51,7 @@
             cdkDrag
             cdkDragLockAxis="y"
             cdkDragBoundary=".rules-list"
+            [cdkDragDisabled]="form.get('rules')['controls'].length <= 1"
           >
             <div class="col form-inline">
               <select
