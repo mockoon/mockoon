@@ -11,5 +11,8 @@ export enum ScrollDirection {
 export type ConfirmModalEvent = {
   title: string;
   text: string;
+  sub?: string;
+  subIcon?: string;
+  subIconClass?: string;
   confirmCallback: () => void;
 };

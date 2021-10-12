@@ -389,6 +389,9 @@ export class EnvironmentsService extends Logger {
               this.eventsService.confirmModalEvents.next({
                 title: 'Confirm file opening',
                 text: 'This file does not seem to be a valid Mockoon file. Open it anyway?',
+                sub: 'File content may be overwritten.',
+                subIcon: 'warning',
+                subIconClass: 'text-warning',
                 confirmCallback: () => {
                   this.validateAndAddToStore(environment, filePath);
                 }

@@ -3,7 +3,19 @@
     <div class="modal-header">
       <h4 class="modal-title">{{ confirmModalEvent?.title }}</h4>
     </div>
-    <div class="modal-body">{{ confirmModalEvent?.text }}</div>
+    <div class="modal-body">
+      <p>{{ confirmModalEvent?.text }}</p>
+      <div *ngIf="confirmModalEvent.sub">
+        <small>
+          <i
+            *ngIf="confirmModalEvent.subIcon"
+            class="material-icons {{ confirmModalEvent.subIconClass }}"
+            >{{ confirmModalEvent.subIcon }}</i
+          >
+          {{ confirmModalEvent.sub }}</small
+        >
+      </div>
+    </div>
     <div class="modal-footer">
       <button
         type="button"
