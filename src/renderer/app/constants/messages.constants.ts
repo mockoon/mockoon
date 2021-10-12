@@ -148,6 +148,11 @@ export const Messages: {
     showToast: true,
     toastType: 'error'
   }),
+  IMPORT_FILE_INVALID: (messageParams) => ({
+    message: 'This file is not a valid Mockoon export file.',
+    showToast: true,
+    toastType: 'warning'
+  }),
   ENVIRONMENT_FILE_IN_USE: () => ({
     message: 'This environment file is already in use',
     showToast: true,
@@ -161,6 +166,11 @@ export const Messages: {
     message: `Environment "${
       messageParams.name || messageParams.uuid
     }" was created with a more recent version of Mockoon. Please upgrade.`,
+    showToast: true,
+    toastType: 'warning'
+  }),
+  ENVIRONMENT_IS_EXPORT_FILE: () => ({
+    message: 'This file is an export file. Please import it.',
     showToast: true,
     toastType: 'warning'
   }),

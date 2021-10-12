@@ -1,109 +1,16 @@
 import { HighestMigrationId } from '@mockoon/commons';
 import { promises as fs } from 'fs';
-import { basename, resolve } from 'path';
+import { resolve } from 'path';
 import { Config } from 'src/renderer/app/config';
 import { Tests } from 'test/lib/tests';
 
 /**
- * These test cases covers imports from old exported files < 1.7.0, and import of data exported with the new system > 1.7.0
  * New cases should only be added if the import system evolve, not if new migrations are added. Use migrations specs for this case.
+ *
+ * Only the new import format (>= 1.7.0) is tested. Old format test were removed for v1.16.0
  */
 
-const oldImportCases = [
-  {
-    desc: 'v1.4.0',
-    exportFile: './test/data/import/old/1.4.0.json',
-    environmentTitle: 'Import old v1.4.0'
-  },
-  {
-    desc: 'v1.5.0',
-    exportFile: './test/data/import/old/1.5.0.json',
-    environmentTitle: 'Import old v1.5.0'
-  },
-  {
-    desc: 'v1.5.1',
-    exportFile: './test/data/import/old/1.5.1.json',
-    environmentTitle: 'Import old v1.5.1'
-  },
-  {
-    desc: 'v1.6.0',
-    exportFile: './test/data/import/old/1.6.0.json',
-    environmentTitle: 'Import old v1.6.0'
-  },
-  {
-    desc: 'v1.6.0 with single environment',
-    exportFile: './test/data/import/old/1.6.0-single-env.json',
-    environmentTitle: 'Import old v1.6.0 single env'
-  }
-];
-
 describe('Environments import', () => {
-  describe('Import from older version (< 1.7.0)', () => {
-    oldImportCases.forEach((testCase) => {
-      describe(testCase.desc, () => {
-        const tests = new Tests('import', true, true, false);
-        const filename = basename(testCase.exportFile);
-
-        it('Should import the export file', async () => {
-          tests.helpers.mockDialog('showOpenDialog', [testCase.exportFile]);
-          tests.helpers.mockDialog('showSaveDialog', [
-            resolve(`./tmp/storage/${filename}`)
-          ]);
-          tests.helpers.selectMenuEntry('IMPORT_FILE');
-
-          await tests.app.client.pause(500);
-
-          await tests.helpers.assertHasActiveEnvironment();
-          await tests.helpers.assertActiveEnvironmentName(
-            testCase.environmentTitle
-          );
-
-          await tests.helpers.startEnvironment();
-
-          await tests.helpers.waitForAutosave();
-
-          await tests.helpers.verifyObjectPropertyInFile(
-            `./tmp/storage/${filename}`,
-            'lastMigration',
-            HighestMigrationId
-          );
-        });
-      });
-    });
-
-    describe('v1.6.0 with single route', () => {
-      const tests = new Tests('import', true, true, false);
-
-      it('Should reject the export file when version is different', async () => {
-        tests.helpers.mockDialog('showOpenDialog', [
-          './test/data/import/old/1.6.0-single-route.json'
-        ]);
-        tests.helpers.mockDialog('showSaveDialog', [
-          resolve('./tmp/storage/1.6.0-single-route.json')
-        ]);
-
-        tests.helpers.selectMenuEntry('IMPORT_FILE');
-
-        await tests.app.client.pause(500);
-
-        await tests.helpers.countEnvironments(0);
-        await tests.helpers.countRoutes(0);
-
-        await tests.helpers.checkToastDisplayed(
-          'warning',
-          'Some routes were not imported.'
-        );
-
-        await tests.helpers.waitForAutosave();
-
-        await tests.helpers.assertFileNotExists(
-          './tmp/storage/1.6.0-single-route.json',
-          'ENOENT: no such file or directory'
-        );
-      });
-    });
-  });
-
   describe('Import new format (>= 1.7.0)', () => {
     describe('Import environment without route from file', () => {
       const tests = new Tests('import', true, true, false);

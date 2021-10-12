@@ -26,25 +26,15 @@ import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { Errors } from 'src/renderer/app/enums/errors.enum';
-import { OldExport } from 'src/renderer/app/models/data.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { MigrationService } from 'src/renderer/app/services/migration.service';
 import { OpenAPIConverterService } from 'src/renderer/app/services/openapi-converter.service';
 import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { addRouteAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-
-// Last migration done for each version
-const oldVersionsMigrationTable = {
-  '1.4.0': 5,
-  '1.5.0': 6,
-  '1.5.1': 7,
-  '1.6.0': 8
-};
 
 @Injectable({ providedIn: 'root' })
 export class ImportExportService extends Logger {
@@ -55,7 +45,6 @@ export class ImportExportService extends Logger {
     private store: Store,
     private eventsService: EventsService,
     private dataService: DataService,
-    private migrationService: MigrationService,
     private schemasBuilderService: SchemasBuilderService,
     private openAPIConverterService: OpenAPIConverterService,
     private dialogsService: DialogsService,
@@ -209,7 +198,7 @@ export class ImportExportService extends Logger {
     this.logger.info(`Importing from URL: ${url}`);
 
     return this.http.get(url, { responseType: 'text' }).pipe(
-      map<string, Export & OldExport>((data) => JSON.parse(data)),
+      map<string, Export>((data) => JSON.parse(data)),
       switchMap((data) => this.import(data))
     );
   }
@@ -226,7 +215,7 @@ export class ImportExportService extends Logger {
       filter((filePath) => !!filePath),
       switchMap((filePath) => from(MainAPI.invoke('APP_READ_FILE', filePath))),
       map((data: string) => JSON.parse(data)),
-      switchMap((data: Export & OldExport) => this.import(data)),
+      switchMap((data: Export) => this.import(data)),
       tap(() => {
         this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);
       }),
@@ -248,7 +237,7 @@ export class ImportExportService extends Logger {
 
     return from(MainAPI.invoke('APP_READ_CLIPBOARD')).pipe(
       map((data: string) => JSON.parse(data)),
-      switchMap((data: Export & OldExport) => this.import(data)),
+      switchMap((data: Export) => this.import(data)),
       tap(() => {
         this.eventsService.analyticsEvents.next(
           AnalyticsEvents.IMPORT_CLIPBOARD
@@ -389,16 +378,17 @@ export class ImportExportService extends Logger {
    *
    * @param importedData
    */
-  private import(importedData: Export & OldExport) {
-    const dataToImport: Export = this.convertOldExports(importedData);
+  private import(importedData: Export) {
+    // return if imported data are empty or source property is not present
+    if (!this.dataService.isExportData(importedData)) {
+      this.logMessage('error', 'IMPORT_FILE_INVALID');
 
-    if (!dataToImport) {
       return EMPTY;
     }
 
-    const dataImportVersion: string = dataToImport.source.split(':')[1];
+    const dataImportVersion: string = importedData.source.split(':')[1];
 
-    return from(dataToImport.data).pipe(
+    return from(importedData.data).pipe(
       filter((data) => {
         if (
           data.type === 'environment' &&
@@ -464,50 +454,5 @@ export class ImportExportService extends Logger {
         return EMPTY;
       })
     );
-  }
-
-  /**
-   * Convert importedData from older versions if needed
-   *
-   * @param importedData
-   */
-  private convertOldExports(importedData: OldExport & Export): Export {
-    if (
-      importedData.id &&
-      importedData.id === 'mockoon_export' &&
-      importedData.appVersion
-    ) {
-      const oldImportedData: OldExport = importedData;
-      const convertedData: Export = {
-        source: `mockoon:${oldImportedData.appVersion}`,
-        data: []
-      };
-
-      if (oldImportedData.subject === 'environment') {
-        (oldImportedData.data as Environment).lastMigration =
-          oldVersionsMigrationTable[oldImportedData.appVersion];
-
-        convertedData.data = [
-          { type: 'environment', item: oldImportedData.data as Environment }
-        ];
-      } else if (oldImportedData.subject === 'route') {
-        convertedData.data = [
-          { type: 'route', item: oldImportedData.data as Route }
-        ];
-      } else {
-        convertedData.data = (oldImportedData.data as Environments).map(
-          (importedItem) => {
-            importedItem.lastMigration =
-              oldVersionsMigrationTable[oldImportedData.appVersion];
-
-            return { type: 'environment', item: importedItem };
-          }
-        );
-      }
-
-      return convertedData;
-    } else {
-      return importedData as Export;
-    }
   }
 }

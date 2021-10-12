@@ -385,6 +385,12 @@ export class EnvironmentsService extends Logger {
       switchMap((filePath) =>
         this.storageService.loadData<Environment>(null, filePath).pipe(
           tap((environment) => {
+            if (this.dataService.isExportData(environment)) {
+              this.logMessage('info', 'ENVIRONMENT_IS_EXPORT_FILE');
+
+              return;
+            }
+
             if (environment.lastMigration === undefined) {
               this.eventsService.confirmModalEvents.next({
                 title: 'Confirm file opening',

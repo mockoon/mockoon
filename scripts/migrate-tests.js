@@ -13,7 +13,6 @@ glob(
   {
     ignore: [
       './test/data/import/new/**/*',
-      './test/data/import/old/**/*',
       './test/data/migrations/**/*',
       './test/data/schema-validation/**/*'
     ]
