@@ -117,6 +117,37 @@ export const Messages: {
     showToast: true,
     toastType: 'success'
   }),
+  IMPORT_ROUTE_INCORRECT_VERSION: (messageParams) => ({
+    message: `Route ${messageParams.uuid} has incompatible version ${messageParams.dataToImportVersion} and cannot be imported`,
+    showToast: true,
+    toastType: 'warning'
+  }),
+  IMPORT_ENVIRONMENT: (messageParams) => ({
+    message: `Importing environment ${messageParams.uuid}`,
+    showToast: false
+  }),
+  IMPORT_ROUTE: (messageParams) => ({
+    message: `Importing route ${messageParams.uuid}`,
+    showToast: false
+  }),
+  IMPORT_FROM_CLIPBOARD: () => ({
+    message: 'Importing from clipboard',
+    showToast: false
+  }),
+  IMPORT_FROM_FILE: () => ({
+    message: 'Importing from file',
+    showToast: false
+  }),
+  IMPORT_CLIPBOARD_ERROR: (messageParams) => ({
+    message: `Error while importing from clipboard: ${messageParams.message}`,
+    showToast: true,
+    toastType: 'error'
+  }),
+  IMPORT_FILE_ERROR: (messageParams) => ({
+    message: `Error while importing from file: ${messageParams.message}`,
+    showToast: true,
+    toastType: 'error'
+  }),
   ENVIRONMENT_FILE_IN_USE: () => ({
     message: 'This environment file is already in use',
     showToast: true,

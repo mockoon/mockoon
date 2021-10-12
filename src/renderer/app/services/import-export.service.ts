@@ -12,8 +12,15 @@ import {
   RouteSchema
 } from '@mockoon/commons';
 import { cloneDeep } from 'lodash';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { EMPTY, from, Observable } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  filter,
+  map,
+  switchMap,
+  tap
+} from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -198,65 +205,63 @@ export class ImportExportService extends Logger {
    * @param url
    * @returns
    */
-  public importFromUrl(url: string): Observable<Export & OldExport> {
+  public importFromUrl(url: string): Observable<string> {
     this.logger.info(`Importing from URL: ${url}`);
 
     return this.http.get(url, { responseType: 'text' }).pipe(
       map<string, Export & OldExport>((data) => JSON.parse(data)),
-      tap((data) => {
-        this.import(data);
-      })
+      switchMap((data) => this.import(data))
     );
   }
 
   /**
    * Load data from JSON file and import
    */
-  public async importFromFile() {
-    this.logger.info('Importing from file');
+  public importFromFile(): Observable<string> {
+    this.logMessage('info', 'IMPORT_FROM_FILE');
 
-    const filePath = await this.dialogsService.showOpenDialog(
-      'Import from JSON file',
-      'json'
-    );
-
-    if (filePath) {
-      try {
-        const fileContent = await MainAPI.invoke('APP_READ_FILE', filePath);
-
-        const importedData: Export & OldExport = JSON.parse(fileContent);
-
-        this.import(importedData);
-
+    return from(
+      this.dialogsService.showOpenDialog('Import from JSON file', 'json')
+    ).pipe(
+      filter((filePath) => !!filePath),
+      switchMap((filePath) => from(MainAPI.invoke('APP_READ_FILE', filePath))),
+      map((data: string) => JSON.parse(data)),
+      switchMap((data: Export & OldExport) => this.import(data)),
+      tap(() => {
         this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_FILE);
-      } catch (error) {
-        this.logger.error(`Error while importing from file: ${error.message}`);
-        this.toastService.addToast('error', Errors.IMPORT_ERROR);
-      }
-    }
+      }),
+      catchError((error) => {
+        this.logMessage('error', 'IMPORT_FILE_ERROR', {
+          message: error.message
+        });
+
+        return EMPTY;
+      })
+    );
   }
 
   /**
    * Load data from clipboard and import
    */
-  public async importFromClipboard() {
-    this.logger.info('Importing from clipboard');
+  public importFromClipboard(): Observable<string> {
+    this.logMessage('info', 'IMPORT_FROM_CLIPBOARD');
 
-    try {
-      const importedData: Export & OldExport = JSON.parse(
-        await MainAPI.invoke('APP_READ_CLIPBOARD')
-      );
+    return from(MainAPI.invoke('APP_READ_CLIPBOARD')).pipe(
+      map((data: string) => JSON.parse(data)),
+      switchMap((data: Export & OldExport) => this.import(data)),
+      tap(() => {
+        this.eventsService.analyticsEvents.next(
+          AnalyticsEvents.IMPORT_CLIPBOARD
+        );
+      }),
+      catchError((error) => {
+        this.logMessage('error', 'IMPORT_CLIPBOARD_ERROR', {
+          message: error.message
+        });
 
-      this.import(importedData);
-
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.IMPORT_CLIPBOARD);
-    } catch (error) {
-      this.logger.info(
-        `Error while importing from clipboard: ${error.message}`
-      );
-
-      this.toastService.addToast('error', Errors.IMPORT_CLIPBOARD_ERROR);
-    }
+        return EMPTY;
+      })
+    );
   }
 
   /**
@@ -388,67 +393,77 @@ export class ImportExportService extends Logger {
     const dataToImport: Export = this.convertOldExports(importedData);
 
     if (!dataToImport) {
-      return;
+      return EMPTY;
     }
 
-    const dataToImportVersion: string = dataToImport.source.split(':')[1];
+    const dataImportVersion: string = dataToImport.source.split(':')[1];
 
-    dataToImport.data.forEach((data) => {
-      if (data.type === 'environment') {
-        if (data.item.lastMigration > HighestMigrationId) {
-          this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
+    return from(dataToImport.data).pipe(
+      filter((data) => {
+        if (
+          data.type === 'environment' &&
+          data.item.lastMigration > HighestMigrationId
+        ) {
+          // environment is too recent
+          this.logMessage('error', 'ENVIRONMENT_MORE_RECENT_VERSION', {
             name: data.item.name,
             uuid: data.item.uuid
           });
 
-          return;
+          return false;
+        } else if (
+          data.type === 'route' &&
+          dataImportVersion !== Config.appVersion
+        ) {
+          // routes cannot be migrated yet so we check the appVersion
+
+          this.logMessage('error', 'IMPORT_ROUTE_INCORRECT_VERSION', {
+            uuid: data.item.uuid,
+            dataToImportVersion: dataImportVersion
+          });
+
+          return false;
         }
 
-        const migratedEnvironment =
-          this.dataService.migrateAndValidateEnvironment(data.item);
+        return true;
+      }),
+      concatMap((data) => {
+        //return from(new Promise((resolve) => setTimeout(resolve, 3000)));
+        if (data.type === 'environment') {
+          const migratedEnvironment =
+            this.dataService.migrateAndValidateEnvironment(data.item);
 
-        this.logger.info(`Importing environment ${migratedEnvironment.uuid}`);
+          this.logMessage('info', 'IMPORT_ENVIRONMENT', {
+            uuid: migratedEnvironment.uuid
+          });
 
-        this.environmentsService
-          .addEnvironment(migratedEnvironment)
-          .subscribe();
-      } else if (
-        // routes cannot be migrated yet so we check the appVersion
-        data.type === 'route' &&
-        dataToImportVersion === Config.appVersion
-      ) {
-        data.item = RouteSchema.validate(data.item).value;
+          return this.environmentsService.addEnvironment(migratedEnvironment);
+        } else if (data.type === 'route') {
+          data.item = RouteSchema.validate(data.item).value;
 
-        // other cases do not renew UUIDs as duplicated ones will be handled by the data service. Here we don't really care about always renewing the uuids for single routes
-        data.item = this.dataService.renewRouteUUIDs(data.item);
+          // other cases do not renew UUIDs as duplicated ones will be handled by the data service. Here we don't really care about always renewing the uuids for single routes
+          data.item = this.dataService.renewRouteUUIDs(data.item);
 
-        this.logger.info(`Importing route ${data.item.uuid}`);
+          this.logMessage('info', 'IMPORT_ROUTE', {
+            uuid: data.item.uuid
+          });
 
-        // if has a current environment append imported route
-        if (this.store.get('activeEnvironmentUUID')) {
-          this.store.update(addRouteAction(data.item));
-        } else {
-          const newEnvironment: Environment = {
-            ...this.schemasBuilderService.buildEnvironment(),
-            routes: [data.item]
-          };
+          // if has a current environment append imported route
+          if (this.store.get('activeEnvironmentUUID')) {
+            this.store.update(addRouteAction(data.item));
 
-          this.environmentsService.addEnvironment(newEnvironment).subscribe();
+            return EMPTY;
+          } else {
+            return this.environmentsService.addEnvironment({
+              ...this.schemasBuilderService.buildEnvironment(),
+              routes: [data.item]
+            });
+          }
         }
-      } else if (dataToImportVersion !== Config.appVersion) {
-        this.logger.info(
-          `Route ${data.item.uuid} has incorrect version ${dataToImportVersion} and cannot be imported`
-        );
 
-        this.toastService.addToast(
-          'warning',
-          Errors.IMPORT_INCOMPATIBLE_VERSION.replace(
-            '{fileVersion}',
-            dataToImportVersion
-          )
-        );
-      }
-    });
+        return EMPTY;
+      })
+    );
   }
 
   /**

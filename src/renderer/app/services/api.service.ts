@@ -82,7 +82,7 @@ export class ApiService {
             changelogModal.showModal();
             break;
           case 'IMPORT_FILE':
-            this.importExportService.importFromFile();
+            this.importExportService.importFromFile().subscribe();
             break;
           case 'IMPORT_OPENAPI_FILE':
             this.importExportService.importOpenAPIFile();
@@ -91,7 +91,7 @@ export class ApiService {
             this.importExportService.exportOpenAPIFile();
             break;
           case 'IMPORT_CLIPBOARD':
-            await this.importExportService.importFromClipboard();
+            this.importExportService.importFromClipboard().subscribe();
             break;
           case 'EXPORT_FILE':
             this.importExportService.exportAllEnvironments();
