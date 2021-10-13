@@ -99,12 +99,10 @@
                     operatorFormControl.value === responseRuleOperator.code
                   "
                   [attr.disabled]="
-                    form.get(['rules', ruleIndex, 'target']).value ===
-                      'request_number' &&
-                    (responseRuleOperator.code === 'null' ||
-                      responseRuleOperator.code === 'empty_array')
-                      ? true
-                      : null
+                    shouldOperatorBeDisabled(
+                      form.get(['rules', ruleIndex, 'target']).value,
+                      responseRuleOperator.code
+                    )
                   "
                 >
                   {{ responseRuleOperator.text }}

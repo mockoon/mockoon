@@ -48,6 +48,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { code: 'body', text: 'Body' },
     { code: 'query', text: 'Query string' },
     { code: 'header', text: 'Header' },
+    { code: 'cookie', text: 'Cookie' },
     { code: 'params', text: 'Route params' },
     { code: 'request_number', text: 'Request number (starting at 1)' }
   ];
@@ -61,6 +62,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     body: 'Object path or empty for full body',
     query: 'Property name or object path',
     header: 'Header name',
+    cookie: 'Cookie name',
     params: 'Route parameter name',
     request_number: ''
   };
@@ -69,6 +71,10 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     regex: 'Regex (without /../)',
     null: '',
     empty_array: ''
+  };
+  public operatorDisablingForTargets = {
+    request_number: ['null', 'empty_array'],
+    cookie: ['empty_array']
   };
   public rulesOperatorsList: LogicalOperators[] = ['OR', 'AND'];
   private listenToChanges = true;
@@ -126,6 +132,18 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     );
 
     this.ruleAdded.emit();
+  }
+
+  public shouldOperatorBeDisabled(
+    target: string,
+    operator: ResponseRuleOperators
+  ): boolean {
+    const disablingTargets = this.operatorDisablingForTargets[target];
+    if (!disablingTargets) {
+      return null;
+    }
+
+    return disablingTargets.includes(operator) ? true : null;
   }
 
   public reorderResponseRules(event: CdkDragDrop<string[]>) {
