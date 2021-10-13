@@ -24,9 +24,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM
+      - name: Update NPM to v7
         run: |
-          npm install -g npm@latest
+          npm install -g npm@7
       - name: Get version from package.json
         id: app-version
         run: |
@@ -61,9 +61,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM
+      - name: Update NPM to v7
         run: |
-          npm install -g npm@latest
+          npm install -g npm@7
       - name: Get version from package.json
         id: app-version
         run: |
@@ -109,9 +109,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM
+      - name: Update NPM to v7
         run: |
-          npm install -g npm@latest
+          npm install -g npm@7
       - name: Get version from package.json
         id: app-version
         run: |
