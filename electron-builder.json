@@ -13,7 +13,7 @@
   ],
   "win": {
     "target": [{ "target": "nsis" }, { "target": "portable" }],
-    "publisherName": "Guillaume Monnet",
+    "publisherName": "1kB SARL-S",
     "rfc3161TimeStampServer": "http://timestamp.digicert.com"
   },
   "nsis": {
