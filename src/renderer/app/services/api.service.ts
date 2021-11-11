@@ -1,8 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
-import { ChangelogModalComponent } from 'src/renderer/app/components/changelog-modal.component';
-import { SettingsModalComponent } from 'src/renderer/app/components/settings-modal.component';
+import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
+import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';

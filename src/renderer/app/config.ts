@@ -18,6 +18,7 @@ export const Config = {
     https: docsURL + 'https/',
     headers: docsURL + 'response-headers/',
     rules: docsURL + 'route-responses/multiple-responses/',
+    hostname: docsURL + 'listening-hostname/',
     faq: websiteURL + 'faq/'
   },
   defaultMaxLogsPerEnvironment: 50,

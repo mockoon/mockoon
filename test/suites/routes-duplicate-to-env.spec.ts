@@ -57,19 +57,21 @@ describe('Duplicate a route to an environment', async () => {
 
   it('should duplicate selected route to selected environment', async () => {
     await helpers.elementClick(envNameSelector);
-
-    await helpers.assertActiveEnvironmentName('New environment');
     await helpers.checkActiveRoute('POST\n/dolphins');
+
+    await helpers.switchView('ENV_SETTINGS');
+    await helpers.assertActiveEnvironmentName('New environment');
   });
 
   it('should duplicate selected route with the same properties', async () => {
+    await helpers.switchView('ENV_ROUTES');
     await helpers.assertElementText(
       'app-custom-select[formcontrolname="method"] .dropdown-toggle-label',
       'POST'
     );
 
     await helpers.assertElementValue(
-      '.main-content .input-group input',
+      'input[formcontrolname="endpoint"]',
       'dolphins'
     );
 

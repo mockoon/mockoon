@@ -63,7 +63,7 @@ describe('Environment hostname restriction', async () => {
     const tests = new Tests('basic-data');
 
     it('Switch localhost only and start default environment', async () => {
-      await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+      await tests.helpers.switchView('ENV_SETTINGS');
       await tests.helpers.elementClick(
         'input[formControlName="localhostOnly"]'
       );

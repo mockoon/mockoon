@@ -7,27 +7,6 @@ export const EnvironmentsContextMenu = (
   {
     payload: {
       subject: 'environment',
-      action: 'env_logs',
-      subjectUUID: environmentUUID
-    },
-    label: 'Environment logs',
-    icon: 'history',
-    disabled: false
-  },
-  {
-    payload: {
-      subject: 'environment',
-      action: 'env_settings',
-      subjectUUID: environmentUUID
-    },
-    label: 'Environment settings',
-    icon: 'settings',
-    separator: true,
-    disabled: false
-  },
-  {
-    payload: {
-      subject: 'environment',
       action: 'duplicate',
       subjectUUID: environmentUUID
     },

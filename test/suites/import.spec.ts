@@ -27,9 +27,8 @@ describe('Environments import', () => {
 
         await tests.app.client.pause(500);
 
-        await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.countEnvironments(1);
-        await tests.helpers.assertActiveEnvironmentName(
+        await tests.helpers.assertHasActiveEnvironment(
           'Environment without route'
         );
         await tests.helpers.startEnvironment();
@@ -58,12 +57,11 @@ describe('Environments import', () => {
 
         await tests.app.client.pause(500);
 
-        await tests.helpers.assertHasActiveEnvironment();
         await tests.helpers.countEnvironments(2);
-        await tests.helpers.assertActiveEnvironmentName('Import new format 2');
+        await tests.helpers.assertHasActiveEnvironment('Import new format 2');
         await tests.helpers.startEnvironment();
         await tests.helpers.selectEnvironment(1);
-        await tests.helpers.assertActiveEnvironmentName('Import new format 1');
+        await tests.helpers.assertHasActiveEnvironment('Import new format 1');
         await tests.helpers.startEnvironment();
 
         await tests.helpers.waitForAutosave();
@@ -99,8 +97,7 @@ describe('Environments import', () => {
 
         await tests.app.client.pause(1000);
 
-        await tests.helpers.assertHasActiveEnvironment();
-        await tests.helpers.assertActiveEnvironmentName('Import new format 2');
+        await tests.helpers.assertHasActiveEnvironment('Import new format 2');
 
         await tests.helpers.startEnvironment();
       });
@@ -127,8 +124,7 @@ describe('Environments import', () => {
 
         await tests.app.client.pause(500);
 
-        await tests.helpers.assertHasActiveEnvironment();
-        await tests.helpers.assertActiveEnvironmentName('New environment');
+        await tests.helpers.assertHasActiveEnvironment('New environment');
         await tests.helpers.checkActiveRoute('GET\n/answer');
         await tests.helpers.startEnvironment();
       });
@@ -169,7 +165,7 @@ describe('Environments import', () => {
         url: 'https://raw.githubusercontent.com/mockoon/mock-samples/main/apis/notion.json'
       });
       await tests.app.client.pause(500);
-      await tests.helpers.assertActiveEnvironmentName(
+      await tests.helpers.assertHasActiveEnvironment(
         'Notion API - Public Beta'
       );
     });

@@ -1,0 +1,11 @@
+svg {
+  fill: currentColor;
+  width: 1em;
+  height: 1em;
+}
+
+:host-context(.btn.btn-link) svg,
+:host-context(.nav-link) svg,
+:host-context(label) svg {
+  vertical-align: -0.125em;
+}

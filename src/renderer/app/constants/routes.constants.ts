@@ -369,3 +369,5 @@ export const headerValues = [
   'XMLHttpRequest',
   "default-src 'self'"
 ];
+
+export const defaultContentType = 'text/html';

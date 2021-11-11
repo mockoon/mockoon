@@ -127,7 +127,7 @@ export class Helpers {
   public async closeEnvironment(index: number) {
     await this.contextMenuClick(
       `.environments-menu .menu-list .nav-item:nth-child(${index}) .nav-link`,
-      6
+      4
     );
     await this.testsInstance.app.client.pause(500);
   }
@@ -135,7 +135,7 @@ export class Helpers {
   public async duplicateEnvironment(index: number) {
     await this.contextMenuClick(
       `.environments-menu .menu-list .nav-item:nth-of-type(${index})`,
-      3
+      1
     );
   }
 
@@ -240,7 +240,7 @@ export class Helpers {
     hasClass: string,
     inverted = false
   ) {
-    const classes = await this.getElementAttribute(selector, 'class');
+    const classes = (await this.getElementAttribute(selector, 'class')) || '';
 
     if (inverted) {
       expect(classes).not.to.include(hasClass);
@@ -250,14 +250,14 @@ export class Helpers {
   }
 
   public async startEnvironment() {
-    await this.elementClick('.btn i[ngbtooltip="Start server"]');
+    await this.elementClick('.btn[ngbtooltip="Start server"]');
     await this.waitElementExist(
       '.environments-menu .menu-list .nav-item .nav-link.active.running'
     );
   }
 
   public async stopEnvironment() {
-    await this.elementClick('.btn i[ngbtooltip="Stop server"]');
+    await this.elementClick('.btn[ngbtooltip="Stop server"]');
     await this.waitElementExist(
       '.environments-menu .menu-list .nav-item .nav-link.active.running',
       true
@@ -265,18 +265,10 @@ export class Helpers {
   }
 
   public async restartEnvironment() {
-    await this.elementClick('.btn i[ngbtooltip="Server needs restart"]');
+    await this.elementClick('.btn[ngbtooltip="Server needs restart"]');
     await this.waitElementExist(
       '.environments-menu .menu-list .nav-item .nav-link.active.running'
     );
-  }
-
-  public async assertEnvironmentServerIconsExists(
-    index: number,
-    iconName: 'cors' | 'https' | 'proxy-mode'
-  ) {
-    const selector = `.environments-menu .nav-item:nth-child(${index}) .nav-link.active .server-icons-${iconName}`;
-    await this.waitElementExist(selector);
   }
 
   public async assertHasActiveEnvironment(name?: string, reverse = false) {
@@ -350,15 +342,19 @@ export class Helpers {
     }
   }
 
-  public async switchViewInHeader(viewName: Exclude<ViewsNameType, 'ROUTE'>) {
-    const selectors: { [key in typeof viewName]: string } = {
-      ENV_LOGS: 'Environment logs',
-      ENV_SETTINGS: 'Environment settings'
+  public async switchView(viewName: ViewsNameType) {
+    const tabIndexes = {
+      ENV_ROUTES: 1,
+      ENV_HEADERS: 2,
+      ENV_LOGS: 3,
+      ENV_PROXY: 4,
+      ENV_SETTINGS: 5
     };
 
     await this.elementClick(
-      `.header .btn[ngbTooltip="${selectors[viewName]}"]`
+      `.header .nav .nav-item:nth-child(${tabIndexes[viewName]}) .nav-link`
     );
+    await this.testsInstance.app.client.pause(100);
   }
 
   public async switchTab(tabName: TabsNameType) {
@@ -402,7 +398,7 @@ export class Helpers {
   }
 
   public async addResponseRule(rule: ResponseRule) {
-    await this.elementClick('app-route-response-rules .btn.btn-link');
+    await this.elementClick('app-route-response-rules .btn.add-rule');
     await this.selectByAttribute(
       'app-route-response-rules .rule-item:last-of-type .form-inline select[formcontrolname="target"]',
       'value',
@@ -553,9 +549,7 @@ export class Helpers {
   }
 
   public async assertLogsEmpty() {
-    const messageText = await this.getElementText(
-      '.environment-logs-column:nth-child(2) .message'
-    );
+    const messageText = await this.getElementText('.message');
     expect(messageText).to.equal('No records yet');
   }
 
@@ -574,9 +568,8 @@ export class Helpers {
   }
 
   public async clearEnvironmentLogs() {
-    await this.switchViewInHeader('ENV_LOGS');
-    const selector =
-      '.main-content > div:first-of-type .btn.btn-link.btn-icon:last-of-type';
+    await this.switchView('ENV_LOGS');
+    const selector = '.environment-logs-content button.btn-link';
     // click twice to confirm (cannot double click)
     await this.elementClick(selector);
     await this.elementClick(selector);
@@ -645,8 +638,8 @@ export class Helpers {
     inverted = false
   ) {
     await this.waitElementExist(
-      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link i[ngbTooltip="${
-        icon === 'PROXY' ? 'Request proxied' : 'Request caught'
+      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link app-svg[icon="${
+        icon === 'PROXY' ? 'security' : 'check'
       }"]`,
       inverted
     );
@@ -712,14 +705,14 @@ export class Helpers {
     location:
       | 'route-response-headers'
       | 'environment-headers'
-      | 'proxy-req-headers'
-      | 'proxy-res-headers',
+      | 'env-proxy-req-headers'
+      | 'env-proxy-res-headers',
     header: Header
   ) {
     const headersComponentSelector = `app-headers-list#${location}`;
-    const inputsSelector = `${headersComponentSelector} .headers-list:last-of-type input:nth-of-type`;
+    const inputsSelector = `${headersComponentSelector} .headers-list .header-item:last-of-type input:nth-of-type`;
 
-    await this.elementClick(`${headersComponentSelector} button`);
+    await this.elementClick(`${headersComponentSelector} button.add-header`);
     await this.setElementValue(`${inputsSelector}(1)`, header.key);
     await this.setElementValue(`${inputsSelector}(2)`, header.value);
   }
@@ -737,10 +730,10 @@ export class Helpers {
       | 'proxy-res-headers'
   ) {
     const keyInputs = await this.testsInstance.app.client.$$(
-      `app-headers-list#${location} .headers-list input:first-of-type`
+      `app-headers-list#${location} .headers-list .header-item input:first-of-type`
     );
     const valueInputs = await this.testsInstance.app.client.$$(
-      `app-headers-list#${location} .headers-list input:last-of-type`
+      `app-headers-list#${location} .headers-list .header-item input:last-of-type`
     );
     const headers = {};
 
@@ -755,7 +748,7 @@ export class Helpers {
   }
 
   public async toggleDisableTemplating() {
-    await this.elementClick("label[for='disableTemplating']");
+    await this.elementClick("label[for='route-settings-disable-templating']");
   }
 
   public async assertRulesOperatorPresence(inverted = false) {

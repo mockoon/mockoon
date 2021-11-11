@@ -3,19 +3,30 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Environment, Environments } from '@mockoon/commons';
-import { Observable } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
+import {
+  distinctUntilKeyChanged,
+  filter,
+  map,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 import { EnvironmentsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
 import { Config } from 'src/renderer/app/config';
+import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { ScrollDirection } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { EnvironmentsStatuses, Store } from 'src/renderer/app/stores/store';
+import { Settings } from 'src/shared/models/settings.model';
 
 @Component({
   selector: 'app-environments-menu',
@@ -23,17 +34,22 @@ import { EnvironmentsStatuses, Store } from 'src/renderer/app/stores/store';
   styleUrls: ['./environments-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EnvironmentsMenuComponent implements OnInit {
+export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   @ViewChild('environmentsMenu')
   private environmentsMenu: ElementRef;
-
   public activeEnvironment$: Observable<Environment>;
   public environments$: Observable<Environments>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
-  public duplicatedEnvironments$: Observable<Set<string>>;
+  public settings$: Observable<Settings>;
   public menuSize = Config.defaultEnvironmentMenuSize;
+  public editingName = false;
+  public activeEnvironmentForm: FormGroup;
+  public dragDisabled = false;
+  public focusableInputs = FocusableInputs;
+  private destroy$ = new Subject<void>();
 
   constructor(
+    private formBuilder: FormBuilder,
     private environmentsService: EnvironmentsService,
     private store: Store,
     private eventsService: EventsService,
@@ -42,15 +58,39 @@ export class EnvironmentsMenuComponent implements OnInit {
 
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
-    this.duplicatedEnvironments$ = this.store.select('duplicatedEnvironments');
     this.environments$ = this.store.select('environments');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
+    this.settings$ = this.store.select('settings');
     this.uiService.scrollEnvironmentsMenu.subscribe((scrollDirection) => {
       this.uiService.scroll(
         this.environmentsMenu.nativeElement,
         scrollDirection
       );
     });
+
+    this.initForms();
+    this.initFormValues();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
+  }
+
+  /**
+   * Handle clicks on the env name
+   * enable editing mode and automatically focus the input
+   */
+  public handleNameClick(event: MouseEvent) {
+    event.stopPropagation();
+
+    if (!this.editingName) {
+      this.enableNameEdit();
+
+      setTimeout(() => {
+        this.uiService.focusInput(this.focusableInputs.ENVIRONMENT_NAME);
+      }, 0);
+    }
   }
 
   /**
@@ -79,8 +119,9 @@ export class EnvironmentsMenuComponent implements OnInit {
    * Open an environment. Append at the end of the list.
    */
   public async openEnvironment() {
-    this.environmentsService.openEnvironment().subscribe();
-    this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
+    this.environmentsService.openEnvironment().subscribe(() => {
+      this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
+    });
   }
 
   /**
@@ -106,5 +147,70 @@ export class EnvironmentsMenuComponent implements OnInit {
 
       this.eventsService.contextMenuEvents.next(menu);
     }
+  }
+
+  public disableNameEdit() {
+    this.editingName = false;
+    this.dragDisabled = false;
+  }
+
+  public submitEnvironmentName(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      (event.target as HTMLInputElement).blur();
+    }
+  }
+
+  private enableNameEdit() {
+    this.editingName = true;
+    this.dragDisabled = true;
+  }
+
+  /**
+   * Init active environment form and subscribe to changes
+   */
+  private initForms() {
+    this.activeEnvironmentForm = this.formBuilder.group({
+      name: new FormControl('', { updateOn: 'blur' })
+    });
+
+    // send new activeEnvironmentForm values to the store, one by one
+    merge(
+      ...Object.keys(this.activeEnvironmentForm.controls).map((controlName) =>
+        this.activeEnvironmentForm.get(controlName).valueChanges.pipe(
+          map((newValue) => ({
+            [controlName]: newValue
+          }))
+        )
+      )
+    )
+      .pipe(
+        tap((newProperty) => {
+          this.environmentsService.updateActiveEnvironment(newProperty);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
+  }
+
+  /**
+   * Listen to stores to init form values
+   */
+  private initFormValues() {
+    // subscribe to active environment changes to reset the form
+    this.activeEnvironment$
+      .pipe(
+        filter((environment) => !!environment),
+        distinctUntilKeyChanged('uuid'),
+        tap((activeEnvironment) => {
+          this.activeEnvironmentForm.setValue(
+            {
+              name: activeEnvironment.name
+            },
+            { emitEvent: false }
+          );
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
   }
 }

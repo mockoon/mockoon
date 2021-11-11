@@ -5,15 +5,77 @@ describe('UI interactions', () => {
   describe('Environments menu', () => {
     const tests = new Tests('ui');
 
-    it('Verify environments men item content', async () => {
+    it('Verify environments menu item content', async () => {
       await tests.helpers.assertHasActiveEnvironment('FT env');
-      await tests.helpers.assertEnvironmentServerIconsExists(1, 'cors');
-      await tests.helpers.assertEnvironmentServerIconsExists(1, 'https');
-      await tests.helpers.assertEnvironmentServerIconsExists(1, 'proxy-mode');
+      await tests.helpers.waitElementExist(
+        '.environments-menu .nav-item:nth-child(1) .nav-link.active .menu-subtitle app-svg[icon="https"]'
+      );
+      await tests.helpers.waitElementExist(
+        '.environments-menu .nav-item:nth-child(1) .nav-link.active app-svg[icon="security"]'
+      );
       await tests.helpers.contextMenuOpen(
         '.environments-menu .nav-item .nav-link.active'
       );
       await tests.helpers.waitElementExist('.context-menu');
+    });
+  });
+
+  describe('Environment name inline edit', () => {
+    const tests = new Tests('ui');
+    const secondEnvSelector = '.environments-menu .nav-item:nth-child(2)';
+
+    it('should not show the name edit input before and after selecting the environment', async () => {
+      await tests.helpers.waitElementExist(
+        `${secondEnvSelector} .environment-name`
+      );
+      await tests.helpers.waitElementExist(
+        `${secondEnvSelector} input[formcontrolname="name"]`,
+        true
+      );
+
+      await tests.helpers.selectEnvironment(2);
+
+      await tests.helpers.waitElementExist(
+        `${secondEnvSelector} .environment-name`
+      );
+      await tests.helpers.waitElementExist(
+        `${secondEnvSelector} input[formcontrolname="name"]`,
+        true
+      );
+
+      await tests.helpers.switchView('ENV_SETTINGS');
+    });
+
+    it('should show the name edit input after clicking on the environment name', async () => {
+      await tests.helpers.elementClick(
+        `${secondEnvSelector} .environment-name`
+      );
+
+      await tests.helpers.waitElementExist(
+        `${secondEnvSelector} .environment-name`,
+        true
+      );
+      await tests.helpers.waitElementExist(
+        `${secondEnvSelector} input[formcontrolname="name"]`
+      );
+    });
+
+    it('should be able to edit the environment name in the environments menu', async () => {
+      await tests.helpers.assertElementValue(
+        'app-environment-settings input[formcontrolname="name"]',
+        'FT env name edit'
+      );
+
+      await tests.helpers.addElementValue(
+        `${secondEnvSelector} input[formcontrolname="name"]`,
+        'added'
+      );
+      await tests.app.client.keys(['Enter']);
+
+      await tests.helpers.assertElementValue(
+        'app-environment-settings input[formcontrolname="name"]',
+        'FT env name editadded'
+      );
     });
   });
 
@@ -42,10 +104,10 @@ describe('UI interactions', () => {
     const tests = new Tests('ui');
 
     const environmentHeadersSelector =
-      'app-headers-list#environment-headers .headers-list';
+      'app-headers-list#environment-headers .headers-list .header-item';
 
     it('Switch to environment settings and check headers count', async () => {
-      await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+      await tests.helpers.switchView('ENV_HEADERS');
 
       await tests.helpers.countElements(environmentHeadersSelector, 1);
     });
@@ -66,7 +128,9 @@ describe('UI interactions', () => {
     });
 
     it('Click on "Add CORS headers" button and check headers count', async () => {
-      await tests.helpers.elementClick('button.settings-add-cors');
+      await tests.helpers.elementClick(
+        'app-headers-list#environment-headers button.add-header-secondary'
+      );
 
       await tests.helpers.countElements(environmentHeadersSelector, 4);
     });
@@ -104,7 +168,7 @@ describe('UI interactions', () => {
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2)';
 
       let text = await tests.helpers.getElementText(headersTabSelector);
-      expect(text).to.equal('Headers (1)');
+      expect(text).to.equal('Headers 1');
 
       await tests.helpers.switchTab('HEADERS');
       await tests.helpers.addHeader('route-response-headers', {
@@ -115,7 +179,7 @@ describe('UI interactions', () => {
       // this is needed for the tab re-render to complete
       await tests.app.client.pause(100);
       text = await tests.helpers.getElementText(headersTabSelector);
-      expect(text).to.equal('Headers (2)');
+      expect(text).to.equal('Headers 2');
 
       await tests.helpers.addHeader('route-response-headers', {
         key: 'route-header-2',
@@ -125,7 +189,7 @@ describe('UI interactions', () => {
       // this is needed for the tab re-render to complete
       await tests.app.client.pause(100);
       text = await tests.helpers.getElementText(headersTabSelector);
-      expect(text).to.equal('Headers (3)');
+      expect(text).to.equal('Headers 3');
 
       await tests.helpers.addRouteResponse();
       await tests.helpers.countRouteResponses(2);
@@ -144,7 +208,7 @@ describe('UI interactions', () => {
       // this is needed for the tab re-render to complete
       await tests.app.client.pause(100);
       text = await tests.helpers.getElementText(headersTabSelector);
-      expect(text).to.equal('Headers (1)');
+      expect(text).to.equal('Headers 1');
     });
 
     it('Rules tab shows the rule count', async () => {
@@ -165,7 +229,7 @@ describe('UI interactions', () => {
       // this is needed for the tab re-render to complete
       await tests.app.client.pause(100);
       text = await tests.helpers.getElementText(rulesTabSelector);
-      expect(text).to.equal('Rules (1)');
+      expect(text).to.equal('Rules 1');
 
       await tests.helpers.addResponseRule({
         modifier: 'test',
@@ -177,7 +241,7 @@ describe('UI interactions', () => {
       // this is needed for the tab re-render to complete
       await tests.app.client.pause(100);
       text = await tests.helpers.getElementText(rulesTabSelector);
-      expect(text).to.equal('Rules (2)');
+      expect(text).to.equal('Rules 2');
 
       await tests.helpers.addRouteResponse();
       await tests.helpers.countRouteResponses(3);
@@ -198,7 +262,7 @@ describe('UI interactions', () => {
       // this is needed for the tab re-render to complete
       await tests.app.client.pause(100);
       text = await tests.helpers.getElementText(rulesTabSelector);
-      expect(text).to.equal('Rules (1)');
+      expect(text).to.equal('Rules 1');
     });
   });
 
@@ -207,6 +271,7 @@ describe('UI interactions', () => {
     const portSelector = 'input[formcontrolname="port"]';
 
     it('should allow numbers', async () => {
+      await tests.helpers.switchView('ENV_SETTINGS');
       await tests.helpers.setElementValue(portSelector, '1234');
       await tests.helpers.assertElementValue(portSelector, '1234');
     });
@@ -227,6 +292,7 @@ describe('UI interactions', () => {
     const prefixSelector = 'input[formcontrolname="endpointPrefix"]';
 
     it('should remove leading slash', async () => {
+      await tests.helpers.switchView('ENV_SETTINGS');
       await tests.helpers.setElementValue(prefixSelector, '/prefix');
       await tests.helpers.assertElementValue(prefixSelector, 'prefix');
     });
@@ -270,37 +336,39 @@ describe('UI interactions', () => {
         description: 'should use the typeahead in the environment headers',
         headers: 'environment-headers',
         preHook: async () => {
-          await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+          await tests.helpers.switchView('ENV_HEADERS');
         }
       },
       {
         description: 'should use the typeahead in the proxy request headers',
-        headers: 'proxy-req-headers',
+        headers: 'env-proxy-req-headers',
         preHook: async () => {
-          await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+          await tests.helpers.switchView('ENV_PROXY');
         }
       },
       {
         description: 'should use the typeahead in the proxy response headers',
-        headers: 'proxy-res-headers',
+        headers: 'env-proxy-res-headers',
         preHook: async () => {
-          await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+          await tests.helpers.switchView('ENV_PROXY');
         }
       }
     ];
 
     testCases.forEach((testCase) => {
       const headersSelector = `app-headers-list#${testCase.headers}`;
-      const firstHeaderSelector = `${headersSelector} .headers-list:last-of-type input:nth-of-type(1)`;
+      const headerKeySelector = `${headersSelector} .headers-list .header-item:last-of-type input:nth-of-type(1)`;
 
       it(testCase.description, async () => {
         await testCase.preHook();
-        await tests.helpers.elementClick(`${headersSelector} button`);
-        await tests.helpers.setElementValue(firstHeaderSelector, 'typ');
+        await tests.helpers.elementClick(
+          `${headersSelector} button:first-of-type`
+        );
+        await tests.helpers.setElementValue(headerKeySelector, 'typ');
         await tests.helpers.waitElementExist(typeaheadEntrySelector);
         await tests.helpers.elementClick(typeaheadEntrySelector);
         const headerName = await tests.helpers.getElementValue(
-          firstHeaderSelector
+          headerKeySelector
         );
         expect(headerName).to.equal('Content-Type');
       });
@@ -453,11 +521,11 @@ describe('UI interactions', () => {
     it('should enable random responses', async () => {
       await tests.helpers.elementClick(randomResponseSelector);
       await tests.helpers.assertHasClass(
-        `${randomResponseSelector} i`,
+        `${randomResponseSelector} app-svg`,
         'text-primary'
       );
       await tests.helpers.assertHasClass(
-        `${sequentialResponseSelector} i`,
+        `${sequentialResponseSelector} app-svg`,
         'text-primary',
         true
       );
@@ -473,12 +541,12 @@ describe('UI interactions', () => {
     it('should enable sequential responses and random responses should be disabled', async () => {
       await tests.helpers.elementClick(sequentialResponseSelector);
       await tests.helpers.assertHasClass(
-        `${randomResponseSelector} i`,
+        `${randomResponseSelector} app-svg`,
         'text-primary',
         true
       );
       await tests.helpers.assertHasClass(
-        `${sequentialResponseSelector} i`,
+        `${sequentialResponseSelector} app-svg`,
         'text-primary'
       );
 
@@ -493,11 +561,11 @@ describe('UI interactions', () => {
     it('should re-enable random responses and sequential responses should be disabled', async () => {
       await tests.helpers.elementClick(randomResponseSelector);
       await tests.helpers.assertHasClass(
-        `${randomResponseSelector} i`,
+        `${randomResponseSelector} app-svg`,
         'text-primary'
       );
       await tests.helpers.assertHasClass(
-        `${sequentialResponseSelector} i`,
+        `${sequentialResponseSelector} app-svg`,
         'text-primary',
         true
       );

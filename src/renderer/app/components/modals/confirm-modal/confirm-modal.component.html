@@ -7,11 +7,11 @@
       <p>{{ confirmModalEvent?.text }}</p>
       <div *ngIf="confirmModalEvent.sub">
         <small>
-          <i
-            *ngIf="confirmModalEvent.subIcon"
-            class="material-icons {{ confirmModalEvent.subIconClass }}"
-            >{{ confirmModalEvent.subIcon }}</i
-          >
+          <app-svg
+            [icon]="confirmModalEvent.subIcon"
+            class="{{ confirmModalEvent.subIconClass }}"
+          ></app-svg>
+
           {{ confirmModalEvent.sub }}</small
         >
       </div>

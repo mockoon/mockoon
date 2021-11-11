@@ -18,7 +18,12 @@ import { Actions } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
 import { Settings } from 'src/shared/models/settings.model';
 
-export type ViewsNameType = 'ROUTE' | 'ENV_SETTINGS' | 'ENV_LOGS';
+export type ViewsNameType =
+  | 'ENV_ROUTES'
+  | 'ENV_HEADERS'
+  | 'ENV_LOGS'
+  | 'ENV_PROXY'
+  | 'ENV_SETTINGS';
 
 export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
 
@@ -59,7 +64,6 @@ export type StoreType = {
   environments: Environments;
   environmentsStatus: EnvironmentsStatuses;
   bodyEditorConfig: any;
-  duplicatedEnvironments: Set<string>;
   duplicatedRoutes: DuplicatedRoutesTypes;
   environmentsLogs: EnvironmentLogs;
   // the active log UUID per environment
@@ -74,7 +78,7 @@ export type StoreType = {
 @Injectable({ providedIn: 'root' })
 export class Store {
   private store$ = new BehaviorSubject<StoreType>({
-    activeView: 'ROUTE',
+    activeView: 'ENV_ROUTES',
     activeTab: 'RESPONSE',
     activeEnvironmentLogsTab: 'REQUEST',
     activeEnvironmentLogsUUID: {},
@@ -95,7 +99,6 @@ export class Store {
       mode: 'json',
       theme: 'editor-theme'
     },
-    duplicatedEnvironments: new Set(),
     duplicatedRoutes: {},
     environmentsLogs: {},
     toasts: [],

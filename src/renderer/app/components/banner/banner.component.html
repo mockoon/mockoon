@@ -7,12 +7,12 @@
       (click)="openLink(banner)"
     >
       <span *ngIf="banner.iconName">
-        <i class="material-icons">{{ banner.iconName }}</i>
+        <app-svg [icon]="banner.iconName"></app-svg>
       </span>
       {{ banner.text }}
     </button>
     <div class="btn p-0 text-secondary" (click)="dismissBanner(banner)">
-      <i class="material-icons">close</i>
+      <app-svg icon="close"></app-svg>
     </div>
   </ng-container>
 </ng-container>

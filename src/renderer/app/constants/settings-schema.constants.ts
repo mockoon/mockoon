@@ -6,7 +6,7 @@ import {
   Settings
 } from 'src/shared/models/settings.model';
 
-const SettingsDefault: Settings = {
+export const SettingsDefault: Settings = {
   welcomeShown: false,
   analytics: true,
   bannerDismissed: [],

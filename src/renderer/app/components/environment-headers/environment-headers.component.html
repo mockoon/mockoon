@@ -1,0 +1,16 @@
+<div
+  *ngIf="activeEnvironment$ | async as activeEnvironment"
+  class="scroll-content h-100 p-2"
+  #environmentHeadersContainer
+>
+  <app-headers-list
+    id="environment-headers"
+    [activeDataSubject$]="activeEnvironment$"
+    dataSubject="environment"
+    headersPropertyName="headers"
+    secondaryButton="add CORS headers"
+    (secondaryButtonClicked)="addCORSHeaders()"
+    (headersUpdated)="headersUpdated($event)"
+    (headerAdded)="scrollToBottom(environmentHeadersContainer)"
+  ></app-headers-list>
+</div>

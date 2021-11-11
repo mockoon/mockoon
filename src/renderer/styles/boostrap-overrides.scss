@@ -12,8 +12,11 @@
   transition: all ease-in-out 150ms, box-shadow 1ms;
 }
 .nav-tabs {
+  border-bottom: none;
+
   .nav-link {
     border: none;
+    margin-bottom: 0;
   }
   .nav-link.active,
   .nav-item.show .nav-link {
@@ -79,34 +82,24 @@
 }
 .input-group-text {
   color: $gray-400;
-
-  i {
-    font-size: 1.2rem;
-    line-height: 1.5rem;
-  }
 }
 label {
   color: $gray-400;
 }
 .input-group-prepend,
 .input-group-append {
-  i {
-    font-size: 1.2rem;
-    line-height: 1.5rem;
-  }
   .btn {
     // remove input group btn big padding 8/16px (do not know where it comes from)
     padding: 1px 6px;
-
-    i {
-      font-size: 1.8rem;
-      line-height: 1.5rem;
-    }
   }
 }
 
-.btn {
-  border-width: 0;
+.badge {
+  transition: none;
+
+  &-hollow {
+    border: 1px solid $gray-300;
+  }
 }
 
 .btn.btn-icon {
@@ -114,10 +107,6 @@ label {
 
   &:visited {
     text-decoration: none;
-  }
-
-  i {
-    font-size: 1.3rem;
   }
   color: $gray-500;
 
@@ -213,12 +202,17 @@ label {
     width: 100%;
     text-align: left;
 
+    &::after {
+      margin-left: -1em;
+    }
+
     .dropdown-toggle-label {
       display: inline-block;
-      width: 95%;
+      width: 100%;
       text-overflow: ellipsis;
       overflow: hidden;
       vertical-align: bottom;
+      padding-right: 2em;
     }
   }
 

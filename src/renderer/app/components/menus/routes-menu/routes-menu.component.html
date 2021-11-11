@@ -9,7 +9,7 @@
             (click)="addRoute()"
             ngbTooltip="Add route"
           >
-            <i class="material-icons">add_box</i>
+            <app-svg icon="add_box"></app-svg>
           </a>
         </li>
         <li class="nav-item flex-grow-1">
@@ -36,7 +36,7 @@
               class="btn btn-custom"
               ngbTooltip="Clear filter"
             >
-              <i class="material-icons">clear</i>
+              <app-svg icon="clear"></app-svg>
             </button>
           </div>
         </li>
@@ -79,16 +79,15 @@
                 *ngIf="duplicatedRoutes$ | async as duplicatedRoutes"
                 class="text-warning"
                 ngbTooltip="Route is duplicated (same endpoint and method)"
-              >
-                <i
+                ><app-svg
                   *ngIf="
                     duplicatedRoutes[activeEnvironment.uuid]?.has(
                       environmentRoute.uuid
                     )
                   "
-                  class="material-icons"
-                  >warning</i
-                >
+                  icon="warning"
+                  class="pr-2"
+                ></app-svg>
               </span>
               <span
                 class="badge badge-default http-method-{{

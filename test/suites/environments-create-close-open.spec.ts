@@ -12,8 +12,10 @@ describe('Create, close and open environments', () => {
     ]);
     await tests.helpers.addEnvironment();
     await tests.helpers.waitForAutosave();
-    await tests.helpers.assertActiveEnvironmentPort(3001);
+
     await tests.helpers.countEnvironments(2);
+    await tests.helpers.switchView('ENV_SETTINGS');
+    await tests.helpers.assertActiveEnvironmentPort(3001);
   });
 
   it('Close first environment', async () => {
@@ -34,9 +36,7 @@ describe('Create, close and open environments', () => {
     await tests.helpers.countEnvironments(0);
     await tests.helpers.countRoutes(0);
 
-    await tests.helpers.waitElementExist(
-      '.header input[placeholder="No environment"]'
-    );
+    await tests.helpers.assertElementText('.message', 'No environment opened');
   });
 
   it('open environment', async () => {
@@ -46,6 +46,7 @@ describe('Create, close and open environments', () => {
     await tests.helpers.openEnvironment();
     await tests.app.client.pause(500);
     await tests.helpers.countEnvironments(1);
+    await tests.helpers.switchView('ENV_SETTINGS');
     await tests.helpers.assertHasActiveEnvironment('New environment');
     await tests.helpers.closeEnvironment(1);
   });
@@ -56,6 +57,7 @@ describe('Create, close and open environments', () => {
         resolve(`./tmp/storage/new-env-test-${port}.json`)
       ]);
       await tests.helpers.addEnvironment();
+      await tests.helpers.switchView('ENV_SETTINGS');
       await tests.helpers.assertActiveEnvironmentPort(port);
     }
   });

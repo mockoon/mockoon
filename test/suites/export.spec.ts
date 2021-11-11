@@ -72,7 +72,7 @@ describe('Environments export', () => {
     it('Should copy environment to clipboard wrapped with export info', async () => {
       await tests.helpers.contextMenuClick(
         '.environments-menu .menu-list .nav-item:first-of-type',
-        4
+        2
       );
 
       const clipboardContent = await tests.app.electron.clipboard.readText();

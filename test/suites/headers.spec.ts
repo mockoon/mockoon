@@ -101,11 +101,17 @@ const getOverriddenCORSHeaders: HttpCall = {
     }
   }
 };
+const envRoutesContentTypeSelector = '.environment-routes-footer div';
 
 describe('Route and environment headers', () => {
   const tests = new Tests('headers');
 
   it('Add headers on route', async () => {
+    await tests.helpers.assertElementText(
+      envRoutesContentTypeSelector,
+      'application/json'
+    );
+
     await tests.helpers.switchTab('HEADERS');
 
     await tests.helpers.addHeader('route-response-headers', {
@@ -120,7 +126,7 @@ describe('Route and environment headers', () => {
   });
 
   it('Add headers on environment', async () => {
-    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+    await tests.helpers.switchView('ENV_HEADERS');
 
     await tests.helpers.addHeader('environment-headers', {
       key: 'global-header',
@@ -131,6 +137,13 @@ describe('Route and environment headers', () => {
       key: 'custom-header',
       value: 'envvalue'
     });
+  });
+
+  it('should verify the header tab counter', async () => {
+    await tests.helpers.assertElementText(
+      'app-header .header .nav .nav-item:nth-child(2) .nav-link',
+      'Headers 3'
+    );
   });
 
   it('Call /headers, route headers should override global headers', async () => {
@@ -163,7 +176,7 @@ describe('Duplicated Set-Cookie header', () => {
   });
 
   it('Add duplicated Set-Cookie headers on environment', async () => {
-    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+    await tests.helpers.switchView('ENV_HEADERS');
 
     await tests.helpers.addHeader('environment-headers', {
       key: 'Set-Cookie',
@@ -192,11 +205,21 @@ describe('File headers', () => {
   it('Call /file should get XML content-type from route header', async () => {
     await fs.copyFile('./test/data/test.pdf', './tmp/storage/test.pdf');
     await tests.helpers.startEnvironment();
+    await tests.helpers.selectRoute(2);
 
+    await tests.helpers.assertElementText(
+      envRoutesContentTypeSelector,
+      'application/xml'
+    );
     await tests.helpers.httpCallAsserterWithPort(getFile, 3000);
   });
 
   it('Call /file-noheader should get PDF content-type from file mime type', async () => {
+    await tests.helpers.selectRoute(3);
+    await tests.helpers.assertElementText(
+      envRoutesContentTypeSelector,
+      'application/pdf'
+    );
     await tests.helpers.httpCallAsserterWithPort(getFileNoHeader, 3000);
   });
 });
@@ -210,7 +233,7 @@ describe('CORS headers', () => {
   });
 
   it('should override CORS headers on the environment', async () => {
-    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+    await tests.helpers.switchView('ENV_HEADERS');
 
     await tests.helpers.addHeader('environment-headers', {
       key: 'Access-Control-Allow-Origin',

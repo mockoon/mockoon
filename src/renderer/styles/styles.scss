@@ -1,5 +1,4 @@
 @import './boostrap-overrides.scss';
-@import './fonts.scss';
 @import './animations.scss';
 
 // custom scrollbar
@@ -117,19 +116,24 @@ input,
   overflow-y: scroll;
 }
 
-.doc-link {
+.cp {
   cursor: pointer;
-  opacity: 0.5;
-  padding: 0;
-  vertical-align: baseline;
-
-  &:hover {
-    opacity: 1;
-  }
 }
 
 .cursor-grab {
   cursor: grab;
+}
+
+.invisible-input {
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  outline: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  height: inherit;
+  width: 100%;
 }
 
 // http methods badges
@@ -153,16 +157,14 @@ $http-methods-light: ('get', lighten($blue, 10%)),
   }
 }
 
-.header {
-  background-color: lighten($gray-900, 3%);
-}
-
-.position-relative {
-  position: relative;
-}
-
 .flex-fill {
   flex: 1;
+}
+.flex-none {
+  flex: none !important;
+}
+.z-index-1 {
+  z-index: 1;
 }
 
 .form-right {
@@ -203,14 +205,6 @@ $http-methods-light: ('get', lighten($blue, 10%)),
   }
 }
 
-.headers-list {
-  &:first-of-type {
-    margin-top: 0;
-  }
-
-  margin-top: $spacer / 2;
-}
-
 .message {
   text-align: center;
   font-size: $font-size-lg;
@@ -241,15 +235,5 @@ $http-methods-light: ('get', lighten($blue, 10%)),
 
   &:hover {
     box-shadow: inset -2px 0 0 0 rgba($blue, 0.1);
-  }
-}
-
-#route-responses-menu {
-  display: grid;
-  grid-template-columns: 30% auto min-content min-content;
-
-  .route-responses-buttons {
-    display: grid;
-    grid-template-columns: min-content auto min-content min-content;
   }
 }

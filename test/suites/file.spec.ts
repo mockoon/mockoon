@@ -29,7 +29,9 @@ describe('File serving', () => {
 
     it('should return the body content and a 404 if option enabled', async () => {
       await tests.helpers.switchTab('SETTINGS');
-      await tests.helpers.elementClick("label[for='fallbackTo404']");
+      await tests.helpers.elementClick(
+        "label[for='route-settings-fallback-to-404']"
+      );
       await tests.helpers.waitForAutosave();
       await tests.helpers.httpCallAsserter({
         path: '/answer',

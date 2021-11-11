@@ -2,7 +2,7 @@
   <div class="d-flex mr-auto">
     <div class="footer-item with-border-right" *ngIf="updateAvailable$ | async">
       <button class="btn text-success" (click)="applyUpdate()">
-        <i class="material-icons">update</i> Update available. Click to
+        <app-svg icon="update"></app-svg> Update available. Click to
         {{ (platform$ | async) === 'win32' ? 'install' : 'download' }}
       </button>
     </div>
@@ -15,7 +15,7 @@
   <div class="d-flex">
     <div *ngIf="closing$ | async" class="footer-item">
       <div class="footer-save animation-flash">
-        <i class="material-icons">save</i>
+        <app-svg icon="save"></app-svg>
         Shutting down...
       </div>
     </div>
