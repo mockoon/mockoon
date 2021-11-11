@@ -62,36 +62,38 @@ describe('Proxy (with TLS and proxy headers)', () => {
   const tests = new Tests('proxy');
 
   it('Add environment headers and proxy headers', async () => {
-    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+    await tests.helpers.switchView('ENV_HEADERS');
     await tests.helpers.addHeader('environment-headers', {
       key: 'env-header',
       value: 'env-header'
     });
 
     await tests.helpers.selectEnvironment(2);
-    await tests.helpers.switchViewInHeader('ENV_SETTINGS');
+    await tests.helpers.switchView('ENV_HEADERS');
 
     await tests.helpers.addHeader('environment-headers', {
       key: 'x-custom-header',
       value: 'header value'
     });
 
-    await tests.helpers.addHeader('proxy-req-headers', {
+    await tests.helpers.switchView('ENV_PROXY');
+
+    await tests.helpers.addHeader('env-proxy-req-headers', {
       key: 'x-proxy-request-header',
       value: 'header value'
     });
 
-    await tests.helpers.addHeader('proxy-res-headers', {
+    await tests.helpers.addHeader('env-proxy-res-headers', {
       key: 'x-proxy-response-header',
       value: 'header value'
     });
 
-    await tests.helpers.addHeader('proxy-res-headers', {
+    await tests.helpers.addHeader('env-proxy-res-headers', {
       key: 'Set-Cookie',
       value: 'cookie1=cookievalue1'
     });
 
-    await tests.helpers.addHeader('proxy-res-headers', {
+    await tests.helpers.addHeader('env-proxy-res-headers', {
       key: 'Set-Cookie',
       value: 'cookie2=cookievalue2'
     });
@@ -109,7 +111,7 @@ describe('Proxy (with TLS and proxy headers)', () => {
   });
 
   it('Environment logs have one entry', async () => {
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchView('ENV_LOGS');
     await tests.helpers.countEnvironmentLogsEntries(1);
   });
 
@@ -121,7 +123,7 @@ describe('Proxy (with TLS and proxy headers)', () => {
 
   it('Should display custom request header in environment logs', async () => {
     await tests.helpers.selectEnvironment(1);
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchView('ENV_LOGS');
     await tests.helpers.selectEnvironmentLogEntry(1);
     await tests.helpers.switchTabInEnvironmentLogs('REQUEST');
 
@@ -135,7 +137,7 @@ describe('Proxy (with TLS and proxy headers)', () => {
 
   it('Should display custom proxied response header in environment logs', async () => {
     await tests.helpers.selectEnvironment(2);
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchView('ENV_LOGS');
     await tests.helpers.selectEnvironmentLogEntry(1);
     await tests.helpers.switchTabInEnvironmentLogs('RESPONSE');
     await tests.helpers.environmentLogItemEqual(
@@ -173,7 +175,7 @@ describe('Proxy (with TLS and proxy headers)', () => {
   it('Test new mock', async () => {
     await tests.helpers.waitForAutosave();
     await tests.helpers.httpCallAsserterWithPort(getAnswerCall, 3001);
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchView('ENV_LOGS');
     await tests.helpers.countEnvironmentLogsEntries(2);
     await tests.helpers.environmentLogMenuMethodEqual('GET', 1);
     await tests.helpers.environmentLogMenuPathEqual('/answer', 1);

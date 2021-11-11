@@ -1,0 +1,136 @@
+<div class="environments-menu d-flex flex-column h-100" appMousedragDeadzone>
+  <div>
+    <ul class="nav menu-header d-flex justify-content-end">
+      <li class="nav-item">
+        <a
+          class="nav-link text-primary add-environment"
+          (click)="addEnvironment()"
+          ngbTooltip="New environment"
+        >
+          <app-svg icon="post_add"></app-svg>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link text-primary open-environment"
+          (click)="openEnvironment()"
+          ngbTooltip="Open environment"
+        >
+          <app-svg icon="folder_open"></app-svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <ng-container *ngIf="environments$ | async as environments">
+    <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
+      <ul
+        class="nav flex-column flex-fill menu-list"
+        #environmentsMenu
+        cdkDropList
+        (cdkDropListDropped)="reorderEnvironments($event)"
+      >
+        <ng-container *ngIf="environmentsStatus$ | async as environmentsStatus">
+          <li
+            *ngFor="let environment of environments"
+            class="nav-item"
+            cdkDrag
+            [cdkDragDisabled]="dragDisabled"
+            cdkDragLockAxis="y"
+            cdkDragBoundary=".environments-menu .nav.menu-list"
+          >
+            <a
+              class="nav-link"
+              [ngClass]="{
+                active: activeEnvironment?.uuid === environment.uuid,
+                running:
+                  environmentsStatus[environment.uuid].running &&
+                  !environmentsStatus[environment.uuid].needRestart,
+                'need-restart': environmentsStatus[environment.uuid].needRestart
+              }"
+              (click)="selectEnvironment(environment.uuid)"
+              (contextmenu)="openContextMenu(environment.uuid, $event)"
+            >
+              <div [formGroup]="activeEnvironmentForm">
+                <div class="d-flex">
+                  <div class="mw0 pr-2">
+                    <div
+                      *ngIf="
+                        !editingName ||
+                        activeEnvironment?.uuid !== environment.uuid
+                      "
+                      class="ellipsis environment-name"
+                      [ngClass]="{
+                        'environment-name-edit':
+                          activeEnvironment?.uuid === environment.uuid
+                      }"
+                      (click)="
+                        activeEnvironment?.uuid === environment.uuid &&
+                          handleNameClick($event)
+                      "
+                    >
+                      {{ environment.name ? environment.name : '&nbsp;' }}
+                    </div>
+                    <input
+                      *ngIf="
+                        editingName &&
+                        activeEnvironment?.uuid === environment.uuid
+                      "
+                      class="form-control invisible-input"
+                      formControlName="name"
+                      [appFocusOnEvent]="focusableInputs.ENVIRONMENT_NAME"
+                      type="text"
+                      (click)="$event.stopPropagation()"
+                      (keydown)="submitEnvironmentName($event)"
+                      (blur)="disableNameEdit()"
+                    />
+                  </div>
+                  <div class="ml-auto">
+                    <app-svg
+                      class="text-primary"
+                      [ngClass]="{
+                        visible: environment.proxyMode,
+                        invisible: !environment.proxyMode
+                      }"
+                      icon="security"
+                      size="12"
+                      ngbTooltip="Proxy mode enabled"
+                    ></app-svg>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="settings$ | async as settings"
+                  class="menu-subtitle ellipsis pt-2"
+                  [ngClass]="{
+                    ellipsis: settings.truncateRouteName,
+                    'text-break': !settings.truncateRouteName
+                  }"
+                >
+                  <app-svg
+                    *ngIf="environment.https"
+                    class="text-warning pr-1"
+                    icon="https"
+                    size="12"
+                    ngbTooltip="HTTPS enabled"
+                  ></app-svg>
+                  <span
+                    >{{ environment.hostname }}:{{ environment.port }}/{{
+                      environment.endpointPrefix
+                    }}</span
+                  >
+                </div>
+              </div>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+  </ng-container>
+  <div
+    appResizeColumn
+    type="environments"
+    [minWidth]="menuSize"
+    [maxWidthFactor]="0.2"
+    class="resize-column"
+  ></div>
+</div>

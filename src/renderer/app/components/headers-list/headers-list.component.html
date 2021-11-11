@@ -1,0 +1,77 @@
+<ng-container *ngIf="dataSubject$ | async">
+  <ng-container [formGroup]="form">
+    <ng-container formArrayName="headers">
+      <div class="headers-list">
+        <div
+          class="header-item"
+          *ngFor="
+            let header of headers.controls;
+            index as headerIndex;
+            first as headerFirst
+          "
+          [ngClass]="{ 'mt-1': !headerFirst }"
+          [formGroupName]="headerIndex"
+        >
+          <div class="input-group" style="position: relative">
+            <input
+              type="text"
+              class="form-control mr-1"
+              placeholder="name"
+              formControlName="key"
+              [ngbTypeahead]="headerNamesSearch"
+            />
+            <input
+              type="text"
+              class="form-control"
+              placeholder="value"
+              formControlName="value"
+              [ngbTypeahead]="headerValuesSearch"
+            />
+            <div
+              class="input-group-prepend"
+              *ngIf="deleteHeaderRequested$ | async as deleteHeaderRequested"
+            >
+              <button
+                type="button"
+                class="btn btn-link btn-icon"
+                [ngClass]="{
+                  'text-danger':
+                    deleteHeaderRequested.enabled === true &&
+                    deleteHeaderRequested.payload === headerIndex
+                }"
+                [ngbTooltip]="
+                  deleteHeaderRequested.enabled === true &&
+                  deleteHeaderRequested.payload === headerIndex
+                    ? 'Confirm'
+                    : 'Delete'
+                "
+                (click)="removeHeader(headerIndex)"
+              >
+                <app-svg icon="delete"></app-svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button
+          type="button"
+          class="btn btn-link btn-icon mt-2 add-header"
+          (click)="addHeader()"
+        >
+          <app-svg icon="add_box" class="text-success pr-2"></app-svg>
+          Add header
+        </button>
+        <button
+          *ngIf="secondaryButton"
+          type="button"
+          class="btn btn-link btn-icon mt-2 text-primary add-header-secondary"
+          (click)="secondaryButtonClicked.emit()"
+        >
+          {{ secondaryButton }}
+        </button>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>

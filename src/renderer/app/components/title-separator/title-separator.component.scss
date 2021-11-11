@@ -1,7 +1,7 @@
 @import 'src/renderer/styles/bootstrap-variables.scss';
 
 .title-separator {
-  border-bottom: 1px solid lighten($gray-900, 3%);
+  border-bottom: 1px solid lighten($gray-900, 6%);
   margin-bottom: 1rem;
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -20,14 +20,15 @@
 
     .title-separator-text {
       margin-left: 22px;
-      border-bottom: 1px solid lighten($gray-900, 3%);
-      display: flex;
+      border-bottom: 1px solid lighten($gray-900, 6%);
+      display: grid;
+      grid-template-columns: max-content auto;
+      column-gap: 1rem;
+      align-items: baseline;
 
       div:nth-child(2) {
-        flex-grow: 1;
         text-align: right;
         font-size: 0.8rem;
-        margin-top: 0.2rem;
 
         .btn-link {
           padding: 0;

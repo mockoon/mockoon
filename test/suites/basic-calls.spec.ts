@@ -66,6 +66,7 @@ describe('Basic endpoint calls with prefix', () => {
     }
   };
   it('should call endpoint successfully with simple prefix', async () => {
+    await tests.helpers.switchView('ENV_SETTINGS');
     await tests.helpers.setElementValue(prefixInputSelector, 'api');
     await tests.helpers.startEnvironment();
     await tests.helpers.httpCallAsserter(testCase);

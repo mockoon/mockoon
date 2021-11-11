@@ -1,0 +1,65 @@
+<ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
+  <ng-container
+    *ngIf="activeEnvironmentState$ | async as activeEnvironmentState"
+  >
+    <div class="header d-flex">
+      <div>
+        <button
+          *ngIf="
+            activeEnvironmentState.running && activeEnvironmentState.needRestart
+          "
+          class="btn btn-link text-warning"
+          type="button"
+          ngbTooltip="Server needs restart"
+          (click)="toggleEnvironment()"
+        >
+          <app-svg icon="refresh" size="20"></app-svg>
+        </button>
+
+        <button
+          *ngIf="
+            activeEnvironmentState.running &&
+            !activeEnvironmentState.needRestart
+          "
+          class="btn btn-link text-danger"
+          type="button"
+          ngbTooltip="Stop server"
+          (click)="toggleEnvironment()"
+        >
+          <app-svg icon="stop" size="20"></app-svg>
+        </button>
+
+        <button
+          *ngIf="!activeEnvironmentState.running"
+          class="btn text-success"
+          type="button"
+          ngbTooltip="Start server"
+          (click)="toggleEnvironment()"
+        >
+          <app-svg icon="play_arrow" size="20"></app-svg>
+        </button>
+      </div>
+
+      <div>
+        <ul *ngIf="activeView$ | async as activeView" class="nav nav-tabs">
+          <li *ngFor="let tab of tabs" class="nav-item">
+            <a
+              class="nav-link"
+              [ngClass]="{ active: activeView === tab.id }"
+              (click)="setActiveView(tab.id)"
+            >
+              <app-svg [icon]="tab.icon" class="pr-2"></app-svg>
+              {{ tab.title }}
+              <span
+                *ngIf="tab.count | async as tabCount"
+                class="badge badge-hollow font-weight-bold ml-2"
+              >
+                {{ tabCount }}
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

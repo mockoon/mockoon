@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { Config } from 'src/renderer/app/config';
 import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
 import {
@@ -11,7 +12,10 @@ import {
 import { DataService } from 'src/renderer/app/services/data.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { setActiveEnvironmentLogUUIDAction } from 'src/renderer/app/stores/actions';
+import {
+  clearLogsAction,
+  setActiveEnvironmentLogUUIDAction
+} from 'src/renderer/app/stores/actions';
 import {
   EnvironmentLogsTabsNameType,
   Store
@@ -50,6 +54,7 @@ export class EnvironmentLogsComponent implements OnInit {
     'response.body': false
   };
   public menuSize = Config.defaultLogsMenuSize;
+  public clearEnvironmentLogsRequested$ = new TimedBoolean();
 
   constructor(
     private store: Store,
@@ -158,5 +163,16 @@ export class EnvironmentLogsComponent implements OnInit {
       mode: editorMode,
       title: `${location} body`
     });
+  }
+
+  /**
+   * Clear logs for active environment
+   */
+  public clearEnvironmentLogs() {
+    if (this.clearEnvironmentLogsRequested$.readValue().enabled) {
+      this.store.update(
+        clearLogsAction(this.store.get('activeEnvironmentUUID'))
+      );
+    }
   }
 }

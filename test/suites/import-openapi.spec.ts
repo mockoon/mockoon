@@ -125,6 +125,7 @@ describe('Swagger/OpenAPI import', () => {
             await tests.app.client.pause(500);
 
             await tests.helpers.assertHasActiveEnvironment();
+            await tests.helpers.switchView('ENV_SETTINGS');
             await tests.helpers.assertActiveEnvironmentName(
               testCase.environmentTitle
             );

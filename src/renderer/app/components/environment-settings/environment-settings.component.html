@@ -1,0 +1,156 @@
+<div
+  *ngIf="activeEnvironment$ | async as activeEnvironment"
+  class="h-100 p-2"
+  [formGroup]="activeEnvironmentForm"
+>
+  <div class="form-group">
+    <div class="input-group">
+      <label for="env-settings-name" class="col-form-label pr-2">Name</label
+      ><input
+        type="text"
+        class="form-control col-4"
+        formControlName="name"
+        id="env-settings-name"
+      />
+    </div>
+  </div>
+
+  <app-title-separator
+    heading="API URL"
+    icon="power"
+    subheading="API available on {{ activeEnvironment?.hostname }}:{{
+      activeEnvironment?.port
+    }}/{{ activeEnvironment?.endpointPrefix }}"
+  ></app-title-separator>
+
+  <div class="form-group">
+    <div class="input-group">
+      <label for="env-settings-port" class="col-form-label pr-2">
+        {{ activeEnvironment?.hostname }} :</label
+      >
+      <input
+        type="number"
+        class="form-control col-1"
+        id="env-settings-port"
+        placeholder="port"
+        formControlName="port"
+        [appInputNumber]="{
+          min: 0,
+          max: 65535,
+          canBeEmpty: false
+        }"
+      />
+      <div class="input-group-prepend">
+        <span class="input-group-text font-bold">/</span>
+      </div>
+      <input
+        type="text"
+        class="form-control col-4"
+        placeholder="prefix"
+        appValidPath
+        formControlName="endpointPrefix"
+      />
+    </div>
+  </div>
+
+  <app-title-separator
+    heading="Server options"
+    icon="storage"
+  ></app-title-separator>
+
+  <div class="form-group">
+    <div class="input-group">
+      <label for="env-settings-latency" class="col-form-label pr-2">
+        Latency (ms)
+      </label>
+      <input
+        type="number"
+        id="env-settings-latency"
+        class="form-control col-1"
+        formControlName="latency"
+        [appInputNumber]="{
+          min: 0,
+          max: Infinity,
+          canBeEmpty: false
+        }"
+      />
+      <div class="input-group-append align-items-center ml-1">
+        <app-svg
+          icon="info"
+          class="ml-1"
+          ngbTooltip="Global environment latency applied to all routes"
+        ></app-svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="input-group">
+      <div class="custom-control custom-checkbox">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          id="env-settings-https"
+          formControlName="https"
+        />
+        <label class="custom-control-label" for="env-settings-https"
+          >HTTPS
+        </label>
+      </div>
+      <div class="input-group-append ml-1">
+        <app-svg
+          icon="info"
+          class="ml-1"
+          ngbTooltip="Serves your mock API over TLS with a self signed certificate"
+        ></app-svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="input-group">
+      <div class="custom-control custom-checkbox">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          id="env-settings-localhost-only"
+          formControlName="localhostOnly"
+        />
+        <label class="custom-control-label" for="env-settings-localhost-only"
+          >Localhost Only
+        </label>
+      </div>
+      <div class="input-group-append ml-1">
+        <app-svg
+          icon="info"
+          class="ml-1"
+          ngbTooltip="Listen to 127.0.0.1 only instead of all network adapters"
+        ></app-svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="input-group">
+      <div class="custom-control custom-checkbox">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          id="env-settings-cors"
+          formControlName="cors"
+        />
+        <label class="custom-control-label" for="env-settings-cors"
+          >Automatically handle OPTIONS pre-flight requests
+        </label>
+      </div>
+      <div class="input-group-append ml-1">
+        <app-svg
+          icon="info"
+          class="ml-1"
+          ngbTooltip="Mockoon will now automatically answer with a 200 HTTP status code to
+      all preflight OPTIONS requests"
+        ></app-svg>
+      </div>
+    </div>
+  </div>
+</div>

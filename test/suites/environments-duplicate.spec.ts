@@ -28,6 +28,7 @@ describe('Duplicate an environment', () => {
   });
 
   it('Verify duplicated environment selected', async () => {
+    await tests.helpers.switchView('ENV_SETTINGS');
     await tests.helpers.assertActiveEnvironmentPort(3002);
   });
 });
@@ -48,6 +49,7 @@ describe('Duplicate an environment with no route', () => {
     ]);
     await tests.helpers.duplicateEnvironment(1);
     await tests.helpers.countEnvironments(2);
+    await tests.helpers.switchView('ENV_SETTINGS');
     await tests.helpers.assertActiveEnvironmentPort(3001);
     await tests.helpers.assertActiveEnvironmentName('FT env (copy)');
   });

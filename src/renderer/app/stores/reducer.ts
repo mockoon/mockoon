@@ -7,7 +7,6 @@ import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import {
   getBodyEditorMode,
-  updateDuplicatedEnvironments,
   updateDuplicatedRoutes
 } from 'src/renderer/app/stores/reducer-utils';
 import { EnvironmentsStatuses, StoreType } from 'src/renderer/app/stores/store';
@@ -72,7 +71,7 @@ export const environmentReducer = (
               ? activeEnvironment.routes[0].responses[0].uuid
               : null,
           activeTab: 'RESPONSE',
-          activeView: 'ROUTE',
+          activeView: 'ENV_ROUTES',
           environments: state.environments,
           routesFilter: ''
         };
@@ -117,7 +116,7 @@ export const environmentReducer = (
             ? newEnvironment.routes[0].responses[0].uuid
             : null,
         activeTab: 'RESPONSE',
-        activeView: 'ROUTE',
+        activeView: 'ENV_ROUTES',
         environments: state.environments,
         routesFilter: ''
       };
@@ -233,7 +232,7 @@ export const environmentReducer = (
             ? activeRoute.responses[0].uuid
             : null,
           activeTab: 'RESPONSE',
-          activeView: 'ROUTE',
+          activeView: 'ENV_ROUTES',
           environments: state.environments
         };
         break;
@@ -272,7 +271,7 @@ export const environmentReducer = (
           ? newRoute.responses[0].uuid
           : null,
         activeTab: 'RESPONSE',
-        activeView: 'ROUTE',
+        activeView: 'ENV_ROUTES',
         environments: state.environments
       };
       break;
@@ -321,7 +320,7 @@ export const environmentReducer = (
             ? activeEnvironment.routes[0].responses[0].uuid
             : null,
         activeTab: 'RESPONSE',
-        activeView: 'ROUTE',
+        activeView: 'ENV_ROUTES',
         environments,
         environmentsStatus: {
           ...state.environmentsStatus,
@@ -581,7 +580,7 @@ export const environmentReducer = (
           activeRouteUUID: newRoute.uuid,
           activeRouteResponseUUID: newRoute.responses[0].uuid,
           activeTab: 'RESPONSE',
-          activeView: 'ROUTE',
+          activeView: 'ENV_ROUTES',
           environments: state.environments.map((environment) => {
             if (environment.uuid === state.activeEnvironmentUUID) {
               const routes = [...environment.routes];
@@ -894,7 +893,7 @@ export const environmentReducer = (
         activeRouteResponseUUID: route.responses[0].uuid,
         activeEnvironmentUUID: targetEnvironmentUUID,
         activeTab: 'RESPONSE',
-        activeView: 'ROUTE',
+        activeView: 'ENV_ROUTES',
         environmentsStatus: {
           ...state.environmentsStatus,
           [targetEnvironmentUUID]: {
@@ -918,15 +917,6 @@ export const environmentReducer = (
       ...newState.bodyEditorConfig,
       mode: getBodyEditorMode(newState)
     },
-    duplicatedEnvironments:
-      action.type === ActionTypes.ADD_ENVIRONMENT ||
-      action.type === ActionTypes.REMOVE_ENVIRONMENT ||
-      action.type === ActionTypes.MOVE_ENVIRONMENTS ||
-      (action.type === ActionTypes.UPDATE_ENVIRONMENT &&
-        action.properties &&
-        action.properties.port)
-        ? updateDuplicatedEnvironments(newState)
-        : newState.duplicatedEnvironments,
     duplicatedRoutes:
       action.type === ActionTypes.ADD_ROUTE ||
       action.type === ActionTypes.REMOVE_ROUTE ||

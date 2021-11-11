@@ -79,10 +79,10 @@ describe('Proxy to server with zipped content', () => {
 
   it('Start environment', async () => {
     await tests.helpers.startEnvironment();
-    await tests.helpers.switchViewInHeader('ENV_LOGS');
+    await tests.helpers.switchView('ENV_LOGS');
   });
 
-  testCases.forEach((testCase, caseIndex) => {
+  testCases.forEach((testCase) => {
     it(testCase.call.description, async () => {
       await tests.helpers.httpCallAsserterWithPort(testCase.call, 3004);
       await tests.helpers.selectEnvironmentLogEntry(1);

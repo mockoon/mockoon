@@ -27,26 +27,36 @@ const makeString = (length: number): string => {
 };
 
 const truncateRoutePathCheckbox =
-  '.modal-dialog input#truncate-route-name ~ .custom-control-label';
+  '.modal-dialog input#settings-truncate-route-name ~ .custom-control-label';
 const analyticsCheckbox =
-  '.modal-dialog input#analytics ~ .custom-control-label';
-const bodySizeInput = '.modal-dialog input#log-body-size';
-const fakerSeedInput = '.modal-dialog input#faker-seed';
-const fakerLocaleSelect = '.modal-dialog select#faker-locale';
+  '.modal-dialog input#settings-analytics ~ .custom-control-label';
+const bodySizeInput = '.modal-dialog input#settings-log-body-size';
+const fakerSeedInput = '.modal-dialog input#settings-faker-seed';
+const fakerLocaleSelect = '.modal-dialog select#settings-faker-locale';
 const prettyPrintCheckbox =
-  '.modal-dialog input#storage-pretty-print ~ .custom-control-label';
+  '.modal-dialog input#settings-storage-pretty-print ~ .custom-control-label';
 
 describe('Settings', () => {
-  describe('Route path truncate', () => {
+  describe('Environment and route path truncate', () => {
     const tests = new Tests('settings');
 
-    it('Path should be truncated by default', async () => {
+    it('Environment and route paths should be truncated by default', async () => {
+      await tests.helpers.switchView('ENV_SETTINGS');
+      await tests.helpers.setElementValue(
+        'input[formcontrolname="endpointPrefix"]',
+        'very/long/prefix/path/that/will/be/truncated/in/the/menu'
+      );
+      await tests.helpers.switchView('ENV_ROUTES');
+
       await tests.helpers.waitElementExist(
         '.routes-menu .nav.menu-list .nav-item:nth-child(2) .route-path.ellipsis'
       );
+      await tests.helpers.waitElementExist(
+        '.environments-menu .nav.menu-list .nav-item:nth-child(1) .menu-subtitle.ellipsis'
+      );
     });
 
-    it('Disable route path truncate in settings and verify persistence', async () => {
+    it('Disable path truncation in settings and verify persistence', async () => {
       await tests.helpers.openSettingsModal();
       await tests.helpers.elementClick(truncateRoutePathCheckbox);
       await tests.helpers.closeModal();
@@ -59,9 +69,12 @@ describe('Settings', () => {
       );
     });
 
-    it('Path should not be truncated after setting update', async () => {
+    it('Environment and routes paths should not be truncated after setting update', async () => {
       await tests.helpers.waitElementExist(
         '.routes-menu .nav.menu-list .nav-item:nth-child(2) .route-path.text-break'
+      );
+      await tests.helpers.waitElementExist(
+        '.environments-menu .nav.menu-list .nav-item:nth-child(1) .menu-subtitle.text-break'
       );
     });
   });
@@ -88,7 +101,10 @@ describe('Settings', () => {
 
     it('should modify the limit and verify the settings file', async () => {
       await tests.helpers.openSettingsModal();
-      await tests.helpers.setElementValue('input[id="log-max-count"]', '000');
+      await tests.helpers.setElementValue(
+        'input[id="settings-log-max-count"]',
+        '000'
+      );
       await tests.helpers.closeModal();
 
       await tests.helpers.waitForAutosave();
@@ -106,7 +122,7 @@ describe('Settings', () => {
     it('should disable telemetry and verify the settings file', async () => {
       await tests.helpers.openSettingsModal();
       await tests.helpers.elementClick(
-        '.modal-dialog input#enableTelemetry ~ .custom-control-label'
+        '.modal-dialog input#settings-enable-telemetry ~ .custom-control-label'
       );
       await tests.helpers.closeModal();
 
@@ -124,7 +140,7 @@ describe('Settings', () => {
 
     it('Start the environment', async () => {
       await tests.helpers.startEnvironment();
-      await tests.helpers.switchViewInHeader('ENV_LOGS');
+      await tests.helpers.switchView('ENV_LOGS');
     });
 
     it('Set log body size to 100', async () => {

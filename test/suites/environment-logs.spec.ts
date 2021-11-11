@@ -52,7 +52,7 @@ describe('Environment logs', () => {
     describe('Verify environment logs after GET call to /prefix/endpoint', () => {
       it(endpointCall.description, async () => {
         await tests.helpers.httpCallAsserter(endpointCall);
-        await tests.helpers.switchViewInHeader('ENV_LOGS');
+        await tests.helpers.switchView('ENV_LOGS');
       });
 
       it('Environment logs menu shows a call that was caught by the application', async () => {
@@ -222,8 +222,11 @@ describe('Environment logs', () => {
       });
 
       it('Mock /prefix/test log', async () => {
+        await tests.helpers.switchView('ENV_ROUTES');
         await tests.helpers.countRoutes(2);
+        await tests.helpers.switchView('ENV_LOGS');
         await tests.helpers.environmentLogClickMockButton(1);
+        await tests.helpers.switchView('ENV_ROUTES');
         await tests.helpers.countRoutes(3);
       });
 
@@ -239,7 +242,7 @@ describe('Environment logs', () => {
       });
 
       it('Environment logs have 3 entries', async () => {
-        await tests.helpers.switchViewInHeader('ENV_LOGS');
+        await tests.helpers.switchView('ENV_LOGS');
         await tests.helpers.countEnvironmentLogsEntries(3);
       });
 
@@ -333,6 +336,9 @@ describe('Environment logs', () => {
   });
 
   describe('Environments logs UI behavior', () => {
+    const headerTabSelector =
+      'app-header .header .nav .nav-item:nth-child(3) .nav-link';
+
     describe('Navigate in environments logs', () => {
       const tests = new Tests('environment-logs');
 
@@ -340,17 +346,19 @@ describe('Environment logs', () => {
         await tests.helpers.startEnvironment();
       });
 
-      it('Verify "no records" message presence', async () => {
-        await tests.helpers.switchViewInHeader('ENV_LOGS');
+      it('Verify "no records" message presence and no counter absence', async () => {
+        await tests.helpers.switchView('ENV_LOGS');
         await tests.helpers.assertLogsEmpty();
+        await tests.helpers.assertElementText(headerTabSelector, 'Logs');
       });
 
       it(endpointCall.description, async () => {
         await tests.helpers.httpCallAsserter(endpointCall);
       });
 
-      it('Verify "no entry selected" message presence before an entry is selected', async () => {
+      it('Verify "no entry selected" message presence before an entry is selected and counter presence', async () => {
         await tests.helpers.assertNoLogEntrySelected();
+        await tests.helpers.assertElementText(headerTabSelector, 'Logs 1');
       });
 
       it('Select entry and verify that it is displayed on the right', async () => {
@@ -384,9 +392,11 @@ describe('Environment logs', () => {
         await tests.helpers.closeModal();
       });
 
-      it('Clear logs and verify message presence', async () => {
+      it('Clear logs, verify message presence and counter absence', async () => {
         await tests.helpers.clearEnvironmentLogs();
         await tests.helpers.assertLogsEmpty();
+
+        await tests.helpers.assertElementText(headerTabSelector, 'Logs');
       });
     });
 
@@ -396,7 +406,10 @@ describe('Environment logs', () => {
       it('Changes log setting', async () => {
         await tests.helpers.openSettingsModal();
         // Add 0 to default value of 1
-        await tests.helpers.setElementValue('input[id="log-max-count"]', 0);
+        await tests.helpers.setElementValue(
+          'input[id="settings-log-max-count"]',
+          0
+        );
         await tests.helpers.closeModal();
       });
 
@@ -405,7 +418,7 @@ describe('Environment logs', () => {
       });
 
       it('Verify "no records" message presence', async () => {
-        await tests.helpers.switchViewInHeader('ENV_LOGS');
+        await tests.helpers.switchView('ENV_LOGS');
         await tests.helpers.assertLogsEmpty();
       });
 
@@ -442,7 +455,7 @@ describe('Environment logs', () => {
     });
 
     it('Select second log entry', async () => {
-      await tests.helpers.switchViewInHeader('ENV_LOGS');
+      await tests.helpers.switchView('ENV_LOGS');
       await tests.helpers.selectEnvironmentLogEntry(2);
       await tests.helpers.assertEnvironmentLogEntryActive(2);
     });
@@ -459,14 +472,14 @@ describe('Environment logs', () => {
     });
 
     it('Select first log entry', async () => {
-      await tests.helpers.switchViewInHeader('ENV_LOGS');
+      await tests.helpers.switchView('ENV_LOGS');
       await tests.helpers.selectEnvironmentLogEntry(1);
       await tests.helpers.assertEnvironmentLogEntryActive(1);
     });
 
     it('Go back to first environment logs and verify that second entry is active', async () => {
       await tests.helpers.selectEnvironment(1);
-      await tests.helpers.switchViewInHeader('ENV_LOGS');
+      await tests.helpers.switchView('ENV_LOGS');
       await tests.helpers.assertEnvironmentLogEntryActive(2);
     });
   });

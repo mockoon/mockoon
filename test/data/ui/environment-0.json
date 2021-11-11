@@ -82,7 +82,7 @@
       "sequentialResponse": false
     }
   ],
-  "proxyMode": true,
+  "proxyMode": false,
   "proxyHost": "",
   "https": true,
   "cors": true,

@@ -364,7 +364,7 @@ describe('Schema validation', () => {
       );
       await tests.helpers.elementClick('.modal-footer .btn:first-of-type');
       await tests.helpers.countEnvironments(1);
-      await tests.helpers.assertActiveEnvironmentName('missing identifier');
+      await tests.helpers.assertHasActiveEnvironment('missing identifier');
 
       await tests.helpers.waitForAutosave();
       await tests.helpers.verifyObjectPropertyInFile(

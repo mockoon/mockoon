@@ -24,22 +24,29 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { NgxMaskModule } from 'ngx-mask';
-import { BannerComponent } from 'src/renderer/app/components/banner.component';
-import { ChangelogModalComponent } from 'src/renderer/app/components/changelog-modal.component';
-import { ConfirmModalComponent } from 'src/renderer/app/components/confirm-modal/confirm-modal.component';
+import { BannerComponent } from 'src/renderer/app/components/banner/banner.component';
 import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/context-menu.component';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
-import { EditorModalComponent } from 'src/renderer/app/components/editor-modal/editor-modal.component';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
-import { EnvironmentLogsComponent } from 'src/renderer/app/components/environment-logs.component';
-import { EnvironmentsMenuComponent } from 'src/renderer/app/components/environments-menu/environments-menu.component';
+import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
+import { EnvironmentLogsComponent } from 'src/renderer/app/components/environment-logs/environment-logs.component';
+import { EnvironmentProxyComponent } from 'src/renderer/app/components/environment-proxy/environment-proxy.component';
+import { EnvironmentRoutesComponent } from 'src/renderer/app/components/environment-routes/environment-routes.component';
+import { EnvironmentSettingsComponent } from 'src/renderer/app/components/environment-settings/environment-settings.component';
 import { FooterComponent } from 'src/renderer/app/components/footer/footer.component';
-import { HeadersListComponent } from 'src/renderer/app/components/headers-list.component';
+import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
+import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
+import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
+import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-menu/routes-menu.component';
+import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
+import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
+import { DuplicateRouteModalComponent } from 'src/renderer/app/components/modals/duplicate-route-modal/duplicate-route-modal.component';
+import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
+import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
+import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
-import { RoutesMenuComponent } from 'src/renderer/app/components/routes-menu/routes-menu.component';
-import { SettingsModalComponent } from 'src/renderer/app/components/settings-modal.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
-import { WelcomeModalComponent } from 'src/renderer/app/components/welcome-modal.component';
 import { Config } from 'src/renderer/app/config';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
@@ -55,11 +62,11 @@ import { NgbConfigFactory } from 'src/renderer/app/modules-config/ngb.config';
 import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handler';
 import { environment } from 'src/renderer/environments/environment';
 import { AppComponent } from './app.component';
-import { DuplicateRouteModalComponent } from './components/move-route-modal/duplicate-route-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent,
     InputNumberDirective,
     ResizeColumnDirective,
     ValidPathDirective,
@@ -72,6 +79,10 @@ import { DuplicateRouteModalComponent } from './components/move-route-modal/dupl
     EditorModalComponent,
     ConfirmModalComponent,
     EnvironmentLogsComponent,
+    EnvironmentProxyComponent,
+    EnvironmentHeadersComponent,
+    EnvironmentSettingsComponent,
+    EnvironmentRoutesComponent,
     HeadersListComponent,
     BannerComponent,
     RouteResponseRulesComponent,
@@ -81,7 +92,8 @@ import { DuplicateRouteModalComponent } from './components/move-route-modal/dupl
     FooterComponent,
     DuplicateRouteModalComponent,
     EditorComponent,
-    CustomSelectComponent
+    CustomSelectComponent,
+    SvgComponent
   ],
   imports: [
     BrowserAnimationsModule,

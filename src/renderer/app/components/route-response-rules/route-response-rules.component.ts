@@ -24,6 +24,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
+import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { MoveArrayItem } from 'src/renderer/app/libs/utils.lib';
 import { SelectOptionsList } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -71,6 +72,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     empty_array: ''
   };
   public rulesOperatorsList: LogicalOperators[] = ['OR', 'AND'];
+  public deleteRuleRequested$ = new TimedBoolean();
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
@@ -141,7 +143,11 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
    * Remove a rule from the list
    */
   public removeRule(ruleIndex: number) {
-    this.rules.removeAt(ruleIndex);
+    const confirmValue = this.deleteRuleRequested$.readValue(ruleIndex);
+
+    if (confirmValue.enabled && ruleIndex === confirmValue.payload) {
+      this.rules.removeAt(ruleIndex);
+    }
   }
 
   /**

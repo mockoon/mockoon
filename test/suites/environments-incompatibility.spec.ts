@@ -6,6 +6,7 @@ describe('Environments incompatibility', () => {
 
   it('should have only one active environment "FT env 2", incompatible environment should be ignored when app load', async () => {
     await tests.helpers.countEnvironments(1);
+    await tests.helpers.switchView('ENV_SETTINGS');
     await tests.helpers.assertActiveEnvironmentName('FT env 2');
 
     await tests.helpers.waitForAutosave();

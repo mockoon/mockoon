@@ -66,31 +66,6 @@ export const getBodyEditorMode = (state: StoreType) => {
 };
 
 /**
- * List duplicated environments (sharing same port)
- *
- * @param state
- */
-export const updateDuplicatedEnvironments = (state: StoreType): Set<string> => {
-  const duplicatedEnvironmentsUUIDs = new Set<string>();
-
-  state.environments.forEach((environment, environmentIndex) => {
-    // extract all environments with same port than current one
-    state.environments.forEach(
-      (otherEnvironment: Environment, otherEnvironmentIndex: number) => {
-        if (
-          otherEnvironmentIndex > environmentIndex &&
-          otherEnvironment.port === environment.port
-        ) {
-          duplicatedEnvironmentsUUIDs.add(otherEnvironment.uuid);
-        }
-      }
-    );
-  });
-
-  return duplicatedEnvironmentsUUIDs;
-};
-
-/**
  * List duplicated routes per environment (sharing same endpoint and method)
  *
  * @param state
