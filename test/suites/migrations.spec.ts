@@ -191,4 +191,27 @@ describe('Environments migrations', () => {
       );
     });
   });
+
+  describe('No. 19', () => {
+    const filesPath = 'migrations/19';
+    const tests = new Tests(filesPath);
+
+    it('should remove https property and replace by tlsOptions', async () => {
+      await tests.helpers.waitForAutosave();
+
+      await tests.helpers.verifyObjectPropertyInFile(
+        './tmp/storage/environment-0.json',
+        [
+          'https',
+          'tlsOptions.enabled',
+          'tlsOptions.pfxPath',
+          'tlsOptions.certPath',
+          'tlsOptions.keyPath',
+          'tlsOptions.caPath',
+          'tlsOptions.passphrase'
+        ],
+        [undefined, true, '', '', '', '', '']
+      );
+    });
+  });
 });

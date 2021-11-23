@@ -1,6 +1,6 @@
 {
   "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
-  "lastMigration": 18,
+  "lastMigration": 19,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -508,11 +508,19 @@
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "https": false,
   "cors": true,
   "headers": [{ "key": "Content-Type", "value": "application/json" }],
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
 }

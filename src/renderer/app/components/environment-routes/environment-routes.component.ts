@@ -271,7 +271,7 @@ default?
     const activeRoute = this.store.getActiveRoute();
 
     let routeUrl =
-      (activeEnvironment.https ? 'https://' : 'http://') +
+      (activeEnvironment.tlsOptions.enabled ? 'https://' : 'http://') +
       'localhost:' +
       activeEnvironment.port +
       '/';

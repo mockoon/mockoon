@@ -1,6 +1,6 @@
 {
   "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-  "lastMigration": 18,
+  "lastMigration": 19,
   "name": "Proxy disabled",
   "endpointPrefix": "",
   "latency": 0,
@@ -35,12 +35,20 @@
   "proxyMode": false,
   "proxyRemovePrefix": false,
   "proxyHost": "https://127.0.0.1:3000",
-  "https": true,
   "cors": true,
   "headers": [],
   "proxyReqHeaders": [],
   "proxyResHeaders": [
     { "key": "x-proxy-response-header", "value": "header value" }
   ],
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": true,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
 }

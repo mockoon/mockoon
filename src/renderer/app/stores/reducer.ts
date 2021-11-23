@@ -404,7 +404,7 @@ export const environmentReducer = (
         'proxyMode',
         'proxyHost',
         'proxyRemovePrefix',
-        'https',
+        'tlsOptions',
         'hostname',
         'cors'
       ];

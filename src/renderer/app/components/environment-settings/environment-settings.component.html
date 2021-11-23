@@ -53,10 +53,203 @@
     </div>
   </div>
 
+  <div class="form-group">
+    <div class="input-group">
+      <div class="custom-control custom-checkbox">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          id="env-settings-localhost-only"
+          formControlName="localhostOnly"
+        />
+        <label class="custom-control-label" for="env-settings-localhost-only"
+          >Localhost Only
+        </label>
+      </div>
+      <div class="input-group-append ml-1">
+        <app-svg
+          icon="info"
+          class="ml-1"
+          ngbTooltip="Listen to 127.0.0.1 only instead of all network adapters"
+        ></app-svg>
+      </div>
+    </div>
+  </div>
+
   <app-title-separator
-    heading="Server options"
-    icon="storage"
+    heading="TLS"
+    icon="https"
+    subheading="TLS uses a self-signed certificate by default"
   ></app-title-separator>
+
+  <ng-container formGroupName="tlsOptions">
+    <div class="form-group">
+      <div class="custom-control custom-checkbox">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          id="env-settings-tls-enabled"
+          formControlName="enabled"
+        />
+        <label class="custom-control-label" for="env-settings-tls-enabled"
+          >Enable TLS
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group d-flex">
+      <div class="align-self-end mr-2 mb-2">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <ng-container *ngFor="let certType of ['CERT', 'PFX']">
+            <label
+              class="btn btn-xs"
+              [ngClass]="{
+                active:
+                  certType ===
+                  activeEnvironmentForm.get(['tlsOptions', 'type']).value,
+                'btn-primary':
+                  certType ===
+                  activeEnvironmentForm.get(['tlsOptions', 'type']).value,
+                'btn-secondary':
+                  certType !==
+                  activeEnvironmentForm.get(['tlsOptions', 'type']).value
+              }"
+            >
+              <input
+                type="radio"
+                formControlName="type"
+                id="certType{{ certType }}"
+                [value]="certType"
+                autocomplete="off"
+                [checked]="
+                  certType ===
+                  activeEnvironmentForm.get(['tlsOptions', 'type']).value
+                "
+              />
+              {{ certType }}
+            </label>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="flex-fill d-flex pl-2">
+        <div
+          *ngIf="
+            activeEnvironmentForm.get(['tlsOptions', 'type']).value === 'PFX'
+          "
+          class="form-group flex-fill mb-0"
+        >
+          <div class="input-group">
+            <label for="env-settings-tls-pfxPath" class="col-form-label pr-2"
+              >PFX or PKCS12 path</label
+            ><input
+              type="text"
+              class="form-control col-4"
+              formControlName="pfxPath"
+              id="env-settings-tls-pfxPath"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-link"
+                ngbTooltip="Browse files"
+                (click)="browseFiles('pfxPath')"
+              >
+                <app-svg icon="find_in_page"></app-svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            activeEnvironmentForm.get(['tlsOptions', 'type']).value === 'CERT'
+          "
+          class="form-group flex-fill mb-0 mr-2"
+        >
+          <div class="input-group">
+            <label for="env-settings-tls-certPath" class="col-form-label pr-2"
+              >Cert path</label
+            ><input
+              type="text"
+              class="form-control"
+              formControlName="certPath"
+              id="env-settings-tls-certPath"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-link"
+                ngbTooltip="Browse files"
+                (click)="browseFiles('certPath')"
+              >
+                <app-svg icon="find_in_page"></app-svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            activeEnvironmentForm.get(['tlsOptions', 'type']).value === 'CERT'
+          "
+          class="form-group flex-fill mb-0"
+        >
+          <div class="input-group">
+            <label for="env-settings-tls-keyPath" class="col-form-label pr-2"
+              >Key path</label
+            ><input
+              type="text"
+              class="form-control"
+              formControlName="keyPath"
+              id="env-settings-tls-keyPath"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-link"
+                ngbTooltip="Browse files"
+                (click)="browseFiles('keyPath')"
+              >
+                <app-svg icon="find_in_page"></app-svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="input-group">
+        <label for="env-settings-tls-caPath" class="col-form-label pr-2"
+          >CA cert path</label
+        ><input
+          type="text"
+          class="form-control col-4"
+          formControlName="caPath"
+          id="env-settings-tls-caPath"
+        />
+        <div class="input-group-append">
+          <button
+            class="btn btn-link"
+            ngbTooltip="Browse files"
+            (click)="browseFiles('caPath')"
+          >
+            <app-svg icon="find_in_page"></app-svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group">
+        <label for="env-settings-tls-passphrase" class="col-form-label pr-2"
+          >Cert passphrase</label
+        ><input
+          type="text"
+          class="form-control col-4"
+          formControlName="passphrase"
+          id="env-settings-tls-passphrase"
+        />
+      </div>
+    </div>
+  </ng-container>
+
+  <app-title-separator heading="Misc" icon="storage"></app-title-separator>
 
   <div class="form-group">
     <div class="input-group">
@@ -79,52 +272,6 @@
           icon="info"
           class="ml-1"
           ngbTooltip="Global environment latency applied to all routes"
-        ></app-svg>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="input-group">
-      <div class="custom-control custom-checkbox">
-        <input
-          type="checkbox"
-          class="custom-control-input"
-          id="env-settings-https"
-          formControlName="https"
-        />
-        <label class="custom-control-label" for="env-settings-https"
-          >HTTPS
-        </label>
-      </div>
-      <div class="input-group-append ml-1">
-        <app-svg
-          icon="info"
-          class="ml-1"
-          ngbTooltip="Serves your mock API over TLS with a self signed certificate"
-        ></app-svg>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="input-group">
-      <div class="custom-control custom-checkbox">
-        <input
-          type="checkbox"
-          class="custom-control-input"
-          id="env-settings-localhost-only"
-          formControlName="localhostOnly"
-        />
-        <label class="custom-control-label" for="env-settings-localhost-only"
-          >Localhost Only
-        </label>
-      </div>
-      <div class="input-group-append ml-1">
-        <app-svg
-          icon="info"
-          class="ml-1"
-          ngbTooltip="Listen to 127.0.0.1 only instead of all network adapters"
         ></app-svg>
       </div>
     </div>

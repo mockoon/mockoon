@@ -1,6 +1,6 @@
 {
   "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-  "lastMigration": 18,
+  "lastMigration": 19,
   "name": "Export env",
   "endpointPrefix": "",
   "latency": 0,
@@ -34,11 +34,19 @@
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "https": false,
   "cors": true,
   "headers": [{ "key": "", "value": "" }],
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
 }

@@ -237,3 +237,14 @@ $http-methods-light: ('get', lighten($blue, 10%)),
     box-shadow: inset -2px 0 0 0 rgba($blue, 0.1);
   }
 }
+
+.brackets {
+  background-image: linear-gradient($gray-500, $gray-500),
+    linear-gradient($gray-500, $gray-500);
+  background-repeat: no-repeat;
+  background-size: 8px 3px;
+  background-position: top left, bottom left;
+  border-left: 3px solid $gray-500;
+  margin: $spacer / 2;
+  width: 11px;
+}

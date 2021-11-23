@@ -107,11 +107,11 @@
                   }"
                 >
                   <app-svg
-                    *ngIf="environment.https"
+                    *ngIf="environment.tlsOptions.enabled"
                     class="text-warning pr-1"
                     icon="https"
                     size="12"
-                    ngbTooltip="HTTPS enabled"
+                    ngbTooltip="TLS enabled"
                   ></app-svg>
                   <span
                     >{{ environment.hostname }}:{{ environment.port }}/{{

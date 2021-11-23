@@ -1,6 +1,6 @@
 {
   "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-  "lastMigration": 18,
+  "lastMigration": 19,
   "name": "Demo users API V2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -200,7 +200,6 @@
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "https": true,
   "cors": true,
   "headers": [
     { "key": "Global-Header", "value": "global-header" },
@@ -209,5 +208,14 @@
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": true,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
 }

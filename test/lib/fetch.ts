@@ -52,14 +52,16 @@ export const fetch = (params: {
           resolve({
             status: response.statusCode,
             headers: response.headers,
-            body
+            body,
+            cert: (response?.connection as any).getPeerCertificate
+              ? (response?.connection as any).getPeerCertificate()
+              : null
           })
         );
       }
     );
 
     request.on('error', (err) => reject(err));
-
     request.write(data);
     request.end();
   });

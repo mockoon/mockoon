@@ -14,6 +14,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
+import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -31,7 +32,8 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private environmentsService: EnvironmentsService,
-    private store: Store
+    private store: Store,
+    private dialogsService: DialogsService
   ) {}
 
   ngOnInit() {
@@ -47,6 +49,17 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Open file browsing dialog
+   */
+  public async browseFiles(target: string) {
+    const filePath = await this.dialogsService.showOpenDialog('Choose a file');
+
+    if (filePath) {
+      this.activeEnvironmentForm.get(['tlsOptions', target]).setValue(filePath);
+    }
+  }
+
+  /**
    * Init active environment form and subscribe to changes
    */
   private initForms() {
@@ -55,7 +68,15 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
       port: [EnvironmentDefault.port],
       endpointPrefix: [EnvironmentDefault.endpointPrefix],
       latency: [EnvironmentDefault.latency],
-      https: [EnvironmentDefault.https],
+      tlsOptions: this.formBuilder.group({
+        enabled: [EnvironmentDefault.tlsOptions.enabled],
+        type: [EnvironmentDefault.tlsOptions.type],
+        pfxPath: [EnvironmentDefault.tlsOptions.pfxPath],
+        certPath: [EnvironmentDefault.tlsOptions.certPath],
+        keyPath: [EnvironmentDefault.tlsOptions.keyPath],
+        caPath: [EnvironmentDefault.tlsOptions.caPath],
+        passphrase: [EnvironmentDefault.tlsOptions.passphrase]
+      }),
       localhostOnly: [false],
       cors: [EnvironmentDefault.cors]
     });
@@ -103,7 +124,7 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
               port: activeEnvironment.port,
               endpointPrefix: activeEnvironment.endpointPrefix,
               latency: activeEnvironment.latency,
-              https: activeEnvironment.https,
+              tlsOptions: activeEnvironment.tlsOptions,
               localhostOnly: activeEnvironment.hostname === '127.0.0.1',
               cors: activeEnvironment.cors
             },

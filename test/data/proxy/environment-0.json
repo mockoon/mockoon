@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 18,
+  "lastMigration": 19,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -41,10 +41,18 @@
   "proxyMode": true,
   "proxyRemovePrefix": false,
   "proxyHost": "https://mockoon.com/",
-  "https": true,
   "cors": true,
   "headers": [],
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": true,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
 }

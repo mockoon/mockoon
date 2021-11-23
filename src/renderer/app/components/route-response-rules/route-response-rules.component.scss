@@ -1,18 +1,5 @@
 @import 'src/renderer/styles/bootstrap-variables.scss';
 
-.rules {
-  .rules-bracket {
-    background-image: linear-gradient($gray-500, $gray-500),
-      linear-gradient($gray-500, $gray-500);
-    background-repeat: no-repeat;
-    background-size: 8px 3px;
-    background-position: top left, bottom left;
-    border-left: 3px solid $gray-500;
-    margin: $spacer / 2;
-    width: 11px;
-  }
-}
-
 .rule-item {
   &:not(:first-of-type) {
     margin-top: $spacer / 2;

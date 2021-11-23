@@ -471,6 +471,11 @@ export class Helpers {
           expect(response.body).to.have.string(
             (httpCall.testedResponse.body as { contains: string }).contains
           );
+        } else if (
+          propertyName === 'cert' &&
+          typeof httpCall.testedResponse.cert === 'object'
+        ) {
+          expect(response.cert).to.deep.include(httpCall.testedResponse.cert);
         } else {
           expect(response[propertyName]).to.equal(
             httpCall.testedResponse[propertyName]

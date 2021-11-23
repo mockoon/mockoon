@@ -15,7 +15,7 @@ export const Config = {
     templating: docsURL + 'templating/overview/',
     proxy: docsURL + 'proxy-mode/',
     cors: docsURL + 'cors/',
-    https: docsURL + 'https/',
+    https: docsURL + 'serving-over-tls/',
     headers: docsURL + 'response-headers/',
     rules: docsURL + 'route-responses/multiple-responses/',
     hostname: docsURL + 'listening-hostname/',

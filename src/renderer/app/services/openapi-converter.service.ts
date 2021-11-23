@@ -157,9 +157,9 @@ export class OpenAPIConverterService {
       info: { title: environment.name, version: '1.0.0' },
       servers: [
         {
-          url: `${environment.https ? 'https' : 'http'}://localhost:${
-            environment.port
-          }/${environment.endpointPrefix}`
+          url: `${
+            environment.tlsOptions.enabled ? 'https' : 'http'
+          }://localhost:${environment.port}/${environment.endpointPrefix}`
         }
       ],
       paths: environment.routes.reduce<OpenAPIV3.PathsObject>(

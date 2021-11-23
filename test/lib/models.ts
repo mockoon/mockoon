@@ -4,6 +4,14 @@ export type HttpCallResponse = {
   headers?: {
     [key in string]: string | string[];
   };
+  cert?: {
+    issuer: {
+      C?: string;
+      CN?: string;
+      O?: string;
+      ST?: string;
+    };
+  };
 };
 
 export type HttpCall = {

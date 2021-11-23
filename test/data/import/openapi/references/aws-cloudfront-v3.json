@@ -1,6 +1,6 @@
 {
   "uuid": "3e16e1a0-a802-11eb-9a34-f1c6ade0819b",
-  "lastMigration": 18,
+  "lastMigration": 19,
   "name": "Amazon CloudFront",
   "endpointPrefix": "",
   "latency": 0,
@@ -3971,11 +3971,19 @@
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "https": false,
   "cors": true,
   "headers": [],
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
 }

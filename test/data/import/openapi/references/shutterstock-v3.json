@@ -1,6 +1,6 @@
 {
   "uuid": "f98d4710-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 18,
+  "lastMigration": 19,
   "name": "Shutterstock API Explorer",
   "endpointPrefix": "",
   "latency": 0,
@@ -5420,11 +5420,19 @@
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "https": false,
   "cors": true,
   "headers": [],
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
 }

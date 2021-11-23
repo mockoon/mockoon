@@ -59,6 +59,11 @@ export const Messages: {
     showToast: true,
     toastType: 'error'
   }),
+  CERT_FILE_NOT_FOUND: (messageParams) => ({
+    message: `Certificate file not found: ${messageParams.error.message}`,
+    showToast: true,
+    toastType: 'error'
+  }),
   REQUEST_BODY_PARSE: (messageParams) => {
     const message = `Error while parsing entering body: ${messageParams.error.message}`;
 

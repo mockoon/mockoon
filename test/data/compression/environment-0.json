@@ -1,6 +1,6 @@
 {
   "uuid": "f98d0d37-b586-4a57-bbe5-3699bc46ebbe",
-  "lastMigration": 18,
+  "lastMigration": 19,
   "name": "Compression (proxy)",
   "endpointPrefix": "",
   "latency": 0,
@@ -9,10 +9,18 @@
   "proxyMode": true,
   "proxyRemovePrefix": true,
   "proxyHost": "http://localhost:3999/",
-  "https": false,
   "cors": true,
   "headers": [{ "key": "Content-Type", "value": "application/json" }],
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
 }

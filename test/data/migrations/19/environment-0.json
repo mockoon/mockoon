@@ -1,0 +1,54 @@
+{
+  "uuid": "0a8ef876-2e61-4798-bc72-8d665f82b12c",
+  "lastMigration": 18,
+  "name": "Migration 19",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0",
+  "routes": [
+    {
+      "uuid": "56e5527c-e3df-4529-ae09-1c9388120967",
+      "method": "get",
+      "endpoint": "test",
+      "documentation": "Test documentation",
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false,
+      "responses": [
+        {
+          "uuid": "8ac0d424-1317-4b3c-9c0e-e4fb6dc1b414",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false
+        }
+      ]
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "https": true,
+  "cors": true,
+  "headers": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ]
+}

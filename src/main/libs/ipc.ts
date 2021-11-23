@@ -197,87 +197,84 @@ export const initIPCListeners = (
     async (event, data) => await openAPIValidate(data)
   );
 
-  ipcMain.handle(
-    'APP_START_SERVER',
-    async (event, environment, environmentPath) => {
-      const environmentDirectory = dirname(environmentPath);
-      const server = new MockoonServer(environment, {
-        environmentDirectory,
-        refreshEnvironmentFunction: (environmentUUID) => {
-          const updatedEnvironment = updatedEnvironments[environmentUUID];
-          if (updatedEnvironment) {
-            return updatedEnvironment;
-          }
-
-          return null;
+  ipcMain.handle('APP_START_SERVER', (event, environment, environmentPath) => {
+    const environmentDirectory = dirname(environmentPath);
+    const server = new MockoonServer(environment, {
+      environmentDirectory,
+      refreshEnvironmentFunction: (environmentUUID) => {
+        const updatedEnvironment = updatedEnvironments[environmentUUID];
+        if (updatedEnvironment) {
+          return updatedEnvironment;
         }
-      });
 
-      server.once('started', () => {
-        runningServerInstances[environment.uuid] = server;
+        return null;
+      }
+    });
 
+    server.once('started', () => {
+      runningServerInstances[environment.uuid] = server;
+
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'started'
+      );
+    });
+
+    server.once('stopped', () => {
+      delete runningServerInstances[environment.uuid];
+
+      // verify that window is still present as we stop servers when app quits too
+      if (!mainWindow.isDestroyed()) {
         mainWindow.webContents.send(
           'APP_SERVER_EVENT',
           environment.uuid,
-          'started'
+          'stopped'
         );
-      });
 
-      server.once('stopped', () => {
-        delete runningServerInstances[environment.uuid];
+        return;
+      }
+    });
 
-        // verify that window is still present as we stop servers when app quits too
-        if (!mainWindow.isDestroyed()) {
-          mainWindow.webContents.send(
-            'APP_SERVER_EVENT',
-            environment.uuid,
-            'stopped'
-          );
+    server.once('creating-proxy', () => {
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'creating-proxy'
+      );
+    });
 
-          return;
+    server.on('entering-request', () => {
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'entering-request'
+      );
+    });
+
+    server.on('transaction-complete', (transaction) => {
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'transaction-complete',
+        { transaction }
+      );
+    });
+
+    server.on('error', (errorCode, originalError) => {
+      mainWindow.webContents.send(
+        'APP_SERVER_EVENT',
+        environment.uuid,
+        'error',
+        {
+          errorCode,
+          originalError
         }
-      });
+      );
+    });
 
-      server.once('creating-proxy', () => {
-        mainWindow.webContents.send(
-          'APP_SERVER_EVENT',
-          environment.uuid,
-          'creating-proxy'
-        );
-      });
-
-      server.on('entering-request', () => {
-        mainWindow.webContents.send(
-          'APP_SERVER_EVENT',
-          environment.uuid,
-          'entering-request'
-        );
-      });
-
-      server.on('transaction-complete', (transaction) => {
-        mainWindow.webContents.send(
-          'APP_SERVER_EVENT',
-          environment.uuid,
-          'transaction-complete',
-          { transaction }
-        );
-      });
-
-      server.on('error', (errorCode, originalError) => {
-        mainWindow.webContents.send(
-          'APP_SERVER_EVENT',
-          environment.uuid,
-          'error',
-          {
-            errorCode,
-            originalError
-          }
-        );
-      });
-
-      server.start();
-    }
-  );
+    server.start();
+  });
 
   ipcMain.handle('APP_STOP_SERVER', async (event, environmentUUID) => {
     if (runningServerInstances[environmentUUID]) {
