@@ -356,8 +356,7 @@ describe('Environment logs', () => {
         await tests.helpers.httpCallAsserter(endpointCall);
       });
 
-      it('Verify "no entry selected" message presence before an entry is selected and counter presence', async () => {
-        await tests.helpers.assertNoLogEntrySelected();
+      it('Verify the presence of the counter in the tab', async () => {
         await tests.helpers.assertElementText(headerTabSelector, 'Logs 1');
       });
 
