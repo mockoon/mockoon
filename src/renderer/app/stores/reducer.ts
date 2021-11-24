@@ -785,9 +785,19 @@ export const environmentReducer = (
         ].slice(0, state.settings.maxLogsPerEnvironment);
       }
 
+      const newActiveEnvironmentLogsUUID = {
+        ...state.activeEnvironmentLogsUUID
+      };
+      // when receiving the first log, immediately select it
+      if (newEnvironmentsLogs[action.environmentUUID].length === 1) {
+        newActiveEnvironmentLogsUUID[action.environmentUUID] =
+          action.logItem.UUID;
+      }
+
       newState = {
         ...state,
-        environmentsLogs: newEnvironmentsLogs
+        environmentsLogs: newEnvironmentsLogs,
+        activeEnvironmentLogsUUID: newActiveEnvironmentLogsUUID
       };
       break;
     }

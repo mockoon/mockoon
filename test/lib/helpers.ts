@@ -558,13 +558,6 @@ export class Helpers {
     expect(messageText).to.equal('No records yet');
   }
 
-  public async assertNoLogEntrySelected() {
-    const messageText = await this.getElementText(
-      '.environment-logs-column:nth-child(2) .message'
-    );
-    expect(messageText).to.equal('Please select a record');
-  }
-
   public async environmentLogBodyContains(str: string) {
     const elementText = await this.getElementText(
       'div.environment-logs-content-item.pre'

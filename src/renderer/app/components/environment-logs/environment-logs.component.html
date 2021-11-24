@@ -74,10 +74,7 @@
 
       <div class="col h-100 environment-logs-column">
         <div
-          *ngIf="
-            activeEnvironmentLog$ | async as selectedLog;
-            else selectLogTemplate
-          "
+          *ngIf="activeEnvironmentLog$ | async as selectedLog"
           class="environment-logs-content d-flex flex-column h-100"
         >
           <ng-container
@@ -416,10 +413,6 @@
     </div>
   </ng-container>
 </ng-container>
-
-<ng-template #selectLogTemplate>
-  <p class="message mt-4">Please select a record</p>
-</ng-template>
 
 <ng-template #emptyLogsTemplate>
   <p class="message mt-4">No records yet</p>

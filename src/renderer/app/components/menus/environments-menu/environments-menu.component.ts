@@ -1,5 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -34,7 +35,9 @@ import { Settings } from 'src/shared/models/settings.model';
   styleUrls: ['./environments-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
+export class EnvironmentsMenuComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @ViewChild('environmentsMenu')
   private environmentsMenu: ElementRef;
   public activeEnvironment$: Observable<Environment>;
@@ -61,15 +64,18 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     this.environments$ = this.store.select('environments');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.settings$ = this.store.select('settings');
+
+    this.initForms();
+    this.initFormValues();
+  }
+
+  ngAfterViewInit() {
     this.uiService.scrollEnvironmentsMenu.subscribe((scrollDirection) => {
       this.uiService.scroll(
         this.environmentsMenu.nativeElement,
         scrollDirection
       );
     });
-
-    this.initForms();
-    this.initFormValues();
   }
 
   ngOnDestroy() {
@@ -110,18 +116,28 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
    * Create a new environment. Append at the end of the list.
    */
   public addEnvironment() {
-    this.environmentsService.addEnvironment().subscribe();
-
-    this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
+    this.environmentsService
+      .addEnvironment()
+      .pipe(
+        tap(() => {
+          this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Open an environment. Append at the end of the list.
    */
-  public async openEnvironment() {
-    this.environmentsService.openEnvironment().subscribe(() => {
-      this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
-    });
+  public openEnvironment() {
+    this.environmentsService
+      .openEnvironment()
+      .pipe(
+        tap(() => {
+          this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
+        })
+      )
+      .subscribe();
   }
 
   /**
