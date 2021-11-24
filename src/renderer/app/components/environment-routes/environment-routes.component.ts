@@ -113,8 +113,12 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       }))
     );
     this.effectiveContentType$ = combineLatest([
-      this.activeEnvironment$,
-      this.activeRouteResponse$,
+      this.activeEnvironment$.pipe(
+        filter((activeEnvironment) => !!activeEnvironment)
+      ),
+      this.activeRouteResponse$.pipe(
+        filter((activeRouteResponse) => !!activeRouteResponse)
+      ),
       this.activeResponseFileMimeType$.pipe(startWith({ mimeType: null }))
     ]).pipe(
       map(([activeEnvironment, activeRouteResponse, fileMimeType]) => ({

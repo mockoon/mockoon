@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Environment } from '@mockoon/commons';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import {
@@ -45,6 +45,7 @@ export class HeaderComponent implements OnInit {
         title: 'Routes',
         icon: 'settings_input_component',
         count: this.activeEnvironment$.pipe(
+          filter((environment) => !!environment),
           map((environment) => environment.routes.length)
         )
       },
@@ -53,6 +54,7 @@ export class HeaderComponent implements OnInit {
         title: 'Headers',
         icon: 'featured_play_list',
         count: this.activeEnvironment$.pipe(
+          filter((environment) => !!environment),
           map((environment) => environment.headers.length)
         )
       },
@@ -61,6 +63,7 @@ export class HeaderComponent implements OnInit {
         title: 'Logs',
         icon: 'history',
         count: this.environmentLogs$.pipe(
+          filter((environmentLogs) => !!environmentLogs),
           map((environmentLogs) => environmentLogs.length)
         )
       },

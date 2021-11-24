@@ -21,14 +21,14 @@
       </li>
     </ul>
   </div>
-  <ng-container *ngIf="environments$ | async as environments">
-    <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
-      <ul
-        class="nav flex-column flex-fill menu-list"
-        #environmentsMenu
-        cdkDropList
-        (cdkDropListDropped)="reorderEnvironments($event)"
-      >
+  <ul
+    class="nav flex-column flex-fill menu-list"
+    #environmentsMenu
+    cdkDropList
+    (cdkDropListDropped)="reorderEnvironments($event)"
+  >
+    <ng-container *ngIf="environments$ | async as environments">
+      <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
         <ng-container *ngIf="environmentsStatus$ | async as environmentsStatus">
           <li
             *ngFor="let environment of environments"
@@ -123,9 +123,9 @@
             </a>
           </li>
         </ng-container>
-      </ul>
+      </ng-container>
     </ng-container>
-  </ng-container>
+  </ul>
   <div
     appResizeColumn
     type="environments"
