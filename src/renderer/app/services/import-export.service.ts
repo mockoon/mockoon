@@ -194,7 +194,7 @@ export class ImportExportService extends Logger {
    * @param url
    * @returns
    */
-  public importFromUrl(url: string): Observable<string> {
+  public importFromUrl(url: string): Observable<[string, string]> {
     this.logger.info(`Importing from URL: ${url}`);
 
     return this.http.get(url, { responseType: 'text' }).pipe(
@@ -206,7 +206,7 @@ export class ImportExportService extends Logger {
   /**
    * Load data from JSON file and import
    */
-  public importFromFile(): Observable<string> {
+  public importFromFile(): Observable<[string, string]> {
     this.logMessage('info', 'IMPORT_FROM_FILE');
 
     return from(
@@ -232,7 +232,7 @@ export class ImportExportService extends Logger {
   /**
    * Load data from clipboard and import
    */
-  public importFromClipboard(): Observable<string> {
+  public importFromClipboard(): Observable<[string, string]> {
     this.logMessage('info', 'IMPORT_FROM_CLIPBOARD');
 
     return from(MainAPI.invoke('APP_READ_CLIPBOARD')).pipe(

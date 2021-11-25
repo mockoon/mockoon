@@ -47,7 +47,7 @@ describe('Duplicate a route to an environment', async () => {
     expect(targetRoute).to.include('POST /dolphins');
 
     const targetEnvironmentName = await helpers.getElementText(envNameSelector);
-    expect(targetEnvironmentName).to.equal('New environment');
+    expect(targetEnvironmentName).to.equal('New env test');
 
     const targetEnvironmentHostname = await helpers.getElementText(
       envHostnameSelector
@@ -60,7 +60,7 @@ describe('Duplicate a route to an environment', async () => {
     await helpers.checkActiveRoute('POST\n/dolphins');
 
     await helpers.switchView('ENV_SETTINGS');
-    await helpers.assertActiveEnvironmentName('New environment');
+    await helpers.assertActiveEnvironmentName('New env test');
   });
 
   it('should duplicate selected route with the same properties', async () => {

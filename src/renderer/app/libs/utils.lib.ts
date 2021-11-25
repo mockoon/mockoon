@@ -55,3 +55,19 @@ export const MoveArrayItem = <T>(
 
   return newItems;
 };
+
+/**
+ * Make a text human friendly
+ *
+ * @param text
+ * @returns
+ */
+export const HumanizeText = (text: string): string => {
+  text = text
+    .trim()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s{2,}/g, ' ');
+  text = text.charAt(0).toUpperCase() + text.slice(1);
+
+  return text;
+};

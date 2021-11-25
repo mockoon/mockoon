@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   Environment,
+  EnvironmentDefault,
   Header,
   HighestMigrationId,
   Method,
@@ -8,7 +9,7 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { cloneDeep } from 'lodash';
-import { EMPTY, forkJoin, from, Observable, of, throwError } from 'rxjs';
+import { EMPTY, forkJoin, from, Observable, of, throwError, zip } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -27,6 +28,7 @@ import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { HumanizeText } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
@@ -285,7 +287,7 @@ export class EnvironmentsService extends Logger {
   public addEnvironment(
     environment?: Environment,
     afterUUID?: string
-  ): Observable<string | null> {
+  ): Observable<[string, string]> {
     return from(
       this.dialogsService.showSaveDialog('Save your new environment')
     ).pipe(
@@ -304,17 +306,25 @@ export class EnvironmentsService extends Logger {
           return throwError('ENVIRONMENT_FILE_IN_USE');
         }
 
-        return of(filePath);
+        return zip(
+          of(filePath),
+          from(MainAPI.invoke('APP_GET_FILENAME', filePath))
+        );
       }),
       catchError((errorCode) => {
         this.logMessage('error', errorCode as MessageCodes);
 
         return EMPTY;
       }),
-      tap((filePath) => {
+      tap(([filePath, filename]) => {
         const newEnvironment = environment
           ? environment
           : this.schemasBuilderService.buildEnvironment();
+
+        // if a non-default name has been set already (imports), do not use the filename
+        if (newEnvironment.name === EnvironmentDefault.name) {
+          newEnvironment.name = HumanizeText(filename);
+        }
 
         this.store.update(
           addEnvironmentAction(newEnvironment, { filePath, afterUUID })
@@ -333,7 +343,7 @@ export class EnvironmentsService extends Logger {
    */
   public duplicateEnvironment(
     environmentUUID: string = this.store.get('activeEnvironmentUUID')
-  ): Observable<string | null> {
+  ): Observable<[string, string]> {
     if (environmentUUID) {
       const environmentToDuplicate = this.store
         .get('environments')

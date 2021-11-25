@@ -45,6 +45,7 @@ export interface MainAPIModel {
   invoke(
     channel:
       | 'APP_GET_MIME_TYPE'
+      | 'APP_GET_FILENAME'
       | 'APP_READ_FILE'
       | 'APP_BUILD_STORAGE_FILEPATH',
     pathOrName: string
