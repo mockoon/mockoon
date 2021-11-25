@@ -15,6 +15,7 @@ export const IPCMainListenerChannels = [
 
 export const IPCMainHandlerChannels = [
   'APP_GET_MIME_TYPE',
+  'APP_GET_FILENAME',
   'APP_GET_PLATFORM',
   'APP_BUILD_STORAGE_FILEPATH',
   'APP_OPENAPI_DEREFERENCE',

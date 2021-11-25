@@ -184,6 +184,12 @@ export const initIPCListeners = (
     mimeTypeLookup(filePath)
   );
 
+  ipcMain.handle('APP_GET_FILENAME', (event, filePath) => {
+    const parsedPath = pathParse(filePath);
+
+    return parsedPath.name;
+  });
+
   ipcMain.handle(
     'APP_OPENAPI_DEREFERENCE',
     async (event, filePath) =>

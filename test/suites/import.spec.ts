@@ -124,7 +124,7 @@ describe('Environments import', () => {
 
         await tests.app.client.pause(500);
 
-        await tests.helpers.assertHasActiveEnvironment('New environment');
+        await tests.helpers.assertHasActiveEnvironment('Route export');
         await tests.helpers.checkActiveRoute('GET\n/answer');
         await tests.helpers.startEnvironment();
       });

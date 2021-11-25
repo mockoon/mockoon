@@ -104,9 +104,7 @@ export class Tests {
     try {
       const storagePath = './tmp/storage/';
 
-      await fs.rmdir(storagePath, {
-        recursive: true
-      });
+      await fs.rm(storagePath, { recursive: true, force: true });
 
       await mkdirp(storagePath);
     } catch (err) {}

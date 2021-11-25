@@ -16,6 +16,7 @@ describe('Create, close and open environments', () => {
     await tests.helpers.countEnvironments(2);
     await tests.helpers.switchView('ENV_SETTINGS');
     await tests.helpers.assertActiveEnvironmentPort(3001);
+    await tests.helpers.assertActiveEnvironmentName('New env test');
   });
 
   it('Close first environment', async () => {
@@ -27,7 +28,7 @@ describe('Create, close and open environments', () => {
     const envName = await tests.helpers.getElementText(
       '.environments-menu .menu-list .nav-item:first-of-type .nav-link.active div:first-of-type'
     );
-    expect(envName).to.contains('New environment');
+    expect(envName).to.contains('New env test');
   });
 
   it('Close last environment, interface should be empty', async () => {
@@ -47,7 +48,7 @@ describe('Create, close and open environments', () => {
     await tests.app.client.pause(500);
     await tests.helpers.countEnvironments(1);
     await tests.helpers.switchView('ENV_SETTINGS');
-    await tests.helpers.assertHasActiveEnvironment('New environment');
+    await tests.helpers.assertHasActiveEnvironment('New env test');
     await tests.helpers.closeEnvironment(1);
   });
 
