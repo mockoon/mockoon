@@ -31,7 +31,7 @@
   "nsis": {
     "artifactName": "mockoon.setup.${version}.${ext}",
     "customNsisBinary": {
-      "url": "https://github.com/electron-userland/electron-builder-binaries/releases/download",
+      "url": "https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z",
       "checksum": "VKMiizYdmNdJOWpRGz4trl4lD++BvYP2irAXpMilheUP0pc93iKlWAoP843Vlraj8YG19CVn0j+dCo/hURz9+Q==",
       "version": "3.0.4.1"
     }
