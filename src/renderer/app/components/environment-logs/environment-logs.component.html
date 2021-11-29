@@ -272,12 +272,7 @@
                   <div class="ml-auto">
                     <span
                       *ngIf="selectedLog?.request?.truncatedBody"
-                      class="
-                        btn btn-link btn-icon
-                        text-primary
-                        p-0
-                        environment-logs-open-request-body
-                      "
+                      class="btn btn-link btn-icon text-primary p-0 environment-logs-open-request-body"
                       (click)="viewBodyInEditor(selectedLog.request, 'request')"
                       >View full body in editor</span
                     >
@@ -376,12 +371,7 @@
                   <div *ngIf="!selectedLog.response.binaryBody" class="ml-auto">
                     <span
                       *ngIf="selectedLog?.response?.truncatedBody"
-                      class="
-                        btn btn-link btn-icon
-                        text-primary
-                        p-0
-                        environment-logs-open-response-body
-                      "
+                      class="btn btn-link btn-icon text-primary p-0 environment-logs-open-response-body"
                       (click)="
                         viewBodyInEditor(selectedLog.response, 'response')
                       "

@@ -400,12 +400,7 @@
                       activeRouteResponseLastLog$
                         | async as activeRouteResponseLastLog
                     "
-                    class="
-                      btn btn-link btn-icon btn-xs
-                      border-0
-                      text-primary
-                      view-body-link
-                    "
+                    class="btn btn-link btn-icon btn-xs border-0 text-primary view-body-link"
                     (click)="
                       goToRouteResponseLog(activeRouteResponseLastLog.UUID)
                     "
@@ -431,14 +426,7 @@
             </div>
 
             <div
-              class="
-                d-flex
-                justify-content-between
-                align-items-center
-                environment-routes-footer
-                pt-1
-                mt-3
-              "
+              class="d-flex justify-content-between align-items-center environment-routes-footer pt-1 mt-3"
             >
               <div [ngbTooltip]="servedContentTypeTooltip">
                 <small> {{ this.effectiveContentType$ | async }}</small>
