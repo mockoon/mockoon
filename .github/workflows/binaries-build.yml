@@ -134,3 +134,34 @@ jobs:
         with:
           name: exe
           path: ./packages/mockoon.portable.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
+
+  build-windows-appx:
+    name: Build Windows binary (appx only)
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - name: Get version from package.json
+        id: app-version
+        run: |
+          $PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+        shell: pwsh
+      - name: Bundle Angular and package application
+        run: |
+          npm ci
+          npm run build:prod:all
+          npm run package:win:appx
+        shell: pwsh
+      - name: Upload Windows appx
+        uses: actions/upload-artifact@v1
+        with:
+          name: appx
+          path: ./packages/mockoon.${{steps.app-version.outputs.PACKAGE_VERSION}}.appx

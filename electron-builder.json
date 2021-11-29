@@ -12,21 +12,9 @@
     "build-res/icon_512x512x32.png"
   ],
   "win": {
-    "target": [
-      { "target": "nsis" },
-      { "target": "portable" },
-      { "target": "appx" }
-    ],
+    "target": [{ "target": "nsis" }, { "target": "portable" }],
     "publisherName": "1kB SARL-S",
     "rfc3161TimeStampServer": "http://timestamp.sectigo.com/?td=sha256"
-  },
-  "appx": {
-    "publisher": "CN=F7BC8E8D-E7FB-4CF2-87B7-66105AC3B61D",
-    "publisherDisplayName": "1kB SARL-S",
-    "identityName": "1kB.mockoon",
-    "applicationId": "mockoon",
-    "backgroundColor": "#ffffff",
-    "artifactName": "mockoon.${version}.${ext}"
   },
   "nsis": {
     "artifactName": "mockoon.setup.${version}.${ext}",

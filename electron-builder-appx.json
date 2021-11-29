@@ -1,0 +1,33 @@
+{
+  "appId": "com.mockoon.app",
+  "productName": "Mockoon",
+  "directories": {
+    "output": "packages",
+    "buildResources": "build-res"
+  },
+  "files": [
+    "package.json",
+    "dist/**/*",
+    "node_modules",
+    "build-res/icon_512x512x32.png"
+  ],
+  "win": {
+    "target": [{ "target": "appx" }],
+    "publisherName": "1kB SARL-S"
+  },
+  "appx": {
+    "publisher": "CN=F7BC8E8D-E7FB-4CF2-87B7-66105AC3B61D",
+    "publisherDisplayName": "1kB SARL-S",
+    "identityName": "1kB.mockoon",
+    "applicationId": "mockoon",
+    "backgroundColor": "#ffffff",
+    "artifactName": "mockoon.${version}.${ext}"
+  },
+  "protocols": [
+    {
+      "name": "Mockoon",
+      "schemes": ["mockoon"],
+      "role": "Editor"
+    }
+  ]
+}

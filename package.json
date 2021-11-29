@@ -37,6 +37,7 @@
     "build:prod:all": "npm run clean-dist && npm run build:prod:renderer && npm run build:prod:main",
     "start": "electron . --remote-debugging-port=8888",
     "package:win": "npm run clean-packages && electron-builder --publish never --win --config electron-builder.json",
+    "package:win:appx": "npm run clean-packages && electron-builder --publish never --win --config electron-builder-appx.json",
     "package:linux": "npm run clean-packages && electron-builder --publish never --linux --config electron-builder.json",
     "package:mac": "npm run clean-packages && electron-builder --publish never --mac --config electron-builder.json"
   },
