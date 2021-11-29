@@ -18,7 +18,7 @@
       { "target": "appx" }
     ],
     "publisherName": "1kB SARL-S",
-    "rfc3161TimeStampServer": "http://timestamp.digicert.com"
+    "rfc3161TimeStampServer": "http://timestamp.sectigo.com/?td=sha256"
   },
   "appx": {
     "publisher": "CN=F7BC8E8D-E7FB-4CF2-87B7-66105AC3B61D",
