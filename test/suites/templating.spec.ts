@@ -1184,15 +1184,6 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
-        description: 'Helper: switch from urlParam, number case value',
-        path: '/old.switch.urlParam/2',
-        method: 'GET',
-        testedResponse: {
-          status: 200,
-          body: 'casecontent2'
-        }
-      },
-      {
         description: 'Helper: switch from urlParam, default',
         path: '/old.switch.urlParam/11',
         method: 'GET',
@@ -1238,15 +1229,6 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
-        description: 'Helper: switch from queryParam, number case value',
-        path: '/old.switch.queryParam?qp=2',
-        method: 'GET',
-        testedResponse: {
-          status: 200,
-          body: 'casecontent2'
-        }
-      },
-      {
         description: 'Helper: switch from queryParam, default',
         path: '/old.switch.queryParam?qp=11',
         method: 'GET',
@@ -1264,28 +1246,6 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         testedResponse: {
           status: 200,
           body: 'casecontent1'
-        }
-      },
-      {
-        description: 'Helper: switch from body, number case value',
-        path: '/old.switch.body',
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        body: { prop: 2 },
-        testedResponse: {
-          status: 200,
-          body: 'casecontent2'
-        }
-      },
-      {
-        description: 'Helper: switch from body, boolean case value',
-        path: '/old.switch.body',
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        body: { prop: true },
-        testedResponse: {
-          status: 200,
-          body: 'casecontenttrue'
         }
       },
       {

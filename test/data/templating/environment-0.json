@@ -2144,7 +2144,7 @@
       "responses": [
         {
           "uuid": "fce44ac2-cfca-4722-930b-5cb0c85250b1",
-          "body": "{{#switch (urlParam 'param')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
+          "body": "{{#switch (urlParam 'param')}}{{#case '1'}}casecontent1{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -2219,7 +2219,7 @@
       "responses": [
         {
           "uuid": "07db1e8c-01c9-4caf-afc2-ca4a52b41667",
-          "body": "{{#switch (queryParam 'qp')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
+          "body": "{{#switch (queryParam 'qp')}}{{#case '1'}}casecontent1{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -2244,7 +2244,7 @@
       "responses": [
         {
           "uuid": "31aecc90-b083-48fb-a3c3-281dd767b70d",
-          "body": "{{#switch (body 'prop')}}{{#case '1'}}casecontent1{{/case}}{{#case 2}}casecontent2{{/case}}{{#case true}}casecontenttrue{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
+          "body": "{{#switch (body 'prop')}}{{#case '1'}}casecontent1{{/case}}{{#default}}defaultcontent{{/default}}{{/switch}}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
