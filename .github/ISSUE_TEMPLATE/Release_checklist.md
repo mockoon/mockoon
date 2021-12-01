@@ -9,10 +9,10 @@ about: Checklist for releases (admin use only)
 
 **Tests:**
 
-- [ ] Test Windows binary
-- [ ] Scan Windows binary on VirusTotal
-- [ ] Test Linux binary(ies)
-- [ ] Test OSX binary
+- [ ] Test Windows binaries
+- [ ] Scan Windows exe installer binary on VirusTotal
+- [ ] Test Linux binaries
+- [ ] Test OSX binaries
 
 **Release:**
 
