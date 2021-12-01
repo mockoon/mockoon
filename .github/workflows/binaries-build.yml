@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - v*
+    branches:
+      - "binaries-build"
 
 jobs:
   build-macos:
@@ -40,14 +42,14 @@ jobs:
       - name: Verify notarization
         run: |
           codesign --verify --deep --strict --verbose=2 ./packages/mac/mockoon.app
-      - name: Get binary shasum
+      - name: Get universal binary shasum
         run: |
-          shasum -a 256 ./packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.dmg
+          shasum -a 256 ./packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.universal.dmg
       - name: Upload macOS dmg
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: dmg
-          path: ./packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.dmg
+          path: ./packages/mockoon.setup*.dmg
 
   build-linux:
     name: Build Linux binaries (deb, rpm, snap, AppImage)
@@ -75,22 +77,22 @@ jobs:
           npm run build:prod:all
           npm run package:linux
       - name: Upload Linux AppImage
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: appimage
           path: ./packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.AppImage
       - name: Upload Linux deb
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: deb
           path: ./packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.deb
       - name: Upload Linux rpm
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: rpm
           path: ./packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.rpm
       - name: Upload Linux snap
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: snap
           path: ./packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.snap
@@ -125,16 +127,17 @@ jobs:
           npm run package:win
         shell: pwsh
       - name: Upload Windows setup exe
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: exe
           path: ./packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
       - name: Upload Windows portable exe
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: exe
           path: ./packages/mockoon.portable.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
 
+  # APPX build requires no code signing env vars to work, thus the separated job
   build-windows-appx:
     name: Build Windows binary (appx only)
     runs-on: windows-latest
@@ -161,7 +164,7 @@ jobs:
           npm run package:win:appx
         shell: pwsh
       - name: Upload Windows appx
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: appx
           path: ./packages/mockoon.${{steps.app-version.outputs.PACKAGE_VERSION}}.appx
