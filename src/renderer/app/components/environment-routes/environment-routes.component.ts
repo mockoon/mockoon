@@ -30,7 +30,6 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { Config } from 'src/renderer/app/config';
 import {
   INDENT_SIZE,
   MainAPI
@@ -52,6 +51,7 @@ import {
   Store,
   TabsNameType
 } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 
 @Component({
   selector: 'app-environment-routes',

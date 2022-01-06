@@ -23,12 +23,12 @@ import {
   tap,
   throttleTime
 } from 'rxjs/operators';
-import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { TelemetrySession } from 'src/renderer/app/models/telemetry.model';
 import { LocalStorageService } from 'src/renderer/app/services/local-storage.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 import { v4 as uuid } from 'uuid';
 
 @Injectable({

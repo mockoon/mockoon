@@ -6,8 +6,8 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { Config } from 'src/shared/config';
 
 /**
  * Heading and subheading can be passed through simple string inputs or

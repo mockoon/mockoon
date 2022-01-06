@@ -9,12 +9,16 @@ const glob = require('glob');
  */
 
 glob(
-  './test/data/**/@(environment*|*v2|*v3).json',
+  './test/data/mock-envs/*.json',
+  './test/data/res/import-openapi/references/@(*v2|*v3).json',
   {
     ignore: [
-      './test/data/import/new/**/*',
-      './test/data/migrations/**/*',
-      './test/data/schema-validation/**/*'
+      './test/data/mock-envs/incompatible.json',
+      './test/data/mock-envs/migration.json',
+      './test/data/mock-envs/schema-broken.json',
+      './test/data/mock-envs/schema-broken-repair.json',
+      './test/data/mock-envs/schema-uuid-dedup-1.json',
+      './test/data/mock-envs/schema-uuid-dedup-2.json'
     ]
   },
   (error, files) => {

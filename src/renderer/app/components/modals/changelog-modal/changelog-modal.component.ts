@@ -11,10 +11,10 @@ import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { filter, first, map, shareReplay, tap } from 'rxjs/operators';
 import { gt as semverGt } from 'semver';
-import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 
 @Component({
   selector: 'app-changelog-modal',

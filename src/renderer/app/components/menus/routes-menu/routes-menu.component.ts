@@ -19,7 +19,6 @@ import {
   tap
 } from 'rxjs/operators';
 import { RoutesContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
-import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
@@ -32,6 +31,7 @@ import {
   EnvironmentsStatuses,
   Store
 } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 import { Settings } from 'src/shared/models/settings.model';
 
 @Component({

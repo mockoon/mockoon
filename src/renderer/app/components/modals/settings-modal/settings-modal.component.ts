@@ -10,12 +10,12 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
-import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
 import { SettingsDefault } from 'src/renderer/app/constants/settings-schema.constants';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 import { Settings } from 'src/shared/models/settings.model';
 
 @Component({
