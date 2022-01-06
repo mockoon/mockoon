@@ -1,0 +1,26 @@
+{
+  "uuid": "9ca3284a-d5e8-42a4-b3dc-cd74a304c764",
+  "lastMigration": 19,
+  "name": "UI env name edit",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [],
+  "proxyMode": false,
+  "proxyHost": "",
+  "cors": true,
+  "headers": [{ "key": "Content-Type", "value": "application/xml" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": true,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  }
+}

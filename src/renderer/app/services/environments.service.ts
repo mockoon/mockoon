@@ -24,7 +24,6 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
-import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -81,6 +80,7 @@ import {
   TabsNameType,
   ViewsNameType
 } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 @Injectable({

@@ -8,7 +8,14 @@ import {
   SetFakerLocale,
   SetFakerSeed
 } from '@mockoon/commons-server';
-import { BrowserWindow, clipboard, dialog, ipcMain, shell } from 'electron';
+import {
+  BrowserWindow,
+  clipboard,
+  dialog,
+  ipcMain,
+  Menu,
+  shell
+} from 'electron';
 import {
   DataOptions,
   get as storageGet,
@@ -17,6 +24,7 @@ import {
 } from 'electron-json-storage';
 import { error as logError, info as logInfo } from 'electron-log';
 import { promises as fsPromises } from 'fs';
+import { createServer } from 'http';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { dirname, join as pathJoin, parse as pathParse } from 'path';
 import { promisify } from 'util';
@@ -27,6 +35,10 @@ import {
 import { migrateData } from './data-migration';
 import { toggleEnvironmentMenuItems, toggleRouteMenuItems } from './menu';
 import { applyUpdate } from './update';
+
+declare const isTesting: boolean;
+
+const dialogMocks: { [x: string]: string[] } = { save: [], open: [] };
 
 export const initIPCListeners = (
   mainWindow: BrowserWindow,
@@ -164,15 +176,27 @@ export const initIPCListeners = (
     clipboard.readText('clipboard')
   );
 
-  ipcMain.handle(
-    'APP_SHOW_OPEN_DIALOG',
-    async (event, options) => await dialog.showOpenDialog(mainWindow, options)
-  );
+  /**
+   * This IPC channel must be mocked when running e2e tests
+   */
+  ipcMain.handle('APP_SHOW_OPEN_DIALOG', async (event, options) => {
+    if (isTesting) {
+      return { filePaths: [dialogMocks.open.pop()] };
+    } else {
+      return await dialog.showOpenDialog(mainWindow, options);
+    }
+  });
 
-  ipcMain.handle(
-    'APP_SHOW_SAVE_DIALOG',
-    async (event, options) => await dialog.showSaveDialog(mainWindow, options)
-  );
+  /**
+   * This IPC channel must be mocked when running e2e tests
+   */
+  ipcMain.handle('APP_SHOW_SAVE_DIALOG', async (event, options) => {
+    if (isTesting) {
+      return { filePath: dialogMocks.save.pop() };
+    } else {
+      return await dialog.showSaveDialog(mainWindow, options);
+    }
+  });
 
   ipcMain.handle('APP_GET_PLATFORM', (event) => process.platform);
 
@@ -307,3 +331,42 @@ export const clearIPCChannels = () => {
     ipcMain.removeHandler(handler);
   });
 };
+
+/**
+ * When running e2e tests and testing native dialogs/menus/clipboard,
+ * we open a server to receive the action to mock (we cannot use Webdriver to access Electron's native features).
+ * Called URL should be in the following form:
+ * - Dialogs: `dialogs#save|open#/path/filename.ext`
+ * - Menu items: menu#menu_item_id
+ * - Clipboard: clipboard#read
+ *
+ * (This mock will be striped from the prod build by Webpack)
+ */
+if (isTesting) {
+  createServer((req, res) => {
+    const chunks: any[] = [];
+
+    req.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+
+    req.on('end', () => {
+      const data = Buffer.concat(chunks).toString();
+
+      const [category, action, filepath] = req.url
+        ?.replace('/', '')
+        .split('#') as string[];
+
+      if (category === 'menu' && action) {
+        Menu.getApplicationMenu()?.getMenuItemById(action)?.click();
+      } else if (category === 'clipboard' && action === 'read') {
+        res.write(clipboard.readText('clipboard'));
+      } else if (category === 'clipboard' && action === 'write') {
+        clipboard.writeText(data);
+      } else if (category === 'dialogs' && action && filepath) {
+        dialogMocks[action].push(filepath);
+      }
+      res.end();
+    });
+  }).listen(45123);
+}

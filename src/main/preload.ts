@@ -5,8 +5,6 @@ import {
   IPCRendererHandlerChannels
 } from './constants/ipc.constants';
 
-declare const isTesting: boolean;
-
 const api = {
   send: (channel: string, ...data: any[]) => {
     if (IPCMainListenerChannels.includes(channel)) {
@@ -27,10 +25,4 @@ const api = {
   }
 };
 
-if (isTesting) {
-  // contextIsolation will be disabled in a testing environment (spectron still relies on node integration and remote module, this `else` should be removed in the future)}
-  (window as any).api = api;
-} else {
-  // contextIsolation will be true in a dev and prod env
-  contextBridge.exposeInMainWorld('api', api);
-}
+contextBridge.exposeInMainWorld('api', api);

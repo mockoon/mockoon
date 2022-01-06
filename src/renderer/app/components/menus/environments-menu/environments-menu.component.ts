@@ -19,7 +19,6 @@ import {
   tap
 } from 'rxjs/operators';
 import { EnvironmentsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
-import { Config } from 'src/renderer/app/config';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { ScrollDirection } from 'src/renderer/app/models/ui.model';
@@ -27,6 +26,7 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { EnvironmentsStatuses, Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 import { Settings } from 'src/shared/models/settings.model';
 
 @Component({

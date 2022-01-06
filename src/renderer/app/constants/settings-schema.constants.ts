@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
-import { Config } from 'src/renderer/app/config';
 import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
+import { Config } from 'src/shared/config';
 import {
   EnvironmentDescriptor,
   Settings

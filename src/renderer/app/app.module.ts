@@ -47,7 +47,6 @@ import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcom
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
-import { Config } from 'src/renderer/app/config';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { MousedragDeadzoneDirective } from 'src/renderer/app/directives/mousedrag-deadzone.directive';
@@ -61,6 +60,7 @@ import { NgbTypeaheadConfigFactory } from 'src/renderer/app/modules-config/ngb-t
 import { NgbConfigFactory } from 'src/renderer/app/modules-config/ngb.config';
 import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handler';
 import { environment } from 'src/renderer/environments/environment';
+import { Config } from 'src/shared/config';
 import { AppComponent } from './app.component';
 
 @NgModule({

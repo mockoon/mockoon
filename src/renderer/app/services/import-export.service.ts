@@ -22,7 +22,6 @@ import {
   tap
 } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
-import { Config } from 'src/renderer/app/config';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { Errors } from 'src/renderer/app/enums/errors.enum';
@@ -35,6 +34,7 @@ import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { addRouteAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 
 @Injectable({ providedIn: 'root' })
 export class ImportExportService extends Logger {

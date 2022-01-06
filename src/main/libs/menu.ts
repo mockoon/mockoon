@@ -6,6 +6,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       label: 'Application',
       submenu: [
         {
+          id: 'OPEN_SETTINGS',
           label: 'Settings',
           accelerator: 'CmdOrCtrl+,',
           click: () => {
@@ -182,12 +183,14 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         label: "Mockoon's format",
         submenu: [
           {
+            id: 'IMPORT_CLIPBOARD',
             label: 'Import from clipboard',
             click: () => {
               mainWindow.webContents.send('APP_MENU', 'IMPORT_CLIPBOARD');
             }
           },
           {
+            id: 'IMPORT_FILE',
             label: 'Import from a file (JSON)',
             click: () => {
               mainWindow.webContents.send('APP_MENU', 'IMPORT_FILE');
@@ -214,6 +217,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         label: 'Swagger/OpenAPI',
         submenu: [
           {
+            id: 'IMPORT_OPENAPI_FILE',
             label: 'Import Swagger v2/OpenAPI v3 (JSON or YAML)',
             click: () => {
               mainWindow.webContents.send('APP_MENU', 'IMPORT_OPENAPI_FILE');

@@ -14,7 +14,6 @@
         "plugin:@angular-eslint/template/process-inline-templates",
         "prettier"
       ],
-      "plugins": ["chai-friendly"],
       "rules": {
         "no-console": "error",
         "no-shadow": "off",
@@ -79,8 +78,7 @@
     {
       "files": "./test/**/*.ts",
       "rules": {
-        "@typescript-eslint/no-unused-expressions": "off",
-        "chai-friendly/no-unused-expressions": "error"
+        "@typescript-eslint/no-unused-expressions": "off"
       }
     },
     {

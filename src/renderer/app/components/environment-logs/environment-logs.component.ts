@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { Config } from 'src/renderer/app/config';
 import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
 import {
   EnvironmentLog,
@@ -20,6 +19,7 @@ import {
   EnvironmentLogsTabsNameType,
   Store
 } from 'src/renderer/app/stores/store';
+import { Config } from 'src/shared/config';
 
 type CollapseStates = {
   'request.general': boolean;

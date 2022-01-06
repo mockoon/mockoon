@@ -54,42 +54,34 @@ export const initMainWindow = () => {
     backgroundColor: '#252830',
     icon: pathJoin(__dirname, '/build-res/icon_512x512x32.png'),
     // directly show the main window when running the tests
-    show: isTesting ? true : false,
+    show: false,
     webPreferences: {
-      // Spectron still relies on node integration and remote module, we need to disable contextIsolation too https://github.com/electron-userland/spectron/issues/693
-      enableRemoteModule: isTesting ? true : false,
-      nodeIntegration: isTesting ? true : false,
-      contextIsolation: isTesting ? false : true,
-      sandbox: isTesting ? false : true,
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: true,
       devTools: isDev ? true : false,
       spellcheck: false,
       preload: pathJoin(__dirname, '/preload.js')
     }
   });
 
-  if (isTesting) {
-    showMainWindow(mainWindowState, mainWindow);
-  } else {
-    // when main app finished loading, hide splashscreen and show the mainWindow
-    // use two timeout as page is still assembling after "dom-ready" event
-    mainWindow.webContents.on('dom-ready', () => {
+  // when main app finished loading, hide splashscreen and show the mainWindow
+  mainWindow.webContents.on('dom-ready', () => {
+    setTimeout(() => {
+      if (splashScreen && !splashScreen.isDestroyed()) {
+        splashScreen.close();
+      }
+
+      // adding a timeout diff (100ms) between splashscreen close and mainWindow.show to fix a bug: https://github.com/electron/electron/issues/27353
       setTimeout(() => {
-        if (splashScreen && !splashScreen.isDestroyed()) {
-          splashScreen.close();
+        showMainWindow(mainWindowState, mainWindow);
+
+        if (isDev) {
+          mainWindow.webContents.openDevTools();
         }
-
-        // adding a timeout diff (100ms) between splashscreen close and mainWindow.show to fix a bug: https://github.com/electron/electron/issues/27353
-        setTimeout(() => {
-          showMainWindow(mainWindowState, mainWindow);
-
-          // Open the DevTools in dev mode except when running functional tests
-          if (isDev && !isTesting) {
-            mainWindow.webContents.openDevTools();
-          }
-        }, 100);
-      }, 500);
-    });
-  }
+      }, 100);
+    }, 500);
+  });
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/renderer/index.html`);

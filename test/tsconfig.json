@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./test",
+    "module": "commonjs",
+    "types": ["node", "webdriverio/async", "@wdio/mocha-framework"]
+  }
+}
