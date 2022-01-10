@@ -20,14 +20,14 @@ It has been built with Electron and can be used on Windows (exe), Linux (deb, rp
 
 ## Sponsors
 
-If you like Mockoon, you can support the project with a one-time donation:
-[![Paypal](https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png)](https://paypal.me/255kb) <a href="https://www.buymeacoffee.com/255kb" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+If you like Mockoon, you can support the project with a one-time donation: <a href="https://www.buymeacoffee.com/255kb" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
-You can also  [sponsor the maintainer (255kb) on GitHub](https://github.com/sponsors/255kb) and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
+You can also [sponsor the maintainer (255kb) on GitHub](https://github.com/sponsors/255kb) and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
 
 ## Features
 
 Mockoon offers many features:
+
 - unlimited number of mock local servers and routes
 - complete control on routes definition: HTTP methods and statuses, regex paths, file serving, custom headers, etc.
 - OpenAPI compatibility
