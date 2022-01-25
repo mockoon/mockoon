@@ -22,15 +22,15 @@ import { RoutesContextMenu } from 'src/renderer/app/components/context-menu/cont
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
+import {
+  DuplicatedRoutesTypes,
+  EnvironmentsStatuses
+} from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateEnvironmentroutesFilterAction } from 'src/renderer/app/stores/actions';
-import {
-  DuplicatedRoutesTypes,
-  EnvironmentsStatuses,
-  Store
-} from 'src/renderer/app/stores/store';
+import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
 import { Settings } from 'src/shared/models/settings.model';
 

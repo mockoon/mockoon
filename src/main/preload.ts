@@ -3,7 +3,7 @@ import {
   IPCMainHandlerChannels,
   IPCMainListenerChannels,
   IPCRendererHandlerChannels
-} from './constants/ipc.constants';
+} from 'src/main/constants/ipc.constants';
 
 const api = {
   send: (channel: string, ...data: any[]) => {

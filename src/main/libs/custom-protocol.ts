@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { info as logInfo } from 'electron-log';
 import { parse as qsParse } from 'querystring';
-import { ProtocolAction } from '../../shared/models/protocol.model';
+import { ProtocolAction } from 'src/shared/models/protocol.model';
 
 const validActions: ProtocolAction[] = ['load-export-data'];
 

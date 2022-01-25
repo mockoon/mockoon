@@ -20,16 +20,11 @@ export interface MainAPIModel {
   invoke<T>(
     channel: 'APP_NEW_STORAGE_MIGRATION'
   ): Promise<EnvironmentDescriptor[]>;
-  invoke<T>(
-    channel: 'APP_READ_JSON_DATA',
-    key: string,
-    path?: string
-  ): Promise<T>;
+  invoke<T>(channel: 'APP_READ_JSON_DATA', path: string): Promise<T>;
   invoke<T>(
     channel: 'APP_WRITE_JSON_DATA',
-    key: string,
     data: T,
-    path?: string,
+    path: string,
     storagePrettyPrint?: boolean
   ): Promise<void>;
   invoke(channel: 'APP_READ_CLIPBOARD'): Promise<any>;
@@ -63,6 +58,7 @@ export interface MainAPIModel {
   ): Promise<any>;
   invoke(channel: 'APP_STOP_SERVER', environmentUUID: string): Promise<any>;
   invoke(channel: 'APP_GET_OS'): Promise<string>;
+  invoke(channel: 'APP_UNWATCH_FILE', filePathOrUUID: string): Promise<void>;
 
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
   send(
@@ -87,6 +83,11 @@ export interface MainAPIModel {
     data: { locale: FakerAvailableLocales; seed: number }
   ): void;
   send(channel: 'APP_UPDATE_ENVIRONMENT', environments: Environments): void;
+  send(
+    channel: 'APP_WATCH_FILE',
+    UUID: string,
+    filePath: string
+  ): Promise<void>;
 
   receive(
     channel: 'APP_SERVER_EVENT',
@@ -105,5 +106,9 @@ export interface MainAPIModel {
   receive(
     channel: 'APP_CUSTOM_PROTOCOL',
     listener: (action: ProtocolAction, parameters: { url: string }) => void
+  ): void;
+  receive(
+    channel: 'APP_FILE_EXTERNAL_CHANGE',
+    listener: (previousUUID: string, environmentPath: string) => void
   ): void;
 }

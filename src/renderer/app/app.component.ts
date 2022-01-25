@@ -17,6 +17,7 @@ import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuItemPayload } from 'src/renderer/app/models/context-menu.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
+import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { AnalyticsService } from 'src/renderer/app/services/analytics.service';
 import { ApiService } from 'src/renderer/app/services/api.service';
@@ -28,7 +29,7 @@ import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { Store, ViewsNameType } from 'src/renderer/app/stores/store';
+import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
   selector: 'app-root',

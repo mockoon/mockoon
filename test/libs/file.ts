@@ -1,10 +1,19 @@
-import { Environments } from '@mockoon/commons';
+import { Environment, Environments } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { get as objectGetPath } from 'object-path';
 import { Settings } from '../../src/shared/models/settings.model';
 
 class File {
   private settingsPath = './tmp/storage/settings.json';
+
+  public async editEnvironment(
+    filePath: string,
+    properties: Partial<Environment>
+  ) {
+    let environment = JSON.parse((await fs.readFile(filePath)).toString());
+    environment = { ...environment, ...properties };
+    await fs.writeFile(filePath, JSON.stringify(environment));
+  }
 
   public async editSettings(properties: Partial<Settings>) {
     let settings = JSON.parse(

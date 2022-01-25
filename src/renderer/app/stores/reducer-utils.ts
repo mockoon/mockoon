@@ -7,7 +7,7 @@ import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
 import {
   DuplicatedRoutesTypes,
   StoreType
-} from 'src/renderer/app/stores/store';
+} from 'src/renderer/app/models/store.model';
 
 /**
  * Return a Set of the duplicated route UUIDs in an environment
@@ -80,4 +80,21 @@ export const updateDuplicatedRoutes = (
   });
 
   return duplicatedRoutes;
+};
+
+/**
+ * Move an object value from one key to another, and remove the old one.
+ * Usefull when an environment UUID changes.
+ *
+ * @param previousKey
+ * @param currentKey
+ * @param target
+ */
+export const changeObjectKey = (
+  previousKey: string,
+  currentKey: string,
+  target: { [key in string]: any }
+) => {
+  target[currentKey] = target[previousKey];
+  delete target[previousKey];
 };

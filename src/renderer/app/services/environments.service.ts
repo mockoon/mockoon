@@ -8,7 +8,7 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { EMPTY, forkJoin, from, Observable, of, throwError, zip } from 'rxjs';
 import {
   catchError,
@@ -34,6 +34,11 @@ import {
   RouteProperties,
   RouteResponseProperties
 } from 'src/renderer/app/models/route.model';
+import {
+  EnvironmentLogsTabsNameType,
+  TabsNameType,
+  ViewsNameType
+} from 'src/renderer/app/models/store.model';
 import {
   DraggableContainerNames,
   ScrollDirection
@@ -74,12 +79,7 @@ import {
   updateUIStateAction
 } from 'src/renderer/app/stores/actions';
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
-import {
-  EnvironmentLogsTabsNameType,
-  Store,
-  TabsNameType,
-  ViewsNameType
-} from 'src/renderer/app/stores/store';
+import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
@@ -134,7 +134,7 @@ export class EnvironmentsService extends Logger {
         return forkJoin(
           settings.environments.map((environmentItem) =>
             this.storageService
-              .loadData<Environment>(null, environmentItem.path)
+              .loadData<Environment>(environmentItem.path)
               .pipe(
                 map((environment) =>
                   environment
@@ -171,6 +171,12 @@ export class EnvironmentsService extends Logger {
               { activeEnvironment: environmentsData[0].environment }
             )
           );
+
+          MainAPI.send(
+            'APP_WATCH_FILE',
+            environmentData.environment.uuid,
+            environmentData.path
+          );
         });
 
         this.store.update(
@@ -188,6 +194,7 @@ export class EnvironmentsService extends Logger {
   /**
    * Subscribe to initiate saving environments changes.
    * Listen to environments and settings updates, and save environments in each path defined in the settings.
+   * Will unwatch files for external change before saving, and rewatch after save is complete
    *
    * @returns
    */
@@ -198,8 +205,8 @@ export class EnvironmentsService extends Logger {
         this.storageService.initiateSaving();
       }),
       debounceTime(Config.storageSaveDelay),
-      // keep previously emitted environments and filter environments that didn't change (startwith + pairwise + map)
       startWith([]),
+      // keep previously emitted environments and filter environments that didn't change (pairwise + map)
       pairwise(),
       map(([previousEnvironments, nextEnvironments]) =>
         nextEnvironments.filter(
@@ -226,16 +233,69 @@ export class EnvironmentsService extends Logger {
             )?.path
           })),
           filter((environmentInfo) => environmentInfo.path !== undefined),
+          // unwatch before saving
           mergeMap((environmentInfo) =>
-            this.storageService.saveData<Environment>(
-              null,
-              environmentInfo.data,
-              environmentInfo.path,
-              settings.storagePrettyPrint
+            from(MainAPI.invoke('APP_UNWATCH_FILE', environmentInfo.path)).pipe(
+              map(() => environmentInfo)
             )
+          ),
+          mergeMap((environmentInfo) =>
+            this.storageService
+              .saveData<Environment>(
+                environmentInfo.data,
+                environmentInfo.path,
+                settings.storagePrettyPrint
+              )
+              .pipe(
+                tap(() => {
+                  // re-watch after saving
+                  MainAPI.send(
+                    'APP_WATCH_FILE',
+                    environmentInfo.data.uuid,
+                    environmentInfo.path
+                  );
+                })
+              )
           )
         )
       )
+    );
+  }
+
+  /**
+   * Reload an environment into the store when an external change is detected
+   *
+   * @param previousUUID
+   * @param environmentPath
+   */
+  public reloadEnvironment(previousUUID: string, environmentPath: string) {
+    const activeEnvironmentUUID = this.store.get('activeEnvironmentUUID');
+    const environments = this.store.get('environments');
+    const environmentIndex = environments.findIndex(
+      (environment) => environment.uuid === previousUUID
+    );
+    const environmentStatus = this.store.getEnvironmentStatus(previousUUID);
+
+    const openOptions = {
+      start: environmentStatus.running,
+      insertAfterIndex: environmentIndex - 1,
+      activeEnvironment: null
+    };
+
+    // keep other environment active, if reloaded one wasn't the active one
+    if (activeEnvironmentUUID !== previousUUID) {
+      openOptions.activeEnvironment = this.store.getEnvironmentByUUID(
+        activeEnvironmentUUID
+      );
+    }
+
+    return this.closeEnvironment(previousUUID).pipe(
+      switchMap(() => this.openEnvironment(environmentPath, openOptions)),
+      tap(() => {
+        this.logMessage('info', 'ENVIRONMENT_RELOADED', {
+          name: environments[environmentIndex].name
+        });
+      })
     );
   }
 
@@ -286,7 +346,7 @@ export class EnvironmentsService extends Logger {
    */
   public addEnvironment(
     environment?: Environment,
-    afterUUID?: string
+    insertAfterIndex?: number
   ): Observable<[string, string]> {
     return from(
       this.dialogsService.showSaveDialog('Save your new environment')
@@ -326,8 +386,13 @@ export class EnvironmentsService extends Logger {
           newEnvironment.name = HumanizeText(filename);
         }
 
+        MainAPI.send('APP_WATCH_FILE', newEnvironment.uuid, filePath);
+
         this.store.update(
-          addEnvironmentAction(newEnvironment, { filePath, afterUUID })
+          addEnvironmentAction(newEnvironment, {
+            filePath,
+            insertAfterIndex
+          })
         );
 
         this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
@@ -345,9 +410,11 @@ export class EnvironmentsService extends Logger {
     environmentUUID: string = this.store.get('activeEnvironmentUUID')
   ): Observable<[string, string]> {
     if (environmentUUID) {
-      const environmentToDuplicate = this.store
+      const environmentToDuplicateindex = this.store
         .get('environments')
-        .find((environment) => environment.uuid === environmentUUID);
+        .findIndex((environment) => environment.uuid === environmentUUID);
+      const environmentToDuplicate =
+        this.store.get('environments')[environmentToDuplicateindex];
 
       // copy the environment, reset some properties and change name
       let newEnvironment: Environment = {
@@ -358,7 +425,7 @@ export class EnvironmentsService extends Logger {
 
       newEnvironment = this.dataService.renewEnvironmentUUIDs(newEnvironment);
 
-      return this.addEnvironment(newEnvironment, environmentToDuplicate.uuid);
+      return this.addEnvironment(newEnvironment, environmentToDuplicateindex);
     }
 
     return EMPTY;
@@ -368,10 +435,24 @@ export class EnvironmentsService extends Logger {
    * Open an environment file and add it to the store
    *
    */
-  public openEnvironment(): Observable<Environment> {
-    return from(
-      this.dialogsService.showOpenDialog('Open environment JSON file', 'json')
-    ).pipe(
+  public openEnvironment(
+    environmentPath?: string,
+    openParams?: {
+      start: boolean;
+      insertAfterIndex: number;
+      activeEnvironment?: Environment;
+    }
+  ): Observable<Environment> {
+    const pathSource = environmentPath
+      ? of(environmentPath)
+      : from(
+          this.dialogsService.showOpenDialog(
+            'Open environment JSON file',
+            'json'
+          )
+        );
+
+    return pathSource.pipe(
       filter((filePath) => {
         if (!filePath) {
           return false;
@@ -393,7 +474,7 @@ export class EnvironmentsService extends Logger {
         return true;
       }),
       switchMap((filePath) =>
-        this.storageService.loadData<Environment>(null, filePath).pipe(
+        this.storageService.loadData<Environment>(filePath).pipe(
           tap((environment) => {
             if (this.dataService.isExportData(environment)) {
               this.logMessage('info', 'ENVIRONMENT_IS_EXPORT_FILE');
@@ -409,7 +490,7 @@ export class EnvironmentsService extends Logger {
                 subIcon: 'warning',
                 subIconClass: 'text-warning',
                 confirmCallback: () => {
-                  this.validateAndAddToStore(environment, filePath);
+                  this.validateAndAddToStore(environment, filePath, openParams);
                 }
               });
 
@@ -425,7 +506,9 @@ export class EnvironmentsService extends Logger {
               return;
             }
 
-            this.validateAndAddToStore(environment, filePath);
+            this.validateAndAddToStore(environment, filePath, openParams);
+
+            MainAPI.send('APP_WATCH_FILE', environment.uuid, filePath);
           })
         )
       )
@@ -453,6 +536,7 @@ export class EnvironmentsService extends Logger {
           this.store.update(removeEnvironmentAction(environmentUUID));
         }
         this.store.update(updateUIStateAction({ closing: false }));
+        MainAPI.invoke('APP_UNWATCH_FILE', environmentUUID);
       })
     );
   }
@@ -631,31 +715,29 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Start / stop active environment
+   * Start / stop an environment (default to active one)
    */
-  public toggleActiveEnvironment() {
-    const activeEnvironment = this.store.getActiveEnvironment();
-    const environmentPath: EnvironmentDescriptor[] =
-      this.store.get('settings').environments;
-    const activeEnvironmentPath = environmentPath.find(
-      (path) => path.uuid === activeEnvironment.uuid
-    ).path;
+  public toggleEnvironment(
+    environmentUUID = this.store.get('activeEnvironmentUUID')
+  ) {
+    const environment = this.store.getEnvironmentByUUID(environmentUUID);
+    const environmentPath = this.store.getEnvironmentPath(environment.uuid);
 
-    if (!activeEnvironment) {
+    if (!environment) {
       return;
     }
 
     const environmentsStatus = this.store.get('environmentsStatus');
-    const activeEnvironmentState = environmentsStatus[activeEnvironment.uuid];
+    const activeEnvironmentState = environmentsStatus[environment.uuid];
 
     if (activeEnvironmentState.running) {
-      this.serverService.stop(activeEnvironment.uuid);
+      this.serverService.stop(environment.uuid);
 
       if (activeEnvironmentState.needRestart) {
-        this.serverService.start(activeEnvironment, activeEnvironmentPath);
+        this.serverService.start(environment, environmentPath);
       }
     } else {
-      this.serverService.start(activeEnvironment, activeEnvironmentPath);
+      this.serverService.start(environment, environmentPath);
       this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_START);
     }
   }
@@ -816,16 +898,30 @@ export class EnvironmentsService extends Logger {
    * @param environment
    * @param filePath
    */
-  private validateAndAddToStore(environment: Environment, filePath: string) {
+  private validateAndAddToStore(
+    environment: Environment,
+    filePath: string,
+    openParams?: {
+      start: boolean;
+      insertAfterIndex: number;
+      activeEnvironment?: Environment;
+    }
+  ) {
     const validatedEnvironment =
       this.dataService.migrateAndValidateEnvironment(environment);
 
     this.store.update(
       addEnvironmentAction(validatedEnvironment, {
         filePath,
-        afterUUID: null
+        insertAfterIndex: openParams?.insertAfterIndex,
+        activeEnvironment: openParams?.activeEnvironment
       })
     );
+
+    if (openParams?.start) {
+      this.toggleEnvironment(validatedEnvironment.uuid);
+    }
+
     this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
   }
 }

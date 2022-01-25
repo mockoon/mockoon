@@ -6,18 +6,18 @@ import {
   RouteResponseProperties
 } from 'src/renderer/app/models/route.model';
 import { SettingsProperties } from 'src/renderer/app/models/settings.model';
-import { Toast } from 'src/renderer/app/models/toasts.model';
-import {
-  ReducerDirectionType,
-  ReducerIndexes
-} from 'src/renderer/app/stores/reducer';
 import {
   EnvironmentLogsTabsNameType,
   EnvironmentStatusProperties,
   TabsNameType,
   UIStateProperties,
   ViewsNameType
-} from 'src/renderer/app/stores/store';
+} from 'src/renderer/app/models/store.model';
+import { Toast } from 'src/renderer/app/models/toasts.model';
+import {
+  ReducerDirectionType,
+  ReducerIndexes
+} from 'src/renderer/app/stores/reducer';
 
 export const enum ActionTypes {
   SET_ACTIVE_TAB,
@@ -149,13 +149,15 @@ export const moveRouteResponsesAction = (indexes: ReducerIndexes) =>
  * Add a new environment
  *
  * @param environment - environment to add
- * @param options.activeEnvironmentUUID - if provided, keep another environment active instead of the one being added
+ * @param options.filePath - update the filepath
+ * @param options.insertIndex - insert at index, default to end of list
+ * @param options.activeEnvironment - if provided, keep another environment active instead of the one being added
  */
 export const addEnvironmentAction = (
   environment: Environment,
   options?: {
     filePath?: string;
-    afterUUID?: string;
+    insertAfterIndex?: number;
     activeEnvironment?: Environment;
   }
 ) =>

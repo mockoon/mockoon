@@ -1,79 +1,15 @@
 import { Injectable } from '@angular/core';
-import {
-  Environment,
-  Environments,
-  Route,
-  RouteResponse
-} from '@mockoon/commons';
+import { Environment, Route, RouteResponse } from '@mockoon/commons';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
 import { INDENT_SIZE } from 'src/renderer/app/constants/common.constants';
+import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
-  ActiveEnvironmentsLogUUIDs,
-  EnvironmentLog,
-  EnvironmentLogs
-} from 'src/renderer/app/models/environment-logs.model';
-import { Toast } from 'src/renderer/app/models/toasts.model';
+  EnvironmentStatus,
+  StoreType
+} from 'src/renderer/app/models/store.model';
 import { Actions } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
-import { Settings } from 'src/shared/models/settings.model';
-
-export type ViewsNameType =
-  | 'ENV_ROUTES'
-  | 'ENV_HEADERS'
-  | 'ENV_LOGS'
-  | 'ENV_PROXY'
-  | 'ENV_SETTINGS';
-
-export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
-
-export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
-
-export type EnvironmentStatus = {
-  running: boolean;
-  needRestart: boolean;
-};
-
-export type EnvironmentStatusProperties = {
-  [T in keyof EnvironmentStatus]?: EnvironmentStatus[T];
-};
-
-export type EnvironmentsStatuses = { [key: string]: EnvironmentStatus };
-
-export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
-
-export type UIState = {
-  closing: boolean;
-};
-
-export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
-
-export type DuplicateRouteToAnotherEnvironment = {
-  moving: boolean;
-  routeUUID?: string;
-  targetEnvironmentUUID?: string;
-};
-
-export type StoreType = {
-  activeTab: TabsNameType;
-  activeView: ViewsNameType;
-  activeEnvironmentLogsTab: EnvironmentLogsTabsNameType;
-  activeEnvironmentUUID: string;
-  activeRouteUUID: string;
-  activeRouteResponseUUID: string;
-  environments: Environments;
-  environmentsStatus: EnvironmentsStatuses;
-  bodyEditorConfig: any;
-  duplicatedRoutes: DuplicatedRoutesTypes;
-  environmentsLogs: EnvironmentLogs;
-  // the active log UUID per environment
-  activeEnvironmentLogsUUID: ActiveEnvironmentsLogUUIDs;
-  toasts: Toast[];
-  uiState: UIState;
-  settings: Settings;
-  duplicateRouteToAnotherEnvironment: DuplicateRouteToAnotherEnvironment;
-  routesFilter: string;
-};
 
 @Injectable({ providedIn: 'root' })
 export class Store {
@@ -276,10 +212,10 @@ export class Store {
   }
 
   /**
-   * Get environments status value
+   * Get an environment status value
    */
-  public getEnvironmentStatus(): EnvironmentsStatuses {
-    return this.store$.value.environmentsStatus;
+  public getEnvironmentStatus(environmentUUID: string): EnvironmentStatus {
+    return this.store$.value.environmentsStatus[environmentUUID];
   }
 
   /**
@@ -348,5 +284,11 @@ export class Store {
 
       return list;
     }, []);
+  }
+
+  public getEnvironmentPath(environmentUUID: string): string {
+    return this.store$.value.settings.environments.find(
+      (descriptor) => descriptor.uuid === environmentUUID
+    ).path;
   }
 }

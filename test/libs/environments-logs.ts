@@ -1,4 +1,4 @@
-import { EnvironmentLogsTabsNameType } from '../../src/renderer/app/stores/store';
+import { EnvironmentLogsTabsNameType } from '../../src/renderer/app/models/store.model';
 import utils from '../libs/utils';
 
 /**

@@ -42,15 +42,15 @@ import {
 } from 'src/renderer/app/constants/routes.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
+import {
+  EnvironmentsStatuses,
+  TabsNameType
+} from 'src/renderer/app/models/store.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateRouteAction } from 'src/renderer/app/stores/actions';
-import {
-  EnvironmentsStatuses,
-  Store,
-  TabsNameType
-} from 'src/renderer/app/stores/store';
+import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
 
 @Component({

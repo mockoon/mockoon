@@ -10,7 +10,8 @@ export const IPCMainListenerChannels = [
   'APP_SET_FAKER_OPTIONS',
   'APP_UPDATE_ENVIRONMENT',
   'APP_WRITE_CLIPBOARD',
-  'APP_SHOW_FILE'
+  'APP_SHOW_FILE',
+  'APP_WATCH_FILE'
 ];
 
 export const IPCMainHandlerChannels = [
@@ -30,12 +31,14 @@ export const IPCMainHandlerChannels = [
   'APP_WRITE_FILE',
   'APP_WRITE_JSON_DATA',
   'APP_NEW_STORAGE_MIGRATION',
-  'APP_GET_OS'
+  'APP_GET_OS',
+  'APP_UNWATCH_FILE'
 ];
 
 export const IPCRendererHandlerChannels = [
   'APP_MENU',
   'APP_SERVER_EVENT',
   'APP_UPDATE_AVAILABLE',
-  'APP_CUSTOM_PROTOCOL'
+  'APP_CUSTOM_PROTOCOL',
+  'APP_FILE_EXTERNAL_CHANGE'
 ];

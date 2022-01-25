@@ -3,13 +3,16 @@ import {
   ArrayContainsObjectKey,
   MoveArrayItem
 } from 'src/renderer/app/libs/utils.lib';
+import {
+  EnvironmentsStatuses,
+  StoreType
+} from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import {
   getBodyEditorMode,
   updateDuplicatedRoutes
 } from 'src/renderer/app/stores/reducer-utils';
-import { EnvironmentsStatuses, StoreType } from 'src/renderer/app/stores/store';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 export type ReducerDirectionType = 'next' | 'previous';
@@ -282,30 +285,34 @@ export const environmentReducer = (
       const activeEnvironment: Environment = action.activeEnvironment
         ? action.activeEnvironment
         : newEnvironment;
-      const afterUUID = action.afterUUID;
-
       const environments = [...state.environments];
 
-      let afterIndex = environments.length;
-      if (afterUUID) {
-        afterIndex = environments.findIndex(
-          (environment) => environment.uuid === afterUUID
-        );
-        if (afterIndex === -1) {
-          afterIndex = environments.length;
-        }
+      if (action.insertAfterIndex != null) {
+        environments.splice(action.insertAfterIndex + 1, 0, newEnvironment);
+      } else {
+        environments.push(newEnvironment);
       }
-      environments.splice(afterIndex + 1, 0, newEnvironment);
 
       let newSettings = state.settings;
+      // if a filePath is provided, we need to save the environment descriptor in the settings
       if (action.filePath) {
         newSettings = {
           ...state.settings,
-          environments: [
-            ...state.settings.environments,
-            { uuid: newEnvironment.uuid, path: action.filePath }
-          ]
+          environments: [...state.settings.environments]
         };
+
+        // we may be reloading or duplicating so we want to keep the descriptors order
+        if (action.insertAfterIndex != null) {
+          newSettings.environments.splice(action.insertAfterIndex + 1, 0, {
+            uuid: newEnvironment.uuid,
+            path: action.filePath
+          });
+        } else {
+          newSettings.environments.push({
+            uuid: newEnvironment.uuid,
+            path: action.filePath
+          });
+        }
       }
 
       newState = {

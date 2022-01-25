@@ -27,7 +27,6 @@
             "polyfills": "src/renderer/polyfills.ts",
             "allowedCommonJsDependencies": [
               "lodash",
-              "src/renderer/app/config",
               "semver",
               "brace/mode/css",
               "brace/mode/html.js",

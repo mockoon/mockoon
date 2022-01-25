@@ -50,7 +50,7 @@ export class ApiService {
             this.environmentsService.addRoute();
             break;
           case 'START_ENVIRONMENT':
-            this.environmentsService.toggleActiveEnvironment();
+            this.environmentsService.toggleEnvironment();
             break;
           case 'START_ALL_ENVIRONMENTS':
             this.environmentsService.toggleAllEnvironments();
@@ -113,6 +113,18 @@ export class ApiService {
         }
       });
     });
+
+    // listen to file external changes
+    MainAPI.receive(
+      'APP_FILE_EXTERNAL_CHANGE',
+      (previousUUID: string, environmentPath: string) => {
+        this.zone.run(() => {
+          this.environmentsService
+            .reloadEnvironment(previousUUID, environmentPath)
+            .subscribe();
+        });
+      }
+    );
 
     // listen to environments and enable/disable some menu entries
     this.store

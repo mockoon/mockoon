@@ -10,12 +10,10 @@ import { Environment, Route } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { EnvironmentsService } from '../../../services/environments.service';
-import { finalizeRouteDuplicationToAnotherEnvironmentAction } from '../../../stores/actions';
-import {
-  DuplicateRouteToAnotherEnvironment,
-  Store
-} from '../../../stores/store';
+import { DuplicateRouteToAnotherEnvironment } from 'src/renderer/app/models/store.model';
+import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { finalizeRouteDuplicationToAnotherEnvironmentAction } from 'src/renderer/app/stores/actions';
+import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
   selector: 'app-duplicate-route-modal',

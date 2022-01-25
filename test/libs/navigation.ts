@@ -1,4 +1,4 @@
-import { ViewsNameType } from '../../src/renderer/app/stores/store';
+import { ViewsNameType } from '../../src/renderer/app/models/store.model';
 
 class Navigation {
   public async switchView(viewName: ViewsNameType): Promise<void> {
