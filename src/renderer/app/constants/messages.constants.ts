@@ -185,5 +185,10 @@ export const Messages: {
     }" failed. The environment was automatically repaired and migrated to the latest version.`,
     showToast: true,
     toastType: 'warning'
+  }),
+  ENVIRONMENT_RELOADED: (messageParams) => ({
+    message: `Environment "${messageParams.name}" was modified externally and reloaded.`,
+    showToast: true,
+    toastType: 'success'
   })
 };

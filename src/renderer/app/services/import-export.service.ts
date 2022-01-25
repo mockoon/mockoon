@@ -418,7 +418,6 @@ export class ImportExportService extends Logger {
         return true;
       }),
       concatMap((data) => {
-        //return from(new Promise((resolve) => setTimeout(resolve, 3000)));
         if (data.type === 'environment') {
           const migratedEnvironment =
             this.dataService.migrateAndValidateEnvironment(data.item);

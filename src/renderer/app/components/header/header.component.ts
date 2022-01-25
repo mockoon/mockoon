@@ -3,12 +3,12 @@ import { Environment } from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
-import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import {
   EnvironmentStatus,
-  Store,
   ViewsNameType
-} from 'src/renderer/app/stores/store';
+} from 'src/renderer/app/models/store.model';
+import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
   selector: 'app-header',
@@ -87,6 +87,6 @@ export class HeaderComponent implements OnInit {
    * Toggle active environment running state (start/stop)
    */
   public toggleEnvironment() {
-    this.environmentsService.toggleActiveEnvironment();
+    this.environmentsService.toggleEnvironment();
   }
 }

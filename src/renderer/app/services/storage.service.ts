@@ -35,17 +35,15 @@ export class StorageService {
    * Load data from JSON storage.
    * Handles storage failure.
    *
-   * A custom path can be passed to load from a different directory than the storage folder.
-   * This is especially useful for loading individual environments.
-   * When using `path` put the `key` at `null`.
+   * Path can be a file 'key', that will retrieve the corresponding file from the user data storage folder:
+   * 'settings' --> /%USER_DATA%/mockoon/storage/settings.json
    *
-   * @param key - storage key
-   * @param path - storage file full path, key will be ignored
+   * @param path - storage file full path or key
    */
-  public loadData<T>(key: string, path?: string): Observable<T> {
-    return from(MainAPI.invoke<T>('APP_READ_JSON_DATA', key, path)).pipe(
+  public loadData<T>(path: string): Observable<T> {
+    return from(MainAPI.invoke<T>('APP_READ_JSON_DATA', path)).pipe(
       catchError((error) => {
-        const errorMessage = `Error while loading ${key}`;
+        const errorMessage = `Error while loading ${path}`;
 
         this.logger.error(
           `${errorMessage}: ${error.code || ''} ${error.message || ''}`
@@ -66,37 +64,26 @@ export class StorageService {
    * Switch saving flag during save.
    * Handles storage failure.
    *
-   * A custom path can be passed to save in a different directory than the storage folder.
-   * This is especially useful for saving individual environments.
-   * When using `path` put the `key` at `null`.
+   * Path can be a file 'key', that will retrieve the corresponding file from the user data storage folder:
+   * 'settings' --> /%USER_DATA%/mockoon/storage/settings.json
    *
-   * @param key - storage key
    * @param data - data to save
-   * @param path - storage file full path, key will be ignored
+   * @param path - storage file full path or key
    * @returns
    */
-  public saveData<T>(
-    key: string,
-    data: T,
-    path?: string,
-    storagePrettyPrint?: boolean
-  ) {
+  public saveData<T>(data: T, path: string, storagePrettyPrint?: boolean) {
     return of(true).pipe(
       mergeMap(() =>
         from(
           MainAPI.invoke<T>(
             'APP_WRITE_JSON_DATA',
-            key,
             data,
             path,
             storagePrettyPrint
           )
         ).pipe(
-          tap(() => {
-            this.saving$.next(false);
-          }),
           catchError((error) => {
-            const errorMessage = `Error while saving ${key}`;
+            const errorMessage = `Error while saving ${path}`;
 
             this.logger.error(
               `${errorMessage}: ${error.code || ''} ${error.message || ''}`
@@ -108,6 +95,9 @@ export class StorageService {
             );
 
             return EMPTY;
+          }),
+          tap(() => {
+            this.saving$.next(false);
           })
         )
       )

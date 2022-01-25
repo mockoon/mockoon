@@ -38,6 +38,12 @@ class Environments {
     );
   }
 
+  private get environmentMenuEntry(): ChainablePromiseElement<
+    Promise<WebdriverIO.Element>
+  > {
+    return $(this.activeMenuEntrySelector);
+  }
+
   private get activeEnvironmentMenuEntry(): ChainablePromiseElement<
     Promise<WebdriverIO.Element>
   > {
@@ -115,6 +121,15 @@ class Environments {
     );
   }
 
+  public async assertMenuEntryText(
+    entryIndex: number,
+    expectedName: string
+  ): Promise<void> {
+    const text = await $(
+      `.environments-menu .menu-list .nav-item:nth-child(${entryIndex}) .nav-link`
+    ).getText();
+    expect(text).toContain(expectedName);
+  }
   public async assertActiveMenuEntryText(expectedName: string): Promise<void> {
     const text = await this.activeEnvironmentMenuEntry.getText();
     expect(text).toContain(expectedName);

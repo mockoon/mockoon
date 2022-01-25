@@ -1,4 +1,3 @@
-import { MockoonServer } from '@mockoon/commons-server';
 import { app, BrowserWindow } from 'electron';
 import {
   catchErrors as logCatchErrors,
@@ -7,10 +6,14 @@ import {
   transports as logTransports
 } from 'electron-log';
 import { join as pathJoin, resolve as pathResolve } from 'path';
-import { parseProtocolArgs, registerProtocol } from './libs/custom-protocol';
-import { clearIPCChannels, initIPCListeners } from './libs/ipc';
-import { initMainWindow, saveOpenUrlArgs } from './libs/main-window';
-import { checkForUpdate } from './libs/update';
+import {
+  parseProtocolArgs,
+  registerProtocol
+} from 'src/main/libs/custom-protocol';
+import { clearIPCChannels, initIPCListeners } from 'src/main/libs/ipc';
+import { initMainWindow, saveOpenUrlArgs } from 'src/main/libs/main-window';
+import { ServerInstance } from 'src/main/libs/server-management';
+import { checkForUpdate } from 'src/main/libs/update';
 
 declare const isTesting: boolean;
 declare const isDev: boolean;
@@ -41,8 +44,6 @@ logCatchErrors({
   }
 });
 
-// running Mockoon server instances
-const runningServerInstances: { [key in string]: MockoonServer } = {};
 let mainWindow: BrowserWindow;
 
 // try getting a lock to ensure only one instance of the application is launched
@@ -50,11 +51,11 @@ const appLock = app.requestSingleInstanceLock();
 
 const initApp = () => {
   mainWindow = initMainWindow();
-  initIPCListeners(mainWindow, runningServerInstances);
+  initIPCListeners(mainWindow);
 
   if (isDev) {
     // when serving (dev mode) enable hot reloading
-    import('./libs/hot-reload').then((hotReloadModule) => {
+    import('src/main/libs/hot-reload').then((hotReloadModule) => {
       hotReloadModule.hotReload();
     });
   }
@@ -100,13 +101,7 @@ if (!appLock) {
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
-    // stop running servers before closing
-    Object.keys(runningServerInstances).forEach((runningEnvironmentUUID) => {
-      logInfo(
-        `[SERVICE][SERVER]Server ${runningEnvironmentUUID} has been stopped`
-      );
-      runningServerInstances[runningEnvironmentUUID].stop();
-    });
+    ServerInstance.stopAll();
 
     clearIPCChannels();
 

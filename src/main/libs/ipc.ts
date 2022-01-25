@@ -3,11 +3,7 @@ import {
   validate as openAPIValidate
 } from '@apidevtools/swagger-parser';
 import { Environment, Environments } from '@mockoon/commons';
-import {
-  MockoonServer,
-  SetFakerLocale,
-  SetFakerSeed
-} from '@mockoon/commons-server';
+import { SetFakerLocale, SetFakerSeed } from '@mockoon/commons-server';
 import {
   BrowserWindow,
   clipboard,
@@ -16,36 +12,34 @@ import {
   Menu,
   shell
 } from 'electron';
-import {
-  DataOptions,
-  get as storageGet,
-  getDataPath,
-  set as storageSet
-} from 'electron-json-storage';
+import { getDataPath } from 'electron-json-storage';
 import { error as logError, info as logInfo } from 'electron-log';
 import { promises as fsPromises } from 'fs';
 import { createServer } from 'http';
 import { lookup as mimeTypeLookup } from 'mime-types';
-import { dirname, join as pathJoin, parse as pathParse } from 'path';
-import { promisify } from 'util';
+import { join as pathJoin, parse as pathParse } from 'path';
 import {
   IPCMainHandlerChannels,
   IPCMainListenerChannels
-} from '../constants/ipc.constants';
-import { migrateData } from './data-migration';
-import { toggleEnvironmentMenuItems, toggleRouteMenuItems } from './menu';
-import { applyUpdate } from './update';
+} from 'src/main/constants/ipc.constants';
+import { migrateData } from 'src/main/libs/data-migration';
+import {
+  toggleEnvironmentMenuItems,
+  toggleRouteMenuItems
+} from 'src/main/libs/menu';
+import { ServerInstance } from 'src/main/libs/server-management';
+import { readJSONData, writeJSONData } from 'src/main/libs/storage';
+import { applyUpdate } from 'src/main/libs/update';
+import {
+  unwatchEnvironmentFile,
+  watchEnvironmentFile
+} from 'src/main/libs/watch-file';
 
 declare const isTesting: boolean;
 
 const dialogMocks: { [x: string]: string[] } = { save: [], open: [] };
 
-export const initIPCListeners = (
-  mainWindow: BrowserWindow,
-  runningServerInstances: { [key in string]: MockoonServer }
-) => {
-  const updatedEnvironments: { [key in string]: Environment } = {};
-
+export const initIPCListeners = (mainWindow: BrowserWindow) => {
   // Quit requested by renderer (when waiting for save to finish)
   ipcMain.on('APP_QUIT', () => {
     // destroy the window otherwise app.quit() will trigger beforeunload again. Also there is no app.quit for macos
@@ -94,71 +88,34 @@ export const initIPCListeners = (
   });
 
   ipcMain.on('APP_UPDATE_ENVIRONMENT', (event, environments: Environments) => {
-    environments.forEach((environment) => {
-      updatedEnvironments[environment.uuid] = environment;
-    });
+    ServerInstance.updateEnvironments(environments);
   });
 
   ipcMain.on('APP_APPLY_UPDATE', () => {
     applyUpdate();
   });
 
+  ipcMain.on('APP_WATCH_FILE', (event, uuid, filePath) => {
+    watchEnvironmentFile(uuid, filePath);
+  });
+
+  ipcMain.handle(
+    'APP_UNWATCH_FILE',
+    async (event, filePathOrUUID) =>
+      await unwatchEnvironmentFile(filePathOrUUID)
+  );
+
   ipcMain.handle('APP_GET_OS', () => process.platform);
 
   ipcMain.handle(
     'APP_READ_JSON_DATA',
-    async (event, key: string, path?: string) => {
-      const options: DataOptions = { dataPath: '' };
-
-      if (path) {
-        const parsedPath = pathParse(path);
-
-        key = parsedPath.name;
-        options.dataPath = parsedPath.dir;
-      }
-      try {
-        const data = await promisify<string, DataOptions, any>(storageGet)(
-          key,
-          options
-        );
-
-        // if object is empty return null instead (electron json storage returns empty object if file does not exists)
-        if (
-          !data ||
-          (Object.keys(data).length === 0 && data.constructor === Object)
-        ) {
-          return null;
-        }
-
-        return data;
-      } catch (error) {
-        // if file empty (JSON.parse error), it will throw
-        return null;
-      }
-    }
+    async (event, path: string) => await readJSONData(path)
   );
 
   ipcMain.handle(
     'APP_WRITE_JSON_DATA',
-    async (event, key, data, path?: string, storagePrettyPrint?: boolean) => {
-      const options: DataOptions & { prettyPrinting?: boolean } = {
-        dataPath: '',
-        prettyPrinting: storagePrettyPrint
-      };
-
-      if (path) {
-        const parsedPath = pathParse(path);
-
-        key = parsedPath.name;
-        options.dataPath = parsedPath.dir;
-      }
-
-      return await promisify<string, any, DataOptions>(storageSet)(
-        key,
-        data,
-        options
-      );
-    }
+    async (event, data, path: string, storagePrettyPrint?: boolean) =>
+      await writeJSONData(data, path, storagePrettyPrint)
   );
 
   ipcMain.handle(
@@ -227,89 +184,15 @@ export const initIPCListeners = (
     async (event, data) => await openAPIValidate(data)
   );
 
-  ipcMain.handle('APP_START_SERVER', (event, environment, environmentPath) => {
-    const environmentDirectory = dirname(environmentPath);
-    const server = new MockoonServer(environment, {
-      environmentDirectory,
-      refreshEnvironmentFunction: (environmentUUID) => {
-        const updatedEnvironment = updatedEnvironments[environmentUUID];
-        if (updatedEnvironment) {
-          return updatedEnvironment;
-        }
-
-        return null;
-      }
-    });
-
-    server.once('started', () => {
-      runningServerInstances[environment.uuid] = server;
-
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        environment.uuid,
-        'started'
-      );
-    });
-
-    server.once('stopped', () => {
-      delete runningServerInstances[environment.uuid];
-
-      // verify that window is still present as we stop servers when app quits too
-      if (!mainWindow.isDestroyed()) {
-        mainWindow.webContents.send(
-          'APP_SERVER_EVENT',
-          environment.uuid,
-          'stopped'
-        );
-
-        return;
-      }
-    });
-
-    server.once('creating-proxy', () => {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        environment.uuid,
-        'creating-proxy'
-      );
-    });
-
-    server.on('entering-request', () => {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        environment.uuid,
-        'entering-request'
-      );
-    });
-
-    server.on('transaction-complete', (transaction) => {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        environment.uuid,
-        'transaction-complete',
-        { transaction }
-      );
-    });
-
-    server.on('error', (errorCode, originalError) => {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        environment.uuid,
-        'error',
-        {
-          errorCode,
-          originalError
-        }
-      );
-    });
-
-    server.start();
-  });
-
-  ipcMain.handle('APP_STOP_SERVER', async (event, environmentUUID) => {
-    if (runningServerInstances[environmentUUID]) {
-      runningServerInstances[environmentUUID].stop();
+  ipcMain.handle(
+    'APP_START_SERVER',
+    (event, environment: Environment, environmentPath: string) => {
+      new ServerInstance(environment, environmentPath);
     }
+  );
+
+  ipcMain.handle('APP_STOP_SERVER', (event, environmentUUID: string) => {
+    ServerInstance.stop(environmentUUID);
   });
 
   ipcMain.handle(

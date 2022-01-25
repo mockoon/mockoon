@@ -6,8 +6,8 @@ import {
 } from 'electron-json-storage';
 import { info as logInfo } from 'electron-log';
 import { sep as pathSeparator } from 'path';
+import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 import { promisify } from 'util';
-import { EnvironmentDescriptor } from '../../shared/models/settings.model';
 
 export const migrateData = async () => {
   logInfo('[MAIN][MIGRATION]Migrating data to new storage system');

@@ -8,6 +8,7 @@ import {
   EnvironmentLogRequest,
   EnvironmentLogResponse
 } from 'src/renderer/app/models/environment-logs.model';
+import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -15,10 +16,7 @@ import {
   clearLogsAction,
   setActiveEnvironmentLogUUIDAction
 } from 'src/renderer/app/stores/actions';
-import {
-  EnvironmentLogsTabsNameType,
-  Store
-} from 'src/renderer/app/stores/store';
+import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
 
 type CollapseStates = {

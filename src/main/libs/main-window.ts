@@ -2,20 +2,18 @@ import { BrowserWindow, Menu, shell } from 'electron';
 import * as windowState from 'electron-window-state';
 import { join as pathJoin } from 'path';
 import { argv } from 'process';
-import { parseProtocolArgs } from './custom-protocol';
-import { createMenu } from './menu';
-import { createSplashScreen } from './splashscreen';
+import { parseProtocolArgs } from 'src/main/libs/custom-protocol';
+import { createMenu } from 'src/main/libs/menu';
+import { createSplashScreen } from 'src/main/libs/splashscreen';
 
 declare const isTesting: boolean;
 declare const isDev: boolean;
 
 // store URL received in open-url event when app is closed (macos only)
 let openUrlArgs: string[];
+let mainWindow: BrowserWindow;
 
-const showMainWindow = (
-  mainWindowState: windowState.State,
-  mainWindow: BrowserWindow
-) => {
+const showMainWindow = (mainWindowState: windowState.State) => {
   mainWindowState.manage(mainWindow);
   // ensure focus, as manage function does not necessarily focus
   mainWindow.show();
@@ -26,6 +24,8 @@ const showMainWindow = (
 export const saveOpenUrlArgs = (url: string[]) => {
   openUrlArgs = url;
 };
+
+export const getMainWindow = () => mainWindow;
 
 export const initMainWindow = () => {
   let splashScreen: BrowserWindow;
@@ -40,7 +40,7 @@ export const initMainWindow = () => {
     defaultHeight: 768
   });
 
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
     minWidth: 1024,
@@ -74,7 +74,7 @@ export const initMainWindow = () => {
 
       // adding a timeout diff (100ms) between splashscreen close and mainWindow.show to fix a bug: https://github.com/electron/electron/issues/27353
       setTimeout(() => {
-        showMainWindow(mainWindowState, mainWindow);
+        showMainWindow(mainWindowState);
 
         if (isDev) {
           mainWindow.webContents.openDevTools();
