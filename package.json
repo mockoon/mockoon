@@ -13,6 +13,7 @@
   "bugs": {
     "url": "https://github.com/mockoon/mockoon/issues"
   },
+  "funding": "https://mockoon.com/sponsor-us/",
   "browserslist": [
     "Chrome >= 96"
   ],

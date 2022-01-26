@@ -16,13 +16,15 @@
 Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.
 It has been built with Electron and can be used on Windows (exe), Linux (deb, rpm, Appimage and Snap) and MacOS (dmg or brew). You can download it here: [mockoon.com](https://mockoon.com)
 
-![screenshot](https://mockoon.com/images/screenshot-repo.png?)
+<div align="center">
+<img src="https://mockoon.com/images/screenshot-repo.png?" alt="app screenshot" />
+</div>
 
-## Sponsors
+Mockoon is an open-source project built by volunteer maintainers. If you like our applications, please considering sponsoring us and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
 
-If you like Mockoon, you can support the project with a one-time donation: <a href="https://www.buymeacoffee.com/255kb" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-You can also [sponsor the maintainer (255kb) on GitHub](https://github.com/sponsors/255kb) and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
+<div align="center">
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png" width="250" alt="sponsor button" /></a>
+</div>
 
 ## Features
 
@@ -36,7 +38,7 @@ Mockoon offers many features:
 - proxy forwarding mode
 - HTTPS support
 
-You can check the [complete list](https://mockoon.com/features) on the website.
+You can check the [complete list](https://mockoon.com/features/) on the website.
 
 ## Download
 
