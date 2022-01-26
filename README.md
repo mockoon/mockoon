@@ -17,7 +17,7 @@ Mockoon is the easiest and quickest way to run mock APIs locally. No remote depl
 It has been built with Electron and can be used on Windows (exe), Linux (deb, rpm, Appimage and Snap) and MacOS (dmg or brew). You can download it here: [mockoon.com](https://mockoon.com)
 
 <div align="center">
-<img src="https://mockoon.com/images/screenshot-repo.png?" alt="app screenshot" />
+<img width="50%" src="https://mockoon.com/images/hp-hero.png">
 </div>
 
 Mockoon is an open-source project built by volunteer maintainers. If you like our applications, please considering sponsoring us and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
