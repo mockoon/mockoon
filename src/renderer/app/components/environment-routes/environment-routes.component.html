@@ -498,7 +498,7 @@
                 <label
                   class="custom-control-label"
                   for="route-settings-disable-templating"
-                  >Disable templating in body or file content.
+                  >Disable templating in body and file content
                 </label>
               </div>
               <div class="input-group-append ml-1">
@@ -506,7 +506,7 @@
                   icon="info"
                   class="ml-1"
                   ngbTooltip="Helpers like {{ '{' + '{' }}body{{ '}' + '}' }}
-        won't be interpreted"
+        won't be interpreted and file content will be directly streamed (better performances)"
                 ></app-svg>
               </div>
             </div>

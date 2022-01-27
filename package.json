@@ -51,7 +51,7 @@
   "dependencies": {
     "@apidevtools/swagger-parser": "10.0.3",
     "@mockoon/commons": "2.8.2",
-    "@mockoon/commons-server": "2.15.3",
+    "@mockoon/commons-server": "2.15.5",
     "axios": "0.24.0",
     "chokidar": "3.5.2",
     "electron-json-storage": "4.5.0",
