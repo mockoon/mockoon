@@ -68,6 +68,7 @@ export interface MainAPIModel {
       | 'APP_DISABLE_ROUTE_MENU_ENTRIES'
       | 'APP_ENABLE_ROUTE_MENU_ENTRIES'
       | 'APP_QUIT'
+      | 'APP_HIDE_WINDOW'
       | 'APP_APPLY_UPDATE'
   ): void;
   send(
