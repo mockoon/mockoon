@@ -46,6 +46,10 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     mainWindow.destroy();
   });
 
+  ipcMain.on('APP_HIDE_WINDOW', () => {
+    mainWindow.hide();
+  });
+
   ipcMain.on('APP_DISABLE_ENVIRONMENT_MENU_ENTRIES', () => {
     toggleEnvironmentMenuItems(false);
   });

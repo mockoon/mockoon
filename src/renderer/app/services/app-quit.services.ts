@@ -42,6 +42,7 @@ export class AppQuitService {
         this.closing = true;
 
         this.store.update(updateUIStateAction({ closing: true }));
+        MainAPI.send('APP_HIDE_WINDOW');
 
         this.telemetryService.closeSession();
       }),
@@ -59,8 +60,8 @@ export class AppQuitService {
         }
 
         return race(
-          // ensure that app closes after 10s even if something fail on the telemetry or storage side
-          timer(10000),
+          // ensure that app closes after 5s even if something fail on the telemetry or storage side
+          timer(5000),
           combineLatest(waitFor)
         );
       }),
