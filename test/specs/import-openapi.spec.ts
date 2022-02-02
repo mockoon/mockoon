@@ -130,7 +130,7 @@ describe('Swagger/OpenAPI import', () => {
             await dialogs.open(testCase.filePath);
             await dialogs.save(resolve(`./tmp/storage/${filename}.json`));
 
-            await menu.click('IMPORT_OPENAPI_FILE');
+            await menu.click('MENU_IMPORT_OPENAPI_FILE');
 
             await browser.pause(500);
 

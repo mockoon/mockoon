@@ -2,7 +2,6 @@ import { Environment, HighestMigrationId } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { resolve } from 'path';
 import { validate as validateUUID } from 'uuid';
-import { Config } from '../../src/shared/config';
 import { Settings } from '../../src/shared/models/settings.model';
 import clipboard from '../libs/clipboard';
 import dialogs from '../libs/dialogs';
@@ -144,19 +143,17 @@ describe('Schema validation', () => {
   });
 
   describe('Route', () => {
-    it('Should import the broken route and fix the schema', async () => {
+    it('should import the broken route and fix the schema', async () => {
       const fileContent = await fs.readFile(
-        './test/data/res/schema-validation/route-export-broken.json',
+        './test/data/res/schema-validation/route-broken.json',
         'utf-8'
       );
 
-      await clipboard.write(
-        fileContent.replace('##appVersion##', Config.appVersion)
+      await clipboard.write(fileContent);
+      await dialogs.save(
+        resolve('./tmp/storage/new-environment-route-broken.json')
       );
-
-      await dialogs.save(resolve('./tmp/storage/new-environment.json'));
-      await menu.click('IMPORT_CLIPBOARD');
-
+      await menu.click('MENU_NEW_ROUTE_CLIPBOARD');
       await browser.pause(500);
 
       await environments.assertCount(1);
@@ -165,7 +162,9 @@ describe('Schema validation', () => {
       await utils.waitForAutosave();
 
       const envFileContent: Environment = JSON.parse(
-        (await fs.readFile('./tmp/storage/new-environment.json')).toString()
+        (
+          await fs.readFile('./tmp/storage/new-environment-route-broken.json')
+        ).toString()
       );
 
       // verify that properties exists
@@ -252,37 +251,6 @@ describe('Schema validation', () => {
       expect(validateUUID(envContent.routes[0].responses[0].uuid)).toEqual(
         true
       );
-    });
-
-    it('should deduplicate UUIDs when importing another environment', async () => {
-      await fs.copyFile(
-        './test/data/res/schema-validation/uuid-dedup/env-to-import.json',
-        './tmp/storage/env-to-import.json'
-      );
-      await dialogs.open('./tmp/storage/env-to-import.json');
-      await dialogs.save(resolve('./tmp/storage/env-to-import.json'));
-
-      await menu.click('IMPORT_FILE');
-
-      await browser.pause(500);
-
-      await environments.assertCount(4);
-      await environments.assertActiveMenuEntryText('uuid dedup import');
-
-      await utils.waitForAutosave();
-
-      const envContent: Environment = JSON.parse(
-        (await fs.readFile('./tmp/storage/env-to-import.json')).toString()
-      );
-      expect(envContent.uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.uuid)).toEqual(true);
-      expect(envContent.routes[0].uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.routes[0].uuid)).toEqual(true);
-      expect(envContent.routes[0].responses[0].uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.routes[0].responses[0].uuid)).toEqual(
-        true
-      );
-      await environments.close(1);
       await environments.close(1);
       await environments.close(1);
       await environments.close(1);
@@ -297,7 +265,7 @@ describe('Schema validation', () => {
       );
       await environments.open('missing-identifier', false);
 
-      await modals.assertTitle('Confirm file opening');
+      await modals.assertTitle('Confirm opening');
     });
 
     it('should not open the file if cancel is clicked', async () => {
@@ -308,7 +276,7 @@ describe('Schema validation', () => {
     it('should open the file and fix the schema if confirm is clicked', async () => {
       await environments.open('missing-identifier', false);
 
-      await modals.assertTitle('Confirm file opening');
+      await modals.assertTitle('Confirm opening');
       await $('.modal-footer .btn:first-of-type').click();
       await environments.assertCount(1);
       await environments.assertActiveMenuEntryText('missing identifier');

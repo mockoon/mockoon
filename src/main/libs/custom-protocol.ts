@@ -3,7 +3,7 @@ import { info as logInfo } from 'electron-log';
 import { parse as qsParse } from 'querystring';
 import { ProtocolAction } from 'src/shared/models/protocol.model';
 
-const validActions: ProtocolAction[] = ['load-export-data'];
+const validActions: ProtocolAction[] = ['load-environment'];
 
 export const registerProtocol = () => {
   app.setAsDefaultProtocolClient('mockoon');

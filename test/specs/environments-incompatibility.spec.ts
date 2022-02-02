@@ -1,9 +1,6 @@
-import { promises as fs } from 'fs';
 import { resolve } from 'path';
-import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import file from '../libs/file';
-import menu from '../libs/menu';
 import utils from '../libs/utils';
 
 describe('Environments incompatibility', () => {
@@ -34,22 +31,5 @@ describe('Environments incompatibility', () => {
       'Environment "FT env" was created with a more recent version of Mockoon. Please upgrade.'
     );
     await utils.closeToast();
-  });
-
-  it('should be unable to import an incompatible environment', async () => {
-    await fs.copyFile(
-      './test/data/res/incompatible/incompatible-export.json',
-      './tmp/storage/incompatible-export.json'
-    );
-    await dialogs.open('./tmp/storage/incompatible-export.json');
-    await dialogs.save(resolve('./tmp/storage/incompatible-imported.json'));
-    await menu.click('IMPORT_FILE');
-
-    await browser.pause(500);
-
-    await utils.checkToastDisplayed(
-      'warning',
-      'Environment "FT env" was created with a more recent version of Mockoon. Please upgrade.'
-    );
   });
 });

@@ -18,10 +18,26 @@ export const Messages: {
         toastType: ToastTypes;
       });
 } = {
+  INITIALIZING_APP: () => ({
+    message: 'Initializing application',
+    showToast: false
+  }),
+  UNKNOWN_ERROR: (messageParams) => {
+    const errorInfo =
+      typeof messageParams.error === 'string'
+        ? messageParams.error
+        : `${messageParams.error.message || ''} - ${
+            messageParams.error.stack || ''
+          }`;
+
+    return {
+      message: `Unexpected error: ${errorInfo}`,
+      showToast: false
+    };
+  },
   CREATING_PROXY: (messageParams) => ({
     message: `Creating proxy between localhost:${messageParams.port} and ${messageParams.proxyHost}`,
-    showToast: false,
-    toastType: ''
+    showToast: false
   }),
   ENVIRONMENT_STARTED: (messageParams) => ({
     message: `Server ${messageParams.uuid} was started successfully on port ${messageParams.port}`,
@@ -102,61 +118,93 @@ export const Messages: {
     showToast: true,
     toastType: 'error'
   }),
-  EXPORT_SUCCESS: () => ({
-    message: 'Environments have been successfully exported',
+  OPENAPI_EXPORT: (messageParams) => ({
+    message: `Exporting environment ${messageParams.environmentUUID} to OpenAPI format`,
+    showToast: false
+  }),
+  OPENAPI_EXPORT_SUCCESS: (messageParams) => ({
+    message: `Environment ${messageParams.environmentName} has been successfully exported`,
     showToast: true,
     toastType: 'success'
   }),
-  EXPORT_SELECTED_SUCCESS: () => ({
-    message: 'Environment has been successfully exported',
+  OPENAPI_EXPORT_ERROR: (messageParams) => ({
+    message: `Error while exporting environment to OpenAPI format: ${messageParams.error.message}`,
+    loggerMessage: `Error while exporting environment ${messageParams.environmentUUID} to OpenAPI format: ${messageParams.error.message}`,
+    showToast: true,
+    toastType: 'error'
+  }),
+  OPENAPI_IMPORT: (messageParams) => ({
+    message: `Importing environment ${messageParams.filePath} from OpenAPI format`,
+    showToast: false
+  }),
+  OPENAPI_IMPORT_SUCCESS: (messageParams) => ({
+    message: `Environment "${messageParams.environmentName}" has been successfully imported`,
     showToast: true,
     toastType: 'success'
   }),
-  EXPORT_ENVIRONMENT_CLIPBOARD_SUCCESS: () => ({
+  OPENAPI_IMPORT_ERROR: (messageParams) => ({
+    message: `Error while importing environment from OpenAPI format: ${messageParams.error.message}`,
+    loggerMessage: `Error while importing environment ${messageParams.filePath} from OpenAPI format: ${messageParams.error.message}`,
+    showToast: true,
+    toastType: 'error'
+  }),
+  OPENAPI_IMPORT_ERROR_WRONG_VERSION: (messageParams) => ({
+    message: `Error while importing environment ${messageParams.filePath} from OpenAPI format: this OpenAPI version is not supported yet`,
+    showToast: true,
+    toastType: 'error'
+  }),
+  OPENAPI_VALIDATION_ERROR: (messageParams) => ({
+    message: `Error while validating OpenAPI export object: ${messageParams.error.message}`,
+    showToast: false
+  }),
+  COPY_ENVIRONMENT_CLIPBOARD: (messageParams) => ({
+    message: `Copying environment ${messageParams.environmentUUID} to the clipboard`,
+    showToast: false
+  }),
+  COPY_ENVIRONMENT_CLIPBOARD_SUCCESS: (messageParams) => ({
     message: 'Environment has been successfully copied to the clipboard',
+    loggerMessage: `Environment ${messageParams.environmentUUID} has been successfully copied to the clipboard`,
     showToast: true,
     toastType: 'success'
   }),
-  EXPORT_ROUTE_CLIPBOARD_SUCCESS: () => ({
+  COPY_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
+    message: `An error occured while copying the environment to the clipboard: ${messageParams.error.message}`,
+    showToast: true,
+    toastType: 'error'
+  }),
+  COPY_ROUTE_CLIPBOARD: (messageParams) => ({
+    message: `Copying route ${messageParams.routeUUID} to the clipboard`,
+    showToast: false
+  }),
+  COPY_ROUTE_CLIPBOARD_SUCCESS: (messageParams) => ({
     message: 'Route has been successfully copied to the clipboard',
+    loggerMessage: `Route ${messageParams.routeUUID} has been successfully copied to the clipboard`,
     showToast: true,
     toastType: 'success'
   }),
-  IMPORT_ROUTE_INCORRECT_VERSION: (messageParams) => ({
-    message: `Route ${messageParams.uuid} has incompatible version ${messageParams.dataToImportVersion} and cannot be imported`,
-    showToast: true,
-    toastType: 'warning'
-  }),
-  IMPORT_ENVIRONMENT: (messageParams) => ({
-    message: `Importing environment ${messageParams.uuid}`,
-    showToast: false
-  }),
-  IMPORT_ROUTE: (messageParams) => ({
-    message: `Importing route ${messageParams.uuid}`,
-    showToast: false
-  }),
-  IMPORT_FROM_CLIPBOARD: () => ({
-    message: 'Importing from clipboard',
-    showToast: false
-  }),
-  IMPORT_FROM_FILE: () => ({
-    message: 'Importing from file',
-    showToast: false
-  }),
-  IMPORT_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `Error while importing from clipboard: ${messageParams.message}`,
+  COPY_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
+    message: `An error occured while copying the route to the clipboard: ${messageParams.error.message}`,
     showToast: true,
     toastType: 'error'
   }),
-  IMPORT_FILE_ERROR: (messageParams) => ({
-    message: `Error while importing from file: ${messageParams.message}`,
+  NEW_ENVIRONMENT_FROM_URL: (messageParams) => ({
+    message: `Importing environment from URL: ${messageParams.url}`,
+    showToast: false
+  }),
+  NEW_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
+    message: `Error while loading environment from clipboard: ${messageParams.error.message}`,
     showToast: true,
     toastType: 'error'
   }),
-  IMPORT_FILE_INVALID: (messageParams) => ({
-    message: 'This file is not a valid Mockoon export file.',
+  NEW_ENVIRONMENT_URL_ERROR: (messageParams) => ({
+    message: `Error while loading environment from URL: ${messageParams.error.message}`,
     showToast: true,
-    toastType: 'warning'
+    toastType: 'error'
+  }),
+  NEW_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
+    message: `Error while loading route from clipboard: ${messageParams.error.message}`,
+    showToast: true,
+    toastType: 'error'
   }),
   ENVIRONMENT_FILE_IN_USE: () => ({
     message: 'This environment file is already in use',
@@ -190,5 +238,25 @@ export const Messages: {
     message: `Environment "${messageParams.name}" was modified externally and reloaded.`,
     showToast: true,
     toastType: 'success'
+  }),
+  STORAGE_LOAD_ERROR: (messageParams) => ({
+    message: `Error while loading ${messageParams.path}. Please restart the application.`,
+    loggerMessage: `Error while loading ${messageParams.path}: ${
+      messageParams.error.code || ''
+    } ${messageParams.error.message || ''}`,
+    showToast: true,
+    toastType: 'error'
+  }),
+  STORAGE_SAVE_ERROR: (messageParams) => ({
+    message: `Error while saving ${messageParams.path}. If the problem persists please restart the application.`,
+    loggerMessage: `Error while saving ${messageParams.path}: ${
+      messageParams.error.code || ''
+    } ${messageParams.error.message || ''}`,
+    showToast: true,
+    toastType: 'error'
+  }),
+  MIGRATING_ENVIRONMENT: (messageParams) => ({
+    message: `Migrating environment ${messageParams.environmentUUID} starting at ${messageParams.migrationStartId}`,
+    showToast: false
   })
 };

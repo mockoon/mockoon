@@ -2,7 +2,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { Environment } from '@mockoon/commons';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -97,9 +96,6 @@ export class ServerService extends Logger {
           break;
 
         case 'entering-request':
-          this.eventsService.analyticsEvents.next(
-            AnalyticsEvents.SERVER_ENTERING_REQUEST
-          );
           this.telemetryService.sendEvent();
           break;
 

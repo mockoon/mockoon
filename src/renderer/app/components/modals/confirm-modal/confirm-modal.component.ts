@@ -36,12 +36,14 @@ export class ConfirmModalComponent implements OnInit, AfterViewInit, OnDestroy {
     this.confirmModalEventSub = this.confirmModalEvent$
       .pipe(
         filter((confirmModalEvent) => !!confirmModalEvent),
-        tap(() => {
+        tap((confirmModalEvent) => {
           this.modalService
             .open(this.modal, {
               size: 'sm'
             })
-            .result.then((confirmCallback) => confirmCallback());
+            .result.then(() => {
+              confirmModalEvent.confirmed$.next();
+            });
         })
       )
       .subscribe();

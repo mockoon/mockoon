@@ -165,20 +165,6 @@ export class DataService extends Logger {
   }
 
   /**
-   * Verify if the object is a Mockoon export data object
-   *
-   * @param data
-   * @returns
-   */
-  public isExportData(data: any): boolean {
-    if (data?.source?.split(':')[0] === 'mockoon') {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Verify that an environment does not contain any duplicated UUID (verify also against all other loaded envs).
    * Will renew UUIDs if needed.
    *

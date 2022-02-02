@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { merge } from 'rxjs';
-import { debounceTime, filter, first, tap } from 'rxjs/operators';
-import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
+import { filter, first, tap } from 'rxjs/operators';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { LocalStorageService } from 'src/renderer/app/services/local-storage.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -68,30 +66,9 @@ export class AnalyticsService {
       )
       .subscribe();
 
-    const allEventsObservable = this.eventsService.analyticsEvents.pipe(
-      filter(
-        (collectParams) =>
-          collectParams.action !==
-          AnalyticsEvents.SERVER_ENTERING_REQUEST.action
-      )
-    );
-
-    // debounce entering request events every 2mn
-    const enteringRequestEventsbservable =
-      this.eventsService.analyticsEvents.pipe(
-        filter(
-          (collectParams) =>
-            collectParams.action ===
-            AnalyticsEvents.SERVER_ENTERING_REQUEST.action
-        ),
-        debounceTime(29 * 60 * 1000)
-      );
-
-    merge(allEventsObservable, enteringRequestEventsbservable).subscribe(
-      (event) => {
-        this.collect(event);
-      }
-    );
+    this.eventsService.analyticsEvents.subscribe((event) => {
+      this.collect(event);
+    });
   }
 
   /**

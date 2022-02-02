@@ -1,4 +1,4 @@
-<ng-template #modal let-close="close">
+<ng-template #modal let-close="close" let-dismiss="dismiss">
   <ng-container *ngIf="confirmModalEvent$ | async as confirmModalEvent">
     <div class="modal-header">
       <h4 class="modal-title">{{ confirmModalEvent?.title }}</h4>
@@ -17,14 +17,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="close(confirmModalEvent.confirmCallback)"
-      >
+      <button type="button" class="btn btn-primary" (click)="close()">
         Confirm
       </button>
-      <button type="button" class="btn btn-secondary" (click)="close()">
+      <button type="button" class="btn btn-secondary" (click)="dismiss()">
         Cancel
       </button>
     </div>

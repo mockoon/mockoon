@@ -11,11 +11,12 @@ import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 
 @Injectable({ providedIn: 'root' })
-export class StorageService {
-  private logger = new Logger('[SERVICE][STORAGE]');
+export class StorageService extends Logger {
   private saving$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private toastsService: ToastsService) {}
+  constructor(protected toastsService: ToastsService) {
+    super('[SERVICE][STORAGE]', toastsService);
+  }
 
   /**
    * Saving in progress observable
@@ -43,16 +44,7 @@ export class StorageService {
   public loadData<T>(path: string): Observable<T> {
     return from(MainAPI.invoke<T>('APP_READ_JSON_DATA', path)).pipe(
       catchError((error) => {
-        const errorMessage = `Error while loading ${path}`;
-
-        this.logger.error(
-          `${errorMessage}: ${error.code || ''} ${error.message || ''}`
-        );
-
-        this.toastsService.addToast(
-          'error',
-          `${errorMessage}. Please restart the application.`
-        );
+        this.logMessage('error', 'STORAGE_LOAD_ERROR', { path, error });
 
         return EMPTY;
       })
@@ -83,16 +75,7 @@ export class StorageService {
           )
         ).pipe(
           catchError((error) => {
-            const errorMessage = `Error while saving ${path}`;
-
-            this.logger.error(
-              `${errorMessage}: ${error.code || ''} ${error.message || ''}`
-            );
-
-            this.toastsService.addToast(
-              'error',
-              `${errorMessage}. If the problem persists please restart the application.`
-            );
+            this.logMessage('error', 'STORAGE_SAVE_ERROR', { path, error });
 
             return EMPTY;
           }),

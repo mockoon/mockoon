@@ -1,15 +1,28 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   Environment,
   EnvironmentDefault,
   Header,
   HighestMigrationId,
+  IsLegacyExportData,
   Method,
   Route,
-  RouteResponse
+  RouteResponse,
+  RouteSchema,
+  UnwrapLegacyExport
 } from '@mockoon/commons';
 import cloneDeep from 'lodash/cloneDeep';
-import { EMPTY, forkJoin, from, Observable, of, throwError, zip } from 'rxjs';
+import {
+  EMPTY,
+  forkJoin,
+  from,
+  Observable,
+  of,
+  Subject,
+  throwError,
+  zip
+} from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -25,7 +38,6 @@ import {
 } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { HumanizeText } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
@@ -96,7 +108,8 @@ export class EnvironmentsService extends Logger {
     private uiService: UIService,
     private storageService: StorageService,
     private dialogsService: DialogsService,
-    protected toastService: ToastsService
+    protected toastService: ToastsService,
+    private http: HttpClient
   ) {
     super('[SERVICE][ENVIRONMENTS]', toastService);
   }
@@ -396,9 +409,57 @@ export class EnvironmentsService extends Logger {
         );
 
         this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
-        this.eventsService.analyticsEvents.next(
-          AnalyticsEvents.CREATE_ENVIRONMENT
-        );
+      })
+    );
+  }
+
+  /**
+   * Add and save a new environment from the clipboard
+   */
+  public newEnvironmentFromClipboard(): Observable<any> {
+    return from(MainAPI.invoke('APP_READ_CLIPBOARD')).pipe(
+      map((data: string) => JSON.parse(data)),
+      switchMap((environment: Environment) => this.verifyData(environment)),
+      switchMap((environment: Environment) => {
+        const migratedEnvironment =
+          this.dataService.migrateAndValidateEnvironment(environment);
+
+        return this.addEnvironment(migratedEnvironment);
+      }),
+      catchError((error) => {
+        this.logMessage('error', 'NEW_ENVIRONMENT_CLIPBOARD_ERROR', {
+          error
+        });
+
+        return EMPTY;
+      })
+    );
+  }
+
+  /**
+   * Open an environment from a URL
+   *
+   * @param url
+   * @returns
+   */
+  public newEnvironmentFromURL(url: string) {
+    this.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', { url });
+
+    return this.http.get(url, { responseType: 'text' }).pipe(
+      map<string, Environment>((data) => JSON.parse(data)),
+      switchMap((environment: Environment) => this.verifyData(environment)),
+      switchMap((environment: Environment) => {
+        const migratedEnvironment =
+          this.dataService.migrateAndValidateEnvironment(environment);
+
+        return this.addEnvironment(migratedEnvironment);
+      }),
+      catchError((error) => {
+        this.logMessage('error', 'NEW_ENVIRONMENT_URL_ERROR', {
+          error
+        });
+
+        return EMPTY;
       })
     );
   }
@@ -475,37 +536,8 @@ export class EnvironmentsService extends Logger {
       }),
       switchMap((filePath) =>
         this.storageService.loadData<Environment>(filePath).pipe(
+          switchMap((environment) => this.verifyData(environment)),
           tap((environment) => {
-            if (this.dataService.isExportData(environment)) {
-              this.logMessage('info', 'ENVIRONMENT_IS_EXPORT_FILE');
-
-              return;
-            }
-
-            if (environment.lastMigration === undefined) {
-              this.eventsService.confirmModalEvents.next({
-                title: 'Confirm file opening',
-                text: 'This file does not seem to be a valid Mockoon file. Open it anyway?',
-                sub: 'File content may be overwritten.',
-                subIcon: 'warning',
-                subIconClass: 'text-warning',
-                confirmCallback: () => {
-                  this.validateAndAddToStore(environment, filePath, openParams);
-                }
-              });
-
-              return;
-            }
-
-            if (environment.lastMigration > HighestMigrationId) {
-              this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
-                name: environment.name,
-                uuid: environment.uuid
-              });
-
-              return;
-            }
-
             this.validateAndAddToStore(environment, filePath, openParams);
 
             MainAPI.send('APP_WATCH_FILE', environment.uuid, filePath);
@@ -549,10 +581,45 @@ export class EnvironmentsService extends Logger {
       this.store.update(
         addRouteAction(this.schemasBuilderService.buildRoute())
       );
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.CREATE_ROUTE);
       this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
       this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
     }
+  }
+
+  /**
+   * Add a new route and save it in the store
+   */
+  public addRouteFromClipboard() {
+    return from(MainAPI.invoke('APP_READ_CLIPBOARD')).pipe(
+      map((data: string) => JSON.parse(data)),
+      switchMap((route: Route) => {
+        route = RouteSchema.validate(route).value;
+        route = this.dataService.renewRouteUUIDs(route);
+
+        // if has a current environment append imported route
+        if (this.store.get('activeEnvironmentUUID')) {
+          this.store.update(addRouteAction(route));
+
+          return EMPTY;
+        } else {
+          return this.addEnvironment({
+            ...this.schemasBuilderService.buildEnvironment(),
+            routes: [route]
+          });
+        }
+      }),
+      tap(() => {
+        this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+        this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
+      }),
+      catchError((error) => {
+        this.logMessage('error', 'NEW_ROUTE_CLIPBOARD_ERROR', {
+          error
+        });
+
+        return EMPTY;
+      })
+    );
   }
 
   /**
@@ -738,7 +805,6 @@ export class EnvironmentsService extends Logger {
       }
     } else {
       this.serverService.start(environment, environmentPath);
-      this.eventsService.analyticsEvents.next(AnalyticsEvents.SERVER_START);
     }
   }
 
@@ -862,10 +928,6 @@ export class EnvironmentsService extends Logger {
       };
 
       this.store.update(addRouteAction(newRoute));
-
-      this.eventsService.analyticsEvents.next(
-        AnalyticsEvents.CREATE_ROUTE_FROM_LOG
-      );
     }
   }
 
@@ -890,6 +952,116 @@ export class EnvironmentsService extends Logger {
     ).path;
 
     MainAPI.send('APP_SHOW_FILE', environmentPath);
+  }
+
+  /**
+   * Copy an environment JSON to the clipboard
+   *
+   * @param environmentUUID
+   */
+  public copyEnvironmentToClipboard(environmentUUID: string) {
+    this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD', {
+      environmentUUID
+    });
+
+    const environment = this.store.getEnvironmentByUUID(environmentUUID);
+
+    try {
+      MainAPI.send('APP_WRITE_CLIPBOARD', JSON.stringify(environment, null, 4));
+
+      this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD_SUCCESS', {
+        environmentUUID
+      });
+    } catch (error) {
+      this.logMessage('error', 'COPY_ENVIRONMENT_CLIPBOARD_ERROR', {
+        error
+      });
+    }
+  }
+
+  /**
+   * copy a route from the active environment to the clipboard
+   *
+   * @param routeUUID
+   */
+  public copyRouteToClipboard(routeUUID: string) {
+    this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD', {
+      routeUUID
+    });
+
+    const route = this.store.getRouteByUUID(routeUUID);
+
+    try {
+      MainAPI.send('APP_WRITE_CLIPBOARD', JSON.stringify(route, null, 4));
+
+      this.logMessage('info', 'COPY_ROUTE_CLIPBOARD_SUCCESS', {
+        routeUUID
+      });
+    } catch (error) {
+      this.logMessage('error', 'COPY_ROUTE_CLIPBOARD_ERROR', {
+        error
+      });
+    }
+  }
+
+  /**
+   * Verify data is not too recent or is a mockoon file.
+   * To be used in switchMap mostly.
+   *
+   * @param environment
+   * @returns
+   */
+  private verifyData(environment: Environment): Observable<Environment> {
+    if (environment.lastMigration > HighestMigrationId) {
+      this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
+        name: environment.name,
+        uuid: environment.uuid
+      });
+
+      return EMPTY;
+    }
+
+    if (IsLegacyExportData(environment)) {
+      const confirmImport$ = new Subject<void>();
+
+      this.eventsService.confirmModalEvents.next({
+        title: 'Legacy export format detected',
+        text: 'This content seems to be in an old export format.',
+        sub: 'Mockoon will attempt to migrate the content, which may be altered and overwritten.',
+        subIcon: 'warning',
+        subIconClass: 'text-warning',
+        confirmed$: confirmImport$
+      });
+
+      return confirmImport$.pipe(
+        switchMap(() => {
+          const unwrappedEnvironments = UnwrapLegacyExport(environment);
+
+          if (unwrappedEnvironments.length) {
+            return of(unwrappedEnvironments[0]);
+          }
+
+          return EMPTY;
+        })
+      );
+    }
+
+    if (environment.lastMigration === undefined) {
+      const confirmed$ = new Subject<void>();
+
+      this.eventsService.confirmModalEvents.next({
+        title: 'Confirm opening',
+        text: 'This content does not seem to be a valid Mockoon environment. Open it anyway?',
+        sub: 'Mockoon will attempt to migrate and repair the content, which may be altered and overwritten.',
+        subIcon: 'warning',
+        subIconClass: 'text-warning',
+        confirmed$
+      });
+
+      return confirmed$.pipe(map(() => environment));
+    }
+
+    return of(environment);
   }
 
   /**

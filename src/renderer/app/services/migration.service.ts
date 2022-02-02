@@ -4,10 +4,10 @@ import { Logger } from 'src/renderer/app/classes/logger';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 
 @Injectable({ providedIn: 'root' })
-export class MigrationService {
-  private logger = new Logger('[SERVICE][MIGRATION]');
-
-  constructor(private settingsService: SettingsService) {}
+export class MigrationService extends Logger {
+  constructor(private settingsService: SettingsService) {
+    super('[SERVICE][MIGRATION]');
+  }
 
   /**
    * Migrate one environment.
@@ -17,9 +17,10 @@ export class MigrationService {
     const migrationStartId = this.getMigrationStartId(environment);
 
     if (migrationStartId > -1) {
-      this.logger.info(
-        `Migrating environment ${environment.uuid} starting at ${migrationStartId}`
-      );
+      this.logMessage('info', 'MIGRATING_ENVIRONMENT', {
+        environmentUUID: environment.uuid,
+        migrationStartId
+      });
 
       Migrations.forEach((migration) => {
         if (migration.id > migrationStartId) {

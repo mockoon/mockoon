@@ -40,10 +40,9 @@ export class Logger {
   /**
    * Log an info level message
    *
-   * @deprecated
    * @param message
    */
-  public info(message: string) {
+  private info(message: string) {
     MainAPI.send('APP_LOGS', {
       type: 'info',
       message: this.buildMessage(message)
@@ -53,10 +52,9 @@ export class Logger {
   /**
    * Log an error level message
    *
-   * @deprecated
    * @param message
    */
-  public error(message: string) {
+  private error(message: string) {
     MainAPI.send('APP_LOGS', {
       type: 'error',
       message: this.buildMessage(message)

@@ -20,7 +20,7 @@ class Settings {
   }
 
   public async open() {
-    await menu.click('OPEN_SETTINGS');
+    await menu.click('MENU_OPEN_SETTINGS');
     await $('.modal-dialog').waitForExist();
   }
 

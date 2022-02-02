@@ -17,7 +17,7 @@ export const EnvironmentsContextMenu = (
   {
     payload: {
       subject: 'environment',
-      action: 'export',
+      action: 'clipboard',
       subjectUUID: environmentUUID
     },
     label: 'Copy to clipboard (JSON)',
@@ -75,7 +75,7 @@ export const RoutesContextMenu = (
   {
     payload: {
       subject: 'route',
-      action: 'export',
+      action: 'clipboard',
       subjectUUID: routeUUID
     },
     label: 'Copy to clipboard (JSON)',
