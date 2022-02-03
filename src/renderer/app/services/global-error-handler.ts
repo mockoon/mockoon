@@ -6,10 +6,6 @@ export class GlobalErrorHandler implements ErrorHandler {
   private logger = new Logger('[APPLICATION]');
 
   public handleError(error) {
-    const errorInfo =
-      typeof error === 'string'
-        ? error
-        : `${error.message || ''} - ${error.stack || ''}`;
-    this.logger.error(`Unexpected error: ${errorInfo}`);
+    this.logger.logMessage('error', 'UNKNOWN_ERROR');
   }
 }

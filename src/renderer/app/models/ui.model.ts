@@ -1,3 +1,5 @@
+import { Subject } from 'rxjs';
+
 export type DraggableContainerNames =
   | 'routes'
   | 'environments'
@@ -14,5 +16,5 @@ export type ConfirmModalEvent = {
   sub?: string;
   subIcon?: string;
   subIconClass?: string;
-  confirmCallback: () => void;
+  confirmed$: Subject<void>;
 };

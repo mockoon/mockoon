@@ -37,6 +37,9 @@ export class ApiService {
           case 'NEW_ENVIRONMENT':
             this.environmentsService.addEnvironment().subscribe();
             break;
+          case 'NEW_ENVIRONMENT_CLIPBOARD':
+            this.environmentsService.newEnvironmentFromClipboard().subscribe();
+            break;
           case 'OPEN_ENVIRONMENT':
             this.environmentsService.openEnvironment().subscribe();
             break;
@@ -48,6 +51,9 @@ export class ApiService {
             break;
           case 'NEW_ROUTE':
             this.environmentsService.addRoute();
+            break;
+          case 'NEW_ROUTE_CLIPBOARD':
+            this.environmentsService.addRouteFromClipboard().subscribe();
             break;
           case 'START_ENVIRONMENT':
             this.environmentsService.toggleEnvironment();
@@ -81,23 +87,11 @@ export class ApiService {
             this.modalService.dismissAll();
             changelogModal.showModal();
             break;
-          case 'IMPORT_FILE':
-            this.importExportService.importFromFile().subscribe();
-            break;
           case 'IMPORT_OPENAPI_FILE':
             this.importExportService.importOpenAPIFile();
             break;
           case 'EXPORT_OPENAPI_FILE':
             this.importExportService.exportOpenAPIFile();
-            break;
-          case 'IMPORT_CLIPBOARD':
-            this.importExportService.importFromClipboard().subscribe();
-            break;
-          case 'EXPORT_FILE':
-            this.importExportService.exportAllEnvironments();
-            break;
-          case 'EXPORT_FILE_SELECTED':
-            this.importExportService.exportActiveEnvironment();
             break;
         }
       });
@@ -107,8 +101,10 @@ export class ApiService {
     MainAPI.receive('APP_CUSTOM_PROTOCOL', (action, parameters) => {
       this.zone.run(() => {
         switch (action) {
-          case 'load-export-data':
-            this.importExportService.importFromUrl(parameters.url).subscribe();
+          case 'load-environment':
+            this.environmentsService
+              .newEnvironmentFromURL(parameters.url)
+              .subscribe();
             break;
         }
       });

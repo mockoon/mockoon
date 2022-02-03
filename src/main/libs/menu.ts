@@ -6,7 +6,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       label: 'Application',
       submenu: [
         {
-          id: 'OPEN_SETTINGS',
+          id: 'MENU_OPEN_SETTINGS',
           label: 'Settings',
           accelerator: 'CmdOrCtrl+,',
           click: () => {
@@ -20,6 +20,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       label: 'File',
       submenu: [
         {
+          id: 'MENU_NEW_ENVIRONMENT',
           label: 'New environment',
           accelerator: 'CmdOrCtrl+N',
           click: () => {
@@ -27,6 +28,17 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
           }
         },
         {
+          id: 'MENU_NEW_ENVIRONMENT_CLIPBOARD',
+          label: 'New environment from clipboard',
+          click: () => {
+            mainWindow.webContents.send(
+              'APP_MENU',
+              'NEW_ENVIRONMENT_CLIPBOARD'
+            );
+          }
+        },
+        {
+          id: 'MENU_OPEN_ENVIRONMENT',
           label: 'Open environment',
           accelerator: 'CmdOrCtrl+O',
           click: () => {
@@ -34,7 +46,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
           }
         },
         {
-          id: 'DUPLICATE_ENVIRONMENT',
+          id: 'MENU_DUPLICATE_ENVIRONMENT',
           label: 'Duplicate current environment',
           accelerator: 'CmdOrCtrl+D',
           click: () => {
@@ -43,7 +55,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         },
         { type: 'separator' },
         {
-          id: 'CLOSE_ENVIRONMENT',
+          id: 'MENU_CLOSE_ENVIRONMENT',
           label: 'Close active environment',
           accelerator: 'CmdOrCtrl+F4',
           click: () => {
@@ -89,7 +101,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
     label: 'Routes',
     submenu: [
       {
-        id: 'NEW_ROUTE',
+        id: 'MENU_NEW_ROUTE',
         label: 'Add new route',
         accelerator: 'Shift+CmdOrCtrl+R',
         click: () => {
@@ -97,7 +109,14 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
-        id: 'DUPLICATE_ROUTE',
+        id: 'MENU_NEW_ROUTE_CLIPBOARD',
+        label: 'Add route from clipboard',
+        click: () => {
+          mainWindow.webContents.send('APP_MENU', 'NEW_ROUTE_CLIPBOARD');
+        }
+      },
+      {
+        id: 'MENU_DUPLICATE_ROUTE',
         label: 'Duplicate current route',
         accelerator: 'Shift+CmdOrCtrl+D',
         click: () => {
@@ -106,7 +125,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       },
       { type: 'separator' },
       {
-        id: 'DELETE_ROUTE',
+        id: 'MENU_DELETE_ROUTE',
         label: 'Delete current route',
         accelerator: 'Alt+Shift+CmdOrCtrl+U',
         click: () => {
@@ -120,7 +139,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
     label: 'Run',
     submenu: [
       {
-        id: 'START_ENVIRONMENT',
+        id: 'MENU_START_ENVIRONMENT',
         label: 'Start/Stop/Reload current environment',
         accelerator: 'Shift+CmdOrCtrl+S',
         click: () => {
@@ -128,7 +147,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
-        id: 'START_ALL_ENVIRONMENTS',
+        id: 'MENU_START_ALL_ENVIRONMENTS',
         label: 'Start/Stop/Reload all environments',
         accelerator: 'Shift+CmdOrCtrl+A',
         click: () => {
@@ -142,7 +161,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
     label: 'Navigate',
     submenu: [
       {
-        id: 'PREVIOUS_ENVIRONMENT',
+        id: 'MENU_PREVIOUS_ENVIRONMENT',
         label: 'Select previous environment',
         accelerator: 'CmdOrCtrl+Up',
         click: () => {
@@ -150,7 +169,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
-        id: 'NEXT_ENVIRONMENT',
+        id: 'MENU_NEXT_ENVIRONMENT',
         label: 'Select next environment',
         accelerator: 'CmdOrCtrl+Down',
         click: () => {
@@ -158,7 +177,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
-        id: 'PREVIOUS_ROUTE',
+        id: 'MENU_PREVIOUS_ROUTE',
         label: 'Select previous route',
         accelerator: 'Shift+CmdOrCtrl+Up',
         click: () => {
@@ -166,7 +185,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       {
-        id: 'NEXT_ROUTE',
+        id: 'MENU_NEXT_ROUTE',
         label: 'Select next route',
         accelerator: 'Shift+CmdOrCtrl+Down',
         click: () => {
@@ -180,57 +199,18 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
     label: 'Import/export',
     submenu: [
       {
-        label: "Mockoon's format",
-        submenu: [
-          {
-            id: 'IMPORT_CLIPBOARD',
-            label: 'Import from clipboard',
-            click: () => {
-              mainWindow.webContents.send('APP_MENU', 'IMPORT_CLIPBOARD');
-            }
-          },
-          {
-            id: 'IMPORT_FILE',
-            label: 'Import from a file (JSON)',
-            click: () => {
-              mainWindow.webContents.send('APP_MENU', 'IMPORT_FILE');
-            }
-          },
-          {
-            id: 'EXPORT_FILE',
-            label: 'Export all environments to a file (JSON)',
-            click: () => {
-              mainWindow.webContents.send('APP_MENU', 'EXPORT_FILE');
-            }
-          },
-          {
-            id: 'EXPORT_FILE_SELECTED',
-            label: 'Export current environment to a file (JSON)',
-            click: () => {
-              mainWindow.webContents.send('APP_MENU', 'EXPORT_FILE_SELECTED');
-            }
-          }
-        ]
+        id: 'MENU_IMPORT_OPENAPI_FILE',
+        label: 'Import Swagger v2/OpenAPI v3 (JSON or YAML)',
+        click: () => {
+          mainWindow.webContents.send('APP_MENU', 'IMPORT_OPENAPI_FILE');
+        }
       },
-      { type: 'separator' },
       {
-        label: 'Swagger/OpenAPI',
-        submenu: [
-          {
-            id: 'IMPORT_OPENAPI_FILE',
-            label: 'Import Swagger v2/OpenAPI v3 (JSON or YAML)',
-            click: () => {
-              mainWindow.webContents.send('APP_MENU', 'IMPORT_OPENAPI_FILE');
-            }
-          },
-          {
-            id: 'EXPORT_OPENAPI_FILE',
-            label: 'Export current environment to OpenAPI v3 (JSON)',
-            click: () => {
-              mainWindow.webContents.send('APP_MENU', 'EXPORT_OPENAPI_FILE');
-            }
-          }
-        ]
+        id: 'MENU_EXPORT_OPENAPI_FILE',
+        label: 'Export current environment to OpenAPI v3 (JSON)',
+        click: () => {
+          mainWindow.webContents.send('APP_MENU', 'EXPORT_OPENAPI_FILE');
+        }
       }
     ]
   });
@@ -309,20 +289,18 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
 export const toggleEnvironmentMenuItems = (state: boolean) => {
   const menu = Menu.getApplicationMenu();
   [
-    'DUPLICATE_ENVIRONMENT',
-    'CLOSE_ENVIRONMENT',
-    'NEW_ROUTE',
-    'DUPLICATE_ROUTE',
-    'DELETE_ROUTE',
-    'START_ENVIRONMENT',
-    'START_ALL_ENVIRONMENTS',
-    'PREVIOUS_ENVIRONMENT',
-    'NEXT_ENVIRONMENT',
-    'PREVIOUS_ROUTE',
-    'NEXT_ROUTE',
-    'EXPORT_FILE',
-    'EXPORT_FILE_SELECTED',
-    'EXPORT_OPENAPI_FILE'
+    'MENU_DUPLICATE_ENVIRONMENT',
+    'MENU_CLOSE_ENVIRONMENT',
+    'MENU_NEW_ROUTE',
+    'MENU_DUPLICATE_ROUTE',
+    'MENU_DELETE_ROUTE',
+    'MENU_START_ENVIRONMENT',
+    'MENU_START_ALL_ENVIRONMENTS',
+    'MENU_PREVIOUS_ENVIRONMENT',
+    'MENU_NEXT_ENVIRONMENT',
+    'MENU_PREVIOUS_ROUTE',
+    'MENU_NEXT_ROUTE',
+    'MENU_EXPORT_OPENAPI_FILE'
   ].forEach((id) => {
     const menuItem = menu?.getMenuItemById(id);
 
@@ -334,13 +312,16 @@ export const toggleEnvironmentMenuItems = (state: boolean) => {
 
 export const toggleRouteMenuItems = (state: boolean) => {
   const menu = Menu.getApplicationMenu();
-  ['DUPLICATE_ROUTE', 'DELETE_ROUTE', 'PREVIOUS_ROUTE', 'NEXT_ROUTE'].forEach(
-    (id) => {
-      const menuItem = menu?.getMenuItemById(id);
+  [
+    'MENU_DUPLICATE_ROUTE',
+    'MENU_DELETE_ROUTE',
+    'MENU_PREVIOUS_ROUTE',
+    'MENU_NEXT_ROUTE'
+  ].forEach((id) => {
+    const menuItem = menu?.getMenuItemById(id);
 
-      if (menuItem) {
-        menuItem.enabled = state;
-      }
+    if (menuItem) {
+      menuItem.enabled = state;
     }
-  );
+  });
 };

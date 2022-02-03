@@ -13,7 +13,6 @@ import { Logger } from 'src/renderer/app/classes/logger';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuItemPayload } from 'src/renderer/app/models/context-menu.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
@@ -24,7 +23,6 @@ import { ApiService } from 'src/renderer/app/services/api.service';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
@@ -36,7 +34,7 @@ import { Store } from 'src/renderer/app/stores/store';
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent extends Logger implements OnInit, AfterViewInit {
   @ViewChild('changelogModal')
   public changelogModal: ChangelogModalComponent;
   @ViewChild('settingsModal')
@@ -46,21 +44,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   public scrollToBottom = this.uiService.scrollToBottom;
   public toasts$: Observable<Toast[]>;
   public os: string;
-  private logger = new Logger('[COMPONENT][APP]');
 
   constructor(
     private analyticsService: AnalyticsService,
     private telemetryService: TelemetryService,
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
-    private importExportService: ImportExportService,
     private store: Store,
-    private toastService: ToastsService,
+    protected toastService: ToastsService,
     private uiService: UIService,
     private apiService: ApiService,
     private settingsService: SettingsService,
     private appQuitService: AppQuitService
   ) {
+    super('[COMPONENT][APP]', toastService);
     this.settingsService.loadSettings().subscribe();
     this.settingsService.saveSettings().subscribe();
     this.environmentsService.loadEnvironments().subscribe();
@@ -87,7 +84,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.appQuitService.init().subscribe();
 
-    this.logger.info('Initializing application');
+    this.logMessage('info', 'INITIALIZING_APP');
 
     from(MainAPI.invoke('APP_GET_OS'))
       .pipe(
@@ -100,8 +97,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.telemetryService.init().subscribe();
 
     this.analyticsService.init();
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.PAGEVIEW);
-    this.eventsService.analyticsEvents.next(AnalyticsEvents.APPLICATION_START);
+    this.eventsService.analyticsEvents.next({
+      type: 'pageview',
+      pageName: '/'
+    });
 
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeView$ = this.store.select('activeView');
@@ -135,8 +134,8 @@ export class AppComponent implements OnInit, AfterViewInit {
             .subscribe();
         }
         break;
-      case 'export':
-        this.exportToClipboard(payload.subject, payload.subjectUUID);
+      case 'clipboard':
+        this.copyToClipboard(payload.subject, payload.subjectUUID);
         break;
       case 'delete':
         if (payload.subject === 'route') {
@@ -169,16 +168,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Export an environment to the clipboard
+   * Export an environment/route to the clipboard
    *
    * @param subject
    * @param subjectUUID
    */
-  public exportToClipboard(subject: DataSubject, subjectUUID: string) {
+  public copyToClipboard(subject: DataSubject, subjectUUID: string) {
     if (subject === 'environment') {
-      this.importExportService.exportEnvironmentToClipboard(subjectUUID);
+      this.environmentsService.copyEnvironmentToClipboard(subjectUUID);
     } else if (subject === 'route') {
-      this.importExportService.exportRouteToClipboard(subjectUUID);
+      this.environmentsService.copyRouteToClipboard(subjectUUID);
     }
   }
 

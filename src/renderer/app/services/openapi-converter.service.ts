@@ -14,7 +14,6 @@ import {
   MainAPI
 } from 'src/renderer/app/constants/common.constants';
 import { Methods } from 'src/renderer/app/constants/routes.constants';
-import { Errors } from 'src/renderer/app/enums/errors.enum';
 import { RemoveLeadingSlash } from 'src/renderer/app/libs/utils.lib';
 import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
@@ -30,13 +29,13 @@ type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';
  *
  */
 @Injectable({ providedIn: 'root' })
-export class OpenAPIConverterService {
-  private logger = new Logger('[SERVICE][OPENAPI-CONVERTER]');
-
+export class OpenAPIConverterService extends Logger {
   constructor(
     private schemasBuilderService: SchemasBuilderService,
     private toastsService: ToastsService
-  ) {}
+  ) {
+    super('[SERVICE][OPENAPI-CONVERTER]', toastsService);
+  }
 
   /**
    * Import Swagger or OpenAPI format
@@ -44,8 +43,6 @@ export class OpenAPIConverterService {
    * @param filePath
    */
   public async import(filePath: string) {
-    this.logger.info(`Started importing OpenAPI file '${filePath}' import`);
-
     try {
       const parsedAPI: OpenAPIV2.Document | OpenAPIV3.Document =
         await MainAPI.invoke('APP_OPENAPI_DEREFERENCE', filePath);
@@ -55,95 +52,15 @@ export class OpenAPIConverterService {
       } else if (this.isOpenAPIV3(parsedAPI)) {
         return this.convertFromOpenAPIV3(parsedAPI);
       } else {
-        this.toastsService.addToast('warning', Errors.IMPORT_WRONG_VERSION);
+        this.logMessage('error', 'OPENAPI_IMPORT_ERROR_WRONG_VERSION', {
+          filePath
+        });
       }
     } catch (error) {
-      this.toastsService.addToast(
-        'error',
-        `${Errors.IMPORT_ERROR}: ${error.message}`
-      );
-      this.logger.error(`Error while importing OpenAPI file: ${error.message}`);
+      throw error;
     }
 
     return null;
-  }
-
-  /**
-   * Export to OpenAPI format
-   *
-   * @param environment
-   */
-  public async export(environment: Environment): Promise<string> {
-    this.logger.info(
-      `Starting environment ${environment.uuid} export to OpenAPI file`
-    );
-
-    try {
-      return await this.convertToOpenAPIV3(environment);
-    } catch (error) {
-      this.logger.error('Error while converting environment to OpenAPI file');
-
-      throw new Error();
-    }
-  }
-
-  /**
-   * Convert Swagger 2.0 format
-   *
-   * @param parsedAPI
-   */
-  private convertFromSwagger(parsedAPI: OpenAPIV2.Document): Environment {
-    const newEnvironment = this.schemasBuilderService.buildEnvironment(
-      false,
-      false
-    );
-
-    // parse the port
-    newEnvironment.port =
-      (parsedAPI.host && parseInt(parsedAPI.host.split(':')[1], 10)) ||
-      newEnvironment.port;
-
-    if (parsedAPI.basePath) {
-      newEnvironment.endpointPrefix = RemoveLeadingSlash(parsedAPI.basePath);
-    }
-
-    newEnvironment.name = parsedAPI.info.title || 'Swagger import';
-
-    newEnvironment.routes = this.createRoutes(parsedAPI, 'SWAGGER');
-
-    return newEnvironment;
-  }
-
-  /**
-   * Convert OpenAPI 3.0 format
-   *
-   * @param parsedAPI
-   */
-  private convertFromOpenAPIV3(parsedAPI: OpenAPIV3.Document): Environment {
-    const newEnvironment = this.schemasBuilderService.buildEnvironment(
-      false,
-      false
-    );
-
-    const server: OpenAPIV3.ServerObject[] = parsedAPI.servers;
-
-    if (server?.[0]?.url) {
-      newEnvironment.endpointPrefix = RemoveLeadingSlash(
-        new URL(
-          this.parametersReplace(
-            server[0].url,
-            'SERVER_VARIABLES',
-            server[0].variables
-          )
-        ).pathname
-      );
-    }
-
-    newEnvironment.name = parsedAPI.info.title || 'OpenAPI import';
-
-    newEnvironment.routes = this.createRoutes(parsedAPI, 'OPENAPI_V3');
-
-    return newEnvironment;
   }
 
   /**
@@ -151,7 +68,7 @@ export class OpenAPIConverterService {
    *
    * @param environment
    */
-  private async convertToOpenAPIV3(environment: Environment) {
+  public async convertToOpenAPIV3(environment: Environment) {
     const openAPIEnvironment: OpenAPIV3.Document = {
       openapi: '3.0.0',
       info: { title: environment.name, version: '1.0.0' },
@@ -239,11 +156,70 @@ export class OpenAPIConverterService {
 
       return JSON.stringify(openAPIEnvironment);
     } catch (error) {
-      this.logger.error(
-        `Error while validating OpenAPI export object: ${error.message}`
-      );
+      this.logMessage('error', 'OPENAPI_VALIDATION_ERROR', {
+        error
+      });
       throw new Error();
     }
+  }
+
+  /**
+   * Convert Swagger 2.0 format
+   *
+   * @param parsedAPI
+   */
+  private convertFromSwagger(parsedAPI: OpenAPIV2.Document): Environment {
+    const newEnvironment = this.schemasBuilderService.buildEnvironment(
+      false,
+      false
+    );
+
+    // parse the port
+    newEnvironment.port =
+      (parsedAPI.host && parseInt(parsedAPI.host.split(':')[1], 10)) ||
+      newEnvironment.port;
+
+    if (parsedAPI.basePath) {
+      newEnvironment.endpointPrefix = RemoveLeadingSlash(parsedAPI.basePath);
+    }
+
+    newEnvironment.name = parsedAPI.info.title || 'Swagger import';
+
+    newEnvironment.routes = this.createRoutes(parsedAPI, 'SWAGGER');
+
+    return newEnvironment;
+  }
+
+  /**
+   * Convert OpenAPI 3.0 format
+   *
+   * @param parsedAPI
+   */
+  private convertFromOpenAPIV3(parsedAPI: OpenAPIV3.Document): Environment {
+    const newEnvironment = this.schemasBuilderService.buildEnvironment(
+      false,
+      false
+    );
+
+    const server: OpenAPIV3.ServerObject[] = parsedAPI.servers;
+
+    if (server?.[0]?.url) {
+      newEnvironment.endpointPrefix = RemoveLeadingSlash(
+        new URL(
+          this.parametersReplace(
+            server[0].url,
+            'SERVER_VARIABLES',
+            server[0].variables
+          )
+        ).pathname
+      );
+    }
+
+    newEnvironment.name = parsedAPI.info.title || 'OpenAPI import';
+
+    newEnvironment.routes = this.createRoutes(parsedAPI, 'OPENAPI_V3');
+
+    return newEnvironment;
   }
 
   /**

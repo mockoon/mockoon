@@ -1,13 +1,11 @@
 import electronMock from '../libs/electron-mock';
 
 type MenuId =
-  | 'EXPORT_FILE'
-  | 'EXPORT_FILE_SELECTED'
-  | 'IMPORT_FILE'
-  | 'IMPORT_CLIPBOARD'
-  | 'IMPORT_OPENAPI_FILE'
-  | 'OPEN_SETTINGS'
-  | 'EXPORT_OPENAPI_FILE';
+  | 'MENU_NEW_ENVIRONMENT_CLIPBOARD'
+  | 'MENU_NEW_ROUTE_CLIPBOARD'
+  | 'MENU_OPEN_SETTINGS'
+  | 'MENU_IMPORT_OPENAPI_FILE'
+  | 'MENU_EXPORT_OPENAPI_FILE';
 
 class Menu {
   public async click(menuId: MenuId) {

@@ -15,7 +15,7 @@ describe('OpenAPI export', () => {
   it('should export the environment and match the reference file', async () => {
     await dialogs.save(filePath);
 
-    await menu.click('EXPORT_OPENAPI_FILE');
+    await menu.click('MENU_EXPORT_OPENAPI_FILE');
 
     await utils.waitForAutosave();
 

@@ -1,0 +1,28 @@
+{
+  "uuid": "",
+  "method": "get",
+  "endpoint": "answer",
+  "documentation": "",
+  "responses": [
+    {
+      "uuid": "",
+      "body": "42",
+      "latency": 0,
+      "statusCode": 99,
+      "label": "",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain"
+        }
+      ],
+      "filePath": "",
+      "sendFileAsBody": false,
+      "rules": [],
+      "rulesOperator": "OR",
+      "disableTemplating": false
+    }
+  ],
+  "randomResponse": false,
+  "sequentialResponse": false
+}

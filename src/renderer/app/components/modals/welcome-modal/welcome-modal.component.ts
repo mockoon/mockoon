@@ -9,7 +9,6 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
-import { AnalyticsEvents } from 'src/renderer/app/enums/analytics-events.enum';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -60,8 +59,5 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
   public closeModal() {
     this.modalService.dismissAll();
     this.settingsService.updateSettings({ welcomeShown: true });
-    this.eventsService.analyticsEvents.next(
-      AnalyticsEvents.APPLICATION_FIRST_LOAD
-    );
   }
 }

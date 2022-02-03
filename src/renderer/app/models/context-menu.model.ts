@@ -15,7 +15,7 @@ export type ContextMenuItemPayload = {
     | 'env_settings'
     | 'env_logs'
     | 'showInFolder'
-    | 'export'
+    | 'clipboard'
     | 'toggle';
   subjectUUID: string;
 };
