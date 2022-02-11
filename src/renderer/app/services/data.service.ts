@@ -72,7 +72,7 @@ export class DataService extends Logger {
       request: {
         params: transaction.request.params,
         query: transaction.request.query,
-        queryParams: transaction.request.queryParams,
+        queryParams: this.formatQueryParams(transaction.request.queryParams),
         body: transaction.request.body,
         headers: transaction.request.headers
       },
@@ -84,6 +84,10 @@ export class DataService extends Logger {
         binaryBody: transaction.response.body === BINARY_BODY
       }
     };
+  }
+
+  public formatQueryParams(requestParams: Transaction['request']['queryParams']) : { name: string; value: string }[] {
+    return this.formatQueryParamsWithPrefix('', requestParams);
   }
 
   /**
@@ -209,5 +213,26 @@ export class DataService extends Logger {
     });
 
     return newEnvironment;
+  }
+
+  /**
+   * Format query string parameter object, acessible using key `prefix`
+   * If parameter has nested objects, will call self recursively
+   */
+  private formatQueryParamsWithPrefix(
+    prefix: string, params: unknown
+  ) : { name: string; value: string }[] {
+    const formattedParams = [];
+
+    Object.entries(params).forEach(([key, value]) =>
+      (typeof value === 'string')
+      ? formattedParams.push({ name: `${prefix}${key}`, value })
+      : formattedParams.push(...this.formatQueryParamsWithPrefix(
+        `${prefix}${key}.`,
+        value
+      ))
+    );
+
+    return formattedParams;
   }
 }
