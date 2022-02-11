@@ -1,4 +1,4 @@
-import { Environment, Environments } from '@mockoon/commons';
+import { Environment, Environments, Transaction } from '@mockoon/commons';
 import { MockoonServer } from '@mockoon/commons-server';
 import { info as logInfo } from 'electron-log';
 import { dirname } from 'path';
@@ -87,7 +87,7 @@ export class ServerInstance {
       );
     });
 
-    server.on('transaction-complete', (transaction) => {
+    server.on('transaction-complete', (transaction: Transaction) => {
       mainWindow.webContents.send(
         'APP_SERVER_EVENT',
         this.environment.uuid,
@@ -96,7 +96,7 @@ export class ServerInstance {
       );
     });
 
-    server.on('error', (errorCode, originalError) => {
+    server.on('error', (errorCode: any, originalError: any) => {
       mainWindow.webContents.send(
         'APP_SERVER_EVENT',
         this.environment.uuid,

@@ -11,8 +11,6 @@ export const ArrayContainsObjectKey = (
   return false;
 };
 
-export const RemoveLeadingSlash = (str: string) => str.replace(/^\//g, '');
-
 /**
  * Retrieve the editor mode (Ace editor) from a content type
  *

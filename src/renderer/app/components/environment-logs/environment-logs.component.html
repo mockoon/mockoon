@@ -154,7 +154,8 @@
                     <strong>Request URL:</strong> {{ selectedLog.url }}
                   </div>
                   <div class="environment-logs-content-item">
-                    <strong>Method:</strong> {{ selectedLog.method }}
+                    <strong>Method:</strong>
+                    {{ selectedLog.method | uppercase }}
                   </div>
                   <div
                     *ngIf="selectedLog.route"

@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Environment, Route, RouteResponse } from '@mockoon/commons';
+import {
+  Environment,
+  INDENT_SIZE,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
-import { INDENT_SIZE } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,

@@ -148,15 +148,6 @@ export const Messages: {
     showToast: true,
     toastType: 'error'
   }),
-  OPENAPI_IMPORT_ERROR_WRONG_VERSION: (messageParams) => ({
-    message: `Error while importing environment ${messageParams.filePath} from OpenAPI format: this OpenAPI version is not supported yet`,
-    showToast: true,
-    toastType: 'error'
-  }),
-  OPENAPI_VALIDATION_ERROR: (messageParams) => ({
-    message: `Error while validating OpenAPI export object: ${messageParams.error.message}`,
-    showToast: false
-  }),
   COPY_ENVIRONMENT_CLIPBOARD: (messageParams) => ({
     message: `Copying environment ${messageParams.environmentUUID} to the clipboard`,
     showToast: false

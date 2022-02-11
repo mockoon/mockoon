@@ -1,6 +1,6 @@
 import { LogicalOperators, ResponseRule } from '@mockoon/commons';
 import { ChainablePromiseElement } from 'webdriverio';
-import { TabsNameType } from '../../src/renderer/app/stores/store';
+import { TabsNameType } from '../../src/renderer/app/models/store.model';
 import contextMenu from '../libs/context-menu';
 import utils from '../libs/utils';
 

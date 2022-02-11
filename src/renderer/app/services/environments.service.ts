@@ -1,18 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  BuildDemoEnvironment,
+  BuildEnvironment,
+  BuildHeader,
+  BuildRoute,
+  BuildRouteResponse,
+  CloneObject,
+  CloneRouteResponse,
   Environment,
   EnvironmentDefault,
   Header,
   HighestMigrationId,
   IsLegacyExportData,
-  Method,
   Route,
   RouteResponse,
   RouteSchema,
   UnwrapLegacyExport
 } from '@mockoon/commons';
-import cloneDeep from 'lodash/cloneDeep';
 import {
   EMPTY,
   forkJoin,
@@ -58,7 +63,6 @@ import {
 import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
@@ -104,7 +108,6 @@ export class EnvironmentsService extends Logger {
     private eventsService: EventsService,
     private store: Store,
     private serverService: ServerService,
-    private schemasBuilderService: SchemasBuilderService,
     private uiService: UIService,
     private storageService: StorageService,
     private dialogsService: DialogsService,
@@ -133,8 +136,7 @@ export class EnvironmentsService extends Logger {
         if (!settings.environments.length && !settings.welcomeShown) {
           this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
 
-          const defaultEnvironment =
-            this.schemasBuilderService.buildDemoEnvironment();
+          const defaultEnvironment = BuildDemoEnvironment();
 
           return of([
             {
@@ -392,7 +394,11 @@ export class EnvironmentsService extends Logger {
       tap(([filePath, filename]) => {
         const newEnvironment = environment
           ? environment
-          : this.schemasBuilderService.buildEnvironment();
+          : BuildEnvironment({
+              hasDefaultHeader: true,
+              hasDefaultRoute: true,
+              port: this.dataService.getNewEnvironmentPort()
+            });
 
         // if a non-default name has been set already (imports), do not use the filename
         if (newEnvironment.name === EnvironmentDefault.name) {
@@ -479,7 +485,7 @@ export class EnvironmentsService extends Logger {
 
       // copy the environment, reset some properties and change name
       let newEnvironment: Environment = {
-        ...cloneDeep(environmentToDuplicate),
+        ...CloneObject(environmentToDuplicate),
         name: `${environmentToDuplicate.name} (copy)`,
         port: this.dataService.getNewEnvironmentPort()
       };
@@ -578,9 +584,7 @@ export class EnvironmentsService extends Logger {
    */
   public addRoute() {
     if (this.store.getActiveEnvironment()) {
-      this.store.update(
-        addRouteAction(this.schemasBuilderService.buildRoute())
-      );
+      this.store.update(addRouteAction(BuildRoute()));
       this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
       this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
     }
@@ -603,7 +607,11 @@ export class EnvironmentsService extends Logger {
           return EMPTY;
         } else {
           return this.addEnvironment({
-            ...this.schemasBuilderService.buildEnvironment(),
+            ...BuildEnvironment({
+              hasDefaultHeader: true,
+              hasDefaultRoute: true,
+              port: this.dataService.getNewEnvironmentPort()
+            }),
             routes: [route]
           });
         }
@@ -626,9 +634,7 @@ export class EnvironmentsService extends Logger {
    * Add a new route response and save it in the store
    */
   public addRouteResponse() {
-    this.store.update(
-      addRouteResponseAction(this.schemasBuilderService.buildRouteResponse())
-    );
+    this.store.update(addRouteResponseAction(BuildRouteResponse()));
   }
 
   /**
@@ -637,10 +643,7 @@ export class EnvironmentsService extends Logger {
   public duplicateRouteResponse() {
     const activeRouteResponse = this.store.getActiveRouteResponse();
     this.store.update(
-      addRouteResponseAction(
-        this.schemasBuilderService.cloneRouteResponse(activeRouteResponse),
-        true
-      )
+      addRouteResponseAction(CloneRouteResponse(activeRouteResponse), true)
     );
   }
 
@@ -657,7 +660,7 @@ export class EnvironmentsService extends Logger {
     }
 
     if (routeToDuplicate) {
-      let newRoute: Route = cloneDeep(routeToDuplicate);
+      let newRoute: Route = CloneObject(routeToDuplicate);
 
       newRoute = this.dataService.renewRouteUUIDs(newRoute);
 
@@ -676,7 +679,7 @@ export class EnvironmentsService extends Logger {
 
     if (routeToDuplicate) {
       const newRoute: Route = this.dataService.renewRouteUUIDs(
-        cloneDeep(routeToDuplicate)
+        CloneObject(routeToDuplicate)
       );
       this.store.update(
         duplicateRouteToAnotherEnvironmentAction(
@@ -890,28 +893,23 @@ export class EnvironmentsService extends Logger {
             return;
           }
 
-          headers.push(
-            this.schemasBuilderService.buildHeader(header.key, header.value)
-          );
+          headers.push(BuildHeader(header.key, header.value));
         });
 
         if (log.response.body) {
           headers.push(
-            this.schemasBuilderService.buildHeader(
-              'content-length',
-              log.response.body.length.toString()
-            )
+            BuildHeader('content-length', log.response.body.length.toString())
           );
         }
 
         routeResponse = {
-          ...this.schemasBuilderService.buildRouteResponse(),
+          ...BuildRouteResponse(),
           headers,
           statusCode: log.response.status,
           body: log.response.body
         };
       } else {
-        routeResponse = this.schemasBuilderService.buildRouteResponse();
+        routeResponse = BuildRouteResponse();
       }
 
       const prefix = this.store.getActiveEnvironment().endpointPrefix;
@@ -921,8 +919,8 @@ export class EnvironmentsService extends Logger {
       }
 
       const newRoute: Route = {
-        ...this.schemasBuilderService.buildRoute(),
-        method: log.method.toLowerCase() as Method,
+        ...BuildRoute(),
+        method: log.method,
         endpoint,
         responses: [routeResponse]
       };

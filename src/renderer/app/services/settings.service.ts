@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import isEqual from 'lodash/isEqual';
+import { IsEqual } from '@mockoon/commons';
 import { from, Observable, of } from 'rxjs';
 import {
   debounceTime,
@@ -120,7 +120,7 @@ export class SettingsService {
         this.storageService.initiateSaving();
       }),
       debounceTime(500),
-      distinctUntilChanged(isEqual),
+      distinctUntilChanged(IsEqual),
       mergeMap((settings) =>
         this.storageService.saveData<Settings>(
           settings,
