@@ -1,9 +1,9 @@
-import {
-  dereference as openAPIDereference,
-  validate as openAPIValidate
-} from '@apidevtools/swagger-parser';
 import { Environment, Environments } from '@mockoon/commons';
-import { SetFakerLocale, SetFakerSeed } from '@mockoon/commons-server';
+import {
+  OpenAPIConverter,
+  SetFakerLocale,
+  SetFakerSeed
+} from '@mockoon/commons-server';
 import {
   BrowserWindow,
   clipboard,
@@ -176,17 +176,19 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   });
 
   ipcMain.handle(
-    'APP_OPENAPI_DEREFERENCE',
-    async (event, filePath) =>
-      await openAPIDereference(filePath, {
-        dereference: { circular: 'ignore' }
-      })
+    'APP_OPENAPI_CONVERT_FROM',
+    async (event, filePath: string, port?: number) => {
+      const openApiConverter = new OpenAPIConverter();
+
+      return await openApiConverter.convertFromOpenAPI(filePath, port);
+    }
   );
 
-  ipcMain.handle(
-    'APP_OPENAPI_VALIDATE',
-    async (event, data) => await openAPIValidate(data)
-  );
+  ipcMain.handle('APP_OPENAPI_CONVERT_TO', async (event, data: Environment) => {
+    const openApiConverter = new OpenAPIConverter();
+
+    return await openApiConverter.convertToOpenAPIV3(data);
+  });
 
   ipcMain.handle(
     'APP_START_SERVER',

@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import {
+  BuildResponseRule,
   LogicalOperators,
   ResponseRule,
   ResponseRuleOperators,
@@ -28,7 +29,6 @@ import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { MoveArrayItem } from 'src/renderer/app/libs/utils.lib';
 import { SelectOptionsList } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
 
 @Component({
   selector: 'app-route-response-rules',
@@ -88,8 +88,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder,
-    private schemasBuilderService: SchemasBuilderService
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -129,9 +128,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
    * Add a new rule to the list if possible
    */
   public addRule() {
-    this.rules.push(
-      this.formBuilder.group(this.schemasBuilderService.buildResponseRule())
-    );
+    this.rules.push(this.formBuilder.group(BuildResponseRule()));
 
     this.ruleAdded.emit();
   }

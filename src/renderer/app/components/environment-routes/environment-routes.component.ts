@@ -11,6 +11,8 @@ import {
   GetContentType,
   GetRouteResponseContentType,
   Header,
+  INDENT_SIZE,
+  Methods,
   MimeTypesWithTemplating,
   Route,
   RouteDefault,
@@ -30,17 +32,14 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import {
-  INDENT_SIZE,
-  MainAPI
-} from 'src/renderer/app/constants/common.constants';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { StatusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
   defaultContentType,
-  Methods,
   StatusCodes
 } from 'src/renderer/app/constants/routes.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentsStatuses,
@@ -52,6 +51,44 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateRouteAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
+
+const MethodsDropdown: DropdownItems = [
+  {
+    value: Methods.get,
+    label: 'GET',
+    classes: 'http-method-get-text'
+  },
+  {
+    value: Methods.post,
+    label: 'POST',
+    classes: 'http-method-post-text'
+  },
+  {
+    value: Methods.put,
+    label: 'PUT',
+    classes: 'http-method-put-text'
+  },
+  {
+    value: Methods.patch,
+    label: 'PATCH',
+    classes: 'http-method-patch-text'
+  },
+  {
+    value: Methods.delete,
+    label: 'DELETE',
+    classes: 'http-method-delete-text'
+  },
+  {
+    value: Methods.head,
+    label: 'HEAD',
+    classes: 'http-method-head-text'
+  },
+  {
+    value: Methods.options,
+    label: 'OPTIONS',
+    classes: 'http-method-options-text'
+  }
+];
 
 @Component({
   selector: 'app-environment-routes',
@@ -77,7 +114,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeRouteForm: FormGroup;
   public activeRouteResponseForm: FormGroup;
   public scrollToBottom = this.uiService.scrollToBottom;
-  public methods = Methods;
+  public methods = MethodsDropdown;
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;
   public focusableInputs = FocusableInputs;

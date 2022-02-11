@@ -28,6 +28,14 @@ export class Logger {
     messageCode: MessageCodes,
     messageParams: MessageParams = { error: { message: '', name: '' } }
   ) {
+    // Strip IPC error prefix
+    if (messageParams?.error?.message) {
+      messageParams.error.message = messageParams.error.message.replace(
+        /Error invoking remote method '[A-Z_]+': /,
+        ''
+      );
+    }
+
     const message = Messages[messageCode](messageParams);
 
     this[level](`${message.loggerMessage || message.message}`);

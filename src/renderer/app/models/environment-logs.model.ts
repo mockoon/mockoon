@@ -1,4 +1,4 @@
-import { Header } from '@mockoon/commons';
+import { Header, Methods } from '@mockoon/commons';
 
 export type EnvironmentLogs = { [key: string]: EnvironmentLog[] };
 
@@ -28,7 +28,7 @@ export type EnvironmentLog = {
   url: string;
   // internal route matched
   route: string;
-  method: string;
+  method: keyof typeof Methods;
   proxied: boolean;
   request: EnvironmentLogRequest;
   response: EnvironmentLogResponse;

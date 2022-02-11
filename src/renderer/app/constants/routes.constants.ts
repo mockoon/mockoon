@@ -1,43 +1,5 @@
 import { DropdownItems } from 'src/renderer/app/models/common.model';
 
-export const Methods: DropdownItems = [
-  {
-    value: 'get',
-    label: 'GET',
-    classes: 'http-method-get-text'
-  },
-  {
-    value: 'post',
-    label: 'POST',
-    classes: 'http-method-post-text'
-  },
-  {
-    value: 'put',
-    label: 'PUT',
-    classes: 'http-method-put-text'
-  },
-  {
-    value: 'patch',
-    label: 'PATCH',
-    classes: 'http-method-patch-text'
-  },
-  {
-    value: 'delete',
-    label: 'DELETE',
-    classes: 'http-method-delete-text'
-  },
-  {
-    value: 'head',
-    label: 'HEAD',
-    classes: 'http-method-head-text'
-  },
-  {
-    value: 'options',
-    label: 'OPTIONS',
-    classes: 'http-method-options-text'
-  }
-];
-
 export const StatusCodes: DropdownItems = [
   { category: true, label: '1xx - Information responses' },
   { value: 100, label: '100 - Continue' },

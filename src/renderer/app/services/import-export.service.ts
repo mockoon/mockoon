@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { OpenAPIConverterService } from 'src/renderer/app/services/openapi-converter.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -13,9 +13,9 @@ export class ImportExportService extends Logger {
   constructor(
     protected toastService: ToastsService,
     private store: Store,
-    private openAPIConverterService: OpenAPIConverterService,
     private dialogsService: DialogsService,
-    private environmentsService: EnvironmentsService
+    private environmentsService: EnvironmentsService,
+    private dataService: DataService
   ) {
     super('[SERVICE][IMPORT-EXPORT]', toastService);
   }
@@ -36,7 +36,12 @@ export class ImportExportService extends Logger {
 
     if (filePath) {
       try {
-        const environment = await this.openAPIConverterService.import(filePath);
+        const environment = await MainAPI.invoke(
+          'APP_OPENAPI_CONVERT_FROM',
+          filePath,
+          this.dataService.getNewEnvironmentPort()
+        );
+
         if (environment) {
           this.environmentsService
             .addEnvironment(environment)
@@ -59,7 +64,7 @@ export class ImportExportService extends Logger {
   }
 
   /**
-   * Export all environments to an OpenAPI v3 file
+   * Export active environment to an OpenAPI v3 file
    */
   public async exportOpenAPIFile() {
     const activeEnvironment = this.store.getActiveEnvironment();
@@ -79,13 +84,11 @@ export class ImportExportService extends Logger {
     // dialog not cancelled
     if (filePath) {
       try {
-        await MainAPI.invoke(
-          'APP_WRITE_FILE',
-          filePath,
-          await this.openAPIConverterService.convertToOpenAPIV3(
-            activeEnvironment
-          )
+        const data = await MainAPI.invoke(
+          'APP_OPENAPI_CONVERT_TO',
+          activeEnvironment
         );
+        await MainAPI.invoke('APP_WRITE_FILE', filePath, data);
 
         this.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
           environmentName: activeEnvironment.name

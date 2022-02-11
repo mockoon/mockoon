@@ -12,7 +12,6 @@ import {
   SaveDialogOptions,
   SaveDialogReturnValue
 } from 'electron';
-import { OpenAPI, OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { ProtocolAction } from 'src/shared/models/protocol.model';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
@@ -47,10 +46,14 @@ export interface MainAPIModel {
   ): Promise<string>;
   invoke(channel: 'APP_WRITE_FILE', path: string, data: string): Promise<void>;
   invoke(
-    channel: 'APP_OPENAPI_DEREFERENCE',
-    path: string
-  ): Promise<OpenAPIV2.Document | OpenAPIV3.Document>;
-  invoke(channel: 'APP_OPENAPI_VALIDATE', data: any): Promise<OpenAPI.Document>;
+    channel: 'APP_OPENAPI_CONVERT_FROM',
+    path: string,
+    port?: number
+  ): Promise<Environment | null>;
+  invoke(
+    channel: 'APP_OPENAPI_CONVERT_TO',
+    environment: Environment
+  ): Promise<string>;
   invoke(
     channel: 'APP_START_SERVER',
     environment: Environment,
