@@ -5,6 +5,7 @@ export type EnvironmentLogs = { [key: string]: EnvironmentLog[] };
 export type EnvironmentLogRequest = {
   headers: Header[];
   params: { name: string; value: string }[];
+  query: string;
   queryParams: { name: string; value: string }[];
   body: string;
   truncatedBody?: string;

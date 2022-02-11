@@ -71,6 +71,7 @@ export class DataService extends Logger {
       url: transaction.request.urlPath,
       request: {
         params: transaction.request.params,
+        query: transaction.request.query,
         queryParams: transaction.request.queryParams,
         body: transaction.request.body,
         headers: transaction.request.headers
