@@ -449,25 +449,29 @@ export class EnvironmentsService extends Logger {
    * @returns
    */
   public newEnvironmentFromURL(url: string) {
-    this.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', { url });
+    if (url) {
+      this.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', { url });
 
-    return this.http.get(url, { responseType: 'text' }).pipe(
-      map<string, Environment>((data) => JSON.parse(data)),
-      switchMap((environment: Environment) => this.verifyData(environment)),
-      switchMap((environment: Environment) => {
-        const migratedEnvironment =
-          this.dataService.migrateAndValidateEnvironment(environment);
+      return this.http.get(url, { responseType: 'text' }).pipe(
+        map<string, Environment>((data) => JSON.parse(data)),
+        switchMap((environment: Environment) => this.verifyData(environment)),
+        switchMap((environment: Environment) => {
+          const migratedEnvironment =
+            this.dataService.migrateAndValidateEnvironment(environment);
 
-        return this.addEnvironment(migratedEnvironment);
-      }),
-      catchError((error) => {
-        this.logMessage('error', 'NEW_ENVIRONMENT_URL_ERROR', {
-          error
-        });
+          return this.addEnvironment(migratedEnvironment);
+        }),
+        catchError((error) => {
+          this.logMessage('error', 'NEW_ENVIRONMENT_URL_ERROR', {
+            error
+          });
 
-        return EMPTY;
-      })
-    );
+          return EMPTY;
+        })
+      );
+    }
+
+    return EMPTY;
   }
 
   /**

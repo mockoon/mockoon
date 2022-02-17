@@ -102,6 +102,7 @@ export class ApiService {
       this.zone.run(() => {
         switch (action) {
           case 'load-environment':
+          case 'load-export-data':
             this.environmentsService
               .newEnvironmentFromURL(parameters.url)
               .subscribe();

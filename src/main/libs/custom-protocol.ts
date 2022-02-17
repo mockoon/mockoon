@@ -3,7 +3,7 @@ import { info as logInfo } from 'electron-log';
 import { parse as qsParse } from 'querystring';
 import { ProtocolAction } from 'src/shared/models/protocol.model';
 
-const validActions: ProtocolAction[] = ['load-environment'];
+const validActions: ProtocolAction[] = ['load-environment', 'load-export-data'];
 
 export const registerProtocol = () => {
   app.setAsDefaultProtocolClient('mockoon');
@@ -29,7 +29,7 @@ export const parseProtocolArgs = (
         return;
       }
 
-      logInfo(`[MAIN][MIGRATION]Custom protocol received ${target}`);
+      logInfo(`[MAIN]Custom protocol received ${target}`);
 
       mainWindow.webContents.send('APP_CUSTOM_PROTOCOL', action, parameters);
     }
