@@ -71,7 +71,8 @@ export class DataService extends Logger {
       url: transaction.request.urlPath,
       request: {
         params: transaction.request.params,
-        queryParams: transaction.request.queryParams,
+        query: transaction.request.query,
+        queryParams: this.formatQueryParams(transaction.request.queryParams),
         body: transaction.request.body,
         headers: transaction.request.headers
       },
@@ -208,5 +209,37 @@ export class DataService extends Logger {
     });
 
     return newEnvironment;
+  }
+
+  /**
+   * Format query string parameters to return tuples of name-value
+   * Name is the path to the query string param element that can be used to
+   * access the value in filters or templates
+   */
+  private formatQueryParams(
+    requestParams: Transaction['request']['queryParams']
+  ): { name: string; value: string }[] {
+    return this.formatQueryParamsWithPrefix('', requestParams);
+  }
+
+  /**
+   * Format query string parameter object, acessible using key `prefix`
+   * If parameter has nested objects, will call self recursively
+   */
+  private formatQueryParamsWithPrefix(
+    prefix: string,
+    params: unknown
+  ): { name: string; value: string }[] {
+    const formattedParams = [];
+
+    Object.entries(params).forEach(([key, value]) =>
+      typeof value === 'string'
+        ? formattedParams.push({ name: `${prefix}${key}`, value })
+        : formattedParams.push(
+            ...this.formatQueryParamsWithPrefix(`${prefix}${key}.`, value)
+          )
+    );
+
+    return formattedParams;
   }
 }

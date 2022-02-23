@@ -239,9 +239,19 @@
                     "
                   ></app-svg>
 
-                  Query params ({{ selectedLog?.request?.queryParams?.length }})
+                  Query params ({{
+                    selectedLog?.request?.queryParams?.length || 'none'
+                  }})
                 </div>
                 <div [ngbCollapse]="collapseStates['request.queryParams']">
+                  <div
+                    *ngIf="selectedLog?.request?.query"
+                    class="environment-logs-content-item"
+                  >
+                    <strong>Raw query string:</strong>
+                    {{ selectedLog.request.query }}
+                  </div>
+
                   <div
                     class="environment-logs-content-item"
                     *ngFor="let queryParam of selectedLog?.request?.queryParams"
