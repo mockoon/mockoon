@@ -239,7 +239,9 @@
                     "
                   ></app-svg>
 
-                  Query params ({{ selectedLog?.request?.queryParams?.length || 'none' }})
+                  Query params ({{
+                    selectedLog?.request?.queryParams?.length || 'none'
+                  }})
                 </div>
                 <div [ngbCollapse]="collapseStates['request.queryParams']">
                   <div

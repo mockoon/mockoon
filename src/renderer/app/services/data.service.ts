@@ -216,7 +216,9 @@ export class DataService extends Logger {
    * Name is the path to the query string param element that can be used to
    * access the value in filters or templates
    */
-  private formatQueryParams(requestParams: Transaction['request']['queryParams']) : { name: string; value: string }[] {
+  private formatQueryParams(
+    requestParams: Transaction['request']['queryParams']
+  ): { name: string; value: string }[] {
     return this.formatQueryParamsWithPrefix('', requestParams);
   }
 
@@ -225,17 +227,17 @@ export class DataService extends Logger {
    * If parameter has nested objects, will call self recursively
    */
   private formatQueryParamsWithPrefix(
-    prefix: string, params: unknown
-  ) : { name: string; value: string }[] {
+    prefix: string,
+    params: unknown
+  ): { name: string; value: string }[] {
     const formattedParams = [];
 
     Object.entries(params).forEach(([key, value]) =>
-      (typeof value === 'string')
-      ? formattedParams.push({ name: `${prefix}${key}`, value })
-      : formattedParams.push(...this.formatQueryParamsWithPrefix(
-        `${prefix}${key}.`,
-        value
-      ))
+      typeof value === 'string'
+        ? formattedParams.push({ name: `${prefix}${key}`, value })
+        : formattedParams.push(
+            ...this.formatQueryParamsWithPrefix(`${prefix}${key}.`, value)
+          )
     );
 
     return formattedParams;
