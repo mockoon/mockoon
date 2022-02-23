@@ -32,7 +32,7 @@
         },
         {
           "uuid": "",
-          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
@@ -71,7 +71,7 @@
         },
         {
           "uuid": "",
-          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
@@ -110,7 +110,7 @@
         },
         {
           "uuid": "",
-          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
@@ -149,7 +149,7 @@
         },
         {
           "uuid": "",
-          "body": "{\n  \"code\": {{faker 'random.number'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",

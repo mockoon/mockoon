@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@mockoon/commons": "2.9.1",
-    "@mockoon/commons-server": "2.16.3",
+    "@mockoon/commons-server": "2.16.4",
     "axios": "0.24.0",
     "chokidar": "3.5.2",
     "electron-json-storage": "4.5.0",

@@ -10,7 +10,7 @@ import settings from '../libs/settings';
 
 const endpointCall: HttpCall = {
   description: 'Call GET /prefix/endpoint/1',
-  path: '/prefix/endpoint/1?qp1=qp1test',
+  path: '/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2',
   method: 'GET',
   body: 'requestbody',
   testedResponse: {
@@ -103,7 +103,37 @@ describe('Environment logs', () => {
         );
 
         await environmentsLogs.assertLogItem('param1: 1', 'request', 6, 1);
-        await environmentsLogs.assertLogItem('qp1: qp1test', 'request', 8, 1);
+        await environmentsLogs.assertLogItem(
+          'Raw query string: param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2',
+          'request',
+          8,
+          1
+        );
+        await environmentsLogs.assertLogItem('param1: value', 'request', 8, 2);
+        await environmentsLogs.assertLogItem(
+          'param2.0: value1',
+          'request',
+          8,
+          3
+        );
+        await environmentsLogs.assertLogItem(
+          'param2.1: value2',
+          'request',
+          8,
+          4
+        );
+        await environmentsLogs.assertLogItem(
+          'param3.prop1: value1',
+          'request',
+          8,
+          5
+        );
+        await environmentsLogs.assertLogItem(
+          'param3.prop2: value2',
+          'request',
+          8,
+          6
+        );
         await environmentsLogs.assertLogItem(' requestbody ', 'request', 10, 1);
       });
 
