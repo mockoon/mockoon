@@ -86,10 +86,6 @@ export class DataService extends Logger {
     };
   }
 
-  public formatQueryParams(requestParams: Transaction['request']['queryParams']) : { name: string; value: string }[] {
-    return this.formatQueryParamsWithPrefix('', requestParams);
-  }
-
   /**
    * Generate a unused port to a new environment
    */
@@ -213,6 +209,15 @@ export class DataService extends Logger {
     });
 
     return newEnvironment;
+  }
+
+  /**
+   * Format query string parameters to return tuples of name-value
+   * Name is the path to the query string param element that can be used to
+   * access the value in filters or templates
+   */
+  private formatQueryParams(requestParams: Transaction['request']['queryParams']) : { name: string; value: string }[] {
+    return this.formatQueryParamsWithPrefix('', requestParams);
   }
 
   /**
