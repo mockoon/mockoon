@@ -3,3 +3,6 @@ contact_links:
   - name: Official community support
     url: https://github.com/mockoon/mockoon/discussions
     about: Please ask and answer questions here.
+  - name: Enterprise support
+    url: https://mockoon.com/enterprise/
+    about: Get enterprise grade support
