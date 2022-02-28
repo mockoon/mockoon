@@ -41,7 +41,8 @@ export interface MainAPIModel {
       | 'APP_GET_MIME_TYPE'
       | 'APP_GET_FILENAME'
       | 'APP_READ_FILE'
-      | 'APP_BUILD_STORAGE_FILEPATH',
+      | 'APP_BUILD_STORAGE_FILEPATH'
+      | 'APP_REPLACE_FILEPATH_EXTENSION',
     pathOrName: string
   ): Promise<string>;
   invoke(channel: 'APP_WRITE_FILE', path: string, data: string): Promise<void>;

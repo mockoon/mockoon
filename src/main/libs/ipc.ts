@@ -17,7 +17,11 @@ import { error as logError, info as logInfo } from 'electron-log';
 import { promises as fsPromises } from 'fs';
 import { createServer } from 'http';
 import { lookup as mimeTypeLookup } from 'mime-types';
-import { join as pathJoin, parse as pathParse } from 'path';
+import {
+  format as pathFormat,
+  join as pathJoin,
+  parse as pathParse
+} from 'path';
 import {
   IPCMainHandlerChannels,
   IPCMainListenerChannels
@@ -163,6 +167,10 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.handle('APP_BUILD_STORAGE_FILEPATH', (event, name: string) =>
     pathJoin(getDataPath(), `${name}.json`)
+  );
+
+  ipcMain.handle('APP_REPLACE_FILEPATH_EXTENSION', (event, filePath: string) =>
+    pathFormat({ ...pathParse(filePath), base: '', ext: '.json' })
   );
 
   ipcMain.handle('APP_GET_MIME_TYPE', (event, filePath) =>
