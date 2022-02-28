@@ -52,7 +52,7 @@ export const initMainWindow = () => {
     height: mainWindowState.height,
     title: 'Mockoon',
     backgroundColor: '#252830',
-    icon: pathJoin(__dirname, '/build-res/icon_512x512x32.png'),
+    icon: pathJoin(__dirname, '../build-res/icon_512x512x32.png'),
     // directly show the main window when running the tests
     show: false,
     webPreferences: {

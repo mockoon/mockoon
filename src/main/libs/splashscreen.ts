@@ -19,7 +19,7 @@ export const createSplashScreen = () => {
     maximizable: false,
     minimizable: false,
     backgroundColor: '#3C637C',
-    icon: pathJoin(__dirname, '/build-res/icon_512x512x32.png')
+    icon: pathJoin(__dirname, '../build-res/icon_512x512x32.png')
   });
 
   splashScreen.loadURL(`file://${__dirname}/renderer/splashscreen.html`);
