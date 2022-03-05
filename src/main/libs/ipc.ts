@@ -34,10 +34,6 @@ import {
 import { ServerInstance } from 'src/main/libs/server-management';
 import { readJSONData, writeJSONData } from 'src/main/libs/storage';
 import { applyUpdate } from 'src/main/libs/update';
-import {
-  unwatchEnvironmentFile,
-  watchEnvironmentFile
-} from 'src/main/libs/watch-file';
 
 declare const isTesting: boolean;
 
@@ -104,14 +100,12 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   });
 
   ipcMain.on('APP_WATCH_FILE', (event, uuid, filePath) => {
-    watchEnvironmentFile(uuid, filePath);
+    // watchEnvironmentFile(uuid, filePath);
   });
 
-  ipcMain.handle(
-    'APP_UNWATCH_FILE',
-    async (event, filePathOrUUID) =>
-      await unwatchEnvironmentFile(filePathOrUUID)
-  );
+  ipcMain.handle('APP_UNWATCH_FILE', async (event, filePathOrUUID) => {
+    // return await unwatchEnvironmentFile(filePathOrUUID)
+  });
 
   ipcMain.handle('APP_GET_OS', () => process.platform);
 
