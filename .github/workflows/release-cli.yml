@@ -36,8 +36,7 @@ jobs:
       - name: Add NPM token
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
-          git add .npmrc
-          git commit -m ''
+          git update-index --assume-unchanged .npmrc
       - name: NPM publish
         run: |
           npm run publish
