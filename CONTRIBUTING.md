@@ -60,8 +60,8 @@ Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./pac
 
 Branches naming convention:
 
-- features and enhancements: `feature/name-or-issue-number`
-- bug fixes: `fix/name-or-issue-number`
+- features and enhancements: `feature/{issue_number}-description`
+- bug fixes: `fix/{issue_number}-description`
 
 ## Adding migrations
 
