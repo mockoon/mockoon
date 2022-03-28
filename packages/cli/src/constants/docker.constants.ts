@@ -7,7 +7,9 @@ COPY {{{.}}} ./{{{.}}}
 
 # Do not run as root.
 RUN adduser --shell /bin/sh --disabled-password --gecos "" mockoon
-RUN chown -R mockoon ./data
+{{#filePaths}}
+RUN chown -R mockoon ./{{{.}}}
+{{/filePaths}}
 USER mockoon
 
 EXPOSE{{#ports}} {{.}}{{/ports}}
