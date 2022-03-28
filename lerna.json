@@ -1,0 +1,9 @@
+{
+  "packages": [
+    "packages/commons",
+    "packages/commons-server",
+    "packages/cli",
+    "packages/desktop"
+  ],
+  "version": "independent"
+}

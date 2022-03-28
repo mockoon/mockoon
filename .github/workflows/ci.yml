@@ -3,10 +3,39 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  tests:
-    name: Lint, build and test
+  lint:
+    name: Lint and format
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Lint and check format
+        run: |
+          npm run lint
+          npm run format
+
+  test-libs:
+    name: Libs - Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    needs: lint
 
     steps:
       - uses: actions/checkout@v2
@@ -17,14 +46,212 @@ jobs:
       - name: Update NPM to v7
         run: |
           npm install -g npm@7
-      - name: NPM install, lint and build
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          npm ci
-          npm run lint
-          npm run format
-          npm run build:ci:all
+          npm run bootstrap
+      - name: Build and test
+        run: |
+          npm run build:libs
+          npm run test:libs
+
+  test-cli:
+    name: CLI - Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    needs: [lint, test-libs]
+
+    strategy:
+      matrix:
+        node: [12, 14, 15, 16]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Build and test
+        run: |
+          npm run build:libs
+          npm run build:cli
+          npm run test:cli
+
+  # run generic unpackaged desktop tests when not on the main branch
+  test-desktop:
+    name: Desktop - Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    needs: [lint, test-libs]
+
+    if: github.ref != 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Build
+        run: |
+          npm run build:libs
+          npm run build:desktop:ci
       - name: Run tests
         run: |
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          npm run test
+          npm run test:desktop
+
+  # run desktop packaged tests when on the main branch (commits on main are always release candidates)
+
+  test-desktop-packaged-win:
+    name: Desktop packaged Windows - Build and test
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    needs: [lint, test-libs]
+
+    if: github.ref == 'refs/heads/main'
+
+    env:
+      CSC_LINK: ${{secrets.WIN_CSC_LINK}}
+      CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Build
+        run: |
+          npm run build:libs
+          npm run build:desktop:ci
+          npm run package:desktop:test:win
+      - name: Run tests
+        run: |
+          npm run test:desktop:packaged:win
+
+  test-desktop-packaged-mac:
+    name: Desktop packaged MacOS - Build and test
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    needs: [lint, test-libs]
+
+    if: github.ref == 'refs/heads/main'
+
+    env:
+      APPLEID: ${{secrets.APPLEID}}
+      APPLEIDPASS: ${{secrets.APPLEIDPASS}}
+      ASCPROVIDER: ${{secrets.ASCPROVIDER}}
+      CSC_LINK: ${{secrets.MACOS_CSC_LINK}}
+      CSC_KEY_PASSWORD: ${{secrets.MACOS_CSC_KEY_PASSWORD}}
+      USE_HARD_LINKS: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Build
+        run: |
+          npm run build:libs
+          npm run build:desktop:ci
+          npm run package:desktop:test:mac
+      - name: Run tests
+        run: |
+          export DISPLAY=':99.0'
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          npm run test:desktop:packaged:mac
+
+  test-desktop-packaged-linux:
+    name: Desktop packaged Linux - Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    needs: [lint, test-libs]
+
+    if: github.ref == 'refs/heads/main'
+
+    env:
+      USE_HARD_LINKS: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Build
+        run: |
+          npm run build:libs
+          npm run build:desktop:ci
+          npm run package:desktop:test:linux
+      - name: Run tests
+        run: |
+          export DISPLAY=':99.0'
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          npm run test:desktop:packaged:linux

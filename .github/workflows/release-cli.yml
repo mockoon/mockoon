@@ -1,0 +1,74 @@
+name: Release CLI
+
+on:
+  push:
+    tags:
+      - cli-v*
+
+jobs:
+  npm-publish:
+    name: Publish libs and CLI
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 15
+
+    env:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Build
+        run: |
+          npm run bootstrap
+          npm run build:libs
+          npm run build:cli
+      - name: Add NPM token
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+      - name: NPM publish
+        run: |
+          npm run publish
+
+  cli-docker:
+    name: Push Docker image
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 15
+
+    needs: npm-publish
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Extract app version
+        id: app-version
+        run: |
+          PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+      - uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./docker
+          tags: |
+            mockoon/cli:latest
+            mockoon/cli:${{steps.app-version.outputs.PACKAGE_VERSION}}
+          build-args: |
+            version=${{steps.app-version.outputs.PACKAGE_VERSION}}

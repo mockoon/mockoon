@@ -1,93 +1,123 @@
 # Contributing to Mockoon
 
-There are many ways to contribute to Mockoon: opening bugs or issues, submitting pull requests, suggesting new features, etc. All contributions are welcome but, please note that Mockoon promise is to be simple, easy to use, and fast. So, not all features are worth implementing and, the maintainers may choose not to implement features that are out of Mockoon's scope, too complicated (especially UX wise) or, that didn't gather enough attention from the community. But we are open to discussion :)
+There are many ways to contribute to Mockoon: opening bugs or issues, submitting pull requests, suggesting new features, etc. All contributions are welcome but, please note that Mockoon promise is to be simple, easy to use, and fast. So, not all features are worth implementing and the maintainers may choose not to implement features that are out of Mockoon's scope, too complicated (especially UX wise) or, that didn't gather enough attention from the community. But we are open to discussion :)
 
-You can always discuss your ideas or ask for support on the [official community](https://github.com/mockoon/mockoon/discussions). 
+You can always discuss your ideas or ask for support on the [official community](https://github.com/mockoon/mockoon/discussions).
 
 ## Contribution rules
 
 The following rules apply to all contributions:
 
 - Always search among the opened and closed issues. Assigned issues are already being worked on, and, most of the time, cannot be reassigned.
-- Bug reports, enhancements, and features must be discussed with the maintainers regarding the implementation, changes to the UI, etc.
-- Pull requests must refer to an open issue. Pull requests not solving existing issues may not be accepted.
-- Issues and PR must follow the provided templates.
+- Bug reports, enhancements, and features **must** be discussed with the maintainers regarding the implementation, changes to the UI, etc.
+- Pull requests **must** refer to an open issue. Pull requests not solving existing issues may not be accepted.
+- Issues and PR **must** follow the provided templates.
 
 ## Find an issue to work on
 
 - Check for **opened unassigned** issues or open a new one (after searching for closed issues).
-- Comment on the issue and request to work on it so it can be assigned to you.
+- If you are not the issue creator, comment on the issue and request to work on it so it can be assigned to you.
 - After discussing the implementation, the issue will be assigned to you by a maintainer. As a rule, the assignee is the person working on the issue.
 
 Please respect this workflow to ensure that:
-- Your work is in line with Mockoon direction.
+
+- Your work is in line with Mockoon roadmap.
 - It hasn't been already done/rejected.
-- You are the only one working on an issue.
+- There is only one person at a time working on an issue.
 
-## Run the application in dev mode
+## Monorepo
 
-- Clone the repository: `git@github.com:mockoon/mockoon.git`
-- Run `npm install`.
-- Run `npm run build:watch:renderer`, `npm run build:watch:main` or `npm run build:watch:all`, then `npm run start` when the first two commands finish (`dist` folder must be available for Electron).
+Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./packages/` folder:
 
-You will get hot reload on both Angular and Electron applications.
+**Libraries** used by the desktop application and the CLI:
+
+- _@mockoon/commons_: this library contains mostly typings, utils and migrations designed to be used in both the browser and Node.js environments. Thus, it is safe to use in the desktop Electron's main or renderer processes, and the CLI.
+- _@mockoon/commons-server_: this library contains mostly "server side" code designed to be used in a Node.js environment. Thus, it is safe to use it in the desktop application Electron's main process and the CLI, but **not** in the desktop application Electron's renderer process.
+
+**Applications**:
+
+- _@mockoon/cli_
+- _@mockoon/desktop_: the desktop application built with Electron and Angular
+
+## Build and run the applications locally during development
+
+- Prepare the repository:
+
+  1. Clone the repository: `git@github.com:mockoon/mockoon.git`.
+  2. Install the dependencies and create internal symlinks: `npm run bootstrap`.
+  3. Build the 2 libraries: `npm run build:libs`.
+
+- Build the CLI: `npm run build:cli`.
+
+- Run the desktop app in watch mode: `npm run build:desktop:dev`.
 
 ## Work on your feature or bugfix
 
 - Start your `feature` or `fix` from `main`
-- Cover it with spectron tests. You will find them in the `test` folder. Please try to cover at least the easiest test cases of your feature.
+- Cover it with automated tests. You will find them in the `test` folders of each package. Please try to cover at least the easiest test cases of your feature.
 - Preferably squash your commits, except when it makes sense to keep them separate (one refactoring + feature development)
-- Do not forget to add "Closes #xx" in one of the commit messages or in the pull request description (where xx is the GitHub issue number)
+- Do not forget to add "Closes #xx" in one of the commit messages or in the pull request description (where xx is the GitHub issue number).
 
 Branches naming convention:
+
 - features and enhancements: `feature/name-or-issue-number`
 - bug fixes: `fix/name-or-issue-number`
 
 ## Adding migrations
 
 When a feature or bugfix requires a change in the data model (`Environment`, `Route`, `RouteResponse`, etc.) you must add a new migration:
-- Add a new migration function in the @mockoon/commons library `/src/libs/migrations.ts` file.
-- Add a new test for the migration in the main repository mockoon/mockoon `/test/data/migrations/{MIGRATION_ID}/environments.json` and `/test/suites/migrations.spec.ts` files.
-- Use the script `/scripts/migrate-tests.js` in the main repository in order to migrate the tests' `environments.json` samples to the latest migration. Please note that some folders/sample files marked with a `.do-not-update-files` must never be migrated.
+
+- Add a new migration function in the @mockoon/commons library `./packages/commons/src/libs/migrations.ts` file.
+- Add a new test for the migration in the same library `./packages/commons/test/data/migrations/{MIGRATION_ID}/environments.json` and `./packages/commons//test/suites/migrations.spec.ts` files.
+- Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' `environments.json` samples to the latest migration. Please note that some folders/sample files marked with a `.do-not-update-files` must never be migrated.
 
 ## Run the tests
 
-Tests are written with Spectron and you can run them using `npm run test`. These tests will also be run on each commit or pull request in the CI environment.
+Some unit and integration tests are present in the 4 packages. You can run them with `npm run test` after building the 4 packages:
 
-When running the tests locally, you will first need to build the application with `npm run build:ci:renderer` and `npm run build:ci:main`, or `npm run build:ci:all`, in order to have an application build to test against.
+1. `npm un build:libs`.
+2. `npm un build:cli`.
+3. `npm un build:desktop:ci`.
+
+These tests will also be run on each commit or pull request in the CI environment.
 
 ## Open a pull request
 
-Open a pull request to be merge in the `main` branch. All branches should start from `main` and must be merged into `main`.
-Ask maintainers to review the code and be prepared to rework your code if it does not match the style or do not follow the way it's usually done (typing, reducer, etc).
+Open a pull request to be merged in the `main` branch. All branches should start from `main` and must be merged into `main`. Ask one maintainer to review the code.
 
 ---
 
-## **[Maintainers only]** Build and package the application for production
+## **[Maintainers only]** Build, package and release the applications for production
 
-- Increment the version (which follows [semver](https://semver.org/)) in package.json file.
+- Increment the version (which follows [semver](https://semver.org/)) in each package.json file depending on the changes, using `npm run set-versions`. To ignore a package give it the same version. Lerna will take care of increasing the internal dependencies version numbers.
 - Push.
-- Create a release in GitHub 'mockoon' repository with a new tag. Respect the releases tag format `vx.x.x`.
 
-**/!\\ Mark the release as a pre-release, and only set it as a final release when all binaries are successfully build, tested and uploaded. /!\\**
+**Cli's process:**
 
-Binaries build will be automatically triggered through GitHub Actions. It will basically run `npm run build:prod:all` and package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing (and notarization).
+Create a `cli-vx.x.x` tag to automatically release the CLI. The libraries and the CLI will be automatically published to NPM.
 
-Next steps are:
-- Download all the binaries from the GitHub Action, test them and add them to the new GitHub release.
-- Publish the release (remove "pre-release" label).
+**Desktop application's process:**
 
-Note that Windows and Mac OS versions need to be signed (and notarized) when packaged. This is the responsibility of @255kb.
+> /!\\ Respect the desktop tag format `vx.x.x` and the GitHub release creation as the desktop application automated update depends on it.
 
-**/!\\ Auto update depends on GitHub release proper taging (`vx.x.x`) and binaries correct naming (as set in `package.json` and `update.service.ts`). Do not change them. /!\\**
+1. Create a `vx.x.x` tag to trigger the build of binaries for the desktop application.
+   The desktop Electron application will be packaged using the local symlinked libraries. So, the desktop's release can be independent from the CLI's release.
+   The GitHub workflow will automatically package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing and notarization. Code signing is currently managed by @255kb.
+   Binaries will be saved as Actions artifacts.
 
-## Distribute the application
+2. Create a GitHub release targeting the `vx.x.x` tag.
 
-Only maintainers (@255kb) are entitled to build and package the application with Windows code signing and macOS certificates.
+> /!\\ Mark the release as a pre-release, and only set it as a final release when all binaries are successfully build, tested and uploaded.
+
+3. Upload the artifacts binaries to the new GitHub release.
+
+4. Publish the release (remove the "pre-release" label).
+
+## Desktop application distribution
 
 Some manual steps are required in order to properly distribute the application:
 
-- A pull request must be created to update Homebrew cask repository (update the `version` and the `sha256` hash in the `Casks/mockoon.rb` file and open a PR).
+- A pull request must be created to update Homebrew Cask repository (update the `version` and the `sha256` hash in the `Casks/mockoon.rb` file and open a PR).
 - Binary must be uploaded to the Snap store manually with `snapcraft upload --release=stable ./mockoon-{version}.snap` command.
 - Arch Linux repository must be updated (Docker image and script can be used in `./scripts/aur-version-bump`).
 - Chocolatey package should be automatically updated after some days.

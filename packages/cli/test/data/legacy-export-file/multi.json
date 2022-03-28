@@ -1,0 +1,194 @@
+{
+  "source": "mockoon:1.10.0",
+  "data": [
+    {
+      "type": "environment",
+      "item": {
+        "uuid": "",
+        "lastMigration": 13,
+        "name": "env0-mock0",
+        "endpointPrefix": "api",
+        "latency": 0,
+        "port": 3000,
+        "routes": [
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "test",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "mock-content-0",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "rulesOperator": "OR",
+                "disableTemplating": false
+              }
+            ],
+            "randomResponse": false,
+            "enabled": true
+          }
+        ],
+        "proxyMode": false,
+        "proxyHost": "",
+        "https": false,
+        "cors": true,
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "proxyReqHeaders": [
+          {
+            "key": "",
+            "value": ""
+          }
+        ],
+        "proxyResHeaders": [
+          {
+            "key": "",
+            "value": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "environment",
+      "item": {
+        "uuid": "",
+        "lastMigration": 13,
+        "name": "env1-mock1",
+        "endpointPrefix": "api",
+        "latency": 0,
+        "port": 3001,
+        "routes": [
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "test",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "mock-content-1",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "rulesOperator": "OR",
+                "disableTemplating": false
+              }
+            ],
+            "randomResponse": false,
+            "enabled": true
+          }
+        ],
+        "proxyMode": false,
+        "proxyHost": "",
+        "https": false,
+        "cors": true,
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "proxyReqHeaders": [
+          {
+            "key": "",
+            "value": ""
+          }
+        ],
+        "proxyResHeaders": [
+          {
+            "key": "",
+            "value": ""
+          }
+        ]
+      }
+    },
+    {
+      "type": "environment",
+      "item": {
+        "uuid": "",
+        "lastMigration": 13,
+        "name": "env2-mock2",
+        "endpointPrefix": "api",
+        "latency": 0,
+        "port": 3002,
+        "routes": [
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "test",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "mock-content-2",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "rulesOperator": "OR",
+                "disableTemplating": false
+              }
+            ],
+            "randomResponse": false,
+            "enabled": true
+          }
+        ],
+        "proxyMode": false,
+        "proxyHost": "",
+        "https": false,
+        "cors": true,
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "proxyReqHeaders": [
+          {
+            "key": "",
+            "value": ""
+          }
+        ],
+        "proxyResHeaders": [
+          {
+            "key": "",
+            "value": ""
+          }
+        ]
+      }
+    }
+  ]
+}

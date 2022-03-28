@@ -1,0 +1,31 @@
+{
+  "uuid": "",
+  "lastMigration": 13,
+  "name": "mockhttps",
+  "endpointPrefix": "api",
+  "latency": 0,
+  "port": 3000,
+  "routes": [],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": true,
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ]
+}

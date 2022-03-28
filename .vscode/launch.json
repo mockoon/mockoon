@@ -5,29 +5,39 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Electron: Main",
+      "name": "Desktop: Electron Main process",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "runtimeExecutable": "${workspaceFolder}/packages/desktop/node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+        "runtimeExecutable": "${workspaceFolder}/packages/desktop/node_modules/.bin/electron.cmd"
       },
-      "args": [".", "--remote-debugging-port=8888"],
+      "args": ["./packages/desktop", "--remote-debugging-port=8888"],
       "outputCapture": "std"
     },
     {
       "type": "chrome",
       "request": "attach",
-      "name": "Electron: Renderer",
+      "name": "Desktop: Electron Renderer process",
       "port": 8888,
       "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "CLI",
+      "program": "${workspaceFolder}/packages/cli/bin/run",
+      "args": ["start", "-d", "./test.json"]
     }
   ],
   "compounds": [
     {
-      "name": "Electron: All",
-      "configurations": ["Electron: Main", "Electron: Renderer"]
+      "name": "Desktop: All processes",
+      "configurations": [
+        "Desktop: Electron Main process",
+        "Desktop: Electron Renderer process"
+      ]
     }
   ]
 }

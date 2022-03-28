@@ -1,0 +1,47 @@
+{
+  "uuid": "4f869b9d-c82d-4438-b5a3-2a8c15d07efc",
+  "name": "Demo API",
+  "port": 3000,
+  "endpointPrefix": "",
+  "latency": 0,
+  "hostname": "0.0.0.0",
+  "routes": [
+    {
+      "uuid": "62088a1b-43da-4251-9420-b83b8bf9ede0",
+      "documentation": "missing method",
+      "endpoint": "users",
+      "responses": [
+        {
+          "uuid": "e5100cb6-1ab6-481e-80c5-55e43ca8087b",
+          "body": "ok",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "https": false,
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": []
+}

@@ -1,0 +1,50 @@
+{
+  "uuid": "",
+  "lastMigration": 13,
+  "name": "mock1",
+  "endpointPrefix": "api",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "test",
+      "responses": [
+        {
+          "uuid": "",
+          "body": "mock-content-1",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false
+        }
+      ],
+      "randomResponse": false,
+      "enabled": true
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "https": false,
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": []
+}

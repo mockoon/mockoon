@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+process.env.NODE_ENV = 'production';
+
+require('@oclif/command')
+  .run()
+  .then(require('@oclif/command/flush'))
+  .catch(require('@oclif/errors/handle'));

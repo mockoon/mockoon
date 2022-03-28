@@ -1,0 +1,178 @@
+name: Release desktop
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build-macos:
+    name: Build macOS binaries
+    runs-on: macos-latest
+    environment: production
+    timeout-minutes: 60
+
+    env:
+      APPLEID: ${{secrets.APPLEID}}
+      APPLEIDPASS: ${{secrets.APPLEIDPASS}}
+      ASCPROVIDER: ${{secrets.ASCPROVIDER}}
+      CSC_LINK: ${{secrets.MACOS_CSC_LINK}}
+      CSC_KEY_PASSWORD: ${{secrets.MACOS_CSC_KEY_PASSWORD}}
+      USE_HARD_LINKS: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - name: Get version from package.json
+        id: app-version
+        run: |
+          PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+      - name: Build and package application
+        run: |
+          npm run bootstrap
+          npm run build:libs
+          npm run build:desktop:prod
+          npm run package:desktop:mac
+      - name: Verify notarization
+        run: |
+          codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac/Mockoon.app
+          codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac-arm64/Mockoon.app
+          codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac-universal/Mockoon.app
+      - name: Get universal binary shasum
+        run: |
+          shasum -a 256 ./packages/desktop/packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.universal.dmg
+      - name: Upload macOS dmg
+        uses: actions/upload-artifact@v2
+        with:
+          name: dmg
+          path: ./packages/desktop/packages/mockoon.setup*.dmg
+
+  build-linux:
+    name: Build Linux binaries
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 60
+    env:
+      USE_HARD_LINKS: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - name: Get version from package.json
+        id: app-version
+        run: |
+          PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+      - name: Build and package application
+        run: |
+          npm run bootstrap
+          npm run build:libs
+          npm run build:desktop:prod
+          npm run package:desktop:linux
+      - name: Upload Linux AppImage
+        uses: actions/upload-artifact@v2
+        with:
+          name: appimage
+          path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.AppImage
+      - name: Upload Linux deb
+        uses: actions/upload-artifact@v2
+        with:
+          name: deb
+          path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.deb
+      - name: Upload Linux rpm
+        uses: actions/upload-artifact@v2
+        with:
+          name: rpm
+          path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.rpm
+      - name: Upload Linux snap
+        uses: actions/upload-artifact@v2
+        with:
+          name: snap
+          path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.snap
+
+  build-windows:
+    name: Build Windows binaries
+    runs-on: windows-latest
+    environment: production
+    timeout-minutes: 60
+
+    env:
+      CSC_LINK: ${{secrets.WIN_CSC_LINK}}
+      CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - name: Get version from package.json
+        id: app-version
+        run: |
+          $PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+        shell: pwsh
+      - name: Build and package application
+        run: |
+          npm run bootstrap
+          npm run build:libs
+          npm run build:desktop:prod
+          npm run package:desktop:win
+        shell: pwsh
+      - name: Upload Windows setup exe
+        uses: actions/upload-artifact@v2
+        with:
+          name: exe
+          path: ./packages/desktop/packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
+      - name: Upload Windows portable exe
+        uses: actions/upload-artifact@v2
+        with:
+          name: exe
+          path: ./packages/desktop/packages/mockoon.portable.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
+
+  # APPX build requires no code signing env vars to work, thus the separated job
+  build-windows-appx:
+    name: Build Windows Appx binary
+    runs-on: windows-latest
+    environment: production
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Update NPM to v7
+        run: |
+          npm install -g npm@7
+      - name: Get version from package.json
+        id: app-version
+        run: |
+          $PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
+          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+        shell: pwsh
+      - name: Build and package application
+        run: |
+          npm run bootstrap
+          npm run build:libs
+          npm run build:desktop:prod
+          npm run package:desktop:win:appx
+        shell: pwsh
+      - name: Upload Windows appx
+        uses: actions/upload-artifact@v2
+        with:
+          name: appx
+          path: ./packages/desktop/packages/mockoon.${{steps.app-version.outputs.PACKAGE_VERSION}}.appx

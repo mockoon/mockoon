@@ -18,6 +18,9 @@ Closes #insert_issue_number_here
 
 **Checklist**
 
-- [ ] automated tests added
-- [ ] data migration added (if applicable)
-- [ ] data migration automated tests added (if applicable)
+<!-- Check relevant boxes -->
+
+- [ ] data migration added (@mockoon/commons)
+- [ ] data migration automated tests added (@mockoon/commons)
+- [ ] CLI automated tests added (@mockoon/cli)
+- [ ] desktop automated tests added (@mockoon/desktop)
