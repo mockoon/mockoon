@@ -27,7 +27,7 @@
     "format": "lerna exec -- prettier {src,test}/**/*.{ts,js,scss,html} --check",
     "format:write": "lerna exec -- prettier {src,test}/**/*.{ts,js,scss,html} --write",
     "set-versions": "lerna version --exact --no-push --no-git-tag-version",
-    "publish": "lerna publish from-package",
+    "publish": "lerna publish --yes from-package",
     "build:commons": "lerna run --scope @mockoon/commons build",
     "build:commons-server": "lerna run --scope @mockoon/commons-server build",
     "build:libs": "lerna run --scope @mockoon/commons build && lerna run --scope @mockoon/commons-server build",
