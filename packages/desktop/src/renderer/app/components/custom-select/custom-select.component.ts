@@ -47,10 +47,6 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   @Input()
   public isNumber: boolean;
   @Input()
-  public set items(items: DropdownItems) {
-    this.items$.next(items);
-  }
-  @Input()
   public enableCustomInput = true;
   @Input()
   public customInputPlaceholder = 'Custom value';
@@ -80,6 +76,11 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public onTouched: (_: any) => void;
 
   constructor() {}
+
+  @Input()
+  public set items(items: DropdownItems) {
+    this.items$.next(items);
+  }
 
   /**
    * Navigate through dropdown items with the keyboard

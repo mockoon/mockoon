@@ -82,14 +82,14 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
-  public get rules() {
-    return this.form.get('rules') as FormArray;
-  }
-
   constructor(
     private environmentsService: EnvironmentsService,
     private formBuilder: FormBuilder
   ) {}
+
+  public get rules() {
+    return this.form.get('rules') as FormArray;
+  }
 
   ngOnInit() {
     this.form = this.formBuilder.group({

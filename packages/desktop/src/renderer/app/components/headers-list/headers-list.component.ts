@@ -56,14 +56,14 @@ export class HeadersListComponent implements OnInit, OnDestroy {
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
-  public get headers() {
-    return this.form.get('headers') as FormArray;
-  }
-
   constructor(
     private formBuilder: FormBuilder,
     private eventsService: EventsService
   ) {}
+
+  public get headers() {
+    return this.form.get('headers') as FormArray;
+  }
 
   ngOnInit() {
     this.form = this.formBuilder.group({

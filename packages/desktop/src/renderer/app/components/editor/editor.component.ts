@@ -69,12 +69,8 @@ export class EditorComponent
     this._editor.$blockScrolling = Infinity;
   }
 
-  /**
-   * When uuid changes, reset undo state
-   */
-  @Input()
-  public set uuid(uuid: string) {
-    this._editor.getSession().setUndoManager(new UndoManager());
+  public get text() {
+    return this._text;
   }
 
   public get value() {
@@ -82,17 +78,21 @@ export class EditorComponent
   }
 
   @Input()
+  public set text(text: string) {
+    this.setText(text);
+  }
+
+  @Input()
   public set value(value: string) {
     this.setText(value);
   }
 
-  public get text() {
-    return this._text;
-  }
-
+  /**
+   * When uuid changes, reset undo state
+   */
   @Input()
-  public set text(text: string) {
-    this.setText(text);
+  public set uuid(uuid: string) {
+    this._editor.getSession().setUndoManager(new UndoManager());
   }
 
   @Input()

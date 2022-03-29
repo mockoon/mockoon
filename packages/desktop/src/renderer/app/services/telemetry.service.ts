@@ -45,7 +45,7 @@ export class TelemetryService {
     version: Config.appVersion,
     environmentsCount: null
   };
-  private event$ = new Subject();
+  private event$ = new Subject<void>();
   private closeSession$ = new BehaviorSubject<boolean>(false);
   private sessionInProgress$ = new BehaviorSubject<boolean>(true);
 

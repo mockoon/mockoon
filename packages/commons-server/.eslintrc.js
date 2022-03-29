@@ -45,13 +45,7 @@ module.exports = {
       }
     ],
     '@typescript-eslint/member-ordering': 'error',
-    '@typescript-eslint/naming-convention': [
-      'error',
-      {
-        selector: 'memberLike',
-        format: ['camelCase', 'UPPER_CASE', 'StrictPascalCase', 'snake_case']
-      }
-    ],
+    '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-empty-interface': 'error',
     '@typescript-eslint/no-inferrable-types': [

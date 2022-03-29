@@ -42,15 +42,15 @@ export class DuplicateRouteModalComponent implements OnDestroy, AfterViewInit {
 
   private routeDuplicationSubscription: Subscription;
 
-  private get activeEnvironment() {
-    return this.store.getActiveEnvironment();
-  }
-
   constructor(
     private modalService: NgbModal,
     private store: Store,
     private environmentsService: EnvironmentsService
   ) {}
+
+  private get activeEnvironment() {
+    return this.store.getActiveEnvironment();
+  }
 
   ngAfterViewInit() {
     this.routeDuplicationSubscription = this.routeDuplicationState$.subscribe(

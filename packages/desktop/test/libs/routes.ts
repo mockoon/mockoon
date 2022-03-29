@@ -29,20 +29,10 @@ class Routes {
     return $('input[id="route-filter"]');
   }
 
-  private get addBtn(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
-    return $('.routes-menu .nav:first-of-type .nav-item .nav-link');
-  }
-
   public get bodyEditor(): ChainablePromiseElement<
     Promise<WebdriverIO.Element>
   > {
     return $('.ace_content');
-  }
-
-  private get activeMenuEntry(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
-    return $(this.activeMenuEntrySelector);
   }
 
   public get rulesTab(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
@@ -71,6 +61,16 @@ class Routes {
     Promise<WebdriverIO.Element>
   > {
     return $('.environment-routes-footer div');
+  }
+
+  private get addBtn(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+    return $('.routes-menu .nav:first-of-type .nav-item .nav-link');
+  }
+
+  private get activeMenuEntry(): ChainablePromiseElement<
+    Promise<WebdriverIO.Element>
+  > {
+    return $(this.activeMenuEntrySelector);
   }
 
   public async select(routeIndex: number): Promise<void> {

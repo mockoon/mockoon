@@ -8,6 +8,18 @@ class Environments {
   private activeMenuEntrySelector =
     '.environments-menu .nav-item .nav-link.active';
 
+  public get routesTab(): ChainablePromiseElement<
+    Promise<WebdriverIO.Element>
+  > {
+    return $('app-header .header .nav .nav-item:nth-child(1) .nav-link');
+  }
+
+  public get headersTab(): ChainablePromiseElement<
+    Promise<WebdriverIO.Element>
+  > {
+    return $('app-header .header .nav .nav-item:nth-child(2) .nav-link');
+  }
+
   private get openBtn(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
     return $(
       '.environments-menu .nav:first-of-type .nav-item .nav-link.open-environment'
@@ -48,18 +60,6 @@ class Environments {
     Promise<WebdriverIO.Element>
   > {
     return $(this.activeMenuEntrySelector);
-  }
-
-  public get routesTab(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
-    return $('app-header .header .nav .nav-item:nth-child(1) .nav-link');
-  }
-
-  public get headersTab(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
-    return $('app-header .header .nav .nav-item:nth-child(2) .nav-link');
   }
 
   public async add() {

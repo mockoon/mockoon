@@ -17,6 +17,7 @@
       "rules": {
         "no-console": "error",
         "no-shadow": "off",
+        "@typescript-eslint/adjacent-overload-signatures": "off",
         "@typescript-eslint/semi": ["error", "always"],
         "@typescript-eslint/no-shadow": ["error"],
         "@angular-eslint/prefer-on-push-component-change-detection": "error",
