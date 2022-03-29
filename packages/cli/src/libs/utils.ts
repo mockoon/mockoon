@@ -15,7 +15,7 @@ export const logProcesses = (processes: ProcessDescription[]): void => {
   const configProcesses: ConfigProcess[] = ProcessListManager.getProcesses();
 
   cli.table(
-    processes,
+    processes as Record<string, any>[],
     {
       name: {
         minWidth: 10
@@ -26,15 +26,16 @@ export const logProcesses = (processes: ProcessDescription[]): void => {
       },
       status: {
         minWidth: 10,
-        get: (row) => row.pm2_env?.status
+        get: (row: ProcessDescription) => row.pm2_env?.status
       },
       cpu: {
         minWidth: 7,
-        get: (row) => row.monit?.cpu
+        get: (row: ProcessDescription) => row.monit?.cpu
       },
       memory: {
         minWidth: 10,
-        get: (row) => (row.monit?.memory ? prettyBytes(row.monit.memory) : 0)
+        get: (row: ProcessDescription) =>
+          row.monit?.memory ? prettyBytes(row.monit.memory) : 0
       },
       hostname: {
         minWidth: 15,

@@ -35,13 +35,13 @@
     "@types/chai": "4.3.0",
     "@types/mocha": "9.1.0",
     "@types/uuid": "8.3.4",
-    "@typescript-eslint/eslint-plugin": "5.14.0",
-    "@typescript-eslint/parser": "5.14.0",
+    "@typescript-eslint/eslint-plugin": "5.17.0",
+    "@typescript-eslint/parser": "5.17.0",
     "chai": "4.3.6",
-    "eslint": "8.11.0",
-    "eslint-plugin-jsdoc": "38.0.3",
+    "eslint": "8.12.0",
+    "eslint-plugin-jsdoc": "38.1.4",
     "mocha": "9.2.2",
     "ts-mocha": "9.0.2",
-    "typescript": "4.5.2"
+    "typescript": "4.6.3"
   }
 }
