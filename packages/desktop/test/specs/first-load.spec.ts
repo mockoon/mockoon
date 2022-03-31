@@ -5,11 +5,10 @@ import utils from '../libs/utils';
 
 describe('First load', () => {
   before(async () => {
-    await file.editSettings({
+    await file.editSettingsAndReload({
       welcomeShown: false,
       environments: undefined
     });
-    await browser.reloadSession();
   });
 
   it('Open window with Mockoon title', async () => {

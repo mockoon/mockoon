@@ -120,13 +120,17 @@ const testSuites = [
 ];
 
 describe('Swagger/OpenAPI import', () => {
-  testSuites.forEach((testSuite) => {
+  testSuites.forEach((testSuite, suiteIndex) => {
     describe(testSuite.name, () => {
       testSuite.tests.forEach((testCase) => {
         describe(testCase.desc, () => {
           const filename = pathParse(testCase.filePath).name;
 
           it('should import the file', async () => {
+            if (suiteIndex === 0) {
+              await browser.pause(1000);
+            }
+
             await dialogs.open(testCase.filePath);
             await dialogs.save(resolve(`./tmp/storage/${filename}.json`));
 

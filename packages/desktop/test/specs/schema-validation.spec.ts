@@ -15,7 +15,7 @@ import utils from '../libs/utils';
 describe('Schema validation', () => {
   describe('Settings', () => {
     it('should prepare the broken settings', async () => {
-      await file.editSettings({
+      await file.editSettingsAndReload({
         welcomeShown: true,
         analytics: true,
         logSizeLimit: 10000,
@@ -34,7 +34,6 @@ describe('Schema validation', () => {
         enableTelemetry: true,
         unknown: true
       } as unknown);
-      await browser.reloadSession();
     });
 
     it('should verify saved properties (missing, invalid, unknown)', async () => {
@@ -179,7 +178,7 @@ describe('Schema validation', () => {
     const initialUUID = 'a93e9c88-62f9-40a7-be4f-9645e1988d8a';
 
     it('should prepare the settings', async () => {
-      await file.editSettings({
+      await file.editSettingsAndReload({
         environments: [
           {
             uuid: 'a93e9c88-62f9-40a7-be4f-9645e1988d8a',
@@ -191,7 +190,6 @@ describe('Schema validation', () => {
           }
         ]
       });
-      await browser.reloadSession();
     });
 
     it('should deduplicate UUIDs at launch', async () => {

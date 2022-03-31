@@ -6,10 +6,9 @@ import utils from '../libs/utils';
 describe('Changelog modal', () => {
   describe('should show changelog modal if last changelog shown is from older version', () => {
     before(async () => {
-      await file.editSettings({
+      await file.editSettingsAndReload({
         lastChangelog: '1.0.0'
       });
-      await browser.reloadSession();
     });
 
     it('should show the changelog modal', async () => {
@@ -29,11 +28,10 @@ describe('Changelog modal', () => {
 
   describe('Do not show changelog modal if it is a fresh install', () => {
     before(async () => {
-      await file.editSettings({
+      await file.editSettingsAndReload({
         lastChangelog: Config.appVersion,
         welcomeShown: false
       });
-      await browser.reloadSession();
     });
 
     it('should show the welcome modal only', async () => {
@@ -53,10 +51,9 @@ describe('Changelog modal', () => {
 
   describe('Do not show changelog modal if same version already shown', () => {
     before(async () => {
-      await file.editSettings({
+      await file.editSettingsAndReload({
         lastChangelog: Config.appVersion
       });
-      await browser.reloadSession();
     });
 
     it('should not show the changelog modal', async () => {
