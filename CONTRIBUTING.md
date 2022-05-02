@@ -36,7 +36,7 @@ Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./pac
 
 **Applications**:
 
-- _@mockoon/cli_
+- _@mockoon/cli_; the CLI built with Oclif
 - _@mockoon/desktop_: the desktop application built with Electron and Angular
 
 ## Build and run the applications locally during development
@@ -112,6 +112,11 @@ Create a `cli-vx.x.x` tag to automatically release the CLI. The libraries and th
 3. Upload the artifacts binaries to the new GitHub release.
 
 4. Publish the release (remove the "pre-release" label).
+
+**Libs process**
+
+There is no release process for the libraries as they are being automatically released together with the CLI, when creating a CLI Git tag.
+Releasing the libraries for the desktop application is irrelevant as they are automatically bundled with the binary by electron-builder during the packaging.
 
 ## Desktop application distribution
 

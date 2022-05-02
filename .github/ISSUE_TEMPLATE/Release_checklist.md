@@ -3,33 +3,29 @@ name: Release checklist
 about: Checklist for releases (admin use only)
 ---
 
-- [ ] Bump app version
-- [ ] Create a **pre-release** (!important) on GitHub with correct version and publish
-- [ ] Build the binaries (automated after pre-release publication)
+- [ ] Bump libs versions
+- [ ] Bump CLI version
+- [ ] Bump desktop version
+- [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
+- [ ] Wait for desktop binaries build (automated after pre-release publication)
 
 **Tests:**
 
-- [ ] Test Windows binaries
-- [ ] Scan Windows exe installer binary on VirusTotal
-- [ ] Test Linux binaries
-- [ ] Test OSX binaries
+- [ ] Manually test desktop binaries (if significant dependencies or native behavior change)
 
-**Release:**
+**Release desktop:**
 
-- [ ] Add Windows binaries to release
-- [ ] Add Linux binaries to release
-- [ ] Add OSX binaries to release
+- [ ] Add desktop binaries to the GitHub release
 - [ ] Set the release to final (non pre-release)
+
+**Release CLI and libs:**
+
+- [ ] Create a `cli-vx.x.x` tag to release CLI and libs
 
 **Website:**
 
 - [ ] Update website package version
 - [ ] Merge release branch on main
-
-**CLI (if applicable):**
-
-- [ ] Merge release branch on main
-- [ ] Create release
 
 **Distribution:**
 
