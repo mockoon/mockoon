@@ -141,17 +141,16 @@ export function CreateTransaction(
  *
  * @param text
  */
-export const ToBase64 = (text: string): string => {
-  if (typeof btoa === 'function') {
-    return btoa(text);
-  }
+export const ToBase64 = (text: string): string =>
+  Buffer.from(text, 'utf-8').toString('base64');
 
-  if (typeof Buffer === 'function') {
-    return Buffer.from(text).toString('base64');
-  }
-
-  return text;
-};
+/**
+ * Convert base64 to a string
+ *
+ * @param base64
+ */
+export const FromBase64 = (base64: string): string =>
+  Buffer.from(base64, 'base64').toString('utf-8');
 
 /**
  * Convert a SafeString to a string if needed.

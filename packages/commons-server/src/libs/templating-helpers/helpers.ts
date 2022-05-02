@@ -4,6 +4,7 @@ import { format as dateFormat } from 'date-fns';
 import { HelperOptions, SafeString } from 'handlebars';
 import { EOL } from 'os';
 import {
+  FromBase64,
   fromSafeString,
   numberFromSafeString,
   RandomInt,
@@ -153,6 +154,21 @@ export const Helpers = {
 
     // convert content toString in case we pass a SafeString from another helper
     return new SafeString(ToBase64(content.toString()));
+  },
+  // convert base64 to a string
+  base64Decode: function (...args: any[]) {
+    const hbsOptions: HelperOptions & hbs.AST.Node = args[args.length - 1];
+
+    let content: string;
+
+    if (args.length === 1) {
+      content = hbsOptions.fn(hbsOptions);
+    } else {
+      content = args[0];
+    }
+
+    // convert content toString in case we pass a SafeString from another helper
+    return new SafeString(FromBase64(content.toString()));
   },
   // adds a newline to the output
   newline: function () {

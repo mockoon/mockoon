@@ -855,6 +855,39 @@ describe('Template parser', () => {
     });
   });
 
+  describe('Helper: base64', () => {
+    it('should decode a string from base64', () => {
+      const parseResult = TemplateParser(
+        "{{base64Decode 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkw'}}",
+        {} as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
+    });
+
+    it('should decode body property from base64', () => {
+      const parseResult = TemplateParser(
+        "{{base64Decode (body 'prop1')}}",
+        {
+          body: { prop1: 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkw' }
+        } as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
+    });
+
+    it('should decode block from base64', () => {
+      const parseResult = TemplateParser(
+        "{{#base64Decode}}YWJjZGVmZ2hpamtsbW5vcHF{{body 'prop1'}}{{/base64Decode}}",
+        {
+          body: { prop1: 'yc3R1dnd4eXoxMjM0NTY3ODkw' }
+        } as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
+    });
+  });
+
   describe('Helper: add', () => {
     it('should add a number to another', () => {
       const parseResult = TemplateParser('{{add 1 1}}', {} as any, {} as any);
