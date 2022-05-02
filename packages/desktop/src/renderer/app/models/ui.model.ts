@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 export type DraggableContainerNames =
   | 'routes'
@@ -13,8 +13,12 @@ export enum ScrollDirection {
 export type ConfirmModalEvent = {
   title: string;
   text: string;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
   sub?: string;
   subIcon?: string;
   subIconClass?: string;
-  confirmed$: Subject<void>;
+  // display an optional list of strings in the confirm modal
+  list$?: Observable<string[]>;
+  confirmed$: Subject<boolean>;
 };

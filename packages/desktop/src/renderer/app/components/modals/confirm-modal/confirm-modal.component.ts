@@ -39,10 +39,15 @@ export class ConfirmModalComponent implements OnInit, AfterViewInit, OnDestroy {
         tap((confirmModalEvent) => {
           this.modalService
             .open(this.modal, {
-              size: 'sm'
+              size: 'md'
             })
             .result.then(() => {
-              confirmModalEvent.confirmed$.next();
+              // confirm was validated
+              confirmModalEvent.confirmed$.next(true);
+            })
+            .catch(() => {
+              // confirm was closed
+              confirmModalEvent.confirmed$.next(false);
             });
         })
       )

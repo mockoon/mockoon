@@ -65,7 +65,7 @@ class ContextMenu {
   private getMenuEntry(
     targetMenu: Targets,
     menuItemIndex?: number
-  ): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  ): ChainablePromiseElement<WebdriverIO.Element> {
     const itemSelector =
       menuItemIndex === undefined
         ? ' .nav-link.active'

@@ -12,18 +12,31 @@ import {
   SaveDialogOptions,
   SaveDialogReturnValue
 } from 'electron';
+import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
 import { ProtocolAction } from 'src/shared/models/protocol.model';
-import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
+import {
+  EnvironmentDescriptor,
+  Settings
+} from 'src/shared/models/settings.model';
 
 export interface MainAPIModel {
   invoke<T>(
     channel: 'APP_NEW_STORAGE_MIGRATION'
   ): Promise<EnvironmentDescriptor[]>;
-  invoke<T>(channel: 'APP_READ_JSON_DATA', path: string): Promise<T>;
-  invoke<T>(
-    channel: 'APP_WRITE_JSON_DATA',
-    data: T,
+  invoke(
+    channel: 'APP_READ_ENVIRONMENT_DATA',
+    path: string
+  ): Promise<Environment>;
+  invoke(channel: 'APP_READ_SETTINGS_DATA'): Promise<PreMigrationSettings>;
+  invoke(
+    channel: 'APP_WRITE_ENVIRONMENT_DATA',
+    data: Environment,
     path: string,
+    storagePrettyPrint?: boolean
+  ): Promise<void>;
+  invoke(
+    channel: 'APP_WRITE_SETTINGS_DATA',
+    newSettings: Settings,
     storagePrettyPrint?: boolean
   ): Promise<void>;
   invoke(channel: 'APP_READ_CLIPBOARD'): Promise<any>;
@@ -62,7 +75,8 @@ export interface MainAPIModel {
   ): Promise<any>;
   invoke(channel: 'APP_STOP_SERVER', environmentUUID: string): Promise<any>;
   invoke(channel: 'APP_GET_OS'): Promise<string>;
-  invoke(channel: 'APP_UNWATCH_FILE', filePathOrUUID: string): Promise<void>;
+  invoke(channel: 'APP_UNWATCH_FILE', UUID: string): Promise<void>;
+  invoke(channel: 'APP_UNWATCH_ALL_FILE'): Promise<void>;
 
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
   send(
@@ -88,11 +102,6 @@ export interface MainAPIModel {
     data: { locale: FakerAvailableLocales; seed: number }
   ): void;
   send(channel: 'APP_UPDATE_ENVIRONMENT', environments: Environments): void;
-  send(
-    channel: 'APP_WATCH_FILE',
-    UUID: string,
-    filePath: string
-  ): Promise<void>;
 
   receive(
     channel: 'APP_SERVER_EVENT',

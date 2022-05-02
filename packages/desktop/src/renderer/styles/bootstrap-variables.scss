@@ -170,6 +170,25 @@ $toast-padding-y: 0.25rem;
 
 $spacer: 1rem !default;
 
+$list-group-color: $gray-300;
 $list-group-bg: transparent;
 $list-group-border-color: lighten($gray-900, 4%);
+$list-group-border-width: $border-width !default;
 $list-group-border-radius: 0;
+
+$list-group-item-padding-y: 0.75rem !default;
+$list-group-item-padding-x: 1.25rem !default;
+
+$list-group-hover-bg: $gray-900;
+$list-group-active-color: $gray-300;
+$list-group-active-bg: transparent;
+$list-group-active-border-color: $list-group-active-bg !default;
+
+$list-group-disabled-color: $gray-600 !default;
+$list-group-disabled-bg: $list-group-bg !default;
+
+$list-group-action-color: $gray-300;
+$list-group-action-hover-color: $list-group-action-color !default;
+
+$list-group-action-active-color: $gray-300;
+$list-group-action-active-bg: $gray-900;

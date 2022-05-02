@@ -7,69 +7,51 @@ import utils from '../libs/utils';
 class Routes {
   private activeMenuEntrySelector = '.routes-menu .nav-item .nav-link.active';
 
-  public get documentationInput(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get documentationInput(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('app-environment-routes input[formcontrolname="documentation"]');
   }
 
-  public get pathInput(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get pathInput(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('app-environment-routes input[formcontrolname="endpoint"]');
   }
 
-  public get fileInput(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get fileInput(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('app-environment-routes input[formcontrolname="filePath"]');
   }
 
-  public get filter(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  public get filter(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('input[id="route-filter"]');
   }
 
-  public get bodyEditor(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get bodyEditor(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.ace_content');
   }
 
-  public get rulesTab(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  public get rulesTab(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(3)');
   }
 
-  public get headersTab(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get headersTab(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2)');
   }
 
-  public get randomResponseIcon(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get randomResponseIcon(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-random app-svg');
   }
 
-  public get sequentialResponseIcon(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get sequentialResponseIcon(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-sequential app-svg');
   }
 
-  public get contentTypeElement(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get contentTypeElement(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.environment-routes-footer div');
   }
 
-  private get addBtn(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  private get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.routes-menu .nav:first-of-type .nav-item .nav-link');
   }
 
-  private get activeMenuEntry(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  private get activeMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(this.activeMenuEntrySelector);
   }
 

@@ -2,6 +2,12 @@ import { FakerAvailableLocales } from '@mockoon/commons';
 
 export type EnvironmentDescriptor = { uuid: string; path: string };
 
+export enum FileWatcherOptions {
+  DISABLED = 'disabled',
+  PROMPT = 'prompt',
+  AUTO = 'auto'
+}
+
 export type Settings = {
   welcomeShown: boolean;
   analytics: boolean;
@@ -18,4 +24,5 @@ export type Settings = {
   environments: EnvironmentDescriptor[];
   enableTelemetry: boolean;
   storagePrettyPrint: boolean;
+  fileWatcherEnabled: FileWatcherOptions;
 };

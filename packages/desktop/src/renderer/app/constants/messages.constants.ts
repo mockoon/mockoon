@@ -225,11 +225,6 @@ export const Messages: {
     showToast: true,
     toastType: 'warning'
   }),
-  ENVIRONMENT_RELOADED: (messageParams) => ({
-    message: `Environment "${messageParams.name}" was modified externally and reloaded.`,
-    showToast: true,
-    toastType: 'success'
-  }),
   STORAGE_LOAD_ERROR: (messageParams) => ({
     message: `Error while loading ${messageParams.path}. Please restart the application.`,
     loggerMessage: `Error while loading ${messageParams.path}: ${

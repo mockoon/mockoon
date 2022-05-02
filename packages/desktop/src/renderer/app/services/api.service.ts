@@ -8,6 +8,7 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -112,16 +113,28 @@ export class ApiService {
     });
 
     // listen to file external changes
-    /* MainAPI.receive(
+    MainAPI.receive(
       'APP_FILE_EXTERNAL_CHANGE',
-      (previousUUID: string, environmentPath: string) => {
+      (UUID: string, environmentPath: string) => {
         this.zone.run(() => {
-          this.environmentsService
-            .reloadEnvironment(previousUUID, environmentPath)
-            .subscribe();
+          if (
+            this.store.get('settings').fileWatcherEnabled ===
+            FileWatcherOptions.AUTO
+          ) {
+            this.environmentsService
+              .reloadEnvironment(UUID, environmentPath)
+              .subscribe();
+          } else if (
+            this.store.get('settings').fileWatcherEnabled ===
+            FileWatcherOptions.PROMPT
+          ) {
+            this.environmentsService
+              .notifyExternalChange(UUID, environmentPath)
+              .subscribe();
+          }
         });
       }
-    ); */
+    );
 
     // listen to environments and enable/disable some menu entries
     this.store

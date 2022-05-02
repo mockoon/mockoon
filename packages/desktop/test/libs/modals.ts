@@ -1,18 +1,34 @@
 import { ChainablePromiseElement } from 'webdriverio';
 
 class Modals {
-  private get closeBtn(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  private get confirmBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.modal-dialog .modal-footer button:first-of-type');
+  }
+  private get cancelBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.modal-dialog .modal-footer button:last-of-type');
+  }
+
+  private get closeBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.modal-dialog .modal-footer button');
   }
 
-  private get title(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  private get title(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.modal-title');
   }
 
+  // close a modal with only one button (settings, welcome, etc)
   public async close() {
     await this.closeBtn.click();
+  }
+
+  // confirm the confirm modal
+  public async confirm() {
+    await this.confirmBtn.click();
+  }
+
+  // cancel the confirm modal
+  public async cancel() {
+    await this.cancelBtn.click();
   }
 
   public async assertTitle(expectedTitle: string): Promise<void> {

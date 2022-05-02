@@ -16,7 +16,7 @@ import { SettingsDefault } from 'src/renderer/app/constants/settings-schema.cons
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
-import { Settings } from 'src/shared/models/settings.model';
+import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
 
 @Component({
   selector: 'app-settings-modal',
@@ -30,6 +30,11 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
   public fakerLocales = FakerLocales;
+  public fileWatcherOptions = [
+    { label: 'Disabled', value: FileWatcherOptions.DISABLED },
+    { label: 'Prompt', value: FileWatcherOptions.PROMPT },
+    { label: 'Auto', value: FileWatcherOptions.AUTO }
+  ];
   public settingsForm: FormGroup;
   private destroy$ = new Subject<void>();
 
@@ -84,6 +89,7 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
       logSizeLimit: [SettingsDefault.logSizeLimit],
       fakerLocale: [SettingsDefault.fakerLocale],
       fakerSeed: [SettingsDefault.fakerSeed],
+      fileWatcherEnabled: [SettingsDefault.fileWatcherEnabled],
       storagePrettyPrint: [SettingsDefault.storagePrettyPrint],
       analytics: [SettingsDefault.analytics],
       enableTelemetry: [SettingsDefault.enableTelemetry]
@@ -124,6 +130,7 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
               logSizeLimit: settings.logSizeLimit,
               fakerLocale: settings.fakerLocale,
               fakerSeed: settings.fakerSeed,
+              fileWatcherEnabled: settings.fileWatcherEnabled,
               storagePrettyPrint: settings.storagePrettyPrint,
               analytics: settings.analytics,
               enableTelemetry: settings.enableTelemetry

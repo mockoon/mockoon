@@ -4,10 +4,11 @@ import {
   ElementArray
 } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
+import { Config } from '../../src/shared/config';
 
 class Utils {
   public async setElementValue(
-    element: ChainablePromiseElement<Promise<WebdriverIO.Element>>,
+    element: ChainablePromiseElement<WebdriverIO.Element>,
     value: string
   ): Promise<void> {
     // ensure we unfocus previously selected fields (on Linux, using setValue, previous fields with typeaheads may still show the menu and not be immediately unfocused)
@@ -16,7 +17,7 @@ class Utils {
   }
 
   public async assertHasClass(
-    element: ChainablePromiseElement<Promise<WebdriverIO.Element>>,
+    element: ChainablePromiseElement<WebdriverIO.Element>,
     className: string,
     reverse = false
   ): Promise<void> {
@@ -30,14 +31,14 @@ class Utils {
   }
 
   public async assertElementText(
-    element: ChainablePromiseElement<Promise<WebdriverIO.Element>>,
+    element: ChainablePromiseElement<WebdriverIO.Element>,
     text: string
   ): Promise<void> {
     expect(await element.getText()).toEqual(text);
   }
 
   public async assertElementTextContain(
-    element: ChainablePromiseElement<Promise<WebdriverIO.Element>>,
+    element: ChainablePromiseElement<WebdriverIO.Element>,
     text: string
   ): Promise<void> {
     expect(await element.getText()).toContain(text);
@@ -101,7 +102,11 @@ class Utils {
   }
 
   public async waitForAutosave(): Promise<void> {
-    await browser.pause(1500);
+    await browser.pause(Config.storageSaveDelay + 500);
+  }
+
+  public async waitForFileWatcher(): Promise<void> {
+    await browser.pause(Config.fileReWatchDelay + 500);
   }
 
   public async checkToastDisplayed(toastType: ToastTypes, text: string) {

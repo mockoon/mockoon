@@ -43,7 +43,8 @@ export class Store {
     environmentsLogs: {},
     toasts: [],
     uiState: {
-      closing: false
+      closing: false,
+      saving: false
     },
     settings: null,
     duplicateRouteToAnotherEnvironment: { moving: false },

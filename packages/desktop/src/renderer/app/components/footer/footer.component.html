@@ -13,11 +13,14 @@
   </div>
 
   <div class="d-flex">
-    <div *ngIf="closing$ | async" class="footer-item">
-      <div class="footer-save animation-flash">
-        <app-svg icon="save"></app-svg>
-        Shutting down...
+    <ng-container *ngIf="uiState$ | async as uiState">
+      <div *ngIf="uiState.closing || uiState.saving" class="footer-item">
+        <div class="footer-save animation-flash">
+          <app-svg icon="save"></app-svg>
+          <ng-container *ngIf="uiState.closing">Shutting down...</ng-container>
+          <ng-container *ngIf="uiState.saving">Saving...</ng-container>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 </div>

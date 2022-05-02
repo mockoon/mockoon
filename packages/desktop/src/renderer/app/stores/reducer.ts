@@ -450,6 +450,110 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.RELOAD_ENVIRONMENT: {
+      let activeEnvironmentUUID = state.activeEnvironmentUUID;
+      let environmentsStatus = state.environmentsStatus;
+      let activeRouteUUID = state.activeRouteUUID;
+      let activeRouteResponseUUID = state.activeRouteResponseUUID;
+      let environmentsLogs = state.environmentsLogs;
+      let activeEnvironmentLogsUUID = state.activeEnvironmentLogsUUID;
+      let duplicatedRoutes = state.duplicatedRoutes;
+      let settings = state.settings;
+      let activeView = state.activeView;
+
+      // replace environment with new content
+      const environments = state.environments.map((environment) => {
+        if (environment.uuid === action.previousUUID) {
+          return action.newEnvironment;
+        }
+
+        return environment;
+      });
+
+      // always reset the active route and active route response if environment was active, as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
+      if (state.activeEnvironmentUUID === action.previousUUID) {
+        activeRouteUUID = action.newEnvironment.routes.length
+          ? action.newEnvironment.routes[0].uuid
+          : null;
+        activeRouteResponseUUID =
+          action.newEnvironment.routes.length &&
+          action.newEnvironment.routes[0].responses.length
+            ? action.newEnvironment.routes[0].responses[0].uuid
+            : null;
+
+        // switch to the reload view as we don't have all views that can react to changes
+        activeView = 'ENV_RELOAD';
+      }
+
+      // always reset env logs and the active log entry as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
+      environmentsLogs = {
+        ...environmentsLogs,
+        [action.newEnvironment.uuid]: []
+      };
+      activeEnvironmentLogsUUID = {
+        ...activeEnvironmentLogsUUID,
+        [action.newEnvironment.uuid]: null
+      };
+
+      // if environment's UUID changed
+      if (action.newEnvironment.uuid !== action.previousUUID) {
+        if (state.activeEnvironmentUUID === action.previousUUID) {
+          activeEnvironmentUUID = action.newEnvironment.uuid;
+        }
+
+        // eventually delete logs info stored under previous UUID
+        delete environmentsLogs[action.previousUUID];
+        delete activeEnvironmentLogsUUID[action.previousUUID];
+
+        // move status to new UUID
+        environmentsStatus = {
+          ...environmentsStatus,
+          [action.newEnvironment.uuid]: environmentsStatus[action.previousUUID]
+        };
+        delete environmentsStatus[action.previousUUID];
+
+        // change UUID in settings
+        settings = {
+          ...settings,
+          environments: settings.environments.map((environmentDescriptor) => {
+            if (environmentDescriptor.uuid === action.previousUUID) {
+              return {
+                ...environmentDescriptor,
+                uuid: action.newEnvironment.uuid
+              };
+            }
+
+            return environmentDescriptor;
+          })
+        };
+      }
+
+      // remove needRestart from status as env will always be restarted if it was running
+      environmentsStatus[action.newEnvironment.uuid] = {
+        ...environmentsStatus[action.newEnvironment.uuid],
+        needRestart: false
+      };
+
+      // reset the duplicated routes, as they will be refreshed and recreated
+      duplicatedRoutes = { ...duplicatedRoutes };
+      delete duplicatedRoutes[action.previousUUID];
+
+      newState = {
+        ...state,
+        environments,
+        environmentsStatus,
+        activeEnvironmentUUID,
+        activeRouteUUID,
+        activeRouteResponseUUID,
+        environmentsLogs,
+        activeEnvironmentLogsUUID,
+        duplicatedRoutes,
+        settings,
+        activeView
+      };
+      break;
+    }
+
     case ActionTypes.UPDATE_ENVIRONMENT_STATUS: {
       const newEnvironmentsStatus: EnvironmentsStatuses = {
         ...state.environmentsStatus
@@ -935,6 +1039,8 @@ export const environmentReducer = (
       mode: getBodyEditorMode(newState)
     },
     duplicatedRoutes:
+      action.type === ActionTypes.ADD_ENVIRONMENT ||
+      action.type === ActionTypes.RELOAD_ENVIRONMENT ||
       action.type === ActionTypes.ADD_ROUTE ||
       action.type === ActionTypes.REMOVE_ROUTE ||
       action.type === ActionTypes.MOVE_ROUTES ||
