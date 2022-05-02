@@ -1,0 +1,46 @@
+.loader-container {
+  margin: 0 auto;
+  width: 6vw;
+}
+
+.loader {
+  animation: loader-animation 3200ms linear infinite normal forwards;
+}
+
+@keyframes loader-animation {
+  0% {
+    transform: translate(12.799997px, 13px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  12.5% {
+    transform: translate(12.799997px, -12px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  25% {
+    transform: translate(12.799997px, -12px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  37.5% {
+    transform: translate(-12.800012px, 13px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  50% {
+    transform: translate(-12.800012px, 13px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  62.5% {
+    transform: translate(-12.800012px, -12px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  75% {
+    transform: translate(-12.800012px, -12px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  87.5% {
+    transform: translate(12.799997px, 13px);
+    animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+  }
+  100% {
+    transform: translate(12.799997px, 13px);
+  }
+}

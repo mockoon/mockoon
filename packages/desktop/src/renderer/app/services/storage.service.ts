@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Environment } from '@mockoon/commons';
 import { BehaviorSubject, EMPTY, from, Observable, of } from 'rxjs';
 import {
   catchError,
@@ -8,7 +9,9 @@ import {
 } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { Settings } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService extends Logger {
@@ -33,16 +36,13 @@ export class StorageService extends Logger {
   }
 
   /**
-   * Load data from JSON storage.
+   * Load environment's data from JSON storage.
    * Handles storage failure.
    *
-   * Path can be a file 'key', that will retrieve the corresponding file from the user data storage folder:
-   * 'settings' --> /%USER_DATA%/mockoon/storage/settings.json
-   *
-   * @param path - storage file full path or key
+   * @param path - storage file full path
    */
-  public loadData<T>(path: string): Observable<T> {
-    return from(MainAPI.invoke<T>('APP_READ_JSON_DATA', path)).pipe(
+  public loadEnvironment(path: string): Observable<Environment> {
+    return from(MainAPI.invoke('APP_READ_ENVIRONMENT_DATA', path)).pipe(
       catchError((error) => {
         this.logMessage('error', 'STORAGE_LOAD_ERROR', { path, error });
 
@@ -52,23 +52,24 @@ export class StorageService extends Logger {
   }
 
   /**
-   * Save data to a file.
+   * Save environments data to a file.
    * Switch saving flag during save.
    * Handles storage failure.
    *
-   * Path can be a file 'key', that will retrieve the corresponding file from the user data storage folder:
-   * 'settings' --> /%USER_DATA%/mockoon/storage/settings.json
-   *
    * @param data - data to save
-   * @param path - storage file full path or key
+   * @param path - storage file full path
    * @returns
    */
-  public saveData<T>(data: T, path: string, storagePrettyPrint?: boolean) {
+  public saveEnvironment(
+    data: Environment,
+    path: string,
+    storagePrettyPrint?: boolean
+  ) {
     return of(true).pipe(
       mergeMap(() =>
         from(
-          MainAPI.invoke<T>(
-            'APP_WRITE_JSON_DATA',
+          MainAPI.invoke(
+            'APP_WRITE_ENVIRONMENT_DATA',
             data,
             path,
             storagePrettyPrint
@@ -76,6 +77,54 @@ export class StorageService extends Logger {
         ).pipe(
           catchError((error) => {
             this.logMessage('error', 'STORAGE_SAVE_ERROR', { path, error });
+
+            return EMPTY;
+          }),
+          tap(() => {
+            this.saving$.next(false);
+          })
+        )
+      )
+    );
+  }
+
+  /**
+   * Load the settings from JSON storage.
+   * Handles storage failure.
+   *
+   */
+  public loadSettings(): Observable<PreMigrationSettings> {
+    return from(MainAPI.invoke('APP_READ_SETTINGS_DATA')).pipe(
+      catchError((error) => {
+        this.logMessage('error', 'STORAGE_LOAD_ERROR', {
+          path: 'settings',
+          error
+        });
+
+        return EMPTY;
+      })
+    );
+  }
+
+  /**
+   * Save the settings to the settings.json file.
+   * Switch saving flag during save.
+   * Handles storage failure.
+   *
+   * @param data - settings to save
+   * @returns
+   */
+  public saveSettings(data: Settings, storagePrettyPrint?: boolean) {
+    return of(true).pipe(
+      mergeMap(() =>
+        from(
+          MainAPI.invoke('APP_WRITE_SETTINGS_DATA', data, storagePrettyPrint)
+        ).pipe(
+          catchError((error) => {
+            this.logMessage('error', 'STORAGE_SAVE_ERROR', {
+              path: 'settings',
+              error
+            });
 
             return EMPTY;
           }),

@@ -41,10 +41,20 @@
 
       <div class="main-content flex-fill mh0 h-100">
         <ng-container [ngSwitch]="activeView$ | async">
+          <app-environment-routes
+            *ngSwitchCase="'ENV_ROUTES'"
+            class="h-100"
+          ></app-environment-routes>
+
           <app-environment-headers
             *ngSwitchCase="'ENV_HEADERS'"
             class="h-100"
           ></app-environment-headers>
+
+          <app-environment-logs
+            *ngSwitchCase="'ENV_LOGS'"
+            class="h-100"
+          ></app-environment-logs>
 
           <app-environment-proxy
             *ngSwitchCase="'ENV_PROXY'"
@@ -56,15 +66,13 @@
             class="h-100"
           ></app-environment-settings>
 
-          <app-environment-logs
-            *ngSwitchCase="'ENV_LOGS'"
-            class="h-100"
-          ></app-environment-logs>
-
-          <app-environment-routes
-            *ngSwitchCase="'ENV_ROUTES'"
-            class="h-100"
-          ></app-environment-routes>
+          <div
+            *ngSwitchCase="'ENV_RELOAD'"
+            class="h-100 d-flex flex-column justify-content-center"
+          >
+            <app-loader></app-loader>
+            <p class="message mt-2">Reloading</p>
+          </div>
         </ng-container>
       </div>
     </div>

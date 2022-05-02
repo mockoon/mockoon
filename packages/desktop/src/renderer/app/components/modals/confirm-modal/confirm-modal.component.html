@@ -3,9 +3,16 @@
     <div class="modal-header">
       <h4 class="modal-title">{{ confirmModalEvent?.title }}</h4>
     </div>
-    <div class="modal-body">
-      <p>{{ confirmModalEvent?.text }}</p>
-      <div *ngIf="confirmModalEvent.sub">
+    <div class="modal-body p-0">
+      <p class="px-3 pt-2">{{ confirmModalEvent?.text }}</p>
+      <ng-container *ngIf="confirmModalEvent?.list$ | async as itemList">
+        <ul *ngIf="itemList.length > 0" class="list-group pb-3">
+          <li class="list-group-item" *ngFor="let item of itemList">
+            <div class="ellipsis">{{ item }}</div>
+          </li>
+        </ul>
+      </ng-container>
+      <div *ngIf="confirmModalEvent.sub" class="px-3 pb-2">
         <small>
           <app-svg
             [icon]="confirmModalEvent.subIcon"
@@ -18,10 +25,10 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" (click)="close()">
-        Confirm
+        {{ confirmModalEvent.confirmButtonText || 'Confirm' }}
       </button>
       <button type="button" class="btn btn-secondary" (click)="dismiss()">
-        Cancel
+        {{ confirmModalEvent.cancelButtonText || 'Cancel' }}
       </button>
     </div>
   </ng-container>

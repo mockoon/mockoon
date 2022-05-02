@@ -8,17 +8,12 @@ type SettingNames =
   | 'settings-log-body-size'
   | 'settings-faker-seed'
   | 'settings-storage-pretty-print'
+  | 'settings-storage-file-watcher'
   | 'settings-log-max-count'
   | 'settings-enable-telemetry'
   | 'settings-faker-locale';
 
 class Settings {
-  public get documentationInput(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
-    return $('app-environment-routes input[formcontrolname="documentation"]');
-  }
-
   public async open() {
     await menu.click('MENU_OPEN_SETTINGS');
     await $('.modal-dialog').waitForExist();
@@ -45,21 +40,29 @@ class Settings {
     await setting.selectByAttribute('value', value);
   }
 
+  public async assertSelectSettingValue(
+    settingName: SettingNames,
+    value: string
+  ): Promise<void> {
+    const setting = this.getSettingSelect(settingName);
+    expect(await setting.getValue()).toEqual(value);
+  }
+
   private getSettingSelect(
     settingName: SettingNames
-  ): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(`.modal-dialog select#${settingName}`);
   }
 
   private getSettingInput(
     settingName: SettingNames
-  ): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(`.modal-dialog input#${settingName}`);
   }
 
   private getSettingCheckbox(
     settingName: SettingNames
-  ): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(`.modal-dialog input#${settingName} ~ .custom-control-label`);
   }
 }

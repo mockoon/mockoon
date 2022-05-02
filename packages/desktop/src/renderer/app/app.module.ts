@@ -62,6 +62,7 @@ import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handl
 import { environment } from 'src/renderer/environments/environment';
 import { Config } from 'src/shared/config';
 import { AppComponent } from './app.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { AppComponent } from './app.component';
     DuplicateRouteModalComponent,
     EditorComponent,
     CustomSelectComponent,
-    SvgComponent
+    SvgComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserAnimationsModule,

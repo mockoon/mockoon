@@ -3,6 +3,7 @@ import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
 import { Config } from 'src/shared/config';
 import {
   EnvironmentDescriptor,
+  FileWatcherOptions,
   Settings
 } from 'src/shared/models/settings.model';
 
@@ -21,7 +22,8 @@ export const SettingsDefault: Settings = {
   lastChangelog: Config.appVersion,
   environments: [],
   enableTelemetry: true,
-  storagePrettyPrint: true
+  storagePrettyPrint: true,
+  fileWatcherEnabled: FileWatcherOptions.DISABLED
 };
 
 export const SettingsSchema = Joi.object<Settings & PreMigrationSettings, true>(
@@ -81,6 +83,14 @@ export const SettingsSchema = Joi.object<Settings & PreMigrationSettings, true>(
       .required(),
     storagePrettyPrint: Joi.boolean()
       .failover(SettingsDefault.storagePrettyPrint)
+      .required(),
+    fileWatcherEnabled: Joi.string()
+      .valid(
+        FileWatcherOptions.DISABLED,
+        FileWatcherOptions.PROMPT,
+        FileWatcherOptions.AUTO
+      )
+      .failover(SettingsDefault.fileWatcherEnabled)
       .required()
   }
 )

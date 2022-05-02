@@ -37,13 +37,13 @@ class EnvironmentsSettings {
 
   private getSettingInput(
     settingName: SettingNames
-  ): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(`app-environment-settings input[formcontrolname=${settingName}]`);
   }
 
   private getSettingCheckbox(
     settingName: SettingNames
-  ): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
       `app-environment-settings input[formcontrolname=${settingName}] + label`
     );

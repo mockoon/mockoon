@@ -139,6 +139,41 @@
 
       <div class="pl-3">
         <div class="form-group">
+          <div class="input-group">
+            <label
+              for="settings-storage-file-watcher"
+              class="col-form-label pr-2"
+            >
+              Environment files watcher
+            </label>
+            <select
+              class="custom-select col-2"
+              id="settings-storage-file-watcher"
+              formControlName="fileWatcherEnabled"
+            >
+              <option
+                *ngFor="let fileWatcherOption of fileWatcherOptions"
+                [value]="fileWatcherOption.value"
+                [selected]="
+                  settings.fileWatcherEnabled === fileWatcherOption.value
+                "
+              >
+                {{ fileWatcherOption.label }}
+              </option>
+            </select>
+            <div class="input-group-append ml-1 align-items-center">
+              <app-svg
+                icon="info"
+                class="ml-1"
+                ngbTooltip="Mockoon will watch environment files for external changes and prompt (or not) for reload"
+              ></app-svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pl-3">
+        <div class="form-group">
           <div class="custom-control custom-checkbox">
             <input
               type="checkbox"
@@ -149,7 +184,7 @@
             <label
               class="custom-control-label"
               for="settings-storage-pretty-print"
-              >pretty print JSON storage files (settings and
+              >Pretty print JSON storage files (settings and
               environments)</label
             >
           </div>

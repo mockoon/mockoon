@@ -8,57 +8,47 @@ class Environments {
   private activeMenuEntrySelector =
     '.environments-menu .nav-item .nav-link.active';
 
-  public get routesTab(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get routesTab(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('app-header .header .nav .nav-item:nth-child(1) .nav-link');
   }
 
-  public get headersTab(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  public get logsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-header .header .nav .nav-item:nth-child(3) .nav-link');
+  }
+
+  public get headersTab(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('app-header .header .nav .nav-item:nth-child(2) .nav-link');
   }
 
-  private get openBtn(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  private get openBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
       '.environments-menu .nav:first-of-type .nav-item .nav-link.open-environment'
     );
   }
 
-  private get startBtn(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  private get startBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.btn[ngbtooltip="Start server"]');
   }
 
-  private get stopBtn(): ChainablePromiseElement<Promise<WebdriverIO.Element>> {
+  private get stopBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.btn[ngbtooltip="Stop server"]');
   }
 
-  private get restartBtn(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  private get restartBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.btn[ngbtooltip="Server needs restart"]');
   }
 
-  private get runningEnvironmentMenuEntry(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  private get runningEnvironmentMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
       '.environments-menu .menu-list .nav-item .nav-link.active.running'
     );
   }
 
-  private get environmentMenuEntry(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  private get environmentMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(this.activeMenuEntrySelector);
   }
 
-  private get activeEnvironmentMenuEntry(): ChainablePromiseElement<
-    Promise<WebdriverIO.Element>
-  > {
+  private get activeEnvironmentMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(this.activeMenuEntrySelector);
   }
 
@@ -123,12 +113,17 @@ class Environments {
 
   public async assertMenuEntryText(
     entryIndex: number,
-    expectedName: string
+    expectedName: string,
+    expectedHostnamePort?: string
   ): Promise<void> {
     const text = await $(
       `.environments-menu .menu-list .nav-item:nth-child(${entryIndex}) .nav-link`
     ).getText();
     expect(text).toContain(expectedName);
+
+    if (expectedHostnamePort) {
+      expect(text).toContain(expectedHostnamePort);
+    }
   }
   public async assertActiveMenuEntryText(expectedName: string): Promise<void> {
     const text = await this.activeEnvironmentMenuEntry.getText();

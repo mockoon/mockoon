@@ -130,7 +130,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           npm run test:desktop
 
-  # run desktop packaged tests when on the main branch (commits on main are always release candidates)
+  # run desktop packaged tests when on the main branch (commits on main are always release candidates) or in a PR
 
   test-desktop-packaged-win:
     name: Desktop packaged Windows - Build and test
@@ -139,7 +139,7 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
 
     env:
       CSC_LINK: ${{secrets.WIN_CSC_LINK}}
@@ -178,7 +178,7 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
 
     env:
       APPLEID: ${{secrets.APPLEID}}
@@ -223,7 +223,7 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
 
     env:
       USE_HARD_LINKS: false

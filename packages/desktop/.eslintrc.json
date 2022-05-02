@@ -21,6 +21,7 @@
         "@typescript-eslint/semi": ["error", "always"],
         "@typescript-eslint/no-shadow": ["error"],
         "@angular-eslint/prefer-on-push-component-change-detection": "error",
+        "@angular-eslint/no-input-rename": "off",
         "@typescript-eslint/consistent-type-definitions": "off",
         "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/naming-convention": "off",

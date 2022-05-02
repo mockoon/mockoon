@@ -11,7 +11,8 @@ export type ViewsNameType =
   | 'ENV_HEADERS'
   | 'ENV_LOGS'
   | 'ENV_PROXY'
-  | 'ENV_SETTINGS';
+  | 'ENV_SETTINGS'
+  | 'ENV_RELOAD';
 
 export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
 
@@ -32,6 +33,7 @@ export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
 
 export type UIState = {
   closing: boolean;
+  saving: boolean;
 };
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
@@ -52,6 +54,7 @@ export type StoreType = {
   environments: Environments;
   environmentsStatus: EnvironmentsStatuses;
   bodyEditorConfig: any;
+  // duplicated routes per environment
   duplicatedRoutes: DuplicatedRoutesTypes;
   environmentsLogs: EnvironmentLogs;
   // the active log UUID per environment

@@ -32,8 +32,15 @@ import {
   toggleRouteMenuItems
 } from 'src/main/libs/menu';
 import { ServerInstance } from 'src/main/libs/server-management';
+import { loadSettings, saveSettings } from 'src/main/libs/settings';
 import { readJSONData, writeJSONData } from 'src/main/libs/storage';
 import { applyUpdate } from 'src/main/libs/update';
+import {
+  unwatchAllEnvironmentFiles,
+  unwatchEnvironmentFile,
+  watchEnvironmentFile
+} from 'src/main/libs/watch-file';
+import { Settings } from 'src/shared/models/settings.model';
 
 declare const isTesting: boolean;
 
@@ -99,25 +106,43 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     applyUpdate();
   });
 
-  ipcMain.on('APP_WATCH_FILE', (event, uuid, filePath) => {
-    // watchEnvironmentFile(uuid, filePath);
-  });
+  ipcMain.handle(
+    'APP_UNWATCH_FILE',
+    async (event, UUID) => await unwatchEnvironmentFile(UUID)
+  );
 
-  ipcMain.handle('APP_UNWATCH_FILE', async (event, filePathOrUUID) => {
-    // return await unwatchEnvironmentFile(filePathOrUUID)
-  });
+  ipcMain.handle(
+    'APP_UNWATCH_ALL_FILE',
+    async (event) => await unwatchAllEnvironmentFiles()
+  );
 
   ipcMain.handle('APP_GET_OS', () => process.platform);
 
   ipcMain.handle(
-    'APP_READ_JSON_DATA',
+    'APP_READ_ENVIRONMENT_DATA',
     async (event, path: string) => await readJSONData(path)
   );
 
   ipcMain.handle(
-    'APP_WRITE_JSON_DATA',
-    async (event, data, path: string, storagePrettyPrint?: boolean) =>
-      await writeJSONData(data, path, storagePrettyPrint)
+    'APP_WRITE_ENVIRONMENT_DATA',
+    async (event, data, path: string, storagePrettyPrint?: boolean) => {
+      unwatchEnvironmentFile(data.uuid);
+
+      await writeJSONData(data, path, storagePrettyPrint);
+
+      watchEnvironmentFile(data.uuid, path);
+    }
+  );
+
+  ipcMain.handle(
+    'APP_READ_SETTINGS_DATA',
+    async (event) => await loadSettings()
+  );
+
+  ipcMain.handle(
+    'APP_WRITE_SETTINGS_DATA',
+    async (event, newSettings: Settings, storagePrettyPrint?: boolean) =>
+      await saveSettings(newSettings, storagePrettyPrint)
   );
 
   ipcMain.handle(

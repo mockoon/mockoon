@@ -16,20 +16,22 @@
   </div>
 
   <div class="modal-body p-0">
-    <ul class="list-group">
-      <li
-        class="list-group-item"
-        *ngFor="let environment of environments$ | async"
-        (click)="chooseTargetEnvironment(environment)"
-      >
-        <div class="ellipsis">{{ environment.name }}</div>
-        <div class="menu-subtitle ellipsis">
-          {{ environment.hostname }}:{{ environment.port }}/{{
-            environment.endpointPrefix
-          }}
-        </div>
-      </li>
-    </ul>
+    <div class="list-group list-group-flush">
+      <ng-container *ngFor="let environment of environments$ | async">
+        <button
+          class="list-group-item list-group-item-action"
+          type="button"
+          (click)="chooseTargetEnvironment(environment)"
+        >
+          <div class="ellipsis">{{ environment.name }}</div>
+          <div class="menu-subtitle ellipsis">
+            {{ environment.hostname }}:{{ environment.port }}/{{
+              environment.endpointPrefix
+            }}
+          </div>
+        </button>
+      </ng-container>
+    </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeModal()">
