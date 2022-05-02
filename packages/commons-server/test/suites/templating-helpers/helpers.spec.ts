@@ -460,7 +460,7 @@ describe('Template parser', () => {
       expect(parseResult).to.be.equal('');
     });
 
-    it('should be usable whithin a #each', () => {
+    it('should be usable within a #each', () => {
       const parseResult = TemplateParser(
         '{{#each (split "1 2 3" " ")}}dolphin,{{/each}}',
         {} as any,
@@ -478,6 +478,82 @@ describe('Template parser', () => {
       );
 
       expect(parseResult).to.be.equal('item123,item456,item789,');
+    });
+  });
+
+  describe('Helper: lowercase', () => {
+    it('should return nothing when no parameter is passed', () => {
+      const parseResult = TemplateParser('{{lowercase}}', {} as any, {} as any);
+
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should lowercase a string', () => {
+      const parseResult = TemplateParser(
+        '{{lowercase "ABCD"}}',
+        {} as any,
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('abcd');
+    });
+
+    it('should be usable within a #switch', () => {
+      const parseResult = TemplateParser(
+        '{{#switch (lowercase "ABCD")}}{{#case "abcd"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
+        {} as any,
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('value1');
+    });
+
+    it('should be compatible with SafeString (queryParam)', () => {
+      const parseResult = TemplateParser(
+        "{{lowercase (queryParam 'param1')}}",
+        { query: { param1: 'ABCD' } } as any,
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('abcd');
+    });
+  });
+
+  describe('Helper: uppercase', () => {
+    it('should return nothing when no parameter is passed', () => {
+      const parseResult = TemplateParser('{{uppercase}}', {} as any, {} as any);
+
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should uppercase a string', () => {
+      const parseResult = TemplateParser(
+        '{{uppercase "abcd"}}',
+        {} as any,
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('ABCD');
+    });
+
+    it('should be usable within a #switch', () => {
+      const parseResult = TemplateParser(
+        '{{#switch (uppercase "abcd")}}{{#case "ABCD"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
+        {} as any,
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('value1');
+    });
+
+    it('should be compatible with SafeString (queryParam)', () => {
+      const parseResult = TemplateParser(
+        "{{uppercase (queryParam 'param1')}}",
+        { query: { param1: 'abcd' } } as any,
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('ABCD');
     });
   });
 

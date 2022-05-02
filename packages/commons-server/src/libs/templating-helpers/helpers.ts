@@ -307,7 +307,6 @@ export const Helpers = {
       return data.substr(fromValue);
     }
   },
-
   // Split a string, default separator is " "
   split: function (...args: any[]) {
     const parameters = args.slice(0, -1);
@@ -333,6 +332,30 @@ export const Helpers = {
 
     return data.split(separator);
   },
+  lowercase: function (...args: any[]) {
+    const parameters = args.slice(0, -1);
+
+    if (parameters.length === 0) {
+      return '';
+    }
+
+    // make it compatible with SafeString (from queryParam, etc)
+    const text = fromSafeString(parameters[0]);
+
+    return text.toLowerCase();
+  },
+  uppercase: function (...args: any[]) {
+    const parameters = args.slice(0, -1);
+
+    if (parameters.length === 0) {
+      return '';
+    }
+
+    // make it compatible with SafeString (from queryParam, etc)
+    const text = fromSafeString(parameters[0]);
+
+    return text.toUpperCase();
+  },
   // Joins Array Values as String with separator
   join: function (arr: string[], sep: string) {
     if (!arr || !(arr instanceof Array)) {
@@ -341,7 +364,6 @@ export const Helpers = {
 
     return arr.join(typeof sep !== 'string' ? ', ' : sep);
   },
-
   slice: function (
     arr: Array<unknown>,
     sliceFrom: number,
@@ -355,12 +377,10 @@ export const Helpers = {
       ? arr.slice(sliceFrom, sliceTo)
       : arr.slice(sliceFrom);
   },
-
   // Returns array length or string length
   len: function (arr: Array<unknown> | string) {
     return typeof arr !== 'string' && !Array.isArray(arr) ? 0 : arr.length;
   },
-
   eq: function (num1: number | string, num2: number | string) {
     const number1 = Number(num1);
     const number2 = Number(num2);
@@ -370,7 +390,6 @@ export const Helpers = {
 
     return number1 === number2;
   },
-
   gt: function (num1: number | string, num2: number | string) {
     const number1 = Number(num1);
     const number2 = Number(num2);
@@ -380,7 +399,6 @@ export const Helpers = {
 
     return number1 > number2;
   },
-
   gte: function (num1: number | string, num2: number | string) {
     const number1 = Number(num1);
     const number2 = Number(num2);
@@ -390,7 +408,6 @@ export const Helpers = {
 
     return number1 >= number2;
   },
-
   lt: function (num1: number | string, num2: number | string) {
     const number1 = Number(num1);
     const number2 = Number(num2);
@@ -400,7 +417,6 @@ export const Helpers = {
 
     return number1 < number2;
   },
-
   lte: function (num1: number | string, num2: number | string) {
     const number1 = Number(num1);
     const number2 = Number(num2);
@@ -410,7 +426,6 @@ export const Helpers = {
 
     return number1 <= number2;
   },
-
   // set a variable to be used in the template
   setVar: function (name: string, value: unknown, options: HelperOptions) {
     if (typeof name === 'object') {
@@ -429,7 +444,6 @@ export const Helpers = {
       options.data[name] = value;
     }
   },
-
   int: function (...args: any[]) {
     const options: { min?: number; max?: number; precision?: number } = {
       precision: 1
