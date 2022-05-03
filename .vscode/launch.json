@@ -14,13 +14,7 @@
         "runtimeExecutable": "${workspaceFolder}/packages/desktop/node_modules/.bin/electron.cmd"
       },
       "args": [".", "--remote-debugging-port=8888"],
-      "outputCapture": "std",
-      "sourceMaps": true,
-      "outFiles": ["${workspaceFolder}/packages/desktop/dist/**/*.js"],
-      "resolveSourceMapLocations": [
-        "${workspaceFolder}/packages/desktop/**",
-        "!**/node_modules/**"
-      ]
+      "sourceMaps": true
     },
     {
       "type": "chrome",
