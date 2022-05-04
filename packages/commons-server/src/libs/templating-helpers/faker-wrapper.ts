@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker';
-import { HelperOptions, SafeString } from 'handlebars';
+import { HelperOptions } from 'handlebars';
 import { IsEmpty } from '../utils';
 
 export const FakerWrapper = {
@@ -57,6 +57,6 @@ export const FakerWrapper = {
       fakedContent = JSON.stringify(fakedContent);
     }
 
-    return new SafeString(fakedContent);
+    return fakedContent;
   }
 };
