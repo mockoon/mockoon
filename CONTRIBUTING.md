@@ -37,19 +37,25 @@ Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./pac
 **Applications**:
 
 - _@mockoon/cli_; the CLI built with Oclif
-- _@mockoon/desktop_: the desktop application built with Electron and Angular
+- _@mockoon/desktop_: the desktop application built with Electron and Angular (for the renderer process)
 
 ## Build and run the applications locally during development
 
-- Prepare the repository:
+Prepare the repository:
 
-  1. Clone the repository: `git@github.com:mockoon/mockoon.git`.
-  2. Install the dependencies and create internal symlinks: `npm run bootstrap`.
-  3. Build the 2 libraries: `npm run build:libs`.
+1. Clone the repository: `git@github.com:mockoon/mockoon.git`.
+2. Install the dependencies and create internal symlinks: `npm run bootstrap`.
+3. Build the 2 libraries: `npm run build:libs`.
+
+For the CLI:
 
 - Build the CLI: `npm run build:cli`.
+- Test CLI's command by running `./packages/cli/bin/run {command} args` where "command" is a CLI command like `start`, `stop`, etc.
 
-- Run the desktop app in watch mode: `npm run build:desktop:dev`.
+For the desktop application:
+
+- Build the application processes (Electron main and renderer processes) `npm run build:desktop:dev` or with hot reload `npm run build:desktop:dev:watch`.
+- Start the application with `npm run start:desktop:dev`.
 
 ## Work on your feature or bugfix
 
