@@ -28,7 +28,7 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "10.0.3",
