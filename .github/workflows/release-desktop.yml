@@ -22,12 +22,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
+      - name: Install Node.js 14.x
+        uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
+          cache: "pnpm"
+      - name: Install dependencies
         run: |
-          npm install -g npm@7
+          pnpm install
       - name: Get version from package.json
         id: app-version
         run: |
@@ -35,10 +40,9 @@ jobs:
           echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
       - name: Build and package application
         run: |
-          npm run bootstrap
-          npm run build:libs
-          npm run build:desktop:prod
-          npm run package:desktop:mac
+          pnpm run build:libs
+          pnpm run build:desktop:prod
+          pnpm run package:desktop:mac
       - name: Verify notarization
         run: |
           codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac/Mockoon.app
@@ -63,12 +67,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
+      - name: Install Node.js 14.x
+        uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
+          cache: "pnpm"
+      - name: Install dependencies
         run: |
-          npm install -g npm@7
+          pnpm install
       - name: Get version from package.json
         id: app-version
         run: |
@@ -76,10 +85,9 @@ jobs:
           echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
       - name: Build and package application
         run: |
-          npm run bootstrap
-          npm run build:libs
-          npm run build:desktop:prod
-          npm run package:desktop:linux
+          pnpm run build:libs
+          pnpm run build:desktop:prod
+          pnpm run package:desktop:linux
       - name: Upload Linux AppImage
         uses: actions/upload-artifact@v2
         with:
@@ -113,12 +121,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
+      - name: Install Node.js 14.x
+        uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
+          cache: "pnpm"
+      - name: Install dependencies
         run: |
-          npm install -g npm@7
+          pnpm install
       - name: Get version from package.json
         id: app-version
         run: |
@@ -127,10 +140,9 @@ jobs:
         shell: pwsh
       - name: Build and package application
         run: |
-          npm run bootstrap
-          npm run build:libs
-          npm run build:desktop:prod
-          npm run package:desktop:win
+          pnpm run build:libs
+          pnpm run build:desktop:prod
+          pnpm run package:desktop:win
         shell: pwsh
       - name: Upload Windows setup exe
         uses: actions/upload-artifact@v2
@@ -152,12 +164,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
+      - name: Install Node.js 14.x
+        uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
+          cache: "pnpm"
+      - name: Install dependencies
         run: |
-          npm install -g npm@7
+          pnpm install
       - name: Get version from package.json
         id: app-version
         run: |
@@ -166,10 +183,9 @@ jobs:
         shell: pwsh
       - name: Build and package application
         run: |
-          npm run bootstrap
-          npm run build:libs
-          npm run build:desktop:prod
-          npm run package:desktop:win:appx
+          pnpm run build:libs
+          pnpm run build:desktop:prod
+          pnpm run package:desktop:win:appx
         shell: pwsh
       - name: Upload Windows appx
         uses: actions/upload-artifact@v2

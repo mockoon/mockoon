@@ -10,25 +10,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
       - name: Install Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
-        run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          cache: "pnpm"
       - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          npm run bootstrap
+          pnpm install
       - name: Lint and check format
         run: |
-          npm run lint
-          npm run format
+          pnpm run lint
+          pnpm run format
 
   test-libs:
     name: Libs - Build and test
@@ -39,25 +35,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
-        run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          cache: "pnpm"
       - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          npm run bootstrap
+          pnpm install
       - name: Build and test
         run: |
-          npm run build:libs
-          npm run test:libs
+          pnpm run build:libs
+          pnpm run test:libs
 
   test-cli:
     name: CLI - Build and test
@@ -68,30 +60,26 @@ jobs:
 
     strategy:
       matrix:
-        node: [12, 14, 15, 16]
+        node: [14, 15, 16]
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - name: Update NPM to v7
-        run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          cache: "pnpm"
       - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          npm run bootstrap
+          pnpm install
       - name: Build and test
         run: |
-          npm run build:libs
-          npm run build:cli
-          npm run test:cli
+          pnpm run build:libs
+          pnpm run build:cli
+          pnpm run test:cli
 
   # run generic unpackaged desktop tests when not on the main branch
   test-desktop:
@@ -105,30 +93,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
-        run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          cache: "pnpm"
       - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          npm run bootstrap
+          pnpm install
       - name: Build
         run: |
-          npm run build:libs
-          npm run build:desktop:ci
+          pnpm run build:libs
+          pnpm run build:desktop:ci
       - name: Run tests
         run: |
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          npm run test:desktop
+          pnpm run test:desktop
 
   # run desktop packaged tests when on the main branch (commits on main are always release candidates) or in a PR
 
@@ -147,29 +131,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
-        run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          cache: "pnpm"
       - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          npm run bootstrap
+          pnpm install
       - name: Build
         run: |
-          npm run build:libs
-          npm run build:desktop:ci
-          npm run package:desktop:test:win
+          pnpm run build:libs
+          pnpm run build:desktop:ci
+          pnpm run package:desktop:test:win
       - name: Run tests
         run: |
-          npm run test:desktop:packaged:win
+          pnpm run test:desktop:packaged:win
 
   test-desktop-packaged-mac:
     name: Desktop packaged MacOS - Build and test
@@ -190,31 +170,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
-        run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          cache: "pnpm"
       - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          npm run bootstrap
+          pnpm install
       - name: Build
         run: |
-          npm run build:libs
-          npm run build:desktop:ci
-          npm run package:desktop:test:mac
+          pnpm run build:libs
+          pnpm run build:desktop:ci
+          pnpm run package:desktop:test:mac
       - name: Run tests
         run: |
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          npm run test:desktop:packaged:mac
+          pnpm run test:desktop:packaged:mac
 
   test-desktop-packaged-linux:
     name: Desktop packaged Linux - Build and test
@@ -230,28 +206,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
-        run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          cache: "pnpm"
       - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
-          npm run bootstrap
+          pnpm install
       - name: Build
         run: |
-          npm run build:libs
-          npm run build:desktop:ci
-          npm run package:desktop:test:linux
+          pnpm run build:libs
+          pnpm run build:desktop:ci
+          pnpm run package:desktop:test:linux
       - name: Run tests
         run: |
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          npm run test:desktop:packaged:linux
+          pnpm run test:desktop:packaged:linux

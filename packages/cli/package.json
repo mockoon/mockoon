@@ -43,10 +43,11 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "@mockoon/commons": "2.9.1",
-    "@mockoon/commons-server": "2.16.4",
+    "@mockoon/commons": "workspace:*",
+    "@mockoon/commons-server": "workspace:*",
     "@oclif/command": "1.8.16",
     "@oclif/config": "1.18.3",
+    "@oclif/errors": "1.3.5",
     "@oclif/plugin-help": "5.1.12",
     "axios": "0.26.1",
     "cli-ux": "6.0.9",

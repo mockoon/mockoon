@@ -17,29 +17,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.0.0
+      - name: Install Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: Update NPM to v7
+          cache: "pnpm"
+      - name: Install dependencies
         run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          pnpm install
       - name: Build
         run: |
-          npm run bootstrap
-          npm run build:libs
-          npm run build:cli
+          pnpm run build:libs
+          pnpm run build:cli
       - name: Add NPM token
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
           git update-index --assume-unchanged .npmrc
       - name: NPM publish
         run: |
-          npm run publish
+          pnpm publish
 
   cli-docker:
     name: Push Docker image

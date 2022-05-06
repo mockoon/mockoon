@@ -2,5 +2,7 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "eslint.packageManager": "pnpm",
+  "npm.packageManager": "pnpm"
 }

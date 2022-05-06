@@ -27,7 +27,7 @@ Please respect this workflow to ensure that:
 
 ## Monorepo
 
-Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./packages/` folder:
+Mockoon is using a monorepo setup (with pnpm). We have 4 packages in the `./packages/` folder:
 
 **Libraries** used by the desktop application and the CLI:
 
@@ -44,18 +44,18 @@ Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./pac
 Prepare the repository:
 
 1. Clone the repository: `git@github.com:mockoon/mockoon.git`.
-2. Install the dependencies and create internal symlinks: `npm run bootstrap`.
-3. Build the 2 libraries: `npm run build:libs`.
+2. Install the dependencies and create internal symlinks: `pnpm install`.
+3. Build the 2 libraries: `pnpm run build:libs`.
 
 For the CLI:
 
-- Build the CLI: `npm run build:cli`.
+- Build the CLI: `pnpm run build:cli`.
 - Test CLI's command by running `./packages/cli/bin/run {command} args` where "command" is a CLI command like `start`, `stop`, etc.
 
 For the desktop application:
 
-- Build the application processes (Electron main and renderer processes) `npm run build:desktop:dev` or with hot reload `npm run build:desktop:dev:watch`.
-- Start the application with `npm run start:desktop:dev`.
+- Build the application processes (Electron main and renderer processes) `pnpm run build:desktop:dev` or with hot reload `pnpm run build:desktop:dev:watch`.
+- Start the application with `pnpm run start:desktop:dev`.
 
 ## Work on your feature or bugfix
 
@@ -79,11 +79,11 @@ When a feature or bugfix requires a change in the data model (`Environment`, `Ro
 
 ## Run the tests
 
-Some unit and integration tests are present in the 4 packages. You can run them with `npm run test` after building the 4 packages:
+Some unit and integration tests are present in the 4 packages. You can run them with `pnpm run test` after building the 4 packages:
 
-1. `npm un build:libs`.
-2. `npm un build:cli`.
-3. `npm un build:desktop:ci`.
+1. `pnpm un build:libs`.
+2. `pnpm un build:cli`.
+3. `pnpm un build:desktop:ci`.
 
 These tests will also be run on each commit or pull request in the CI environment.
 
@@ -95,7 +95,7 @@ Open a pull request to be merged in the `main` branch. All branches should start
 
 ## **[Maintainers only]** Build, package and release the applications for production
 
-- Increment the version (which follows [semver](https://semver.org/)) in each package.json file depending on the changes, using `npm run set-versions`. To ignore a package give it the same version. Lerna will take care of increasing the internal dependencies version numbers.
+- Increment the versions (which follows [semver](https://semver.org/)) in each package.json file depending on the changes.
 - Push.
 
 **Cli's process:**
@@ -108,7 +108,7 @@ Create a `cli-vx.x.x` tag to automatically release the CLI. The libraries and th
 
 1. Create a `vx.x.x` tag to trigger the build of binaries for the desktop application.
    The desktop Electron application will be packaged using the local symlinked libraries. So, the desktop's release can be independent from the CLI's release.
-   The GitHub workflow will automatically package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing and notarization. Code signing is currently managed by @255kb.
+   The GitHub workflow will automatically package the application for different platforms with `pnpm run package:win|mac|linux`. Including Windows/macOS code signing and notarization. Code signing is currently managed by @255kb.
    Binaries will be saved as Actions artifacts.
 
 2. Create a GitHub release targeting the `vx.x.x` tag.

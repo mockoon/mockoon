@@ -49,8 +49,8 @@
     "package:test:mac": "npm run clean-packages && electron-builder --publish never --config ./build-configs/test/electron-builder.mac.js"
   },
   "dependencies": {
-    "@mockoon/commons": "2.9.1",
-    "@mockoon/commons-server": "2.16.4",
+    "@mockoon/commons": "workspace:*",
+    "@mockoon/commons-server": "workspace:*",
     "axios": "0.26.1",
     "chokidar": "3.5.3",
     "electron-json-storage": "4.5.0",
@@ -97,7 +97,7 @@
     "@wdio/spec-reporter": "7.19.1",
     "bootstrap": "4.6.0",
     "brace": "0.11.1",
-    "chromedriver": "99.0.0",
+    "chromedriver": "100.0.0",
     "date-fns": "2.28.0",
     "electron": "18.0.0",
     "electron-builder": "23.0.4",
