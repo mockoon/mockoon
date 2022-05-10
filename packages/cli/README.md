@@ -99,7 +99,7 @@ $ mockoon-cli start --data https://domain.com/your-opeanapi-file.yaml
 
 ## Compatibility
 
-Mockoon's CLI has been tested on Node.js versions 12, 14, 15 and 16.
+Mockoon's CLI has been tested on Node.js versions 14, 15, 16 and 18.
 
 ## Commands
 

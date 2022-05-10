@@ -13,13 +13,13 @@ jobs:
       - name: Install Node.js 14.x
         uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: '14.x'
       - name: Update NPM to v7
         run: |
           npm install -g npm@7
       - uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -42,13 +42,13 @@ jobs:
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: '14.x'
       - name: Update NPM to v7
         run: |
           npm install -g npm@7
       - uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -68,7 +68,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [12, 14, 15, 16]
+        node: [14, 15, 16]
 
     steps:
       - uses: actions/checkout@v2
@@ -81,7 +81,7 @@ jobs:
           npm install -g npm@7
       - uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -108,13 +108,13 @@ jobs:
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: '14.x'
       - name: Update NPM to v7
         run: |
           npm install -g npm@7
       - uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -150,13 +150,13 @@ jobs:
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: '14.x'
       - name: Update NPM to v7
         run: |
           npm install -g npm@7
       - uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -193,13 +193,13 @@ jobs:
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: '14.x'
       - name: Update NPM to v7
         run: |
           npm install -g npm@7
       - uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -233,13 +233,13 @@ jobs:
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
+          node-version: '14.x'
       - name: Update NPM to v7
         run: |
           npm install -g npm@7
       - uses: actions/cache@v2
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
