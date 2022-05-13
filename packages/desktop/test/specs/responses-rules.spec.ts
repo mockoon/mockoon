@@ -31,6 +31,7 @@ describe('Responses rules', () => {
     });
 
     it('should add a url params rule to response 200, if fulfilled should return 200', async () => {
+      await routes.openRouteResponseMenu();
       await routes.selectRouteResponse(2);
       await routes.switchTab('RULES');
       await routes.addResponseRule({
@@ -52,6 +53,7 @@ describe('Responses rules', () => {
     });
 
     it('should add a query string rule to response 500, both routes rules can be fulfilled but returns 500', async () => {
+      await routes.openRouteResponseMenu();
       await routes.selectRouteResponse(1);
       await routes.switchTab('RULES');
       await routes.addResponseRule({
@@ -378,6 +380,7 @@ describe('Responses rules', () => {
 
     it('should add 2 OR rules on response 2, verify operator switch presence', async () => {
       await routes.select(3);
+      await routes.openRouteResponseMenu();
       await routes.selectRouteResponse(2);
       await routes.switchTab('RULES');
       await routes.addResponseRule({
@@ -398,6 +401,7 @@ describe('Responses rules', () => {
     });
 
     it('should add 3 AND rules on response 3, verify operator switch presence', async () => {
+      await routes.openRouteResponseMenu();
       await routes.selectRouteResponse(3);
       await routes.switchTab('RULES');
       await routes.addResponseRule({

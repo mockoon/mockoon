@@ -60,8 +60,11 @@ export class ResponseRulesInterpreter {
             );
       });
 
+      // if no rules were fulfilled fin the default one, or first one if no default
       if (response === undefined) {
-        response = this.routeResponses[0];
+        response =
+          this.routeResponses.find((routeResponse) => routeResponse.default) ||
+          this.routeResponses[0];
       }
 
       return response;

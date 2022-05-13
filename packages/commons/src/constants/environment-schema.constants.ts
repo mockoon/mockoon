@@ -69,7 +69,8 @@ export const RouteResponseDefault: RouteResponse = {
   rules: [],
   rulesOperator: 'OR',
   disableTemplating: false,
-  fallbackTo404: false
+  fallbackTo404: false,
+  default: false
 };
 
 export const ResponseRuleDefault: ResponseRule = {
@@ -180,7 +181,8 @@ const RouteResponseSchema = Joi.object<RouteResponse, true>({
     .required(),
   fallbackTo404: Joi.boolean()
     .failover(RouteResponseDefault.fallbackTo404)
-    .required()
+    .required(),
+  default: Joi.boolean().failover(RouteResponseDefault.default).required()
 });
 
 export const RouteSchema = Joi.object<Route, true>({

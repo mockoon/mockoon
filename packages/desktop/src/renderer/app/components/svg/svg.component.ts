@@ -64,6 +64,7 @@ export class SvgComponent {
     | 'featured_play_list'
     | 'find_in_page'
     | 'flag'
+    | 'outlined_flag'
     | 'folder'
     | 'folder_open'
     | 'history'

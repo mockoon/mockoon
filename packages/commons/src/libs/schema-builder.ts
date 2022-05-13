@@ -42,7 +42,8 @@ export const CloneRouteResponse = (
 ): RouteResponse => ({
   ...CloneObject(routeResponse),
   uuid: uuid(),
-  label: `${routeResponse.label} (copy)`
+  label: `${routeResponse.label} (copy)`,
+  default: false
 });
 
 /**
@@ -50,7 +51,9 @@ export const CloneRouteResponse = (
  */
 export const BuildRoute = (hasDefaultRouteResponse = true): Route => ({
   ...RouteDefault,
-  responses: hasDefaultRouteResponse ? [BuildRouteResponse()] : []
+  responses: hasDefaultRouteResponse
+    ? [{ ...BuildRouteResponse(), default: true }]
+    : []
 });
 
 /**

@@ -30,6 +30,21 @@ class Utils {
     }
   }
 
+  public async assertHasAttribute(
+    element: ChainablePromiseElement<WebdriverIO.Element>,
+    attributeName: string,
+    content: string,
+    reverse = false
+  ): Promise<void> {
+    const attributeContent = await element.getAttribute(attributeName);
+
+    if (reverse) {
+      expect(attributeContent).not.toContain(content);
+    } else {
+      expect(attributeContent).toContain(content);
+    }
+  }
+
   public async assertElementText(
     element: ChainablePromiseElement<WebdriverIO.Element>,
     text: string

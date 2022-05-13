@@ -13,6 +13,7 @@ export type RouteResponse = {
   sendFileAsBody: boolean;
   disableTemplating: boolean;
   fallbackTo404: boolean;
+  default: boolean;
 };
 
 export type ResponseRuleOperators = 'equals' | 'regex' | 'null' | 'empty_array';

@@ -318,6 +318,9 @@ export class OpenAPIConverter {
             });
           }
 
+          // mark the first route response as default
+          routeResponses[0].default = true;
+
           const newRoute: Route = {
             ...BuildRoute(false),
             documentation: parsedRoute.summary || parsedRoute.description || '',
