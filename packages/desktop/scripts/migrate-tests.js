@@ -9,8 +9,7 @@ const glob = require('glob');
  */
 
 glob(
-  './test/data/mock-envs/*.json',
-  './test/data/res/import-openapi/references/@(*v2|*v3).json',
+  `{./test/data/mock-envs/*.json,./test/data/res/import-openapi/references/@(*v2|*v3).json}`,
   {
     ignore: [
       './test/data/mock-envs/incompatible.json',

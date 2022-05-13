@@ -1,6 +1,6 @@
 {
   "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-  "lastMigration": 19,
+  "lastMigration": 20,
   "name": "Environment logs 1",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -29,7 +29,8 @@
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         },
         {
           "uuid": "10e32786-2fc9-4490-9f85-b4fe1763717a",
@@ -50,7 +51,8 @@
           ],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": false
         },
         {
           "uuid": "31f4e399-4878-4bbe-bf86-6fcaf29e5bba",
@@ -64,7 +66,8 @@
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "sequentialResponse": false
@@ -89,7 +92,8 @@
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         }
       ],
       "sequentialResponse": false

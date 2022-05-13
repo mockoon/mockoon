@@ -1,6 +1,6 @@
 {
   "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-  "lastMigration": 19,
+  "lastMigration": 20,
   "name": "Demo users API V2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -28,7 +28,8 @@
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         }
       ],
       "enabled": true,
@@ -60,7 +61,8 @@
           ],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         },
         {
           "uuid": "e84c9929-6047-11ea-b4a3-058bbf68d234",
@@ -81,7 +83,8 @@
           ],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
@@ -113,7 +116,8 @@
           ],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         },
         {
           "uuid": "e84c992d-6047-11ea-b4a3-058bbf68d234",
@@ -134,7 +138,8 @@
           ],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
@@ -166,7 +171,8 @@
           ],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         }
       ],
       "enabled": true,
@@ -191,7 +197,8 @@
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         }
       ],
       "enabled": true,

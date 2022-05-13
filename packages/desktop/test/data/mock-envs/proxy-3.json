@@ -1,6 +1,6 @@
 {
   "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-  "lastMigration": 19,
+  "lastMigration": 20,
   "name": "Proxy disabled",
   "endpointPrefix": "",
   "latency": 0,
@@ -26,7 +26,8 @@
           "disableTemplating": false,
           "rules": [],
           "rulesOperator": "OR",
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         }
       ],
       "sequentialResponse": false

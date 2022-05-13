@@ -186,4 +186,17 @@ describe('Migrations', () => {
       });
     });
   });
+
+  describe('migration n. 20', () => {
+    it('should add a `default` property to the route responses', () => {
+      const environment = {
+        routes: [{ responses: [{}, {}] }]
+      };
+
+      applyMigration(20, environment);
+
+      expect(environment.routes[0].responses[0]['default']).to.equal(true);
+      expect(environment.routes[0].responses[1]['default']).to.equal(false);
+    });
+  });
 });

@@ -147,7 +147,6 @@ class Routes {
   }
 
   public async selectRouteResponse(index: number) {
-    await $('#route-responses-menu .dropdown-toggle').click();
     await $(
       `.route-responses-dropdown-menu .dropdown-item:nth-child(${index})`
     ).click();
@@ -164,6 +163,40 @@ class Routes {
 
     await deleteButton.click();
     await deleteButton.click();
+  }
+
+  public async openRouteResponseMenu() {
+    await $('#route-responses-menu .dropdown-toggle').click();
+  }
+
+  public async assertDefaultRouteResponse(index: number, reverse = false) {
+    const flag = $(
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2) app-svg`
+    );
+
+    if (reverse) {
+      await utils.assertHasAttribute(flag, 'icon', 'outlined_flag');
+    } else {
+      await utils.assertHasAttribute(flag, 'icon', 'flag');
+    }
+  }
+
+  public async assertDefaultRouteResponseClass(
+    index: number,
+    className: string
+  ) {
+    const flagContainer = $(
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2)`
+    );
+
+    await utils.assertHasClass(flagContainer, className);
+  }
+
+  public async setDefaultRouteResponse(index: number) {
+    const flag = $(
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2)`
+    );
+    await flag.click();
   }
 
   public async duplicateRouteResponse() {

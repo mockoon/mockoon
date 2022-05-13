@@ -19,6 +19,7 @@ import {
   RouteResponse,
   RouteResponseDefault
 } from '@mockoon/commons';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { combineLatest, from, merge, Observable, Subject } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -48,7 +49,10 @@ import {
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { updateRouteAction } from 'src/renderer/app/stores/actions';
+import {
+  setDefaultRouteResponseAction,
+  updateRouteAction
+} from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
 
@@ -300,7 +304,11 @@ default?
   /**
    * Set the application active route response
    */
-  public setActiveRouteResponse(routeResponseUUID: string) {
+  public setActiveRouteResponse(
+    routeResponseUUID: string,
+    routeResponsesDropdown: NgbDropdown
+  ) {
+    routeResponsesDropdown.close();
     this.environmentsService.setActiveRouteResponse(routeResponseUUID);
   }
 
@@ -385,6 +393,26 @@ default?
       } catch (e) {
         // ignore any errors with parsing / stringifying the JSON
       }
+    }
+  }
+
+  /**
+   * Set a route response as default
+   *
+   * @param routeResponseIndex
+   * @param event
+   */
+  public setDefaultRouteResponse(
+    routeResponseIndex: number | null,
+    event: MouseEvent
+  ) {
+    /* event.preventDefault();
+    event.stopImmediatePropagation(); */
+    // prevent dropdown item selection
+    event.stopPropagation();
+
+    if (routeResponseIndex != null) {
+      this.store.update(setDefaultRouteResponseAction(routeResponseIndex));
     }
   }
 

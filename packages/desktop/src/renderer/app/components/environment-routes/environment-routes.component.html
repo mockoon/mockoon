@@ -92,7 +92,12 @@
             </button>
 
             <!-- Route responses dropdown -->
-            <div class="flex-fill z-index-1 ellipsis" ngbDropdown>
+            <div
+              class="flex-fill z-index-1 ellipsis"
+              ngbDropdown
+              [autoClose]="'outside'"
+              #routeResponsesDropdown="ngbDropdown"
+            >
               <button
                 type="button"
                 class="btn btn-custom dropdown-toggle"
@@ -131,26 +136,56 @@
                     active: activeRouteResponse?.uuid === routeResponse.uuid
                   }"
                   ngbDropdownItem
-                  (click)="setActiveRouteResponse(routeResponse.uuid)"
                   cdkDrag
                   cdkDragLockAxis="y"
                   cdkDragBoundary=".dropdown-menu.route-responses-dropdown-menu"
                 >
-                  <span class="flex-grow-1 mr-2 ellipsis"
-                    ><span class="pr-2"
+                  <span
+                    class="flex-grow-1 mr-2 ellipsis"
+                    (click)="
+                      setActiveRouteResponse(
+                        routeResponse.uuid,
+                        routeResponsesDropdown
+                      )
+                    "
+                  >
+                    <span class="pr-2"
                       >Response {{ routeResponseIndex + 1 }} ({{
                         routeResponse.statusCode
                       }})</span
                     >
-                    {{ routeResponse.label }}</span
-                  >
+                    {{ routeResponse.label }}
+                  </span>
                   <span
-                    ><app-svg
-                      *ngIf="routeResponseIndex === 0"
-                      class="text-primary"
-                      icon="flag"
-                      ngbTooltip="Default response served if no rule matches"
-                    ></app-svg>
+                    *ngIf="routeResponse.default"
+                    (click)="setDefaultRouteResponse(null, $event)"
+                    class="px-2"
+                    [ngClass]="{
+                      'text-primary':
+                        !activeRoute.randomResponse &&
+                        !activeRoute.sequentialResponse,
+                      'text-muted':
+                        activeRoute.randomResponse ||
+                        activeRoute.sequentialResponse
+                    }"
+                    [ngbTooltip]="
+                      activeRoute.randomResponse ||
+                      activeRoute.sequentialResponse
+                        ? 'Default response disabled by random or sequential responses'
+                        : 'Default response served if no rule matches'
+                    "
+                  >
+                    <app-svg icon="flag"></app-svg
+                  ></span>
+                  <span
+                    *ngIf="!routeResponse.default"
+                    (click)="
+                      setDefaultRouteResponse(routeResponseIndex, $event)
+                    "
+                    class="text-muted px-2"
+                    ngbTooltip="Make route response as default"
+                  >
+                    <app-svg icon="outlined_flag"></app-svg>
                   </span>
                 </button>
               </div>

@@ -37,6 +37,8 @@
     "build:desktop:dev": "lerna run --stream --scope @mockoon/desktop build:dev:all",
     "build:desktop:ci": "lerna run --scope @mockoon/desktop build:ci:all",
     "build:desktop:prod": "lerna run --scope @mockoon/desktop build:prod:all",
+    "test:commons": "lerna run --scope @mockoon/commons test",
+    "test:commons-server": "lerna run --scope @mockoon/commons-server test",
     "test:libs": "lerna run --scope @mockoon/commons test && lerna run --scope @mockoon/commons-server test",
     "test:cli": "lerna run --scope @mockoon/cli test",
     "test:desktop": "lerna run --scope @mockoon/desktop test",

@@ -643,6 +643,14 @@ export const environmentReducer = (
         (routeResponse) => routeResponse.uuid !== state.activeRouteResponseUUID
       );
 
+      // mark first route response as default if needed
+      const defaultRouteResponseIndex = newRouteResponses.findIndex(
+        (routeResponse) => routeResponse.default
+      );
+      if (defaultRouteResponseIndex === -1) {
+        newRouteResponses[0] = { ...newRouteResponses[0], default: true };
+      }
+
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === state.activeEnvironmentUUID) {
           return {
@@ -864,6 +872,51 @@ export const environmentReducer = (
 
                       return response;
                     })
+                  };
+                }
+
+                return route;
+              })
+            };
+          }
+
+          return environment;
+        })
+      };
+      break;
+    }
+
+    case ActionTypes.SET_DEFAULT_ROUTE_RESPONSE: {
+      newState = {
+        ...state,
+        environments: state.environments.map((environment) => {
+          if (environment.uuid === state.activeEnvironmentUUID) {
+            return {
+              ...environment,
+              routes: environment.routes.map((route) => {
+                if (route.uuid === state.activeRouteUUID) {
+                  return {
+                    ...route,
+                    responses: route.responses.map(
+                      (response, responseIndex) => {
+                        if (responseIndex === action.routeResponseIndex) {
+                          return { ...response, default: true };
+                        } else if (response.default) {
+                          return { ...response, default: false };
+                        } else {
+                          return response;
+                        }
+
+                        /* if (response.uuid === state.activeRouteResponseUUID) {
+                        return {
+                          ...response,
+                          ...action.properties
+                        };
+                      }
+
+                      return response; */
+                      }
+                    )
                   };
                 }
 

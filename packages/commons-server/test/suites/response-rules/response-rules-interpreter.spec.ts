@@ -22,7 +22,8 @@ const routeResponse403: RouteResponse = {
   disableTemplating: false,
   fallbackTo404: false,
   rules: [],
-  rulesOperator: 'OR'
+  rulesOperator: 'OR',
+  default: false
 };
 
 const routeResponseTemplate: RouteResponse = {
@@ -42,7 +43,8 @@ const routeResponseTemplate: RouteResponse = {
   disableTemplating: false,
   fallbackTo404: false,
   rules: [],
-  rulesOperator: 'OR'
+  rulesOperator: 'OR',
+  default: false
 };
 
 describe('Response rules interpreter', () => {
@@ -2361,6 +2363,68 @@ describe('Response rules interpreter', () => {
         false
       ).chooseResponse(1);
       expect(routeResponse.body).to.be.equal('response2');
+    });
+
+    it('should return response marked as default if no rule fulfilled', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: ''
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          { ...routeResponseTemplate, body: 'content', default: true }
+        ],
+        request,
+        false,
+        false
+      ).chooseResponse(1);
+
+      expect(routeResponse.body).to.be.equal('content');
+    });
+
+    it('should return response if rules fulfilled and ignore the response marked as default', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        stringBody: 'bodyvalue',
+        body: 'bodyvalue'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          {
+            ...routeResponseTemplate,
+            body: 'content1',
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: 'bodyvalue',
+                operator: 'regex'
+              }
+            ],
+            rulesOperator: 'OR',
+            default: false
+          },
+          { ...routeResponseTemplate, body: 'content2', default: true }
+        ],
+        request,
+        false,
+        false
+      ).chooseResponse(1);
+
+      expect(routeResponse.body).to.be.equal('content1');
     });
   });
 });

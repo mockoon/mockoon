@@ -43,6 +43,7 @@ export const enum ActionTypes {
   SET_ACTIVE_ROUTE_RESPONSE = 'SET_ACTIVE_ROUTE_RESPONSE',
   ADD_ROUTE_RESPONSE = 'ADD_ROUTE_RESPONSE',
   UPDATE_ROUTE_RESPONSE = 'UPDATE_ROUTE_RESPONSE',
+  SET_DEFAULT_ROUTE_RESPONSE = 'SET_DEFAULT_ROUTE_RESPONSE',
   LOG_REQUEST = 'LOG_REQUEST',
   CLEAR_LOGS = 'CLEAR_LOGS',
   SET_ACTIVE_ENVIRONMENT_LOG = 'SET_ACTIVE_ENVIRONMENT_LOG',
@@ -355,7 +356,7 @@ export const duplicateRouteToAnotherEnvironmentAction = (
   } as const);
 
 /**
- * Update a route response
+ * Update the active route response
  *
  * @param properties - properties to update
  */
@@ -365,6 +366,17 @@ export const updateRouteResponseAction = (
   ({
     type: ActionTypes.UPDATE_ROUTE_RESPONSE,
     properties
+  } as const);
+
+/**
+ * Set a route response as default
+ *
+ * @param routeResponseIndex - route response index
+ */
+export const setDefaultRouteResponseAction = (routeResponseIndex: number) =>
+  ({
+    type: ActionTypes.SET_DEFAULT_ROUTE_RESPONSE,
+    routeResponseIndex
   } as const);
 
 /**
@@ -479,6 +491,7 @@ export type Actions =
   | ReturnType<typeof setActiveRouteResponseAction>
   | ReturnType<typeof addRouteResponseAction>
   | ReturnType<typeof updateRouteResponseAction>
+  | ReturnType<typeof setDefaultRouteResponseAction>
   | ReturnType<typeof logRequestAction>
   | ReturnType<typeof clearLogsAction>
   | ReturnType<typeof setActiveEnvironmentLogUUIDAction>

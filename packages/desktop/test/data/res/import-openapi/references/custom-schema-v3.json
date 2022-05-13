@@ -1,6 +1,6 @@
 {
   "uuid": "",
-  "lastMigration": 19,
+  "lastMigration": 20,
   "name": "Sample v3 schema",
   "endpointPrefix": "api",
   "latency": 0,
@@ -24,7 +24,8 @@
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         }
       ],
       "enabled": true,
@@ -49,7 +50,8 @@
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         }
       ],
       "enabled": true,
@@ -79,7 +81,8 @@
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
-          "fallbackTo404": false
+          "fallbackTo404": false,
+          "default": true
         }
       ],
       "enabled": true,
