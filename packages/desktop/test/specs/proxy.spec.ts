@@ -1,5 +1,7 @@
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
+import environmentsProxy from '../libs/environments-proxy';
+import environmentsSettings from '../libs/environments-settings';
 import headersUtils from '../libs/headers-utils';
 import http from '../libs/http';
 import { HttpCall } from '../libs/models';
@@ -23,6 +25,17 @@ const getAnswerCall: HttpCall = {
 };
 
 const getPrefixedAnswerCall: HttpCall = {
+  description: 'Call GET answer',
+  protocol: 'https',
+  path: '/prefix/answer',
+  method: 'GET',
+  testedResponse: {
+    body: '42',
+    status: 200
+  }
+};
+
+const getDoublePrefixedAnswerCall: HttpCall = {
   description: 'Call GET answer',
   protocol: 'https',
   path: '/prefix/answer',
@@ -209,5 +222,25 @@ describe('Proxy (with TLS and proxy headers)', () => {
     await environments.select(4);
     await environments.start();
     await http.assertCallWithPort(getPrefixedAnswerCall, 3003);
+  });
+
+  it('should test the remove prefix option when proxy host is prefixed too', async () => {
+    await environments.select(1);
+    await navigation.switchView('ENV_SETTINGS');
+    await environmentsSettings.setSettingValue(
+      'endpointPrefix',
+      'targetprefix'
+    );
+    await environments.restart();
+
+    await environments.select(4);
+    await navigation.switchView('ENV_PROXY');
+    await environmentsProxy.setOptionValue(
+      'proxyHost',
+      'https://127.0.0.1:3000/targetprefix'
+    );
+    await environments.restart();
+
+    await http.assertCallWithPort(getDoublePrefixedAnswerCall, 3003);
   });
 });
