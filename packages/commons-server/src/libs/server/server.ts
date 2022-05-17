@@ -579,6 +579,18 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           secure: false,
           changeOrigin: true,
           logProvider: this.options.logProvider,
+          pathRewrite: (path, req) => {
+            if (
+              this.environment.proxyRemovePrefix === true &&
+              this.environment.endpointPrefix.length > 0
+            ) {
+              const regExp = new RegExp(`^/${this.environment.endpointPrefix}`);
+
+              return path.replace(regExp, '');
+            }
+
+            return path;
+          },
           ssl: { ...this.tlsOptions, agent: false },
           onProxyReq: (proxyReq, request, response) => {
             this.refreshEnvironment();
@@ -590,14 +602,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               proxyReq,
               request as Request
             );
-
-            if (
-              this.environment.proxyRemovePrefix === true &&
-              this.environment.endpointPrefix.length > 0
-            ) {
-              const regExp = new RegExp(`^/${this.environment.endpointPrefix}`);
-              proxyReq.path = proxyReq.path.replace(regExp, '');
-            }
 
             // re-stream the body (intercepted by body parser method)
             if (request.rawBody) {
