@@ -155,7 +155,7 @@ describe('Template parser', () => {
 
     it('should set a variable in a different scope: repeat', () => {
       const parseResult = TemplateParser(
-        "{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{@testvar}}{{/repeat}}",
+        "{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{testvar}}{{/repeat}}",
         {} as any,
         {} as any
       );
@@ -164,11 +164,20 @@ describe('Template parser', () => {
 
     it('should set a variable in root scope and child scope: repeat', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'outsidevar' 'test'}}{{@root.outsidevar}}{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{@testvar}}{{outsidevar}}{{/repeat}}",
+        "{{setVar 'outsidevar' 'test'}}{{outsidevar}}{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{testvar}}{{outsidevar}}{{/repeat}}",
         {} as any,
         {} as any
       );
       expect(parseResult).to.be.equal('test0test1test2test3test4test');
+    });
+
+    it('should set variables in two nested repeat', () => {
+      const parseResult = TemplateParser(
+        "{{#repeat 1 comma=false}}{{setVar 'itemId' 25}}Item:{{itemId}}{{setVar 'nb' 1}}{{#repeat nb comma=false}}{{setVar 'childId' 56}}Child:{{childId}}parent:{{itemId}}{{/repeat}}{{/repeat}}",
+        {} as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal('Item:25Child:56parent:25');
     });
 
     it('should set a variable to empty value if none provided', () => {
