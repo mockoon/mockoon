@@ -112,8 +112,8 @@ export function CreateTransaction(
     try {
         queryString = decodeURI(queryString);
     } catch (err) {
-        queryString = "";
-        console.error("ERROR DECODING URI: ", err.message);
+        queryString = '';
+        console.error('ERROR DECODING URI: ', err instanceof Error ? err.message : err);
     }
 
   return {
