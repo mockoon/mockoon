@@ -24,18 +24,17 @@ import {
  * args[args.length - 1]
  */
 export const Helpers = {
-  repeat: function (min: number, max: number, options: HelperOptions | any) {
+  repeat: function (...args: any[]) {
     let content = '';
     let count = 0;
+    const options = args[args.length - 1];
     const data = { ...options };
 
     if (arguments.length === 3) {
       // If given two numbers then pick a random one between the two
-      count = RandomInt(min, max);
+      count = RandomInt(args[0], args[1]);
     } else if (arguments.length === 2) {
-      // If given one number then just use it as a fixed repeat total
-      options = max;
-      count = min;
+      count = args[0];
     } else {
       throw new Error('The repeat helper requires a numeric param');
     }
@@ -443,7 +442,7 @@ export const Helpers = {
     return number1 <= number2;
   },
   // set a variable to be used in the template
-  setVar: function (name: string, value: unknown, options: HelperOptions) {
+  setVar: function (name: string, value: unknown) {
     if (typeof name === 'object') {
       return;
     }
@@ -453,12 +452,7 @@ export const Helpers = {
       return;
     }
 
-    // we are at the root level
-    if (options.data.root) {
-      options.data.root[name] = value;
-    } else {
-      options.data[name] = value;
-    }
+    this[name] = value;
   },
   int: function (...args: any[]) {
     const options: { min?: number; max?: number; precision?: number } = {
