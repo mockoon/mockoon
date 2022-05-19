@@ -18,15 +18,15 @@ describe('Create and delete routes', () => {
   });
 
   it('should remove 3 routes over 4', async () => {
-    await contextMenu.clickAndConfirm('routes', 1, 5);
-    await contextMenu.clickAndConfirm('routes', 1, 5);
-    await contextMenu.clickAndConfirm('routes', 1, 5);
+    await contextMenu.clickAndConfirm('routes', 1, 6);
+    await contextMenu.clickAndConfirm('routes', 1, 6);
+    await contextMenu.clickAndConfirm('routes', 1, 6);
 
     await routes.assertCount(1);
   });
 
   it('should display a message when no route is present', async () => {
-    await contextMenu.clickAndConfirm('routes', 1, 5);
+    await contextMenu.clickAndConfirm('routes', 1, 6);
     await routes.assertCount(0);
     await utils.assertElementText(environments.routesTab, 'Routes');
 

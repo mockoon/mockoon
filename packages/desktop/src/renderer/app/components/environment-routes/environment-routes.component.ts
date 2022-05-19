@@ -40,6 +40,7 @@ import {
   StatusCodes
 } from 'src/renderer/app/constants/routes.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { BuildFullPath } from 'src/renderer/app/libs/utils.lib';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
@@ -319,19 +320,10 @@ default?
     const activeEnvironment = this.store.getActiveEnvironment();
     const activeRoute = this.store.getActiveRoute();
 
-    let routeUrl =
-      (activeEnvironment.tlsOptions.enabled ? 'https://' : 'http://') +
-      'localhost:' +
-      activeEnvironment.port +
-      '/';
-
-    if (activeEnvironment.endpointPrefix) {
-      routeUrl += activeEnvironment.endpointPrefix + '/';
-    }
-
-    routeUrl += activeRoute.endpoint;
-
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', routeUrl);
+    MainAPI.send(
+      'APP_OPEN_EXTERNAL_LINK',
+      BuildFullPath(activeEnvironment, activeRoute)
+    );
   }
 
   /**

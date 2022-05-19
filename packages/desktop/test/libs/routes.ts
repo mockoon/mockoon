@@ -66,7 +66,7 @@ class Routes {
   }
 
   public async remove(index: number) {
-    await contextMenu.clickAndConfirm('routes', index, 5);
+    await contextMenu.clickAndConfirm('routes', index, 6);
   }
 
   public async assertActiveMenuEntryText(expectedText: string): Promise<void> {
@@ -127,7 +127,7 @@ class Routes {
   }
 
   public async toggleDisable(routeIndex: number) {
-    await contextMenu.click('routes', routeIndex, 4);
+    await contextMenu.click('routes', routeIndex, 5);
   }
 
   public async setFilter(text: string) {
