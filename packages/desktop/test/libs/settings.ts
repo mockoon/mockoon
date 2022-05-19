@@ -4,7 +4,6 @@ import utils from '../libs/utils';
 
 type SettingNames =
   | 'settings-truncate-route-name'
-  | 'settings-analytics'
   | 'settings-log-body-size'
   | 'settings-faker-seed'
   | 'settings-storage-pretty-print'

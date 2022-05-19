@@ -9,7 +9,6 @@ import {
 
 export const SettingsDefault: Settings = {
   welcomeShown: false,
-  analytics: true,
   bannerDismissed: [],
   logSizeLimit: 10000,
   maxLogsPerEnvironment: Config.defaultMaxLogsPerEnvironment,
@@ -31,7 +30,6 @@ export const SettingsSchema = Joi.object<Settings & PreMigrationSettings, true>(
     welcomeShown: Joi.boolean()
       .failover(SettingsDefault.welcomeShown)
       .required(),
-    analytics: Joi.boolean().failover(SettingsDefault.analytics).required(),
     bannerDismissed: Joi.array()
       .items(Joi.string(), Joi.any().strip())
       .failover(SettingsDefault.bannerDismissed)

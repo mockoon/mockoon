@@ -10,7 +10,6 @@ export enum FileWatcherOptions {
 
 export type Settings = {
   welcomeShown: boolean;
-  analytics: boolean;
   bannerDismissed: string[];
   logSizeLimit: number;
   maxLogsPerEnvironment: number;

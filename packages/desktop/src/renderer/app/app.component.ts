@@ -18,7 +18,6 @@ import { ContextMenuItemPayload } from 'src/renderer/app/models/context-menu.mod
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import { AnalyticsService } from 'src/renderer/app/services/analytics.service';
 import { ApiService } from 'src/renderer/app/services/api.service';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -46,7 +45,6 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
   public os: string;
 
   constructor(
-    private analyticsService: AnalyticsService,
     private telemetryService: TelemetryService,
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
@@ -96,12 +94,6 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
       .subscribe();
 
     this.telemetryService.init().subscribe();
-
-    this.analyticsService.init();
-    this.eventsService.analyticsEvents.next({
-      type: 'pageview',
-      pageName: '/'
-    });
 
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeView$ = this.store.select('activeView');
