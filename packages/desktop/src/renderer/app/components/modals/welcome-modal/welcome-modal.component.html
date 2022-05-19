@@ -4,29 +4,9 @@
   </div>
   <div class="modal-body">
     <p>
-      Thank you for trying Mockoon. We spent time crafting a great user
+      Thank you for installing Mockoon. We spent time crafting a great user
       experience so mocking becomes efficient and fun. Do not hesitate to submit
       your feedback or any bug you would encounter.<br />Happy mocking!
-    </p>
-    <p>&nbsp;</p>
-    <div class="custom-control custom-checkbox">
-      <input
-        type="checkbox"
-        class="custom-control-input"
-        id="analytics"
-        name="analytics"
-        [ngModel]="(settings$ | async)?.analytics"
-        (ngModelChange)="settingsUpdated($event, 'analytics')"
-      />
-      <label class="custom-control-label" for="analytics"
-        >I agree to share anonymous usage data</label
-      >
-    </div>
-    <p class="text-muted">
-      <small
-        >We are using a basic Google Analytics setup, none of your data/content
-        is kept anywhere and it helps us improve Mockoon :)</small
-      >
     </p>
   </div>
   <div class="modal-footer">

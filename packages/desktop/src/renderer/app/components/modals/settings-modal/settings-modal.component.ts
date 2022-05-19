@@ -91,7 +91,6 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
       fakerSeed: [SettingsDefault.fakerSeed],
       fileWatcherEnabled: [SettingsDefault.fileWatcherEnabled],
       storagePrettyPrint: [SettingsDefault.storagePrettyPrint],
-      analytics: [SettingsDefault.analytics],
       enableTelemetry: [SettingsDefault.enableTelemetry]
     });
 
@@ -132,7 +131,6 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
               fakerSeed: settings.fakerSeed,
               fileWatcherEnabled: settings.fileWatcherEnabled,
               storagePrettyPrint: settings.storagePrettyPrint,
-              analytics: settings.analytics,
               enableTelemetry: settings.enableTelemetry
             },
             { emitEvent: false }

@@ -1,6 +1,5 @@
 {
   "welcomeShown": true,
-  "analytics": true,
   "bannerDismissed": [],
   "logSizeLimit": 10000,
   "maxLogsPerEnvironment": 50,

@@ -70,21 +70,6 @@ describe('Settings', () => {
     });
   });
 
-  describe('Analytics disable', () => {
-    it('should disable analytics in settings and verify persistence', async () => {
-      await settings.open();
-      await settings.toggleSetting('settings-analytics');
-      await modals.close();
-
-      await utils.waitForAutosave();
-      await file.verifyObjectPropertyInFile(
-        './tmp/storage/settings.json',
-        'analytics',
-        false
-      );
-    });
-  });
-
   describe('Environment log entries maximum', () => {
     it('should modify the limit and verify the settings file', async () => {
       await settings.open();

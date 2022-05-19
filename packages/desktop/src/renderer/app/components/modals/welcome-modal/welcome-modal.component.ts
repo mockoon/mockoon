@@ -9,7 +9,6 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Settings } from 'src/shared/models/settings.model';
@@ -27,7 +26,6 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
   constructor(
     private modalService: NgbModal,
     private settingsService: SettingsService,
-    private eventsService: EventsService,
     private store: Store
   ) {}
 
@@ -44,16 +42,6 @@ export class WelcomeModalComponent implements OnInit, AfterViewInit {
           this.modalService.open(this.modal);
         }
       });
-  }
-
-  /**
-   * Call the store to update the settings
-   *
-   * @param newValue
-   * @param settingName
-   */
-  public settingsUpdated(settingNewValue: string, settingName: string) {
-    this.settingsService.updateSettings({ [settingName]: settingNewValue });
   }
 
   public closeModal() {
