@@ -17,10 +17,10 @@ export const EnvironmentsContextMenu = (
   {
     payload: {
       subject: 'environment',
-      action: 'clipboard',
+      action: 'copyJSON',
       subjectUUID: environmentUUID
     },
-    label: 'Copy to clipboard (JSON)',
+    label: 'Copy configuration to clipboard (JSON)',
     icon: 'assignment',
     separator: true,
     disabled: false
@@ -75,10 +75,20 @@ export const RoutesContextMenu = (
   {
     payload: {
       subject: 'route',
-      action: 'clipboard',
+      action: 'copyJSON',
       subjectUUID: routeUUID
     },
-    label: 'Copy to clipboard (JSON)',
+    label: 'Copy configuration to clipboard (JSON)',
+    icon: 'assignment',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'route',
+      action: 'copyFullPath',
+      subjectUUID: routeUUID
+    },
+    label: 'Copy full path to clipboard',
     icon: 'assignment',
     disabled: false
   },

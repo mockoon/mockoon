@@ -46,7 +46,7 @@ describe('Clipboard copy', () => {
   });
 
   describe('Copy route to the clipboard', () => {
-    it('should copy route to clipboard wrapped with export info', async () => {
+    it('should copy route JSON to clipboard', async () => {
       await contextMenu.click('routes', 1, 3);
 
       const clipboardContent = await clipboard.read();
@@ -90,6 +90,14 @@ describe('Clipboard copy', () => {
       );
       await routes.assertCount(1);
       await routes.assertActiveMenuEntryText('GET\n/answer');
+    });
+
+    it('should copy the full route path to the clipboard', async () => {
+      await contextMenu.click('routes', 1, 4);
+
+      const clipboardContent = await clipboard.read();
+
+      expect(clipboardContent).toEqual('http://localhost:3000/answer');
     });
   });
 });

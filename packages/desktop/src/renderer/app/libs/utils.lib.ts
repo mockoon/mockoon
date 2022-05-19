@@ -1,3 +1,4 @@
+import { Environment, Route } from '@mockoon/commons';
 import { EditorModes } from 'src/renderer/app/models/editor.model';
 
 export const ArrayContainsObjectKey = (
@@ -68,4 +69,27 @@ export const HumanizeText = (text: string): string => {
   text = text.charAt(0).toUpperCase() + text.slice(1);
 
   return text;
+};
+
+/**
+ * Build a full APi endpoint path with protocol, domain and port
+ *
+ * @param environment
+ * @param route
+ * @returns
+ */
+export const BuildFullPath = (environment: Environment, route: Route) => {
+  let routeUrl =
+    (environment.tlsOptions.enabled ? 'https://' : 'http://') +
+    'localhost:' +
+    environment.port +
+    '/';
+
+  if (environment.endpointPrefix) {
+    routeUrl += environment.endpointPrefix + '/';
+  }
+
+  routeUrl += route.endpoint;
+
+  return routeUrl;
 };

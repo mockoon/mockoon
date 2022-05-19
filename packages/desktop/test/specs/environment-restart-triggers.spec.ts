@@ -15,7 +15,7 @@ describe('Environment "restart needed" indicator', () => {
   });
 
   it('should remove a route and check that a restart is needed', async () => {
-    await contextMenu.clickAndConfirm('routes', 1, 5);
+    await contextMenu.clickAndConfirm('routes', 1, 6);
 
     await environments.assertNeedsRestart();
   });

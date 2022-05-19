@@ -14,6 +14,7 @@ import { ChangelogModalComponent } from 'src/renderer/app/components/modals/chan
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { BuildFullPath } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuItemPayload } from 'src/renderer/app/models/context-menu.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { ViewsNameType } from 'src/renderer/app/models/store.model';
@@ -127,8 +128,11 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
             .subscribe();
         }
         break;
-      case 'clipboard':
-        this.copyToClipboard(payload.subject, payload.subjectUUID);
+      case 'copyJSON':
+        this.copyJSONToClipboard(payload.subject, payload.subjectUUID);
+        break;
+      case 'copyFullPath':
+        this.copyFullPathToClipboard(payload.subject, payload.subjectUUID);
         break;
       case 'delete':
         if (payload.subject === 'route') {
@@ -166,11 +170,29 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
    * @param subject
    * @param subjectUUID
    */
-  public copyToClipboard(subject: DataSubject, subjectUUID: string) {
+  private copyJSONToClipboard(subject: DataSubject, subjectUUID: string) {
     if (subject === 'environment') {
       this.environmentsService.copyEnvironmentToClipboard(subjectUUID);
     } else if (subject === 'route') {
       this.environmentsService.copyRouteToClipboard(subjectUUID);
+    }
+  }
+
+  /**
+   * Copy an API endpoint full path to the clipboard
+   *
+   * @param subject
+   * @param subjectUUID
+   */
+  private copyFullPathToClipboard(subject: DataSubject, subjectUUID: string) {
+    if (subject === 'route') {
+      const activeEnvironment = this.store.getActiveEnvironment();
+      const route = this.store.getRouteByUUID(subjectUUID);
+
+      MainAPI.send(
+        'APP_WRITE_CLIPBOARD',
+        BuildFullPath(activeEnvironment, route)
+      );
     }
   }
 
