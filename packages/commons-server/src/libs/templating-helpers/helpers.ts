@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import ObjectId from 'bson-objectid';
 import { format as dateFormat } from 'date-fns';
 import { HelperOptions, SafeString } from 'handlebars';
