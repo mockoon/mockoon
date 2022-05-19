@@ -1,6 +1,7 @@
 import { FakerAvailableLocales } from '@mockoon/commons';
 
 export const FakerLocales: { code: FakerAvailableLocales; label: string }[] = [
+  { code: 'af_ZA', label: 'Afrikaans' },
   { code: 'ar', label: 'Arabic' },
   { code: 'hy', label: 'Armenian' },
   { code: 'az', label: 'Azerbaijani' },
@@ -14,6 +15,7 @@ export const FakerLocales: { code: FakerAvailableLocales; label: string }[] = [
   { code: 'en_AU', label: 'English (Australia)' },
   { code: 'en_BORK', label: 'English (Bork)' },
   { code: 'en_CA', label: 'English (Canada)' },
+  { code: 'en_GH', label: 'English (Ghana)' },
   { code: 'en_GB', label: 'English (Great Britain)' },
   { code: 'en_IND', label: 'English (India)' },
   { code: 'en_IE', label: 'English (Ireland)' },
@@ -21,6 +23,7 @@ export const FakerLocales: { code: FakerAvailableLocales; label: string }[] = [
   { code: 'en_US', label: 'English (United States)' },
   { code: 'fa', label: 'Farsi' },
   { code: 'fi', label: 'Finnish' },
+  { code: 'fr_BE', label: 'Français (Belgique)' },
   { code: 'fr', label: 'French' },
   { code: 'fr_CA', label: 'French (Canada)' },
   { code: 'fr_CH', label: 'French (Switzerland)' },
@@ -28,13 +31,18 @@ export const FakerLocales: { code: FakerAvailableLocales; label: string }[] = [
   { code: 'de', label: 'German' },
   { code: 'de_AT', label: 'German (Austria)' },
   { code: 'de_CH', label: 'German (Switzerland)' },
+  { code: 'el', label: 'Greek' },
   { code: 'he', label: 'Hebrew' },
   { code: 'hr', label: 'Hrvatski' },
+  { code: 'hu', label: 'Hungarian' },
   { code: 'id_ID', label: 'Indonesia' },
   { code: 'it', label: 'Italian' },
   { code: 'ja', label: 'Japanese' },
   { code: 'ko', label: 'Korean' },
+  { code: 'lv', label: 'Latvian' },
+  { code: 'mk', label: 'Macedonian' },
   { code: 'ne', label: 'Nepalese' },
+  { code: 'en_NG', label: 'Nigeria (English)' },
   { code: 'nb_NO', label: 'Norwegian' },
   { code: 'pl', label: 'Polish' },
   { code: 'pt_BR', label: 'Portuguese (Brazil)' },
@@ -47,5 +55,7 @@ export const FakerLocales: { code: FakerAvailableLocales; label: string }[] = [
   { code: 'sv', label: 'Swedish' },
   { code: 'tr', label: 'Turkish' },
   { code: 'uk', label: 'Ukrainian' },
-  { code: 'vi', label: 'Vietnamese' }
+  { code: 'ur', label: 'Urdu' },
+  { code: 'vi', label: 'Vietnamese' },
+  { code: 'zu_ZA', label: 'Zulu (South Africa)' }
 ];

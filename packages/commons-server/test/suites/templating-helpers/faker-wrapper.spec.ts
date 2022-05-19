@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { expect } from 'chai';
 import { TemplateParser } from '../../../src/libs/template-parser';
 

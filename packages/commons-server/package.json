@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "10.0.3",
-    "@faker-js/faker": "5.5.3",
+    "@faker-js/faker": "6.3.1",
     "@mockoon/commons": "2.9.1",
     "bson-objectid": "2.0.3",
     "cookie-parser": "1.4.6",
@@ -52,7 +52,6 @@
     "@types/chai": "4.3.0",
     "@types/cookie-parser": "1.4.2",
     "@types/express": "4.17.13",
-    "@types/faker": "5.5.9",
     "@types/mime-types": "2.1.1",
     "@types/mocha": "9.1.0",
     "@types/node": "17.0.23",

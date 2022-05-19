@@ -1,4 +1,4 @@
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { HelperOptions } from 'handlebars';
 import { IsEmpty } from '../utils';
 
