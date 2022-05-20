@@ -77,6 +77,10 @@ When a feature or bugfix requires a change in the data model (`Environment`, `Ro
 - Add a new test for the migration in the same library `./packages/commons/test/data/migrations/{MIGRATION_ID}/environments.json` and `./packages/commons//test/suites/migrations.spec.ts` files.
 - Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' `environments.json` samples to the latest migration. Please note that some folders/sample files marked with a `.do-not-update-files` must never be migrated.
 
+## Lint and format
+
+ESLint rules and Prettier code styling are enforced by the continuous integration pipeline. Please fix all the ESLint issues and format your code using Prettier before pushing.
+
 ## Run the tests
 
 Some unit and integration tests are present in the 4 packages. You can run them with `npm run test` after building the 4 packages:
