@@ -108,6 +108,10 @@ export function CreateTransaction(
   response: Response
 ): Transaction {
   const requestUrl = new URL(request.originalUrl, 'http://localhost/');
+  let queryString = requestUrl.search.slice(1);
+  try {
+    queryString = decodeURI(queryString);
+  } catch (err) {}
 
   return {
     request: {
@@ -120,7 +124,7 @@ export function CreateTransaction(
             value: request.params[paramName]
           }))
         : [],
-      query: requestUrl ? decodeURI(requestUrl.search.slice(1)) : null,
+      query: requestUrl ? queryString : null,
       queryParams: request.query,
       body: request.stringBody,
       headers: TransformHeaders(request.headers).sort(AscSort)
