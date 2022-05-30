@@ -18,6 +18,7 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Adialix
 - Andres Saa
 - Andrey Kozlov
+- [Anthony Critelli](https://github.com/acritelli)
 - Валентин Радчук
 - Barefootdeveloper
 - Buckley Robinson
@@ -27,6 +28,7 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Efe
 - Emadashi
 - Everett
+- [fl0rian-p](https://github.com/fl0rian-p)
 - François Grémont
 - Jakub Bartkowiak
 - Jakub Ślusarski
@@ -60,4 +62,4 @@ Thank you to all the supporters who donated over time, and all the ones who want
 - Xutzin
 - Yuemuc
 
-(List from GitHub one-time sponsors and [Buy Me A Coffee](https://www.buymeacoffee.com/255kb) page)
+(List from GitHub Sponsors and [Buy Me A Coffee](https://www.buymeacoffee.com/255kb) page)
