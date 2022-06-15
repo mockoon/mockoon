@@ -69,7 +69,7 @@ $ mockoon-cli start --data ~/path/to/your-environment-file.json
 ```
 
 > To locate your environment file from the main application, right-click on a environment and select "Show in folder" in the context menu:
-> ![context menu - show in folder](/docs/environment-show-in-folder.png)
+> ![context menu - show in folder](https://github.com/mockoon/mockoon/raw/main/packages/cli/docs/environment-show-in-folder.png)
 
 You can also directly load Mockoon's environment file from a URL. To do so, provide the URL as the `data` parameter instead of a local path:
 
