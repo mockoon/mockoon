@@ -1,6 +1,6 @@
 {
   "uuid": "00c259b0-a802-11eb-8344-e578768b170e",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "AWS Server Migration Service",
   "endpointPrefix": "",
   "latency": 0,
@@ -104,8 +104,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c280d0-a802-11eb-8344-e578768b170e",
@@ -265,8 +264,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a7d3-a802-11eb-8344-e578768b170e",
@@ -366,8 +364,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a7da-a802-11eb-8344-e578768b170e",
@@ -467,8 +464,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a7e1-a802-11eb-8344-e578768b170e",
@@ -568,8 +564,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a7e8-a802-11eb-8344-e578768b170e",
@@ -669,8 +664,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a7ee-a802-11eb-8344-e578768b170e",
@@ -755,8 +749,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a7f4-a802-11eb-8344-e578768b170e",
@@ -841,8 +834,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a7fb-a802-11eb-8344-e578768b170e",
@@ -942,8 +934,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a802-a802-11eb-8344-e578768b170e",
@@ -1043,8 +1034,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a809-a802-11eb-8344-e578768b170e",
@@ -1144,8 +1134,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2a810-a802-11eb-8344-e578768b170e",
@@ -1245,8 +1234,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2cee5-a802-11eb-8344-e578768b170e",
@@ -1346,8 +1334,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2cee8-a802-11eb-8344-e578768b170e",
@@ -1387,8 +1374,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2ceed-a802-11eb-8344-e578768b170e",
@@ -1458,8 +1444,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2cef2-a802-11eb-8344-e578768b170e",
@@ -1529,8 +1514,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2cef5-a802-11eb-8344-e578768b170e",
@@ -1570,8 +1554,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2cefc-a802-11eb-8344-e578768b170e",
@@ -1671,8 +1654,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2cf03-a802-11eb-8344-e578768b170e",
@@ -1772,8 +1754,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2cf0a-a802-11eb-8344-e578768b170e",
@@ -1873,8 +1854,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2cf11-a802-11eb-8344-e578768b170e",
@@ -1974,8 +1954,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2f5f4-a802-11eb-8344-e578768b170e",
@@ -2075,8 +2054,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2f5fb-a802-11eb-8344-e578768b170e",
@@ -2176,8 +2154,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2f602-a802-11eb-8344-e578768b170e",
@@ -2277,8 +2254,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2f609-a802-11eb-8344-e578768b170e",
@@ -2378,8 +2354,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2f610-a802-11eb-8344-e578768b170e",
@@ -2479,8 +2454,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2f617-a802-11eb-8344-e578768b170e",
@@ -2580,8 +2554,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "00c2f621-a802-11eb-8344-e578768b170e",
@@ -2726,8 +2699,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,

@@ -162,18 +162,13 @@
                     class="px-2"
                     [ngClass]="{
                       'text-primary':
-                        !activeRoute.randomResponse &&
-                        !activeRoute.sequentialResponse,
+                        activeRoute.responseMode !== 'SEQUENTIAL' &&
+                        activeRoute.responseMode !== 'RANDOM',
                       'text-muted':
-                        activeRoute.randomResponse ||
-                        activeRoute.sequentialResponse
+                        activeRoute.responseMode === 'SEQUENTIAL' ||
+                        activeRoute.responseMode === 'RANDOM'
                     }"
-                    [ngbTooltip]="
-                      activeRoute.randomResponse ||
-                      activeRoute.sequentialResponse
-                        ? 'Default response disabled by random or sequential responses'
-                        : 'Default response served if no rule matches'
-                    "
+                    [ngbTooltip]="defaultResponseTooltip$ | async"
                   >
                     <app-svg icon="flag"></app-svg
                   ></span>
@@ -191,35 +186,13 @@
               </div>
             </div>
 
-            <button
-              type="button"
-              id="route-responses-random"
-              class="btn btn-custom"
-              (click)="toggleRandomResponse(activeRoute.randomResponse)"
-              ngbTooltip="Random response (will disable the rules)"
-            >
-              <app-svg
-                icon="shuffle"
-                [ngClass]="{
-                  'text-primary': activeRoute.randomResponse
-                }"
-              ></app-svg>
-            </button>
-
-            <button
-              type="button"
-              id="route-responses-sequential"
-              class="btn btn-custom"
-              (click)="toggleSequentialResponse(activeRoute.sequentialResponse)"
-              ngbTooltip="Sequential response (will disable the rules)"
-            >
-              <app-svg
-                icon="repeat"
-                [ngClass]="{
-                  'text-primary': activeRoute.sequentialResponse
-                }"
-              ></app-svg>
-            </button>
+            <app-toggle
+              class="ml-2"
+              prefix="response-modes"
+              [form]="activeRouteForm"
+              controlName="responseMode"
+              [items]="responseModes"
+            ></app-toggle>
           </div>
 
           <div class="d-flex mt-2">
@@ -253,7 +226,12 @@
                   class="nav-link"
                   [ngClass]="{ active: activeTab === 'RULES' }"
                   (click)="setActiveTab('RULES')"
-                >
+                  ><span
+                    *ngIf="activeRoute.responseMode !== null"
+                    class="text-warning"
+                    [ngbTooltip]="texts.DISABLED_RULES_WARNING"
+                    ><app-svg icon="warning" class="pr-1"></app-svg>
+                  </span>
                   Rules
                   <span
                     *ngIf="activeRouteResponse?.rules.length"

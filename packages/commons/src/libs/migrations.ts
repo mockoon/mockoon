@@ -7,6 +7,7 @@ import {
 import { Environment } from '../models/environment.model';
 import {
   Header,
+  ResponseMode,
   ResponseRule,
   Route,
   RouteResponse
@@ -34,6 +35,13 @@ type RouteResponseWithStringStatus = RouteResponse | { statusCode: string };
 
 // old environment with https property
 type EnvironmentWithHttps = Environment & { https: boolean };
+
+// old routes with sequential and random responses
+type RouteWithResponseModes = Route & {
+  sequentialResponse: boolean;
+  randomResponse: boolean;
+};
+
 /**
  * List of migration functions.
  *
@@ -290,9 +298,9 @@ export const Migrations: {
   {
     id: 13,
     migrationFunction: (environment: Environment) => {
-      environment.routes.forEach((route: Route) => {
-        if (route.randomResponse === undefined) {
-          route.randomResponse = false;
+      environment.routes.forEach((route) => {
+        if ((route as RouteWithResponseModes).randomResponse === undefined) {
+          (route as RouteWithResponseModes).randomResponse = false;
         }
       });
     }
@@ -305,8 +313,10 @@ export const Migrations: {
     id: 14,
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
-        if (route.sequentialResponse === undefined) {
-          route.sequentialResponse = false;
+        if (
+          (route as RouteWithResponseModes).sequentialResponse === undefined
+        ) {
+          (route as RouteWithResponseModes).sequentialResponse = false;
         }
       });
     }
@@ -410,6 +420,27 @@ export const Migrations: {
             }
           }
         });
+      });
+    }
+  },
+  /**
+   * Remove route sequential and random response, and add responseMode
+   */
+  {
+    id: 21,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        if (route.responseMode === undefined) {
+          route.responseMode = (route as RouteWithResponseModes)
+            .sequentialResponse
+            ? ResponseMode.SEQUENTIAL
+            : (route as RouteWithResponseModes).randomResponse
+            ? ResponseMode.RANDOM
+            : null;
+        }
+
+        delete route['sequentialResponse'];
+        delete route['randomResponse'];
       });
     }
   }

@@ -14,6 +14,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
+import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -26,7 +27,18 @@ import { Store } from 'src/renderer/app/stores/store';
 export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public activeEnvironmentForm: FormGroup;
+  public tlsOptionsFormGroup: FormGroup;
   public Infinity = Infinity;
+  public certTypes: ToggleItems = [
+    {
+      value: 'CERT',
+      label: 'CERT'
+    },
+    {
+      value: 'PFX',
+      label: 'PFX'
+    }
+  ];
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -63,20 +75,22 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
    * Init active environment form and subscribe to changes
    */
   private initForms() {
+    this.tlsOptionsFormGroup = this.formBuilder.group({
+      enabled: [EnvironmentDefault.tlsOptions.enabled],
+      type: [EnvironmentDefault.tlsOptions.type],
+      pfxPath: [EnvironmentDefault.tlsOptions.pfxPath],
+      certPath: [EnvironmentDefault.tlsOptions.certPath],
+      keyPath: [EnvironmentDefault.tlsOptions.keyPath],
+      caPath: [EnvironmentDefault.tlsOptions.caPath],
+      passphrase: [EnvironmentDefault.tlsOptions.passphrase]
+    });
+
     this.activeEnvironmentForm = this.formBuilder.group({
       name: [EnvironmentDefault.name],
       port: [EnvironmentDefault.port],
       endpointPrefix: [EnvironmentDefault.endpointPrefix],
       latency: [EnvironmentDefault.latency],
-      tlsOptions: this.formBuilder.group({
-        enabled: [EnvironmentDefault.tlsOptions.enabled],
-        type: [EnvironmentDefault.tlsOptions.type],
-        pfxPath: [EnvironmentDefault.tlsOptions.pfxPath],
-        certPath: [EnvironmentDefault.tlsOptions.certPath],
-        keyPath: [EnvironmentDefault.tlsOptions.keyPath],
-        caPath: [EnvironmentDefault.tlsOptions.caPath],
-        passphrase: [EnvironmentDefault.tlsOptions.passphrase]
-      }),
+      tlsOptions: this.tlsOptionsFormGroup,
       localhostOnly: [false],
       cors: [EnvironmentDefault.cors]
     });

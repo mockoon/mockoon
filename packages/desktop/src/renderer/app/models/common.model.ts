@@ -17,6 +17,16 @@ export type DropdownItem = {
 
 export type DropdownItems = DropdownItem[];
 
+export type ToggleItem = {
+  value?: number | string;
+  label?: string;
+  icon?: string;
+  tooltip?: string;
+  activeClass?: string;
+};
+
+export type ToggleItems = ToggleItem[];
+
 export type Validation = {
   mask: string;
   maskPatterns: { [key in string]: { pattern: RegExp } };

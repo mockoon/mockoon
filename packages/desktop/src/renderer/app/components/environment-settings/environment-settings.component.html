@@ -98,39 +98,13 @@
     </div>
 
     <div class="form-group d-flex">
-      <div class="align-self-end mr-2 mb-2">
-        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-          <ng-container *ngFor="let certType of ['CERT', 'PFX']">
-            <label
-              class="btn btn-xs"
-              [ngClass]="{
-                active:
-                  certType ===
-                  activeEnvironmentForm.get(['tlsOptions', 'type']).value,
-                'btn-primary':
-                  certType ===
-                  activeEnvironmentForm.get(['tlsOptions', 'type']).value,
-                'btn-secondary':
-                  certType !==
-                  activeEnvironmentForm.get(['tlsOptions', 'type']).value
-              }"
-            >
-              <input
-                type="radio"
-                formControlName="type"
-                id="certType{{ certType }}"
-                [value]="certType"
-                autocomplete="off"
-                [checked]="
-                  certType ===
-                  activeEnvironmentForm.get(['tlsOptions', 'type']).value
-                "
-              />
-              {{ certType }}
-            </label>
-          </ng-container>
-        </div>
-      </div>
+      <app-toggle
+        prefix="cert-types"
+        [form]="tlsOptionsFormGroup"
+        controlName="type"
+        [items]="certTypes"
+        [uncheckable]="false"
+      ></app-toggle>
 
       <div class="flex-fill d-flex pl-2">
         <div

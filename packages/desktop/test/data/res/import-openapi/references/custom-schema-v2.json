@@ -1,6 +1,6 @@
 {
   "uuid": "a03a4dc0-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "Sample v2 schema",
   "endpointPrefix": "api",
   "latency": 0,
@@ -11,7 +11,6 @@
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint",
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "a03a74d0-e7d4-11ea-a5ec-979674ac1a4b",
@@ -30,7 +29,7 @@
         }
       ],
       "enabled": true,
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,

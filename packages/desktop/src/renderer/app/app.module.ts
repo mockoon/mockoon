@@ -47,6 +47,7 @@ import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcom
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
+import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { MousedragDeadzoneDirective } from 'src/renderer/app/directives/mousedrag-deadzone.directive';
@@ -94,6 +95,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     DuplicateRouteModalComponent,
     EditorComponent,
     CustomSelectComponent,
+    ToggleComponent,
     SvgComponent,
     LoaderComponent
   ],

@@ -1,6 +1,6 @@
 {
   "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "Proxy disabled",
   "endpointPrefix": "",
   "latency": 0,
@@ -12,7 +12,6 @@
       "endpoint": "disabled-proxy",
       "documentation": "",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "5ddcbb6a-e13d-4d4a-ac6f-2e776dc6e3e9",
@@ -30,7 +29,7 @@
           "default": true
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,

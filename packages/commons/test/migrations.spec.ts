@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Migrations } from '../src';
+import { Migrations, ResponseMode } from '../src';
 
 const applyMigration = (migrationId: number, environment: any) => {
   const migrationFunction = Migrations.find(
@@ -197,6 +197,48 @@ describe('Migrations', () => {
 
       expect(environment.routes[0].responses[0]['default']).to.equal(true);
       expect(environment.routes[0].responses[1]['default']).to.equal(false);
+    });
+  });
+
+  describe('migration n. 21', () => {
+    it('should add `responseMode` and remove `sequentialResponse` and `randomResponse`, initialized to null', () => {
+      const environment = {
+        routes: [{ sequentialResponse: false, randomResponse: false }]
+      };
+
+      applyMigration(21, environment);
+
+      expect(environment.routes[0]['responseMode']).to.equal(null);
+      expect(environment.routes[0]['sequentialResponse']).to.equal(undefined);
+      expect(environment.routes[0]['randomResponse']).to.equal(undefined);
+    });
+
+    it('should add `responseMode` and remove `sequentialResponse` and `randomResponse`, initialized to SEQUENTIAL', () => {
+      const environment = {
+        routes: [{ sequentialResponse: true, randomResponse: false }]
+      };
+
+      applyMigration(21, environment);
+
+      expect(environment.routes[0]['responseMode']).to.equal(
+        ResponseMode.SEQUENTIAL
+      );
+      expect(environment.routes[0]['sequentialResponse']).to.equal(undefined);
+      expect(environment.routes[0]['randomResponse']).to.equal(undefined);
+    });
+
+    it('should add `responseMode` and remove `sequentialResponse` and `randomResponse`, initialized to RANDOM', () => {
+      const environment = {
+        routes: [{ sequentialResponse: false, randomResponse: true }]
+      };
+
+      applyMigration(21, environment);
+
+      expect(environment.routes[0]['responseMode']).to.equal(
+        ResponseMode.RANDOM
+      );
+      expect(environment.routes[0]['sequentialResponse']).to.equal(undefined);
+      expect(environment.routes[0]['randomResponse']).to.equal(undefined);
     });
   });
 });

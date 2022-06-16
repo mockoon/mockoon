@@ -8,6 +8,7 @@ import {
 import {
   Header,
   Methods,
+  ResponseMode,
   ResponseRule,
   Route,
   RouteResponse
@@ -51,8 +52,7 @@ export const RouteDefault: Route = {
   endpoint: '',
   responses: [],
   enabled: true,
-  randomResponse: false,
-  sequentialResponse: false
+  responseMode: null
 };
 
 export const RouteResponseDefault: RouteResponse = {
@@ -209,11 +209,14 @@ export const RouteSchema = Joi.object<Route, true>({
     .failover(RouteDefault.responses)
     .required(),
   enabled: Joi.boolean().failover(RouteDefault.enabled).required(),
-  randomResponse: Joi.boolean()
-    .failover(RouteDefault.randomResponse)
-    .required(),
-  sequentialResponse: Joi.boolean()
-    .failover(RouteDefault.sequentialResponse)
+  responseMode: Joi.string()
+    .allow(null)
+    .valid(
+      ResponseMode.RANDOM,
+      ResponseMode.SEQUENTIAL,
+      ResponseMode.DISABLE_RULES
+    )
+    .failover(RouteDefault.responseMode)
     .required()
 });
 

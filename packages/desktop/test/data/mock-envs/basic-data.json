@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "Basic data",
   "endpointPrefix": "",
   "latency": 0,
@@ -12,7 +12,6 @@
       "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
       "documentation": "Test documentation",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "505a77b1-34c7-4af8-adde-ed00b8dd29bf",
@@ -30,7 +29,7 @@
           "default": true
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "9745a08e-94c2-451e-bccc-b31dc608bb6d",
@@ -38,7 +37,6 @@
       "endpoint": "answer",
       "documentation": "",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "057ec98a-dd5d-4dd8-9af9-a99dd7a5c3f5",
@@ -56,7 +54,7 @@
           "default": true
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "9eec44ab-48b1-454f-8cda-ddbc9aeaac0e",
@@ -64,7 +62,6 @@
       "endpoint": "dolphins",
       "documentation": "",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",
@@ -82,7 +79,7 @@
           "default": true
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,
