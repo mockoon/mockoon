@@ -1,6 +1,6 @@
 {
   "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "Env clipboard copy",
   "endpointPrefix": "",
   "latency": 0,
@@ -12,7 +12,6 @@
       "endpoint": "answer",
       "documentation": "",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "64fcbac2-1ac7-11ea-b8fd-577fb167a4ce",
@@ -30,7 +29,7 @@
           "default": true
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,

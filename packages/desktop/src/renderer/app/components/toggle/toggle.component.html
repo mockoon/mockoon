@@ -1,0 +1,34 @@
+<div
+  class="btn-group btn-group-toggle h-100"
+  data-toggle="buttons"
+  [formGroup]="form"
+>
+  <ng-container *ngFor="let item of items">
+    <label
+      id="{{ prefix }}-{{ item.value }}"
+      class="btn btn-custom btn-xs px-2 d-flex align-items-center"
+      [ngClass]="{
+        'btn-primary': item.value === form.get(controlName).value,
+        active: item.value === form.get(controlName).value
+      }"
+      [ngbTooltip]="item.tooltip"
+      [ngClass]="
+        item.value === form.get(controlName).value
+          ? item.activeClass
+            ? item.activeClass
+            : 'text-primary'
+          : ''
+      "
+      (click)="itemClick(item, $event)"
+    >
+      <input
+        type="radio"
+        [formControlName]="controlName"
+        [value]="item.value"
+        autocomplete="off"
+        [checked]="item.value === form.get(controlName).value"
+      />
+      <app-svg *ngIf="item.icon" [icon]="item.icon"></app-svg>{{ item.label }}
+    </label>
+  </ng-container>
+</div>

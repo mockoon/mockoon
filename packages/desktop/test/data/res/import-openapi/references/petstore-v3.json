@@ -1,6 +1,6 @@
 {
   "uuid": "",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "Swagger Petstore v3",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -48,8 +48,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "",
@@ -89,8 +88,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "",
@@ -130,8 +128,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "",
@@ -171,8 +168,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,

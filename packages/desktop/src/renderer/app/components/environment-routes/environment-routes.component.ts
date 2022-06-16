@@ -14,6 +14,7 @@ import {
   INDENT_SIZE,
   Methods,
   MimeTypesWithTemplating,
+  ResponseMode,
   Route,
   RouteDefault,
   RouteResponse,
@@ -39,9 +40,13 @@ import {
   defaultContentType,
   StatusCodes
 } from 'src/renderer/app/constants/routes.constants';
+import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { BuildFullPath } from 'src/renderer/app/libs/utils.lib';
-import { DropdownItems } from 'src/renderer/app/models/common.model';
+import {
+  DropdownItems,
+  ToggleItems
+} from 'src/renderer/app/models/common.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentsStatuses,
@@ -50,50 +55,9 @@ import {
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import {
-  setDefaultRouteResponseAction,
-  updateRouteAction
-} from 'src/renderer/app/stores/actions';
+import { setDefaultRouteResponseAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
-
-const MethodsDropdown: DropdownItems = [
-  {
-    value: Methods.get,
-    label: 'GET',
-    classes: 'http-method-get-text'
-  },
-  {
-    value: Methods.post,
-    label: 'POST',
-    classes: 'http-method-post-text'
-  },
-  {
-    value: Methods.put,
-    label: 'PUT',
-    classes: 'http-method-put-text'
-  },
-  {
-    value: Methods.patch,
-    label: 'PATCH',
-    classes: 'http-method-patch-text'
-  },
-  {
-    value: Methods.delete,
-    label: 'DELETE',
-    classes: 'http-method-delete-text'
-  },
-  {
-    value: Methods.head,
-    label: 'HEAD',
-    classes: 'http-method-head-text'
-  },
-  {
-    value: Methods.options,
-    label: 'OPTIONS',
-    classes: 'http-method-options-text'
-  }
-];
 
 @Component({
   selector: 'app-environment-routes',
@@ -112,6 +76,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     supportsTemplating: boolean;
   }>;
   public effectiveContentType$: Observable<string>;
+  public defaultResponseTooltip$: Observable<string>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public activeTab$: Observable<TabsNameType>;
   public deleteCurrentRouteResponseRequested$ = new TimedBoolean();
@@ -119,11 +84,66 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeRouteForm: FormGroup;
   public activeRouteResponseForm: FormGroup;
   public scrollToBottom = this.uiService.scrollToBottom;
-  public methods = MethodsDropdown;
+  public methods: DropdownItems = [
+    {
+      value: Methods.get,
+      label: 'GET',
+      classes: 'http-method-get-text'
+    },
+    {
+      value: Methods.post,
+      label: 'POST',
+      classes: 'http-method-post-text'
+    },
+    {
+      value: Methods.put,
+      label: 'PUT',
+      classes: 'http-method-put-text'
+    },
+    {
+      value: Methods.patch,
+      label: 'PATCH',
+      classes: 'http-method-patch-text'
+    },
+    {
+      value: Methods.delete,
+      label: 'DELETE',
+      classes: 'http-method-delete-text'
+    },
+    {
+      value: Methods.head,
+      label: 'HEAD',
+      classes: 'http-method-head-text'
+    },
+    {
+      value: Methods.options,
+      label: 'OPTIONS',
+      classes: 'http-method-options-text'
+    }
+  ];
+  public responseModes: ToggleItems = [
+    {
+      value: ResponseMode.RANDOM,
+      icon: 'shuffle',
+      tooltip: 'Random response mode (will disable the rules)'
+    },
+    {
+      value: ResponseMode.SEQUENTIAL,
+      icon: 'repeat',
+      tooltip: 'Sequential response mode (will disable the rules)'
+    },
+    {
+      value: ResponseMode.DISABLE_RULES,
+      icon: 'rule',
+      tooltip: 'Disabled rules mode (default response only)',
+      activeClass: 'text-warning'
+    }
+  ];
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;
   public focusableInputs = FocusableInputs;
   public Infinity = Infinity;
+  public texts = Texts;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -154,6 +174,16 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
         supportsTemplating: MimeTypesWithTemplating.indexOf(mimeType) > -1
       }))
     );
+
+    /**
+     * Effective content type:
+     *
+     * if file and no route header --> file mime type OK
+     * if file and route header --> route header OK
+     * if no file and route header --> route header OK
+     * if no file and no route header --> env header
+     * default?
+     */
     this.effectiveContentType$ = combineLatest([
       this.activeEnvironment$.pipe(
         filter((activeEnvironment) => !!activeEnvironment)
@@ -186,15 +216,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
         }
 
         return defaultContentType;
-        /*
-   if file and no route header --> file mime type OK
-   if file and route header --> route header OK
-   if no file and route header --> route header OK
-   if no file and no route header --> env header
-default?
-    */
       })
     );
+
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.activeTab$ = this.store.select('activeTab');
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
@@ -247,21 +271,6 @@ default?
   }
 
   /**
-   * Enable/disable random response
-   */
-  public toggleRandomResponse(randomResponse: boolean) {
-    const payload: { randomResponse: boolean; sequentialResponse?: boolean } = {
-      randomResponse: !randomResponse
-    };
-
-    if (payload.randomResponse) {
-      payload.sequentialResponse = false;
-    }
-
-    this.store.update(updateRouteAction(payload));
-  }
-
-  /**
    * Set the application active tab
    */
   public setActiveTab(tabName: TabsNameType) {
@@ -282,24 +291,6 @@ default?
    */
   public duplicateRouteResponse() {
     this.environmentsService.duplicateRouteResponse();
-  }
-
-  /**
-   * Enable/disable sequential response
-   */
-  public toggleSequentialResponse(sequentialResponse: boolean) {
-    const payload: {
-      randomResponse?: boolean;
-      sequentialResponse?: boolean;
-    } = {
-      sequentialResponse: !sequentialResponse
-    };
-
-    if (payload.sequentialResponse) {
-      payload.randomResponse = false;
-    }
-
-    this.store.update(updateRouteAction(payload));
   }
 
   /**
@@ -415,8 +406,27 @@ default?
     this.activeRouteForm = this.formBuilder.group({
       documentation: [RouteDefault.documentation],
       method: [RouteDefault.method],
-      endpoint: [RouteDefault.endpoint]
+      endpoint: [RouteDefault.endpoint],
+      responseMode: [RouteDefault.responseMode]
     });
+
+    this.defaultResponseTooltip$ = this.activeRouteForm
+      .get('responseMode')
+      .valueChanges.pipe(
+        startWith(RouteDefault.responseMode),
+        map((responseMode: ResponseMode) => {
+          if (
+            responseMode === ResponseMode.SEQUENTIAL ||
+            responseMode === ResponseMode.RANDOM
+          ) {
+            return 'Default response disabled by random or sequential responses';
+          } else if (responseMode === ResponseMode.DISABLE_RULES) {
+            return 'Default response always served as rules are disabled';
+          }
+
+          return 'Default response served if no rule matches';
+        })
+      );
 
     // send new activeRouteForm values to the store, one by one
     merge(
@@ -479,7 +489,8 @@ default?
           {
             documentation: activeRoute.documentation,
             method: activeRoute.method,
-            endpoint: activeRoute.endpoint
+            endpoint: activeRoute.endpoint,
+            responseMode: activeRoute.responseMode
           },
           { emitEvent: false }
         );

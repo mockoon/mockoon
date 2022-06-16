@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -12,7 +12,6 @@
       "endpoint": "answer",
       "documentation": "",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "057ec98a-dd5d-4dd8-9af9-a99dd7a5c3f5",
@@ -36,7 +35,7 @@
           "default": true
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": true,

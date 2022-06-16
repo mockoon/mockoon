@@ -3,33 +3,13 @@
     <div class="rules mt-2 d-flex">
       <ng-container *ngIf="form.get('rules').value.length > 1">
         <div class="rules-operator d-flex flex-column justify-content-center">
-          <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <ng-container *ngFor="let rulesOperatorsItem of rulesOperatorsList">
-              <label
-                class="btn btn-xs rules-operator-{{ rulesOperatorsItem }}"
-                [ngClass]="{
-                  active:
-                    rulesOperatorsItem === form.get('rulesOperator').value,
-                  'btn-primary':
-                    rulesOperatorsItem === form.get('rulesOperator').value,
-                  'btn-secondary':
-                    rulesOperatorsItem !== form.get('rulesOperator').value
-                }"
-              >
-                <input
-                  type="radio"
-                  formControlName="rulesOperator"
-                  id="rulesOperators{{ rulesOperatorsItem }}"
-                  [value]="rulesOperatorsItem"
-                  autocomplete="off"
-                  [checked]="
-                    rulesOperatorsItem === form.get('rulesOperator').value
-                  "
-                />
-                {{ rulesOperatorsItem }}
-              </label>
-            </ng-container>
-          </div>
+          <app-toggle
+            prefix="rules-operators"
+            [form]="form"
+            controlName="rulesOperator"
+            [items]="rulesOperators"
+            [uncheckable]="false"
+          ></app-toggle>
         </div>
 
         <div class="brackets"></div>
@@ -177,10 +157,10 @@
       </button>
       <ng-container *ngIf="activeRoute$ | async as activeRoute">
         <div
-          *ngIf="activeRoute.randomResponse || activeRoute.sequentialResponse"
+          *ngIf="activeRoute.responseMode !== null"
           class="warning-message ml-auto text-center pr-2"
         >
-          Activating random or sequential responses disable the rules
+          {{ texts.DISABLED_RULES_WARNING }}
         </div>
       </ng-container>
     </div>

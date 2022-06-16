@@ -1,6 +1,6 @@
 {
   "uuid": "b8701e60-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "Regulations.gov",
   "endpointPrefix": "regulations/v3",
   "latency": 0,
@@ -11,7 +11,6 @@
       "documentation": "Returns Docket information",
       "method": "get",
       "endpoint": "docket.:response_format",
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "b8701e61-e7d4-11ea-a5ec-979674ac1a4b",
@@ -60,14 +59,13 @@
         }
       ],
       "enabled": true,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "b8701e68-e7d4-11ea-a5ec-979674ac1a4b",
       "documentation": "Returns Document information",
       "method": "get",
       "endpoint": "document.:response_format",
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "b8701e65-e7d4-11ea-a5ec-979674ac1a4b",
@@ -116,14 +114,13 @@
         }
       ],
       "enabled": true,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "b8701e6c-e7d4-11ea-a5ec-979674ac1a4b",
       "documentation": "Search for Documents",
       "method": "get",
       "endpoint": "documents.:response_format",
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "b8701e69-e7d4-11ea-a5ec-979674ac1a4b",
@@ -172,7 +169,7 @@
         }
       ],
       "enabled": true,
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,

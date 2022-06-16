@@ -11,7 +11,6 @@ import {
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import {
   BuildResponseRule,
-  LogicalOperators,
   ResponseRule,
   ResponseRuleOperators,
   ResponseRuleTargets,
@@ -26,8 +25,12 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { MoveArrayItem } from 'src/renderer/app/libs/utils.lib';
-import { SelectOptionsList } from 'src/renderer/app/models/common.model';
+import {
+  SelectOptionsList,
+  ToggleItems
+} from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 
 @Component({
@@ -77,8 +80,18 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     request_number: ['null', 'empty_array'],
     cookie: ['empty_array']
   };
-  public rulesOperatorsList: LogicalOperators[] = ['OR', 'AND'];
+  public rulesOperators: ToggleItems = [
+    {
+      value: 'OR',
+      label: 'OR'
+    },
+    {
+      value: 'AND',
+      label: 'AND'
+    }
+  ];
   public deleteRuleRequested$ = new TimedBoolean();
+  public texts = Texts;
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 

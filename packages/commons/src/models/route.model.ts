@@ -16,6 +16,12 @@ export type RouteResponse = {
   default: boolean;
 };
 
+export enum ResponseMode {
+  RANDOM = 'RANDOM',
+  SEQUENTIAL = 'SEQUENTIAL',
+  DISABLE_RULES = 'DISABLE_RULES'
+}
+
 export type ResponseRuleOperators = 'equals' | 'regex' | 'null' | 'empty_array';
 
 export type ResponseRule = {
@@ -40,8 +46,7 @@ export type Route = {
   endpoint: string;
   responses: RouteResponse[];
   enabled: boolean;
-  randomResponse: boolean;
-  sequentialResponse: boolean;
+  responseMode: ResponseMode | null;
 };
 
 export type Header = { key: string; value: string };

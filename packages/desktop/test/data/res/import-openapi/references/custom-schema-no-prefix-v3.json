@@ -1,6 +1,6 @@
 {
   "uuid": "",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "Sample v3 schema",
   "endpointPrefix": "",
   "latency": 0,
@@ -29,8 +29,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "",
@@ -55,8 +54,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "",
@@ -86,8 +84,7 @@
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,

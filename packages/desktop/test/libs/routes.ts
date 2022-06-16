@@ -35,12 +35,15 @@ class Routes {
     return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2)');
   }
 
-  public get randomResponseIcon(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('#route-responses-random app-svg');
+  public get randomResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#response-modes-RANDOM');
   }
 
-  public get sequentialResponseIcon(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('#route-responses-sequential app-svg');
+  public get sequentialResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#response-modes-SEQUENTIAL');
+  }
+  public get disableRulesResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#response-modes-DISABLE_RULES');
   }
 
   public get contentTypeElement(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -239,22 +242,26 @@ class Routes {
 
   public async assertRulesOperator(operator: LogicalOperators) {
     const element = await $(
-      `.rules-operator input[id="rulesOperators${operator}"]`
+      `.rules-operator #rules-operators-${operator} input`
     );
     const selected: boolean = await element.isSelected();
     expect(selected).toEqual(true);
   }
 
   public async selectRulesOperator(operator: LogicalOperators) {
-    await $(`.rules-operator .rules-operator-${operator}`).click();
+    await $(`.rules-operator #rules-operators-${operator}`).click();
   }
 
   public async toggleRouteResponseRandom() {
-    await $('#route-responses-random').click();
+    await $('#response-modes-RANDOM').click();
   }
 
   public async toggleRouteResponseSequential() {
-    await $('#route-responses-sequential').click();
+    await $('#response-modes-SEQUENTIAL').click();
+  }
+
+  public async toggleRouteResponseDisableRules() {
+    await $('#response-modes-DISABLE_RULES').click();
   }
 
   public async switchTab(tabName: TabsNameType): Promise<void> {

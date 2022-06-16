@@ -507,7 +507,7 @@ describe('Responses rules', () => {
       await environments.start();
     });
 
-    it('should enable random responses', async () => {
+    it('should enable sequential responses', async () => {
       await routes.select(4);
       await routes.toggleRouteResponseSequential();
       await utils.waitForAutosave();
@@ -518,6 +518,40 @@ describe('Responses rules', () => {
         await http.assertCall(testCase);
       });
     }
+  });
+
+  describe('Disable rules', async () => {
+    it('should restart the environment', async () => {
+      await environments.stop();
+      await environments.start();
+    });
+
+    it('should call the disabled rules endpoint and get a 204 as rules are fulfilled', async () => {
+      await http.assertCall({
+        path: '/disable-rules',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: { test: 'value1' },
+        testedResponse: { status: 204 }
+      });
+    });
+
+    it('should disable rules', async () => {
+      await routes.select(5);
+      await routes.toggleRouteResponseDisableRules();
+      await utils.waitForAutosave();
+    });
+
+    it('should call the disabled rules endpoint and get a 202 as rules are disabled', async () => {
+      await http.assertCall({
+        path: '/disable-rules',
+        method: 'GET',
+        body: { test: 'value1' },
+        testedResponse: { status: 202, body: 'accepted' }
+      });
+    });
   });
 });
 
@@ -569,24 +603,14 @@ describe('Rules tabs', () => {
   });
 });
 
-describe('Response rules random or sequential', () => {
-  it('should verify sequential responses is enabled', async () => {
-    await utils.assertHasClass(routes.randomResponseIcon, 'text-primary', true);
-    await utils.assertHasClass(routes.sequentialResponseIcon, 'text-primary');
-
+describe('Response mode random, sequential, disable rules', () => {
+  it('should verify disable rules is enabled', async () => {
     await utils.waitForAutosave();
-    await file.verifyObjectPropertyInFile(
-      './tmp/storage/response-rules.json',
-      ['routes.3.randomResponse', 'routes.3.sequentialResponse'],
-      [false, true]
-    );
-  });
 
-  it('should enable random responses and sequential responses should be disabled', async () => {
-    await routes.toggleRouteResponseRandom();
-    await utils.assertHasClass(routes.randomResponseIcon, 'text-primary');
+    await utils.assertHasClass(routes.disableRulesResponseBtn, 'text-warning');
+    await utils.assertHasClass(routes.randomResponseBtn, 'text-primary', true);
     await utils.assertHasClass(
-      routes.sequentialResponseIcon,
+      routes.sequentialResponseBtn,
       'text-primary',
       true
     );
@@ -594,25 +618,70 @@ describe('Response rules random or sequential', () => {
     await utils.waitForAutosave();
     await file.verifyObjectPropertyInFile(
       './tmp/storage/response-rules.json',
-      ['routes.3.randomResponse', 'routes.3.sequentialResponse'],
-      [true, false]
+      ['routes.4.responseMode'],
+      ['DISABLE_RULES']
     );
   });
 
-  it('should disable random responses and both options should be disabled', async () => {
+  it('should switch to random responses and other buttons should be disabled', async () => {
     await routes.toggleRouteResponseRandom();
-    await utils.assertHasClass(routes.randomResponseIcon, 'text-primary', true);
+    await utils.assertHasClass(routes.randomResponseBtn, 'text-primary');
     await utils.assertHasClass(
-      routes.sequentialResponseIcon,
+      routes.sequentialResponseBtn,
       'text-primary',
+      true
+    );
+    await utils.assertHasClass(
+      routes.disableRulesResponseBtn,
+      'text-warning',
       true
     );
 
     await utils.waitForAutosave();
     await file.verifyObjectPropertyInFile(
       './tmp/storage/response-rules.json',
-      ['routes.3.randomResponse', 'routes.3.sequentialResponse'],
-      [false, false]
+      ['routes.4.responseMode'],
+      ['RANDOM']
+    );
+  });
+
+  it('should switch to sequential responses and other buttons should be disabled', async () => {
+    await routes.toggleRouteResponseSequential();
+    await utils.assertHasClass(routes.sequentialResponseBtn, 'text-primary');
+    await utils.assertHasClass(routes.randomResponseBtn, 'text-primary', true);
+    await utils.assertHasClass(
+      routes.disableRulesResponseBtn,
+      'text-warning',
+      true
+    );
+
+    await utils.waitForAutosave();
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/response-rules.json',
+      ['routes.4.responseMode'],
+      ['SEQUENTIAL']
+    );
+  });
+
+  it('should disable sequential responses and all options should be disabled', async () => {
+    await routes.toggleRouteResponseSequential();
+    await utils.assertHasClass(
+      routes.sequentialResponseBtn,
+      'text-primary',
+      true
+    );
+    await utils.assertHasClass(routes.randomResponseBtn, 'text-primary', true);
+    await utils.assertHasClass(
+      routes.disableRulesResponseBtn,
+      'text-warning',
+      true
+    );
+
+    await utils.waitForAutosave();
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/response-rules.json',
+      ['routes.4.responseMode'],
+      [null]
     );
   });
 });

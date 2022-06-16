@@ -1,6 +1,8 @@
 import {
+  ResponseMode,
   ResponseRule,
   ResponseRuleTargets,
+  Route,
   RouteResponse
 } from '@mockoon/commons';
 import { Request } from 'express';
@@ -22,8 +24,7 @@ export class ResponseRulesInterpreter {
   constructor(
     private routeResponses: RouteResponse[],
     private request: Request,
-    private randomResponse: boolean,
-    private sequentialResponse: boolean
+    private responseMode: Route['responseMode']
   ) {
     this.extractTargets();
   }
@@ -33,18 +34,22 @@ export class ResponseRulesInterpreter {
    * If no rule has been fulfilled get the first route response.
    */
   public chooseResponse(requestNumber: number): RouteResponse {
-    if (this.randomResponse) {
+    const defaultResponse =
+      this.routeResponses.find((routeResponse) => routeResponse.default) ||
+      this.routeResponses[0];
+
+    if (this.responseMode === ResponseMode.RANDOM) {
       const randomStatus = Math.floor(
         Math.random() * this.routeResponses.length
       );
 
       return this.routeResponses[randomStatus];
-    }
-
-    if (this.sequentialResponse) {
+    } else if (this.responseMode === ResponseMode.SEQUENTIAL) {
       return this.routeResponses[
         (requestNumber - 1) % this.routeResponses.length
       ];
+    } else if (this.responseMode === ResponseMode.DISABLE_RULES) {
+      return defaultResponse;
     } else {
       let response = this.routeResponses.find((routeResponse) => {
         if (routeResponse.rules.length === 0) {
@@ -62,9 +67,7 @@ export class ResponseRulesInterpreter {
 
       // if no rules were fulfilled fin the default one, or first one if no default
       if (response === undefined) {
-        response =
-          this.routeResponses.find((routeResponse) => routeResponse.default) ||
-          this.routeResponses[0];
+        response = defaultResponse;
       }
 
       return response;

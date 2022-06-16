@@ -1,6 +1,6 @@
 {
   "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-  "lastMigration": 20,
+  "lastMigration": 21,
   "name": "Environment logs 1",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -12,7 +12,6 @@
       "endpoint": "endpoint/:param1",
       "documentation": "Test endpoint",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "4bddd419-fbd4-44b7-9564-fb5cd234a2eb",
@@ -70,7 +69,7 @@
           "default": false
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     },
     {
       "uuid": "08f2985c-26d7-477d-bd71-f4c47e203e14",
@@ -78,7 +77,6 @@
       "endpoint": "file",
       "documentation": "Binary test endpoint",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "c0ed8945-8b57-4144-818a-e581c3cc3414",
@@ -96,7 +94,7 @@
           "default": true
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,
