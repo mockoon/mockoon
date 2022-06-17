@@ -97,6 +97,7 @@
               ngbDropdown
               [autoClose]="'outside'"
               #routeResponsesDropdown="ngbDropdown"
+              #routeResponsesDropdownElement
             >
               <button
                 type="button"
@@ -119,6 +120,10 @@
 
               <div
                 class="dropdown-menu route-responses-dropdown-menu"
+                [ngStyle]="{
+                  'min-width': routeResponsesDropdownElement.offsetWidth + 'px',
+                  'max-width': routeResponsesDropdownElement.offsetWidth + 'px'
+                }"
                 aria-labelledby="route-responses-dropdown"
                 ngbDropdownMenu
                 MousedragDeadzone
