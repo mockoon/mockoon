@@ -85,6 +85,8 @@ $ mockoon-cli start --data https://domain.com/your-environment-file.json
 
 Another option is to directly pass an OpenAPI specification file as the `data` parameter. Mockoon supports both JSON and YAML formats in versions 2.0.0 and 3.0.0.
 
+> /!\ There is currently no equivalent between all the OpenAPI specifications and Mockoon's features ([more info](https://mockoon.com/docs/latest/openapi/openapi-specification-compatibility/)). If you want to run your Mockoon mock APIs with the CLI with all the features (templating, rules, etc.), you must use Mockoon's data files ([see above](#use-your-mockoon-environment-file)) directly, or you may lose part of your mock's behavior.
+
 You can provide a path to a local OpenAPI specification file or directly the file's URL:
 
 ```sh-sessions
