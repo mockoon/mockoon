@@ -93,7 +93,8 @@ describe('Response rules interpreter', () => {
               target: '' as ResponseRuleTargets,
               modifier: 'prop',
               value: 'value',
-              operator: 'equals'
+              operator: 'equals',
+              invert: false
             }
           ],
           body: 'invalid'
@@ -128,7 +129,43 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: 'obj.prop',
                 value: '^value',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'query1'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+
+      expect(routeResponse.body).to.be.equal('query1');
+    });
+
+    it('should return response if query param do no matches (inverted)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: '',
+        query: { obj: { prop: 'notvalue' } } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'query',
+                modifier: 'obj.prop',
+                value: 'value',
+                operator: 'equals',
+                invert: true
               }
             ],
             body: 'query1'
@@ -162,7 +199,8 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: 'obj.prop',
                 value: 'val',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'query2'
@@ -196,7 +234,8 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: 'obj.prop',
                 value: 'value',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'query3'
@@ -230,7 +269,8 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: 'array',
                 value: 'test1|test2',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             body: 'query4'
@@ -264,7 +304,8 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: 'array',
                 value: 'test2',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             body: 'query5'
@@ -298,7 +339,8 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: '',
                 value: 'value',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'query6'
@@ -332,7 +374,8 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: 'prop',
                 value: 'value',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'query7'
@@ -366,7 +409,8 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: 'shouldNotBeSet',
                 value: '',
-                operator: 'null'
+                operator: 'null',
+                invert: false
               }
             ],
             body: 'query7'
@@ -400,7 +444,8 @@ describe('Response rules interpreter', () => {
                 target: 'query',
                 modifier: 'examples',
                 value: '',
-                operator: 'empty_array'
+                operator: 'empty_array',
+                invert: false
               }
             ],
             body: 'query7'
@@ -436,7 +481,42 @@ describe('Response rules interpreter', () => {
                 target: 'params',
                 modifier: 'id',
                 value: '^1',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'params1'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+      expect(routeResponse.body).to.be.equal('params1');
+    });
+
+    it('should return response if route param value does not match (inverted)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: '',
+        params: { id: '2' } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'params',
+                modifier: 'id',
+                value: '1',
+                operator: 'equals',
+                invert: true
               }
             ],
             body: 'params1'
@@ -469,7 +549,8 @@ describe('Response rules interpreter', () => {
                 target: 'params',
                 modifier: 'id',
                 value: '111',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'params2'
@@ -502,7 +583,8 @@ describe('Response rules interpreter', () => {
                 target: 'params',
                 modifier: '',
                 value: '111',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'params3'
@@ -535,7 +617,8 @@ describe('Response rules interpreter', () => {
                 target: 'params',
                 modifier: '',
                 value: '11',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'params4'
@@ -568,7 +651,8 @@ describe('Response rules interpreter', () => {
                 target: 'params',
                 modifier: '',
                 value: '11',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'params5'
@@ -605,7 +689,8 @@ describe('Response rules interpreter', () => {
                 target: 'request_number',
                 modifier: '',
                 value: '1',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'request_number_1'
@@ -617,7 +702,7 @@ describe('Response rules interpreter', () => {
       expect(routeResponse.body).to.be.equal('request_number_1');
     });
 
-    it("should not return response if request number don't matches", () => {
+    it('should return response if request number does not match (inverted)', () => {
       const request: Request = {
         header: function (headerName: string) {
           const headers = {
@@ -640,7 +725,44 @@ describe('Response rules interpreter', () => {
                 target: 'request_number',
                 modifier: '',
                 value: '1',
-                operator: 'equals'
+                operator: 'equals',
+                invert: true
+              }
+            ],
+            body: 'request_number_not_1'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(2);
+      expect(routeResponse.body).to.be.equal('request_number_not_1');
+    });
+
+    it("should return default response if request number don't matches", () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json',
+            'Accept-Charset': 'UTF-8'
+          };
+
+          return headers[headerName];
+        },
+        body: ''
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'request_number',
+                modifier: '',
+                value: '1',
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'request_number_1'
@@ -675,7 +797,8 @@ describe('Response rules interpreter', () => {
                 target: 'request_number',
                 modifier: '',
                 value: '^[1-9][0-9]?$|^100$',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             body: 'request_number_regex'
@@ -710,7 +833,8 @@ describe('Response rules interpreter', () => {
                 target: 'request_number',
                 modifier: '',
                 value: '^[1-9][0-9]?$|^100$',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             body: 'request_number_regex'
@@ -745,13 +869,15 @@ describe('Response rules interpreter', () => {
                 target: 'header',
                 modifier: 'Authorization',
                 value: '^$|s+',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               },
               {
                 target: 'request_number',
                 modifier: '',
                 value: '1|2',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             rulesOperator: 'AND',
@@ -887,7 +1013,44 @@ describe('Response rules interpreter', () => {
                 target: 'header',
                 modifier: 'Accept-Charset',
                 value: '^UTF',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'header1'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+      expect(routeResponse.body).to.be.equal('header1');
+    });
+
+    it('should return response if header value does not match (inverted)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json',
+            'Accept-Charset': 'ISOsomething'
+          };
+
+          return headers[headerName];
+        },
+        body: ''
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'header',
+                modifier: 'Accept-Charset',
+                value: 'UTF-8',
+                operator: 'equals',
+                invert: true
               }
             ],
             body: 'header1'
@@ -922,7 +1085,8 @@ describe('Response rules interpreter', () => {
                 target: 'header',
                 modifier: 'Accept-Charset',
                 value: 'UTF-8',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'header2'
@@ -957,7 +1121,8 @@ describe('Response rules interpreter', () => {
                 target: 'header',
                 modifier: 'Accept-Charset',
                 value: 'UTF-16',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'header3'
@@ -992,7 +1157,8 @@ describe('Response rules interpreter', () => {
                 target: 'header',
                 modifier: 'Accept-Charset',
                 value: 'UTF-16',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'header4'
@@ -1027,7 +1193,8 @@ describe('Response rules interpreter', () => {
                 target: 'header',
                 modifier: '',
                 value: 'UTF-8',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'header5'
@@ -1068,7 +1235,46 @@ describe('Response rules interpreter', () => {
                 target: 'cookie',
                 modifier: 'login',
                 value: 'tom.+',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'cookie1'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+      expect(routeResponse.body).to.be.equal('cookie1');
+    });
+
+    it('should return response if cookie value does not match (inverted)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        cookies: {
+          login: 'notvalue'
+        },
+        body: ''
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'cookie',
+                modifier: 'login',
+                value: 'value',
+                operator: 'equals',
+                invert: true
               }
             ],
             body: 'cookie1'
@@ -1107,7 +1313,8 @@ describe('Response rules interpreter', () => {
                 target: 'cookie',
                 modifier: 'login',
                 value: 'tommy',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'cookie2'
@@ -1146,7 +1353,8 @@ describe('Response rules interpreter', () => {
                 target: 'cookie',
                 modifier: 'login',
                 value: 'fanta',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'cookie2'
@@ -1184,7 +1392,8 @@ describe('Response rules interpreter', () => {
                 target: 'cookie',
                 modifier: 'login',
                 value: '',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'cookie2'
@@ -1220,7 +1429,8 @@ describe('Response rules interpreter', () => {
                 target: 'cookie',
                 modifier: 'login',
                 value: '',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'cookie2'
@@ -1256,7 +1466,8 @@ describe('Response rules interpreter', () => {
                 target: 'cookie',
                 modifier: 'login',
                 value: '',
-                operator: 'null'
+                operator: 'null',
+                invert: false
               }
             ],
             body: 'cookie2'
@@ -1295,7 +1506,8 @@ describe('Response rules interpreter', () => {
                 target: 'cookie',
                 modifier: '',
                 value: 'cola',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'cookie3'
@@ -1334,7 +1546,8 @@ describe('Response rules interpreter', () => {
                 target: 'cookie',
                 modifier: '',
                 value: '',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'cookie3'
@@ -1374,7 +1587,44 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: '',
                 value: 'value',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'body1'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+      expect(routeResponse.body).to.be.equal('body1');
+    });
+
+    it('should return response if full body value does not match (no modifier + inverted)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        stringBody: 'notbodyvalue',
+        body: 'notbodyvalue'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: 'bodyvalue',
+                operator: 'equals',
+                invert: true
               }
             ],
             body: 'body1'
@@ -1409,7 +1659,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: '',
                 value: 'bodyvalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body2'
@@ -1444,7 +1695,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: '',
                 value: 'body',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body3'
@@ -1479,7 +1731,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'name',
                 value: 'john',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body4'
@@ -1514,7 +1767,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'user.0.name',
                 value: 'John',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body5'
@@ -1549,7 +1803,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'user.0.name',
                 value: '^John',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             body: 'body6'
@@ -1584,7 +1839,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'users',
                 value: 'John',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body7'
@@ -1619,7 +1875,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'users',
                 value: '^John',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             body: 'body8'
@@ -1654,7 +1911,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'test',
                 value: 'test',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body9'
@@ -1689,7 +1947,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'test',
                 value: '1',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body10'
@@ -1724,7 +1983,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'test',
                 value: 'false',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body11'
@@ -1759,7 +2019,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'param1',
                 value: 'value1',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body12'
@@ -1794,7 +2055,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'param1',
                 value: '^value',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             body: 'body13'
@@ -1829,7 +2091,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'params',
                 value: 'value2',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body14'
@@ -1864,7 +2127,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'params.prop2',
                 value: 'value2',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body15'
@@ -1899,7 +2163,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: '',
                 value: 'bodyvalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body16'
@@ -1934,7 +2199,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: '',
                 value: 'value',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             body: 'body17'
@@ -1969,7 +2235,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'prop1',
                 value: '',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             body: 'body19'
@@ -2004,7 +2271,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'prop1',
                 value: null,
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               } as any
             ],
             body: 'body19'
@@ -2040,7 +2308,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'user.name._text',
                 value: 'John',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               } as any
             ],
             body: 'body20'
@@ -2076,7 +2345,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'user._attributes.userId',
                 value: '1',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               } as any
             ],
             body: 'body21'
@@ -2112,7 +2382,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: '_declaration._attributes.version',
                 value: '1.0',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               } as any
             ],
             body: 'body21'
@@ -2124,6 +2395,7 @@ describe('Response rules interpreter', () => {
       expect(routeResponse.body).to.be.equal('body21');
     });
   });
+
   describe('Complex rules (AND/OR)', () => {
     it('should return response if both rules match', () => {
       const request: Request = {
@@ -2149,13 +2421,60 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'test',
                 value: 'bodyvalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               },
               {
                 target: 'header',
                 modifier: 'Test-Header',
                 value: 'headervalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            rulesOperator: 'AND',
+            body: 'complex1'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+      expect(routeResponse.body).to.be.equal('complex1');
+    });
+
+    it('should return response if both rules match (with invert)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json',
+            'Test-Header': 'headervalue'
+          };
+
+          return headers[headerName];
+        },
+        stringBody: '{ "test": "notbodyvalue" }',
+        body: { test: 'notbodyvalue' }
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: 'test',
+                value: 'bodyvalue',
+                operator: 'equals',
+                invert: true
+              },
+              {
+                target: 'header',
+                modifier: 'Test-Header',
+                value: 'headervalue',
+                operator: 'equals',
+                invert: false
               }
             ],
             rulesOperator: 'AND',
@@ -2191,13 +2510,15 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'test',
                 value: 'bodyvalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               },
               {
                 target: 'header',
                 modifier: 'Test-Header',
                 value: 'headervalue1',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             rulesOperator: 'AND',
@@ -2234,13 +2555,15 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'test',
                 value: 'bodyvalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               },
               {
                 target: 'header',
                 modifier: 'Test-Header',
                 value: 'headervalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             rulesOperator: 'OR',
@@ -2276,13 +2599,15 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'test',
                 value: 'bodyvalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               },
               {
                 target: 'header',
                 modifier: 'Test-Header',
                 value: 'headervalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             rulesOperator: 'OR',
@@ -2329,7 +2654,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: 'test',
                 value: 'bodyvalue',
-                operator: 'equals'
+                operator: 'equals',
+                invert: false
               }
             ],
             rulesOperator: 'OR',
@@ -2387,7 +2713,8 @@ describe('Response rules interpreter', () => {
                 target: 'body',
                 modifier: '',
                 value: 'bodyvalue',
-                operator: 'regex'
+                operator: 'regex',
+                invert: false
               }
             ],
             rulesOperator: 'OR',

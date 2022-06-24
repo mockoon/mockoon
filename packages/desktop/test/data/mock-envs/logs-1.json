@@ -1,6 +1,6 @@
 {
   "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-  "lastMigration": 21,
+  "lastMigration": 22,
   "name": "Environment logs 1",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -45,7 +45,8 @@
               "target": "params",
               "modifier": "param1",
               "value": "2",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",

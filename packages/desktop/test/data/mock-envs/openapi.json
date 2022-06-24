@@ -1,6 +1,6 @@
 {
   "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-  "lastMigration": 21,
+  "lastMigration": 22,
   "name": "Demo users API V2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -54,7 +54,8 @@
               "target": "params",
               "modifier": "id",
               "value": "1",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -76,7 +77,8 @@
               "target": "params",
               "modifier": "id",
               "value": "2",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -108,7 +110,8 @@
               "target": "body",
               "modifier": "firstname",
               "value": ".+",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -130,7 +133,8 @@
               "target": "body",
               "modifier": "firstname",
               "value": "^$",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -162,7 +166,8 @@
               "target": "body",
               "modifier": "firstname",
               "value": ".*",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",

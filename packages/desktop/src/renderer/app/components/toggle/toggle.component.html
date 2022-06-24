@@ -1,34 +1,61 @@
-<div
-  class="btn-group btn-group-toggle h-100"
-  data-toggle="buttons"
-  [formGroup]="form"
->
+<div class="btn-group btn-group-toggle h-100" data-toggle="buttons">
   <ng-container *ngFor="let item of items">
-    <label
-      id="{{ prefix }}-{{ item.value }}"
-      class="btn btn-custom btn-xs px-2 d-flex align-items-center"
-      [ngClass]="{
-        'btn-primary': item.value === form.get(controlName).value,
-        active: item.value === form.get(controlName).value
-      }"
-      [ngbTooltip]="item.tooltip"
-      [ngClass]="
-        item.value === form.get(controlName).value
-          ? item.activeClass
+    <!-- Single toggle mode (checkbox, boolean) -->
+    <ng-container *ngIf="items.length === 1">
+      <label
+        id="{{ prefix }}-{{ item.label | uppercase }}"
+        class="btn btn-custom btn-xs"
+        [ngClass]="{
+          'btn-primary': control.value === true,
+          active: control.value === true
+        }"
+        [ngbTooltip]="item.tooltip"
+        [ngClass]="
+          control.value === true
             ? item.activeClass
-            : 'text-primary'
-          : ''
-      "
-      (click)="itemClick(item, $event)"
-    >
-      <input
-        type="radio"
-        [formControlName]="controlName"
-        [value]="item.value"
-        autocomplete="off"
-        [checked]="item.value === form.get(controlName).value"
-      />
-      <app-svg *ngIf="item.icon" [icon]="item.icon"></app-svg>{{ item.label }}
-    </label>
+              ? item.activeClass
+              : 'text-primary'
+            : ''
+        "
+      >
+        <input
+          type="checkbox"
+          [formControl]="control"
+          autocomplete="off"
+          [checked]="control.value === true"
+        />
+        <app-svg *ngIf="item.icon" [icon]="item.icon"></app-svg>{{ item.label }}
+      </label>
+    </ng-container>
+
+    <!-- Multi toggle mode (radio buttons, uncheckable) -->
+    <ng-container *ngIf="items.length > 1">
+      <label
+        id="{{ prefix }}-{{ item.value }}"
+        class="btn btn-custom btn-xs px-2 d-flex align-items-center"
+        [ngClass]="{
+          'btn-primary': item.value === control.value,
+          active: item.value === control.value
+        }"
+        [ngbTooltip]="item.tooltip"
+        [ngClass]="
+          item.value === control.value
+            ? item.activeClass
+              ? item.activeClass
+              : 'text-primary'
+            : ''
+        "
+        (click)="itemClick(item, $event)"
+      >
+        <input
+          type="radio"
+          [formControl]="control"
+          [value]="item.value"
+          autocomplete="off"
+          [checked]="item.value === control.value"
+        />
+        <app-svg *ngIf="item.icon" [icon]="item.icon"></app-svg>{{ item.label }}
+      </label>
+    </ng-container>
   </ng-container>
 </div>

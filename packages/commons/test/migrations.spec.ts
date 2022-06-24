@@ -241,4 +241,33 @@ describe('Migrations', () => {
       expect(environment.routes[0]['randomResponse']).to.equal(undefined);
     });
   });
+
+  describe('migration n. 22', () => {
+    it('should add `invert` to the response rules', () => {
+      const environment = {
+        routes: [
+          {
+            responses: [
+              {
+                rules: [
+                  {
+                    target: 'body',
+                    modifier: 'test',
+                    value: 'test',
+                    operator: 'equals'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      };
+
+      applyMigration(22, environment);
+
+      expect(environment.routes[0].responses[0].rules[0]['invert']).to.equal(
+        false
+      );
+    });
+  });
 });

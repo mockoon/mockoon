@@ -1,6 +1,6 @@
 {
   "uuid": "",
-  "lastMigration": 21,
+  "lastMigration": 22,
   "name": "Slack",
   "endpointPrefix": "api",
   "latency": 0,

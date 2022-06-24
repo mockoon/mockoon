@@ -34,6 +34,7 @@ export class ResponseRulesInterpreter {
    * If no rule has been fulfilled get the first route response.
    */
   public chooseResponse(requestNumber: number): RouteResponse {
+    // if no rules were fulfilled find the default one, or first one if no default
     const defaultResponse =
       this.routeResponses.find((routeResponse) => routeResponse.default) ||
       this.routeResponses[0];
@@ -58,20 +59,36 @@ export class ResponseRulesInterpreter {
 
         return routeResponse.rulesOperator === 'AND'
           ? routeResponse.rules.every((rule) =>
-              this.isValidRule(rule, requestNumber)
+              this.isValid(rule, requestNumber)
             )
           : routeResponse.rules.some((rule) =>
-              this.isValidRule(rule, requestNumber)
+              this.isValid(rule, requestNumber)
             );
       });
 
-      // if no rules were fulfilled fin the default one, or first one if no default
       if (response === undefined) {
         response = defaultResponse;
       }
 
       return response;
     }
+  }
+
+  /**
+   * Check a rule validity and invert it if invert is at true
+   *
+   * @param rule
+   * @param requestNumber
+   * @returns
+   */
+  private isValid(rule: ResponseRule, requestNumber: number) {
+    let isValid = this.isValidRule(rule, requestNumber);
+
+    if (rule.invert) {
+      isValid = !isValid;
+    }
+
+    return isValid;
   }
 
   /**

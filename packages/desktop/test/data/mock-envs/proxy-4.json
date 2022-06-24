@@ -1,6 +1,6 @@
 {
   "uuid": "2cbdec80-f284-11e9-a28c-912bdc671020",
-  "lastMigration": 21,
+  "lastMigration": 22,
   "name": "Proxy removes prefix",
   "endpointPrefix": "prefix",
   "latency": 0,

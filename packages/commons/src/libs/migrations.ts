@@ -443,6 +443,23 @@ export const Migrations: {
         delete route['randomResponse'];
       });
     }
+  },
+  /**
+   * Add invert property to the rules
+   */
+  {
+    id: 22,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((routeResponse) => {
+          routeResponse.rules.forEach((rule) => {
+            if (rule.invert === undefined) {
+              rule.invert = ResponseRuleDefault.invert;
+            }
+          });
+        });
+      });
+    }
   }
 ];
 

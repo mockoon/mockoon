@@ -100,8 +100,7 @@
     <div class="form-group d-flex">
       <app-toggle
         prefix="cert-types"
-        [form]="tlsOptionsFormGroup"
-        controlName="type"
+        formControlName="type"
         [items]="certTypes"
         [uncheckable]="false"
       ></app-toggle>

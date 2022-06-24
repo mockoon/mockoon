@@ -5,8 +5,7 @@
         <div class="rules-operator d-flex flex-column justify-content-center">
           <app-toggle
             prefix="rules-operators"
-            [form]="form"
-            controlName="rulesOperator"
+            formControlName="rulesOperator"
             [items]="rulesOperators"
             [uncheckable]="false"
           ></app-toggle>
@@ -66,6 +65,14 @@
                     : null
                 "
               />
+
+              <app-toggle
+                class="mr-1"
+                [uncheckable]="true"
+                formControlName="invert"
+                prefix="rule"
+                [items]="rulesInvert"
+              ></app-toggle>
 
               <select
                 class="custom-select col-2 mr-1"
