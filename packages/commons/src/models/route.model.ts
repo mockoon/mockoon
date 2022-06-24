@@ -28,6 +28,7 @@ export type ResponseRule = {
   target: ResponseRuleTargets;
   modifier: string;
   value: string;
+  invert: boolean;
   operator: ResponseRuleOperators;
 };
 

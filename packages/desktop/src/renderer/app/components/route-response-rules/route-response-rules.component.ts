@@ -90,6 +90,9 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
       label: 'AND'
     }
   ];
+  public rulesInvert: ToggleItems = [
+    { icon: 'priority_high', tooltip: 'Invert condition' }
+  ];
   public deleteRuleRequested$ = new TimedBoolean();
   public texts = Texts;
   private listenToChanges = true;

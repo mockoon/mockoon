@@ -74,6 +74,7 @@ export class SvgComponent {
     | 'insert_drive_file'
     | 'multiple_stop'
     | 'open_in_new'
+    | 'priority_high'
     | string;
 
   constructor() {}

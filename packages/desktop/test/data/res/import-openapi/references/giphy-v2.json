@@ -1,6 +1,6 @@
 {
   "uuid": "d1fec840-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 21,
+  "lastMigration": 22,
   "name": "Giphy",
   "endpointPrefix": "v1",
   "latency": 0,

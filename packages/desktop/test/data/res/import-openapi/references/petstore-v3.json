@@ -1,6 +1,6 @@
 {
   "uuid": "",
-  "lastMigration": 21,
+  "lastMigration": 22,
   "name": "Swagger Petstore v3",
   "endpointPrefix": "v2",
   "latency": 0,

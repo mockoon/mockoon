@@ -77,6 +77,7 @@ export const ResponseRuleDefault: ResponseRule = {
   target: 'body',
   modifier: '',
   value: '',
+  invert: false,
   operator: 'equals'
 };
 
@@ -138,6 +139,7 @@ const RouteResponseRuleSchema = Joi.object<ResponseRule, true>({
     .failover(ResponseRuleDefault.modifier)
     .required(),
   value: Joi.string().allow('').failover(ResponseRuleDefault.value).required(),
+  invert: Joi.boolean().failover(ResponseRuleDefault.invert).required(),
   operator: Joi.string()
     .valid('equals', 'regex', 'null', 'empty_array')
     .failover(ResponseRuleDefault.operator)

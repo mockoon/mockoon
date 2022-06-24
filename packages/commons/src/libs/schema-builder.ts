@@ -121,6 +121,7 @@ export const BuildDemoEnvironment = (): Environment => ({
               target: 'params',
               modifier: 'param1',
               value: 'xyz',
+              invert: false,
               operator: 'equals'
             }
           ]
@@ -135,6 +136,7 @@ export const BuildDemoEnvironment = (): Environment => ({
               target: 'params',
               modifier: 'param1',
               value: '^(?!.*xyz).*$',
+              invert: false,
               operator: 'regex'
             }
           ]

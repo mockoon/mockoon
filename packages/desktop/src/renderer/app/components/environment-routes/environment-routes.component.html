@@ -79,7 +79,7 @@
           class="mt-4"
           id="route-responses-menu"
         >
-          <div id="route-responses-buttons">
+          <div id="route-responses-buttons" [formGroup]="activeRouteForm">
             <!-- Route responses button (add / randomize) -->
             <button
               type="button"
@@ -194,8 +194,7 @@
             <app-toggle
               class="ml-2"
               prefix="response-modes"
-              [form]="activeRouteForm"
-              controlName="responseMode"
+              formControlName="responseMode"
               [items]="responseModes"
             ></app-toggle>
           </div>

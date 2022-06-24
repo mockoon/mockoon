@@ -1,6 +1,6 @@
 {
   "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
-  "lastMigration": 21,
+  "lastMigration": 22,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -28,7 +28,8 @@
               "target": "body",
               "modifier": "test",
               "value": "test",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -75,7 +76,8 @@
               "target": "query",
               "modifier": "obj.prop2",
               "value": "^value",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -97,7 +99,8 @@
               "target": "query",
               "modifier": "array",
               "value": "test1|test2",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -119,7 +122,8 @@
               "target": "params",
               "modifier": "id",
               "value": "^1",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -141,7 +145,8 @@
               "target": "header",
               "modifier": "Accept-Charset",
               "value": "UTF-8",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -163,7 +168,8 @@
               "target": "header",
               "modifier": "Accept-Charset",
               "value": "UTF\\-8|UTF\\-16",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -185,7 +191,8 @@
               "target": "body",
               "modifier": "name",
               "value": "john",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -207,7 +214,8 @@
               "target": "body",
               "modifier": "user.0.name",
               "value": "John",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -229,7 +237,8 @@
               "target": "body",
               "modifier": "users",
               "value": "Paul",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -251,7 +260,8 @@
               "target": "body",
               "modifier": "user",
               "value": "^Ric",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -273,7 +283,8 @@
               "target": "body",
               "modifier": "users",
               "value": "^Ric",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -295,7 +306,8 @@
               "target": "body",
               "modifier": "test",
               "value": "test",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -317,7 +329,8 @@
               "target": "body",
               "modifier": "test",
               "value": "1",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -339,7 +352,8 @@
               "target": "body",
               "modifier": "test",
               "value": "true",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -361,7 +375,8 @@
               "target": "body",
               "modifier": "",
               "value": "testfullbody",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -383,7 +398,8 @@
               "target": "body",
               "modifier": "",
               "value": "body2$",
-              "operator": "regex"
+              "operator": "regex",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -405,7 +421,8 @@
               "target": "body",
               "modifier": "property1",
               "value": "",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
@@ -577,7 +594,8 @@
               "target": "body",
               "modifier": "test",
               "value": "value1",
-              "operator": "equals"
+              "operator": "equals",
+              "invert": false
             }
           ],
           "rulesOperator": "OR",
