@@ -2,9 +2,13 @@ Thank you to all the supporters who donated over time, and all the ones who want
 
 You can join them by visiting our Sponsor page on [GitHub Sponsors](https://github.com/sponsors/mockoon)
 
-[![sponsor button](https://mockoon.com/images/sponsor-btn-250.png)](https://github.com/sponsors/mockoon)
+[![sponsor button](https://mockoon.com/images/sponsor-btn-250.png?)](https://github.com/sponsors/mockoon)
 
-# Sponsors & Backers:
+# Platinum sponsor
+
+[![Appwrite](https://mockoon.com/images/sponsors/appwrite-300.png)](https://appwrite.io/)
+
+# One-time and past sponsors
 
 - 0xhexmeow
 - Adam Recvlohe
@@ -12,6 +16,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Andres Saa
 - Andrey Kozlov
 - [Anthony Critelli](https://github.com/acritelli)
+- [Appwrite](https://appwrite.io/)
 - Валентин Радчук
 - Barefootdeveloper
 - Buckley Robinson

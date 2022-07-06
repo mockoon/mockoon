@@ -39,10 +39,16 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
 
 ---
 
+## Our platinum sponsor
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite-300.png" width="300" alt="Appwrite logo" /></a>
+</div>
+
 Mockoon is an open-source project built by volunteer maintainers. If you like our application, please consider sponsoring us and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png" width="250" alt="sponsor button" /></a>
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
 </div>
 
 ---
