@@ -91,8 +91,6 @@ export const unwatchEnvironmentFile = async (UUID: string) => {
 export const unwatchAllEnvironmentFiles = async () => {
   clearAllScheduledWatchers();
 
-  logInfo('unwatch all', JSON.stringify(watchers.map((w) => w.UUID)));
-
   for (const watcherItem of watchers) {
     logInfo(`${logPrefix} unwatching ${watcherItem.UUID}`);
 

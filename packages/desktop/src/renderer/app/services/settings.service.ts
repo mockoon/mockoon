@@ -125,11 +125,12 @@ export class SettingsService {
    */
   public saveSettings(): Observable<void> {
     return this.store.select('settings').pipe(
+      filter((settings) => !!settings),
+      debounceTime(500),
+      distinctUntilChanged(IsEqual),
       tap(() => {
         this.storageService.initiateSaving();
       }),
-      debounceTime(500),
-      distinctUntilChanged(IsEqual),
       mergeMap((settings) =>
         this.storageService.saveSettings(settings, settings.storagePrettyPrint)
       )
