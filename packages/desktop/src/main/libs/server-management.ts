@@ -48,12 +48,13 @@ export class ServerInstance {
 
     server.once('started', () => {
       this.mockoonServer = server;
-
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        this.environment.uuid,
-        'started'
-      );
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          this.environment.uuid,
+          'started'
+        );
+      }
     });
 
     server.once('stopped', () => {
@@ -72,40 +73,48 @@ export class ServerInstance {
     });
 
     server.once('creating-proxy', () => {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        this.environment.uuid,
-        'creating-proxy'
-      );
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          this.environment.uuid,
+          'creating-proxy'
+        );
+      }
     });
 
     server.on('entering-request', () => {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        this.environment.uuid,
-        'entering-request'
-      );
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          this.environment.uuid,
+          'entering-request'
+        );
+      }
     });
 
     server.on('transaction-complete', (transaction: Transaction) => {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        this.environment.uuid,
-        'transaction-complete',
-        { transaction }
-      );
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          this.environment.uuid,
+          'transaction-complete',
+          { transaction }
+        );
+      }
     });
 
     server.on('error', (errorCode: any, originalError: any) => {
-      mainWindow.webContents.send(
-        'APP_SERVER_EVENT',
-        this.environment.uuid,
-        'error',
-        {
-          errorCode,
-          originalError
-        }
-      );
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          this.environment.uuid,
+          'error',
+          {
+            errorCode,
+            originalError
+          }
+        );
+      }
     });
 
     server.start();
