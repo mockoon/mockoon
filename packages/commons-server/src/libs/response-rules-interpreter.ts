@@ -8,6 +8,8 @@ import {
 import { Request } from 'express';
 import { get as objectPathGet } from 'object-path';
 import { ParsedQs } from 'qs';
+import { ParsedBodyMimeTypes } from '../constants/common.constants';
+import { stringIncludesArrayItems } from './utils';
 
 /**
  * Interpretor for the route response rules.
@@ -170,12 +172,7 @@ export class ResponseRulesInterpreter {
     let body: ParsedQs | JSON = {};
 
     if (requestContentType) {
-      if (
-        requestContentType.includes('application/x-www-form-urlencoded') ||
-        requestContentType.includes('application/json') ||
-        requestContentType.includes('application/xml') ||
-        requestContentType.includes('text/xml')
-      ) {
+      if (stringIncludesArrayItems(ParsedBodyMimeTypes, requestContentType)) {
         body = this.request.body;
       }
     }

@@ -30,11 +30,16 @@ import { parse as qsParse } from 'qs';
 import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
 import { xml2js } from 'xml-js';
+import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
 import { Texts } from '../../i18n/en';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
-import { CreateTransaction, resolvePathFromEnvironment } from '../utils';
+import {
+  CreateTransaction,
+  resolvePathFromEnvironment,
+  stringIncludesArrayItems
+} from '../utils';
 
 /**
  * Create a server instance from an Environment object.
@@ -230,8 +235,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               depth: 10
             });
           } else if (
-            requestContentType.includes('application/xml') ||
-            requestContentType.includes('text/xml')
+            stringIncludesArrayItems(ParsedXMLBodyMimeTypes, requestContentType)
           ) {
             request.body = xml2js(request.stringBody, {
               compact: true

@@ -272,6 +272,7 @@ export const headerValues = [
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/x-www-form-urlencoded',
   'application/xhtml+xml',
+  'application/soap+xml',
   'application/xml',
   'application/zip',
   'audio/mpeg',
