@@ -190,3 +190,15 @@ export const resolvePathFromEnvironment = (
 
   return filePath;
 };
+
+/**
+ * Check that at least one item of the array is included in the provided string
+ *
+ * @param array
+ * @param str
+ * @returns
+ */
+export const stringIncludesArrayItems = (
+  array: string[],
+  str: string
+): boolean => array.some((item) => str.includes(item));

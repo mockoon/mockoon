@@ -38,7 +38,8 @@ describe('Responses rules', () => {
         modifier: 'userid',
         target: 'params',
         value: '10',
-        operator: 'equals'
+        operator: 'equals',
+        invert: false
       });
 
       await utils.waitForAutosave();
@@ -60,7 +61,8 @@ describe('Responses rules', () => {
         modifier: 'userid',
         target: 'query',
         value: '5',
-        operator: 'equals'
+        operator: 'equals',
+        invert: false
       });
 
       await utils.waitForAutosave();
@@ -80,7 +82,8 @@ describe('Responses rules', () => {
         modifier: 'Accept',
         target: 'header',
         value: 'application/xhtml+xml',
-        operator: 'equals'
+        operator: 'equals',
+        invert: false
       });
 
       await utils.waitForAutosave();
@@ -387,14 +390,16 @@ describe('Responses rules', () => {
         modifier: 'param1',
         target: 'params',
         value: 'param1value',
-        operator: 'equals'
+        operator: 'equals',
+        invert: false
       });
       await routes.assertRulesOperatorPresence(true);
       await routes.addResponseRule({
         modifier: 'qp1',
         target: 'query',
         value: 'qp1value',
-        operator: 'equals'
+        operator: 'equals',
+        invert: false
       });
       await routes.assertRulesOperatorPresence();
       await routes.assertRulesOperator('OR');
@@ -408,19 +413,22 @@ describe('Responses rules', () => {
         modifier: 'param1',
         target: 'params',
         value: 'param1value2',
-        operator: 'equals'
+        operator: 'equals',
+        invert: false
       });
       await routes.addResponseRule({
         modifier: 'qp2',
         target: 'query',
         value: 'qp2value',
-        operator: 'equals'
+        operator: 'equals',
+        invert: false
       });
       await routes.addResponseRule({
         modifier: 'qp3',
         target: 'query',
         value: 'qp3value',
-        operator: 'equals'
+        operator: 'equals',
+        invert: false
       });
       await routes.assertRulesOperatorPresence();
       await routes.assertRulesOperator('OR');
@@ -564,7 +572,8 @@ describe('Rules tabs', () => {
       modifier: 'var',
       target: 'params',
       value: '10',
-      operator: 'equals'
+      operator: 'equals',
+      invert: false
     });
 
     // this is needed for the tab re-render to complete
@@ -575,7 +584,8 @@ describe('Rules tabs', () => {
       modifier: 'test',
       target: 'query',
       value: 'true',
-      operator: 'equals'
+      operator: 'equals',
+      invert: false
     });
 
     // this is needed for the tab re-render to complete
@@ -594,7 +604,8 @@ describe('Rules tabs', () => {
       modifier: 'var',
       target: 'params',
       value: '10',
-      operator: 'equals'
+      operator: 'equals',
+      invert: false
     });
 
     // this is needed for the tab re-render to complete
