@@ -52,8 +52,7 @@ export class ToggleComponent
   ngOnInit(): void {
     this.control = new FormControl();
 
-    this.controlChanges = this.control.valueChanges.subscribe((v) => {
-      console.log(v);
+    this.controlChanges = this.control.valueChanges.subscribe(() => {
       this.onTouched();
       this.onChange(this.control.value);
     });

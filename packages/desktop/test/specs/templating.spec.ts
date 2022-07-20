@@ -623,6 +623,19 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
+        description: 'Helper: formdata',
+        path: '/formdata',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data; boundary=X-BOUNDARY'
+        },
+        body: '--X-BOUNDARY\r\nContent-Disposition: form-data; name="var1"\r\n\r\nval1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv2\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="object[property]"\r\n\r\nobjv1\r\n--X-BOUNDARY--\r\n',
+        testedResponse: {
+          status: 200,
+          body: 'val1sv1,sv2objv1'
+        }
+      },
+      {
         description: 'Helper: header',
         path: '/header',
         headers: { header1: 'testheader1' },

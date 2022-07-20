@@ -7,5 +7,6 @@ export const ParsedXMLBodyMimeTypes = [
 export const ParsedBodyMimeTypes = [
   'application/json',
   'application/x-www-form-urlencoded',
+  'multipart/form-data',
   ...ParsedXMLBodyMimeTypes
 ];
