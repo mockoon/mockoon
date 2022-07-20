@@ -13,6 +13,8 @@ import {
   ServerErrorCodes,
   ServerEvents
 } from '@mockoon/commons';
+import appendField from 'append-field';
+import busboy from 'busboy';
 import cookieParser from 'cookie-parser';
 import { EventEmitter } from 'events';
 import express, { Application, NextFunction, Request, Response } from 'express';
@@ -228,25 +230,58 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         if (requestContentType) {
           if (requestContentType.includes('application/json')) {
             request.body = JSON.parse(request.stringBody);
+            next();
           } else if (
             requestContentType.includes('application/x-www-form-urlencoded')
           ) {
             request.body = qsParse(request.stringBody, {
               depth: 10
             });
+            next();
+          } else if (requestContentType.includes('multipart/form-data')) {
+            const busboyParse = busboy({
+              headers: request.headers,
+              limits: { fieldNameSize: 1000, files: 0 }
+            });
+
+            busboyParse.on('field', (name, value, info) => {
+              if (request.body === undefined) {
+                request.body = {};
+              }
+
+              if (name != null && !info.nameTruncated && !info.valueTruncated) {
+                appendField(request.body, name, value);
+              }
+            });
+
+            busboyParse.on('error', (error: any) => {
+              this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
+              // we want to continue answering the call despite the parsing errors
+              next();
+            });
+
+            busboyParse.on('finish', () => {
+              next();
+            });
+
+            busboyParse.end(request.rawBody);
           } else if (
             stringIncludesArrayItems(ParsedXMLBodyMimeTypes, requestContentType)
           ) {
             request.body = xml2js(request.stringBody, {
               compact: true
             });
+            next();
+          } else {
+            next();
           }
+        } else {
+          next();
         }
       } catch (error: any) {
         this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
+        next();
       }
-
-      next();
     });
   };
 

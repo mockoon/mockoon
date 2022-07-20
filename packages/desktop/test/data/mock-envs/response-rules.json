@@ -7,7 +7,7 @@
   "port": 3000,
   "routes": [
     {
-      "uuid": "c7b025db-6fcb-4029-8a10-0054a4fbcb22",
+      "uuid": "c595a481-a367-4cc6-8ae1-188b72e9e3c7",
       "method": "get",
       "endpoint": "users/:userid",
       "documentation": "",
@@ -426,6 +426,36 @@
             }
           ],
           "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "a2892a78-90db-49da-88b4-388f9689718c",
+          "body": "formdata",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "var1",
+              "value": "val1",
+              "operator": "equals",
+              "invert": false
+            },
+            {
+              "target": "body",
+              "modifier": "object.property",
+              "value": "objv1",
+              "operator": "equals",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
           "fallbackTo404": false,
           "default": false
         }

@@ -313,6 +313,19 @@ describe('Responses rules', () => {
           status: 200,
           body: '16'
         }
+      },
+      {
+        description: 'Body form data AND rule',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'multipart/form-data; boundary=X-BOUNDARY'
+        },
+        body: '--X-BOUNDARY\r\nContent-Disposition: form-data; name="var1"\r\n\r\nval1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv2\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="object[property]"\r\n\r\nobjv1\r\n--X-BOUNDARY--\r\n',
+        testedResponse: {
+          status: 200,
+          body: 'formdata'
+        }
       }
     ];
 

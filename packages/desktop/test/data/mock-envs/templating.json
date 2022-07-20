@@ -760,6 +760,31 @@
       "responseMode": null
     },
     {
+      "uuid": "c6900dcd-aeb7-43e9-a470-e3a2d6373687",
+      "method": "post",
+      "endpoint": "formdata",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "333eeac3-d2a8-4b43-b350-bcaea7d55f18",
+          "body": "{{bodyRaw 'var1'}}{{bodyRaw 'select'}}{{bodyRaw 'object.property'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
+    },
+    {
       "uuid": "9668ef0f-bfd3-4dc7-9942-efe324c5b5e1",
       "method": "get",
       "endpoint": "header",
