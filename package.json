@@ -54,11 +54,11 @@
     "package:desktop:test:linux": "lerna run --scope @mockoon/desktop package:test:linux"
   },
   "devDependencies": {
-    "concurrently": "7.0.0",
-    "dotenv": "16.0.0",
+    "concurrently": "7.3.0",
+    "dotenv": "16.0.1",
     "eslint-config-prettier": "8.5.0",
-    "lerna": "4.0.0",
-    "prettier": "2.6.1",
-    "prettier-plugin-organize-imports": "2.3.4"
+    "lerna": "5.1.8",
+    "prettier": "2.7.1",
+    "prettier-plugin-organize-imports": "3.0.0"
   }
 }
