@@ -2,6 +2,7 @@ import { Environment } from '@mockoon/commons';
 import { Request } from 'express';
 import { SafeString } from 'handlebars';
 import { get as objectGet } from 'object-path';
+import { convertPathToArray } from '../utils';
 
 export const RequestHelpers = function (
   request: Request,
@@ -10,7 +11,7 @@ export const RequestHelpers = function (
   return {
     // get json property from body
     body: function (
-      path: string | null,
+      path: string | string[] | null,
       defaultValue: string,
       stringify: boolean
     ) {
@@ -44,6 +45,17 @@ export const RequestHelpers = function (
         );
       }
 
+      if (typeof path === 'string') {
+        path = convertPathToArray(path);
+      }
+
+      if (typeof path === 'string' && path.includes('\\.')) {
+        path = path
+          .replace(/\\\./g, '%#%')
+          .split('.')
+          .map((s) => s.replace(/%#%/g, '.'));
+      }
+
       let value = objectGet(source, path);
       value = value === undefined ? defaultValue : value;
 
@@ -55,7 +67,7 @@ export const RequestHelpers = function (
     },
     // get the raw json property from body to use with each for example
     bodyRaw: function (...args: any[]) {
-      let path: string | null = null;
+      let path: string | string[] | null = null;
       let defaultValue = '';
       const parameters = args.slice(0, -1); // remove last item (handlebars options argument)
 
@@ -70,6 +82,10 @@ export const RequestHelpers = function (
         // if no path has been provided we want the full raw body as is
         if (path == null || path === '') {
           return request.body;
+        }
+
+        if (typeof path === 'string') {
+          path = convertPathToArray(path);
         }
 
         const value = objectGet(request.body, path);

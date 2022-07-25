@@ -202,3 +202,34 @@ export const stringIncludesArrayItems = (
   array: string[],
   str: string
 ): boolean => array.some((item) => str.includes(item));
+
+/**
+ * Convert an object path (for the object-path lib) containing escaped dots '\.'
+ * to an array of strings to allow fetching properties containing dots.
+ *
+ * Example:
+ * 'get.a.property\.with\.dots => ['get', 'a', 'property.with.dots']
+ *
+ * To query an object like this:
+ *
+ * ```
+ * {
+ *   get: {
+ *     a: {
+ *       'propery.with.dots': "value"
+ *     }
+ *   }
+ * }
+ * ```
+ * @param str
+ */
+export const convertPathToArray = (str: string): string | string[] => {
+  if (str.includes('\\.')) {
+    return str
+      .replace(/\\\./g, '%#%')
+      .split('.')
+      .map((s) => s.replace(/%#%/g, '.'));
+  }
+
+  return str;
+};

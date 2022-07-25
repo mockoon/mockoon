@@ -2394,6 +2394,57 @@ describe('Response rules interpreter', () => {
       ).chooseResponse(1);
       expect(routeResponse.body).to.be.equal('body21');
     });
+
+    it('should return response if JSON body path to property with dots value matches', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        stringBody:
+          '[{"deep":{"property.with.dots":"val1","deeper":{"another.property.with.dots":[{"final.property.with.dots":"val2"}]}}}]',
+        body: [
+          {
+            deep: {
+              'property.with.dots': 'val1',
+              deeper: {
+                'another.property.with.dots': [
+                  {
+                    'final.property.with.dots': 'val2'
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier:
+                  '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots',
+                value: 'val2',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'body6'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+      expect(routeResponse.body).to.be.equal('body6');
+    });
   });
 
   describe('Complex rules (AND/OR)', () => {

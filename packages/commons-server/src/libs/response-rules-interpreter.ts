@@ -9,7 +9,7 @@ import { Request } from 'express';
 import { get as objectPathGet } from 'object-path';
 import { ParsedQs } from 'qs';
 import { ParsedBodyMimeTypes } from '../constants/common.constants';
-import { stringIncludesArrayItems } from './utils';
+import { convertPathToArray, stringIncludesArrayItems } from './utils';
 
 /**
  * Interpretor for the route response rules.
@@ -119,7 +119,13 @@ export class ResponseRulesInterpreter {
       value = this.request.header(rule.modifier);
     } else {
       if (rule.modifier) {
-        value = objectPathGet(this.targets[rule.target], rule.modifier);
+        let path: string | string[] = rule.modifier;
+
+        if (typeof path === 'string') {
+          path = convertPathToArray(path);
+        }
+
+        value = objectPathGet(this.targets[rule.target], path);
       } else if (!rule.modifier && rule.target === 'body') {
         value = this.targets.bodyRaw;
       }

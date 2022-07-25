@@ -458,6 +458,36 @@
           "rulesOperator": "AND",
           "fallbackTo404": false,
           "default": false
+        },
+        {
+          "uuid": "39f827ea-b19e-4ae0-a454-4836f2f2f258",
+          "body": "propertywithdots",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "0.deep.property\\.with\\.dots",
+              "value": "val1",
+              "operator": "equals",
+              "invert": false
+            },
+            {
+              "target": "body",
+              "modifier": "0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots",
+              "value": "val2",
+              "operator": "equals",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "AND",
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "responseMode": null
