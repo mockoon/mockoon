@@ -136,6 +136,30 @@ describe('Template parser', () => {
         `{"id":1,"name":"John"},${EOL}{"id":2,"name":"Doe"}${EOL}`
       );
     });
+
+    it('should return the property with dots value', () => {
+      const parseResult = TemplateParser(
+        "{{body '0.deep.property\\.with\\.dots'}}{{body '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots'}}",
+        {
+          body: [
+            {
+              deep: {
+                'property.with.dots': 'val1',
+                deeper: {
+                  'another.property.with.dots': [
+                    {
+                      'final.property.with.dots': 'val2'
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        } as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal('val1val2');
+    });
   });
 
   describe('Helper: bodyRaw', () => {
@@ -240,6 +264,30 @@ describe('Template parser', () => {
         {} as any
       );
       expect(parseResult).to.be.equal(`string1,${EOL}string2${EOL}`);
+    });
+
+    it('should return the property with dots value', () => {
+      const parseResult = TemplateParser(
+        "{{bodyRaw '0.deep.property\\.with\\.dots'}}{{bodyRaw '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots'}}",
+        {
+          body: [
+            {
+              deep: {
+                'property.with.dots': 'val1',
+                deeper: {
+                  'another.property.with.dots': [
+                    {
+                      'final.property.with.dots': 'val2'
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        } as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal('val1val2');
     });
   });
 

@@ -326,6 +326,32 @@ describe('Responses rules', () => {
           status: 200,
           body: 'formdata'
         }
+      },
+      {
+        description: 'Body property with dots and AND rule',
+        path: '/rules/2',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: [
+          {
+            deep: {
+              'property.with.dots': 'val1',
+              deeper: {
+                'another.property.with.dots': [
+                  {
+                    'final.property.with.dots': 'val2'
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        testedResponse: {
+          status: 200,
+          body: 'propertywithdots'
+        }
       }
     ];
 
