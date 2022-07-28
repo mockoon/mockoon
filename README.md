@@ -81,6 +81,10 @@ Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mock
 
 You will find Mockoon's [documentation](https://mockoon.com/docs/latest) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
 
+## Changelogs
+
+You will find Mockoon [desktop](https://mockoon.com/releases/desktop/) and [CLI](https://mockoon.com/releases/cli/) changelogs on the official website.
+
 ## Support/feedback
 
 You can discuss all things related to Mockoon, and ask for help, on the [official community](https://github.com/mockoon/mockoon/discussions). It's also a good place to discuss bugs and feature requests before opening an issue on this repository. For more chat-like discussions, you can also join our [Discord server](https://discord.gg/MutRpsY5gE).
