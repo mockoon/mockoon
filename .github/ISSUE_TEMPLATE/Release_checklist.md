@@ -11,7 +11,7 @@ about: Checklist for releases (admin use only)
 
 **Tests:**
 
-- [ ] Manually test desktop binaries (if significant dependencies or native behavior change)
+- [ ] Manually test desktop binaries (if significant dependencies or native behavior changes)
 
 **Release desktop:**
 
@@ -22,9 +22,15 @@ about: Checklist for releases (admin use only)
 
 - [ ] Create a `cli-vx.x.x` tag to release CLI and libs
 
+**API:**
+
+- [ ] Update desktop latest version
+- [ ] Merge release branch on main
+
 **Website:**
 
-- [ ] Update website package version
+> /!\ Requires above API repo deployment
+
 - [ ] Merge release branch on main
 
 **Distribution:**

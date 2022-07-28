@@ -5,6 +5,7 @@ import { error as logError, info as logInfo } from 'electron-log';
 import { createWriteStream, promises as fsPromises } from 'fs';
 import { join as pathJoin } from 'path';
 import { gt as semverGt } from 'semver';
+import { Config } from 'src/shared/config';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 
@@ -30,11 +31,7 @@ const notifyUpdate = (mainWindow: BrowserWindow) => {
 export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   const userDataPath = app.getPath('userData');
   const streamPipeline = promisify(pipeline);
-  const githubLatestReleaseUrl =
-    'https://api.github.com/repos/mockoon/mockoon/releases/latest';
-  const githubBinaryDownloadUrl =
-    'https://github.com/mockoon/mockoon/releases/download/';
-  let releaseResponse: { data: { tag_name: string } };
+  let releaseResponse: { data: { tag: string } };
 
   try {
     // try to remove existing old update
@@ -45,14 +42,14 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   } catch (error) {}
 
   try {
-    releaseResponse = await axios.get(githubLatestReleaseUrl);
+    releaseResponse = await axios.get(Config.latestReleaseDataURL);
   } catch (error: any) {
     logError(`[MAIN][UPDATE]Error while checking for update: ${error.message}`);
 
     return;
   }
 
-  const latestVersion = releaseResponse.data.tag_name.replace('v', '');
+  const latestVersion = releaseResponse.data.tag;
 
   if (semverGt(latestVersion, appVersion)) {
     logInfo(`[MAIN][UPDATE]Found a new version v${latestVersion}`);
@@ -74,7 +71,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
 
       try {
         const response = await axios.get(
-          `${githubBinaryDownloadUrl}v${latestVersion}/${binaryFilename}`,
+          `${Config.githubBinaryURL}v${latestVersion}/${binaryFilename}`,
           { responseType: 'stream' }
         );
         await streamPipeline(response.data, createWriteStream(updateFilePath));

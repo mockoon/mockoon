@@ -1,5 +1,6 @@
 const appVersion: string = require('../../package.json').version;
 const websiteURL = 'https://mockoon.com/';
+const apiURL = 'https://api.mockoon.com/';
 const docsURL = `${websiteURL}docs/latest/`;
 
 export const Config = {
@@ -8,9 +9,11 @@ export const Config = {
     sessionDuration: 3_600_000, // 1h
     functionName: 'telemetry'
   },
-  githubTagReleaseUrl: 'https://github.com/mockoon/mockoon/releases/tag/v',
-  githubAPITagReleaseUrl:
-    'https://api.github.com/repos/mockoon/mockoon/releases/tags/v',
+  websiteURL,
+  githubBinaryURL: 'https://github.com/mockoon/mockoon/releases/download/',
+  latestReleaseDataURL: `${apiURL}releases/desktop/stable.json`,
+  changelogMarkdownURL: `${websiteURL}desktop-changelogs-markdown/`,
+  releasePublicURL: `${websiteURL}releases/desktop/`,
   docs: {
     templating: docsURL + 'templating/overview/',
     proxy: docsURL + 'proxy-mode/',
