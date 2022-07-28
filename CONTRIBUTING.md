@@ -102,9 +102,11 @@ Open a pull request to be merged in the `main` branch. All branches should start
 - Increment the version (which follows [semver](https://semver.org/)) in each package.json file depending on the changes, using `npm run set-versions`. To ignore a package give it the same version. Lerna will take care of increasing the internal dependencies version numbers.
 - Push.
 
-**Cli's process:**
+**CLI's process:**
 
 Create a `cli-vx.x.x` tag to automatically release the CLI. The libraries and the CLI will be automatically published to NPM.
+
+> /!\\ Do not create a GitHub release for the CLI, as desktop version <=1.19.0 relies on https://api.github.com/repos/mockoon/mockoon/releases/latest to get the latest release version. As we are using a monorepo, this would mess up the legacy auto update from the desktop application.
 
 **Desktop application's process:**
 
@@ -132,6 +134,7 @@ Releasing the libraries for the desktop application is irrelevant as they are au
 
 Some manual steps are required in order to properly distribute the application:
 
+- the API repository (private) desktop release files must be updated. This will update the download links on the website.
 - A pull request must be created to update Homebrew Cask repository (update the `version` and the `sha256` hash in the `Casks/mockoon.rb` file and open a PR).
 - Binary must be uploaded to the Snap store manually with `snapcraft upload --release=stable ./mockoon-{version}.snap` command.
 - Arch Linux repository must be updated (Docker image and script can be used in `./scripts/aur-version-bump`).

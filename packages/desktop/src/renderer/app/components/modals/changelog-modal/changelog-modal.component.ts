@@ -8,8 +8,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
-import { filter, first, map, shareReplay, tap } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, filter, first, shareReplay, tap } from 'rxjs/operators';
 import { gt as semverGt } from 'semver';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
@@ -38,10 +38,12 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.changelog$ = this.httpClient
-      .get(Config.githubAPITagReleaseUrl + Config.appVersion)
+      .get(`${Config.changelogMarkdownURL}${Config.appVersion}.md`, {
+        responseType: 'text'
+      })
       .pipe(
-        map((release) => release['body']),
-        shareReplay(1)
+        shareReplay(1),
+        catchError(() => EMPTY)
       );
 
     this.changelog$.subscribe();
@@ -69,7 +71,7 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
   public openReleaseLink() {
     MainAPI.send(
       'APP_OPEN_EXTERNAL_LINK',
-      Config.githubTagReleaseUrl + Config.appVersion
+      `${Config.releasePublicURL}${Config.appVersion}`
     );
   }
 
