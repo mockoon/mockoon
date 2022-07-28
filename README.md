@@ -15,8 +15,9 @@
 
 Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, free and open-source.
 
-It's a desktop application and a CLI that help you work faster with APIs by mocking them. Integrate third-party APIs quicker, improve your integration tests, speed up your development, etc.
-➡️ [More use cases](https://mockoon.com/use-cases/)
+It's a desktop application and a [CLI](https://mockoon.com/cli/) that help you work faster with APIs by mocking them. Integrate third-party APIs quicker, improve your integration tests, speed up your development, etc.
+
+➡️ [Download](https://mockoon.com/download/)
 
 <div align="center">
   <img width="50%" src="https://mockoon.com/images/repo-illustration.png">
@@ -63,6 +64,7 @@ MacOS:
 
 Windows:
 
+- _winget_: `winget install mockoon`.
 - [_Chocolatey_](https://community.chocolatey.org/packages/mockoon): `choco install mockoon`.
 - [_Windows Store_](https://www.microsoft.com/en-us/p/mockoon/9pk8dmsn00jj)
 
