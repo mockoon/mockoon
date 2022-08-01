@@ -566,6 +566,33 @@ describe('Template parser', () => {
     });
   });
 
+  describe('Helper: parseInt', () => {
+    it('should return nothing when no parameter is passed', () => {
+      const parseResult = TemplateParser('{{parseInt}}', {} as any, {} as any);
+
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should parse string and return an int', () => {
+      const parseResult = TemplateParser(
+        "{{parseInt 'zero'}}",
+        {} as any,
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should parse string and return an int', () => {
+      const parseResult = TemplateParser(
+        "{{parseInt '10'}}",
+        {} as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal('10');
+    });
+  });
+
   describe('Helper: join', () => {
     it('should join an Array with spaces', () => {
       const parseResult = TemplateParser(

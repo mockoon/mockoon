@@ -371,6 +371,24 @@ export const Helpers = {
 
     return text.toUpperCase();
   },
+  // parse a string and returns corresponding int
+  parseInt: function (...args: any[]) {
+    const parameters = args.slice(0, -1);
+
+    if (parameters.length === 0) {
+      return '';
+    }
+
+    // make it compatible with SafeString (from queryParam, etc)
+    const text = fromSafeString(parameters[0]);
+    const result = parseInt(text, 10);
+
+    if (isNaN(result)) {
+      return '';
+    } else {
+      return result;
+    }
+  },
   // Joins Array Values as String with separator
   join: function (arr: string[], sep: string) {
     if (!arr || !(arr instanceof Array)) {
