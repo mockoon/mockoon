@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -39,7 +39,11 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.changelog$ = this.httpClient
       .get(`${Config.changelogMarkdownURL}${Config.appVersion}.md`, {
-        responseType: 'text'
+        responseType: 'text',
+        headers: new HttpHeaders({
+          pragma: 'no-cache',
+          'cache-control': 'no-cache'
+        })
       })
       .pipe(
         shareReplay(1),

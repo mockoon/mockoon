@@ -42,7 +42,9 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   } catch (error) {}
 
   try {
-    releaseResponse = await axios.get(Config.latestReleaseDataURL);
+    releaseResponse = await axios.get(Config.latestReleaseDataURL, {
+      headers: { pragma: 'no-cache', 'cache-control': 'no-cache' }
+    });
   } catch (error: any) {
     logError(`[MAIN][UPDATE]Error while checking for update: ${error.message}`);
 
