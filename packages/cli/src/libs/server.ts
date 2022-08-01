@@ -1,4 +1,5 @@
 import {
+  CommonsTexts,
   Environment,
   Methods,
   ServerErrorCodes,
@@ -63,9 +64,10 @@ const addEventListeners = function (
     if (
       errorCode === ServerErrorCodes.PORT_ALREADY_USED ||
       errorCode === ServerErrorCodes.PORT_INVALID ||
-      errorCode === ServerErrorCodes.UNKNOWN_SERVER_ERROR
+      errorCode === ServerErrorCodes.UNKNOWN_SERVER_ERROR ||
+      errorCode === ServerErrorCodes.CERT_FILE_NOT_FOUND
     ) {
-      throw new Error(error?.message);
+      throw new Error(CommonsTexts.EN.MESSAGES[errorCode]);
     }
 
     // report non blocking errors

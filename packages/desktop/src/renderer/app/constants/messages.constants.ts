@@ -1,3 +1,4 @@
+import { CommonsTexts } from '@mockoon/commons';
 import {
   MessageCodes,
   MessageParams
@@ -48,7 +49,7 @@ export const Messages: {
     showToast: false
   }),
   PORT_ALREADY_USED: (messageParams) => {
-    const message = `Port ${messageParams.port} is already in use`;
+    const message = `${CommonsTexts.EN.MESSAGES.PORT_ALREADY_USED}: ${messageParams.port}`;
 
     return {
       message,
@@ -58,7 +59,7 @@ export const Messages: {
     };
   },
   PORT_INVALID: (messageParams) => ({
-    message: 'This port is invalid or access is denied',
+    message: CommonsTexts.EN.MESSAGES.PORT_INVALID,
     loggerMessage: `Error when starting the server ${messageParams.uuid}: ${messageParams.error.message}`,
     showToast: true,
     toastType: 'error'
@@ -76,7 +77,7 @@ export const Messages: {
     toastType: 'error'
   }),
   CERT_FILE_NOT_FOUND: (messageParams) => ({
-    message: `Certificate file not found: ${messageParams.error.message}`,
+    message: `${CommonsTexts.EN.MESSAGES.CERT_FILE_NOT_FOUND}: ${messageParams.error.message}`,
     showToast: true,
     toastType: 'error'
   }),
@@ -101,19 +102,19 @@ export const Messages: {
     toastType: 'error'
   }),
   ROUTE_SERVING_ERROR: (messageParams) => ({
-    message: `Error while serving the content: ${messageParams.error.message}`,
+    message: `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}: ${messageParams.error.message}`,
     showToast: false
   }),
   ROUTE_FILE_SERVING_ERROR: (messageParams) => ({
-    message: `Error while serving the file content: ${messageParams.error.message}`,
+    message: `${CommonsTexts.EN.MESSAGES.ROUTE_FILE_SERVING_ERROR}: ${messageParams.error.message}`,
     showToast: false
   }),
   PROXY_ERROR: (messageParams) => ({
-    message: `An error occured while trying to proxy to ${messageParams.proxyHost}: ${messageParams.error.message}`,
+    message: `${CommonsTexts.EN.MESSAGES.PROXY_ERROR} ${messageParams.proxyHost}: ${messageParams.error.message}`,
     showToast: false
   }),
   UNKNOWN_SERVER_ERROR: (messageParams) => ({
-    message: `Server error: ${messageParams.error.message}`,
+    message: `${CommonsTexts.EN.MESSAGES.UNKNOWN_SERVER_ERROR}: ${messageParams.error.message}`,
     loggerMessage: `Error when starting the server ${messageParams.uuid}: ${messageParams.error.message}`,
     showToast: true,
     toastType: 'error'

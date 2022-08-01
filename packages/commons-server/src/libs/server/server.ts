@@ -1,5 +1,6 @@
 import {
   BINARY_BODY,
+  CommonsTexts,
   CORSHeaders,
   Environment,
   GetContentType,
@@ -34,7 +35,6 @@ import TypedEmitter from 'typed-emitter';
 import { xml2js } from 'xml-js';
 import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
-import { Texts } from '../../i18n/en';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
 import {
@@ -375,7 +375,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       const currentRoute = this.getRefreshedRoute(route);
 
       if (!currentRoute) {
-        this.sendError(response, Texts.EN.MESSAGES.ROUTE_NO_LONGER_EXISTS, 404);
+        this.sendError(
+          response,
+          CommonsTexts.EN.MESSAGES.ROUTE_NO_LONGER_EXISTS,
+          404
+        );
 
         return;
       }
@@ -453,7 +457,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       this.sendError(
         response,
-        `${Texts.EN.MESSAGES.ROUTE_SERVING_ERROR}${error.message}`
+        `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}${error.message}`
       );
     }
   }
@@ -477,7 +481,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.emit('error', ServerErrorCodes.ROUTE_FILE_SERVING_ERROR, error);
       this.sendError(
         response,
-        `${Texts.EN.MESSAGES.ROUTE_FILE_SERVING_ERROR}${error.message}`
+        `${CommonsTexts.EN.MESSAGES.ROUTE_FILE_SERVING_ERROR}${error.message}`
       );
     };
 
@@ -566,7 +570,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       this.sendError(
         response,
-        `${Texts.EN.MESSAGES.ROUTE_SERVING_ERROR}${error.message}`
+        `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}${error.message}`
       );
     }
   }
@@ -667,7 +671,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             this.emit('error', ServerErrorCodes.PROXY_ERROR, error);
             this.sendError(
               response as Response,
-              `${Texts.EN.MESSAGES.PROXY_ERROR}${this.environment.proxyHost}${request.url}: ${error}`,
+              `${CommonsTexts.EN.MESSAGES.PROXY_ERROR}${this.environment.proxyHost}${request.url}: ${error}`,
               504
             );
           }
@@ -779,7 +783,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           this.environment
         );
       } catch (error) {
-        const errorMessage = Texts.EN.MESSAGES.HEADER_PARSING_ERROR;
+        const errorMessage = CommonsTexts.EN.MESSAGES.HEADER_PARSING_ERROR;
         parsedHeaderValue = errorMessage;
       }
     }
