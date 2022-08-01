@@ -457,7 +457,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       this.sendError(
         response,
-        `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}${error.message}`
+        `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}: ${error.message}`
       );
     }
   }
@@ -481,7 +481,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.emit('error', ServerErrorCodes.ROUTE_FILE_SERVING_ERROR, error);
       this.sendError(
         response,
-        `${CommonsTexts.EN.MESSAGES.ROUTE_FILE_SERVING_ERROR}${error.message}`
+        `${CommonsTexts.EN.MESSAGES.ROUTE_FILE_SERVING_ERROR}: ${error.message}`
       );
     };
 
@@ -570,7 +570,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       this.sendError(
         response,
-        `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}${error.message}`
+        `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}: ${error.message}`
       );
     }
   }
