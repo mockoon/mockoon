@@ -9,7 +9,14 @@ import {
 } from '@angular/core';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable } from 'rxjs';
-import { catchError, filter, first, shareReplay, tap } from 'rxjs/operators';
+import {
+  catchError,
+  filter,
+  first,
+  map,
+  shareReplay,
+  tap
+} from 'rxjs/operators';
 import { gt as semverGt } from 'semver';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
@@ -47,6 +54,8 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
       })
       .pipe(
         shareReplay(1),
+        // strip front matter from the release markdown
+        map((content) => content.replace(/^---(.|\n|\r)*?---/, '')),
         catchError(() => EMPTY)
       );
 
