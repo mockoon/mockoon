@@ -220,7 +220,7 @@ describe('Template parser', () => {
 
     it('Should return a date using a the default format', () => {
       const parseResult = TemplateParser(
-        "{{date '2022-01-01' '2022-02-01'}}",
+        "{{date '2022-01-01' '2022-02-01' 'YYYY'}}",
         {} as any,
         {} as any
       );
