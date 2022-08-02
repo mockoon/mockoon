@@ -53,4 +53,12 @@ describe('Data loading', () => {
       );
     })
     .it('should fail when JSON data is invalid');
+
+  test
+    .stderr()
+    .command(['start', '--data', './test/data/envs/wrong-cert.json', '-D'])
+    .catch((context) => {
+      expect(context.message).to.contain('Certificate file not found');
+    })
+    .it('should fail when certificate file cannot be found');
 });
