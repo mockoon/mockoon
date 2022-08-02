@@ -164,6 +164,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
    * This IPC channel must be mocked when running e2e tests
    */
   ipcMain.handle('APP_SHOW_OPEN_DIALOG', async (event, options) => {
+    options.defaultPath = getDataPath();
     if (isTesting) {
       return { filePaths: [dialogMocks.open.pop()] };
     } else {
@@ -175,6 +176,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
    * This IPC channel must be mocked when running e2e tests
    */
   ipcMain.handle('APP_SHOW_SAVE_DIALOG', async (event, options) => {
+    options.defaultPath = getDataPath();
     if (isTesting) {
       return { filePath: dialogMocks.save.pop() };
     } else {
