@@ -233,7 +233,19 @@ $http-methods-light: ('get', lighten($blue, 10%)),
   cursor: col-resize;
 
   &:hover {
-    box-shadow: inset -2px 0 0 0 rgba($blue, 0.1);
+    animation-name: resizerFadeIn;
+    animation-duration: 0.75s;
+    animation-delay: 0.25s;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes resizerFadeIn {
+  from {
+    box-shadow: inset -4px 0 0 0 rgba($blue, 0);
+  }
+  to {
+    box-shadow: inset -4px 0 0 0 rgba($blue, 0.5);
   }
 }
 
