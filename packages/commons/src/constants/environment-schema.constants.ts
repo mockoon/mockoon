@@ -2,6 +2,7 @@ import * as Joi from 'joi';
 import { v4 as uuid } from 'uuid';
 import { HighestMigrationId } from '../libs/migrations';
 import {
+  DataBucket,
   Environment,
   EnvironmentTLSOptions
 } from '../models/environment.model';
@@ -40,7 +41,8 @@ export const EnvironmentDefault: Environment = {
   cors: true,
   headers: [],
   proxyReqHeaders: [],
-  proxyResHeaders: []
+  proxyResHeaders: [],
+  data: []
 };
 
 export const RouteDefault: Route = {
@@ -86,6 +88,14 @@ export const HeaderDefault: Header = {
   value: ''
 };
 
+export const DataBucketDefault: DataBucket = {
+  get uuid() {
+    return uuid();
+  },
+  name: '',
+  value: ''
+};
+
 const UUIDSchema = Joi.string()
   .uuid()
   .failover(() => uuid())
@@ -95,6 +105,14 @@ const HeaderSchema = Joi.object<Header, true>({
   key: Joi.string().allow('').required(),
   value: Joi.string().allow('').required()
 });
+
+const DataSchema = Joi.object<DataBucket, true>({
+  uuid: UUIDSchema,
+  name: Joi.string().allow('').failover(DataBucketDefault.name).required(),
+  value: Joi.string().allow('').failover(DataBucketDefault.name).required()
+})
+  .failover(EnvironmentDefault.data)
+  .default(EnvironmentDefault.data);
 
 const TLSOptionsSchema = Joi.object<EnvironmentTLSOptions, true>({
   enabled: Joi.boolean()
@@ -264,6 +282,10 @@ export const EnvironmentSchema = Joi.object<Environment, true>({
   proxyResHeaders: Joi.array()
     .items(HeaderSchema, Joi.any().strip())
     .failover(EnvironmentDefault.proxyResHeaders)
+    .required(),
+  data: Joi.array()
+    .items(DataSchema, Joi.any().strip())
+    .failover(EnvironmentDefault.data)
     .required()
 })
   .failover(EnvironmentDefault)
