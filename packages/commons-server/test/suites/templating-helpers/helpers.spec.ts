@@ -226,7 +226,7 @@ describe('Template parser', () => {
       );
 
       expect(parseResult).to.be.equal(
-        'Sat Jan 08 2022 08:39:00 GMT+0100 (Central European Standard Time)'
+        '2022'
       );
     });
 
