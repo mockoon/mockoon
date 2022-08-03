@@ -270,4 +270,15 @@ describe('Migrations', () => {
       );
     });
   });
+
+  describe('migration n. 23', () => {
+    it('should add `data` to the environment', () => {
+      const environment: any = {};
+
+      applyMigration(22, environment);
+
+      expect(environment.data).to.be.an('array');
+      expect(environment.data).to.be.empty;
+    });
+  });
 });
