@@ -225,9 +225,7 @@ describe('Template parser', () => {
         {} as any
       );
 
-      expect(parseResult).to.be.equal(
-        '2022'
-      );
+      expect(parseResult).to.be.equal('2022');
     });
 
     it('Should return a date using a given format', () => {
