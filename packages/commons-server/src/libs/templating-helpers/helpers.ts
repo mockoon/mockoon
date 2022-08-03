@@ -503,16 +503,15 @@ export const Helpers = {
     return faker.datatype.number(options);
   },
   date: function (...args: any[]) {
-    let from, to, format;
+    let format;
+    const from = fromSafeString(args[0]);
+    const to = fromSafeString(args[1]);
 
     if (
       args.length >= 3 &&
-      typeof args[0] === 'string' &&
-      typeof args[1] === 'string'
+      typeof from === 'string' &&
+      typeof to === 'string'
     ) {
-      from = args[0];
-      to = args[1];
-
       const randomDate = faker.date.between(from, to);
 
       if (args.length === 4 && typeof args[2] === 'string') {
