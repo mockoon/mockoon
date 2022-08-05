@@ -1,0 +1,59 @@
+<div class="d-flex h-100">
+  <app-databuckets-menu class="h-100"></app-databuckets-menu>
+
+  <div
+    *ngIf="activeEnvironment$ | async as activeEnvironment"
+    class="d-flex flex-column flex-fill mh0 p-2"
+  >
+    <ng-container
+      *ngIf="
+        activeDatabucket$ | async as activeDatabucket;
+        else noActiveDatabucket
+      "
+    >
+      <ng-container [formGroup]="activeDatabucketForm">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Databucket name"
+            appValidPath
+            formControlName="name"
+            [appFocusOnEvent]="focusableInputs.DATABUCKET_NAME"
+          />
+        </div>
+        <div class="input-group mt-2">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Content of the databucket"
+            formControlName="value"
+          />
+        </div>
+        <div
+          class="d-flex justify-content-between align-items-center environment-routes-footer pt-1 mt-3"
+        >
+          <div [ngbTooltip]="servedContentTypeTooltip">
+            <small> {{ this.effectiveContentType$ | async }}</small>
+          </div>
+          <ng-template #servedContentTypeTooltip
+            >Served Content-Type<br />(Order: environment headers &rarr; file
+            mime type &rarr; route headers)</ng-template
+          >
+
+          <button
+            type="button"
+            class="btn btn-link btn-icon btn-xs text-primary"
+            (click)="openWikiLink('templating')"
+          >
+            Open templating documentation
+          </button>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #noActiveDatabucket>
+  <p class="message mt-4">No databucket defined</p>
+</ng-template>

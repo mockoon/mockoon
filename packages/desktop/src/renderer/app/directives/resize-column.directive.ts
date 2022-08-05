@@ -11,7 +11,7 @@ import { SettingsProperties } from 'src/renderer/app/models/settings.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
 
-export type ColumnType = 'environments' | 'routes' | 'logs';
+export type ColumnType = 'environments' | 'routes' | 'databuckets' | 'logs';
 
 /**
  * Allows the resizing of the parent element using CSS.

@@ -1,0 +1,10 @@
+@import 'src/renderer/styles/bootstrap-variables.scss';
+
+.databuckets-menu {
+  border-right: 1px solid lighten($gray-900, 2%);
+  min-width: 200px;
+  // initial width
+  width: 300px;
+
+  position: relative; // we need this for the resize-column
+}

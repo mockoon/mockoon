@@ -46,6 +46,11 @@
             class="h-100"
           ></app-environment-routes>
 
+          <app-environment-databuckets
+            *ngSwitchCase="'ENV_DATABUCKETS'"
+            class="h-100"
+          ></app-environment-databuckets>
+
           <app-environment-headers
             *ngSwitchCase="'ENV_HEADERS'"
             class="h-100"

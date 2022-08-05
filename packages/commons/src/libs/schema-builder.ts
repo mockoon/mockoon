@@ -1,12 +1,13 @@
 import { v4 as uuid } from 'uuid';
 import {
+  DataBucketDefault,
   EnvironmentDefault,
   ResponseRuleDefault,
   RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
 import { CloneObject } from '../libs/utils';
-import { Environment } from '../models/environment.model';
+import { DataBucket, Environment } from '../models/environment.model';
 import {
   Header,
   Methods,
@@ -55,6 +56,11 @@ export const BuildRoute = (hasDefaultRouteResponse = true): Route => ({
     ? [{ ...BuildRouteResponse(), default: true }]
     : []
 });
+
+/**
+ * Build a new databucket
+ */
+export const BuildDatabucket = (): DataBucket => ({ ...DataBucketDefault });
 
 /**
  * Build a new environment

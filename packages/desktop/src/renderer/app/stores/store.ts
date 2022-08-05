@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  DataBucket,
   Environment,
   INDENT_SIZE,
   Route,
@@ -24,6 +25,7 @@ export class Store {
     activeEnvironmentLogsUUID: {},
     activeEnvironmentUUID: null,
     activeRouteUUID: null,
+    activeDatabucketUUID: null,
     activeRouteResponseUUID: null,
     environments: [],
     environmentsStatus: {},
@@ -48,7 +50,8 @@ export class Store {
     },
     settings: null,
     duplicateRouteToAnotherEnvironment: { moving: false },
-    routesFilter: ''
+    routesFilter: '',
+    databucketsFilter: ''
   });
 
   constructor() {}
@@ -192,6 +195,21 @@ export class Store {
               (routeResponse) =>
                 routeResponse.uuid === this.store$.value.activeRouteResponseUUID
             ) + 1
+          : null
+      )
+    );
+  }
+
+  /**
+   * Select active databucket observable
+   */
+  public selectActiveDatabucket(): Observable<DataBucket> {
+    return this.selectActiveEnvironment().pipe(
+      map((environment) =>
+        environment
+          ? environment.data.find(
+              (data) => data.uuid === this.store$.value.activeDatabucketUUID
+            )
           : null
       )
     );

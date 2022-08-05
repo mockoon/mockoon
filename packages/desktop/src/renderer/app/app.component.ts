@@ -77,7 +77,11 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
       event.shiftKey &&
       event.key.toLowerCase() === 'f'
     ) {
-      this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
+      if (this.store.get('activeView') === 'ENV_ROUTES') {
+        this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
+      } else if (this.store.get('activeView') === 'ENV_DATABUCKETS') {
+        this.eventsService.focusInput.next(FocusableInputs.DATABUCKET_FILTER);
+      }
     }
   }
 
@@ -137,6 +141,8 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
       case 'delete':
         if (payload.subject === 'route') {
           this.environmentsService.removeRoute(payload.subjectUUID);
+        } else if (payload.subject === 'databucket') {
+          this.environmentsService.removeDatabucket(payload.subjectUUID);
         }
         break;
       case 'close':

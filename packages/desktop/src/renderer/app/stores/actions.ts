@@ -1,4 +1,10 @@
-import { Environment, Route, RouteResponse } from '@mockoon/commons';
+import {
+  DataBucket,
+  Environment,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
+import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
 import {
@@ -32,9 +38,11 @@ export const enum ActionTypes {
   RELOAD_ENVIRONMENT = 'RELOAD_ENVIRONMENT',
   UPDATE_ENVIRONMENT_STATUS = 'UPDATE_ENVIRONMENT_STATUS',
   UPDATE_ENVIRONMENT_ROUTE_FILTER = 'UPDATE_ENVIRONMENT_ROUTE_FILTER',
+  UPDATE_ENVIRONMENT_DATABUCKET_FILTER = 'UPDATE_ENVIRONMENT_DATABUCKET_FILTER',
   SET_ACTIVE_ROUTE = 'SET_ACTIVE_ROUTE',
   NAVIGATE_ROUTES = 'NAVIGATE_ROUTES',
   MOVE_ROUTES = 'MOVE_ROUTES',
+  MOVE_DATABUCKETS = 'MOVE_DATABUCKETS',
   MOVE_ROUTE_RESPONSES = 'MOVE_ROUTE_RESPONSES',
   ADD_ROUTE = 'ADD_ROUTE',
   REMOVE_ROUTE = 'REMOVE_ROUTE',
@@ -44,6 +52,10 @@ export const enum ActionTypes {
   ADD_ROUTE_RESPONSE = 'ADD_ROUTE_RESPONSE',
   UPDATE_ROUTE_RESPONSE = 'UPDATE_ROUTE_RESPONSE',
   SET_DEFAULT_ROUTE_RESPONSE = 'SET_DEFAULT_ROUTE_RESPONSE',
+  SET_ACTIVE_DATABUCKET = 'SET_ACTIVE_DATABUCKET',
+  ADD_DATABUCKET = 'ADD_DATABUCKET',
+  REMOVE_DATABUCKET = 'REMOVE_DATABUCKET',
+  UPDATE_DATABUCKET = 'UPDATE_DATABUCKET',
   LOG_REQUEST = 'LOG_REQUEST',
   CLEAR_LOGS = 'CLEAR_LOGS',
   SET_ACTIVE_ENVIRONMENT_LOG = 'SET_ACTIVE_ENVIRONMENT_LOG',
@@ -148,6 +160,17 @@ export const moveRouteResponsesAction = (indexes: ReducerIndexes) =>
   } as const);
 
 /**
+ * Move a databucket
+ *
+ * @param indexes - indexes to and from which move
+ */
+export const moveDatabucketsAction = (indexes: ReducerIndexes) =>
+  ({
+    type: ActionTypes.MOVE_DATABUCKETS,
+    indexes
+  } as const);
+
+/**
  * Add a new environment
  *
  * @param environment - environment to add
@@ -230,6 +253,19 @@ export const updateEnvironmentroutesFilterAction = (routesFilter: string) =>
   ({
     type: ActionTypes.UPDATE_ENVIRONMENT_ROUTE_FILTER,
     routesFilter
+  } as const);
+
+/**
+ * Update a databucket filter
+ *
+ * @param databucketsFilter - databuckets filter to update
+ */
+export const updateEnvironmentDatabucketsFilterAction = (
+  databucketsFilter: string
+) =>
+  ({
+    type: ActionTypes.UPDATE_ENVIRONMENT_DATABUCKET_FILTER,
+    databucketsFilter
   } as const);
 
 /**
@@ -380,6 +416,54 @@ export const setDefaultRouteResponseAction = (routeResponseIndex: number) =>
   } as const);
 
 /**
+ * Set the active databucket (currently displayed)
+ *
+ * @param databucketUUID - databucket UUID to set as active
+ */
+export const setActiveDatabucketAction = (databucketUUID: string) =>
+  ({
+    type: ActionTypes.SET_ACTIVE_DATABUCKET,
+    databucketUUID
+  } as const);
+
+/**
+ * Add a databucket
+ *
+ * @param databucket - databucket to add
+ */
+export const addDatabucketAction = (
+  databucket: DataBucket,
+  afterUUID?: string
+) =>
+  ({
+    type: ActionTypes.ADD_DATABUCKET,
+    databucket,
+    afterUUID
+  } as const);
+
+/**
+ * Remove a databucket
+ *
+ * @param databucketUUID - databucket UUID to remove
+ */
+export const removeDatabucketAction = (databucketUUID: string) =>
+  ({
+    type: ActionTypes.REMOVE_DATABUCKET,
+    databucketUUID
+  } as const);
+
+/**
+ * Update a databucket
+ *
+ * @param properties - properties to update
+ */
+export const updateDatabucketAction = (properties: DatabucketProperties) =>
+  ({
+    type: ActionTypes.UPDATE_DATABUCKET,
+    properties
+  } as const);
+
+/**
  * Log the request (request and response)
  *
  * @param environmentUUID - environment UUID to which the request is linked to
@@ -476,12 +560,14 @@ export type Actions =
   | ReturnType<typeof moveEnvironmentsAction>
   | ReturnType<typeof moveRoutesAction>
   | ReturnType<typeof moveRouteResponsesAction>
+  | ReturnType<typeof moveDatabucketsAction>
   | ReturnType<typeof addEnvironmentAction>
   | ReturnType<typeof removeEnvironmentAction>
   | ReturnType<typeof updateEnvironmentAction>
   | ReturnType<typeof reloadEnvironmentAction>
   | ReturnType<typeof updateEnvironmentStatusAction>
   | ReturnType<typeof updateEnvironmentroutesFilterAction>
+  | ReturnType<typeof updateEnvironmentDatabucketsFilterAction>
   | ReturnType<typeof setActiveRouteAction>
   | ReturnType<typeof navigateRoutesAction>
   | ReturnType<typeof addRouteAction>
@@ -492,6 +578,10 @@ export type Actions =
   | ReturnType<typeof addRouteResponseAction>
   | ReturnType<typeof updateRouteResponseAction>
   | ReturnType<typeof setDefaultRouteResponseAction>
+  | ReturnType<typeof setActiveDatabucketAction>
+  | ReturnType<typeof addDatabucketAction>
+  | ReturnType<typeof removeDatabucketAction>
+  | ReturnType<typeof updateDatabucketAction>
   | ReturnType<typeof logRequestAction>
   | ReturnType<typeof clearLogsAction>
   | ReturnType<typeof setActiveEnvironmentLogUUIDAction>

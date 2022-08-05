@@ -8,13 +8,19 @@ import { Settings } from 'src/shared/models/settings.model';
 
 export type ViewsNameType =
   | 'ENV_ROUTES'
+  | 'ENV_DATABUCKETS'
   | 'ENV_HEADERS'
   | 'ENV_LOGS'
   | 'ENV_PROXY'
   | 'ENV_SETTINGS'
   | 'ENV_RELOAD';
 
-export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
+export type TabsNameType =
+  | 'RESPONSE'
+  | 'DATABUCKETS'
+  | 'HEADERS'
+  | 'RULES'
+  | 'SETTINGS';
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 
@@ -51,6 +57,7 @@ export type StoreType = {
   activeEnvironmentUUID: string;
   activeRouteUUID: string;
   activeRouteResponseUUID: string;
+  activeDatabucketUUID: string;
   environments: Environments;
   environmentsStatus: EnvironmentsStatuses;
   bodyEditorConfig: any;
@@ -64,4 +71,5 @@ export type StoreType = {
   settings: Settings;
   duplicateRouteToAnotherEnvironment: DuplicateRouteToAnotherEnvironment;
   routesFilter: string;
+  databucketsFilter: string;
 };
