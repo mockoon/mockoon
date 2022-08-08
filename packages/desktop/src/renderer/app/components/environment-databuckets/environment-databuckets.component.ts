@@ -47,9 +47,7 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public focusableInputs = FocusableInputs;
   public effectiveContentType$: Observable<string>;
-  //public headerNamesSearch = this.buildSearch(headerNames);
-  //public headerValuesSearch = this.buildSearch(headerValues);
-
+  public bodyEditorConfig$: Observable<any>;
   public scrollToBottom = this.uiService.scrollToBottom;
   private destroy$ = new Subject<void>();
 
@@ -67,7 +65,7 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
-
+    this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
     this.initForms();
     this.initFormValues();
   }

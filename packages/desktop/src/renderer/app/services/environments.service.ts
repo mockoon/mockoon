@@ -653,7 +653,6 @@ export class EnvironmentsService extends Logger {
    */
   public addDatabucket() {
     if (this.store.getActiveEnvironment()) {
-      console.log('enter services');
       this.store.update(addDatabucketAction(BuildDatabucket()));
       this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
       this.uiService.focusInput(FocusableInputs.DATABUCKET_NAME);
@@ -775,7 +774,6 @@ export class EnvironmentsService extends Logger {
    */
   public duplicateDatabucket(databucketUUID?: string) {
     let databucketToDuplicate = this.store.getActiveDatabucket();
-
     if (databucketUUID) {
       databucketToDuplicate = this.store
         .getActiveEnvironment()
@@ -784,6 +782,7 @@ export class EnvironmentsService extends Logger {
 
     if (databucketToDuplicate) {
       let newDatabucket: DataBucket = CloneObject(databucketToDuplicate);
+      newDatabucket.name = `${databucketToDuplicate.name} (copy)`;
 
       newDatabucket = this.dataService.renewDatabucketUUIDs(newDatabucket);
 
@@ -802,6 +801,7 @@ export class EnvironmentsService extends Logger {
   ) {
     const databucketToDuplicate =
       this.store.getDatabucketByUUID(databucketUUID);
+    databucketToDuplicate.name = `${databucketToDuplicate.name} (copy)`;
 
     if (databucketToDuplicate) {
       const newDatabucket: DataBucket = this.dataService.renewDatabucketUUIDs(

@@ -92,7 +92,7 @@ export const DataBucketDefault: DataBucket = {
   get uuid() {
     return uuid();
   },
-  name: '',
+  name: 'New Databucket',
   value: ''
 };
 
