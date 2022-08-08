@@ -66,7 +66,10 @@ export const enum ActionTypes {
   UPDATE_UI_STATE = 'UPDATE_UI_STATE',
   START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT'
+  DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT',
+  START_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
+  FINALIZE_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'FINALIZE_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
+  DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT'
 }
 
 /**
@@ -392,6 +395,38 @@ export const duplicateRouteToAnotherEnvironmentAction = (
   } as const);
 
 /**
+ * Triggers movement of a route to another environment
+ */
+export const startDatabucketDuplicationToAnotherEnvironmentAction = (
+  databucketUUID: string
+) =>
+  ({
+    type: ActionTypes.START_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
+    databucketUUID
+  } as const);
+
+/**
+ * Cancels out route movement
+ */
+export const finalizeDatabucketDuplicationToAnotherEnvironmentAction = () =>
+  ({
+    type: ActionTypes.FINALIZE_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT
+  } as const);
+
+/**
+ * Finalizes databucket movement to another environment
+ */
+export const duplicateDatabucketToAnotherEnvironmentAction = (
+  databucket: DataBucket,
+  targetEnvironmentUUID: string
+) =>
+  ({
+    type: ActionTypes.DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT,
+    databucket,
+    targetEnvironmentUUID
+  } as const);
+
+/**
  * Update the active route response
  *
  * @param properties - properties to update
@@ -591,4 +626,7 @@ export type Actions =
   | ReturnType<typeof updateSettingsAction>
   | ReturnType<typeof startRouteDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof finalizeRouteDuplicationToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>;
+  | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>
+  | ReturnType<typeof startDatabucketDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof finalizeDatabucketDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>;

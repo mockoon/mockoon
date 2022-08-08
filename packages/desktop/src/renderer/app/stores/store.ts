@@ -50,6 +50,7 @@ export class Store {
     },
     settings: null,
     duplicateRouteToAnotherEnvironment: { moving: false },
+    duplicateDatabucketToAnotherEnvironment: { moving: false },
     routesFilter: '',
     databucketsFilter: ''
   });
@@ -276,6 +277,24 @@ export class Store {
   }
 
   /**
+   * Get active route value
+   */
+  public getActiveDatabucket(): DataBucket {
+    const activeEnvironment = this.store$.value.environments.find(
+      (environment) =>
+        environment.uuid === this.store$.value.activeEnvironmentUUID
+    );
+
+    if (!activeEnvironment) {
+      return null;
+    }
+
+    return activeEnvironment.data.find(
+      (databucket) => databucket.uuid === this.store$.value.activeDatabucketUUID
+    );
+  }
+
+  /**
    * Get route with the supplied UUID from any environment
    */
   public getRouteByUUID(routeUUID: string): Route | undefined {
@@ -289,6 +308,22 @@ export class Store {
     });
 
     return foundRoute;
+  }
+
+  /**
+   * Get databucket with the supplied UUID from any environment
+   */
+  public getDatabucketByUUID(databucketUUID: string): DataBucket | undefined {
+    let foundDataBucket: DataBucket;
+    this.store$.value.environments.some((environment: Environment) => {
+      foundDataBucket = environment.data.find(
+        (dataBucket: DataBucket) => dataBucket.uuid === databucketUUID
+      );
+
+      return !!foundDataBucket;
+    });
+
+    return foundDataBucket;
   }
 
   /**

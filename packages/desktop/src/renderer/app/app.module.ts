@@ -42,6 +42,7 @@ import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/env
 import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-menu/routes-menu.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
+import { DuplicateDatabucketModalComponent } from 'src/renderer/app/components/modals/duplicate-databucket-modal/duplicate-databucket-modal.component';
 import { DuplicateRouteModalComponent } from 'src/renderer/app/components/modals/duplicate-route-modal/duplicate-route-modal.component';
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
@@ -97,6 +98,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     TitleSeparatorComponent,
     FooterComponent,
     DuplicateRouteModalComponent,
+    DuplicateDatabucketModalComponent,
     EditorComponent,
     CustomSelectComponent,
     ToggleComponent,

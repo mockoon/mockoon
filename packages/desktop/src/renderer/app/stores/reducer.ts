@@ -1333,6 +1333,58 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.START_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
+      newState = {
+        ...state,
+        duplicateDatabucketToAnotherEnvironment: {
+          moving: true,
+          databucketUUID: action.databucketUUID
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.FINALIZE_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
+      newState = {
+        ...state,
+        duplicateDatabucketToAnotherEnvironment: {
+          moving: false
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT: {
+      const { databucket, targetEnvironmentUUID } = action;
+      const { environments } = state;
+      const targetEnvironment = environments.find(
+        (environment: Environment) => environment.uuid === targetEnvironmentUUID
+      );
+      const targetEnvironmentStatus =
+        state.environmentsStatus[targetEnvironmentUUID];
+
+      if (targetEnvironment) {
+        targetEnvironment.data.push(databucket);
+      }
+
+      newState = {
+        ...state,
+        environments: [...environments],
+        activeDatabucketUUID: databucket.uuid,
+        activeEnvironmentUUID: targetEnvironmentUUID,
+        activeView: 'ENV_DATABUCKETS',
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          [targetEnvironmentUUID]: {
+            ...targetEnvironmentStatus,
+            needRestart: targetEnvironmentStatus.running
+          }
+        },
+        databucketsFilter: ''
+      };
+      break;
+    }
+
     default:
       newState = state;
       break;

@@ -130,6 +130,8 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
           this.environmentsService
             .duplicateEnvironment(payload.subjectUUID)
             .subscribe();
+        } else if (payload.subject === 'databucket') {
+          this.environmentsService.duplicateDatabucket(payload.subjectUUID);
         }
         break;
       case 'copyJSON':
@@ -158,6 +160,10 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
       case 'duplicateToEnv':
         if (payload.subject === 'route') {
           this.startRouteDuplicationToAnotherEnvironment(payload.subjectUUID);
+        } else if (payload.subject === 'databucket') {
+          this.startDatabucketDuplicationToAnotherEnvironment(
+            payload.subjectUUID
+          );
         }
         break;
       case 'showInFolder':
@@ -215,6 +221,17 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
   private startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
     this.environmentsService.startRouteDuplicationToAnotherEnvironment(
       routeUUID
+    );
+  }
+
+  /**
+   * Trigger databucket movement flow
+   */
+  private startDatabucketDuplicationToAnotherEnvironment(
+    databucketUUID: string
+  ) {
+    this.environmentsService.startDatabucketDuplicationToAnotherEnvironment(
+      databucketUUID
     );
   }
 }

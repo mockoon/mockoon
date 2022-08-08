@@ -9,6 +9,7 @@ import {
   BuildRouteResponse,
   CloneObject,
   CloneRouteResponse,
+  DataBucket,
   Environment,
   EnvironmentDefault,
   Header,
@@ -77,6 +78,7 @@ import {
   addEnvironmentAction,
   addRouteAction,
   addRouteResponseAction,
+  duplicateDatabucketToAnotherEnvironmentAction,
   duplicateRouteToAnotherEnvironmentAction,
   moveDatabucketsAction,
   moveEnvironmentsAction,
@@ -97,6 +99,7 @@ import {
   setActiveRouteResponseAction,
   setActiveTabAction,
   setActiveViewAction,
+  startDatabucketDuplicationToAnotherEnvironmentAction,
   startRouteDuplicationToAnotherEnvironmentAction,
   updateDatabucketAction,
   updateEnvironmentAction,
@@ -769,6 +772,52 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Duplicate a databucket, or the current active databucket and append it at the end
+   */
+  public duplicateDatabucket(databucketUUID?: string) {
+    let databucketToDuplicate = this.store.getActiveDatabucket();
+
+    if (databucketUUID) {
+      databucketToDuplicate = this.store
+        .getActiveEnvironment()
+        .data.find((data) => data.uuid === databucketUUID);
+    }
+
+    if (databucketToDuplicate) {
+      let newDatabucket: DataBucket = CloneObject(databucketToDuplicate);
+
+      newDatabucket = this.dataService.renewDatabucketUUIDs(newDatabucket);
+
+      this.store.update(
+        addDatabucketAction(newDatabucket, databucketToDuplicate.uuid)
+      );
+    }
+  }
+
+  /**
+   * Duplicate a databucket to another environment
+   */
+  public duplicateDatabucketInAnotherEnvironment(
+    databucketUUID: string,
+    targetEnvironmentUUID: string
+  ) {
+    const databucketToDuplicate =
+      this.store.getDatabucketByUUID(databucketUUID);
+
+    if (databucketToDuplicate) {
+      const newDatabucket: DataBucket = this.dataService.renewDatabucketUUIDs(
+        CloneObject(databucketToDuplicate)
+      );
+      this.store.update(
+        duplicateDatabucketToAnotherEnvironmentAction(
+          newDatabucket,
+          targetEnvironmentUUID
+        )
+      );
+    }
+  }
+
+  /**
    * Remove a route and save
    */
   public removeRoute(routeUUID: string = this.store.get('activeRouteUUID')) {
@@ -1032,6 +1081,17 @@ export class EnvironmentsService extends Logger {
   public startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
     this.store.update(
       startRouteDuplicationToAnotherEnvironmentAction(routeUUID)
+    );
+  }
+
+  /**
+   * Sends an event for further process of route movement
+   */
+  public startDatabucketDuplicationToAnotherEnvironment(
+    databucketUUID: string
+  ) {
+    this.store.update(
+      startDatabucketDuplicationToAnotherEnvironmentAction(databucketUUID)
     );
   }
 
