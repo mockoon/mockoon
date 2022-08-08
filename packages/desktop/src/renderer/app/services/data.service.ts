@@ -130,6 +130,9 @@ export class DataService extends Logger {
     environment.routes.forEach((route) => {
       this.renewRouteUUIDs(route);
     });
+    environment.data.forEach((databucket) => {
+      this.renewDatabucketUUIDs(databucket);
+    });
 
     return environment;
   }

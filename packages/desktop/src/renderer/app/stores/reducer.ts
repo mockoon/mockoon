@@ -84,7 +84,8 @@ export const environmentReducer = (
             ? activeEnvironment.data[0].uuid
             : null,
           environments: state.environments,
-          routesFilter: ''
+          routesFilter: '',
+          databucketsFilter: ''
         };
         break;
       }
