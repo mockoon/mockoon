@@ -99,8 +99,7 @@ import {
   setActiveRouteResponseAction,
   setActiveTabAction,
   setActiveViewAction,
-  startDatabucketDuplicationToAnotherEnvironmentAction,
-  startRouteDuplicationToAnotherEnvironmentAction,
+  startEntityDuplicationToAnotherEnvironmentAction,
   updateDatabucketAction,
   updateEnvironmentAction,
   updateRouteAction,
@@ -1076,22 +1075,14 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Sends an event for further process of route movement
+   * Sends an event for further process of entity movement
    */
-  public startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
-    this.store.update(
-      startRouteDuplicationToAnotherEnvironmentAction(routeUUID)
-    );
-  }
-
-  /**
-   * Sends an event for further process of route movement
-   */
-  public startDatabucketDuplicationToAnotherEnvironment(
-    databucketUUID: string
+  public startEntityDuplicationToAnotherEnvironment(
+    subjectUUID: string,
+    subject: string
   ) {
     this.store.update(
-      startDatabucketDuplicationToAnotherEnvironmentAction(databucketUUID)
+      startEntityDuplicationToAnotherEnvironmentAction(subjectUUID, subject)
     );
   }
 

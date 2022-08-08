@@ -56,6 +56,13 @@ export type DuplicateDatabucketToAnotherEnvironment = {
   targetEnvironmentUUID?: string;
 };
 
+export type DuplicateEntityToAnotherEnvironment = {
+  moving: boolean;
+  subject?: string;
+  subjectUUID?: string;
+  targetEnvironmentUUID?: string;
+};
+
 export type StoreType = {
   activeTab: TabsNameType;
   activeView: ViewsNameType;
@@ -77,6 +84,7 @@ export type StoreType = {
   settings: Settings;
   duplicateRouteToAnotherEnvironment: DuplicateRouteToAnotherEnvironment;
   duplicateDatabucketToAnotherEnvironment: DuplicateDatabucketToAnotherEnvironment;
+  duplicateEntityToAnotherEnvironment: DuplicateEntityToAnotherEnvironment;
   routesFilter: string;
   databucketsFilter: string;
 };

@@ -158,13 +158,10 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
         }
         break;
       case 'duplicateToEnv':
-        if (payload.subject === 'route') {
-          this.startRouteDuplicationToAnotherEnvironment(payload.subjectUUID);
-        } else if (payload.subject === 'databucket') {
-          this.startDatabucketDuplicationToAnotherEnvironment(
-            payload.subjectUUID
-          );
-        }
+        this.startEntityDuplicationToAnotherEnvironment(
+          payload.subjectUUID,
+          payload.subject
+        );
         break;
       case 'showInFolder':
         if (payload.subject === 'environment') {
@@ -216,22 +213,15 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
   }
 
   /**
-   * Trigger route movement flow
+   * Trigger entity movement flow
    */
-  private startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
-    this.environmentsService.startRouteDuplicationToAnotherEnvironment(
-      routeUUID
-    );
-  }
-
-  /**
-   * Trigger databucket movement flow
-   */
-  private startDatabucketDuplicationToAnotherEnvironment(
-    databucketUUID: string
+  private startEntityDuplicationToAnotherEnvironment(
+    subjectUUID: string,
+    subject: string
   ) {
-    this.environmentsService.startDatabucketDuplicationToAnotherEnvironment(
-      databucketUUID
+    this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+      subjectUUID,
+      subject
     );
   }
 }

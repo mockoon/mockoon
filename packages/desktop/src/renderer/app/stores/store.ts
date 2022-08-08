@@ -51,6 +51,7 @@ export class Store {
     settings: null,
     duplicateRouteToAnotherEnvironment: { moving: false },
     duplicateDatabucketToAnotherEnvironment: { moving: false },
+    duplicateEntityToAnotherEnvironment: { moving: false },
     routesFilter: '',
     databucketsFilter: ''
   });

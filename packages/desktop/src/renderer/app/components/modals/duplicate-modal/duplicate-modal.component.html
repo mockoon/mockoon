@@ -3,9 +3,14 @@
     <h3 class="modal-title">
       Choose target environment
       <br />
-      <small class="text-muted h6"
-        >Databucket
-        <code>{{ databucketToDuplicate.name | uppercase }}</code>
+      <small class="text-muted h6">
+        <ng-container *ngIf="entityInformation.subject === 'route'">
+          Route
+        </ng-container>
+        <ng-container *ngIf="entityInformation.subject === 'databucket='">
+          Databucket
+        </ng-container>
+        {{ entityInformation.displayName }}
         will be copied to:</small
       >
     </h3>
@@ -17,7 +22,7 @@
         <button
           class="list-group-item list-group-item-action"
           type="button"
-          (click)="chooseTargetEnvironment(environment)"
+          (click)="chooseTargetEnvironment(environment, entityInformation)"
         >
           <div class="ellipsis">{{ environment.name }}</div>
           <div class="menu-subtitle ellipsis">

@@ -64,11 +64,9 @@ export const enum ActionTypes {
   SET_USER_ID = 'SET_USER_ID',
   UPDATE_SETTINGS = 'UPDATE_SETTINGS',
   UPDATE_UI_STATE = 'UPDATE_UI_STATE',
-  START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
-  FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
+  START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
+  FINALIZE_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'FINALIZE_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT',
-  START_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
-  FINALIZE_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'FINALIZE_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT'
 }
 
@@ -363,25 +361,6 @@ export const addRouteResponseAction = (
   } as const);
 
 /**
- * Triggers movement of a route to another environment
- */
-export const startRouteDuplicationToAnotherEnvironmentAction = (
-  routeUUID: string
-) =>
-  ({
-    type: ActionTypes.START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
-    routeUUID
-  } as const);
-
-/**
- * Cancels out route movement
- */
-export const finalizeRouteDuplicationToAnotherEnvironmentAction = () =>
-  ({
-    type: ActionTypes.FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT
-  } as const);
-
-/**
  * Finalizes route movement to another environment
  */
 export const duplicateRouteToAnotherEnvironmentAction = (
@@ -395,22 +374,24 @@ export const duplicateRouteToAnotherEnvironmentAction = (
   } as const);
 
 /**
- * Triggers movement of a route to another environment
+ * Triggers movement of an entity to another environment
  */
-export const startDatabucketDuplicationToAnotherEnvironmentAction = (
-  databucketUUID: string
+export const startEntityDuplicationToAnotherEnvironmentAction = (
+  subjectUUID: string,
+  subject: string
 ) =>
   ({
-    type: ActionTypes.START_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
-    databucketUUID
+    type: ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
+    subjectUUID,
+    subject
   } as const);
 
 /**
- * Cancels out route movement
+ * Cancels out entity movement
  */
-export const finalizeDatabucketDuplicationToAnotherEnvironmentAction = () =>
+export const finalizeEntityDuplicationToAnotherEnvironmentAction = () =>
   ({
-    type: ActionTypes.FINALIZE_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT
+    type: ActionTypes.FINALIZE_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT
   } as const);
 
 /**
@@ -624,9 +605,7 @@ export type Actions =
   | ReturnType<typeof removeToastAction>
   | ReturnType<typeof updateUIStateAction>
   | ReturnType<typeof updateSettingsAction>
-  | ReturnType<typeof startRouteDuplicationToAnotherEnvironmentAction>
-  | ReturnType<typeof finalizeRouteDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof startEntityDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof finalizeEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>
-  | ReturnType<typeof startDatabucketDuplicationToAnotherEnvironmentAction>
-  | ReturnType<typeof finalizeDatabucketDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>;

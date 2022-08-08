@@ -1279,27 +1279,6 @@ export const environmentReducer = (
       break;
     }
 
-    case ActionTypes.START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
-      newState = {
-        ...state,
-        duplicateRouteToAnotherEnvironment: {
-          moving: true,
-          routeUUID: action.routeUUID
-        }
-      };
-      break;
-    }
-
-    case ActionTypes.FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
-      newState = {
-        ...state,
-        duplicateRouteToAnotherEnvironment: {
-          moving: false
-        }
-      };
-      break;
-    }
-
     case ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT: {
       const { route, targetEnvironmentUUID } = action;
       const { environments } = state;
@@ -1333,21 +1312,22 @@ export const environmentReducer = (
       break;
     }
 
-    case ActionTypes.START_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
+    case ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
       newState = {
         ...state,
-        duplicateDatabucketToAnotherEnvironment: {
+        duplicateEntityToAnotherEnvironment: {
           moving: true,
-          databucketUUID: action.databucketUUID
+          subject: action.subject,
+          subjectUUID: action.subjectUUID
         }
       };
       break;
     }
 
-    case ActionTypes.FINALIZE_DATABUCKET_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
+    case ActionTypes.FINALIZE_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
       newState = {
         ...state,
-        duplicateDatabucketToAnotherEnvironment: {
+        duplicateEntityToAnotherEnvironment: {
           moving: false
         }
       };
