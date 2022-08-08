@@ -156,16 +156,6 @@ export const DatabucketsContextMenu = (
   {
     payload: {
       subject: 'databucket',
-      action: 'toggle',
-      subjectUUID: databucketUUID
-    },
-    label: 'Toggle',
-    icon: 'power_settings_new',
-    disabled: false
-  },
-  {
-    payload: {
-      subject: 'databucket',
       action: 'delete',
       subjectUUID: databucketUUID
     },
