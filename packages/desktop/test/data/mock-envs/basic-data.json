@@ -19,12 +19,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "Reponse 1",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -49,12 +44,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "text/plain"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -79,12 +69,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -100,24 +85,9 @@
   "proxyMode": false,
   "proxyHost": "",
   "cors": true,
-  "headers": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "headers": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
   "hostname": "0.0.0.0",
   "tlsOptions": {

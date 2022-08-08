@@ -1,6 +1,6 @@
 {
   "uuid": "",
-  "lastMigration": 22,
+  "lastMigration": 23,
   "name": "Slack",
   "endpointPrefix": "api",
   "latency": 0,
@@ -6263,5 +6263,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }

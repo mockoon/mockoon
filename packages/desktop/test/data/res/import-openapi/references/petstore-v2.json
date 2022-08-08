@@ -1,6 +1,6 @@
 {
   "uuid": "",
-  "lastMigration": 22,
+  "lastMigration": 23,
   "name": "Swagger Petstore v2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -767,5 +767,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }
