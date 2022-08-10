@@ -275,7 +275,7 @@ describe('Migrations', () => {
     it('should add `data` to the environment', () => {
       const environment: any = {};
 
-      applyMigration(22, environment);
+      applyMigration(23, environment);
 
       expect(environment.data).to.be.an('array');
       expect(environment.data).to.be.empty;
