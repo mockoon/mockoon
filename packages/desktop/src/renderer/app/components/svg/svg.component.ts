@@ -75,6 +75,7 @@ export class SvgComponent {
     | 'multiple_stop'
     | 'open_in_new'
     | 'priority_high'
+    | 'data'
     | string;
 
   constructor() {}

@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
       {
         id: 'ENV_DATABUCKETS',
         title: 'Data',
-        icon: 'storage',
+        icon: 'data',
         count: this.activeEnvironment$.pipe(
           filter((environment) => !!environment),
           map((environment) => environment.data.length)

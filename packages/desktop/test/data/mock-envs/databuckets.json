@@ -1,0 +1,33 @@
+{
+  "uuid": "5c73b45a-351b-4aed-a01b-4c6e4eb47f41",
+  "lastMigration": 23,
+  "name": "databuckets",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [],
+  "proxyMode": false,
+  "proxyHost": "",
+  "cors": true,
+  "headers": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "data": [
+    {
+      "uuid": "bd25259c-180a-48e6-b12a-0d0f7eab280c",
+      "name": "Test databucket",
+      "value": "Databucket content"
+    }
+  ]
+}

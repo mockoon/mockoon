@@ -12,12 +12,16 @@ class Environments {
     return $('app-header .header .nav .nav-item:nth-child(1) .nav-link');
   }
 
+  public get databucketsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-header .header .nav .nav-item:nth-child(2) .nav-link');
+  }
+
   public get logsTab(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('app-header .header .nav .nav-item:nth-child(3) .nav-link');
+    return $('app-header .header .nav .nav-item:nth-child(4) .nav-link');
   }
 
   public get headersTab(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('app-header .header .nav .nav-item:nth-child(2) .nav-link');
+    return $('app-header .header .nav .nav-item:nth-child(3) .nav-link');
   }
 
   private get openBtn(): ChainablePromiseElement<WebdriverIO.Element> {

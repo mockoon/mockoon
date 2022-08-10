@@ -133,7 +133,8 @@ export const environmentReducer = (
           ? newEnvironment.data[0].uuid
           : null,
         environments: state.environments,
-        routesFilter: ''
+        routesFilter: '',
+        databucketsFilter: ''
       };
       break;
     }
@@ -421,6 +422,7 @@ export const environmentReducer = (
           [newEnvironment.uuid]: null
         },
         routesFilter: '',
+        databucketsFilter: '',
         settings: newSettings
       };
       break;
@@ -446,6 +448,7 @@ export const environmentReducer = (
         environmentsLogs: newEnvironmentsLogs,
         activeEnvironmentLogsUUID: newActiveEnvironmentLogsUUID,
         routesFilter: '',
+        databucketsFilter: '',
         settings: {
           ...state.settings,
           environments: state.settings.environments.filter(
@@ -986,7 +989,7 @@ export const environmentReducer = (
         }
       };
 
-      if (state.activeRouteUUID === action.databucketUUID) {
+      if (state.activeDatabucketUUID === action.databucketUUID) {
         if (newDatabuckets.length) {
           newState.activeDatabucketUUID = newDatabuckets[0].uuid;
         } else {

@@ -92,8 +92,8 @@ export const DataBucketDefault: DataBucket = {
   get uuid() {
     return uuid();
   },
-  name: 'New Databucket',
-  value: ''
+  name: 'New Data',
+  value: '{}'
 };
 
 const UUIDSchema = Joi.string()

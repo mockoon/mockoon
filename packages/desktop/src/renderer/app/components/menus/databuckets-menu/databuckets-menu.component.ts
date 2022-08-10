@@ -134,7 +134,6 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
    */
   public addDatabucket() {
     this.environmentsService.addDatabucket();
-    console.log('add a dtbucket');
     if (this.databucketsMenu) {
       this.uiService.scrollToBottom(this.databucketsMenu.nativeElement);
     }

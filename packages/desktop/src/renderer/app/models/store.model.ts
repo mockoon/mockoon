@@ -15,12 +15,7 @@ export type ViewsNameType =
   | 'ENV_SETTINGS'
   | 'ENV_RELOAD';
 
-export type TabsNameType =
-  | 'RESPONSE'
-  | 'DATABUCKETS'
-  | 'HEADERS'
-  | 'RULES'
-  | 'SETTINGS';
+export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 
@@ -43,18 +38,6 @@ export type UIState = {
 };
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
-
-export type DuplicateRouteToAnotherEnvironment = {
-  moving: boolean;
-  routeUUID?: string;
-  targetEnvironmentUUID?: string;
-};
-
-export type DuplicateDatabucketToAnotherEnvironment = {
-  moving: boolean;
-  databucketUUID?: string;
-  targetEnvironmentUUID?: string;
-};
 
 export type DuplicateEntityToAnotherEnvironment = {
   moving: boolean;
@@ -82,8 +65,6 @@ export type StoreType = {
   toasts: Toast[];
   uiState: UIState;
   settings: Settings;
-  duplicateRouteToAnotherEnvironment: DuplicateRouteToAnotherEnvironment;
-  duplicateDatabucketToAnotherEnvironment: DuplicateDatabucketToAnotherEnvironment;
   duplicateEntityToAnotherEnvironment: DuplicateEntityToAnotherEnvironment;
   routesFilter: string;
   databucketsFilter: string;
