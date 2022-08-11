@@ -460,6 +460,21 @@ export const Migrations: {
         });
       });
     }
+  },
+  /**
+   * Add graphql properties
+   */
+  {
+    id: 23,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((routeResponse) => {
+          if (routeResponse.graphQLSchema === undefined) {
+            routeResponse.graphQLSchema = RouteResponseDefault.graphQLSchema;
+          }
+        });
+      });
+    }
   }
 ];
 

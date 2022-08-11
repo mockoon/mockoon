@@ -136,18 +136,19 @@ input,
 }
 
 // http methods badges
-$http-methods: ('get', lighten($blue, 5%)), ('put', lighten($orange, 5%)),
-  ('post', lighten($green, 5%)), ('delete', lighten($red, 8%)),
-  ('head', lighten($purple, 12%)), ('patch', $teal),
-  ('options', lighten($dark-blue, 15%));
-$http-methods-light: ('get', lighten($blue, 10%)),
-  ('put', lighten($orange, 10%)), ('post', lighten($green, 10%)),
-  ('delete', lighten($red, 17%)), ('head', lighten($purple, 25%)),
-  ('patch', $teal), ('options', lighten($dark-blue, 30%));
+$http-methods: ('graphql', #e10098), ('get', lighten($blue, 5%)),
+  ('put', lighten($orange, 5%)), ('post', lighten($green, 5%)),
+  ('delete', lighten($red, 8%)), ('head', lighten($purple, 12%)),
+  ('patch', $teal), ('options', lighten($dark-blue, 15%));
+$http-methods-light: ('graphql', lighten(#e10098, 10%)),
+  ('get', lighten($blue, 10%)), ('put', lighten($orange, 10%)),
+  ('post', lighten($green, 10%)), ('delete', lighten($red, 17%)),
+  ('head', lighten($purple, 25%)), ('patch', $teal),
+  ('options', lighten($dark-blue, 30%));
 @each $method in $http-methods-light {
   .http-method-#{nth($method, 1)} {
     background-color: #{nth($method, 2)};
-    color: $gray-900;
+    color: darken($gray-900, 10%);
   }
 }
 @each $method in $http-methods-light {

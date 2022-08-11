@@ -6,25 +6,32 @@ import { Helpers } from './templating-helpers/helpers';
 import { RequestHelpers } from './templating-helpers/request-helpers';
 
 /**
- * Parse a content with Handlebars
+ * Parse a content with Handlebars.
+ * If the `request` is omitted,
  *
  * @param content
  * @param request
+ * @param environment
  */
 export const TemplateParser = function (
   content: string,
-  request: Request,
+  request: Request | null,
   environment: Environment
 ): string {
   try {
     return hbsCompile(content)(
       {},
       {
-        helpers: {
-          ...FakerWrapper,
-          ...RequestHelpers(request, environment),
-          ...Helpers
-        }
+        helpers: request
+          ? {
+              ...FakerWrapper,
+              ...RequestHelpers(request, environment),
+              ...Helpers
+            }
+          : {
+              ...FakerWrapper,
+              ...Helpers
+            }
       }
     );
   } catch (error) {

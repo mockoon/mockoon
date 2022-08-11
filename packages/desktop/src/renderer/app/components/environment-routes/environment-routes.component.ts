@@ -14,6 +14,7 @@ import {
   INDENT_SIZE,
   Methods,
   MimeTypesWithTemplating,
+  PseudoMethods,
   ResponseMode,
   Route,
   RouteDefault,
@@ -84,6 +85,13 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeRouteResponseForm: FormGroup;
   public scrollToBottom = this.uiService.scrollToBottom;
   public methods: DropdownItems = [
+    { category: true, label: 'Misc' },
+    {
+      value: PseudoMethods.graphql,
+      label: 'GraphQL',
+      classes: 'http-method-graphql-text'
+    },
+    { category: true, label: 'HTTP' },
     {
       value: Methods.get,
       label: 'GET',
@@ -456,6 +464,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       filePath: [RouteResponseDefault.filePath],
       sendFileAsBody: [RouteResponseDefault.sendFileAsBody],
       body: [RouteResponseDefault.body],
+      graphQLSchema: [RouteResponseDefault.graphQLSchema],
       rules: this.formBuilder.array([]),
       disableTemplating: [RouteResponseDefault.disableTemplating],
       fallbackTo404: [RouteResponseDefault.fallbackTo404]
@@ -521,6 +530,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             filePath: activeRouteResponse.filePath,
             sendFileAsBody: activeRouteResponse.sendFileAsBody,
             body: activeRouteResponse.body,
+            graphQLSchema: activeRouteResponse.graphQLSchema,
             rules: activeRouteResponse.rules,
             disableTemplating: activeRouteResponse.disableTemplating,
             fallbackTo404: activeRouteResponse.fallbackTo404

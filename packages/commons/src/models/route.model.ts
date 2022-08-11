@@ -7,7 +7,8 @@ export type RouteResponse = {
   statusCode: number;
   label: string;
   headers: Header[];
-  body?: string;
+  body: string;
+  graphQLSchema: string;
   latency: number;
   filePath: string;
   sendFileAsBody: boolean;
@@ -40,10 +41,14 @@ export type ResponseRuleTargets =
   | 'request_number'
   | 'cookie';
 
+export enum PseudoMethods {
+  graphql = 'graphql'
+}
+
 export type Route = {
   uuid: string;
   documentation: string;
-  method: keyof typeof Methods;
+  method: keyof typeof Methods | keyof typeof PseudoMethods;
   endpoint: string;
   responses: RouteResponse[];
   enabled: boolean;

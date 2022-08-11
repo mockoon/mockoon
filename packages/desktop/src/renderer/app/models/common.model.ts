@@ -8,14 +8,14 @@ export type HeadersProperties =
   | 'proxyReqHeaders'
   | 'proxyResHeaders';
 
-export type DropdownItem = {
+export type DropdownItem<T = string | number> = {
   category?: true;
-  value?: number | string;
+  value?: T;
   label: string;
   classes?: string;
 };
 
-export type DropdownItems = DropdownItem[];
+export type DropdownItems<T = string | number> = DropdownItem<T>[];
 
 export type ToggleItem = {
   value?: number | string;

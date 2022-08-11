@@ -19,7 +19,9 @@ import busboy from 'busboy';
 import cookieParser from 'cookie-parser';
 import { EventEmitter } from 'events';
 import express, { Application, NextFunction, Request, Response } from 'express';
+import { graphqlHTTP } from 'express-graphql';
 import { createReadStream, readFile, readFileSync, statSync } from 'fs';
+import { buildSchema } from 'graphql';
 import { createServer as httpCreateServer, Server as httpServer } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import {
@@ -37,11 +39,8 @@ import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
-import {
-  CreateTransaction,
-  resolvePathFromEnvironment,
-  stringIncludesArrayItems
-} from '../utils';
+import { CreateTransaction, resolvePathFromEnvironment,stringIncludesArrayItems } from '../utils';
+import { buildRootResolvers } from './graphql';
 
 /**
  * Create a server instance from an Environment object.
@@ -339,7 +338,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           routePath = routePath.replace(/\/{2,}/g, '/');
 
-          this.createRESTRoute(server, declaredRoute, routePath);
+          if (declaredRoute.method === 'graphql') {
+            this.createGraphQLRoute(server, declaredRoute, routePath);
+          } else {
+            this.createRESTRoute(server, declaredRoute, routePath);
+          }
         } catch (error: any) {
           let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
 
@@ -354,13 +357,56 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     });
   }
 
+  private createGraphQLRoute(
+    server: Application,
+    route: Route,
+    routePath: string
+  ) {
+    /* const users = [
+      {
+        id: 'b0f88842-452b-4271-b4b1-b9d5a1057224',
+        name: 'jean loup'
+      },
+      {
+        id: '7ea6a918-3ee6-46ca-9e0e-e16c1a1dfcb8',
+        name: 'jean jak'
+      }
+    ]; */
+
+    /**
+     * WIP
+     * - handle objects, lists
+     */
+    try {
+      const schema = buildSchema(route.responses[0].graphQLSchema);
+      const preparsedMockData = TemplateParser(
+        route.responses[0].body,
+        null,
+        this.environment
+      );
+      server.use(routePath, (request, response) => {
+        graphqlHTTP({
+          schema,
+          rootValue: buildRootResolvers(
+            schema,
+            JSON.parse(
+              TemplateParser(preparsedMockData, request, this.environment)
+            )
+          ),
+          graphiql: true
+        })(request, response);
+      });
+    } catch (error: any) {
+      this.emit('error', ServerErrorCodes.ROUTE_CREATION_ERROR, error);
+    }
+  }
+
   /**
    * Create a regular REST route (GET, POST, etc.)
    *
    * @param server
    * @param route
    * @param routePath
-   * @param requestNumber
    */
   private createRESTRoute(
     server: Application,
