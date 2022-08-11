@@ -9,8 +9,6 @@ import navigation from '../libs/navigation';
 import utils from '../libs/utils';
 
 describe('Databuckets navigation', () => {
-  const envNameSelector =
-    '.modal-content .modal-body .list-group .list-group-item:first-child div:first-of-type';
   it('should open and start the environment', async () => {
     await environments.open('databuckets');
     await environments.start();
@@ -19,13 +17,13 @@ describe('Databuckets navigation', () => {
   it('should navigate to the databuckets tab and verify the header count', async () => {
     await navigation.switchView('ENV_DATABUCKETS');
     await databuckets.assertCount(1);
-    await utils.assertElementText(environments.databucketsTab, 'Data 1');
+    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 1');
   });
 
   it('should delete the single databucket and verify the header count and message', async () => {
     await databuckets.remove(1);
     await databuckets.assertCount(0);
-    await utils.assertElementText(environments.databucketsTab, 'Data');
+    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data');
     await utils.assertElementText(
       $('.main-content .message'),
       'No databucket defined'
@@ -65,11 +63,6 @@ describe('Databucket duplication', () => {
 });
 
 describe('Databucket duplication to another envionment', () => {
-  const envNameSelector =
-    '.modal-content .modal-body .list-group .list-group-item:first-child div:first-of-type';
-  const envHostnameSelector =
-    '.modal-content .modal-body .list-group .list-group-item:first-child div:last-of-type';
-
   it('assert the context menu entry is disabled when there is only one env', async () => {
     await contextMenu.assertEntryDisabled('databuckets', 1, 2);
   });
@@ -86,12 +79,12 @@ describe('Databucket duplication to another envionment', () => {
 
     expect(modalText).toContain('My Databucket');
 
-    await utils.assertElementText($(envNameSelector), 'Basic data');
-    await utils.assertElementText($(envHostnameSelector), '0.0.0.0:3000/');
+    await modals.assertDuplicationModalEnvName('Basic data');
+    await modals.assertDuplicationModalEnvHostname('0.0.0.0:3000/');
   });
 
   it('should duplicate the databucket in another env', async () => {
-    await $(envNameSelector).click();
+    await modals.confirmDulicateToEnvModal(1);
     await databuckets.assertName('My Databucket (copy)');
     await databuckets.assertCount(1);
 
