@@ -31,7 +31,7 @@ describe('Duplicate a route to an environment', async () => {
 
     const targetRoute = await $('.modal-content .modal-title small').getText();
 
-    expect(targetRoute).toContain('POST /dolphins');
+    expect(targetRoute).toContain('POST / dolphins');
 
     await modals.assertDuplicationModalEnvName('Basic data');
     await modals.assertDuplicationModalEnvHostname('0.0.0.0:3000/');

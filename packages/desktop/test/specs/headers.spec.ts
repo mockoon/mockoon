@@ -149,10 +149,7 @@ describe('Headers', () => {
     });
 
     it('should verify the header tab counter', async () => {
-      await utils.assertElementText(
-        $('app-header .header .nav .nav-item:nth-child(2) .nav-link'),
-        'Headers 3'
-      );
+      await navigation.assertHeaderValue('ENV_HEADERS', 'Headers 3');
     });
 
     it('should call /headers, route headers should override global headers', async () => {
