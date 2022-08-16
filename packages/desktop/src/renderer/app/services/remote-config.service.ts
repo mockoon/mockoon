@@ -5,7 +5,7 @@ import {
   RemoteConfig
 } from '@angular/fire/remote-config';
 import { from, Observable } from 'rxjs';
-import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { RemoteConfigData } from 'src/renderer/app/models/remote-config.model';
 import { environment } from 'src/renderer/environments/environment';
 
@@ -23,7 +23,7 @@ export class RemoteConfigService {
   public get<T extends keyof RemoteConfigData>(
     path: T
   ): Observable<RemoteConfigData[T]> {
-    return this.getConfig().pipe(pluck(path));
+    return this.getConfig().pipe(map((remoteConfig) => remoteConfig?.[path]));
   }
 
   /**
