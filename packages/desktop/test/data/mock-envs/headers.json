@@ -80,6 +80,31 @@
         }
       ],
       "responseMode": null
+    },
+    {
+      "uuid": "493365b8-7f69-434b-adca-e6092a17c1dc",
+      "method": "get",
+      "endpoint": "file-nomime",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "d1208679-4a8b-4d33-bd5b-ee8d6d3e0e8c",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "./filenoext",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
     }
   ],
   "proxyMode": false,

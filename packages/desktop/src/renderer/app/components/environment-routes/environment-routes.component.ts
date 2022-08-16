@@ -28,7 +28,6 @@ import {
   filter,
   map,
   mergeMap,
-  pluck,
   startWith,
   takeUntil,
   tap
@@ -163,7 +162,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     this.activeRouteResponseLastLog$ =
       this.store.selectActiveRouteResponseLastLog();
     this.activeResponseFileMimeType$ = this.activeRouteResponse$.pipe(
-      pluck('filePath'),
+      map((activeRouteResponse) => activeRouteResponse?.filePath),
       filter((filePath) => !!filePath),
       distinctUntilChanged(),
       mergeMap((filePath) =>
@@ -178,11 +177,10 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     /**
      * Effective content type:
      *
-     * if file and no route header --> file mime type OK
-     * if file and route header --> route header OK
-     * if no file and route header --> route header OK
-     * if no file and no route header --> env header
-     * default?
+     * if file and no route header --> file mime type
+     * if file and route header --> route content type
+     * if no file and route header --> route content type
+     * if no file and no route header --> env content type
      */
     this.effectiveContentType$ = combineLatest([
       this.activeEnvironment$.pipe(
@@ -206,6 +204,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
 
         if (
           contentTypeInfo.hasFile &&
+          contentTypeInfo.fileMimeType &&
           !contentTypeInfo.routeResponseContentType
         ) {
           return contentTypeInfo.fileMimeType;
