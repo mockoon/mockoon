@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { OpenDialogOptions } from 'electron';
+import { from, Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { updateSettingsAction } from 'src/renderer/app/stores/actions';
+import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({
   providedIn: 'root'
@@ -11,49 +15,88 @@ export class DialogsService {
     json: [{ name: 'JSON', extensions: ['json'] }]
   };
 
+  constructor(private store: Store) {}
+
   /**
    * Show the save dialog and return the path or null if cancelled
    */
-  public async showSaveDialog(title: string): Promise<string | null> {
-    const dialogResult = await MainAPI.invoke('APP_SHOW_SAVE_DIALOG', {
-      filters: this.filters.json,
-      title
-    });
+  public showSaveDialog(
+    title: string,
+    saveWorkingDir = true
+  ): Observable<string | null> {
+    return from(
+      MainAPI.invoke('APP_SHOW_SAVE_DIALOG', {
+        filters: this.filters.json,
+        title
+      })
+    ).pipe(
+      // Get the directory
+      switchMap((dialogResult) => {
+        if (dialogResult.canceled) {
+          return of(null);
+        }
 
-    if (dialogResult.canceled) {
-      return null;
-    }
-
-    // add json ext if was omitted. Required for unix where, despite the filter, a non json ext can be provided. (settings would be saved with erroneous ext, while electron-json-storage would save with json ext, resulting in some non working features, like file watching)
-    return await MainAPI.invoke(
-      'APP_REPLACE_FILEPATH_EXTENSION',
-      dialogResult.filePath
+        return from(
+          MainAPI.invoke('APP_GET_BASE_PATH', dialogResult.filePath)
+        ).pipe(
+          tap((directory) => {
+            if (saveWorkingDir) {
+              this.store.update(
+                updateSettingsAction({ dialogWorkingDir: directory })
+              );
+            }
+          }),
+          switchMap(() =>
+            from(
+              MainAPI.invoke(
+                'APP_REPLACE_FILEPATH_EXTENSION',
+                dialogResult.filePath
+              )
+            )
+          )
+        );
+      })
     );
   }
 
   /**
    * Show the open dialog and return the path or null if cancelled
    */
-  public async showOpenDialog(
+  public showOpenDialog(
     title: string,
-    filterName?: 'json' | 'openapi'
-  ): Promise<string | null> {
+    filterName?: 'json' | 'openapi',
+    saveWorkingDir = true
+  ): Observable<string | null> {
     const options: OpenDialogOptions = { title };
 
     if (filterName) {
       options.filters = this.filters[filterName];
     }
 
-    const dialogResult = await MainAPI.invoke('APP_SHOW_OPEN_DIALOG', options);
+    return from(MainAPI.invoke('APP_SHOW_OPEN_DIALOG', options)).pipe(
+      // Get the directory
+      switchMap((dialogResult) => {
+        if (
+          dialogResult.canceled ||
+          !dialogResult.filePaths ||
+          !dialogResult.filePaths[0]
+        ) {
+          return of(null);
+        }
 
-    if (
-      dialogResult.canceled ||
-      !dialogResult.filePaths ||
-      !dialogResult.filePaths[0]
-    ) {
-      return null;
-    }
-
-    return dialogResult.filePaths[0];
+        return from(
+          MainAPI.invoke('APP_GET_BASE_PATH', dialogResult.filePaths[0])
+        ).pipe(
+          tap((directory) => {
+            if (saveWorkingDir) {
+              this.store.update(
+                updateSettingsAction({ dialogWorkingDir: directory })
+              );
+            }
+          }),
+          map(() => dialogResult.filePaths[0])
+        );
+      })
+    );
   }
 }

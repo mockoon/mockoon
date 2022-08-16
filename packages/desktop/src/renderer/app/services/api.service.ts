@@ -89,10 +89,10 @@ export class ApiService {
             changelogModal.showModal();
             break;
           case 'IMPORT_OPENAPI_FILE':
-            this.importExportService.importOpenAPIFile();
+            this.importExportService.importOpenAPIFile().subscribe();
             break;
           case 'EXPORT_OPENAPI_FILE':
-            this.importExportService.exportOpenAPIFile();
+            this.importExportService.exportOpenAPIFile().subscribe();
             break;
         }
       });
