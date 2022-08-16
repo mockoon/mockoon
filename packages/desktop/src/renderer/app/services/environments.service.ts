@@ -426,9 +426,7 @@ export class EnvironmentsService extends Logger {
     environment?: Environment,
     insertAfterIndex?: number
   ): Observable<[string, string]> {
-    return from(
-      this.dialogsService.showSaveDialog('Save your new environment')
-    ).pipe(
+    return this.dialogsService.showSaveDialog('Save your new environment').pipe(
       switchMap((filePath) => {
         if (!filePath) {
           return EMPTY;
@@ -441,7 +439,7 @@ export class EnvironmentsService extends Logger {
               (environmentItem) => environmentItem.path === filePath
             ) !== undefined
         ) {
-          return throwError('ENVIRONMENT_FILE_IN_USE');
+          return throwError(() => 'ENVIRONMENT_FILE_IN_USE');
         }
 
         return zip(
@@ -568,38 +566,40 @@ export class EnvironmentsService extends Logger {
    *
    */
   public openEnvironment(): Observable<Environment> {
-    return from(
-      this.dialogsService.showOpenDialog('Open environment JSON file', 'json')
-    ).pipe(
-      filter((filePath) => {
-        if (!filePath) {
-          return false;
-        }
+    return this.dialogsService
+      .showOpenDialog('Open environment JSON file', 'json')
+      .pipe(
+        filter((filePath) => {
+          if (!filePath) {
+            return false;
+          }
 
-        // set environment as active if already opened
-        const openedEnvironment = this.store
-          .get('settings')
-          .environments.find(
-            (environmentItem) => environmentItem.path === filePath
-          );
+          // set environment as active if already opened
+          const openedEnvironment = this.store
+            .get('settings')
+            .environments.find(
+              (environmentItem) => environmentItem.path === filePath
+            );
 
-        if (openedEnvironment !== undefined) {
-          this.store.update(setActiveEnvironmentAction(openedEnvironment.uuid));
+          if (openedEnvironment !== undefined) {
+            this.store.update(
+              setActiveEnvironmentAction(openedEnvironment.uuid)
+            );
 
-          return false;
-        }
+            return false;
+          }
 
-        return true;
-      }),
-      switchMap((filePath) =>
-        this.storageService.loadEnvironment(filePath).pipe(
-          switchMap((environment) => this.verifyData(environment)),
-          tap((environment) => {
-            this.validateAndAddToStore(environment, filePath);
-          })
+          return true;
+        }),
+        switchMap((filePath) =>
+          this.storageService.loadEnvironment(filePath).pipe(
+            switchMap((environment) => this.verifyData(environment)),
+            tap((environment) => {
+              this.validateAndAddToStore(environment, filePath);
+            })
+          )
         )
-      )
-    );
+      );
   }
 
   /**

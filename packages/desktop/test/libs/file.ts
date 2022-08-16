@@ -28,16 +28,23 @@ class File {
     await browser.pause(2000);
   }
 
+  public async getObjectPropertyInFile(filePath: string, objectPath: string) {
+    const file = await fs.readFile(filePath);
+    const content: Environments = JSON.parse(file.toString());
+
+    return objectGetPath(content, objectPath);
+  }
+
   public async verifyObjectPropertyInFile(
     filePath: string,
     objectPaths: string | string[],
     values: any | any[],
     exists = false
   ) {
-    const environmentFile = await fs.readFile(filePath);
-    const environments: Environments = JSON.parse(environmentFile.toString());
+    const file = await fs.readFile(filePath);
+    const content = JSON.parse(file.toString());
 
-    this.verifyObjectProperty(environments, objectPaths, values, exists);
+    this.verifyObjectProperty(content, objectPaths, values, exists);
   }
 
   public verifyObjectProperty(

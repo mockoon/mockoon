@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import { sep } from 'path';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import environmentsSettings from '../libs/environments-settings';
@@ -22,8 +23,29 @@ const generateCall = (requestBody: any): HttpCall => ({
 });
 
 describe('Settings', () => {
-  it('should open the environment', async () => {
-    await environments.open('settings-env');
+  describe('Dialog working directory', () => {
+    it('should verify default value', async () => {
+      await utils.waitForAutosave();
+      await file.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'dialogWorkingDir',
+        ''
+      );
+    });
+
+    it('should open the environment', async () => {
+      await environments.open('settings-env');
+    });
+
+    it('should verify default value', async () => {
+      await utils.waitForAutosave();
+      const dialogWorkingDir = await file.getObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'dialogWorkingDir'
+      );
+
+      expect(dialogWorkingDir).toContain(`${sep}tmp${sep}storage`);
+    });
   });
 
   describe('Environment and route path truncate', () => {

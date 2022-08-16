@@ -24,4 +24,5 @@ export type Settings = {
   enableTelemetry: boolean;
   storagePrettyPrint: boolean;
   fileWatcherEnabled: FileWatcherOptions;
+  dialogWorkingDir: string;
 };

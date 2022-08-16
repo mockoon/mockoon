@@ -335,12 +335,18 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   /**
    * Open file browsing dialog
    */
-  public async browseFiles() {
-    const filePath = await this.dialogsService.showOpenDialog('Choose a file');
-
-    if (filePath) {
-      this.activeRouteResponseForm.get('filePath').setValue(filePath);
-    }
+  public browseFiles() {
+    /* WIP */
+    this.dialogsService
+      .showOpenDialog('Choose a file', null, false)
+      .pipe(
+        tap((filePath) => {
+          if (filePath) {
+            this.activeRouteResponseForm.get('filePath').setValue(filePath);
+          }
+        })
+      )
+      .subscribe();
   }
 
   public openWikiLink(linkName: string) {

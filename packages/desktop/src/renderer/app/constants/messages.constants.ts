@@ -145,7 +145,7 @@ export const Messages: {
   }),
   OPENAPI_IMPORT_ERROR: (messageParams) => ({
     message: `Error while importing environment from OpenAPI format: ${messageParams.error.message}`,
-    loggerMessage: `Error while importing environment ${messageParams.filePath} from OpenAPI format: ${messageParams.error.message}`,
+    loggerMessage: `Error while importing environment from OpenAPI format: ${messageParams.error.message}`,
     showToast: true,
     toastType: 'error'
   }),

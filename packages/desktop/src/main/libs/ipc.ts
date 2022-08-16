@@ -32,7 +32,11 @@ import {
   toggleRouteMenuItems
 } from 'src/main/libs/menu';
 import { ServerInstance } from 'src/main/libs/server-management';
-import { loadSettings, saveSettings } from 'src/main/libs/settings';
+import {
+  getSettings,
+  loadSettings,
+  saveSettings
+} from 'src/main/libs/settings';
 import { readJSONData, writeJSONData } from 'src/main/libs/storage';
 import { applyUpdate } from 'src/main/libs/update';
 import {
@@ -45,6 +49,21 @@ import { Settings } from 'src/shared/models/settings.model';
 declare const isTesting: boolean;
 
 const dialogMocks: { [x: string]: string[] } = { save: [], open: [] };
+
+/**
+ * Returns the user data path or the last saved saved/opened directory
+ *
+ * @returns
+ */
+const getDialogDefaultPath = () => {
+  const settings = getSettings();
+
+  if (settings.dialogWorkingDir) {
+    return settings.dialogWorkingDir;
+  }
+
+  return getDataPath();
+};
 
 export const initIPCListeners = (mainWindow: BrowserWindow) => {
   // Quit requested by renderer (when waiting for save to finish)
@@ -164,7 +183,8 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
    * This IPC channel must be mocked when running e2e tests
    */
   ipcMain.handle('APP_SHOW_OPEN_DIALOG', async (event, options) => {
-    options.defaultPath = getDataPath();
+    options.defaultPath = getDialogDefaultPath();
+
     if (isTesting) {
       return { filePaths: [dialogMocks.open.pop()] };
     } else {
@@ -176,7 +196,8 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
    * This IPC channel must be mocked when running e2e tests
    */
   ipcMain.handle('APP_SHOW_SAVE_DIALOG', async (event, options) => {
-    options.defaultPath = getDataPath();
+    options.defaultPath = getDialogDefaultPath();
+
     if (isTesting) {
       return { filePath: dialogMocks.save.pop() };
     } else {
@@ -188,6 +209,11 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.handle('APP_BUILD_STORAGE_FILEPATH', (event, name: string) =>
     pathJoin(getDataPath(), `${name}.json`)
+  );
+
+  ipcMain.handle(
+    'APP_GET_BASE_PATH',
+    (event, filePath: string) => pathParse(filePath).dir
   );
 
   ipcMain.handle('APP_REPLACE_FILEPATH_EXTENSION', (event, filePath: string) =>
