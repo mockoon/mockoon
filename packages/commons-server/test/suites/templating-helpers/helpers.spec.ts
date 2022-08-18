@@ -236,12 +236,18 @@ describe('Template parser', () => {
 
   describe('Helper: date', () => {
     it('Should return an empty string if given the wrong amount of arguments', () => {
-      const parseResult = TemplateParser('{{date}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{date}}',
+        {} as any,
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
 
     it('Should return an empty string if given the wrong amount of arguments', () => {
       const parseResult = TemplateParser(
+        false,
         "{{date '2022-01-01'}}",
         {} as any,
         {} as any
@@ -252,6 +258,7 @@ describe('Template parser', () => {
 
     it('Should return a date using a the default format', () => {
       const parseResult = TemplateParser(
+        false,
         "{{date '2022-01-01' '2022-02-01' 'YYYY'}}",
         {} as any,
         {} as any
@@ -262,6 +269,7 @@ describe('Template parser', () => {
 
     it('Should return a date using a given format', () => {
       const parseResult = TemplateParser(
+        false,
         "{{date '2022-02-01' '2022-02-01' 'yyyy-MM-dd'}}",
         {} as any,
         {} as any
@@ -272,6 +280,7 @@ describe('Template parser', () => {
 
     it('Should return a date when using queryParams', () => {
       const parseResult = TemplateParser(
+        false,
         "{{date (queryParam 'dateFrom') (queryParam 'dateTo') 'YYYY'}}",
         {
           query: {
