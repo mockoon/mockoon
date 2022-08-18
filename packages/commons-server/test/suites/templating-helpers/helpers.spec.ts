@@ -240,6 +240,7 @@ describe('Template parser', () => {
         false,
         '{{date}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -250,6 +251,7 @@ describe('Template parser', () => {
         false,
         "{{date '2022-01-01'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -261,6 +263,7 @@ describe('Template parser', () => {
         false,
         "{{date '2022-01-01' '2022-02-01' 'YYYY'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -272,6 +275,7 @@ describe('Template parser', () => {
         false,
         "{{date '2022-02-01' '2022-02-01' 'yyyy-MM-dd'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -288,6 +292,7 @@ describe('Template parser', () => {
             dateTo: '2022-06-03T12:00:00.000Z'
           }
         } as any,
+        [],
         {} as any
       );
 
