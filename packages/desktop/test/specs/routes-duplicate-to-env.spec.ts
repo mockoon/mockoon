@@ -34,7 +34,7 @@ describe('Duplicate a route to an environment', async () => {
     expect(targetRoute).toContain('POST /dolphins');
 
     await modals.assertDuplicationModalEnvName('New env test');
-    await modals.assertDuplicationModalEnvHostname('0.0.0.0:3000/');
+    await modals.assertDuplicationModalEnvHostname('0.0.0.0:3001/');
   });
 
   it('should duplicate selected route to selected environment', async () => {

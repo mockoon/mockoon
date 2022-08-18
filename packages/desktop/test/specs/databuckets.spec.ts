@@ -35,7 +35,7 @@ describe('Databuckets addition', () => {
   it('should add a databucket', async () => {
     await databuckets.add();
     await databuckets.assertCount(1);
-    await databuckets.assertName('New Data');
+    await databuckets.assertName('New data');
   });
 });
 
