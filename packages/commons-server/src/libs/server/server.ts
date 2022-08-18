@@ -9,6 +9,7 @@ import {
   IsValidURL,
   MimeTypesWithTemplating,
   MockoonServerOptions,
+  ProcessedDatabucket,
   Route,
   RouteResponse,
   ServerErrorCodes,
@@ -37,6 +38,7 @@ import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
+import { listOfRequestHelperTypes } from '../templating-helpers/request-helpers';
 import {
   CreateTransaction,
   resolvePathFromEnvironment,
@@ -51,6 +53,7 @@ import {
 export class MockoonServer extends (EventEmitter as new () => TypedEmitter<ServerEvents>) {
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
+  private processedDatabuckets: ProcessedDatabucket[];
 
   constructor(
     private environment: Environment,
@@ -120,6 +123,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.emit('started');
       }
     );
+
+    this.generateDatabuckets(this.environment);
 
     server.use(this.emitEvent);
     server.use(this.delayResponse);
@@ -370,6 +375,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     let requestNumber = 1;
 
     server[route.method](routePath, (request: Request, response: Response) => {
+      this.generateRemainingDatabuckets(this.environment, request);
+
       // refresh environment data to get route changes that do not require a restart (headers, body, etc)
       this.refreshEnvironment();
       const currentRoute = this.getRefreshedRoute(route);
@@ -446,7 +453,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       let body = routeResponse.body;
 
       if (!routeResponse.disableTemplating) {
-        body = TemplateParser(body || '', request, this.environment);
+        body = TemplateParser(
+          false,
+          body || '',
+          this.environment,
+          this.processedDatabuckets,
+          request
+        );
       }
 
       response.body = body;
@@ -496,9 +509,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     try {
       let filePath = TemplateParser(
+        false,
         routeResponse.filePath.replace(/\\/g, '/'),
-        request,
-        this.environment
+        this.environment,
+        this.processedDatabuckets,
+        request
       );
 
       filePath = resolvePathFromEnvironment(
@@ -534,9 +549,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           try {
             const fileContent = TemplateParser(
+              false,
               data.toString(),
-              request,
-              this.environment
+              this.environment,
+              this.processedDatabuckets,
+              request
             );
 
             response.body = fileContent;
@@ -778,9 +795,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     if (header.key && header.value) {
       try {
         parsedHeaderValue = TemplateParser(
+          false,
           header.value,
-          request,
-          this.environment
+          this.environment,
+          this.processedDatabuckets,
+          request
         );
       } catch (error) {
         const errorMessage = CommonsTexts.EN.MESSAGES.HEADER_PARSING_ERROR;
@@ -903,5 +922,77 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     return tlsOptions;
+  }
+
+  private generateDatabuckets(environment: Environment) {
+    if (environment.data.length > 0) {
+      environment.data.forEach((databucket) => {
+        let newProcessedDatabucket: ProcessedDatabucket;
+
+        if (
+          databucket.value.match(
+            new RegExp(`\{\{[\w\s\(]*(${listOfRequestHelperTypes.join('|')})`)
+          )
+        ) {
+          // a request helper was found
+          newProcessedDatabucket = {
+            name: databucket.name,
+            value: databucket.value,
+            parsed: false
+          };
+          newProcessedDatabucket.value = databucket.value;
+          newProcessedDatabucket.parsed = false;
+        } else {
+          const templateParsedContent = TemplateParser(
+            false,
+            databucket.value,
+            environment,
+            this.processedDatabuckets
+          );
+
+          try {
+            const JSONParsedContent = JSON.parse(templateParsedContent);
+            newProcessedDatabucket = {
+              name: databucket.name,
+              value: JSONParsedContent,
+              parsed: true
+            };
+          } catch (e) {
+            newProcessedDatabucket = {
+              name: databucket.name,
+              value: templateParsedContent,
+              parsed: true
+            };
+          }
+        }
+        this.processedDatabuckets.push(newProcessedDatabucket);
+      });
+    }
+  }
+
+  private generateRemainingDatabuckets(
+    environment: Environment,
+    request: Request
+  ) {
+    this.processedDatabuckets.forEach((databucket) => {
+      if (!databucket.parsed) {
+        let content = databucket.value;
+        content = TemplateParser(
+          false,
+          databucket.value,
+          environment,
+          this.processedDatabuckets,
+          request
+        );
+        try {
+          const JSONParsedcontent = JSON.parse(content);
+          databucket.value = JSONParsedcontent;
+          databucket.parsed = true;
+        } catch {
+          databucket.value = content;
+          databucket.parsed = true;
+        }
+      }
+    });
   }
 }

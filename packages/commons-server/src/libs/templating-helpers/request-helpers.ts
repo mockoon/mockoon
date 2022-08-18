@@ -4,6 +4,21 @@ import { SafeString } from 'handlebars';
 import { get as objectGet } from 'object-path';
 import { convertPathToArray } from '../utils';
 
+type RequestHelperTypes = keyof ReturnType<typeof RequestHelpers>;
+export const listOfRequestHelperTypes: RequestHelperTypes[] = [
+  'bodyRaw',
+  'body',
+  'method',
+  'ip',
+  'urlParam',
+  'queryParam',
+  'queryParamRaw',
+  'header',
+  'cookie',
+  'baseUrl',
+  'hostname'
+];
+
 export const RequestHelpers = function (
   request: Request,
   environment: Environment
@@ -47,13 +62,6 @@ export const RequestHelpers = function (
 
       if (typeof path === 'string') {
         path = convertPathToArray(path);
-      }
-
-      if (typeof path === 'string' && path.includes('\\.')) {
-        path = path
-          .replace(/\\\./g, '%#%')
-          .split('.')
-          .map((s) => s.replace(/%#%/g, '.'));
       }
 
       let value = objectGet(source, path);
