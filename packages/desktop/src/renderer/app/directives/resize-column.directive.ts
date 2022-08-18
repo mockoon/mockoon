@@ -42,6 +42,7 @@ export class ResizeColumnDirective implements AfterViewInit {
   private settingProperties = {
     environments: 'environmentMenuSize',
     routes: 'routeMenuSize',
+    databuckets: 'databucketMenuSize',
     logs: 'logsMenuSize'
   };
 

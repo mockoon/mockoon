@@ -1,4 +1,5 @@
 import { Environments } from '@mockoon/commons';
+import { DataSubject } from 'src/renderer/app/models/data.model';
 import {
   ActiveEnvironmentsLogUUIDs,
   EnvironmentLogs
@@ -41,7 +42,7 @@ export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
 
 export type DuplicateEntityToAnotherEnvironment = {
   moving: boolean;
-  subject?: string;
+  subject?: Omit<DataSubject, 'environment'>;
   subjectUUID?: string;
   targetEnvironmentUUID?: string;
 };

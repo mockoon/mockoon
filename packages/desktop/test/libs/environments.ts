@@ -8,22 +8,6 @@ class Environments {
   private activeMenuEntrySelector =
     '.environments-menu .nav-item .nav-link.active';
 
-  public get routesTab(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('app-header .header .nav .nav-item:nth-child(1) .nav-link');
-  }
-
-  public get databucketsTab(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('app-header .header .nav .nav-item:nth-child(2) .nav-link');
-  }
-
-  public get logsTab(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('app-header .header .nav .nav-item:nth-child(4) .nav-link');
-  }
-
-  public get headersTab(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('app-header .header .nav .nav-item:nth-child(3) .nav-link');
-  }
-
   private get openBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
       '.environments-menu .nav:first-of-type .nav-item .nav-link.open-environment'

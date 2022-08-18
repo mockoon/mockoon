@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   OnDestroy,
   OnInit
 } from '@angular/core';
@@ -19,11 +18,6 @@ import {
 } from 'rxjs';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { DataSubject } from 'src/renderer/app/models/data.model';
-import {
-  EnvironmentStatus,
-  ViewsNameType
-} from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -36,17 +30,11 @@ import { Config } from 'src/shared/config';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
-  @Input()
-  public dataSubject: DataSubject;
   public activeEnvironment$: Observable<Environment>;
-  public activeView$: Observable<ViewsNameType>;
   public activeDatabucket$: Observable<DataBucket>;
-  public activeEnvironmentState$: Observable<EnvironmentStatus>;
-  public dataSubject$: Observable<DataBucket | Environment>;
   public activeDatabucketForm: FormGroup;
   public form: FormGroup;
   public focusableInputs = FocusableInputs;
-  public effectiveContentType$: Observable<string>;
   public bodyEditorConfig$: Observable<any>;
   public scrollToBottom = this.uiService.scrollToBottom;
   private destroy$ = new Subject<void>();
@@ -63,7 +51,6 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
     this.initForms();

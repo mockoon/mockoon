@@ -1,4 +1,3 @@
-<!-- Only display the routes menu if there is at least a selected environment -->
 <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
   <div class="databuckets-menu d-flex flex-column h-100" appMousedragDeadzone>
     <div class="menu-header d-flex">
@@ -7,7 +6,7 @@
           <a
             class="nav-link text-primary"
             (click)="addDatabucket()"
-            ngbTooltip="Add databucket"
+            ngbTooltip="Add data"
           >
             <app-svg icon="add_box"></app-svg>
           </a>

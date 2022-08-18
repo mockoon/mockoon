@@ -92,8 +92,8 @@ export const DataBucketDefault: DataBucket = {
   get uuid() {
     return uuid();
   },
-  name: 'New Data',
-  value: '{}'
+  name: 'New data',
+  value: ''
 };
 
 const UUIDSchema = Joi.string()
@@ -109,10 +109,11 @@ const HeaderSchema = Joi.object<Header, true>({
 const DataSchema = Joi.object<DataBucket, true>({
   uuid: UUIDSchema,
   name: Joi.string().allow('').failover(DataBucketDefault.name).required(),
-  value: Joi.string().allow('').failover(DataBucketDefault.name).required()
+  value: Joi.string().allow('').failover(DataBucketDefault.value).required()
 })
   .failover(EnvironmentDefault.data)
-  .default(EnvironmentDefault.data);
+  .default(EnvironmentDefault.data)
+  .options({ stripUnknown: true });
 
 const TLSOptionsSchema = Joi.object<EnvironmentTLSOptions, true>({
   enabled: Joi.boolean()

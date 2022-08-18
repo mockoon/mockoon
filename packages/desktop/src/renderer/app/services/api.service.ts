@@ -68,9 +68,6 @@ export class ApiService {
           case 'DELETE_ROUTE':
             this.environmentsService.removeRoute();
             break;
-          case 'DELETE_DATABUCKET':
-            this.environmentsService.removeDatabucket();
-            break;
           case 'PREVIOUS_ENVIRONMENT':
             this.environmentsService.setActiveEnvironment('previous');
             break;

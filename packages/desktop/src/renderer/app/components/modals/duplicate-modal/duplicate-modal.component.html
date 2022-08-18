@@ -4,14 +4,15 @@
       Choose target environment
       <br />
       <small class="text-muted h6">
+        Copy the
         <ng-container *ngIf="entityInformation.subject === 'route'">
           Route
         </ng-container>
-        <ng-container *ngIf="entityInformation.subject === 'databucket='">
+        <ng-container *ngIf="entityInformation.subject === 'databucket'">
           Databucket
         </ng-container>
         {{ entityInformation.displayName }}
-        will be copied to:</small
+        to:</small
       >
     </h3>
   </div>

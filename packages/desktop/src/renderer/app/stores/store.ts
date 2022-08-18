@@ -276,7 +276,7 @@ export class Store {
   }
 
   /**
-   * Get active route value
+   * Get active databucket value
    */
   public getActiveDatabucket(): DataBucket {
     const activeEnvironment = this.store$.value.environments.find(

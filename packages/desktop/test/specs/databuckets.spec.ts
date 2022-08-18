@@ -84,8 +84,8 @@ describe('Databucket duplication to another envionment', () => {
   });
 
   it('should duplicate the databucket in another env', async () => {
-    await modals.confirmDulicateToEnvModal(1);
-    await databuckets.assertName('My Databucket (copy)');
+    await modals.confirmDuplicateToEnvModal(1);
+    await databuckets.assertName('My Databucket');
     await databuckets.assertCount(1);
 
     await environments.select(1);

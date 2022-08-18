@@ -772,13 +772,10 @@ export class EnvironmentsService extends Logger {
   /**
    * Duplicate a databucket, or the current active databucket and append it at the end
    */
-  public duplicateDatabucket(databucketUUID?: string) {
-    let databucketToDuplicate = this.store.getActiveDatabucket();
-    if (databucketUUID) {
-      databucketToDuplicate = this.store
-        .getActiveEnvironment()
-        .data.find((data) => data.uuid === databucketUUID);
-    }
+  public duplicateDatabucket(databucketUUID: string) {
+    const databucketToDuplicate = this.store
+      .getActiveEnvironment()
+      .data.find((data) => data.uuid === databucketUUID);
 
     if (databucketToDuplicate) {
       let newDatabucket: DataBucket = CloneObject(databucketToDuplicate);
@@ -801,7 +798,6 @@ export class EnvironmentsService extends Logger {
   ) {
     const databucketToDuplicate =
       this.store.getDatabucketByUUID(databucketUUID);
-    databucketToDuplicate.name = `${databucketToDuplicate.name} (copy)`;
 
     if (databucketToDuplicate) {
       const newDatabucket: DataBucket = this.dataService.renewDatabucketUUIDs(

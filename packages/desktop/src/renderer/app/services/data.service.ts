@@ -153,7 +153,7 @@ export class DataService extends Logger {
   }
 
   /**
-   * Renew one databuckey UUIDs
+   * Renew one databucket UUIDs
    *
    * @param params
    */

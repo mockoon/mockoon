@@ -10,6 +10,7 @@ import { DataBucket, Environment, Route } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DuplicateEntityToAnotherEnvironment } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { finalizeEntityDuplicationToAnotherEnvironmentAction } from 'src/renderer/app/stores/actions';
@@ -36,7 +37,7 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
     );
   public entityInformation: {
     displayName: string;
-    subject: string;
+    subject: Omit<DataSubject, 'environment'>;
     uuid: string;
   } = {
     displayName: '',
@@ -84,18 +85,16 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
     targetEnvironment: Environment,
     entityInformation: {
       displayName: string;
-      subject: string;
+      subject: Omit<DataSubject, 'environment'>;
       uuid: string;
     }
   ) {
     if (entityInformation.subject === 'route') {
-      console.log('access chose target route');
       this.environmentsService.duplicateRouteInAnotherEnvironment(
         this.entityInformation.uuid,
         targetEnvironment.uuid
       );
     } else if (entityInformation.subject === 'databucket') {
-      console.log('access chose target route');
       this.environmentsService.duplicateDatabucketInAnotherEnvironment(
         this.entityInformation.uuid,
         targetEnvironment.uuid
@@ -109,13 +108,12 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
   }
 
   private extractEntityToDuplicate(state: DuplicateEntityToAnotherEnvironment) {
-    console.log('extract entity info');
     if (state.subject === 'route') {
       const entityToDuplicate = this.activeEnvironment.routes.find(
         (route: Route) => route.uuid === state.subjectUUID
       );
       this.entityInformation = {
-        displayName: `${entityToDuplicate.method.toUpperCase()} / ${
+        displayName: `${entityToDuplicate.method.toUpperCase()} /${
           entityToDuplicate.endpoint
         }`,
         subject: state.subject,

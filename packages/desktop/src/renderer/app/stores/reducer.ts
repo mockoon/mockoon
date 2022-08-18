@@ -199,15 +199,6 @@ export const environmentReducer = (
     }
 
     case ActionTypes.MOVE_DATABUCKETS: {
-      // reordering databuckets need an environment restart
-      const activeEnvironmentStatus =
-        state.environmentsStatus[state.activeEnvironmentUUID];
-
-      let needRestart: boolean;
-      if (activeEnvironmentStatus.running) {
-        needRestart = true;
-      }
-
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === state.activeEnvironmentUUID) {
           return {
@@ -227,11 +218,7 @@ export const environmentReducer = (
         ...state,
         environments: newEnvironments,
         environmentsStatus: {
-          ...state.environmentsStatus,
-          [state.activeEnvironmentUUID]: {
-            ...activeEnvironmentStatus,
-            needRestart
-          }
+          ...state.environmentsStatus
         }
       };
       break;
@@ -1006,7 +993,6 @@ export const environmentReducer = (
       let needRestart: boolean;
       const specifiedUUID = action.properties.uuid;
 
-      console.log('updating data bucket');
       if (activeEnvironmentStatus.needRestart) {
         needRestart = true;
       } else {

@@ -37,7 +37,7 @@ class Modals {
     await this.cancelBtn.click();
   }
 
-  public async confirmDulicateToEnvModal(envIndex: number) {
+  public async confirmDuplicateToEnvModal(envIndex: number) {
     await $(
       `.modal-content .modal-body .list-group .list-group-item:nth-child(${envIndex}) div:first-of-type`
     ).click();

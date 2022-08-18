@@ -1,5 +1,5 @@
+import { ChainablePromiseElement } from 'webdriverio';
 import { ViewsNameType } from '../../src/renderer/app/models/store.model';
-import environments from '../libs/environments';
 import utils from '../libs/utils';
 
 class Navigation {
@@ -19,6 +19,22 @@ class Navigation {
     ENV_SETTINGS: 6
   };
 
+  public get routesTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-header .header .nav .nav-item:nth-child(1) .nav-link');
+  }
+
+  public get databucketsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-header .header .nav .nav-item:nth-child(2) .nav-link');
+  }
+
+  public get logsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-header .header .nav .nav-item:nth-child(4) .nav-link');
+  }
+
+  public get headersTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-header .header .nav .nav-item:nth-child(3) .nav-link');
+  }
+
   public async switchView(viewName: ViewsNameType): Promise<void> {
     await $(
       `.header .nav .nav-item:nth-child(${this.tabIndexes[viewName]}) .nav-link`
@@ -32,19 +48,19 @@ class Navigation {
   ): Promise<void> {
     switch (viewName) {
       case 'ENV_DATABUCKETS':
-        await utils.assertElementText(environments.databucketsTab, value);
+        await utils.assertElementText(this.databucketsTab, value);
         break;
 
       case 'ENV_ROUTES':
-        await utils.assertElementText(environments.routesTab, value);
+        await utils.assertElementText(this.routesTab, value);
         break;
 
       case 'ENV_HEADERS':
-        await utils.assertElementText(environments.headersTab, value);
+        await utils.assertElementText(this.headersTab, value);
         break;
 
       case 'ENV_LOGS':
-        await utils.assertElementText(environments.logsTab, value);
+        await utils.assertElementText(this.logsTab, value);
         break;
     }
   }

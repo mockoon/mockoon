@@ -1,63 +1,50 @@
 <div class="d-flex h-100">
   <app-databuckets-menu class="h-100"></app-databuckets-menu>
 
-  <div
-    *ngIf="activeEnvironment$ | async as activeEnvironment"
-    class="d-flex flex-column flex-fill mh0 p-2"
+  <ng-container
+    *ngIf="
+      activeDatabucket$ | async as activeDatabucket;
+      else noActiveDatabucket
+    "
   >
-    <ng-container
-      *ngIf="
-        activeDatabucket$ | async as activeDatabucket;
-        else noActiveDatabucket
-      "
-    >
-      <ng-container [formGroup]="activeDatabucketForm">
-        <div class="input-group">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Databucket name"
-            appValidPath
-            formControlName="name"
-            [appFocusOnEvent]="focusableInputs.DATABUCKET_NAME"
-          />
-        </div>
-        <div
-          class="flex-fill mt-2"
-          *ngIf="bodyEditorConfig$ | async as bodyEditorConfig"
+    <ng-container [formGroup]="activeDatabucketForm">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Databucket name"
+          appValidPath
+          formControlName="name"
+          [appFocusOnEvent]="focusableInputs.DATABUCKET_NAME"
+        />
+      </div>
+      <div
+        class="flex-fill mt-2"
+        *ngIf="bodyEditorConfig$ | async as bodyEditorConfig"
+      >
+        <app-editor
+          class="h-100"
+          [options]="bodyEditorConfig?.options"
+          mode="json"
+          [theme]="bodyEditorConfig?.theme"
+          [uuid]="activeDatabucket.uuid"
+          formControlName="value"
         >
-          <app-editor
-            class="h-100"
-            [options]="bodyEditorConfig?.options"
-            mode="json"
-            [theme]="bodyEditorConfig?.theme"
-            [uuid]="activeDatabucket.uuid"
-            formControlName="value"
-          >
-          </app-editor>
-        </div>
-        <div
-          class="d-flex justify-content-between align-items-center environment-routes-footer pt-1 mt-3"
+        </app-editor>
+      </div>
+      <div
+        class="d-flex justify-content-between align-items-center environment-databuckets-footer pt-1 mt-3"
+      >
+        <button
+          type="button"
+          class="btn btn-link btn-icon btn-xs text-primary ml-auto"
+          (click)="openWikiLink('templating')"
         >
-          <div [ngbTooltip]="servedContentTypeTooltip">
-            <small> {{ this.effectiveContentType$ | async }}</small>
-          </div>
-          <ng-template #servedContentTypeTooltip
-            >Served Content-Type<br />(Order: environment headers &rarr; file
-            mime type &rarr; route headers)</ng-template
-          >
-
-          <button
-            type="button"
-            class="btn btn-link btn-icon btn-xs text-primary"
-            (click)="openWikiLink('templating')"
-          >
-            Open templating documentation
-          </button>
-        </div>
-      </ng-container>
+          Open data buckets documentation
+        </button>
+      </div>
     </ng-container>
-  </div>
+  </ng-container>
 </div>
 
 <ng-template #noActiveDatabucket>
