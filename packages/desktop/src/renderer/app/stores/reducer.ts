@@ -1270,29 +1270,30 @@ export const environmentReducer = (
     }
 
     case ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT: {
-      const { route, targetEnvironmentUUID } = action;
-      const { environments } = state;
-      const targetEnvironment = environments.find(
-        (environment: Environment) => environment.uuid === targetEnvironmentUUID
-      );
       const targetEnvironmentStatus =
-        state.environmentsStatus[targetEnvironmentUUID];
+        state.environmentsStatus[action.targetEnvironmentUUID];
 
-      if (targetEnvironment) {
-        targetEnvironment.routes.push(route);
-      }
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.targetEnvironmentUUID) {
+          return {
+            ...environment,
+            routes: [...environment.routes, action.route]
+          };
+        }
 
+        return environment;
+      });
       newState = {
         ...state,
-        environments: [...environments],
-        activeRouteUUID: route.uuid,
-        activeRouteResponseUUID: route.responses[0].uuid,
-        activeEnvironmentUUID: targetEnvironmentUUID,
+        environments: newEnvironments,
+        activeRouteUUID: action.route.uuid,
+        activeRouteResponseUUID: action.route.responses[0].uuid,
+        activeEnvironmentUUID: action.targetEnvironmentUUID,
         activeTab: 'RESPONSE',
         activeView: 'ENV_ROUTES',
         environmentsStatus: {
           ...state.environmentsStatus,
-          [targetEnvironmentUUID]: {
+          [action.targetEnvironmentUUID]: {
             ...targetEnvironmentStatus,
             needRestart: targetEnvironmentStatus.running
           }
@@ -1325,27 +1326,30 @@ export const environmentReducer = (
     }
 
     case ActionTypes.DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT: {
-      const { databucket, targetEnvironmentUUID } = action;
-      const { environments } = state;
-      const targetEnvironment = environments.find(
-        (environment: Environment) => environment.uuid === targetEnvironmentUUID
-      );
       const targetEnvironmentStatus =
-        state.environmentsStatus[targetEnvironmentUUID];
+        state.environmentsStatus[action.targetEnvironmentUUID];
 
-      if (targetEnvironment) {
-        targetEnvironment.data.push(databucket);
-      }
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.targetEnvironmentUUID) {
+          return {
+            ...environment,
+            data: [...environment.data, action.databucket]
+          };
+        }
+
+        return environment;
+      });
 
       newState = {
         ...state,
-        environments: [...environments],
-        activeDatabucketUUID: databucket.uuid,
-        activeEnvironmentUUID: targetEnvironmentUUID,
+        environments: newEnvironments,
+        activeDatabucketUUID: action.databucket.uuid,
+        activeEnvironmentUUID: action.targetEnvironmentUUID,
         activeView: 'ENV_DATABUCKETS',
+
         environmentsStatus: {
           ...state.environmentsStatus,
-          [targetEnvironmentUUID]: {
+          [action.targetEnvironmentUUID]: {
             ...targetEnvironmentStatus,
             needRestart: targetEnvironmentStatus.running
           }

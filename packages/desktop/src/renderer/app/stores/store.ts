@@ -7,7 +7,7 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map, pluck } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
@@ -60,7 +60,10 @@ export class Store {
    * Select store element
    */
   public select<T extends keyof StoreType>(path: T): Observable<StoreType[T]> {
-    return this.store$.asObservable().pipe(pluck(path), distinctUntilChanged());
+    return this.store$.asObservable().pipe(
+      map((store) => store?.[path]),
+      distinctUntilChanged()
+    );
   }
 
   /**
@@ -91,7 +94,9 @@ export class Store {
   public selectActiveEnvironmentProperty<T extends keyof Environment>(
     path: T
   ): Observable<Environment[T]> {
-    return this.selectActiveEnvironment().pipe(pluck(path));
+    return this.selectActiveEnvironment().pipe(
+      map((activeEnvironment) => activeEnvironment?.[path])
+    );
   }
 
   /**

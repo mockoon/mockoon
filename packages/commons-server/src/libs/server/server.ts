@@ -508,8 +508,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       const fileMimeType = mimeTypeLookup(filePath) || '';
 
-      // set content-type to route response's one or the detected mime type if none
-      if (!routeContentType) {
+      // set content-type the detected mime type if any
+      if (!routeContentType && fileMimeType) {
         response.set('Content-Type', fileMimeType);
       }
 

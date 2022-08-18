@@ -77,6 +77,18 @@ const getFileNoHeader: HttpCall = {
   }
 };
 
+const getFileNoMime: HttpCall = {
+  description: 'Call GET file, with no mime type',
+  path: '/file-nomime',
+  method: 'GET',
+  testedResponse: {
+    status: 200,
+    headers: {
+      'content-type': 'text/plain'
+    }
+  }
+};
+
 const getCORSHeaders: HttpCall = {
   description: 'Call OPTIONS headers',
   path: '/headers',
@@ -215,6 +227,13 @@ describe('Headers', () => {
       await routes.select(3);
       await routes.assertContentType('application/pdf');
       await http.assertCallWithPort(getFileNoHeader, 3000);
+    });
+
+    it('should call /file-nomime should revert to the environment content type', async () => {
+      await fs.copyFile('./test/data/res/filenoext', './tmp/storage/filenoext');
+      await routes.select(4);
+      await routes.assertContentType('text/plain');
+      await http.assertCallWithPort(getFileNoMime, 3000);
     });
   });
 

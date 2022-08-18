@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { EMPTY, from } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { DataService } from 'src/renderer/app/services/data.service';
@@ -24,81 +25,94 @@ export class ImportExportService extends Logger {
    * Import an OpenAPI (v2/v3) file in Mockoon's format.
    * Append imported envs to the env array.
    */
-  public async importOpenAPIFile() {
-    const filePath = await this.dialogsService.showOpenDialog(
-      'Import OpenAPI specification file',
-      'openapi'
-    );
+  public importOpenAPIFile() {
+    return this.dialogsService
+      .showOpenDialog('Import OpenAPI specification file', 'openapi', false)
+      .pipe(
+        switchMap((filePath) => {
+          if (filePath) {
+            this.logMessage('info', 'OPENAPI_IMPORT', {
+              filePath
+            });
 
-    this.logMessage('info', 'OPENAPI_IMPORT', {
-      filePath
-    });
+            return from(
+              MainAPI.invoke(
+                'APP_OPENAPI_CONVERT_FROM',
+                filePath,
+                this.dataService.getNewEnvironmentPort()
+              )
+            );
+          }
 
-    if (filePath) {
-      try {
-        const environment = await MainAPI.invoke(
-          'APP_OPENAPI_CONVERT_FROM',
-          filePath,
-          this.dataService.getNewEnvironmentPort()
-        );
+          return EMPTY;
+        }),
+        switchMap((environment) =>
+          this.environmentsService.addEnvironment(environment).pipe(
+            tap(() => {
+              this.logMessage('info', 'OPENAPI_IMPORT_SUCCESS', {
+                environmentName: environment.name
+              });
+            })
+          )
+        ),
+        catchError((error) => {
+          this.logMessage('error', 'OPENAPI_IMPORT_ERROR', {
+            error
+          });
 
-        if (environment) {
-          this.environmentsService
-            .addEnvironment(environment)
-            .pipe(
-              tap(() => {
-                this.logMessage('info', 'OPENAPI_IMPORT_SUCCESS', {
-                  environmentName: environment.name
-                });
-              })
-            )
-            .subscribe();
-        }
-      } catch (error) {
-        this.logMessage('error', 'OPENAPI_IMPORT_ERROR', {
-          error,
-          filePath
-        });
-      }
-    }
+          return EMPTY;
+        })
+      );
   }
 
   /**
    * Export active environment to an OpenAPI v3 file
    */
-  public async exportOpenAPIFile() {
+  public exportOpenAPIFile() {
     const activeEnvironment = this.store.getActiveEnvironment();
 
     if (!activeEnvironment) {
-      return;
+      return EMPTY;
     }
 
-    this.logMessage('info', 'OPENAPI_EXPORT', {
-      environmentUUID: activeEnvironment.uuid
-    });
+    return this.dialogsService
+      .showSaveDialog('Export environment to OpenAPI JSON', false)
+      .pipe(
+        switchMap((filePath) => {
+          if (filePath) {
+            this.logMessage('info', 'OPENAPI_EXPORT', {
+              environmentUUID: activeEnvironment.uuid
+            });
 
-    const filePath = await this.dialogsService.showSaveDialog(
-      'Export environment to OpenAPI JSON'
-    );
+            return from(
+              MainAPI.invoke('APP_OPENAPI_CONVERT_TO', activeEnvironment)
+            ).pipe(
+              map((data) => ({
+                data,
+                filePath
+              }))
+            );
+          }
 
-    // dialog not cancelled
-    if (filePath) {
-      try {
-        const data = await MainAPI.invoke(
-          'APP_OPENAPI_CONVERT_TO',
-          activeEnvironment
-        );
-        await MainAPI.invoke('APP_WRITE_FILE', filePath, data);
+          return EMPTY;
+        }),
+        switchMap(({ data, filePath }) =>
+          from(MainAPI.invoke('APP_WRITE_FILE', filePath, data)).pipe(
+            tap(() => {
+              this.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
+                environmentName: activeEnvironment.name
+              });
+            })
+          )
+        ),
+        catchError((error) => {
+          this.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
+            error,
+            environmentUUID: activeEnvironment.uuid
+          });
 
-        this.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
-          environmentName: activeEnvironment.name
-        });
-      } catch (error) {
-        this.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
-          error,
-          environmentUUID: activeEnvironment.uuid
-        });
-      }
-    }
+          return EMPTY;
+        })
+      );
   }
 }
