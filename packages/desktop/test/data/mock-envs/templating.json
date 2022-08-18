@@ -1283,6 +1283,56 @@
         }
       ],
       "responseMode": null
+    },
+    {
+      "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
+      "method": "get",
+      "endpoint": "databucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
+          "body": "{{data databucket}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "7a748b48-0ebb-4557-88f0-c44d50ae238c",
+      "method": "get",
+      "endpoint": "rqHelpersDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "e36c8eb6-8cdf-4c22-89ae-f3c292aeb953",
+          "body": "{{data rqHelperDatabucket}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
     }
   ],
   "proxyMode": false,
@@ -1302,5 +1352,31 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [
+    {
+      "name": "emptyDatabucket",
+      "uuid": "e418d78c-2887-4526-916c-a554b747bb0b",
+      "value": ""
+    },
+    {
+      "name": "stringDatabucket",
+      "uuid": "5b62d428-f7d4-42a6-95fe-8876bf5ef53a",
+      "value": "string"
+    },
+    {
+      "name": "numberDatabucket",
+      "uuid": "3e316443-ec75-4aaa-bc34-52a5b5bbe85e",
+      "value": "1"
+    },
+    {
+      "name": "booleanDatabucket",
+      "uuid": "9cfd35b4-cce0-48e4-b6eb-17de71647007",
+      "value": "true"
+    },
+    {
+      "name": "rqHelperDatabucket",
+      "uuid": "8426338c-f293-4dc9-a56c-de5a0e78b5d4",
+      "value": "{{queryParam 'param1'}}"
+    }
+  ]
 }

@@ -3,8 +3,10 @@ import { promises as fs } from 'fs';
 import { EOL } from 'os';
 import environments from '../libs/environments';
 import http from '../libs/http';
+import modals from '../libs/modals';
 import { HttpCall } from '../libs/models';
 import routes from '../libs/routes';
+import settings from '../libs/settings';
 import utils from '../libs/utils';
 
 const testSuites: { name: string; tests: HttpCall[] }[] = [
@@ -952,6 +954,67 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       }
     ]
+  },
+  {
+    name: 'Data helpers',
+    tests: [
+      {
+        description: 'Helper: databucket call should return an empty string',
+        path: '/emptyDatabucket',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: ''
+        }
+      },
+      {
+        description: 'Helper: databucket call should return a string',
+        path: '/stringDatabucket',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'string'
+        }
+      },
+      {
+        description: 'Helper: databucket call should return a number',
+        path: '/numberDatabucket',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: '1'
+        }
+      },
+      {
+        description: 'Helper: databucket call should return a boolean',
+        path: '/booleanDatabucket',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'true'
+        }
+      },
+      {
+        description:
+          'Helper: databucket call with request helper should return a properly parsed content',
+        path: '/rqHelpersDatabucket?param1=value',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'value'
+        }
+      },
+      {
+        description:
+          'Helper: databucket call with request helper should return the same content despite ',
+        path: '/rqHelpersDatabucket?param1=newValue',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'value'
+        }
+      }
+    ]
   }
 ];
 
@@ -971,6 +1034,9 @@ describe('Templating', () => {
 
     it('should open and start the environment', async () => {
       await environments.open('templating');
+      await settings.open();
+      await settings.setSettingValue('settings-faker-seed', '1');
+      await modals.close();
       await environments.start();
     });
 
