@@ -1,11 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { Environment, ProcessedDatabucket } from '@mockoon/commons';
 import ObjectId from 'bson-objectid';
 import { format as dateFormat } from 'date-fns';
-import { Request } from 'express';
 import { HelperOptions, SafeString } from 'handlebars';
 import { EOL } from 'os';
-import { TemplateParser } from '../template-parser';
 import {
   FromBase64,
   fromSafeString,
@@ -27,12 +24,7 @@ import {
  * args[args.length - 1]
  */
 
-export const Helpers = function (
-  shouldOmitDataHelper: boolean,
-  processedDatabuckets: ProcessedDatabucket[],
-  environment: Environment,
-  request?: Request
-) {
+export const Helpers = function () {
   const helpers: any = {
     repeat: function (...args: any[]) {
       let content = '';
@@ -773,40 +765,6 @@ export const Helpers = function (
       }
     }
   };
-
-  if (!shouldOmitDataHelper) {
-    helpers.data = function (...args: any[]) {
-      // We do not remove the last argument because it is required
-      if (args.length <= 1) {
-        return;
-      }
-      const targetName = args[0];
-      const options = args[args.length - 1];
-
-      const targetDatabucket = processedDatabuckets.find(
-        (databucket) => databucket.value === targetName
-      );
-
-      if (targetDatabucket === undefined) {
-        return;
-      }
-
-      switch (targetDatabucket.type) {
-        case 'json':
-          return JSON.stringify(targetDatabucket.value);
-        case 'string':
-          return TemplateParser(
-            true,
-            targetDatabucket.value as string,
-            environment,
-            processedDatabuckets,
-            request
-          );
-        case 'parsedString':
-          return targetDatabucket.value;
-      }
-    };
-  }
 
   return helpers;
 };

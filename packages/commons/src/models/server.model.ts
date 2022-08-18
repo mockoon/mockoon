@@ -22,8 +22,8 @@ export interface MockoonServerOptions {
 
 export type ProcessedDatabucket = {
   name: string;
-  value: string;
-  type: 'json' | 'parsedString' | 'string';
+  value: any;
+  parsed: boolean;
 };
 
 /**

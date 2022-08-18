@@ -6,30 +6,34 @@ describe('Template parser', () => {
   describe('Helper: switch', () => {
     it('should return different values depending on the string value', () => {
       const parseResult = TemplateParser(
+        false,
         '{{#switch (body "prop1")}}{{#case "value1"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
+        {} as any,
+        [],
         {
           body: { prop1: 'value1' }
-        } as any,
-        {} as any
+        } as any
       );
       expect(parseResult).to.be.equal('value1');
     });
 
     it('should return default values depending on the string value', () => {
       const parseResult = TemplateParser(
+        false,
         '{{#switch (body "prop1")}}{{#case "value1"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
-        {
-          body: { prop1: 'defaultvalue' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: 'defaultvalue' } } as any
       );
       expect(parseResult).to.be.equal('defaultvalue');
     });
 
     it('should return different values depending on the index', () => {
       const parseResult = TemplateParser(
+        false,
         '{{#repeat 2 comma=false}}{{@index}}{{#switch @index}}{{#case 0}}John{{/case}}{{#default}}Peter{{/default}}{{/switch}}{{/repeat}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0John1Peter');
@@ -37,22 +41,22 @@ describe('Template parser', () => {
 
     it('should return different values depending on the boolean value', () => {
       const parseResult = TemplateParser(
+        false,
         '{{#switch (bodyRaw "prop1")}}{{#case true}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
-        {
-          body: { prop1: true }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: true } } as any
       );
       expect(parseResult).to.be.equal('value1');
     });
 
     it('should return different values depending on the boolean value', () => {
       const parseResult = TemplateParser(
+        false,
         '{{#switch (bodyRaw "prop1")}}{{#case true}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
-        {
-          body: { prop1: false }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: false } } as any
       );
       expect(parseResult).to.be.equal('defaultvalue');
     });
@@ -61,8 +65,10 @@ describe('Template parser', () => {
   describe('Helper: concat', () => {
     it('should concat two strings', () => {
       const parseResult = TemplateParser(
+        false,
         "{{concat 'test' 'test'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('testtest');
@@ -70,8 +76,10 @@ describe('Template parser', () => {
 
     it('should concat two strings and repeat index', () => {
       const parseResult = TemplateParser(
+        false,
         "{{#repeat 1 comma=false}}{{concat 'test' @index 'test'}}{{/repeat}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('test0test');
@@ -79,17 +87,21 @@ describe('Template parser', () => {
 
     it('should concat two strings and the result of a helper', () => {
       const parseResult = TemplateParser(
+        false,
         "{{#repeat 1 comma=false}}{{concat 'test' (body 'id') 'test'}}{{/repeat}}",
-        { body: { id: '123' } } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { id: '123' } } as any
       );
       expect(parseResult).to.be.equal('test123test');
     });
 
     it('should concat two strings and number', () => {
       const parseResult = TemplateParser(
+        false,
         "{{concat 'test' 123 'test'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('test123test');
@@ -97,9 +109,11 @@ describe('Template parser', () => {
 
     it('should concat object path to retrieve body array items', () => {
       const parseResult = TemplateParser(
+        false,
         "{{#repeat 2 comma=false}}item_{{body (concat 'a.' @index '.item')}}{{/repeat}}",
-        { body: { a: [{ item: 10 }, { item: 20 }] } } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { a: [{ item: 10 }, { item: 20 }] } } as any
       );
       expect(parseResult).to.be.equal('item_10item_20');
     });
@@ -108,8 +122,10 @@ describe('Template parser', () => {
   describe('Helper: setVar', () => {
     it('should set a variable to a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' 'testvalue'}}{{testvar}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('testvalue');
@@ -117,8 +133,10 @@ describe('Template parser', () => {
 
     it('should set a variable to a number', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' 123}}{{testvar}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('123');
@@ -126,19 +144,21 @@ describe('Template parser', () => {
 
     it('should set a variable value to body helper result', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' (body 'uuid')}}{{testvar}}",
-        {
-          body: { uuid: '0d35618e-5e85-4c09-864d-6d63973271c8' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { uuid: '0d35618e-5e85-4c09-864d-6d63973271c8' } } as any
       );
       expect(parseResult).to.be.equal('0d35618e-5e85-4c09-864d-6d63973271c8');
     });
 
     it('should set a variable value to oneOf helper result', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' (oneOf (array 'item1'))}}{{testvar}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('item1');
@@ -146,8 +166,10 @@ describe('Template parser', () => {
 
     it('should set a variable and use it in another helper', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' 5}}{{#repeat testvar comma=false}}test{{/repeat}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('testtesttesttesttest');
@@ -155,8 +177,10 @@ describe('Template parser', () => {
 
     it('should set a variable in a different scope: repeat', () => {
       const parseResult = TemplateParser(
+        false,
         "{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{testvar}}{{/repeat}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('01234');
@@ -164,8 +188,10 @@ describe('Template parser', () => {
 
     it('should set a variable in root scope and child scope: repeat', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'outsidevar' 'test'}}{{outsidevar}}{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{testvar}}{{outsidevar}}{{/repeat}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('test0test1test2test3test4test');
@@ -173,8 +199,10 @@ describe('Template parser', () => {
 
     it('should set variables in two nested repeat', () => {
       const parseResult = TemplateParser(
+        false,
         "{{#repeat 1 comma=false}}{{setVar 'itemId' 25}}Item:{{itemId}}{{setVar 'nb' 1}}{{#repeat nb comma=false}}{{setVar 'childId' 56}}Child:{{childId}}parent:{{itemId}}{{/repeat}}{{/repeat}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('Item:25Child:56parent:25');
@@ -182,8 +210,10 @@ describe('Template parser', () => {
 
     it('should set a variable to empty value if none provided', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar'}}{{testvar}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -191,8 +221,10 @@ describe('Template parser', () => {
 
     it('should not set a variable if no name provided', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar ''}}{{testvar}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -202,8 +234,10 @@ describe('Template parser', () => {
   describe('Helper: dateTimeShift', () => {
     it('Should not throw an error when passed with invalid parameters.', () => {
       const parseResult = TemplateParser(
+        false,
         '{{dateTimeShift 1}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -215,8 +249,10 @@ describe('Template parser', () => {
 
     it('Should return a date shifted the specified amount of days from now.', () => {
       const parseResult = TemplateParser(
+        false,
         '{{dateTimeShift days=2}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -229,8 +265,10 @@ describe('Template parser', () => {
 
     it('Should return a date shifted by the requested amount from a specified start date.', () => {
       const parseResult = TemplateParser(
+        false,
         "{{dateTimeShift date='2021-02-01' days=2 months=4}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -239,8 +277,10 @@ describe('Template parser', () => {
 
     it('Should return a date shifted by the requested amount from the specified start date in the specified format.', () => {
       const parseResult = TemplateParser(
+        false,
         "{{dateTimeShift date='2021-02-01' format='yyyy-MM-dd' days=2 months=4}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -249,8 +289,10 @@ describe('Template parser', () => {
 
     it('Should return a date time shifted by the requested amount from the specified start date in the specified format.', () => {
       const parseResult = TemplateParser(
+        false,
         "{{dateTimeShift date='2021-02-01T10:45:00' format=\"yyyy-MM-dd'T'HH:mm:ss\" days=8 months=3 hours=1 minutes=2 seconds=3}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -259,9 +301,11 @@ describe('Template parser', () => {
 
     it('Should return a date time shifted by the requested amount when another helper is used as the date source (safestring).', () => {
       const parseResult = TemplateParser(
+        false,
         "{{dateTimeShift date=(queryParam 'date') format=\"yyyy-MM-dd'T'HH:mm:ss\" hours=1}}",
-        { query: { date: '2021-01-01 05:00:00' } } as any,
-        {} as any
+        {} as any,
+        [],
+        { query: { date: '2021-01-01 05:00:00' } } as any
       );
 
       expect(parseResult).to.equals('2021-01-01T06:00:00');
@@ -269,9 +313,11 @@ describe('Template parser', () => {
 
     it('Should return a date time shifted by the requested amount when another helper is used as the date and months and days source (safestring).', () => {
       const parseResult = TemplateParser(
+        false,
         "{{dateTimeShift date=(queryParam 'date') format=\"yyyy-MM-dd\" days=(queryParam 'days') months=(queryParam 'months')}}",
-        { query: { date: '2021-01-01', months: 1, days: 1 } } as any,
-        {} as any
+        {} as any,
+        [],
+        { query: { date: '2021-01-01', months: 1, days: 1 } } as any
       );
 
       expect(parseResult).to.equals('2021-02-02');
@@ -281,8 +327,10 @@ describe('Template parser', () => {
   describe('Helper: includes', () => {
     it('should return true if a string includes a search string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{includes 'testdata' 'test'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -291,8 +339,10 @@ describe('Template parser', () => {
 
     it('should return false if a string does not include a search string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{includes 'testdata' 'not'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -300,15 +350,23 @@ describe('Template parser', () => {
     });
 
     it('should not fail when passing no parameters', () => {
-      const parseResult = TemplateParser('{{includes}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{includes}}',
+        {} as any,
+        [],
+        {} as any
+      );
 
       expect(parseResult).to.be.equal('true');
     });
 
     it('should not fail when passing only one parameter', () => {
       const parseResult = TemplateParser(
+        false,
         "{{includes 'testdata'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -319,8 +377,10 @@ describe('Template parser', () => {
   describe('Helper: substr', () => {
     it('should return a substring of the provided string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{substr 'testdata' 4 4}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -329,8 +389,10 @@ describe('Template parser', () => {
 
     it('should work correctly when from and length parameters are passed as strings', () => {
       const parseResult = TemplateParser(
+        false,
         "{{substr 'testdata' '4' '4'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -339,8 +401,10 @@ describe('Template parser', () => {
 
     it('should return a substring of the provided string to the end when the length parameter is excluded (from as a number)', () => {
       const parseResult = TemplateParser(
+        false,
         "{{substr 'testdata' 4}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -349,8 +413,10 @@ describe('Template parser', () => {
 
     it('should return a substring of the provided string to the end when the length parameter is excluded (from as a string)', () => {
       const parseResult = TemplateParser(
+        false,
         "{{substr 'testdata' '4'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -359,8 +425,10 @@ describe('Template parser', () => {
 
     it('Should work correctly when variables are passed as parameters as numbers', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' 'testdata'}}{{setVar 'from' 4}}{{setVar 'length' 4}}{{substr testvar from length}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -369,8 +437,10 @@ describe('Template parser', () => {
 
     it('Should work correctly when variables are passed as parameters as strings', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' 'testdata'}}{{setVar 'from' '4'}}{{setVar 'length' '4'}}{{substr testvar from length}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -379,11 +449,11 @@ describe('Template parser', () => {
 
     it('Should work correctly when other helpers are used for parameters as numbers', () => {
       const parseResult = TemplateParser(
+        false,
         "{{substr (body 'prop1') (body 'prop2') (body 'prop3')}}",
-        {
-          body: { prop1: 'testdata', prop2: 4, prop3: 4 }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: 'testdata', prop2: 4, prop3: 4 } } as any
       );
 
       expect(parseResult).to.be.equal('data');
@@ -391,26 +461,34 @@ describe('Template parser', () => {
 
     it('Should work correctly when other helpers are used for parameters as strings', () => {
       const parseResult = TemplateParser(
+        false,
         "{{substr (body 'prop1') (body 'prop2') (body 'prop3')}}",
-        {
-          body: { prop1: 'testdata', prop2: '4', prop3: '4' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: 'testdata', prop2: '4', prop3: '4' } } as any
       );
 
       expect(parseResult).to.be.equal('data');
     });
 
     it('should not fail when passing no parameters', () => {
-      const parseResult = TemplateParser('{{substr}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{substr}}',
+        {} as any,
+        [],
+        {} as any
+      );
 
       expect(parseResult).to.be.equal('');
     });
 
     it('should not fail when passing only one parameter', () => {
       const parseResult = TemplateParser(
+        false,
         "{{substr 'testdata'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -421,8 +499,10 @@ describe('Template parser', () => {
   describe('Helper: split', () => {
     it('should split a string using spaces as separator', () => {
       const parseResult = TemplateParser(
+        false,
         '{{split "I love dolphins" " "}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -431,8 +511,10 @@ describe('Template parser', () => {
 
     it('should split a string using commas', () => {
       const parseResult = TemplateParser(
+        false,
         '{{split "I too, love dolphins" ","}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -441,8 +523,10 @@ describe('Template parser', () => {
 
     it('should split a string using spaces by default', () => {
       const parseResult = TemplateParser(
+        false,
         '{{split "I love dolphins"}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -451,8 +535,10 @@ describe('Template parser', () => {
 
     it('should split a string using spaces when given anything else but a string as separator', () => {
       const parseResult = TemplateParser(
+        false,
         '{{split "I love dolphins" 123}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -461,8 +547,10 @@ describe('Template parser', () => {
 
     it('should return an empty string when given anything else but a string as data', () => {
       const parseResult = TemplateParser(
+        false,
         '{{split 123 ","}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -471,8 +559,10 @@ describe('Template parser', () => {
 
     it('should be usable within a #each', () => {
       const parseResult = TemplateParser(
+        false,
         '{{#each (split "1 2 3" " ")}}dolphin,{{/each}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -481,9 +571,11 @@ describe('Template parser', () => {
 
     it('should be compatible with SafeString (queryParam)', () => {
       const parseResult = TemplateParser(
+        false,
         "{{#each (split (queryParam 'param1') ',')}}item{{this}},{{/each}}",
-        { query: { param1: '123,456,789' } } as any,
-        {} as any
+        {} as any,
+        [],
+        { query: { param1: '123,456,789' } } as any
       );
 
       expect(parseResult).to.be.equal('item123,item456,item789,');
@@ -492,15 +584,23 @@ describe('Template parser', () => {
 
   describe('Helper: lowercase', () => {
     it('should return nothing when no parameter is passed', () => {
-      const parseResult = TemplateParser('{{lowercase}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{lowercase}}',
+        {} as any,
+        [],
+        {} as any
+      );
 
       expect(parseResult).to.be.equal('');
     });
 
     it('should lowercase a string', () => {
       const parseResult = TemplateParser(
+        false,
         '{{lowercase "ABCD"}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -509,8 +609,10 @@ describe('Template parser', () => {
 
     it('should be usable within a #switch', () => {
       const parseResult = TemplateParser(
+        false,
         '{{#switch (lowercase "ABCD")}}{{#case "abcd"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -519,9 +621,11 @@ describe('Template parser', () => {
 
     it('should be compatible with SafeString (queryParam)', () => {
       const parseResult = TemplateParser(
+        false,
         "{{lowercase (queryParam 'param1')}}",
-        { query: { param1: 'ABCD' } } as any,
-        {} as any
+        {} as any,
+        [],
+        { query: { param1: 'ABCD' } } as any
       );
 
       expect(parseResult).to.be.equal('abcd');
@@ -530,15 +634,23 @@ describe('Template parser', () => {
 
   describe('Helper: uppercase', () => {
     it('should return nothing when no parameter is passed', () => {
-      const parseResult = TemplateParser('{{uppercase}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{uppercase}}',
+        {} as any,
+        [],
+        {} as any
+      );
 
       expect(parseResult).to.be.equal('');
     });
 
     it('should uppercase a string', () => {
       const parseResult = TemplateParser(
+        false,
         '{{uppercase "abcd"}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -547,8 +659,10 @@ describe('Template parser', () => {
 
     it('should be usable within a #switch', () => {
       const parseResult = TemplateParser(
+        false,
         '{{#switch (uppercase "abcd")}}{{#case "ABCD"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -557,9 +671,11 @@ describe('Template parser', () => {
 
     it('should be compatible with SafeString (queryParam)', () => {
       const parseResult = TemplateParser(
+        false,
         "{{uppercase (queryParam 'param1')}}",
-        { query: { param1: 'abcd' } } as any,
-        {} as any
+        {} as any,
+        [],
+        { query: { param1: 'abcd' } } as any
       );
 
       expect(parseResult).to.be.equal('ABCD');
@@ -568,15 +684,11 @@ describe('Template parser', () => {
 
   describe('Helper: parseInt', () => {
     it('should return nothing when no parameter is passed', () => {
-      const parseResult = TemplateParser('{{parseInt}}', {} as any, {} as any);
-
-      expect(parseResult).to.be.equal('');
-    });
-
-    it('should parse string and return an int', () => {
       const parseResult = TemplateParser(
-        "{{parseInt 'zero'}}",
+        false,
+        '{{parseInt}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -585,8 +697,22 @@ describe('Template parser', () => {
 
     it('should parse string and return an int', () => {
       const parseResult = TemplateParser(
+        false,
+        "{{parseInt 'zero'}}",
+        {} as any,
+        [],
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should parse string and return an int', () => {
+      const parseResult = TemplateParser(
+        false,
         "{{parseInt '10'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('10');
@@ -596,8 +722,10 @@ describe('Template parser', () => {
   describe('Helper: join', () => {
     it('should join an Array with spaces', () => {
       const parseResult = TemplateParser(
+        false,
         '{{join (array "Mockoon" "is" "nice") " "}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -606,8 +734,10 @@ describe('Template parser', () => {
 
     it('should ignore non Array values and return same value', () => {
       const parseResult = TemplateParser(
+        false,
         '{{join "I too, love dolphins" " "}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -616,8 +746,10 @@ describe('Template parser', () => {
 
     it('should use comma separator if no separator was provided', () => {
       const parseResult = TemplateParser(
+        false,
         '{{join (array "Water" "Tea" "Coffee")}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -628,8 +760,10 @@ describe('Template parser', () => {
   describe('Helper: slice', () => {
     it('should return an empty string if parameter is not an array', () => {
       const parseResult = TemplateParser(
+        false,
         '{{slice "hello"}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -638,8 +772,10 @@ describe('Template parser', () => {
 
     it('should return the stringified array (same content)', () => {
       const parseResult = TemplateParser(
+        false,
         '{{slice (array "Mockoon" "is" "very" "nice")}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -648,8 +784,10 @@ describe('Template parser', () => {
 
     it('should return the stringified first two elements', () => {
       const parseResult = TemplateParser(
+        false,
         '{{slice (array "Mockoon" "is" "very" "nice") 0 2}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -658,8 +796,10 @@ describe('Template parser', () => {
 
     it('should return the stringified last two elements', () => {
       const parseResult = TemplateParser(
+        false,
         '{{slice (array "Mockoon" "is" "very" "nice") 2}}',
         {} as any,
+        [],
         {} as any
       );
 
@@ -670,8 +810,10 @@ describe('Template parser', () => {
   describe('Helper: indexOf', () => {
     it('should return the index of a matching substring', () => {
       const parseResult = TemplateParser(
+        false,
         "{{indexOf 'testdata' 'data'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -680,8 +822,10 @@ describe('Template parser', () => {
 
     it('should return the index of a matching substring from a given starting position', () => {
       const parseResult = TemplateParser(
+        false,
         "{{indexOf 'testdatadata' 'data' 6}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -690,8 +834,10 @@ describe('Template parser', () => {
 
     it('should still work correctly if the position parameter is passed as a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{indexOf 'testdatadata' 'data' '6'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -700,8 +846,10 @@ describe('Template parser', () => {
 
     it('should be possible to search for a number', () => {
       const parseResult = TemplateParser(
+        false,
         "{{indexOf 'testdata12345' 3}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -710,8 +858,10 @@ describe('Template parser', () => {
 
     it('should be possible to search for a number (as a string)', () => {
       const parseResult = TemplateParser(
+        false,
         "{{indexOf 'testdata12345' '3'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -720,8 +870,10 @@ describe('Template parser', () => {
 
     it('Can return the index from a previously set variable', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' 'this is a test'}}{{indexOf testvar 'test'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -730,8 +882,10 @@ describe('Template parser', () => {
 
     it('Can return the index from a previously set variable using a variable for the search string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{setVar 'testvar' 'this is a test'}}{{setVar 'searchstring' 'test'}}{{indexOf testvar searchstring}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -740,11 +894,11 @@ describe('Template parser', () => {
 
     it('Can return the index from a body property', () => {
       const parseResult = TemplateParser(
+        false,
         "{{indexOf (body 'prop1') (body 'prop2')}}",
-        {
-          body: { prop1: 'First test then test', prop2: 'test' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: 'First test then test', prop2: 'test' } } as any
       );
 
       expect(parseResult).to.be.equal('6');
@@ -752,30 +906,40 @@ describe('Template parser', () => {
 
     it('Can return the index from a body property with a position', () => {
       const parseResult = TemplateParser(
+        false,
         "{{indexOf (body 'prop1') (body 'prop2') (body 'prop3')}}",
+        {} as any,
+        [],
         {
           body: {
             prop1: 'First test then test',
             prop2: 'test',
             prop3: 10
           }
-        } as any,
-        {} as any
+        } as any
       );
 
       expect(parseResult).to.be.equal('16');
     });
 
     it('should not fail when passing no parameters', () => {
-      const parseResult = TemplateParser('{{indexOf}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{indexOf}}',
+        {} as any,
+        [],
+        {} as any
+      );
 
       expect(parseResult).to.be.equal('0');
     });
 
     it('should not fail when passing only one parameter', () => {
       const parseResult = TemplateParser(
+        false,
         "{{indexOf 'testdata'}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -786,8 +950,10 @@ describe('Template parser', () => {
   describe('Helper: someOf', () => {
     it('should return one element', () => {
       const parseResult = TemplateParser(
+        false,
         "{{someOf (array 'value1' 'value2' 'value3' 'value4' 'value5' 'value6') 1 1}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -797,8 +963,10 @@ describe('Template parser', () => {
 
     it('should return 1 to 3 elements', () => {
       const parseResult = TemplateParser(
+        false,
         "{{someOf (array 'value1' 'value2' 'value3' 'value4' 'value5' 'value6') 1 3}}",
         {} as any,
+        [],
         {} as any
       );
 
@@ -813,8 +981,10 @@ describe('Template parser', () => {
 
     it('should return 1 to 3 elements as array', () => {
       const parseResult = TemplateParser(
+        false,
         "{{someOf (array 'value1' 'value2' 'value3' 'value4' 'value5' 'value6') 1 3 true}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult.match(/^\[.*\]$/)?.length).to.equal(1);
@@ -831,8 +1001,10 @@ describe('Template parser', () => {
   describe('Helper: len', () => {
     it('should return the length of an array', () => {
       const parseResult = TemplateParser(
+        false,
         '{{len (array 1 2 3)}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('3');
@@ -840,20 +1012,34 @@ describe('Template parser', () => {
 
     it('should return the length of a string', () => {
       const parseResult = TemplateParser(
+        false,
         '{{len "Cowboy"}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('6');
     });
 
     it('should return 0 if value is not an array', () => {
-      const parseResult = TemplateParser('{{len true}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{len true}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('0');
     });
 
     it('should return 0 if no value was provided', () => {
-      const parseResult = TemplateParser('{{len}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{len}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('0');
     });
   });
@@ -861,8 +1047,10 @@ describe('Template parser', () => {
   describe('Helper: base64', () => {
     it('should encode string to base64', () => {
       const parseResult = TemplateParser(
+        false,
         "{{base64 'abc'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('YWJj');
@@ -870,22 +1058,22 @@ describe('Template parser', () => {
 
     it('should encode body property to base64', () => {
       const parseResult = TemplateParser(
+        false,
         "{{base64 (body 'prop1')}}",
-        {
-          body: { prop1: '123' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('MTIz');
     });
 
     it('should encode block to base64', () => {
       const parseResult = TemplateParser(
+        false,
         "{{#base64}}value: {{body 'prop1'}}{{/base64}}",
-        {
-          body: { prop1: '123' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('dmFsdWU6IDEyMw==');
     });
@@ -894,8 +1082,10 @@ describe('Template parser', () => {
   describe('Helper: base64', () => {
     it('should decode a string from base64', () => {
       const parseResult = TemplateParser(
+        false,
         "{{base64Decode 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkw'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
@@ -903,22 +1093,24 @@ describe('Template parser', () => {
 
     it('should decode body property from base64', () => {
       const parseResult = TemplateParser(
+        false,
         "{{base64Decode (body 'prop1')}}",
+        {} as any,
+        [],
         {
           body: { prop1: 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkw' }
-        } as any,
-        {} as any
+        } as any
       );
       expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
     });
 
     it('should decode block from base64', () => {
       const parseResult = TemplateParser(
+        false,
         "{{#base64Decode}}YWJjZGVmZ2hpamtsbW5vcHF{{body 'prop1'}}{{/base64Decode}}",
-        {
-          body: { prop1: 'yc3R1dnd4eXoxMjM0NTY3ODkw' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: 'yc3R1dnd4eXoxMjM0NTY3ODkw' } } as any
       );
       expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
     });
@@ -926,44 +1118,66 @@ describe('Template parser', () => {
 
   describe('Helper: add', () => {
     it('should add a number to another', () => {
-      const parseResult = TemplateParser('{{add 1 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{add 1 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('2');
     });
 
     it('should add the number described by a string to another number described by a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{add '1' '1'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('2');
     });
 
     it('should return the base value when given a single parameter', () => {
-      const parseResult = TemplateParser('{{add 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{add 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return an empty string when given no arguments', () => {
-      const parseResult = TemplateParser('{{add }}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{add }}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
 
     it('should add the body property to the initial value', () => {
       const parseResult = TemplateParser(
+        false,
         "{{add 1 (body 'prop1')}}",
-        {
-          body: { prop1: '123' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('124');
     });
 
     it('should omit arguments that are NaN', () => {
       const parseResult = TemplateParser(
+        false,
         "{{add '1' '2' 'dolphins' '3'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -973,8 +1187,10 @@ describe('Template parser', () => {
   describe('Helper: subtract', () => {
     it('should subtract a number to another', () => {
       const parseResult = TemplateParser(
+        false,
         '{{subtract 1 1}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -982,8 +1198,10 @@ describe('Template parser', () => {
 
     it('should subtract the number described by a string to another number described by a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{subtract '1' '1'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -991,33 +1209,43 @@ describe('Template parser', () => {
 
     it('should return the base value when given a single parameter', () => {
       const parseResult = TemplateParser(
+        false,
         '{{subtract 1}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return an empty string when given no arguments', () => {
-      const parseResult = TemplateParser('{{subtract }}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{subtract }}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
 
     it('should subtract the body property to the initial value', () => {
       const parseResult = TemplateParser(
+        false,
         "{{subtract 1 (body 'prop1')}}",
-        {
-          body: { prop1: '123' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('-122');
     });
 
     it('should omit arguments that are NaN', () => {
       const parseResult = TemplateParser(
+        false,
         "{{subtract '6' '2' 'dolphins' '3'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1027,8 +1255,10 @@ describe('Template parser', () => {
   describe('Helper: multiply', () => {
     it('should multiply a number by another', () => {
       const parseResult = TemplateParser(
+        false,
         '{{multiply 2 3}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -1036,8 +1266,10 @@ describe('Template parser', () => {
 
     it('should multiply the number described by a string by another number described by a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{multiply '2' '3'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -1045,33 +1277,43 @@ describe('Template parser', () => {
 
     it('should return the base value when given a single parameter', () => {
       const parseResult = TemplateParser(
+        false,
         '{{multiply 1}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return an empty string when given no arguments', () => {
-      const parseResult = TemplateParser('{{multiply }}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{multiply }}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
 
     it('should multiply the body property by the initial value', () => {
       const parseResult = TemplateParser(
+        false,
         "{{multiply 2 (body 'prop1')}}",
-        {
-          body: { prop1: '123' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('246');
     });
 
     it('should omit arguments that are NaN', () => {
       const parseResult = TemplateParser(
+        false,
         "{{multiply '1' '2' 'dolphins' '3'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -1081,8 +1323,10 @@ describe('Template parser', () => {
   describe('Helper: divide', () => {
     it('should divide a number by another', () => {
       const parseResult = TemplateParser(
+        false,
         '{{divide 4 2}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('2');
@@ -1090,38 +1334,54 @@ describe('Template parser', () => {
 
     it('should divide the number described by a string by another number described by a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{divide '6' '2'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('3');
     });
 
     it('should return the base value when given a single parameter', () => {
-      const parseResult = TemplateParser('{{divide 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{divide 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return an empty string when given no arguments', () => {
-      const parseResult = TemplateParser('{{divide }}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{divide }}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
 
     it('should divide the initial value by the body property', () => {
       const parseResult = TemplateParser(
+        false,
         "{{divide 246 (body 'prop1')}}",
-        {
-          body: { prop1: '123' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('2');
     });
 
     it('should return an emtpy string when attempting to divide by 0', () => {
       const parseResult = TemplateParser(
+        false,
         "{{divide 5 '0' 5}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1129,8 +1389,10 @@ describe('Template parser', () => {
 
     it('should omit arguments that are NaN', () => {
       const parseResult = TemplateParser(
+        false,
         "{{divide '6' '2' 'dolphins' '3'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1140,8 +1402,10 @@ describe('Template parser', () => {
   describe('Helper: modulo', () => {
     it('should compute the modulo x of a number', () => {
       const parseResult = TemplateParser(
+        false,
         '{{modulo 4 2}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1149,38 +1413,54 @@ describe('Template parser', () => {
 
     it('should compute the modulo x (passed as a string) of a number described by a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{modulo '4' '2'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0');
     });
 
     it('should return an empty string when given a single parameter', () => {
-      const parseResult = TemplateParser('{{modulo 4}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{modulo 4}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
 
     it('should return an empty string when given no arguments', () => {
-      const parseResult = TemplateParser('{{modulo }}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{modulo }}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
 
     it('should compute the modulo of the initial value by the body property', () => {
       const parseResult = TemplateParser(
+        false,
         "{{modulo 4 (body 'prop1')}}",
-        {
-          body: { prop1: '2' }
-        } as any,
-        {} as any
+        {} as any,
+        [],
+        { body: { prop1: '2' } } as any
       );
       expect(parseResult).to.be.equal('0');
     });
 
     it('should return an empty string when attempting to compute modulo 0', () => {
       const parseResult = TemplateParser(
+        false,
         '{{modulo 4 0}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1189,66 +1469,114 @@ describe('Template parser', () => {
 
   describe('Helper: ceil', () => {
     it('should ceil a number', () => {
-      const parseResult = TemplateParser('{{ceil 0.5}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{ceil 0.5}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should ceil a number described by a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{ceil '0.5'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return the base value when given an integer', () => {
-      const parseResult = TemplateParser('{{ceil 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{ceil 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return an empty string when given no arguments', () => {
-      const parseResult = TemplateParser('{{ceil }}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{ceil }}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
   });
 
   describe('Helper: floor', () => {
     it('should floor a number', () => {
-      const parseResult = TemplateParser('{{floor 0.5}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{floor 0.5}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('0');
     });
 
     it('should floor a number described by a string', () => {
       const parseResult = TemplateParser(
+        false,
         "{{floor '0.5'}}",
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0');
     });
 
     it('should return the base value when given an integer', () => {
-      const parseResult = TemplateParser('{{floor 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{floor 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return an empty string when given no arguments', () => {
-      const parseResult = TemplateParser('{{floor }}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{floor }}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
   });
 
   describe('Helper: round', () => {
     it('should round a number up when min .5', () => {
-      const parseResult = TemplateParser('{{round 0.5}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{round 0.5}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('1');
     });
 
     it('should round a number down when smaller than .5', () => {
       const parseResult = TemplateParser(
+        false,
         '{{round 0.499}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1256,15 +1584,23 @@ describe('Template parser', () => {
 
     it('should take a string', () => {
       const parseResult = TemplateParser(
+        false,
         '{{round "0.499"}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0');
     });
 
     it('should return empty string if no parameters', () => {
-      const parseResult = TemplateParser('{{round}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{round}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('');
     });
   });
@@ -1272,8 +1608,10 @@ describe('Template parser', () => {
   describe('Helper: toFixed', function () {
     it('should fix the number to correct format', () => {
       const parseResult = TemplateParser(
+        false,
         '{{toFixed 1.11111 2}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('1.11');
@@ -1281,22 +1619,32 @@ describe('Template parser', () => {
 
     it('should delete all decimal places if no fix value is given', () => {
       const parseResult = TemplateParser(
+        false,
         '{{toFixed 2.11111}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('2');
     });
 
     it('should return 0 if no values are given', () => {
-      const parseResult = TemplateParser('{{toFixed}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{toFixed}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('0');
     });
 
     it('should return 0 if wrong values are given as number', () => {
       const parseResult = TemplateParser(
+        false,
         '{{toFixed "hi"}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1306,8 +1654,10 @@ describe('Template parser', () => {
   describe('Helper: gt', function () {
     it('should return true if first number is bigger than second number', () => {
       const parseResult = TemplateParser(
+        false,
         '{{gt 1.11111 1}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -1315,15 +1665,23 @@ describe('Template parser', () => {
 
     it('should return false if first number is smaller than second number', () => {
       const parseResult = TemplateParser(
+        false,
         '{{gt 1.11111 1.2}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('false');
     });
 
     it('should return false if first number is equal to the second number', () => {
-      const parseResult = TemplateParser('{{gt 1 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{gt 1 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('false');
     });
   });
@@ -1331,8 +1689,10 @@ describe('Template parser', () => {
   describe('Helper: gt', function () {
     it('should return true if first number is bigger than second number', () => {
       const parseResult = TemplateParser(
+        false,
         '{{gt 1.11111 1}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -1340,15 +1700,23 @@ describe('Template parser', () => {
 
     it('should return false if first number is smaller than second number', () => {
       const parseResult = TemplateParser(
+        false,
         '{{gt 1.11111 1.2}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('false');
     });
 
     it('should return false if first number is equal to the second number', () => {
-      const parseResult = TemplateParser('{{gt 1 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{gt 1 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('false');
     });
   });
@@ -1356,8 +1724,10 @@ describe('Template parser', () => {
   describe('Helper: gte', function () {
     it('should return true if first number is bigger than second number', () => {
       const parseResult = TemplateParser(
+        false,
         '{{gte 1.11111 1}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -1365,66 +1735,128 @@ describe('Template parser', () => {
 
     it('should return false if first number is smaller than second number', () => {
       const parseResult = TemplateParser(
+        false,
         '{{gte 1.11111 1.2}}',
         {} as any,
+        [],
         {} as any
       );
       expect(parseResult).to.be.equal('false');
     });
 
     it('should return true if first number is equal to the second number', () => {
-      const parseResult = TemplateParser('{{gte 1 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{gte 1 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('true');
     });
   });
 
   describe('Helper: lt', function () {
     it('should return true if second number is bigger than first number', () => {
-      const parseResult = TemplateParser('{{lt 1 2}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{lt 1 2}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('true');
     });
 
     it('should return false if second number is bigger than second number', () => {
-      const parseResult = TemplateParser('{{lt 2 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{lt 2 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('false');
     });
 
     it('should return false if first number is equal to the second number', () => {
-      const parseResult = TemplateParser('{{lt 1 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{lt 1 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('false');
     });
   });
 
   describe('Helper: lte', function () {
     it('should return true if second number is bigger than first number', () => {
-      const parseResult = TemplateParser('{{lte 1 2}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{lte 1 2}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('true');
     });
 
     it('should return false if second number is bigger than second number', () => {
-      const parseResult = TemplateParser('{{lte 2 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{lte 2 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('false');
     });
 
     it('should return true if first number is equal to the second number', () => {
-      const parseResult = TemplateParser('{{lte 1 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{lte 1 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('true');
     });
   });
 
   describe('Helper: eq', function () {
     it('should return false if second number is bigger than first number', () => {
-      const parseResult = TemplateParser('{{eq 1 2}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{eq 1 2}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('false');
     });
 
     it('should return false if second number is bigger than second number', () => {
-      const parseResult = TemplateParser('{{eq 2 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{eq 2 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('false');
     });
 
     it('should return true if first number is equal to the second number', () => {
-      const parseResult = TemplateParser('{{eq 1 1}}', {} as any, {} as any);
+      const parseResult = TemplateParser(
+        false,
+        '{{eq 1 1}}',
+        {} as any,
+        [],
+        {} as any
+      );
       expect(parseResult).to.be.equal('true');
     });
   });
@@ -1432,7 +1864,10 @@ describe('Template parser', () => {
   describe('Helper: stringify', () => {
     it('should output objects as string', () => {
       const parseResult = TemplateParser(
+        false,
         '{{{stringify (bodyRaw "prop2")}}}',
+        {} as any,
+        [],
         {
           body: {
             prop1: '123',
@@ -1440,8 +1875,7 @@ describe('Template parser', () => {
               data: 'super'
             }
           }
-        } as any,
-        {} as any
+        } as any
       );
       expect(parseResult).to.be.equal(`{
   "data": "super"

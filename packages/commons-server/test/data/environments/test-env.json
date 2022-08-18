@@ -1,6 +1,6 @@
 {
   "uuid": "c6199444-5116-490a-99a2-074876253a4a",
-  "lastMigration": 19,
+  "lastMigration": 23,
   "name": "Test env",
   "port": 3000,
   "hostname": "0.0.0.0",
@@ -25,12 +25,12 @@
           "sendFileAsBody": false,
           "disableTemplating": false,
           "fallbackTo404": false,
-          "body": "{}"
+          "body": "{}",
+          "default": true
         }
       ],
       "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,
@@ -39,7 +39,12 @@
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
   "cors": false,
-  "headers": [{ "key": "Content-Type", "value": "application/json" }],
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",
@@ -48,5 +53,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }

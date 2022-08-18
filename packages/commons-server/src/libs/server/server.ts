@@ -375,6 +375,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     let requestNumber = 1;
 
     server[route.method](routePath, (request: Request, response: Response) => {
+      this.generateRemainingDatabuckets(this.environment, request);
+
       // refresh environment data to get route changes that do not require a restart (headers, body, etc)
       this.refreshEnvironment();
       const currentRoute = this.getRefreshedRoute(route);
@@ -923,44 +925,74 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   private generateDatabuckets(environment: Environment) {
-    environment.data.forEach((databucket) => {
-      let newProcessedDatabucket: ProcessedDatabucket;
-      if (
-        databucket.value.match(
-          new RegExp(`\{\{[\w\s\(]*(${listOfRequestHelperTypes.join('|')})`)
-        )
-      ) {
-        // a request helper was found
-        newProcessedDatabucket = {
-          name: databucket.name,
-          value: databucket.value,
-          type: 'string'
-        };
-        newProcessedDatabucket.value = databucket.value;
-        newProcessedDatabucket.type = 'string';
-      } else {
-        const templateParsedContent = TemplateParser(
+    if (environment.data.length > 0) {
+      environment.data.forEach((databucket) => {
+        let newProcessedDatabucket: ProcessedDatabucket;
+
+        if (
+          databucket.value.match(
+            new RegExp(`\{\{[\w\s\(]*(${listOfRequestHelperTypes.join('|')})`)
+          )
+        ) {
+          // a request helper was found
+          newProcessedDatabucket = {
+            name: databucket.name,
+            value: databucket.value,
+            parsed: false
+          };
+          newProcessedDatabucket.value = databucket.value;
+          newProcessedDatabucket.parsed = false;
+        } else {
+          const templateParsedContent = TemplateParser(
+            false,
+            databucket.value,
+            environment,
+            this.processedDatabuckets
+          );
+
+          try {
+            const JSONParsedContent = JSON.parse(templateParsedContent);
+            newProcessedDatabucket = {
+              name: databucket.name,
+              value: JSONParsedContent,
+              parsed: true
+            };
+          } catch (e) {
+            newProcessedDatabucket = {
+              name: databucket.name,
+              value: templateParsedContent,
+              parsed: true
+            };
+          }
+        }
+        this.processedDatabuckets.push(newProcessedDatabucket);
+      });
+    }
+  }
+
+  private generateRemainingDatabuckets(
+    environment: Environment,
+    request: Request
+  ) {
+    this.processedDatabuckets.forEach((databucket) => {
+      if (!databucket.parsed) {
+        let content = databucket.value;
+        content = TemplateParser(
           false,
           databucket.value,
           environment,
-          this.processedDatabuckets
+          this.processedDatabuckets,
+          request
         );
         try {
-          const JSONParsedContent = JSON.parse(templateParsedContent);
-          newProcessedDatabucket = {
-            name: databucket.name,
-            value: JSONParsedContent,
-            type: 'json'
-          };
-        } catch (e) {
-          newProcessedDatabucket = {
-            name: databucket.name,
-            value: templateParsedContent,
-            type: 'parsedString'
-          };
+          const JSONParsedcontent = JSON.parse(content);
+          databucket.value = JSONParsedcontent;
+          databucket.parsed = true;
+        } catch {
+          databucket.value = content;
+          databucket.parsed = true;
         }
       }
-      this.processedDatabuckets.push(newProcessedDatabucket);
     });
   }
 }

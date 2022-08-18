@@ -64,13 +64,6 @@ export const RequestHelpers = function (
         path = convertPathToArray(path);
       }
 
-      if (typeof path === 'string' && path.includes('\\.')) {
-        path = path
-          .replace(/\\\./g, '%#%')
-          .split('.')
-          .map((s) => s.replace(/%#%/g, '.'));
-      }
-
       let value = objectGet(source, path);
       value = value === undefined ? defaultValue : value;
 
