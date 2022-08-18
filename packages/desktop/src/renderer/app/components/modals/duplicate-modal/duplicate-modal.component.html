@@ -6,12 +6,12 @@
       <small class="text-muted h6">
         Copy the
         <ng-container *ngIf="entityInformation.subject === 'route'">
-          Route
+          route
         </ng-container>
         <ng-container *ngIf="entityInformation.subject === 'databucket'">
-          Databucket
+          data bucket
         </ng-container>
-        {{ entityInformation.displayName }}
+        <code>{{ entityInformation.displayName }}</code>
         to:</small
       >
     </h3>

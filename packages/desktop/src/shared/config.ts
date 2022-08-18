@@ -28,6 +28,7 @@ export const Config = {
   defaultEnvironmentMenuSize: 100,
   defaultRouteMenuSize: 200,
   defaultLogsMenuSize: 150,
+  defaultDatabucketsMenuSize: 150,
   storageSaveDelay: 1000, // ms
   fileReWatchDelay: 3000, // ms
   firebaseConfig: {
