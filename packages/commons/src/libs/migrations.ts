@@ -460,6 +460,17 @@ export const Migrations: {
         });
       });
     }
+  },
+  /**
+   * Add Data bucket
+   */
+  {
+    id: 23,
+    migrationFunction: (environment: Environment) => {
+      if (environment.data === undefined) {
+        environment.data = EnvironmentDefault.data;
+      }
+    }
   }
 ];
 

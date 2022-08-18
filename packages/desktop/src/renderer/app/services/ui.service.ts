@@ -11,6 +11,7 @@ import { Store } from 'src/renderer/app/stores/store';
 export class UIService {
   public scrollEnvironmentsMenu: Subject<ScrollDirection> = new Subject();
   public scrollRoutesMenu: Subject<ScrollDirection> = new Subject();
+  public scrollDatabucketsMenu: Subject<ScrollDirection> = new Subject();
 
   constructor(private store: Store, private eventsService: EventsService) {}
 

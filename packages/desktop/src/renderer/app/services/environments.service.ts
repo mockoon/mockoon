@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  BuildDatabucket,
   BuildDemoEnvironment,
   BuildEnvironment,
   BuildHeader,
@@ -8,6 +9,7 @@ import {
   BuildRouteResponse,
   CloneObject,
   CloneRouteResponse,
+  DataBucket,
   Environment,
   EnvironmentDefault,
   Header,
@@ -48,6 +50,7 @@ import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { HumanizeText } from 'src/renderer/app/libs/utils.lib';
+import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
@@ -71,19 +74,24 @@ import { StorageService } from 'src/renderer/app/services/storage.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
+  addDatabucketAction,
   addEnvironmentAction,
   addRouteAction,
   addRouteResponseAction,
+  duplicateDatabucketToAnotherEnvironmentAction,
   duplicateRouteToAnotherEnvironmentAction,
+  moveDatabucketsAction,
   moveEnvironmentsAction,
   moveRouteResponsesAction,
   moveRoutesAction,
   navigateEnvironmentsAction,
   navigateRoutesAction,
   reloadEnvironmentAction,
+  removeDatabucketAction,
   removeEnvironmentAction,
   removeRouteAction,
   removeRouteResponseAction,
+  setActiveDatabucketAction,
   setActiveEnvironmentAction,
   setActiveEnvironmentLogTabAction,
   setActiveEnvironmentLogUUIDAction,
@@ -91,7 +99,8 @@ import {
   setActiveRouteResponseAction,
   setActiveTabAction,
   setActiveViewAction,
-  startRouteDuplicationToAnotherEnvironmentAction,
+  startEntityDuplicationToAnotherEnvironmentAction,
+  updateDatabucketAction,
   updateEnvironmentAction,
   updateRouteAction,
   updateRouteResponseAction,
@@ -640,6 +649,17 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Add a new databucket and save it in the store
+   */
+  public addDatabucket() {
+    if (this.store.getActiveEnvironment()) {
+      this.store.update(addDatabucketAction(BuildDatabucket()));
+      this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+      this.uiService.focusInput(FocusableInputs.DATABUCKET_NAME);
+    }
+  }
+
+  /**
    * Add a new route and save it in the store
    */
   public addRouteFromClipboard() {
@@ -686,6 +706,16 @@ export class EnvironmentsService extends Logger {
     this.store.update(addRouteResponseAction(BuildRouteResponse()));
   }
 
+  /**
+   * Set active databucket by UUID
+   */
+  public setActiveDatabucket(databucketUUID: string | ReducerDirectionType) {
+    const activeDatabucketUUID = this.store.get('activeDatabucketUUID');
+
+    if (activeDatabucketUUID && activeDatabucketUUID !== databucketUUID) {
+      this.store.update(setActiveDatabucketAction(databucketUUID));
+    }
+  }
   /**
    * Duplicate the given route response and save it in the store
    */
@@ -740,6 +770,49 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Duplicate a databucket, or the current active databucket and append it at the end
+   */
+  public duplicateDatabucket(databucketUUID: string) {
+    const databucketToDuplicate = this.store
+      .getActiveEnvironment()
+      .data.find((data) => data.uuid === databucketUUID);
+
+    if (databucketToDuplicate) {
+      let newDatabucket: DataBucket = CloneObject(databucketToDuplicate);
+      newDatabucket.name = `${databucketToDuplicate.name} (copy)`;
+
+      newDatabucket = this.dataService.renewDatabucketUUIDs(newDatabucket);
+
+      this.store.update(
+        addDatabucketAction(newDatabucket, databucketToDuplicate.uuid)
+      );
+    }
+  }
+
+  /**
+   * Duplicate a databucket to another environment
+   */
+  public duplicateDatabucketInAnotherEnvironment(
+    databucketUUID: string,
+    targetEnvironmentUUID: string
+  ) {
+    const databucketToDuplicate =
+      this.store.getDatabucketByUUID(databucketUUID);
+
+    if (databucketToDuplicate) {
+      const newDatabucket: DataBucket = this.dataService.renewDatabucketUUIDs(
+        CloneObject(databucketToDuplicate)
+      );
+      this.store.update(
+        duplicateDatabucketToAnotherEnvironmentAction(
+          newDatabucket,
+          targetEnvironmentUUID
+        )
+      );
+    }
+  }
+
+  /**
    * Remove a route and save
    */
   public removeRoute(routeUUID: string = this.store.get('activeRouteUUID')) {
@@ -753,6 +826,17 @@ export class EnvironmentsService extends Logger {
    */
   public removeRouteResponse() {
     this.store.update(removeRouteResponseAction());
+  }
+
+  /**
+   * Remove a databucket and save
+   */
+  public removeDatabucket(
+    databucketUUID: string = this.store.get('activeDatabucketUUID')
+  ) {
+    if (databucketUUID) {
+      this.store.update(removeDatabucketAction(databucketUUID));
+    }
   }
 
   /**
@@ -834,6 +918,13 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Update the active databucket
+   */
+  public updateActiveDatabucket(properties: DatabucketProperties) {
+    this.store.update(updateDatabucketAction(properties));
+  }
+
+  /**
    * Start / stop an environment (default to active one)
    */
   public toggleEnvironment(
@@ -909,6 +1000,7 @@ export class EnvironmentsService extends Logger {
   ) {
     const storeActions = {
       routes: moveRoutesAction,
+      databuckets: moveDatabucketsAction,
       environments: moveEnvironmentsAction,
       routeResponses: moveRouteResponsesAction
     };
@@ -979,11 +1071,14 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Sends an event for further process of route movement
+   * Sends an event for further process of entity movement
    */
-  public startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
+  public startEntityDuplicationToAnotherEnvironment(
+    subjectUUID: string,
+    subject: string
+  ) {
     this.store.update(
-      startRouteDuplicationToAnotherEnvironmentAction(routeUUID)
+      startEntityDuplicationToAnotherEnvironmentAction(subjectUUID, subject)
     );
   }
 

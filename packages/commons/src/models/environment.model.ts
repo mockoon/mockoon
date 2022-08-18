@@ -2,6 +2,12 @@ import { Header, Route } from './route.model';
 
 export type TLSOptionsType = 'PFX' | 'CERT';
 
+export type DataBucket = {
+  uuid: string;
+  name: string;
+  value: string;
+};
+
 /**
  * Node.js TLS options https://nodejs.org/dist/latest-v16.x/docs/api/tls.html#tlscreatesecurecontextoptions
  * Use pfx or cert+key.
@@ -39,6 +45,7 @@ export type Environment = {
   tlsOptions: EnvironmentTLSOptions;
   cors: boolean;
   headers: Header[];
+  data: DataBucket[];
 };
 
 export type Environments = Environment[];

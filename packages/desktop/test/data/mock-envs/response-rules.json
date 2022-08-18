@@ -1,6 +1,6 @@
 {
   "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
-  "lastMigration": 22,
+  "lastMigration": 23,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -682,5 +682,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }

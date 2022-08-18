@@ -1,6 +1,6 @@
 {
   "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-  "lastMigration": 22,
+  "lastMigration": 23,
   "name": "Proxy disabled",
   "endpointPrefix": "",
   "latency": 0,
@@ -50,5 +50,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }

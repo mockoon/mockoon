@@ -16,6 +16,7 @@ export type Settings = {
   truncateRouteName: boolean;
   environmentMenuSize: number;
   routeMenuSize: number;
+  databucketMenuSize: number;
   logsMenuSize: number;
   fakerLocale: FakerAvailableLocales;
   fakerSeed: number;

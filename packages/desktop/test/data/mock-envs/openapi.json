@@ -1,6 +1,6 @@
 {
   "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-  "lastMigration": 22,
+  "lastMigration": 23,
   "name": "Demo users API V2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -224,5 +224,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }

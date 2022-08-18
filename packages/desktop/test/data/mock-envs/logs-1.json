@@ -1,6 +1,6 @@
 {
   "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-  "lastMigration": 22,
+  "lastMigration": 23,
   "name": "Environment logs 1",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -114,5 +114,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }

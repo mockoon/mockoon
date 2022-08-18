@@ -16,6 +16,7 @@ export const SettingsDefault: Settings = {
   environmentMenuSize: Config.defaultEnvironmentMenuSize,
   routeMenuSize: Config.defaultRouteMenuSize,
   logsMenuSize: Config.defaultLogsMenuSize,
+  databucketMenuSize: Config.defaultDatabucketsMenuSize,
   fakerLocale: 'en',
   fakerSeed: null,
   lastChangelog: Config.appVersion,
@@ -56,6 +57,10 @@ export const SettingsSchema = Joi.object<Settings & PreMigrationSettings, true>(
     logsMenuSize: Joi.number()
       .min(Config.defaultLogsMenuSize)
       .failover(SettingsDefault.logsMenuSize)
+      .required(),
+    databucketMenuSize: Joi.number()
+      .min(Config.defaultDatabucketsMenuSize)
+      .failover(SettingsDefault.databucketMenuSize)
       .required(),
     fakerLocale: Joi.string().failover(SettingsDefault.fakerLocale).required(),
     fakerSeed: Joi.number()

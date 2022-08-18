@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   BINARY_BODY,
+  DataBucket,
   Environment,
   EnvironmentSchema,
   HighestMigrationId,
@@ -129,6 +130,9 @@ export class DataService extends Logger {
     environment.routes.forEach((route) => {
       this.renewRouteUUIDs(route);
     });
+    environment.data.forEach((databucket) => {
+      this.renewDatabucketUUIDs(databucket);
+    });
 
     return environment;
   }
@@ -146,6 +150,17 @@ export class DataService extends Logger {
     });
 
     return route;
+  }
+
+  /**
+   * Renew one databucket UUIDs
+   *
+   * @param params
+   */
+  public renewDatabucketUUIDs(databucket: DataBucket) {
+    databucket.uuid = uuid();
+
+    return databucket;
   }
 
   /**

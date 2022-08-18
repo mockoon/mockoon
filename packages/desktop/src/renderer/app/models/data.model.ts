@@ -1,1 +1,1 @@
-export type DataSubject = 'environment' | 'route';
+export type DataSubject = 'environment' | 'route' | 'databucket';
