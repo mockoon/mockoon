@@ -5,6 +5,7 @@ export type TLSOptionsType = 'PFX' | 'CERT';
 export type DataBucket = {
   uuid: string;
   name: string;
+  documentation: string;
   value: string;
 };
 

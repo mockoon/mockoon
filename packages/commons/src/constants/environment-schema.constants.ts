@@ -93,6 +93,7 @@ export const DataBucketDefault: DataBucket = {
     return uuid();
   },
   name: 'New data',
+  documentation: '',
   value: ''
 };
 
@@ -109,6 +110,10 @@ const HeaderSchema = Joi.object<Header, true>({
 const DataSchema = Joi.object<DataBucket, true>({
   uuid: UUIDSchema,
   name: Joi.string().allow('').failover(DataBucketDefault.name).required(),
+  documentation: Joi.string()
+    .allow('')
+    .failover(DataBucketDefault.documentation)
+    .required(),
   value: Joi.string().allow('').failover(DataBucketDefault.value).required()
 })
   .failover(EnvironmentDefault.data)

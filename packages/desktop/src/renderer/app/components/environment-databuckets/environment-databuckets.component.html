@@ -9,6 +9,7 @@
       "
     >
       <ng-container [formGroup]="activeDatabucketForm">
+        <!-- Name -->
         <div class="input-group">
           <input
             type="text"
@@ -19,6 +20,18 @@
             [appFocusOnEvent]="focusableInputs.DATABUCKET_NAME"
           />
         </div>
+
+        <!-- Documentation -->
+        <div class="input-group mt-2">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Add notes or documentation"
+            formControlName="documentation"
+          />
+        </div>
+
+        <!-- Editor -->
         <div
           class="flex-fill mt-2"
           *ngIf="bodyEditorConfig$ | async as bodyEditorConfig"
