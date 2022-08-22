@@ -1,6 +1,6 @@
 {
   "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
-  "lastMigration": 16,
+  "lastMigration": 23,
   "name": "uuid dedup 2",
   "endpointPrefix": "",
   "latency": 0,
@@ -12,7 +12,6 @@
       "endpoint": "test",
       "documentation": "Test documentation",
       "enabled": true,
-      "randomResponse": false,
       "responses": [
         {
           "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
@@ -25,19 +24,36 @@
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
-          "disableTemplating": false
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
         }
       ],
-      "sequentialResponse": false
+      "responseMode": null
     }
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "https": false,
   "cors": true,
   "headers": [],
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0"
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "data": [
+    {
+      "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
+      "name": "db1",
+      "value": "null"
+    }
+  ]
 }
