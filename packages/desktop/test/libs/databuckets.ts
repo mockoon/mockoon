@@ -10,6 +10,12 @@ class Databuckets {
     return $('app-environment-databuckets input[formcontrolname="name"]');
   }
 
+  public get documentationInput(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      'app-environment-databuckets input[formcontrolname="documentation"]'
+    );
+  }
+
   public get valueInput(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('app-environment-databuckets input[formcontrolname="value"]');
   }
@@ -52,8 +58,16 @@ class Databuckets {
     expect(await this.nameInput.getValue()).toEqual(expected);
   }
 
+  public async assertDocumentation(expected: string) {
+    expect(await this.documentationInput.getValue()).toEqual(expected);
+  }
+
   public async setName(value: string): Promise<void> {
     await utils.setElementValue(this.nameInput, value);
+  }
+
+  public async setDocumentation(value: string): Promise<void> {
+    await utils.setElementValue(this.documentationInput, value);
   }
 
   public async setFilter(text: string) {

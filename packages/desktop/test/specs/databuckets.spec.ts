@@ -40,7 +40,7 @@ describe('Databuckets addition', () => {
 });
 
 describe('Databuckets edition', () => {
-  it('should edit a databucket', async () => {
+  it('should edit a databuckets name', async () => {
     await databuckets.setName('My Databucket');
 
     await utils.waitForAutosave();
@@ -50,6 +50,19 @@ describe('Databuckets edition', () => {
       './tmp/storage/databuckets.json',
       ['data.0.name'],
       ['My Databucket']
+    );
+  });
+
+  it('should edit a databuckets documentation', async () => {
+    await databuckets.setDocumentation('Documentation of the databucket');
+
+    await utils.waitForAutosave();
+
+    await databuckets.assertDocumentation('Documentation of the databucket');
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/databuckets.json',
+      ['data.0.documentation'],
+      ['Documentation of the databucket']
     );
   });
 });
@@ -110,6 +123,20 @@ describe('Databucket filter', () => {
     await databuckets.assertFilter('');
   });
 
+  it('should filter databuckets by documentation', async () => {
+    await databuckets.select(1);
+    await databuckets.setDocumentation('Best databucket ever');
+    await databuckets.select(2);
+    await databuckets.setName('Still a nice databucket');
+
+    await databuckets.assertCount(2);
+
+    await databuckets.setFilter('Best');
+    await browser.pause(100);
+    await databuckets.assertCount(1);
+    await databuckets.clearFilter();
+  });
+
   it('should filter databuckets by name', async () => {
     await databuckets.select(1);
     await databuckets.setName('First databucket');
@@ -121,6 +148,7 @@ describe('Databucket filter', () => {
     await databuckets.setFilter('Second');
     await browser.pause(100);
     await databuckets.assertCount(1);
+    await databuckets.clearFilter();
   });
 
   it('should reset databuckets filter when clicking on the button Clear filter', async () => {
