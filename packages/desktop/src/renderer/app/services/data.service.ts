@@ -189,37 +189,50 @@ export class DataService extends Logger {
    * @returns
    */
   private deduplicateUUIDs(newEnvironment: Environment): Environment {
-    const UUIDs: { [key in string]: true } = {};
+    const UUIDs = new Set();
     const environments = this.store.get('environments');
 
     environments.forEach((environment) => {
-      UUIDs[environment.uuid] = true;
+      UUIDs.add(environment.uuid);
+
+      environment.data.forEach((data) => {
+        UUIDs.add(data.uuid);
+      });
+
       environment.routes.forEach((route) => {
-        UUIDs[route.uuid] = true;
+        UUIDs.add(route.uuid);
 
         route.responses.forEach((response) => {
-          UUIDs[response.uuid] = true;
+          UUIDs.add(response.uuid);
         });
       });
     });
 
-    if (UUIDs[newEnvironment.uuid]) {
+    if (UUIDs.has(newEnvironment.uuid)) {
       newEnvironment.uuid = uuid();
     }
-    UUIDs[newEnvironment.uuid] = true;
+    UUIDs.add(newEnvironment.uuid);
+
+    newEnvironment.data.forEach((data) => {
+      if (UUIDs.has(data.uuid)) {
+        data.uuid = uuid();
+      }
+
+      UUIDs.add(data.uuid);
+    });
 
     newEnvironment.routes.forEach((route) => {
-      if (UUIDs[route.uuid]) {
+      if (UUIDs.has(route.uuid)) {
         route.uuid = uuid();
       }
 
-      UUIDs[route.uuid] = true;
+      UUIDs.add(route.uuid);
 
       route.responses.forEach((response) => {
-        if (UUIDs[response.uuid]) {
+        if (UUIDs.has(response.uuid)) {
           response.uuid = uuid();
         }
-        UUIDs[response.uuid] = true;
+        UUIDs.add(response.uuid);
       });
     });
 
