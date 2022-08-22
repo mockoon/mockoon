@@ -53,7 +53,7 @@ import {
 export class MockoonServer extends (EventEmitter as new () => TypedEmitter<ServerEvents>) {
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
-  private processedDatabuckets: ProcessedDatabucket[];
+  private processedDatabuckets: ProcessedDatabucket[] = [];
 
   constructor(
     private environment: Environment,
@@ -375,7 +375,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     let requestNumber = 1;
 
     server[route.method](routePath, (request: Request, response: Response) => {
-      this.generateRemainingDatabuckets(this.environment, request);
+      this.generateCalledDatabucket(route, this.environment, request);
 
       // refresh environment data to get route changes that do not require a restart (headers, body, etc)
       this.refreshEnvironment();
@@ -931,7 +931,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
         if (
           databucket.value.match(
-            new RegExp(`\{\{[\w\s\(]*(${listOfRequestHelperTypes.join('|')})`)
+            new RegExp(`\{\{[\#\w\s\(]*(${listOfRequestHelperTypes.join('|')})`)
           )
         ) {
           // a request helper was found
@@ -970,27 +970,43 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
   }
 
-  private generateRemainingDatabuckets(
+  private generateCalledDatabucket(
+    route: Route,
     environment: Environment,
     request: Request
   ) {
-    this.processedDatabuckets.forEach((databucket) => {
-      if (!databucket.parsed) {
-        let content = databucket.value;
-        content = TemplateParser(
-          false,
-          databucket.value,
-          environment,
-          this.processedDatabuckets,
-          request
-        );
-        try {
-          const JSONParsedcontent = JSON.parse(content);
-          databucket.value = JSONParsedcontent;
-          databucket.parsed = true;
-        } catch {
-          databucket.value = content;
-          databucket.parsed = true;
+    route.responses.forEach((response) => {
+      const results = response.body?.matchAll(
+        new RegExp('{{2,3}data [\'|"]{1}([^(\'|")]*)', 'g')
+      );
+
+      if (results) {
+        let targetDatabucket;
+
+        for (const result of results) {
+          const targetName = result[1];
+          targetDatabucket = this.processedDatabuckets.find(
+            (databucket) => databucket.name === targetName
+          );
+
+          if (targetDatabucket && !targetDatabucket?.parsed) {
+            let content = targetDatabucket.value;
+            content = TemplateParser(
+              false,
+              targetDatabucket.value,
+              environment,
+              this.processedDatabuckets,
+              request
+            );
+            try {
+              const JSONParsedcontent = JSON.parse(content);
+              targetDatabucket.value = JSONParsedcontent;
+              targetDatabucket.parsed = true;
+            } catch {
+              targetDatabucket.value = content;
+              targetDatabucket.parsed = true;
+            }
+          }
         }
       }
     });

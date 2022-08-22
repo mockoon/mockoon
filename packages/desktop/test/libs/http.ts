@@ -107,6 +107,11 @@ class Http {
       };
 
       if (params.cookie) {
+        console.log(
+          `${params.cookie}; expires=${new Date(
+            new Date().getTime() + 86409000
+          )}`
+        );
         headers['Cookie'] = `${params.cookie}; expires=${new Date(
           new Date().getTime() + 86409000
         )}`;

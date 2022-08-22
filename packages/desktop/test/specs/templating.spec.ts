@@ -1006,12 +1006,32 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description:
-          'Helper: databucket call with request helper should return the same content despite ',
+          'Helper: databucket call with request helper should return the same content despite given new param',
         path: '/rqHelpersDatabucket?param1=newValue',
         method: 'GET',
         testedResponse: {
           status: 200,
           body: 'value'
+        }
+      },
+      {
+        description:
+          'Helper: databucket call with faker helper should return a value when given a path',
+        path: '/pathDatabucket',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'Hayden_Zieme0'
+        }
+      },
+      {
+        description:
+          'Helper: databucket call with faker helper should return the same value when called a second time',
+        path: '/pathDatabucket',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'Hayden_Zieme0'
         }
       }
     ]
