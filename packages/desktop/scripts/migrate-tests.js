@@ -15,9 +15,7 @@ glob(
       './test/data/mock-envs/incompatible.json',
       './test/data/mock-envs/migration.json',
       './test/data/mock-envs/schema-broken.json',
-      './test/data/mock-envs/schema-broken-repair.json',
-      './test/data/mock-envs/schema-uuid-dedup-1.json',
-      './test/data/mock-envs/schema-uuid-dedup-2.json'
+      './test/data/mock-envs/schema-broken-repair.json'
     ]
   },
   (error, files) => {
