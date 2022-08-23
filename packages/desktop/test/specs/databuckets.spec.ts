@@ -205,6 +205,7 @@ describe('Databucket filter', () => {
     await navigation.switchView('ENV_DATABUCKETS');
 
     await databuckets.setFilter('Second');
+    await browser.pause(100);
     await environments.close(2);
     await databuckets.assertFilter('');
   });
