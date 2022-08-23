@@ -148,7 +148,6 @@ describe('Databucket filter', () => {
     await databuckets.setFilter('Second');
     await browser.pause(100);
     await databuckets.assertCount(1);
-    await databuckets.clearFilter();
   });
 
   it('should reset databuckets filter when clicking on the button Clear filter', async () => {
