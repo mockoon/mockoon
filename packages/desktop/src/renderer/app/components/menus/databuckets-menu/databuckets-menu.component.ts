@@ -91,11 +91,9 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
 
         return databuckets.filter(
           (databucket) =>
-            databucket.name
-              .toLocaleLowerCase()
-              .includes(search.toLowerCase()) ||
+            databucket.name.toLowerCase().includes(search.toLowerCase()) ||
             databucket.documentation
-              .toLocaleLowerCase()
+              .toLowerCase()
               .includes(search.toLowerCase())
         );
       })
