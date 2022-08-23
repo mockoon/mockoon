@@ -148,7 +148,7 @@ describe('Databucket filter', () => {
     await environments.select(1);
     await navigation.switchView('ENV_DATABUCKETS');
     await databuckets.setFilter('Second');
-    await browser.pause(100);
+    await browser.pause(200);
     await databuckets.assertCount(1);
 
     await contextMenu.click('databuckets', 1, 2);

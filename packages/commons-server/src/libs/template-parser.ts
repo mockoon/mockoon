@@ -23,7 +23,7 @@ export const TemplateParser = function (
 ): string {
   let helpers = {
     ...FakerWrapper,
-    ...Helpers()
+    ...Helpers
   };
 
   if (!shouldOmitDataHelper) {
