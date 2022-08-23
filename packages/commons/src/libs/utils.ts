@@ -108,3 +108,15 @@ export const IsEqual = (firstObject: any, secondObject: any) =>
   JSON.stringify(firstObject) === JSON.stringify(secondObject);
 
 export const RemoveLeadingSlash = (str: string) => str.replace(/^\//g, '');
+
+/**
+ * Turns a string into its slugified version: lowercase words separated by hyphens
+ * @param str
+ */
+export const slugify = (str: string) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/[\s|_|&|\||.|,|']/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/[^a-z0-9-]*/g, '');
