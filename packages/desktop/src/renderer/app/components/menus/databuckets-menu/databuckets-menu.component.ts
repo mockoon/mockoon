@@ -89,8 +89,12 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
       map(([databuckets, search]) => {
         this.dragIsDisabled = search.length > 0;
 
-        return databuckets.filter((databucket) =>
-          databucket.name.toLocaleLowerCase().includes(search.toLowerCase())
+        return databuckets.filter(
+          (databucket) =>
+            databucket.name.toLowerCase().includes(search.toLowerCase()) ||
+            databucket.documentation
+              .toLowerCase()
+              .includes(search.toLowerCase())
         );
       })
     );
