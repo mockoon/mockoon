@@ -375,7 +375,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     let requestNumber = 1;
 
     server[route.method](routePath, (request: Request, response: Response) => {
-      this.generateCalledDatabucket(route, this.environment, request);
+      this.generateRequestDatabuckets(route, this.environment, request);
 
       // refresh environment data to get route changes that do not require a restart (headers, body, etc)
       this.refreshEnvironment();
@@ -924,6 +924,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     return tlsOptions;
   }
 
+  /**
+   * Parse all databuckets in the environment and set their parsed value to true except if they contain request helpers
+   * @param environment
+   */
   private generateDatabuckets(environment: Environment) {
     if (environment.data.length > 0) {
       environment.data.forEach((databucket) => {
@@ -970,14 +974,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
   }
 
-  private generateCalledDatabucket(
+  /**
+   * Generate the databuckets called with the data helper on route call
+   * @param route
+   * @param environment
+   * @param request
+   */
+  private generateRequestDatabuckets(
     route: Route,
     environment: Environment,
     request: Request
   ) {
     route.responses.forEach((response) => {
       const results = response.body?.matchAll(
-        new RegExp('{{2,3}data [\'|"]{1}([^(\'|")]*)', 'g')
+        new RegExp('{{2,3}[ |#|\\w|(]*data [\'|"]{1}([^(\'|")]*)', 'g')
       );
 
       if (results) {
