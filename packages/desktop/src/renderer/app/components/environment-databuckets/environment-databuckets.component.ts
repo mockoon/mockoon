@@ -68,7 +68,6 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
 
   private initForms() {
     this.activeDatabucketForm = this.formBuilder.group({
-      uuid: [DataBucketDefault.uuid],
       name: [DataBucketDefault.name],
       documentation: [DataBucketDefault.documentation],
       value: [DataBucketDefault.value]
@@ -105,7 +104,6 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
       .subscribe((activeDatabucket) => {
         this.activeDatabucketForm.patchValue(
           {
-            uuid: activeDatabucket.uuid,
             name: activeDatabucket.name,
             documentation: activeDatabucket.documentation,
             value: activeDatabucket.value

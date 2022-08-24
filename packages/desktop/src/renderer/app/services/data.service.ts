@@ -163,6 +163,12 @@ export class DataService extends Logger {
     return databucket;
   }
 
+  public renewDatabucketID(databucket: DataBucket) {
+    databucket.id = (Math.random() + 1).toString(36).substring(2, 6);
+
+    return databucket;
+  }
+
   /**
    * Truncate the body to the maximum length defined in the settings
    *
