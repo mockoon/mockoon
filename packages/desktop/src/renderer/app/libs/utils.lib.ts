@@ -27,7 +27,11 @@ export const GetEditorModeFromContentType = (
     contentType.includes('application/xhtml+xml')
   ) {
     return 'html';
-  } else if (contentType.includes('application/xml')) {
+  } else if (
+    contentType.includes('application/xml') ||
+    contentType.includes('text/xml') ||
+    contentType.includes('application/soap+xml')
+  ) {
     return 'xml';
   } else if (contentType.includes('text/css')) {
     return 'css';
