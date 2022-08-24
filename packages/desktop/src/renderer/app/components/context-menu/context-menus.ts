@@ -156,6 +156,16 @@ export const DatabucketsContextMenu = (
   {
     payload: {
       subject: 'databucket',
+      action: 'copyDatabucketID',
+      subjectUUID: databucketUUID
+    },
+    label: 'Copy ID',
+    icon: 'assignment',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'databucket',
       action: 'delete',
       subjectUUID: databucketUUID
     },
