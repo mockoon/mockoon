@@ -163,8 +163,33 @@ export class DataService extends Logger {
     return databucket;
   }
 
+  /**
+   * Renew one databucket ID
+   *
+   * @param params
+   */
   public renewDatabucketID(databucket: DataBucket) {
     databucket.id = (Math.random() + 1).toString(36).substring(2, 6);
+
+    return databucket;
+  }
+
+  /**
+   * Renew the databucket's ID until it is unique
+   *
+   * @param databucket
+   * @returns
+   */
+  public deduplicateDatabucketID(databucket: DataBucket) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    let foundID;
+
+    do {
+      databucket = this.renewDatabucketID(databucket);
+      foundID = activeEnvironment.data.find(
+        (data) => databucket.id === data.id && databucket.uuid !== data.uuid
+      );
+    } while (foundID);
 
     return databucket;
   }
