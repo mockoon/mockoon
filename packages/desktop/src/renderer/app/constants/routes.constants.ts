@@ -274,6 +274,7 @@ export const headerValues = [
   'application/xhtml+xml',
   'application/soap+xml',
   'application/xml',
+  'text/xml',
   'application/zip',
   'audio/mpeg',
   'audio/vorbis',
