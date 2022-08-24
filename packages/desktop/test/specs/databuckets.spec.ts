@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import clipboard from '../libs/clipboard';
 import contextMenu from '../libs/context-menu';
 import databuckets from '../libs/databuckets';
 import dialogs from '../libs/dialogs';
@@ -16,6 +17,7 @@ describe('Databuckets navigation', () => {
 
   it('should navigate to the databuckets tab and verify the header count', async () => {
     await navigation.switchView('ENV_DATABUCKETS');
+    await databuckets.select(1);
     await databuckets.assertCount(1);
     await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 1');
   });
@@ -106,6 +108,23 @@ describe('Databucket duplication to another envionment', () => {
   });
 });
 
+describe('Databucket IDs', () => {
+  it('should create a new random ID when adding a new Databucket', async () => {
+    const id = await file.getObjectPropertyInFile(
+      './tmp/storage/databuckets.json',
+      'data.0.id'
+    );
+    expect(await databuckets.idElement.getText()).toContain(`Unique ID: ${id}`);
+  });
+
+  it('should copy the ID to the clipboard via the context menu', async () => {
+    await databuckets.copyID(1);
+    expect(await databuckets.idElement.getText()).toContain(
+      await clipboard.read()
+    );
+  });
+});
+
 describe('Databucket filter', () => {
   it('should get focused when pressing ctrl + shift + f', async () => {
     await browser.keys([
@@ -148,7 +167,6 @@ describe('Databucket filter', () => {
     await databuckets.setFilter('Second');
     await browser.pause(100);
     await databuckets.assertCount(1);
-    await databuckets.clearFilter();
   });
 
   it('should reset databuckets filter when clicking on the button Clear filter', async () => {

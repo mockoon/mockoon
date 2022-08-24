@@ -1285,6 +1285,31 @@
       "responseMode": null
     },
     {
+      "uuid": "0d190ff6-f23c-4f03-9d90-08a5542abe3e",
+      "method": "get",
+      "endpoint": "nameDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "b55224cb-d1e9-4836-ae34-04af05b697f5",
+          "body": "{{data 'nameDatabucket'}}{{data 'name'}}{{data 'ab12'}}{{data '12'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
+    },
+    {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
       "method": "get",
       "endpoint": "emptyDatabucket",
@@ -1478,6 +1503,12 @@
     "passphrase": ""
   },
   "data": [
+    {
+      "name": "nameDatabucket",
+      "id": "ab12",
+      "uuid": "6eefb1fa-a60e-4326-8bea-e197f416cfad",
+      "value": "check"
+    },
     {
       "name": "emptyDatabucket",
       "uuid": "e418d78c-2887-4526-916c-a554b747bb0b",

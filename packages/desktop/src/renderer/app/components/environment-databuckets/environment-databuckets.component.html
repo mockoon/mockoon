@@ -46,19 +46,19 @@
           >
           </app-editor>
         </div>
+
         <div
           class="d-flex justify-content-between align-items-center environment-databuckets-footer pt-1 mt-3"
         >
-          <div [ngbTooltip]="bucketIdTooltip">
-            <small> ID: {{ activeDatabucket.id }}</small>
-          </div>
-          <ng-template #bucketIdTooltip
-            >Data ID (can be used in within helpers)</ng-template
+          <div
+            ngbTooltip="Data ID (can be used within data and dataRaw helpers)"
           >
+            <small> Unique ID: {{ activeDatabucket.id }}</small>
+          </div>
 
           <button
             type="button"
-            class="btn btn-link btn-icon btn-xs text-primary ml-auto"
+            class="btn btn-link btn-icon btn-xs text-primary"
             (click)="openWikiLink('templating')"
           >
             Open data buckets documentation
