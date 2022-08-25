@@ -111,7 +111,7 @@ describe('Template parser', () => {
   describe('Helper: setVar', () => {
     it('should set a variable to a string', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' 'testvalue'}}{{testvar}}",
+        "{{setVar 'testvar' 'testvalue'}}{{@testvar}}",
         {} as any,
         {} as any
       );
@@ -120,7 +120,7 @@ describe('Template parser', () => {
 
     it('should set a variable to a number', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' 123}}{{testvar}}",
+        "{{setVar 'testvar' 123}}{{@testvar}}",
         {} as any,
         {} as any
       );
@@ -129,7 +129,7 @@ describe('Template parser', () => {
 
     it('should set a variable value to body helper result', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' (body 'uuid')}}{{testvar}}",
+        "{{setVar 'testvar' (body 'uuid')}}{{@testvar}}",
         {
           body: { uuid: '0d35618e-5e85-4c09-864d-6d63973271c8' }
         } as any,
@@ -140,7 +140,7 @@ describe('Template parser', () => {
 
     it('should set a variable value to oneOf helper result', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' (oneOf (array 'item1'))}}{{testvar}}",
+        "{{setVar 'testvar' (oneOf (array 'item1'))}}{{@testvar}}",
         {} as any,
         {} as any
       );
@@ -149,7 +149,7 @@ describe('Template parser', () => {
 
     it('should set a variable and use it in another helper', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' 5}}{{#repeat testvar comma=false}}test{{/repeat}}",
+        "{{setVar 'testvar' 5}}{{#repeat @testvar comma=false}}test{{/repeat}}",
         {} as any,
         {} as any
       );
@@ -158,7 +158,7 @@ describe('Template parser', () => {
 
     it('should set a variable in a different scope: repeat', () => {
       const parseResult = TemplateParser(
-        "{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{testvar}}{{/repeat}}",
+        "{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{@testvar}}{{/repeat}}",
         {} as any,
         {} as any
       );
@@ -167,7 +167,7 @@ describe('Template parser', () => {
 
     it('should set a variable in root scope and child scope: repeat', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'outsidevar' 'test'}}{{outsidevar}}{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{testvar}}{{outsidevar}}{{/repeat}}",
+        "{{setVar 'outsidevar' 'test'}}{{@outsidevar}}{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{@testvar}}{{@outsidevar}}{{/repeat}}",
         {} as any,
         {} as any
       );
@@ -176,16 +176,47 @@ describe('Template parser', () => {
 
     it('should set variables in two nested repeat', () => {
       const parseResult = TemplateParser(
-        "{{#repeat 1 comma=false}}{{setVar 'itemId' 25}}Item:{{itemId}}{{setVar 'nb' 1}}{{#repeat nb comma=false}}{{setVar 'childId' 56}}Child:{{childId}}parent:{{itemId}}{{/repeat}}{{/repeat}}",
+        "{{#repeat 1 comma=false}}{{setVar 'itemId' 25}}Item:{{@itemId}}{{setVar 'nb' 1}}{{#repeat @nb comma=false}}{{setVar 'childId' 56}}Child:{{@childId}}parent:{{@itemId}}{{/repeat}}{{/repeat}}",
         {} as any,
         {} as any
       );
       expect(parseResult).to.be.equal('Item:25Child:56parent:25');
     });
 
+    it('should set variables in a each', () => {
+      const parseResult = TemplateParser(
+        "{{#each (split '1 2')}}{{setVar 'item' this}}{{@item}}{{/each}}",
+        {} as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal('12');
+    });
+
+    it('should set variables in a each in a repeat', () => {
+      const parseResult = TemplateParser(
+        "{{#repeat 2 comma=false}}{{setVar 'repeatvar' 'repeatvarvalue'}}{{#each (split '1 2')}}{{setVar 'item' this}}{{@repeatvar}}{{@item}}{{/each}}{{/repeat}}",
+        {} as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        'repeatvarvalue1repeatvarvalue2repeatvarvalue1repeatvarvalue2'
+      );
+    });
+
+    it('should set variables in two each', () => {
+      const parseResult = TemplateParser(
+        "{{#each (split '1 2')}}{{setVar 'each1var' 'each1varvalue'}}{{#each (split '1 2')}}{{setVar 'each2var' this}}{{@each1var}}{{@each2var}}{{/each}}{{/each}}",
+        {} as any,
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        'each1varvalue1each1varvalue2each1varvalue1each1varvalue2'
+      );
+    });
+
     it('should set a variable to empty value if none provided', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar'}}{{testvar}}",
+        "{{setVar 'testvar'}}{{@testvar}}",
         {} as any,
         {} as any
       );
@@ -194,7 +225,7 @@ describe('Template parser', () => {
 
     it('should not set a variable if no name provided', () => {
       const parseResult = TemplateParser(
-        "{{setVar ''}}{{testvar}}",
+        "{{setVar ''}}{{@testvar}}",
         {} as any,
         {} as any
       );
@@ -414,7 +445,7 @@ describe('Template parser', () => {
 
     it('Should work correctly when variables are passed as parameters as numbers', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' 'testdata'}}{{setVar 'from' 4}}{{setVar 'length' 4}}{{substr testvar from length}}",
+        "{{setVar 'testvar' 'testdata'}}{{setVar 'from' 4}}{{setVar 'length' 4}}{{substr @testvar @from @length}}",
         {} as any,
         {} as any
       );
@@ -424,7 +455,7 @@ describe('Template parser', () => {
 
     it('Should work correctly when variables are passed as parameters as strings', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' 'testdata'}}{{setVar 'from' '4'}}{{setVar 'length' '4'}}{{substr testvar from length}}",
+        "{{setVar 'testvar' 'testdata'}}{{setVar 'from' '4'}}{{setVar 'length' '4'}}{{substr @testvar @from @length}}",
         {} as any,
         {} as any
       );
@@ -775,7 +806,7 @@ describe('Template parser', () => {
 
     it('Can return the index from a previously set variable', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' 'this is a test'}}{{indexOf testvar 'test'}}",
+        "{{setVar 'testvar' 'this is a test'}}{{indexOf @testvar 'test'}}",
         {} as any,
         {} as any
       );
@@ -785,7 +816,7 @@ describe('Template parser', () => {
 
     it('Can return the index from a previously set variable using a variable for the search string', () => {
       const parseResult = TemplateParser(
-        "{{setVar 'testvar' 'this is a test'}}{{setVar 'searchstring' 'test'}}{{indexOf testvar searchstring}}",
+        "{{setVar 'testvar' 'this is a test'}}{{setVar 'searchstring' 'test'}}{{indexOf @testvar @searchstring}}",
         {} as any,
         {} as any
       );

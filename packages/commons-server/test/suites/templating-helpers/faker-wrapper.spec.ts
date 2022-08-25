@@ -88,7 +88,7 @@ describe('Template parser: Faker wrapper', () => {
 
   it('should be able to use a number value in a setvar and reuse the setvar', () => {
     const parseResult = TemplateParser(
-      "{{setVar 'nb' (faker 'datatype.number' min=5 max=10)}}{{nb}}",
+      "{{setVar 'nb' (faker 'datatype.number' min=5 max=10)}}{{@nb}}",
       {} as any,
       {} as any
     );
@@ -97,7 +97,7 @@ describe('Template parser: Faker wrapper', () => {
 
   it('should be able to use a number value in a setvar and reuse the variable in a helper requiring a number (int)', () => {
     const parseResult = TemplateParser(
-      "{{setVar 'nb' (faker 'datatype.number' min=50 max=100)}}{{nb}}{{int 10 nb}}",
+      "{{setVar 'nb' (faker 'datatype.number' min=50 max=100)}}{{@nb}}{{int 10 @nb}}",
       {} as any,
       {} as any
     );
