@@ -13,6 +13,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import 'brace';
 import { Editor, UndoManager } from 'brace';
+import 'brace/ext/language_tools';
 import 'brace/ext/searchbox';
 import 'brace/index';
 import 'brace/mode/css';
