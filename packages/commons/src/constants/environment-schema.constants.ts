@@ -1,6 +1,7 @@
 import * as Joi from 'joi';
 import { v4 as uuid } from 'uuid';
 import { HighestMigrationId } from '../libs/migrations';
+import { GenerateDatabucketID } from '../libs/utils';
 import {
   DataBucket,
   Environment,
@@ -92,6 +93,9 @@ export const DataBucketDefault: DataBucket = {
   get uuid() {
     return uuid();
   },
+  get id() {
+    return GenerateDatabucketID();
+  },
   name: 'New data',
   documentation: '',
   value: ''
@@ -109,6 +113,7 @@ const HeaderSchema = Joi.object<Header, true>({
 
 const DataSchema = Joi.object<DataBucket, true>({
   uuid: UUIDSchema,
+  id: Joi.string().allow('').failover(DataBucketDefault.id).required(),
   name: Joi.string().allow('').failover(DataBucketDefault.name).required(),
   documentation: Joi.string()
     .allow('')

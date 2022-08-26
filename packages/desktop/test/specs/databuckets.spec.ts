@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import clipboard from '../libs/clipboard';
 import contextMenu from '../libs/context-menu';
 import databuckets from '../libs/databuckets';
 import dialogs from '../libs/dialogs';
@@ -6,6 +7,7 @@ import environments from '../libs/environments';
 import file from '../libs/file';
 import modals from '../libs/modals';
 import navigation from '../libs/navigation';
+import routes from '../libs/routes';
 import utils from '../libs/utils';
 
 describe('Databuckets navigation', () => {
@@ -16,6 +18,7 @@ describe('Databuckets navigation', () => {
 
   it('should navigate to the databuckets tab and verify the header count', async () => {
     await navigation.switchView('ENV_DATABUCKETS');
+    await databuckets.select(1);
     await databuckets.assertCount(1);
     await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 1');
   });
@@ -103,6 +106,23 @@ describe('Databucket duplication to another envionment', () => {
 
     await environments.select(1);
     await navigation.switchView('ENV_DATABUCKETS');
+  });
+});
+
+describe('Databucket IDs', () => {
+  it('should create a new random ID when adding a new Databucket', async () => {
+    const id = await file.getObjectPropertyInFile(
+      './tmp/storage/databuckets.json',
+      'data.0.id'
+    );
+    expect(await databuckets.idElement.getText()).toContain(`Unique ID: ${id}`);
+  });
+
+  it('should copy the ID to the clipboard via the context menu', async () => {
+    await databuckets.copyID(1);
+    expect(await databuckets.idElement.getText()).toContain(
+      await clipboard.read()
+    );
   });
 });
 
@@ -207,5 +227,20 @@ describe('Databucket filter', () => {
     await browser.pause(100);
     await environments.close(2);
     await databuckets.assertFilter('');
+  });
+});
+
+describe('Databuckets autocompletion', () => {
+  it('should open autocompletion menu when pressing ctrl + space in editor', async () => {
+    await navigation.switchView('ENV_ROUTES');
+    await routes.add();
+    await routes.bodyEditor.click();
+    await browser.keys(['Control', 'Space']);
+    await $('.ace_editor.ace_autocomplete').waitForExist();
+    await browser.pause(5000);
+    await utils.countElements(
+      $$('.ace_editor.ace_autocomplete .ace_content .ace_line'),
+      2
+    );
   });
 });

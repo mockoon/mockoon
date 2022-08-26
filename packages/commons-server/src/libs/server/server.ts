@@ -942,6 +942,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         ) {
           // a request helper was found
           newProcessedDatabucket = {
+            id: databucket.id,
             name: databucket.name,
             value: databucket.value,
             parsed: false
@@ -959,12 +960,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           try {
             const JSONParsedContent = JSON.parse(templateParsedContent);
             newProcessedDatabucket = {
+              id: databucket.id,
               name: databucket.name,
               value: JSONParsedContent,
               parsed: true
             };
           } catch (e) {
             newProcessedDatabucket = {
+              id: databucket.id,
               name: databucket.name,
               value: templateParsedContent,
               parsed: true
@@ -996,9 +999,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         let targetDatabucket;
 
         for (const result of results) {
-          const targetName = result[1];
+          const targetInfo = result[1];
           targetDatabucket = this.processedDatabuckets.find(
-            (databucket) => databucket.name === targetName
+            (databucket) =>
+              databucket.id === targetInfo ||
+              databucket.name.toLowerCase().includes(targetInfo.toLowerCase())
           );
 
           if (targetDatabucket && !targetDatabucket?.parsed) {

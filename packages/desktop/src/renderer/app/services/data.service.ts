@@ -4,6 +4,7 @@ import {
   DataBucket,
   Environment,
   EnvironmentSchema,
+  GenerateDatabucketID,
   HighestMigrationId,
   Route,
   Transaction
@@ -159,6 +160,37 @@ export class DataService extends Logger {
    */
   public renewDatabucketUUIDs(databucket: DataBucket) {
     databucket.uuid = uuid();
+
+    return databucket;
+  }
+
+  /**
+   * Renew one databucket ID
+   *
+   * @param params
+   */
+  public renewDatabucketID(databucket: DataBucket) {
+    databucket.id = GenerateDatabucketID();
+
+    return databucket;
+  }
+
+  /**
+   * Renew the databucket's ID until it is unique
+   *
+   * @param databucket
+   * @returns
+   */
+  public deduplicateDatabucketID(databucket: DataBucket) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    let foundID;
+
+    do {
+      databucket = this.renewDatabucketID(databucket);
+      foundID = activeEnvironment.data.find(
+        (data) => databucket.id === data.id && databucket.uuid !== data.uuid
+      );
+    } while (foundID);
 
     return databucket;
   }

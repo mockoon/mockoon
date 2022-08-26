@@ -108,3 +108,6 @@ export const IsEqual = (firstObject: any, secondObject: any) =>
   JSON.stringify(firstObject) === JSON.stringify(secondObject);
 
 export const RemoveLeadingSlash = (str: string) => str.replace(/^\//g, '');
+
+export const GenerateDatabucketID = () =>
+  (Math.random() + 1).toString(36).substring(2, 6);

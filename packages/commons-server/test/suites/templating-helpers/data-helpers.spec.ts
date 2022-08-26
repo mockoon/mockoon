@@ -22,6 +22,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'rightDatabucket',
+            id: '45fd',
             value: 'value of the databucket',
             parsed: true
           }
@@ -39,6 +40,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'numberDatabucket',
+            id: 'd45s',
             value: '1',
             parsed: true
           }
@@ -56,6 +58,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'booleanDatabucket',
+            id: 'd5zs',
             value: 'true',
             parsed: true
           }
@@ -73,6 +76,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'nullDatabucket',
+            id: 'gn18',
             value: 'null',
             parsed: true
           }
@@ -90,6 +94,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'arrayDatabucket',
+            id: 'szed',
             value: ['first', 'second'],
             parsed: true
           }
@@ -107,6 +112,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'objectDatabucket',
+            id: 'sc51',
             value: { key: 'value' },
             parsed: true
           }
@@ -124,6 +130,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'stringDatabucket',
+            id: 'jh14',
             value: 'test',
             parsed: true
           }
@@ -141,6 +148,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'pathDatabucket',
+            id: 'w63q',
             value: {
               object1: { prop1: 'value1', prop2: 'value2' },
               prop: 'value',
@@ -162,6 +170,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'pathDatabucket',
+            id: 'de69',
             value: {
               object1: { 'prop.with.dots': 'value1', prop2: 'value2' },
               prop: 'value',
@@ -196,6 +205,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'rightDatabucket',
+            id: 'b47g',
             value: 'value of the databucket',
             parsed: true
           }
@@ -213,6 +223,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'stringDatabucket',
+            id: 'h18t',
             value: 'test',
             parsed: true
           }
@@ -230,6 +241,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'numberDatabucket',
+            id: 's95a',
             value: '1',
             parsed: true
           }
@@ -247,6 +259,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'booleanDatabucket',
+            id: 'ju47',
             value: 'true',
             parsed: true
           }
@@ -264,6 +277,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'nullDatabucket',
+            id: 'bv25',
             value: 'null',
             parsed: true
           }
@@ -281,6 +295,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'arrayDatabucket',
+            id: 'de9s',
             value: ['first', 'second'],
             parsed: true
           }
@@ -298,6 +313,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'eachDatabucket',
+            id: 'df95',
             value: [1, 2, 3],
             parsed: true
           }
@@ -315,6 +331,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'ifDatabucket',
+            id: 'l18k',
             value: 'true',
             parsed: true
           }
@@ -332,6 +349,7 @@ describe('Data helpers', () => {
         [
           {
             name: 'enumDatabucket',
+            id: 'h18h',
             value: ['string1', 'string2'],
             parsed: true
           }

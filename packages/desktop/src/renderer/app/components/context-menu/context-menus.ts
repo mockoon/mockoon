@@ -146,10 +146,10 @@ export const DatabucketsContextMenu = (
   {
     payload: {
       subject: 'databucket',
-      action: 'copyFullPath',
+      action: 'copyDatabucketID',
       subjectUUID: databucketUUID
     },
-    label: 'Copy slug to clipboard',
+    label: 'Copy ID to clipboard',
     icon: 'assignment',
     disabled: false
   },

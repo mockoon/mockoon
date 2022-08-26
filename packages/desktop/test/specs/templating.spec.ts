@@ -959,6 +959,16 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
     name: 'Data helpers',
     tests: [
       {
+        description:
+          'Helper: databucket should be called by its name, part of its name or full ID',
+        path: '/nameDatabucket',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: 'checkcheckcheck'
+        }
+      },
+      {
         description: 'Helper: databucket call should return an empty string',
         path: '/emptyDatabucket',
         method: 'GET',

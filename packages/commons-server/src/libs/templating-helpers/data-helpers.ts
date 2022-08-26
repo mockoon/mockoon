@@ -14,9 +14,11 @@ export const DataHelpers = function (
         return;
       }
 
-      const targetName = parameters[0];
+      const targetInfo = parameters[0];
       const targetDatabucket = processedDatabuckets.find(
-        (databucket) => databucket.name === targetName
+        (databucket) =>
+          databucket.id === targetInfo ||
+          databucket.name.toLowerCase().includes(targetInfo.toLowerCase())
       );
 
       if (targetDatabucket === undefined) {
@@ -53,9 +55,11 @@ export const DataHelpers = function (
         return;
       }
 
-      const targetName = parameters[0];
+      const targetInfo = parameters[0];
       const targetDatabucket = processedDatabuckets.find(
-        (databucket) => databucket.name === targetName
+        (databucket) =>
+          databucket.id === targetInfo ||
+          databucket.name.toLowerCase().includes(targetInfo.toLowerCase())
       );
 
       if (targetDatabucket === undefined) {

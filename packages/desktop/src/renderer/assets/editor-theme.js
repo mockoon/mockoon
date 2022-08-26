@@ -154,6 +154,37 @@ ace.define(
       .ace-editor-theme .ace_searchbtn:hover::after {
         border-color: #b8bcc4;
       }
+      .ace-editor-theme.ace_autocomplete {
+        background-color: #353944;
+        border: 1px solid #454a5b;
+        width: 20vw;
+        box-shadow:none;
+      }
+      .ace-editor-theme.ace_autocomplete .ace_line {
+        color: #b8bcc4;
+        padding: 0px 10px;
+      }
+      .ace_editor.ace_autocomplete .ace_line .ace_completion-highlight {
+        color: #b8bcc4;
+        text-shadow: none;
+      }
+      .ace_editor.ace_autocomplete .ace_line.ace_selected .ace_completion-highlight {
+        color: #fff;
+        text-shadow: none;
+      }
+      .ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
+        background-color: #393e4a;
+      }
+      .ace-editor-theme.ace_autocomplete .ace_line.ace_selected {
+        color: #fff;
+      }
+      .ace-editor-theme.ace_autocomplete .ace_line .ace_rightAlignedText {
+        color: #b8bcc4;
+      }
+      .ace_editor.ace_autocomplete .ace_line-hover {
+        border: 1px solid transparent;
+        background-color: #393e4a;
+      }
     `;
 
     const dom = acequire('../lib/dom');

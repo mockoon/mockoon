@@ -16,7 +16,8 @@ import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import {
   getBodyEditorMode,
-  updateDuplicatedRoutes
+  updateDuplicatedRoutes,
+  updateEditorAutocomplete
 } from 'src/renderer/app/stores/reducer-utils';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
@@ -286,18 +287,9 @@ export const environmentReducer = (
 
     case ActionTypes.SET_ACTIVE_DATABUCKET: {
       if (action.databucketUUID !== state.activeDatabucketUUID) {
-        const activeEnvironment = state.environments.find(
-          (environment) => environment.uuid === state.activeEnvironmentUUID
-        );
-        const activeDatabucket = activeEnvironment.data.find(
-          (databucket) => databucket.uuid === action.databucketUUID
-        );
-
         newState = {
           ...state,
-          activeDatabucketUUID: action.databucketUUID,
-          activeView: 'ENV_DATABUCKETS',
-          environments: state.environments
+          activeDatabucketUUID: action.databucketUUID
         };
         break;
       }
@@ -1368,7 +1360,17 @@ export const environmentReducer = (
     ...newState,
     bodyEditorConfig: {
       ...newState.bodyEditorConfig,
-      mode: getBodyEditorMode(newState)
+      mode: getBodyEditorMode(newState),
+      options: {
+        ...newState.bodyEditorConfig.options,
+        enableBasicAutocompletion:
+          state.activeEnvironmentUUID !== newState.activeEnvironmentUUID ||
+          action.type === ActionTypes.ADD_DATABUCKET ||
+          action.type === ActionTypes.REMOVE_DATABUCKET ||
+          action.type === ActionTypes.UPDATE_DATABUCKET
+            ? updateEditorAutocomplete(newState)
+            : newState.bodyEditorConfig.options.enableBasicAutocompletion
+      }
     },
     duplicatedRoutes:
       action.type === ActionTypes.ADD_ENVIRONMENT ||

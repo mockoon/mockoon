@@ -140,6 +140,9 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
       case 'copyFullPath':
         this.copyFullPathToClipboard(payload.subject, payload.subjectUUID);
         break;
+      case 'copyDatabucketID':
+        this.copyDatabucketID(payload.subject, payload.subjectUUID);
+        break;
       case 'delete':
         if (payload.subject === 'route') {
           this.environmentsService.removeRoute(payload.subjectUUID);
@@ -202,6 +205,14 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
         'APP_WRITE_CLIPBOARD',
         BuildFullPath(activeEnvironment, route)
       );
+    }
+  }
+
+  private copyDatabucketID(subject: DataSubject, subjectUUID: string) {
+    if (subject === 'databucket') {
+      const databucket = this.store.getDatabucketByUUID(subjectUUID);
+
+      MainAPI.send('APP_WRITE_CLIPBOARD', databucket.id);
     }
   }
 

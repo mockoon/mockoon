@@ -24,6 +24,10 @@ class Databuckets {
     return $('input[id="databucket-filter"]');
   }
 
+  public get idElement(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.environment-databuckets-footer div');
+  }
+
   private get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.databuckets-menu .nav:first-of-type .nav-item .nav-link');
   }
@@ -48,6 +52,10 @@ class Databuckets {
 
   public async duplicateToEnv(index: number) {
     await contextMenu.click('databuckets', index, 2);
+  }
+
+  public async copyID(index: number) {
+    await contextMenu.click('databuckets', index, 3);
   }
 
   public async remove(index: number) {
