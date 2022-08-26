@@ -7,6 +7,7 @@ import environments from '../libs/environments';
 import file from '../libs/file';
 import modals from '../libs/modals';
 import navigation from '../libs/navigation';
+import routes from '../libs/routes';
 import utils from '../libs/utils';
 
 describe('Databuckets navigation', () => {
@@ -226,5 +227,20 @@ describe('Databucket filter', () => {
     await browser.pause(100);
     await environments.close(2);
     await databuckets.assertFilter('');
+  });
+});
+
+describe('Databuckets autocompletion', () => {
+  it('should open autocompletion menu when pressing ctrl + space in editor', async () => {
+    await navigation.switchView('ENV_ROUTES');
+    await routes.add();
+    await routes.bodyEditor.click();
+    await browser.keys(['Control', 'Space']);
+    await $('.ace_editor.ace_autocomplete').waitForExist();
+    await browser.pause(5000);
+    await utils.countElements(
+      $$('.ace_editor.ace_autocomplete .ace_content .ace_line'),
+      2
+    );
   });
 });
