@@ -103,17 +103,19 @@ export const updateEditorAutocomplete = (state: StoreType) => {
   const currentEnvironment = state.environments.find(
     (environment) => environment.uuid === state.activeEnvironmentUUID
   );
-  const autoCompletions = currentEnvironment.data.map((databucket) => ({
-    caption: `data '${databucket.id}'`,
-    value: `{{data '${databucket.id}'}}`,
-    meta: `Data "${databucket.name}"`
-  }));
+  if (currentEnvironment) {
+    const autoCompletions = currentEnvironment.data.map((databucket) => ({
+      caption: `data '${databucket.id}'`,
+      value: `{{data '${databucket.id}'}}`,
+      meta: `Data "${databucket.name}"`
+    }));
 
-  return [
-    {
-      getCompletions: (editor, session, pos, prefix, callback) => {
-        callback(null, autoCompletions);
+    return [
+      {
+        getCompletions: (editor, session, pos, prefix, callback) => {
+          callback(null, autoCompletions);
+        }
       }
-    }
-  ];
+    ];
+  }
 };
