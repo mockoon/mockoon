@@ -999,9 +999,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         let targetDatabucket;
 
         for (const result of results) {
-          const targetName = result[1];
+          const targetInfo = result[1];
           targetDatabucket = this.processedDatabuckets.find(
-            (databucket) => databucket.name === targetName
+            (databucket) =>
+              databucket.id === targetInfo ||
+              databucket.name.toLowerCase().includes(targetInfo.toLowerCase())
           );
 
           if (targetDatabucket && !targetDatabucket?.parsed) {
