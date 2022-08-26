@@ -287,18 +287,9 @@ export const environmentReducer = (
 
     case ActionTypes.SET_ACTIVE_DATABUCKET: {
       if (action.databucketUUID !== state.activeDatabucketUUID) {
-        const activeEnvironment = state.environments.find(
-          (environment) => environment.uuid === state.activeEnvironmentUUID
-        );
-        const activeDatabucket = activeEnvironment.data.find(
-          (databucket) => databucket.uuid === action.databucketUUID
-        );
-
         newState = {
           ...state,
-          activeDatabucketUUID: action.databucketUUID,
-          activeView: 'ENV_DATABUCKETS',
-          environments: state.environments
+          activeDatabucketUUID: action.databucketUUID
         };
         break;
       }
