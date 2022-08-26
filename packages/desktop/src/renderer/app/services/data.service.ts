@@ -4,6 +4,7 @@ import {
   DataBucket,
   Environment,
   EnvironmentSchema,
+  GenerateDatabucketID,
   HighestMigrationId,
   Route,
   Transaction
@@ -169,7 +170,7 @@ export class DataService extends Logger {
    * @param params
    */
   public renewDatabucketID(databucket: DataBucket) {
-    databucket.id = (Math.random() + 1).toString(36).substring(2, 6);
+    databucket.id = GenerateDatabucketID();
 
     return databucket;
   }

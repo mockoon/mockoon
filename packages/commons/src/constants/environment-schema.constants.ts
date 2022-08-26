@@ -1,6 +1,7 @@
 import * as Joi from 'joi';
 import { v4 as uuid } from 'uuid';
 import { HighestMigrationId } from '../libs/migrations';
+import { GenerateDatabucketID } from '../libs/utils';
 import {
   DataBucket,
   Environment,
@@ -93,7 +94,7 @@ export const DataBucketDefault: DataBucket = {
     return uuid();
   },
   get id() {
-    return (Math.random() + 1).toString(36).substring(2, 6);
+    return GenerateDatabucketID();
   },
   name: 'New data',
   documentation: '',

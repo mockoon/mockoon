@@ -118,4 +118,6 @@ export const updateEditorAutocomplete = (state: StoreType) => {
       }
     ];
   }
+
+  return [];
 };

@@ -41,18 +41,7 @@ export class Store {
           {
             getCompletions: (editor, session, pos, prefix, callback) => {
               // note, won't fire if caret is at a word that does not have these letters
-              callback(null, [
-                {
-                  caption: 'data ID',
-                  value: "{{data 'id'}}",
-                  meta: 'Get databucket by ID'
-                },
-                {
-                  caption: 'data name',
-                  value: "{{data 'bucketName'}}",
-                  meta: 'Get databucket by name or partial name'
-                }
-              ]);
+              callback(null, []);
             }
           }
         ]
