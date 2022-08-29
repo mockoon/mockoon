@@ -25,10 +25,8 @@ export const Config = {
     faq: websiteURL + 'faq/'
   },
   defaultMaxLogsPerEnvironment: 50,
-  defaultEnvironmentMenuSize: 100,
-  defaultRouteMenuSize: 200,
-  defaultLogsMenuSize: 150,
-  defaultDatabucketsMenuSize: 150,
+  defaultMainMenuSize: 100,
+  defaultSecondaryMenuSize: 200,
   storageSaveDelay: 1000, // ms
   fileReWatchDelay: 3000, // ms
   firebaseConfig: {

@@ -45,7 +45,7 @@ export class EnvironmentsMenuComponent
   public environments$: Observable<Environments>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public settings$: Observable<Settings>;
-  public menuSize = Config.defaultEnvironmentMenuSize;
+  public menuSize = Config.defaultMainMenuSize;
   public editingName = false;
   public activeEnvironmentForm: FormGroup;
   public dragDisabled = false;
