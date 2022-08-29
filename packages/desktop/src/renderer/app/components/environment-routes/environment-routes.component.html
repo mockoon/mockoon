@@ -436,80 +436,80 @@
             unselectedMessage=""
           ></app-custom-select>
         </ng-container>
-      </ng-container>
 
-      <!-- body editor -->
-      <ng-container
-        *ngIf="activeRouteResponseForm.get(['bodyType']).value === 'INLINE'"
-      >
-        <div class="flex-fill">
-          <div class="d-flex flex-column h-100">
-            <app-title-separator
-              icon="subject"
-              heading="Body"
-              iconClasses="text-secondary"
-              iconTooltip="Format body"
-              [iconClickable]="true"
-              (iconClicked)="formatBody()"
-            >
-              <ng-container subheading>
-                <ng-container *ngIf="activeRouteResponse.filePath">
-                  <span class="btn-xs text-warning"
-                    >A file is selected, this body will not be served</span
-                  >
-                </ng-container>
-                <ng-container *ngIf="!activeRouteResponse.filePath">
-                  <span
-                    *ngIf="
-                      activeRouteResponseLastLog$
-                        | async as activeRouteResponseLastLog
-                    "
-                    class="btn btn-link btn-icon btn-xs border-0 text-primary view-body-link"
-                    (click)="
-                      goToRouteResponseLog(activeRouteResponseLastLog.UUID)
-                    "
-                    >View last body sent</span
-                  >
-                </ng-container>
-              </ng-container>
-            </app-title-separator>
-
-            <div
-              class="flex-fill"
-              *ngIf="bodyEditorConfig$ | async as bodyEditorConfig"
-            >
-              <app-editor
-                class="h-100"
-                [options]="bodyEditorConfig?.options"
-                [mode]="bodyEditorConfig?.mode"
-                [theme]="bodyEditorConfig?.theme"
-                [uuid]="activeRouteResponse.uuid"
-                formControlName="body"
+        <!-- body editor -->
+        <ng-container
+          *ngIf="activeRouteResponseForm.get(['bodyType']).value === 'INLINE'"
+        >
+          <div class="flex-fill">
+            <div class="d-flex flex-column h-100">
+              <app-title-separator
+                icon="subject"
+                heading="Body"
+                iconClasses="text-secondary"
+                iconTooltip="Format body"
+                [iconClickable]="true"
+                (iconClicked)="formatBody()"
               >
-              </app-editor>
-            </div>
+                <ng-container subheading>
+                  <ng-container *ngIf="activeRouteResponse.filePath">
+                    <span class="btn-xs text-warning"
+                      >A file is selected, this body will not be served</span
+                    >
+                  </ng-container>
+                  <ng-container *ngIf="!activeRouteResponse.filePath">
+                    <span
+                      *ngIf="
+                        activeRouteResponseLastLog$
+                          | async as activeRouteResponseLastLog
+                      "
+                      class="btn btn-link btn-icon btn-xs border-0 text-primary view-body-link"
+                      (click)="
+                        goToRouteResponseLog(activeRouteResponseLastLog.UUID)
+                      "
+                      >View last body sent</span
+                    >
+                  </ng-container>
+                </ng-container>
+              </app-title-separator>
 
-            <div
-              class="d-flex justify-content-between align-items-center environment-routes-footer pt-1 mt-3"
-            >
-              <div [ngbTooltip]="servedContentTypeTooltip">
-                <small> {{ this.effectiveContentType$ | async }}</small>
+              <div
+                class="flex-fill"
+                *ngIf="bodyEditorConfig$ | async as bodyEditorConfig"
+              >
+                <app-editor
+                  class="h-100"
+                  [options]="bodyEditorConfig?.options"
+                  [mode]="bodyEditorConfig?.mode"
+                  [theme]="bodyEditorConfig?.theme"
+                  [uuid]="activeRouteResponse.uuid"
+                  formControlName="body"
+                >
+                </app-editor>
               </div>
-              <ng-template #servedContentTypeTooltip
-                >Served Content-Type<br />(Order: environment headers &rarr;
-                file mime type &rarr; route headers)</ng-template
-              >
 
-              <button
-                type="button"
-                class="btn btn-link btn-icon btn-xs text-primary"
-                (click)="openWikiLink('templating')"
+              <div
+                class="d-flex justify-content-between align-items-center environment-routes-footer pt-1 mt-3"
               >
-                Open templating documentation
-              </button>
+                <div [ngbTooltip]="servedContentTypeTooltip">
+                  <small> {{ this.effectiveContentType$ | async }}</small>
+                </div>
+                <ng-template #servedContentTypeTooltip
+                  >Served Content-Type<br />(Order: environment headers &rarr;
+                  file mime type &rarr; route headers)</ng-template
+                >
+
+                <button
+                  type="button"
+                  class="btn btn-link btn-icon btn-xs text-primary"
+                  (click)="openWikiLink('templating')"
+                >
+                  Open templating documentation
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ng-container>
       </ng-container>
     </ng-container>
 
