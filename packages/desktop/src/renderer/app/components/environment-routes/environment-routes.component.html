@@ -333,68 +333,115 @@
           />
           <input
             type="text"
-            class="form-control ml-1"
+            class="form-control ml-1 mb-3"
             formControlName="label"
             placeholder="Add label or notes"
           />
         </div>
 
-        <app-title-separator
-          heading="File"
-          icon="insert_drive_file"
-          iconClasses="text-secondary"
-        >
-          <ng-container *ngIf="activeRouteResponse.filePath" subheading>
-            Detected MIME type:
-            {{ (activeResponseFileMimeType$ | async)?.mimeType || 'unknown' }}
-            {{
-              (activeResponseFileMimeType$ | async)?.supportsTemplating
-                ? ' - Supports templating'
-                : ''
-            }}
-          </ng-container>
-        </app-title-separator>
+        <app-toggle
+          prefix="bodyType"
+          formControlName="bodyType"
+          [items]="bodyType"
+          [uncheckable]="false"
+        ></app-toggle>
 
-        <!-- body: file -->
-        <div class="input-group">
-          <input type="text" class="form-control" formControlName="filePath" />
-          <div class="input-group-append">
-            <button
-              class="btn btn-link"
-              (click)="browseFiles()"
-              ngbTooltip="Browse files"
-            >
-              <app-svg icon="find_in_page"></app-svg>
-            </button>
-          </div>
-          <div class="input-group-append" *ngIf="activeRouteResponse.filePath">
-            <button
-              class="btn btn-link text-danger"
-              (click)="activeRouteResponseForm.get('filePath').setValue('')"
-              ngbTooltip="Reset file"
-            >
-              <app-svg icon="delete"></app-svg>
-            </button>
-          </div>
-          <div
-            *ngIf="activeRouteResponse.filePath"
-            class="input-group-append align-items-center ml-2"
+        <ng-container
+          *ngIf="activeRouteResponseForm.get(['bodyType']).value === 'FILE'"
+        >
+          <app-title-separator
+            heading="File"
+            icon="insert_drive_file"
+            iconClasses="text-secondary"
           >
-            <div class="custom-control custom-checkbox">
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="sendFileAsBody"
-                formControlName="sendFileAsBody"
-              />
-              <label class="custom-control-label" for="sendFileAsBody"
-                >Send as body</label
+            <ng-container *ngIf="activeRouteResponse.filePath" subheading>
+              Detected MIME type:
+              {{ (activeResponseFileMimeType$ | async)?.mimeType || 'unknown' }}
+              {{
+                (activeResponseFileMimeType$ | async)?.supportsTemplating
+                  ? ' - Supports templating'
+                  : ''
+              }}
+            </ng-container>
+          </app-title-separator>
+
+          <!-- body: file -->
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="filePath"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-link"
+                (click)="browseFiles()"
+                ngbTooltip="Browse files"
               >
+                <app-svg icon="find_in_page"></app-svg>
+              </button>
+            </div>
+            <div
+              class="input-group-append"
+              *ngIf="activeRouteResponse.filePath"
+            >
+              <button
+                class="btn btn-link text-danger"
+                (click)="activeRouteResponseForm.get('filePath').setValue('')"
+                ngbTooltip="Reset file"
+              >
+                <app-svg icon="delete"></app-svg>
+              </button>
+            </div>
+            <div
+              *ngIf="activeRouteResponse.filePath"
+              class="input-group-append align-items-center ml-2"
+            >
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="sendFileAsBody"
+                  formControlName="sendFileAsBody"
+                />
+                <label class="custom-control-label" for="sendFileAsBody"
+                  >Send as body</label
+                >
+              </div>
             </div>
           </div>
-        </div>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            activeRouteResponseForm.get(['bodyType']).value === 'DATABUCKET'
+          "
+        >
+          <app-title-separator
+            icon="data"
+            heading="Data"
+            iconClasses="text-secondary"
+            iconTooltip="Go to Data"
+            [iconClickable]="true"
+            (iconClicked)="openDatabucketTab()"
+          >
+          </app-title-separator>
 
-        <!-- body editor -->
+          <app-custom-select
+            class="col-2"
+            formControlName="databucketID"
+            [enableCustomInput]="false"
+            [items]="databuckets$ | async"
+            dropdownId="databuckets"
+            emptyListMessage="No databucket defined"
+            unselectedMessage=""
+          ></app-custom-select>
+        </ng-container>
+      </ng-container>
+
+      <!-- body editor -->
+      <ng-container
+        *ngIf="activeRouteResponseForm.get(['bodyType']).value === 'INLINE'"
+      >
         <div class="flex-fill">
           <div class="d-flex flex-column h-100">
             <app-title-separator
@@ -464,96 +511,96 @@
           </div>
         </div>
       </ng-container>
+    </ng-container>
 
-      <!-- HEADERS tab -->
-      <ng-container *ngIf="(activeTab$ | async) === 'HEADERS'">
-        <div
-          class="flex-fill mh0 scroll-content mt-2 h-100"
-          #routeHeadersContainer
-        >
-          <app-headers-list
-            id="route-response-headers"
-            [activeDataSubject$]="activeRouteResponse$"
-            dataSubject="route"
-            headersPropertyName="headers"
-            (headersUpdated)="routeHeadersUpdated($event)"
-            (headerAdded)="scrollToBottom(routeHeadersContainer)"
-          ></app-headers-list>
-        </div>
-      </ng-container>
+    <!-- HEADERS tab -->
+    <ng-container *ngIf="(activeTab$ | async) === 'HEADERS'">
+      <div
+        class="flex-fill mh0 scroll-content mt-2 h-100"
+        #routeHeadersContainer
+      >
+        <app-headers-list
+          id="route-response-headers"
+          [activeDataSubject$]="activeRouteResponse$"
+          dataSubject="route"
+          headersPropertyName="headers"
+          (headersUpdated)="routeHeadersUpdated($event)"
+          (headerAdded)="scrollToBottom(routeHeadersContainer)"
+        ></app-headers-list>
+      </div>
+    </ng-container>
 
-      <!-- RULES tab -->
-      <ng-container *ngIf="(activeTab$ | async) === 'RULES'">
-        <div
-          class="flex-fill mh0 scroll-content h-100"
-          #routeResponseRulesContainer
+    <!-- RULES tab -->
+    <ng-container *ngIf="(activeTab$ | async) === 'RULES'">
+      <div
+        class="flex-fill mh0 scroll-content h-100"
+        #routeResponseRulesContainer
+      >
+        <app-route-response-rules
+          [activeRouteResponse$]="activeRouteResponse$"
+          [activeRoute$]="activeRoute$"
+          (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"
         >
-          <app-route-response-rules
-            [activeRouteResponse$]="activeRouteResponse$"
-            [activeRoute$]="activeRoute$"
-            (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"
-          >
-          </app-route-response-rules>
-        </div>
-      </ng-container>
+        </app-route-response-rules>
+      </div>
+    </ng-container>
 
-      <!-- Route settings tab -->
-      <ng-container *ngIf="(activeTab$ | async) === 'SETTINGS'">
-        <div
-          class="flex-fill mh0 pt-3 h-100"
-          [formGroup]="activeRouteResponseForm"
-        >
-          <div class="form-group">
-            <div class="input-group">
-              <div class="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="route-settings-disable-templating"
-                  formControlName="disableTemplating"
-                />
-                <label
-                  class="custom-control-label"
-                  for="route-settings-disable-templating"
-                  >Disable templating in body and file content
-                </label>
-              </div>
-              <div class="input-group-append ml-1">
-                <app-svg
-                  icon="info"
-                  class="ml-1"
-                  ngbTooltip="Helpers like {{ '{' + '{' }}body{{ '}' + '}' }}
+    <!-- Route settings tab -->
+    <ng-container *ngIf="(activeTab$ | async) === 'SETTINGS'">
+      <div
+        class="flex-fill mh0 pt-3 h-100"
+        [formGroup]="activeRouteResponseForm"
+      >
+        <div class="form-group">
+          <div class="input-group">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="route-settings-disable-templating"
+                formControlName="disableTemplating"
+              />
+              <label
+                class="custom-control-label"
+                for="route-settings-disable-templating"
+                >Disable templating in body and file content
+              </label>
+            </div>
+            <div class="input-group-append ml-1">
+              <app-svg
+                icon="info"
+                class="ml-1"
+                ngbTooltip="Helpers like {{ '{' + '{' }}body{{ '}' + '}' }}
         won't be interpreted and file content will be directly streamed (better performances)"
-                ></app-svg>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="input-group">
-              <div class="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="route-settings-fallback-to-404"
-                  formControlName="fallbackTo404"
-                />
-                <label
-                  class="custom-control-label"
-                  for="route-settings-fallback-to-404"
-                  >Respond with 404 when the file path did not match any files
-                </label>
-              </div>
-              <div class="input-group-append ml-1">
-                <app-svg
-                  icon="info"
-                  class="ml-1"
-                  ngbTooltip="This will also fallback to use Body content that is present in the editor"
-                ></app-svg>
-              </div>
+              ></app-svg>
             </div>
           </div>
         </div>
-      </ng-container>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="route-settings-fallback-to-404"
+                formControlName="fallbackTo404"
+              />
+              <label
+                class="custom-control-label"
+                for="route-settings-fallback-to-404"
+                >Respond with 404 when the file path did not match any files
+              </label>
+            </div>
+            <div class="input-group-append ml-1">
+              <app-svg
+                icon="info"
+                class="ml-1"
+                ngbTooltip="This will also fallback to use Body content that is present in the editor"
+              ></app-svg>
+            </div>
+          </div>
+        </div>
+      </div>
     </ng-container>
   </div>
 </div>

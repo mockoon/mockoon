@@ -83,6 +83,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeRouteForm: FormGroup;
   public activeRouteResponseForm: FormGroup;
   public scrollToBottom = this.uiService.scrollToBottom;
+  public databuckets$: Observable<DropdownItems>;
   public methods: DropdownItems = [
     {
       value: Methods.get,
@@ -138,6 +139,21 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       activeClass: 'text-warning'
     }
   ];
+  public bodyType: ToggleItems = [
+    {
+      value: 'INLINE',
+      label: 'Inline'
+    },
+    {
+      value: 'FILE',
+      label: 'File'
+    },
+    {
+      value: 'DATABUCKET',
+      label: 'Data'
+    }
+  ];
+
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;
   public focusableInputs = FocusableInputs;
@@ -172,6 +188,15 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
         mimeType,
         supportsTemplating: MimeTypesWithTemplating.indexOf(mimeType) > -1
       }))
+    );
+    this.databuckets$ = this.activeEnvironment$.pipe(
+      filter((activeEnvironment) => !!activeEnvironment),
+      map((activeEnvironment) =>
+        activeEnvironment.data.map((data) => ({
+          value: data.id,
+          label: data.name
+        }))
+      )
     );
 
     /**
@@ -385,6 +410,13 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Open the databucket tab
+   */
+  public openDatabucketTab() {
+    this.environmentsService.setActiveView('ENV_DATABUCKETS');
+  }
+
+  /**
    * Set a route response as default
    *
    * @param routeResponseIndex
@@ -453,7 +485,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       statusCode: [RouteResponseDefault.statusCode],
       label: [RouteResponseDefault.label],
       latency: [RouteResponseDefault.latency],
+      bodyType: [RouteResponseDefault.bodyType],
       filePath: [RouteResponseDefault.filePath],
+      databucketID: [RouteResponseDefault.databucketID],
       sendFileAsBody: [RouteResponseDefault.sendFileAsBody],
       body: [RouteResponseDefault.body],
       rules: this.formBuilder.array([]),
@@ -518,7 +552,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             statusCode: activeRouteResponse.statusCode,
             label: activeRouteResponse.label,
             latency: activeRouteResponse.latency,
+            bodyType: activeRouteResponse.bodyType,
             filePath: activeRouteResponse.filePath,
+            databucketID: activeRouteResponse.databucketID,
             sendFileAsBody: activeRouteResponse.sendFileAsBody,
             body: activeRouteResponse.body,
             rules: activeRouteResponse.rules,

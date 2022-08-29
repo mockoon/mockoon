@@ -8,6 +8,7 @@ import {
   EnvironmentTLSOptions
 } from '../models/environment.model';
 import {
+  BodyTypes,
   Header,
   Methods,
   ResponseMode,
@@ -67,7 +68,9 @@ export const RouteResponseDefault: RouteResponse = {
   statusCode: 200,
   label: '',
   headers: [],
+  bodyType: BodyTypes.INLINE,
   filePath: '',
+  databucketID: '',
   sendFileAsBody: false,
   rules: [],
   rulesOperator: 'OR',
@@ -192,9 +195,17 @@ const RouteResponseSchema = Joi.object<RouteResponse, true>({
     .items(HeaderSchema, Joi.any().strip())
     .failover(RouteResponseDefault.headers)
     .required(),
+  bodyType: Joi.string()
+    .valid(BodyTypes.INLINE, BodyTypes.DATABUCKET, BodyTypes.FILE)
+    .failover(RouteResponseDefault.bodyType)
+    .required(),
   filePath: Joi.string()
     .allow('')
     .failover(RouteResponseDefault.filePath)
+    .required(),
+  databucketID: Joi.string()
+    .allow('')
+    .failover(RouteResponseDefault.databucketID)
     .required(),
   sendFileAsBody: Joi.boolean()
     .failover(RouteResponseDefault.sendFileAsBody)
