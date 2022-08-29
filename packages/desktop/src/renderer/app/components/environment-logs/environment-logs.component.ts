@@ -51,7 +51,7 @@ export class EnvironmentLogsComponent implements OnInit {
     'response.headers': false,
     'response.body': false
   };
-  public menuSize = Config.defaultLogsMenuSize;
+  public menuSize = Config.defaultSecondaryMenuSize;
   public clearEnvironmentLogsRequested$ = new TimedBoolean();
 
   constructor(

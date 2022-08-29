@@ -20,8 +20,7 @@ describe('Schema validation', () => {
         logSizeLimit: 10000,
         maxLogsPerEnvironment: 50,
         truncateRouteName: true,
-        environmentMenuSize: 100,
-        routeMenuSize: 200,
+        mainMenuSize: 100,
         fakerLocale: 'en',
         fakerSeed: null,
         lastChangelog: '9999.9.9',
@@ -42,7 +41,7 @@ describe('Schema validation', () => {
       );
 
       // add missing properties with default
-      expect(fileContent.logsMenuSize).toEqual(150);
+      expect(fileContent.secondaryMenuSize).toEqual(200);
       expect(fileContent.bannerDismissed).toHaveLength(0);
 
       // remove unknown values
