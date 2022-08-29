@@ -6,6 +6,7 @@ import {
 } from '../constants/environment-schema.constants';
 import { Environment } from '../models/environment.model';
 import {
+  BodyTypes,
   Header,
   ResponseMode,
   ResponseRule,
@@ -470,6 +471,29 @@ export const Migrations: {
       if (environment.data === undefined) {
         environment.data = EnvironmentDefault.data;
       }
+    }
+  },
+  /**
+   * Add toggle menu in route responses and databucketID
+   */
+  {
+    id: 24,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((routeResponse) => {
+          if (routeResponse.databucketID === undefined) {
+            routeResponse.databucketID = RouteResponseDefault.databucketID;
+          }
+
+          if (routeResponse.bodyType === undefined) {
+            if (routeResponse.filePath) {
+              routeResponse.bodyType = BodyTypes.FILE;
+            } else {
+              routeResponse.bodyType = RouteResponseDefault.bodyType;
+            }
+          }
+        });
+      });
     }
   }
 ];
