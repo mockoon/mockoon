@@ -644,7 +644,10 @@ export class EnvironmentsService extends Logger {
     if (this.store.getActiveEnvironment()) {
       this.store.update(addRouteAction(BuildRoute()));
       this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
-      this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
+
+      setTimeout(() => {
+        this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
+      }, 0);
     }
   }
 
@@ -658,7 +661,10 @@ export class EnvironmentsService extends Logger {
 
       this.store.update(addDatabucketAction(newDatabucket));
       this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
-      this.uiService.focusInput(FocusableInputs.DATABUCKET_NAME);
+
+      setTimeout(() => {
+        this.uiService.focusInput(FocusableInputs.DATABUCKET_NAME);
+      }, 0);
     }
   }
 
