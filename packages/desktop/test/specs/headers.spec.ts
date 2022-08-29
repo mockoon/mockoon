@@ -1,3 +1,4 @@
+import { BodyTypes } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import environments from '../libs/environments';
 import headersUtils from '../libs/headers-utils';
@@ -218,6 +219,8 @@ describe('Headers', () => {
 
       await navigation.switchView('ENV_ROUTES');
       await routes.select(2);
+      await browser.pause(5000);
+      await routes.selectBodyType(BodyTypes.FILE);
 
       await routes.assertContentType('application/xml');
       await http.assertCallWithPort(getFile, 3000);
@@ -225,6 +228,7 @@ describe('Headers', () => {
 
     it('should call /file-noheader should get PDF content-type from file mime type', async () => {
       await routes.select(3);
+      await routes.selectBodyType(BodyTypes.FILE);
       await routes.assertContentType('application/pdf');
       await http.assertCallWithPort(getFileNoHeader, 3000);
     });
@@ -232,6 +236,7 @@ describe('Headers', () => {
     it('should call /file-nomime should revert to the environment content type', async () => {
       await fs.copyFile('./test/data/res/filenoext', './tmp/storage/filenoext');
       await routes.select(4);
+      await routes.selectBodyType(BodyTypes.FILE);
       await routes.assertContentType('text/plain');
       await http.assertCallWithPort(getFileNoMime, 3000);
     });

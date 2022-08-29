@@ -1,4 +1,4 @@
-import { LogicalOperators, ResponseRule } from '@mockoon/commons';
+import { BodyTypes, LogicalOperators, ResponseRule } from '@mockoon/commons';
 import { ChainablePromiseElement } from 'webdriverio';
 import { TabsNameType } from '../../src/renderer/app/models/store.model';
 import contextMenu from '../libs/context-menu';
@@ -62,6 +62,10 @@ class Routes {
     await $(
       `.routes-menu .menu-list .nav-item:nth-child(${routeIndex}) .nav-link`
     ).click();
+  }
+
+  public async selectBodyType(type: BodyTypes) {
+    await $(`#body-type-${BodyTypes[type]}`).click();
   }
 
   public async add(): Promise<void> {
