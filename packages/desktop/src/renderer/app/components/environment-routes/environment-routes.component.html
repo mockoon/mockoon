@@ -340,7 +340,7 @@
         </div>
 
         <app-toggle
-          prefix="bodyType"
+          prefix="body-type"
           formControlName="bodyType"
           [items]="bodyType"
           [uncheckable]="false"
@@ -452,11 +452,6 @@
                 (iconClicked)="formatBody()"
               >
                 <ng-container subheading>
-                  <ng-container *ngIf="activeRouteResponse.filePath">
-                    <span class="btn-xs text-warning"
-                      >A file is selected, this body will not be served</span
-                    >
-                  </ng-container>
                   <ng-container *ngIf="!activeRouteResponse.filePath">
                     <span
                       *ngIf="
