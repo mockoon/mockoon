@@ -482,29 +482,29 @@
                 >
                 </app-editor>
               </div>
-
-              <div
-                class="d-flex justify-content-between align-items-center environment-routes-footer pt-1 mt-3"
-              >
-                <div [ngbTooltip]="servedContentTypeTooltip">
-                  <small> {{ this.effectiveContentType$ | async }}</small>
-                </div>
-                <ng-template #servedContentTypeTooltip
-                  >Served Content-Type<br />(Order: environment headers &rarr;
-                  file mime type &rarr; route headers)</ng-template
-                >
-
-                <button
-                  type="button"
-                  class="btn btn-link btn-icon btn-xs text-primary"
-                  (click)="openWikiLink('templating')"
-                >
-                  Open templating documentation
-                </button>
-              </div>
             </div>
           </div>
         </ng-container>
+
+        <div
+          class="d-flex justify-content-between align-items-center environment-routes-footer pt-1 mt-3"
+        >
+          <div [ngbTooltip]="servedContentTypeTooltip">
+            <small> {{ this.effectiveContentType$ | async }}</small>
+          </div>
+          <ng-template #servedContentTypeTooltip
+            >Served Content-Type<br />(Order: environment headers &rarr; file
+            mime type &rarr; route headers)</ng-template
+          >
+
+          <button
+            type="button"
+            class="btn btn-link btn-icon btn-xs text-primary"
+            (click)="openWikiLink('templating')"
+          >
+            Open templating documentation
+          </button>
+        </div>
       </ng-container>
     </ng-container>
 
