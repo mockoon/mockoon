@@ -360,7 +360,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
    * Open file browsing dialog
    */
   public browseFiles() {
-    /* WIP */
     this.dialogsService
       .showOpenDialog('Choose a file', null, false)
       .pipe(
@@ -410,13 +409,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Open the databucket tab
-   */
-  public openDatabucketTab() {
-    this.environmentsService.setActiveView('ENV_DATABUCKETS');
-  }
-
-  /**
    * Set a route response as default
    *
    * @param routeResponseIndex
@@ -426,8 +418,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     routeResponseIndex: number | null,
     event: MouseEvent
   ) {
-    /* event.preventDefault();
-    event.stopImmediatePropagation(); */
     // prevent dropdown item selection
     event.stopPropagation();
 
