@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 23,
+  "lastMigration": 24,
   "name": "Basic data",
   "endpointPrefix": "",
   "latency": 0,
@@ -19,19 +19,16 @@
           "latency": 0,
           "statusCode": 200,
           "label": "Reponse 1",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -49,19 +46,16 @@
           "latency": 0,
           "statusCode": 200,
           "label": "",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "text/plain"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -79,19 +73,16 @@
           "latency": 0,
           "statusCode": 200,
           "label": "",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -100,24 +91,9 @@
   "proxyMode": false,
   "proxyHost": "",
   "cors": true,
-  "headers": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "headers": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
   "hostname": "0.0.0.0",
   "tlsOptions": {

@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 23,
+  "lastMigration": 24,
   "name": "UI env",
   "endpointPrefix": "",
   "latency": 0,
@@ -26,7 +26,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -51,7 +53,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -76,7 +80,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null

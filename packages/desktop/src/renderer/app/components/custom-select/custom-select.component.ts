@@ -58,6 +58,8 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public fixedWidth: string;
   @Input()
   public dropdownId: string;
+  @Input()
+  public unselectedMessage = ' - Unknown';
 
   @ViewChild('dropdown')
   public dropdown: NgbDropdown;
@@ -233,7 +235,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
     let searchedItem = this.items$.value.find((item) => item.value === value);
 
     if (searchedItem === undefined) {
-      searchedItem = { value, label: `${value} - Unknown` };
+      searchedItem = { value, label: `${value}${this.unselectedMessage}` };
     }
 
     return searchedItem;

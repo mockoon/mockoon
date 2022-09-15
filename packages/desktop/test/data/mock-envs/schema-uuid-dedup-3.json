@@ -1,6 +1,6 @@
 {
   "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
-  "lastMigration": 23,
+  "lastMigration": 24,
   "name": "uuid dedup load",
   "endpointPrefix": "",
   "latency": 0,
@@ -26,7 +26,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null

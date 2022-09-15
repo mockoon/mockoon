@@ -1,5 +1,6 @@
 import {
   BINARY_BODY,
+  BodyTypes,
   CommonsTexts,
   CORSHeaders,
   Environment,
@@ -419,19 +420,35 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.setHeaders(enabledRouteResponse.headers, response, request);
 
         // send the file
-        if (enabledRouteResponse.filePath) {
+        if (enabledRouteResponse.bodyType === BodyTypes.FILE) {
           this.sendFile(
             enabledRouteResponse,
             routeContentType,
             request,
             response
           );
+          // serve inline body or databucket
         } else {
           if (contentType.includes('application/json')) {
             response.set('Content-Type', 'application/json');
           }
+          let content: string | undefined;
 
-          this.serveBody(enabledRouteResponse, request, response);
+          if (enabledRouteResponse.bodyType === BodyTypes.INLINE) {
+            content = enabledRouteResponse.body;
+          } else {
+            const servedDatabucket = this.environment.data.find(
+              (databucket) =>
+                databucket.id === enabledRouteResponse.databucketID
+            );
+            content = servedDatabucket?.value;
+          }
+
+          if (content === undefined) {
+            content = '';
+          }
+
+          this.serveBody(content, enabledRouteResponse, request, response);
         }
       }, enabledRouteResponse.latency);
     });
@@ -445,26 +462,25 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param response
    */
   private serveBody(
+    content: string,
     routeResponse: RouteResponse,
     request: Request,
     response: Response
   ) {
     try {
-      let body = routeResponse.body;
-
       if (!routeResponse.disableTemplating) {
-        body = TemplateParser(
+        content = TemplateParser(
           false,
-          body || '',
+          content || '',
           this.environment,
           this.processedDatabuckets,
           request
         );
       }
 
-      response.body = body;
+      response.body = content;
 
-      response.send(body);
+      response.send(content);
     } catch (error: any) {
       this.emit('error', ServerErrorCodes.ROUTE_SERVING_ERROR, error);
 
@@ -501,7 +517,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const errorThrowOrFallback = (error) => {
       if (routeResponse.fallbackTo404) {
         response.status(404);
-        this.serveBody(routeResponse, request, response);
+        const content = routeResponse.body ? routeResponse.body : '';
+        this.serveBody(content, routeResponse, request, response);
       } else {
         fileServingError(error);
       }

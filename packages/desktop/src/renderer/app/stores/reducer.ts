@@ -935,7 +935,9 @@ export const environmentReducer = (
       );
       const activeEnvironmentStatus =
         state.environmentsStatus[state.activeEnvironmentUUID];
-
+      const deletedBucket = activeEnvironment.data.find(
+        (databucket) => databucket.uuid === action.databucketUUID
+      );
       let needRestart: boolean;
       if (activeEnvironmentStatus.running) {
         needRestart = true;
@@ -945,11 +947,30 @@ export const environmentReducer = (
         (databucket) => databucket.uuid !== action.databucketUUID
       );
 
+      const newRoutes = activeEnvironment.routes.map((route) => {
+        let hasChanged = false;
+        const newReponses = route.responses.map((response) => {
+          if (response.databucketID === deletedBucket.id) {
+            hasChanged = true;
+
+            return { ...response, databucketID: '' };
+          }
+
+          return response;
+        });
+        if (hasChanged) {
+          return { ...route, responses: newReponses };
+        }
+
+        return route;
+      });
+
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === state.activeEnvironmentUUID) {
           return {
             ...environment,
-            data: newDatabuckets
+            data: newDatabuckets,
+            routes: newRoutes
           };
         }
 
