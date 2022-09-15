@@ -28,7 +28,7 @@ export const Helpers = {
     let content = '';
     let count = 0;
     const options = args[args.length - 1];
-    const data = { ...options };
+    const data = { ...options.data };
 
     if (arguments.length === 3) {
       // If given two numbers then pick a random one between the two
@@ -460,17 +460,21 @@ export const Helpers = {
     return number1 <= number2;
   },
   // set a variable to be used in the template
-  setVar: function (name: string, value: unknown) {
-    if (typeof name === 'object') {
-      return;
-    }
-
+  setVar: function (...args: any[]) {
     // return if not all parameters have been provided
     if (arguments.length < 3) {
       return;
     }
 
-    this[name] = value;
+    const options = args[args.length - 1];
+    const name = args[0];
+    const value = args[1];
+
+    if (!options.data) {
+      options.data = {};
+    }
+
+    options.data[name] = value;
   },
   int: function (...args: any[]) {
     const options: { min?: number; max?: number; precision?: number } = {
