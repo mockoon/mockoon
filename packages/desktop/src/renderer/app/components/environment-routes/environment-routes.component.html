@@ -352,7 +352,6 @@
         <ng-container *ngIf="activeRouteResponse.bodyType === 'INLINE'">
           <div class="flex-fill mb-3 px-2">
             <div class="d-flex flex-column h-100">
-              <div (click)="formatBody()">format body WIP</div>
               <ng-container *ngIf="!activeRouteResponse.filePath">
                 <span
                   *ngIf="
@@ -380,6 +379,15 @@
                   formControlName="body"
                 >
                 </app-editor>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  class="btn btn-link btn-xs btn-icon text-primary"
+                  (click)="formatBody()"
+                >
+                  Beautify JSON
+                </button>
               </div>
             </div>
           </div>
