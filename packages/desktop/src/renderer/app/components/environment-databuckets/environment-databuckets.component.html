@@ -26,7 +26,7 @@
           <input
             type="text"
             class="form-control"
-            placeholder="Add notes or documentation"
+            placeholder="Add documentation for these data"
             formControlName="documentation"
           />
         </div>
@@ -48,17 +48,18 @@
         </div>
 
         <div
-          class="d-flex justify-content-between align-items-center environment-databuckets-footer p-2 mt-3"
+          class="d-flex justify-content-between align-items-center environment-databuckets-footer px-2 mt-3"
         >
           <div
+            class="py-2 d-inline-block"
             ngbTooltip="Data ID (can be used within data and dataRaw templating helpers)"
           >
-            <small> Unique ID: {{ activeDatabucket.id }}</small>
+            <small class="pl-0"> Unique ID: {{ activeDatabucket.id }}</small>
           </div>
 
           <button
             type="button"
-            class="btn btn-link btn-icon btn-xs text-primary"
+            class="btn btn-link btn-icon btn-xs text-primary pr-0"
             (click)="openWikiLink('data')"
           >
             Open data buckets documentation

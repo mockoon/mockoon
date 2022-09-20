@@ -172,6 +172,10 @@ label {
   );
 }
 
+.p-btn {
+  padding: $input-btn-padding-y $input-btn-padding-x;
+}
+
 .custom-select {
   &:focus {
     color: $gray-200;
@@ -238,4 +242,10 @@ a:focus {
 }
 .list-group-item {
   outline: none;
+}
+
+small,
+.small {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.8rem;
 }

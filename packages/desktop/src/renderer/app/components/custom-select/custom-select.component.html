@@ -3,6 +3,7 @@
   ngbDropdown
   #dropdown="ngbDropdown"
   (openChange)="onDropdownOpenChange($event)"
+  #dropdownElement
 >
   <button
     type="button"
@@ -21,7 +22,10 @@
   <div
     id="{{ dropdownId }}-dropdown-menu"
     class="dropdown-menu"
-    [ngStyle]="{ 'min-width': fixedWidth, 'max-width': fixedWidth }"
+    [ngStyle]="{
+      'min-width': dropdownElement.offsetWidth + 'px',
+      'max-width': dropdownElement.offsetWidth + 'px'
+    }"
     ngbDropdownMenu
   >
     <div *ngIf="enableCustomInput" class="custom-value">
@@ -66,7 +70,9 @@
         </ng-container>
       </ng-container>
       <ng-template #emptyList>
-        <div class="message message-md">{{ emptyListMessage }}</div>
+        <div class="message message-md text-left p-btn">
+          {{ emptyListMessage }}
+        </div>
       </ng-template>
     </div>
   </div>
