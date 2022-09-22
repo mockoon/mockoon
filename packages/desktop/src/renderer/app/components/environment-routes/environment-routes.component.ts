@@ -194,7 +194,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       map((activeEnvironment) =>
         activeEnvironment.data.map((data) => ({
           value: data.id,
-          label: `${data.name} - ${data.documentation}`
+          label: `${data.name}${
+            data.documentation ? ' - ' + data.documentation : ''
+          }`
         }))
       )
     );

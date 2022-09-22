@@ -2,6 +2,10 @@
   class="btn-group btn-group-toggle btn-group-sm h-100"
   data-toggle="buttons"
 >
+  <button *ngIf="label" class="btn btn-custom px-3" disabled>
+    {{ label }}
+  </button>
+
   <ng-container *ngFor="let item of items">
     <!-- Single toggle mode (checkbox, boolean) -->
     <ng-container *ngIf="items.length === 1">

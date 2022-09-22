@@ -39,6 +39,8 @@ export class ToggleComponent
   @Input()
   public prefix: string;
   @Input()
+  public label?: string;
+  @Input()
   public uncheckable = true;
 
   public onChange: (_: any) => void;

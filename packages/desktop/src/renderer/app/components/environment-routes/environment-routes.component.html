@@ -309,6 +309,7 @@
               formControlName="statusCode"
               customInputPlaceholder="Custom status code (100-999)"
               emptyListMessage="Press enter for custom status code"
+              unknownValueMessage=" - Unknown"
               [isNumber]="true"
               [items]="statusCodes"
               [validation]="statusCodeValidation"
@@ -351,6 +352,7 @@
           <app-toggle
             prefix="body-type"
             formControlName="bodyType"
+            label="Body"
             [items]="bodyType"
             [uncheckable]="false"
           ></app-toggle>
@@ -396,6 +398,15 @@
               formControlName="filePath"
               placeholder="Relative or absolute path"
             />
+            <button
+              *ngIf="activeRouteResponse.filePath"
+              type="button"
+              (click)="activeRouteResponseForm.get('filePath').setValue('')"
+              class="btn btn-custom"
+              ngbTooltip="Clear"
+            >
+              <app-svg icon="clear"></app-svg>
+            </button>
             <div class="input-group-append">
               <button
                 class="btn btn-link"
@@ -403,18 +414,6 @@
                 ngbTooltip="Browse"
               >
                 <app-svg icon="find_in_page"></app-svg>
-              </button>
-            </div>
-            <div
-              class="input-group-append"
-              *ngIf="activeRouteResponse.filePath"
-            >
-              <button
-                class="btn btn-link text-danger"
-                (click)="activeRouteResponseForm.get('filePath').setValue('')"
-                ngbTooltip="Reset file"
-              >
-                <app-svg icon="delete"></app-svg>
               </button>
             </div>
           </div>
@@ -461,7 +460,9 @@
               [items]="databuckets$ | async"
               dropdownId="databuckets"
               emptyListMessage="No databucket defined"
-              unselectedMessage=""
+              placeholder="Select a databucket"
+              [clearable]="true"
+              [defaultClearValue]="''"
             ></app-custom-select>
           </div>
         </ng-container>
