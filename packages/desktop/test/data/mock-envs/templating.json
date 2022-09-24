@@ -1395,7 +1395,7 @@
       "responses": [
         {
           "uuid": "b55224cb-d1e9-4836-ae34-04af05b697f5",
-          "body": "{{data 'nameDatabucket'}}{{data 'name'}}{{data 'ab12'}}{{data '12'}}",
+          "body": "{{data 'nameDatabucket'}}{{data 'name'}}{{data 'abc1'}}{{data '12'}}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -1623,37 +1623,43 @@
   "data": [
     {
       "name": "nameDatabucket",
-      "id": "ab12",
+      "id": "abc1",
       "uuid": "6eefb1fa-a60e-4326-8bea-e197f416cfad",
       "value": "check"
     },
     {
       "name": "emptyDatabucket",
+      "id": "abc2",
       "uuid": "e418d78c-2887-4526-916c-a554b747bb0b",
       "value": ""
     },
     {
       "name": "stringDatabucket",
+      "id": "abc3",
       "uuid": "5b62d428-f7d4-42a6-95fe-8876bf5ef53a",
       "value": "string"
     },
     {
       "name": "numberDatabucket",
+      "id": "abc4",
       "uuid": "3e316443-ec75-4aaa-bc34-52a5b5bbe85e",
       "value": "1"
     },
     {
       "name": "booleanDatabucket",
+      "id": "abc5",
       "uuid": "9cfd35b4-cce0-48e4-b6eb-17de71647007",
       "value": "true"
     },
     {
       "name": "rqHelperDatabucket",
+      "id": "abc6",
       "uuid": "8426338c-f293-4dc9-a56c-de5a0e78b5d4",
       "value": "{{queryParam 'param1'}}"
     },
     {
       "name": "pathDatabucket",
+      "id": "abc7",
       "uuid": "4a0323cc-6472-484b-80c6-eb25c81cc01b",
       "value": "{ \"data\": {\"username\": \"{{faker 'internet.userName'}}\", \"email\": \"{{faker 'internet.email'}}\"} }"
     }

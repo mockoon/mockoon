@@ -420,7 +420,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.setHeaders(enabledRouteResponse.headers, response, request);
 
         // send the file
-        if (enabledRouteResponse.bodyType === BodyTypes.FILE) {
+        if (
+          enabledRouteResponse.bodyType === BodyTypes.FILE &&
+          enabledRouteResponse.filePath
+        ) {
           this.sendFile(
             enabledRouteResponse,
             routeContentType,
@@ -432,23 +435,27 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           if (contentType.includes('application/json')) {
             response.set('Content-Type', 'application/json');
           }
-          let content: string | undefined;
 
-          if (enabledRouteResponse.bodyType === BodyTypes.INLINE) {
-            content = enabledRouteResponse.body;
-          } else {
-            const servedDatabucket = this.environment.data.find(
-              (databucket) =>
-                databucket.id === enabledRouteResponse.databucketID
+          // serve inline body as default
+          let content = enabledRouteResponse.body;
+
+          if (
+            enabledRouteResponse.bodyType === BodyTypes.DATABUCKET &&
+            enabledRouteResponse.databucketID
+          ) {
+            const servedDatabucket = this.processedDatabuckets.find(
+              (processedDatabucket) =>
+                processedDatabucket.id === enabledRouteResponse.databucketID
             );
             content = servedDatabucket?.value;
           }
 
-          if (content === undefined) {
-            content = '';
-          }
-
-          this.serveBody(content, enabledRouteResponse, request, response);
+          this.serveBody(
+            content || '',
+            enabledRouteResponse,
+            request,
+            response
+          );
         }
       }, enabledRouteResponse.latency);
     });
@@ -964,8 +971,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             value: databucket.value,
             parsed: false
           };
-          newProcessedDatabucket.value = databucket.value;
-          newProcessedDatabucket.parsed = false;
         } else {
           const templateParsedContent = TemplateParser(
             false,
@@ -1007,20 +1012,36 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     environment: Environment,
     request: Request
   ) {
+    // do not continue if all the buckets were previously parsed
+    if (
+      !this.processedDatabuckets.some(
+        (processedDatabucket) => !processedDatabucket.parsed
+      )
+    ) {
+      return;
+    }
+
     route.responses.forEach((response) => {
       const results = response.body?.matchAll(
         new RegExp('{{2,3}[\\s|#|\\w|(]*data [\'|"]{1}([^(\'|")]*)', 'g')
       );
+      const databucketIdsToParse = [...(results || [])].map(
+        (match) => match[1]
+      );
+      if (response.databucketID) {
+        databucketIdsToParse.push(response.databucketID);
+      }
 
-      if (results) {
-        let targetDatabucket;
+      if (databucketIdsToParse.length) {
+        let targetDatabucket: ProcessedDatabucket | undefined;
 
-        for (const result of results) {
-          const targetInfo = result[1];
+        for (const databucketIdToParse of databucketIdsToParse) {
           targetDatabucket = this.processedDatabuckets.find(
             (databucket) =>
-              databucket.id === targetInfo ||
-              databucket.name.toLowerCase().includes(targetInfo.toLowerCase())
+              databucket.id === databucketIdToParse ||
+              databucket.name
+                .toLowerCase()
+                .includes(databucketIdToParse.toLowerCase())
           );
 
           if (targetDatabucket && !targetDatabucket?.parsed) {

@@ -219,7 +219,6 @@ describe('Headers', () => {
 
       await navigation.switchView('ENV_ROUTES');
       await routes.select(2);
-      await browser.pause(5000);
       await routes.selectBodyType(BodyTypes.FILE);
 
       await routes.assertContentType('application/xml');
