@@ -107,6 +107,7 @@ describe('Environment external reload', () => {
       uuid: randomUUID()
     });
 
+    await browser.pause(2000);
     await environments.assertActiveMenuEntryText('env 2 (change1)');
     await environments.assertMenuEntryText(1, 'env 1 (change2)');
   });
@@ -155,6 +156,7 @@ describe('Environment external reload', () => {
       'env 2 (change1)'
     );
     await modals.cancel();
+    await browser.pause(500);
 
     await environments.assertActiveMenuEntryText('env 1 (change2)');
     await environments.assertMenuEntryText(2, 'env 2 (change1)');
