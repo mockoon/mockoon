@@ -16,8 +16,6 @@ export const Config = {
   releasePublicURL: `${websiteURL}releases/desktop/`,
   docs: {
     templating: docsURL + 'templating/overview/',
-    data: docsURL + 'data/overview/',
-    file: docsURL + 'file-serving/',
     proxy: docsURL + 'proxy-mode/',
     cors: docsURL + 'cors/',
     https: docsURL + 'serving-over-tls/',

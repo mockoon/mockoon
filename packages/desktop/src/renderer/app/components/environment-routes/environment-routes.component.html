@@ -575,48 +575,21 @@
             >Response Content-Type<br />(Order: environment headers &rarr; file
             mime type &rarr; route headers)</ng-template
           >
-
-          <div
-            *ngIf="
-              activeRouteResponseLastLog$ | async as activeRouteResponseLastLog
-            "
-            class="pl-2 ml-2 border-left py-2"
-          >
-            <button
-              class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link"
-              (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)"
-            >
-              Last log
-            </button>
-          </div>
         </div>
 
-        <button
-          *ngIf="activeRouteResponse.bodyType === 'INLINE'"
-          type="button"
-          class="btn btn-link btn-icon btn-xs text-primary pr-0"
-          (click)="openWikiLink('templating')"
+        <div
+          *ngIf="
+            activeRouteResponseLastLog$ | async as activeRouteResponseLastLog
+          "
+          class="pr-0 py-2"
         >
-          Open templating documentation
-        </button>
-
-        <button
-          *ngIf="activeRouteResponse.bodyType === 'FILE'"
-          type="button"
-          class="btn btn-link btn-icon btn-xs text-primary pr-0"
-          (click)="openWikiLink('file')"
-        >
-          Open file documentation
-        </button>
-
-        <button
-          *ngIf="activeRouteResponse.bodyType === 'DATABUCKET'"
-          type="button"
-          class="btn btn-link btn-icon btn-xs text-primary pr-0"
-          (click)="openWikiLink('data')"
-        >
-          Open data buckets documentation
-        </button>
+          <button
+            class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link"
+            (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)"
+          >
+            Last log
+          </button>
+        </div>
       </div>
     </ng-container>
   </div>

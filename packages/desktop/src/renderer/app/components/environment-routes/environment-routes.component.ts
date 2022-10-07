@@ -56,7 +56,6 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { setDefaultRouteResponseAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/shared/config';
 
 @Component({
   selector: 'app-environment-routes',
@@ -372,10 +371,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  public openWikiLink(linkName: string) {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.docs[linkName]);
   }
 
   /**

@@ -16,12 +16,10 @@ import {
   takeUntil,
   tap
 } from 'rxjs';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/shared/config';
 
 @Component({
   selector: 'app-environment-databuckets',
@@ -60,10 +58,6 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.unsubscribe();
-  }
-
-  public openWikiLink(linkName: string) {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.docs[linkName]);
   }
 
   private initForms() {
