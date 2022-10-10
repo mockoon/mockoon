@@ -17,6 +17,7 @@ export type ContextMenuItemPayload = {
     | 'showInFolder'
     | 'copyJSON'
     | 'copyFullPath'
+    | 'copyDatabucketID'
     | 'toggle';
   subjectUUID: string;
 };

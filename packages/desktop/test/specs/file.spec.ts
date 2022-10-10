@@ -1,3 +1,4 @@
+import { BodyTypes } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { resolve } from 'path';
 import environments from '../libs/environments';
@@ -13,6 +14,7 @@ describe('File serving', () => {
   describe('File not found', () => {
     it('should return an error and keep the defined status', async () => {
       await routes.select(2);
+      await routes.selectBodyType(BodyTypes.FILE);
       await routes.setFile('./non-existing-file.txt');
       await environments.start();
 

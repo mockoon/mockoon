@@ -20,6 +20,13 @@ export interface MockoonServerOptions {
   };
 }
 
+export type ProcessedDatabucket = {
+  id: string;
+  name: string;
+  value: any;
+  parsed: boolean;
+};
+
 /**
  * Transaction object containing req/res information after response is closed
  */

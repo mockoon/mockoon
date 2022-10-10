@@ -118,3 +118,54 @@ export const RoutesContextMenu = (
     disabled: false
   }
 ];
+
+export const DatabucketsContextMenu = (
+  databucketUUID: string,
+  environments: Environments
+): ContextMenuItem[] => [
+  {
+    payload: {
+      subject: 'databucket',
+      action: 'duplicate',
+      subjectUUID: databucketUUID
+    },
+    label: 'Duplicate',
+    icon: 'content_copy',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'databucket',
+      action: 'duplicateToEnv',
+      subjectUUID: databucketUUID
+    },
+    label: 'Duplicate to environment',
+    icon: 'input',
+    disabled: environments.length <= 1
+  },
+  {
+    payload: {
+      subject: 'databucket',
+      action: 'copyDatabucketID',
+      subjectUUID: databucketUUID
+    },
+    label: 'Copy ID to clipboard',
+    icon: 'assignment',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'databucket',
+      action: 'delete',
+      subjectUUID: databucketUUID
+    },
+    label: 'Delete',
+    icon: 'delete',
+    confirm: {
+      icon: 'error',
+      label: 'Confirm deletion'
+    },
+    confirmColor: 'text-danger',
+    disabled: false
+  }
+];

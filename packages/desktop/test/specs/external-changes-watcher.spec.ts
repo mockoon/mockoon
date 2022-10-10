@@ -43,7 +43,7 @@ describe('Environment external reload', () => {
       },
       3000
     );
-    await utils.assertElementText(environments.logsTab, 'Logs 1');
+    await navigation.assertHeaderValue('ENV_LOGS', 'Logs 1');
   });
 
   it('should edit the environment externally and assert values changed', async () => {
@@ -60,7 +60,7 @@ describe('Environment external reload', () => {
       '0.0.0.0:5005'
     );
 
-    await utils.assertElementText(environments.logsTab, 'Logs');
+    await navigation.assertHeaderValue('ENV_LOGS', 'Logs');
   });
 
   it('should assert the settings were updated after a UUID change', async () => {
@@ -85,7 +85,7 @@ describe('Environment external reload', () => {
       },
       5005
     );
-    await utils.assertElementText(environments.logsTab, 'Logs 1');
+    await navigation.assertHeaderValue('ENV_LOGS', 'Logs 1');
     await navigation.switchView('ENV_LOGS');
     await environmentsLogs.assertCount(1);
   });
@@ -107,6 +107,7 @@ describe('Environment external reload', () => {
       uuid: randomUUID()
     });
 
+    await browser.pause(2000);
     await environments.assertActiveMenuEntryText('env 2 (change1)');
     await environments.assertMenuEntryText(1, 'env 1 (change2)');
   });
@@ -155,6 +156,7 @@ describe('Environment external reload', () => {
       'env 2 (change1)'
     );
     await modals.cancel();
+    await browser.pause(500);
 
     await environments.assertActiveMenuEntryText('env 1 (change2)');
     await environments.assertMenuEntryText(2, 'env 2 (change1)');

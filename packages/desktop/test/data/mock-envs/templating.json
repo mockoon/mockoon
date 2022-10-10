@@ -1,6 +1,6 @@
 {
   "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
-  "lastMigration": 22,
+  "lastMigration": 24,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -26,7 +26,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -51,7 +53,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -76,7 +80,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -101,7 +107,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -126,7 +134,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -151,7 +161,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -176,7 +188,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -201,7 +215,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -226,7 +242,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -251,7 +269,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -276,7 +296,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -301,7 +323,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -326,7 +350,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -351,7 +377,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -379,7 +407,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -404,7 +434,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE"
         }
       ],
       "responseMode": null
@@ -429,7 +461,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE"
         }
       ],
       "responseMode": null
@@ -454,7 +488,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE"
         }
       ],
       "responseMode": null
@@ -479,7 +515,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE"
         }
       ],
       "responseMode": null
@@ -504,7 +542,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE"
         }
       ],
       "responseMode": null
@@ -529,7 +569,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -554,7 +596,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -579,7 +623,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -604,7 +650,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -629,7 +677,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -654,7 +704,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -679,7 +731,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -704,7 +758,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -729,7 +785,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -754,7 +812,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -779,7 +839,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -804,7 +866,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -829,7 +893,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -854,7 +920,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -879,7 +947,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -904,7 +974,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -929,7 +1001,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -954,7 +1028,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -979,7 +1055,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1004,7 +1082,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1029,7 +1109,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1054,7 +1136,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1079,7 +1163,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1104,7 +1190,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1129,7 +1217,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1154,7 +1244,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1179,7 +1271,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1204,7 +1298,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1229,7 +1325,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1254,7 +1352,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1279,7 +1379,225 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "0d190ff6-f23c-4f03-9d90-08a5542abe3e",
+      "method": "get",
+      "endpoint": "nameDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "b55224cb-d1e9-4836-ae34-04af05b697f5",
+          "body": "{{data 'nameDatabucket'}}{{data 'name'}}{{data 'abc1'}}{{data '12'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
+      "method": "get",
+      "endpoint": "emptyDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
+          "body": "{{data 'emptyDatabucket'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
+      "method": "get",
+      "endpoint": "stringDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
+          "body": "{{data 'stringDatabucket'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
+      "method": "get",
+      "endpoint": "stringDatabucket2",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
+          "body": "{{data 'stringDatabucket'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
+      "method": "get",
+      "endpoint": "numberDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
+          "body": "{{data 'numberDatabucket'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
+      "method": "get",
+      "endpoint": "booleanDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
+          "body": "{{data 'booleanDatabucket'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "7a748b48-0ebb-4557-88f0-c44d50ae238c",
+      "method": "get",
+      "endpoint": "rqHelpersDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "e36c8eb6-8cdf-4c22-89ae-f3c292aeb953",
+          "body": "{{data 'rqHelperDatabucket'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "0687ac28-bdd1-43f1-8dfe-0fd523a8c276",
+      "method": "get",
+      "endpoint": "pathDatabucket",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "802ddec6-8437-45e0-9084-37d405b37cab",
+          "body": "{{data 'pathDatabucket' 'data.username'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -1301,5 +1619,49 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": [
+    {
+      "name": "nameDatabucket",
+      "id": "abc1",
+      "uuid": "6eefb1fa-a60e-4326-8bea-e197f416cfad",
+      "value": "check"
+    },
+    {
+      "name": "emptyDatabucket",
+      "id": "abc2",
+      "uuid": "e418d78c-2887-4526-916c-a554b747bb0b",
+      "value": ""
+    },
+    {
+      "name": "stringDatabucket",
+      "id": "abc3",
+      "uuid": "5b62d428-f7d4-42a6-95fe-8876bf5ef53a",
+      "value": "string"
+    },
+    {
+      "name": "numberDatabucket",
+      "id": "abc4",
+      "uuid": "3e316443-ec75-4aaa-bc34-52a5b5bbe85e",
+      "value": "1"
+    },
+    {
+      "name": "booleanDatabucket",
+      "id": "abc5",
+      "uuid": "9cfd35b4-cce0-48e4-b6eb-17de71647007",
+      "value": "true"
+    },
+    {
+      "name": "rqHelperDatabucket",
+      "id": "abc6",
+      "uuid": "8426338c-f293-4dc9-a56c-de5a0e78b5d4",
+      "value": "{{queryParam 'param1'}}"
+    },
+    {
+      "name": "pathDatabucket",
+      "id": "abc7",
+      "uuid": "4a0323cc-6472-484b-80c6-eb25c81cc01b",
+      "value": "{ \"data\": {\"username\": \"{{faker 'internet.userName'}}\", \"email\": \"{{faker 'internet.email'}}\"} }"
+    }
+  ]
 }

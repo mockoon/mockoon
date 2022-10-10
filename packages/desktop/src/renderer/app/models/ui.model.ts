@@ -2,6 +2,7 @@ import { Observable, Subject } from 'rxjs';
 
 export type DraggableContainerNames =
   | 'routes'
+  | 'databuckets'
   | 'environments'
   | 'routeResponses';
 

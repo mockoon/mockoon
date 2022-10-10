@@ -77,7 +77,11 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
       event.shiftKey &&
       event.key.toLowerCase() === 'f'
     ) {
-      this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
+      if (this.store.get('activeView') === 'ENV_ROUTES') {
+        this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
+      } else if (this.store.get('activeView') === 'ENV_DATABUCKETS') {
+        this.eventsService.focusInput.next(FocusableInputs.DATABUCKET_FILTER);
+      }
     }
   }
 
@@ -126,6 +130,8 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
           this.environmentsService
             .duplicateEnvironment(payload.subjectUUID)
             .subscribe();
+        } else if (payload.subject === 'databucket') {
+          this.environmentsService.duplicateDatabucket(payload.subjectUUID);
         }
         break;
       case 'copyJSON':
@@ -134,9 +140,14 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
       case 'copyFullPath':
         this.copyFullPathToClipboard(payload.subject, payload.subjectUUID);
         break;
+      case 'copyDatabucketID':
+        this.copyDatabucketID(payload.subject, payload.subjectUUID);
+        break;
       case 'delete':
         if (payload.subject === 'route') {
           this.environmentsService.removeRoute(payload.subjectUUID);
+        } else if (payload.subject === 'databucket') {
+          this.environmentsService.removeDatabucket(payload.subjectUUID);
         }
         break;
       case 'close':
@@ -150,9 +161,10 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
         }
         break;
       case 'duplicateToEnv':
-        if (payload.subject === 'route') {
-          this.startRouteDuplicationToAnotherEnvironment(payload.subjectUUID);
-        }
+        this.startEntityDuplicationToAnotherEnvironment(
+          payload.subjectUUID,
+          payload.subject
+        );
         break;
       case 'showInFolder':
         if (payload.subject === 'environment') {
@@ -196,6 +208,14 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
     }
   }
 
+  private copyDatabucketID(subject: DataSubject, subjectUUID: string) {
+    if (subject === 'databucket') {
+      const databucket = this.store.getDatabucketByUUID(subjectUUID);
+
+      MainAPI.send('APP_WRITE_CLIPBOARD', databucket.id);
+    }
+  }
+
   /**
    * Enable/disable a route
    */
@@ -204,11 +224,15 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
   }
 
   /**
-   * Trigger route movement flow
+   * Trigger entity movement flow
    */
-  private startRouteDuplicationToAnotherEnvironment(routeUUID: string) {
-    this.environmentsService.startRouteDuplicationToAnotherEnvironment(
-      routeUUID
+  private startEntityDuplicationToAnotherEnvironment(
+    subjectUUID: string,
+    subject: string
+  ) {
+    this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+      subjectUUID,
+      subject
     );
   }
 }

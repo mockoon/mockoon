@@ -11,7 +11,7 @@ import { SettingsProperties } from 'src/renderer/app/models/settings.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
 
-export type ColumnType = 'environments' | 'routes' | 'logs';
+export type ColumnType = 'main' | 'secondary';
 
 /**
  * Allows the resizing of the parent element using CSS.
@@ -39,10 +39,9 @@ export class ResizeColumnDirective implements AfterViewInit {
   // The x point where the mousedown event occurred
   private startX: number;
   private startWidth: number;
-  private settingProperties = {
-    environments: 'environmentMenuSize',
-    routes: 'routeMenuSize',
-    logs: 'logsMenuSize'
+  private settingProperties: { [key in ColumnType]: string } = {
+    main: 'mainMenuSize',
+    secondary: 'secondaryMenuSize'
   };
 
   constructor(

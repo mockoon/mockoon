@@ -1,0 +1,67 @@
+<div class="d-flex h-100">
+  <app-databuckets-menu class="h-100"></app-databuckets-menu>
+
+  <div class="d-flex flex-column flex-fill mh0">
+    <ng-container
+      *ngIf="
+        activeDatabucket$ | async as activeDatabucket;
+        else noActiveDatabucket
+      "
+    >
+      <ng-container [formGroup]="activeDatabucketForm">
+        <!-- Name -->
+        <div class="input-group pt-2 px-2">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Databucket name"
+            appValidPath
+            formControlName="name"
+            [appFocusOnEvent]="focusableInputs.DATABUCKET_NAME"
+          />
+        </div>
+
+        <!-- Documentation -->
+        <div class="input-group mt-2 px-2">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Add documentation for these data"
+            formControlName="documentation"
+          />
+        </div>
+
+        <!-- Editor -->
+        <div
+          class="flex-fill mt-2 mb-3 px-2"
+          *ngIf="bodyEditorConfig$ | async as bodyEditorConfig"
+        >
+          <app-editor
+            class="h-100"
+            [options]="bodyEditorConfig?.options"
+            mode="json"
+            [theme]="bodyEditorConfig?.theme"
+            [uuid]="activeDatabucket.uuid"
+            formControlName="value"
+          >
+          </app-editor>
+        </div>
+
+        <div
+          class="d-flex justify-content-between align-items-center environment-databuckets-footer px-2"
+        >
+          <div
+            class="py-2 d-inline-block"
+            ngbTooltip="Data ID (can be used within data and dataRaw templating helpers)"
+          >
+            <small class="pl-0"> Unique ID: {{ activeDatabucket.id }}</small>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #noActiveDatabucket>
+  <p class="message mt-4">No databucket defined</p>
+</ng-template>

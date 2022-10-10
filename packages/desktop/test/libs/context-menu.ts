@@ -1,12 +1,13 @@
 import { ChainablePromiseElement } from 'webdriverio';
 import utils from '../libs/utils';
 
-type Targets = 'environments' | 'routes';
+type Targets = 'environments' | 'routes' | 'databuckets';
 
 class ContextMenu {
   private targetSelectors = {
     environments: '.environments-menu',
-    routes: '.routes-menu'
+    routes: '.routes-menu',
+    databuckets: '.databuckets-menu'
   };
 
   public async openContextMenu(
@@ -32,6 +33,20 @@ class ContextMenu {
     await $(
       `.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`
     ).click();
+  }
+
+  public async assertEntryEnabled(
+    targetMenu: Targets,
+    menuItemIndex: number,
+    contextMenuItemIndex: number,
+    reverse = true
+  ) {
+    await this.openContextMenu(targetMenu, menuItemIndex);
+    await utils.assertHasClass(
+      $(`.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`),
+      'disabled',
+      reverse
+    );
   }
 
   public async assertEntryDisabled(

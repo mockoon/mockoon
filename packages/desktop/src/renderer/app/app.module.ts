@@ -28,6 +28,7 @@ import { BannerComponent } from 'src/renderer/app/components/banner/banner.compo
 import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/context-menu.component';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
+import { EnvironmentDatabucketsComponent } from 'src/renderer/app/components/environment-databuckets/environment-databuckets.component';
 import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
 import { EnvironmentLogsComponent } from 'src/renderer/app/components/environment-logs/environment-logs.component';
 import { EnvironmentProxyComponent } from 'src/renderer/app/components/environment-proxy/environment-proxy.component';
@@ -36,11 +37,12 @@ import { EnvironmentSettingsComponent } from 'src/renderer/app/components/enviro
 import { FooterComponent } from 'src/renderer/app/components/footer/footer.component';
 import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
 import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
+import { DatabucketsMenuComponent } from 'src/renderer/app/components/menus/databuckets-menu/databuckets-menu.component';
 import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
 import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-menu/routes-menu.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
-import { DuplicateRouteModalComponent } from 'src/renderer/app/components/modals/duplicate-route-modal/duplicate-route-modal.component';
+import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
@@ -85,14 +87,16 @@ import { LoaderComponent } from './components/loader/loader.component';
     EnvironmentHeadersComponent,
     EnvironmentSettingsComponent,
     EnvironmentRoutesComponent,
+    EnvironmentDatabucketsComponent,
     HeadersListComponent,
     BannerComponent,
     RouteResponseRulesComponent,
     EnvironmentsMenuComponent,
     RoutesMenuComponent,
+    DatabucketsMenuComponent,
     TitleSeparatorComponent,
     FooterComponent,
-    DuplicateRouteModalComponent,
+    DuplicateModalComponent,
     EditorComponent,
     CustomSelectComponent,
     ToggleComponent,

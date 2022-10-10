@@ -1,6 +1,6 @@
 {
   "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-  "lastMigration": 22,
+  "lastMigration": 24,
   "name": "Proxy disabled",
   "endpointPrefix": "",
   "latency": 0,
@@ -26,7 +26,9 @@
           "rules": [],
           "rulesOperator": "OR",
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "responseMode": null
@@ -50,5 +52,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }

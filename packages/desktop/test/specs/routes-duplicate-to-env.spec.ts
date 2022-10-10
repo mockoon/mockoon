@@ -6,14 +6,8 @@ import headersUtils from '../libs/headers-utils';
 import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
-import utils from '../libs/utils';
 
 describe('Duplicate a route to an environment', async () => {
-  const envNameSelector =
-    '.modal-content .modal-body .list-group .list-group-item:first-child div:first-of-type';
-  const envHostnameSelector =
-    '.modal-content .modal-body .list-group .list-group-item:first-child div:last-of-type';
-
   it('should open the environment', async () => {
     await environments.open('basic-data');
   });
@@ -39,12 +33,12 @@ describe('Duplicate a route to an environment', async () => {
 
     expect(targetRoute).toContain('POST /dolphins');
 
-    await utils.assertElementText($(envNameSelector), 'New env test');
-    await utils.assertElementText($(envHostnameSelector), '0.0.0.0:3001/');
+    await modals.assertDuplicationModalEnvName('New env test');
+    await modals.assertDuplicationModalEnvHostname('0.0.0.0:3001/');
   });
 
   it('should duplicate selected route to selected environment', async () => {
-    await $(envNameSelector).click();
+    await modals.confirmDuplicateToEnvModal(1);
     await routes.assertActiveMenuEntryText('POST\n/dolphins');
 
     await navigation.switchView('ENV_SETTINGS');

@@ -1,0 +1,95 @@
+<ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
+  <div class="databuckets-menu d-flex flex-column h-100" appMousedragDeadzone>
+    <div class="menu-header d-flex">
+      <ul class="nav d-flex w-100 pt-2 pb-2 align-items-center">
+        <li class="nav-item">
+          <a
+            class="nav-link text-primary"
+            (click)="addDatabucket()"
+            ngbTooltip="Add data"
+          >
+            <app-svg icon="add_box"></app-svg>
+          </a>
+        </li>
+        <li class="nav-item flex-grow-1">
+          <div class="input-group" *ngIf="os$ | async as os">
+            <input
+              type="text"
+              class="form-control"
+              id="databucket-filter"
+              placeholder="Filter"
+              [formControl]="databucketsFilter"
+              [ngbTooltip]="
+                'Filter databuckets (' +
+                (os === 'darwin' ? 'Cmd' : 'Ctrl') +
+                '+Shift+F)'
+              "
+              triggers="hover"
+              [appFocusOnEvent]="focusableInputs.DATABUCKET_FILTER"
+            />
+            <button
+              *ngIf="databucketsFilter.value.length > 0"
+              type="button"
+              id="databucket-filter-clear"
+              (click)="clearFilter()"
+              class="btn btn-custom"
+              ngbTooltip="Clear filter"
+            >
+              <app-svg icon="clear"></app-svg>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <ng-container *ngIf="databucketList$ | async as databucketList">
+      <ul
+        class="nav flex-column menu-list"
+        #databucketsMenu
+        cdkDropList
+        (cdkDropListDropped)="reorderDatabuckets($event)"
+      >
+        <li
+          class="nav-item"
+          *ngFor="let environmentDatabucket of databucketList"
+          cdkDrag
+          cdkDragLockAxis="y"
+          cdkDragBoundary=".databuckets-menu .nav.menu-list"
+          [cdkDragDisabled]="dragIsDisabled"
+        >
+          <a
+            class="nav-link"
+            [ngClass]="{
+              active:
+                (activeDatabucket$ | async)?.uuid === environmentDatabucket.uuid
+            }"
+            (click)="selectDatabucket(environmentDatabucket.uuid)"
+            (contextmenu)="openContextMenu(environmentDatabucket.uuid, $event)"
+          >
+            <div
+              *ngIf="settings$ | async as settings"
+              class="databucket-path"
+              [ngClass]="{
+                ellipsis: settings.truncateRouteName,
+                'text-break': !settings.truncateRouteName
+              }"
+            >
+              {{ environmentDatabucket.name }}
+            </div>
+            <div class="menu-subtitle ellipsis">
+              {{ environmentDatabucket.documentation }}
+            </div>
+          </a>
+        </li>
+      </ul>
+    </ng-container>
+
+    <div
+      appResizeColumn
+      type="secondary"
+      [minWidth]="menuSize"
+      [maxWidthFactor]="0.25"
+      class="resize-column"
+    ></div>
+  </div>
+</ng-container>

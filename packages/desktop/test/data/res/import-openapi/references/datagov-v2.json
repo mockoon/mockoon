@@ -1,6 +1,6 @@
 {
   "uuid": "b8701e60-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 22,
+  "lastMigration": 24,
   "name": "Regulations.gov",
   "endpointPrefix": "regulations/v3",
   "latency": 0,
@@ -25,7 +25,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         },
         {
           "uuid": "b8701e62-e7d4-11ea-a5ec-979674ac1a4b",
@@ -40,7 +42,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE"
         },
         {
           "uuid": "b8701e63-e7d4-11ea-a5ec-979674ac1a4b",
@@ -55,7 +59,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "enabled": true,
@@ -80,7 +86,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         },
         {
           "uuid": "b8701e66-e7d4-11ea-a5ec-979674ac1a4b",
@@ -95,7 +103,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE"
         },
         {
           "uuid": "b8701e67-e7d4-11ea-a5ec-979674ac1a4b",
@@ -110,7 +120,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "enabled": true,
@@ -135,7 +147,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         },
         {
           "uuid": "b8701e6a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -150,7 +164,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE"
         },
         {
           "uuid": "b8701e6b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -165,7 +181,9 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false
+          "default": false,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "enabled": true,
@@ -188,5 +206,6 @@
     "keyPath": "",
     "caPath": "",
     "passphrase": ""
-  }
+  },
+  "data": []
 }

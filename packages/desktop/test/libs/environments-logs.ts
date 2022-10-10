@@ -1,4 +1,5 @@
 import { EnvironmentLogsTabsNameType } from '../../src/renderer/app/models/store.model';
+import navigation from '../libs/navigation';
 import utils from '../libs/utils';
 
 /**
@@ -25,9 +26,9 @@ class EnvironmentsLogs {
       'app-header .header .nav .nav-item:nth-child(3) .nav-link'
     );
     if (expected === 0) {
-      await utils.assertElementText(tabText, 'Logs');
+      await navigation.assertHeaderValue('ENV_LOGS', 'Logs');
     } else {
-      await utils.assertElementText(tabText, `Logs ${expected}`);
+      await navigation.assertHeaderValue('ENV_LOGS', `Logs ${expected}`);
     }
   }
 

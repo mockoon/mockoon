@@ -1,0 +1,6 @@
+@import 'src/renderer/styles/bootstrap-variables.scss';
+
+.environment-databuckets-footer {
+  border-top: 1px solid lighten($gray-900, 6%);
+  line-height: 1.3;
+}

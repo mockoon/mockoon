@@ -207,7 +207,7 @@ $http-methods-light: ('get', lighten($blue, 10%)),
 .message {
   text-align: center;
   font-size: $font-size-lg;
-  color: darken($gray-600, 5%);
+  color: $gray-600;
   font-weight: $font-weight-light;
 
   &-md {

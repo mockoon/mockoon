@@ -1,11 +1,14 @@
 import * as Joi from 'joi';
 import { v4 as uuid } from 'uuid';
 import { HighestMigrationId } from '../libs/migrations';
+import { GenerateDatabucketID } from '../libs/utils';
 import {
+  DataBucket,
   Environment,
   EnvironmentTLSOptions
 } from '../models/environment.model';
 import {
+  BodyTypes,
   Header,
   Methods,
   ResponseMode,
@@ -40,7 +43,8 @@ export const EnvironmentDefault: Environment = {
   cors: true,
   headers: [],
   proxyReqHeaders: [],
-  proxyResHeaders: []
+  proxyResHeaders: [],
+  data: []
 };
 
 export const RouteDefault: Route = {
@@ -64,7 +68,9 @@ export const RouteResponseDefault: RouteResponse = {
   statusCode: 200,
   label: '',
   headers: [],
+  bodyType: BodyTypes.INLINE,
   filePath: '',
+  databucketID: '',
   sendFileAsBody: false,
   rules: [],
   rulesOperator: 'OR',
@@ -86,6 +92,18 @@ export const HeaderDefault: Header = {
   value: ''
 };
 
+export const DataBucketDefault: DataBucket = {
+  get uuid() {
+    return uuid();
+  },
+  get id() {
+    return GenerateDatabucketID();
+  },
+  name: 'New data',
+  documentation: '',
+  value: ''
+};
+
 const UUIDSchema = Joi.string()
   .uuid()
   .failover(() => uuid())
@@ -95,6 +113,20 @@ const HeaderSchema = Joi.object<Header, true>({
   key: Joi.string().allow('').required(),
   value: Joi.string().allow('').required()
 });
+
+const DataSchema = Joi.object<DataBucket, true>({
+  uuid: UUIDSchema,
+  id: Joi.string().allow('').failover(DataBucketDefault.id).required(),
+  name: Joi.string().allow('').failover(DataBucketDefault.name).required(),
+  documentation: Joi.string()
+    .allow('')
+    .failover(DataBucketDefault.documentation)
+    .required(),
+  value: Joi.string().allow('').failover(DataBucketDefault.value).required()
+})
+  .failover(EnvironmentDefault.data)
+  .default(EnvironmentDefault.data)
+  .options({ stripUnknown: true });
 
 const TLSOptionsSchema = Joi.object<EnvironmentTLSOptions, true>({
   enabled: Joi.boolean()
@@ -163,9 +195,17 @@ const RouteResponseSchema = Joi.object<RouteResponse, true>({
     .items(HeaderSchema, Joi.any().strip())
     .failover(RouteResponseDefault.headers)
     .required(),
+  bodyType: Joi.string()
+    .valid(BodyTypes.INLINE, BodyTypes.DATABUCKET, BodyTypes.FILE)
+    .failover(RouteResponseDefault.bodyType)
+    .required(),
   filePath: Joi.string()
     .allow('')
     .failover(RouteResponseDefault.filePath)
+    .required(),
+  databucketID: Joi.string()
+    .allow('')
+    .failover(RouteResponseDefault.databucketID)
     .required(),
   sendFileAsBody: Joi.boolean()
     .failover(RouteResponseDefault.sendFileAsBody)
@@ -264,6 +304,10 @@ export const EnvironmentSchema = Joi.object<Environment, true>({
   proxyResHeaders: Joi.array()
     .items(HeaderSchema, Joi.any().strip())
     .failover(EnvironmentDefault.proxyResHeaders)
+    .required(),
+  data: Joi.array()
+    .items(DataSchema, Joi.any().strip())
+    .failover(EnvironmentDefault.data)
     .required()
 })
   .failover(EnvironmentDefault)

@@ -7,7 +7,7 @@
 <app-changelog-modal #changelogModal></app-changelog-modal>
 <app-editor-modal></app-editor-modal>
 <app-confirm-modal></app-confirm-modal>
-<app-duplicate-route-modal></app-duplicate-route-modal>
+<app-duplicate-modal></app-duplicate-modal>
 
 <div class="toasts-container">
   <ngb-toast
@@ -45,6 +45,11 @@
             *ngSwitchCase="'ENV_ROUTES'"
             class="h-100"
           ></app-environment-routes>
+
+          <app-environment-databuckets
+            *ngSwitchCase="'ENV_DATABUCKETS'"
+            class="h-100"
+          ></app-environment-databuckets>
 
           <app-environment-headers
             *ngSwitchCase="'ENV_HEADERS'"

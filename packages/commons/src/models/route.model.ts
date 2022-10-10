@@ -1,5 +1,11 @@
 export type LogicalOperators = 'AND' | 'OR';
 
+export enum BodyTypes {
+  INLINE = 'INLINE',
+  FILE = 'FILE',
+  DATABUCKET = 'DATABUCKET'
+}
+
 export type RouteResponse = {
   uuid: string;
   rules: ResponseRule[];
@@ -9,7 +15,9 @@ export type RouteResponse = {
   headers: Header[];
   body?: string;
   latency: number;
+  bodyType: BodyTypes;
   filePath: string;
+  databucketID: string;
   sendFileAsBody: boolean;
   disableTemplating: boolean;
   fallbackTo404: boolean;

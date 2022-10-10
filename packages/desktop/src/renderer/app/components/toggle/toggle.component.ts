@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   forwardRef,
   Input,
@@ -39,6 +40,8 @@ export class ToggleComponent
   @Input()
   public prefix: string;
   @Input()
+  public label?: string;
+  @Input()
   public uncheckable = true;
 
   public onChange: (_: any) => void;
@@ -47,7 +50,7 @@ export class ToggleComponent
   public control: FormControl;
   private controlChanges: Subscription;
 
-  constructor() {}
+  constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.control = new FormControl();
@@ -64,6 +67,8 @@ export class ToggleComponent
 
   public writeValue(value: string | number | boolean): void {
     this.control.setValue(value, { emitEvent: false });
+
+    this.changeDetectorRef.detectChanges();
   }
 
   public registerOnChange(fn: any): void {

@@ -13,6 +13,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import 'brace';
 import { Editor, UndoManager } from 'brace';
+import 'brace/ext/language_tools';
 import 'brace/ext/searchbox';
 import 'brace/index';
 import 'brace/mode/css';
@@ -60,6 +61,7 @@ export class EditorComponent
   private _editor: Editor;
   private _durationBeforeCallback = 0;
   private _text = '';
+  private emitChanges = true;
 
   constructor(elementRef: ElementRef, private zone: NgZone) {
     const element = elementRef.nativeElement;
@@ -147,7 +149,7 @@ export class EditorComponent
   }
 
   public writeValue(value: any) {
-    this.setText(value);
+    this.setText(value, false);
   }
 
   private init() {
@@ -163,6 +165,10 @@ export class EditorComponent
   }
 
   private updateText() {
+    if (!this.emitChanges) {
+      return;
+    }
+
     const newVal = this._editor.getValue();
 
     if (newVal === this.oldText) {
@@ -217,14 +223,21 @@ export class EditorComponent
     }
   }
 
-  private setText(text: any) {
+  private setText(text: any, emit = true) {
     if (text === null || text === undefined) {
       text = '';
     }
     if (this._text !== text && this._autoUpdateContent === true) {
       this._text = text;
+
+      this.emitChanges = false;
       this._editor.setValue(text);
-      this.onChange(text);
+      this.emitChanges = true;
+
+      if (emit) {
+        this.onChange(text);
+      }
+
       this._editor.clearSelection();
     }
   }

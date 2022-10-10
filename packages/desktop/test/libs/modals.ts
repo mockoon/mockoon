@@ -1,6 +1,12 @@
 import { ChainablePromiseElement } from 'webdriverio';
+import utils from '../libs/utils';
 
 class Modals {
+  private envNameSelector =
+    '.modal-content .modal-body .list-group .list-group-item:first-child div:first-of-type';
+  private envHostnameSelector =
+    '.modal-content .modal-body .list-group .list-group-item:first-child div:last-of-type';
+
   private get confirmBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.modal-dialog .modal-footer button:first-of-type');
   }
@@ -31,6 +37,12 @@ class Modals {
     await this.cancelBtn.click();
   }
 
+  public async confirmDuplicateToEnvModal(envIndex: number) {
+    await $(
+      `.modal-content .modal-body .list-group .list-group-item:nth-child(${envIndex}) div:first-of-type`
+    ).click();
+  }
+
   public async assertTitle(expectedTitle: string): Promise<void> {
     const text = await this.title.getText();
     expect(text).toContain(expectedTitle);
@@ -38,6 +50,21 @@ class Modals {
 
   public async assertExists(): Promise<void> {
     await $('.modal').waitForExist();
+  }
+
+  public async assertDuplicationModalEnvName(
+    expectedName: string
+  ): Promise<void> {
+    await utils.assertElementText($(this.envNameSelector), expectedName);
+  }
+
+  public async assertDuplicationModalEnvHostname(
+    expectedHostname: string
+  ): Promise<void> {
+    await utils.assertElementText(
+      $(this.envHostnameSelector),
+      expectedHostname
+    );
   }
 }
 

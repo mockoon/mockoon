@@ -58,6 +58,14 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public fixedWidth: string;
   @Input()
   public dropdownId: string;
+  @Input()
+  public placeholder = '';
+  @Input()
+  public unknownValueMessage = '';
+  @Input()
+  public clearable = false;
+  @Input()
+  public defaultClearValue?: any;
 
   @ViewChild('dropdown')
   public dropdown: NgbDropdown;
@@ -196,6 +204,15 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
     this.dropdown.close();
   }
 
+  public clearValue() {
+    this.selectedItem$.next({
+      value: this.defaultClearValue,
+      label: ''
+    });
+    this.onChange(this.defaultClearValue);
+    this.focusedItemIndex$.next(-1);
+  }
+
   public itemKeydown(item: DropdownItem, event: KeyboardEvent) {
     if (event.key === 'Enter') {
       this.setValue(item);
@@ -233,7 +250,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
     let searchedItem = this.items$.value.find((item) => item.value === value);
 
     if (searchedItem === undefined) {
-      searchedItem = { value, label: `${value} - Unknown` };
+      searchedItem = { value, label: `${value}${this.unknownValueMessage}` };
     }
 
     return searchedItem;

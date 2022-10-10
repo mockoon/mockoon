@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Migrations, ResponseMode } from '../src';
+import { BodyTypes, Migrations, ResponseMode } from '../src';
 
 const applyMigration = (migrationId: number, environment: any) => {
   const migrationFunction = Migrations.find(
@@ -268,6 +268,35 @@ describe('Migrations', () => {
       expect(environment.routes[0].responses[0].rules[0]['invert']).to.equal(
         false
       );
+    });
+  });
+
+  describe('migration n. 23', () => {
+    it('should add `data` to the environment', () => {
+      const environment: any = {};
+
+      applyMigration(23, environment);
+
+      expect(environment.data).to.be.an('array');
+      expect(environment.data).to.be.empty;
+    });
+  });
+
+  describe('migration n. 24', () => {
+    it('should add `bodyType` and `databucketID` to the route responses and set it to INLINE by default or to FILE if a filepath was given', () => {
+      const environment: any = {
+        routes: [{ responses: [{ filePath: './file' }, { filePath: '' }] }]
+      };
+
+      applyMigration(24, environment);
+
+      expect(environment.routes[0].responses[0].bodyType).to.equal(
+        BodyTypes.FILE
+      );
+      expect(environment.routes[0].responses[1].bodyType).to.equal(
+        BodyTypes.INLINE
+      );
+      expect(environment.routes[0].responses[0].databucketID).to.be.equal('');
     });
   });
 });

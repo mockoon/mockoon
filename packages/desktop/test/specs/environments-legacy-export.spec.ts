@@ -47,6 +47,7 @@ describe('Open environment legacy export file', () => {
 
     await modals.assertTitle('Legacy export format detected');
     await $('.modal-footer .btn:first-of-type').click();
+    await browser.pause(100);
     await environments.assertCount(1);
     await environments.assertActiveMenuEntryText('Environment legacy export');
 

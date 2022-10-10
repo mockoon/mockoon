@@ -20,8 +20,7 @@ describe('Schema validation', () => {
         logSizeLimit: 10000,
         maxLogsPerEnvironment: 50,
         truncateRouteName: true,
-        environmentMenuSize: 100,
-        routeMenuSize: 200,
+        mainMenuSize: 100,
         fakerLocale: 'en',
         fakerSeed: null,
         lastChangelog: '9999.9.9',
@@ -42,7 +41,7 @@ describe('Schema validation', () => {
       );
 
       // add missing properties with default
-      expect(fileContent.logsMenuSize).toEqual(150);
+      expect(fileContent.secondaryMenuSize).toEqual(200);
       expect(fileContent.bannerDismissed).toHaveLength(0);
 
       // remove unknown values
@@ -202,8 +201,13 @@ describe('Schema validation', () => {
       );
 
       expect(env0Content.uuid).toEqual(initialUUID);
+
+      expect(env0Content.data[0].uuid).not.toEqual(initialUUID);
+      expect(validateUUID(env0Content.data[0].uuid)).toEqual(true);
+
       expect(env0Content.routes[0].uuid).not.toEqual(initialUUID);
       expect(validateUUID(env0Content.routes[0].uuid)).toEqual(true);
+
       expect(env0Content.routes[0].responses[0].uuid).not.toEqual(initialUUID);
       expect(validateUUID(env0Content.routes[0].responses[0].uuid)).toEqual(
         true
@@ -211,8 +215,13 @@ describe('Schema validation', () => {
 
       expect(env1Content.uuid).not.toEqual(initialUUID);
       expect(validateUUID(env1Content.uuid)).toEqual(true);
+
+      expect(env1Content.data[0].uuid).not.toEqual(initialUUID);
+      expect(validateUUID(env1Content.data[0].uuid)).toEqual(true);
+
       expect(env1Content.routes[0].uuid).not.toEqual(initialUUID);
       expect(validateUUID(env1Content.routes[0].uuid)).toEqual(true);
+
       expect(env1Content.routes[0].responses[0].uuid).not.toEqual(initialUUID);
       expect(validateUUID(env1Content.routes[0].responses[0].uuid)).toEqual(
         true
@@ -226,28 +235,30 @@ describe('Schema validation', () => {
     });
 
     it('should deduplicate UUIDs when opening another environment', async () => {
-      await fs.copyFile(
-        './test/data/res/schema-validation/uuid-dedup/env-to-load-1.json',
-        './tmp/storage/env-to-load-1.json'
-      );
-      await browser.pause(500);
-      await environments.open('env-to-load-1');
+      await environments.open('schema-uuid-dedup-3');
       await environments.assertCount(3);
       await environments.assertActiveMenuEntryText('uuid dedup load');
 
       await utils.waitForAutosave();
 
       const envContent: Environment = JSON.parse(
-        (await fs.readFile('./tmp/storage/env-to-load-1.json')).toString()
+        (await fs.readFile('./tmp/storage/schema-uuid-dedup-3.json')).toString()
       );
+
       expect(envContent.uuid).not.toEqual(initialUUID);
       expect(validateUUID(envContent.uuid)).toEqual(true);
+
+      expect(envContent.data[0].uuid).not.toEqual(initialUUID);
+      expect(validateUUID(envContent.data[0].uuid)).toEqual(true);
+
       expect(envContent.routes[0].uuid).not.toEqual(initialUUID);
       expect(validateUUID(envContent.routes[0].uuid)).toEqual(true);
+
       expect(envContent.routes[0].responses[0].uuid).not.toEqual(initialUUID);
       expect(validateUUID(envContent.routes[0].responses[0].uuid)).toEqual(
         true
       );
+
       await environments.close(1);
       await environments.close(1);
       await environments.close(1);

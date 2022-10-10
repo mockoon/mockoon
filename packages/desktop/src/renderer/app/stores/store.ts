@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  DataBucket,
   Environment,
   INDENT_SIZE,
   Route,
@@ -24,6 +25,7 @@ export class Store {
     activeEnvironmentLogsUUID: {},
     activeEnvironmentUUID: null,
     activeRouteUUID: null,
+    activeDatabucketUUID: null,
     activeRouteResponseUUID: null,
     environments: [],
     environmentsStatus: {},
@@ -34,7 +36,15 @@ export class Store {
         showPrintMargin: false,
         tooltipFollowsMouse: false,
         useWorker: false,
-        tabSize: INDENT_SIZE
+        tabSize: INDENT_SIZE,
+        enableBasicAutocompletion: [
+          {
+            getCompletions: (editor, session, pos, prefix, callback) => {
+              // note, won't fire if caret is at a word that does not have these letters
+              callback(null, []);
+            }
+          }
+        ]
       },
       mode: 'json',
       theme: 'editor-theme'
@@ -47,8 +57,9 @@ export class Store {
       saving: false
     },
     settings: null,
-    duplicateRouteToAnotherEnvironment: { moving: false },
-    routesFilter: ''
+    duplicateEntityToAnotherEnvironment: { moving: false },
+    routesFilter: '',
+    databucketsFilter: ''
   });
 
   constructor() {}
@@ -203,6 +214,21 @@ export class Store {
   }
 
   /**
+   * Select active databucket observable
+   */
+  public selectActiveDatabucket(): Observable<DataBucket> {
+    return this.selectActiveEnvironment().pipe(
+      map((environment) =>
+        environment
+          ? environment.data.find(
+              (data) => data.uuid === this.store$.value.activeDatabucketUUID
+            )
+          : null
+      )
+    );
+  }
+
+  /**
    * Get environment by uuid
    */
   public getEnvironmentByUUID(UUID: string): Environment {
@@ -263,6 +289,24 @@ export class Store {
   }
 
   /**
+   * Get active databucket value
+   */
+  public getActiveDatabucket(): DataBucket {
+    const activeEnvironment = this.store$.value.environments.find(
+      (environment) =>
+        environment.uuid === this.store$.value.activeEnvironmentUUID
+    );
+
+    if (!activeEnvironment) {
+      return null;
+    }
+
+    return activeEnvironment.data.find(
+      (databucket) => databucket.uuid === this.store$.value.activeDatabucketUUID
+    );
+  }
+
+  /**
    * Get route with the supplied UUID from any environment
    */
   public getRouteByUUID(routeUUID: string): Route | undefined {
@@ -276,6 +320,22 @@ export class Store {
     });
 
     return foundRoute;
+  }
+
+  /**
+   * Get databucket with the supplied UUID from any environment
+   */
+  public getDatabucketByUUID(databucketUUID: string): DataBucket | undefined {
+    let foundDataBucket: DataBucket;
+    this.store$.value.environments.some((environment: Environment) => {
+      foundDataBucket = environment.data.find(
+        (dataBucket: DataBucket) => dataBucket.uuid === databucketUUID
+      );
+
+      return !!foundDataBucket;
+    });
+
+    return foundDataBucket;
   }
 
   /**

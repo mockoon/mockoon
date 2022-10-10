@@ -1,4 +1,5 @@
 import { Environments } from '@mockoon/commons';
+import { DataSubject } from 'src/renderer/app/models/data.model';
 import {
   ActiveEnvironmentsLogUUIDs,
   EnvironmentLogs
@@ -8,6 +9,7 @@ import { Settings } from 'src/shared/models/settings.model';
 
 export type ViewsNameType =
   | 'ENV_ROUTES'
+  | 'ENV_DATABUCKETS'
   | 'ENV_HEADERS'
   | 'ENV_LOGS'
   | 'ENV_PROXY'
@@ -38,9 +40,10 @@ export type UIState = {
 
 export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
 
-export type DuplicateRouteToAnotherEnvironment = {
+export type DuplicateEntityToAnotherEnvironment = {
   moving: boolean;
-  routeUUID?: string;
+  subject?: Omit<DataSubject, 'environment'>;
+  subjectUUID?: string;
   targetEnvironmentUUID?: string;
 };
 
@@ -51,6 +54,7 @@ export type StoreType = {
   activeEnvironmentUUID: string;
   activeRouteUUID: string;
   activeRouteResponseUUID: string;
+  activeDatabucketUUID: string;
   environments: Environments;
   environmentsStatus: EnvironmentsStatuses;
   bodyEditorConfig: any;
@@ -62,6 +66,7 @@ export type StoreType = {
   toasts: Toast[];
   uiState: UIState;
   settings: Settings;
-  duplicateRouteToAnotherEnvironment: DuplicateRouteToAnotherEnvironment;
+  duplicateEntityToAnotherEnvironment: DuplicateEntityToAnotherEnvironment;
   routesFilter: string;
+  databucketsFilter: string;
 };

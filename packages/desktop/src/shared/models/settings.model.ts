@@ -14,9 +14,8 @@ export type Settings = {
   logSizeLimit: number;
   maxLogsPerEnvironment: number;
   truncateRouteName: boolean;
-  environmentMenuSize: number;
-  routeMenuSize: number;
-  logsMenuSize: number;
+  mainMenuSize: number;
+  secondaryMenuSize: number;
   fakerLocale: FakerAvailableLocales;
   fakerSeed: number;
   lastChangelog: string;

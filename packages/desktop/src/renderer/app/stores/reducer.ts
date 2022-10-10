@@ -1,4 +1,9 @@
-import { Environment, Route, RouteResponse } from '@mockoon/commons';
+import {
+  DataBucket,
+  Environment,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import {
   ArrayContainsObjectKey,
   MoveArrayItem
@@ -11,7 +16,8 @@ import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import {
   getBodyEditorMode,
-  updateDuplicatedRoutes
+  updateDuplicatedRoutes,
+  updateEditorAutocomplete
 } from 'src/renderer/app/stores/reducer-utils';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
@@ -75,8 +81,12 @@ export const environmentReducer = (
               : null,
           activeTab: 'RESPONSE',
           activeView: 'ENV_ROUTES',
+          activeDatabucketUUID: activeEnvironment.data.length
+            ? activeEnvironment.data[0].uuid
+            : null,
           environments: state.environments,
-          routesFilter: ''
+          routesFilter: '',
+          databucketsFilter: ''
         };
         break;
       }
@@ -120,8 +130,12 @@ export const environmentReducer = (
             : null,
         activeTab: 'RESPONSE',
         activeView: 'ENV_ROUTES',
+        activeDatabucketUUID: newEnvironment.data.length
+          ? newEnvironment.data[0].uuid
+          : null,
         environments: state.environments,
-        routesFilter: ''
+        routesFilter: '',
+        databucketsFilter: ''
       };
       break;
     }
@@ -185,6 +199,32 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.MOVE_DATABUCKETS: {
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === state.activeEnvironmentUUID) {
+          return {
+            ...environment,
+            data: MoveArrayItem<DataBucket>(
+              environment.data,
+              action.indexes.sourceIndex,
+              action.indexes.targetIndex
+            )
+          };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments,
+        environmentsStatus: {
+          ...state.environmentsStatus
+        }
+      };
+      break;
+    }
+
     case ActionTypes.MOVE_ROUTE_RESPONSES: {
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === state.activeEnvironmentUUID) {
@@ -237,6 +277,19 @@ export const environmentReducer = (
           activeTab: 'RESPONSE',
           activeView: 'ENV_ROUTES',
           environments: state.environments
+        };
+        break;
+      }
+
+      newState = state;
+      break;
+    }
+
+    case ActionTypes.SET_ACTIVE_DATABUCKET: {
+      if (action.databucketUUID !== state.activeDatabucketUUID) {
+        newState = {
+          ...state,
+          activeDatabucketUUID: action.databucketUUID
         };
         break;
       }
@@ -328,6 +381,9 @@ export const environmentReducer = (
             : null,
         activeTab: 'RESPONSE',
         activeView: 'ENV_ROUTES',
+        activeDatabucketUUID: activeEnvironment.data.length
+          ? activeEnvironment.data[0].uuid
+          : null,
         environments,
         environmentsStatus: {
           ...state.environmentsStatus,
@@ -345,6 +401,7 @@ export const environmentReducer = (
           [newEnvironment.uuid]: null
         },
         routesFilter: '',
+        databucketsFilter: '',
         settings: newSettings
       };
       break;
@@ -370,6 +427,7 @@ export const environmentReducer = (
         environmentsLogs: newEnvironmentsLogs,
         activeEnvironmentLogsUUID: newActiveEnvironmentLogsUUID,
         routesFilter: '',
+        databucketsFilter: '',
         settings: {
           ...state.settings,
           environments: state.settings.environments.filter(
@@ -390,14 +448,18 @@ export const environmentReducer = (
               newEnvironments[0].routes.length &&
               newEnvironments[0].routes[0].responses.length
                 ? newEnvironments[0].routes[0].responses[0].uuid
-                : null
+                : null,
+            activeDatabucketUUID: newEnvironments[0].data.length
+              ? newEnvironments[0].data[0].uuid
+              : null
           };
         } else {
           newState = {
             ...newState,
             activeEnvironmentUUID: null,
             activeRouteUUID: null,
-            activeRouteResponseUUID: null
+            activeRouteResponseUUID: null,
+            activeDatabucketUUID: null
           };
         }
       }
@@ -455,6 +517,7 @@ export const environmentReducer = (
       let environmentsStatus = state.environmentsStatus;
       let activeRouteUUID = state.activeRouteUUID;
       let activeRouteResponseUUID = state.activeRouteResponseUUID;
+      let activeDatabucketUUID = state.activeDatabucketUUID;
       let environmentsLogs = state.environmentsLogs;
       let activeEnvironmentLogsUUID = state.activeEnvironmentLogsUUID;
       let duplicatedRoutes = state.duplicatedRoutes;
@@ -470,7 +533,7 @@ export const environmentReducer = (
         return environment;
       });
 
-      // always reset the active route and active route response if environment was active, as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
+      // always reset the active route, active route response and active databucket if environment was active, as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
       if (state.activeEnvironmentUUID === action.previousUUID) {
         activeRouteUUID = action.newEnvironment.routes.length
           ? action.newEnvironment.routes[0].uuid
@@ -480,6 +543,9 @@ export const environmentReducer = (
           action.newEnvironment.routes[0].responses.length
             ? action.newEnvironment.routes[0].responses[0].uuid
             : null;
+        activeDatabucketUUID = action.newEnvironment.data.length
+          ? action.newEnvironment.data[0].uuid
+          : null;
 
         // switch to the reload view as we don't have all views that can react to changes
         activeView = 'ENV_RELOAD';
@@ -545,6 +611,7 @@ export const environmentReducer = (
         activeEnvironmentUUID,
         activeRouteUUID,
         activeRouteResponseUUID,
+        activeDatabucketUUID,
         environmentsLogs,
         activeEnvironmentLogsUUID,
         duplicatedRoutes,
@@ -575,6 +642,14 @@ export const environmentReducer = (
       newState = {
         ...state,
         routesFilter: action.routesFilter
+      };
+      break;
+    }
+
+    case ActionTypes.UPDATE_ENVIRONMENT_DATABUCKET_FILTER: {
+      newState = {
+        ...state,
+        databucketsFilter: action.databucketsFilter
       };
       break;
     }
@@ -780,6 +855,187 @@ export const environmentReducer = (
                 }
 
                 return route;
+              })
+            };
+          }
+
+          return environment;
+        }),
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          [state.activeEnvironmentUUID]: {
+            ...activeEnvironmentStatus,
+            needRestart
+          }
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.ADD_DATABUCKET: {
+      // only add a databucket if there is at least one environment
+      if (state.environments.length > 0) {
+        const activeEnvironmentStatus =
+          state.environmentsStatus[state.activeEnvironmentUUID];
+
+        let needRestart: boolean;
+        if (activeEnvironmentStatus.running) {
+          needRestart = true;
+        }
+
+        const newDatabucket = action.databucket;
+        const afterUUID = action.afterUUID;
+
+        newState = {
+          ...state,
+          activeDatabucketUUID: newDatabucket.uuid,
+          activeView: 'ENV_DATABUCKETS',
+          environments: state.environments.map((environment) => {
+            if (environment.uuid === state.activeEnvironmentUUID) {
+              const data = [...environment.data];
+
+              let afterIndex = data.length;
+              if (afterUUID) {
+                afterIndex = environment.data.findIndex(
+                  (databucket) => databucket.uuid === afterUUID
+                );
+                if (afterIndex === -1) {
+                  afterIndex = data.length;
+                }
+              }
+              data.splice(afterIndex + 1, 0, newDatabucket);
+
+              return {
+                ...environment,
+                data
+              };
+            }
+
+            return environment;
+          }),
+          environmentsStatus: {
+            ...state.environmentsStatus,
+            [state.activeEnvironmentUUID]: {
+              ...activeEnvironmentStatus,
+              needRestart
+            }
+          },
+          databucketsFilter: ''
+        };
+        break;
+      }
+
+      newState = state;
+      break;
+    }
+
+    case ActionTypes.REMOVE_DATABUCKET: {
+      const activeEnvironment = state.environments.find(
+        (environment) => environment.uuid === state.activeEnvironmentUUID
+      );
+      const activeEnvironmentStatus =
+        state.environmentsStatus[state.activeEnvironmentUUID];
+      const deletedBucket = activeEnvironment.data.find(
+        (databucket) => databucket.uuid === action.databucketUUID
+      );
+      let needRestart: boolean;
+      if (activeEnvironmentStatus.running) {
+        needRestart = true;
+      }
+
+      const newDatabuckets = activeEnvironment.data.filter(
+        (databucket) => databucket.uuid !== action.databucketUUID
+      );
+
+      const newRoutes = activeEnvironment.routes.map((route) => {
+        let hasChanged = false;
+        const newReponses = route.responses.map((response) => {
+          if (response.databucketID === deletedBucket.id) {
+            hasChanged = true;
+
+            return { ...response, databucketID: '' };
+          }
+
+          return response;
+        });
+        if (hasChanged) {
+          return { ...route, responses: newReponses };
+        }
+
+        return route;
+      });
+
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === state.activeEnvironmentUUID) {
+          return {
+            ...environment,
+            data: newDatabuckets,
+            routes: newRoutes
+          };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments,
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          [state.activeEnvironmentUUID]: {
+            ...activeEnvironmentStatus,
+            needRestart
+          }
+        }
+      };
+
+      if (state.activeDatabucketUUID === action.databucketUUID) {
+        if (newDatabuckets.length) {
+          newState.activeDatabucketUUID = newDatabuckets[0].uuid;
+        } else {
+          newState.activeDatabucketUUID = null;
+        }
+      }
+      break;
+    }
+
+    case ActionTypes.UPDATE_DATABUCKET: {
+      const propertiesNeedingRestart: (keyof DataBucket)[] = ['name', 'value'];
+      const activeEnvironmentStatus =
+        state.environmentsStatus[state.activeEnvironmentUUID];
+      let needRestart: boolean;
+      const specifiedUUID = action.properties.uuid;
+
+      if (activeEnvironmentStatus.needRestart) {
+        needRestart = true;
+      } else {
+        needRestart =
+          ArrayContainsObjectKey(action.properties, propertiesNeedingRestart) &&
+          activeEnvironmentStatus.running;
+      }
+
+      newState = {
+        ...state,
+        environments: state.environments.map((environment) => {
+          if (environment.uuid === state.activeEnvironmentUUID) {
+            return {
+              ...environment,
+              data: environment.data.map((data) => {
+                if (specifiedUUID) {
+                  if (data.uuid === specifiedUUID) {
+                    return {
+                      ...data,
+                      ...action.properties
+                    };
+                  }
+                } else if (data.uuid === state.activeDatabucketUUID) {
+                  return {
+                    ...data,
+                    ...action.properties
+                  };
+                }
+
+                return data;
               })
             };
           }
@@ -1026,27 +1282,6 @@ export const environmentReducer = (
       break;
     }
 
-    case ActionTypes.START_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
-      newState = {
-        ...state,
-        duplicateRouteToAnotherEnvironment: {
-          moving: true,
-          routeUUID: action.routeUUID
-        }
-      };
-      break;
-    }
-
-    case ActionTypes.FINALIZE_ROUTE_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
-      newState = {
-        ...state,
-        duplicateRouteToAnotherEnvironment: {
-          moving: false
-        }
-      };
-      break;
-    }
-
     case ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT: {
       const targetEnvironmentStatus =
         state.environmentsStatus[action.targetEnvironmentUUID];
@@ -1061,7 +1296,6 @@ export const environmentReducer = (
 
         return environment;
       });
-
       newState = {
         ...state,
         environments: newEnvironments,
@@ -1082,6 +1316,62 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
+      newState = {
+        ...state,
+        duplicateEntityToAnotherEnvironment: {
+          moving: true,
+          subject: action.subject,
+          subjectUUID: action.subjectUUID
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.FINALIZE_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
+      newState = {
+        ...state,
+        duplicateEntityToAnotherEnvironment: {
+          moving: false
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT: {
+      const targetEnvironmentStatus =
+        state.environmentsStatus[action.targetEnvironmentUUID];
+
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.targetEnvironmentUUID) {
+          return {
+            ...environment,
+            data: [...environment.data, action.databucket]
+          };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments,
+        activeDatabucketUUID: action.databucket.uuid,
+        activeEnvironmentUUID: action.targetEnvironmentUUID,
+        activeView: 'ENV_DATABUCKETS',
+
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          [action.targetEnvironmentUUID]: {
+            ...targetEnvironmentStatus,
+            needRestart: targetEnvironmentStatus.running
+          }
+        },
+        databucketsFilter: ''
+      };
+      break;
+    }
+
     default:
       newState = state;
       break;
@@ -1091,7 +1381,17 @@ export const environmentReducer = (
     ...newState,
     bodyEditorConfig: {
       ...newState.bodyEditorConfig,
-      mode: getBodyEditorMode(newState)
+      mode: getBodyEditorMode(newState),
+      options: {
+        ...newState.bodyEditorConfig.options,
+        enableBasicAutocompletion:
+          state.activeEnvironmentUUID !== newState.activeEnvironmentUUID ||
+          action.type === ActionTypes.ADD_DATABUCKET ||
+          action.type === ActionTypes.REMOVE_DATABUCKET ||
+          action.type === ActionTypes.UPDATE_DATABUCKET
+            ? updateEditorAutocomplete(newState)
+            : newState.bodyEditorConfig.options.enableBasicAutocompletion
+      }
     },
     duplicatedRoutes:
       action.type === ActionTypes.ADD_ENVIRONMENT ||

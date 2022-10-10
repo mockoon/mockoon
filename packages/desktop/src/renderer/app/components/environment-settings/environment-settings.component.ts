@@ -64,7 +64,6 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
    * Open file browsing dialog
    */
   public browseFiles(target: string) {
-    /* WIP  */
     this.dialogsService
       .showOpenDialog('Choose a file', null, false)
       .pipe(

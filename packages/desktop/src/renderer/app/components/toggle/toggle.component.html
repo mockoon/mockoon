@@ -1,10 +1,17 @@
-<div class="btn-group btn-group-toggle h-100" data-toggle="buttons">
+<div
+  class="btn-group btn-group-toggle btn-group-sm h-100"
+  data-toggle="buttons"
+>
+  <button *ngIf="label" class="btn btn-custom px-3" disabled>
+    {{ label }}
+  </button>
+
   <ng-container *ngFor="let item of items">
     <!-- Single toggle mode (checkbox, boolean) -->
     <ng-container *ngIf="items.length === 1">
       <label
         id="{{ prefix }}-{{ item.label | uppercase }}"
-        class="btn btn-custom btn-xs"
+        class="btn btn-custom"
         [ngClass]="{
           'btn-primary': control.value === true,
           active: control.value === true
@@ -32,7 +39,7 @@
     <ng-container *ngIf="items.length > 1">
       <label
         id="{{ prefix }}-{{ item.value }}"
-        class="btn btn-custom btn-xs px-2 d-flex align-items-center"
+        class="btn btn-custom px-2 d-flex align-items-center"
         [ngClass]="{
           'btn-primary': item.value === control.value,
           active: item.value === control.value

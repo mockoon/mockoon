@@ -53,7 +53,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public dragIsDisabled = false;
   public focusableInputs = FocusableInputs;
   public os$: Observable<string>;
-  public menuSize = Config.defaultRouteMenuSize;
+  public menuSize = Config.defaultSecondaryMenuSize;
   private routesFilterSubscription: Subscription;
 
   constructor(
