@@ -33,9 +33,11 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Jakub Ślusarski
 - Jeremy
 - John
+- [John Michael Luy](https://github.com/jmluy)
 - Jonatan Gonzalez
 - Kelly Farris
 - [mallowigi](https://github.com/mallowigi)
+- [Matus Benko](https://github.com/PrimaMateria)
 - Max Sommer
 - Mike
 - [mingyuchoo](https://github.com/mingyuchoo)
@@ -53,6 +55,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Sander
 - Sebastián Díaz
 - Serj
+- [Shinji Nakamatsu](https://github.com/snaka)
 - Silicon Jungles
 - Steve Seidenthal
 - Steven Pollock
