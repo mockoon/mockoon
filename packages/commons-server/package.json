@@ -35,7 +35,6 @@
     "@faker-js/faker": "6.3.1",
     "@mockoon/commons": "2.11.0",
     "append-field": "1.0.0",
-    "bson-objectid": "2.0.3",
     "busboy": "1.6.0",
     "cookie-parser": "1.4.6",
     "date-fns": "2.28.0",
