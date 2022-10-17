@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-import ObjectId from 'bson-objectid';
 import { format as dateFormat } from 'date-fns';
 import { HelperOptions, SafeString } from 'handlebars';
 import { EOL } from 'os';
@@ -173,15 +172,9 @@ export const Helpers = {
   newline: function () {
     return '\n';
   },
-  // returns a compatible ObjectId
-  // * if value is undefined or null returns a random ObjectId
-  // * if value is defined is used a seed, can be a string, number or Buffer
-  objectId: function (defaultValue: any) {
-    if (typeof defaultValue === 'object') {
-      defaultValue = undefined;
-    }
-
-    return new ObjectId(defaultValue).toHexString();
+  // returns a Mongodb ObjectId
+  objectId: function () {
+    return faker.database.mongodbObjectId();
   },
   // concat multiple string and/or variables (like @index)
   concat: function (...args: any[]) {

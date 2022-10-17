@@ -1119,40 +1119,13 @@
     {
       "uuid": "921c9906-ea2b-42fa-abe2-55f21200ad2e",
       "method": "get",
-      "endpoint": "objectid_1",
+      "endpoint": "objectid",
       "documentation": "",
       "enabled": true,
       "responses": [
         {
           "uuid": "67d9190b-7312-4ad4-b8d4-c1cc7d66807c",
           "body": "{{objectId}}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "disableTemplating": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "fallbackTo404": false,
-          "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE"
-        }
-      ],
-      "responseMode": null
-    },
-    {
-      "uuid": "13839664-6752-482d-8ce2-fc7ae301dc11",
-      "method": "get",
-      "endpoint": "objectid_2",
-      "documentation": "",
-      "enabled": true,
-      "responses": [
-        {
-          "uuid": "2451572c-d838-4f55-94c8-c615942efea8",
-          "body": "{{objectId '54495ad94c934721ede76d90'}}",
           "latency": 0,
           "statusCode": 200,
           "label": "",

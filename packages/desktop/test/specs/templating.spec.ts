@@ -754,20 +754,11 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
       },
       {
         description: 'Helper: random objectId',
-        path: '/objectid_1',
+        path: '/objectid',
         method: 'GET',
         testedResponse: {
           status: 200,
           body: /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i
-        }
-      },
-      {
-        description: 'Helper: objectId based on time',
-        path: '/objectid_2',
-        method: 'GET',
-        testedResponse: {
-          status: 200,
-          body: '54495ad94c934721ede76d90'
         }
       },
       {
