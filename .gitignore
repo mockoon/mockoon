@@ -53,3 +53,6 @@ wip.md
 
 # env files
 .env*
+
+# Python files
+.python-version

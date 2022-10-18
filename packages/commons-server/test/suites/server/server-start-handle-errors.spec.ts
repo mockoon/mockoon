@@ -32,7 +32,7 @@ describe('Server should handle bad hostnames', () => {
   });
 
   it('Unavailable IP Address', (done) => {
-    environment.hostname = '192.168.1.255';
+    environment.hostname = '192.168.0.255';
 
     const server = new MockoonServer(environment);
     server.on('error', (errorCode) => {

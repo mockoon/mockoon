@@ -153,6 +153,72 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
+   * Select a response for a particular request.  Both regular requests and admin requests (x-mockoon-... header) are
+   * handled.  For a regular request, an enabledRouteResponse is returned.  For admin requests, the response may be
+   * success or failure.  All cases are handled by the following return value structure:
+   *
+   *     {
+   *         enabledRouteResponse: enabledRouteResponse | undefined,
+   *         success: {
+   *             message: "success message for admin request",/sele
+   *         } | undefined,
+   *         error: {
+   *             message: "error message for admin request",
+   *             statusCode: 4xx,
+   *         } | undefined,
+   *     }
+   *
+   * @param route
+   * @param request
+   * @param requestNumbers cache of request numbers per endpoint and mock resource that is updated by this function
+   *
+   * @returns
+   */
+  public selectResponse(
+    route: Route,
+    request: Request,
+    requestNumbers: object
+  ) {
+    let enabledRouteResponse;
+    let success;
+    let error;
+
+    if (
+      request.headers &&
+      'x-mockoon-request-number-reset' in request.headers
+    ) {
+      const resetTargetKey = String(
+        request.headers['x-mockoon-request-number-reset']
+      );
+
+      if (requestNumbers.hasOwnProperty(resetTargetKey)) {
+        const oldValue = requestNumbers[resetTargetKey];
+        delete requestNumbers[resetTargetKey];
+        success = {
+          message: `Request number counter for '${resetTargetKey}' reset to 1.  It was ${oldValue}.`
+        };
+      } else {
+        error = {
+          message:
+            CommonsTexts.EN.MESSAGES.RESET_TARGET_NOT_FOUND + resetTargetKey,
+          statusCode: 404
+        };
+      }
+    } else {
+      enabledRouteResponse = new ResponseRulesInterpreter(
+        route.responses,
+        request,
+        route.responseMode
+      ).chooseResponse(requestNumbers);
+
+      requestNumbers['endpoint'] += 1;
+    }
+    console.log();
+
+    return { enabledRouteResponse, success, error };
+  }
+
+  /**
    * ### Middleware ###
    * Emit the SERVER_ENTERING_REQUEST event
    *
@@ -366,14 +432,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param server
    * @param route
    * @param routePath
-   * @param requestNumber
    */
   private createRESTRoute(
     server: Application,
     route: Route,
     routePath: string
   ) {
-    let requestNumber = 1;
+    const requestNumbers = {
+      // cache managed by selectResponse
+      endpoint: 1 // special entry for endpoint scope
+    }; // otherwise keyed by mock resource identifier
 
     server[route.method](routePath, (request: Request, response: Response) => {
       this.generateRequestDatabuckets(route, this.environment, request);
@@ -392,13 +460,21 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         return;
       }
 
-      const enabledRouteResponse = new ResponseRulesInterpreter(
-        currentRoute.responses,
+      const { enabledRouteResponse, success, error } = this.selectResponse(
+        currentRoute,
         request,
-        currentRoute.responseMode
-      ).chooseResponse(requestNumber);
+        requestNumbers
+      );
 
-      requestNumber += 1;
+      if (success) {
+        this.sendSuccess(response, success.message);
+
+        return;
+      } else if (error) {
+        this.sendError(response, error.message, error.statusCode);
+
+        return;
+      }
 
       // save route and response UUIDs for logs (only in desktop app)
       if (route.uuid && enabledRouteResponse.uuid) {
@@ -851,6 +927,19 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     response.send(errorMessage);
+  }
+
+  /**
+   * Send a message with text/plain content type, the provided message, and 200 status code.
+   *
+   * @param response
+   * @param message
+   */
+  private sendSuccess(response: Response, message: string) {
+    response.set('Content-Type', 'text/plain');
+    response.body = message;
+    response.status(200);
+    response.send(message);
   }
 
   /**

@@ -1,0 +1,518 @@
+{
+  "uuid": "400d4c8c-61f3-4184-b1d9-f8e83cdc539f",
+  "lastMigration": 24,
+  "name": "Mock Models API",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "0.0.0.0",
+  "routes": [
+    {
+      "uuid": "8c3f77e4-d799-4acd-8786-a48f51ebd0dd",
+      "documentation": "Create a prediction model",
+      "method": "post",
+      "endpoint": "model",
+      "responses": [
+        {
+          "uuid": "fdb26d76-a891-4811-aa09-c41cf57833b8",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"New\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Create it",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "f7e83b5e-5c1b-4705-8b75-32a6fa472a55",
+      "documentation": "Use a prediction model",
+      "method": "put",
+      "endpoint": "model/:id/use",
+      "responses": [
+        {
+          "uuid": "15fedc6f-6bc1-4499-bf32-5ba01a82bbc6",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Use it",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "0b9fae4a-0646-4ea8-a9cb-e81ca8e2c6ea",
+      "documentation": "Get the status of a prediction model",
+      "method": "get",
+      "endpoint": "model/:id",
+      "responses": [
+        {
+          "uuid": "f18c039a-1841-475c-9129-3da07c9ac47e",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  {{#if (includes (urlParam 'id') '-N')}}\n    \"status\": \"New\"\n  {{else if (includes (urlParam 'id') '-R')}}\n    \"status\": \"Ready\"\n  {{else if (includes (urlParam 'id') '-U')}}\n    \"status\": \"Used\"\n  {{else}}\n    \"status\": \"Error!\"\n  {{/if}}\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-[NRU]- New, Ready, or Used",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": ".",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-[NRU]-",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "a3f08fc5-215b-4e83-8f41-c53f4c0cf071",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"New\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-(NRU?|NRRRU)- New",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": "1",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-(NRU?|NRRRU)-",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "c8858095-ae80-4af6-aea3-c6503232b084",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Ready\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-NR(RRU)?- Ready",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": "2",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-NR(RRU)?-",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "173a2586-145a-4fd5-93b6-d2d37d183d1b",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Ready\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-RRU- Ready",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": "^[12]$",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-RRU-",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "af66bc18-50a2-4301-b918-c082dc9de964",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Used\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-[NR]RU- Used",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": "^([3456789]|\\d{2,})$",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-[NR]RU-",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "0be91ad0-3c08-46ff-92a1-5ec97cc22dfc",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Used\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-NRRRU- Used",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": "^([56789]|\\d{2,})$",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-NRRRU-",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "3d8671ef-f106-4303-bb50-57264b1e91b1",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Ready\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-NR((RR)?U)?- Ready",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": ".",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-NR((RR)?U)?-",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "98d1f0c1-5040-4c4a-bc61-60cdf02aea8d",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Invalid Profile\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Invalid Profile",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "679a068d-77f6-4f3a-a5b9-5a61c49b99a8",
+      "documentation": "Same as /model/:id, but using simple rules, unable to identify an invalid profile",
+      "method": "get",
+      "endpoint": "model-simple/:id",
+      "responses": [
+        {
+          "uuid": "ed9d61e5-5a3e-4d49-956b-76b5a641070f",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  {{#if (includes (urlParam 'id') '-N')}}\n    \"status\": \"New\"\n  {{else if (includes (urlParam 'id') '-U')}}\n    \"status\": \"Used\"\n  {{else}}\n    \"status\": \"Error!\"\n  {{/if}}\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-[NU]- --> New or Used",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": ".",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-[NU]-",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "9ebbfd4a-f10e-4c0a-a444-4053c921182d",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"New\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-N --> New",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": "1",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-N",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        },
+        {
+          "uuid": "cfe840bc-5315-40c5-89fb-d1631c143bee",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Used\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-[NR]RU --> Used",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": "^([3456789]|\\d{2,})$",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-[NR]RU",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "0b0a68a3-5518-4f3c-9442-8be8b957e665",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Used\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "-NRRRU --> Used",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": "^([56789]|\\d{2,})$",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": "-NRRRU",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "c44061de-17cf-4210-958f-903f29b0ff5f",
+          "body": "{\n  \"id\": \"{{ urlParam 'id' }}\",\n  \"status\": \"Ready\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": ". --> Ready",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "request_number",
+              "modifier": "",
+              "value": ".",
+              "invert": false,
+              "operator": "regex"
+            },
+            {
+              "target": "params",
+              "modifier": "id",
+              "value": ".",
+              "invert": false,
+              "operator": "regex"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": []
+}

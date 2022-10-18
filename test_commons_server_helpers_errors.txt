@@ -1,0 +1,403 @@
+
+> @mockoon/mockoon@1.0.0 test:commons-server /Users/perrin/save/data/projects/mockoon-w-mock-resources
+> lerna run --scope @mockoon/commons-server test
+
+lerna notice cli v5.1.8
+lerna info versioning independent
+lerna notice filter including "@mockoon/commons-server"
+lerna info filter [ '@mockoon/commons-server' ]
+lerna info Executing command in 1 package: "npm run test"
+lerna ERR! npm run test exited 4 in '@mockoon/commons-server'
+lerna ERR! npm run test stdout:
+
+> @mockoon/commons-server@3.1.0 test /Users/perrin/save/data/projects/mockoon-w-mock-resources/packages/commons-server
+> ts-mocha -p ./tsconfig-build-cjs.json --timeout 10000 --forbid-only "./test/suites/**/*.spec.ts"
+
+
+
+  Data helpers
+    Helper: Data
+      ✔ should return nothing when given no arguments
+      ✔ should return nothing if given a wrong databucket name
+      ✔ should return number without without quotes
+      ✔ should return boolean value without quotes
+      ✔ should return null value without quotes
+      ✔ should always return array as JSON string
+      ✔ should always return object as JSON string
+      ✔ should return string without enclosing it in quotes
+      ✔ should return property at the end of a path
+      ✔ should return property with dots
+    Helper: DataRaw
+      ✔ should return nothing when given no arguments
+      ✔ should return nothing if given a wrong databucket name
+      ✔ should return string without enclosing it in quotes
+      ✔ should return number without without quotes
+      ✔ should return boolean value without quotes
+      ✔ should return null value without quotes
+      ✔ should always return array as JSON string
+      ✔ should be usable with a each
+      ✔ should be usable within a if clause
+      ✔ should return the enumerated strings when databucket contains an array and no path is provided
+
+  Template parser: Faker wrapper
+    ✔ should throw if helper name is missing
+    ✔ should throw if helper name is malformed
+    ✔ should throw if helper name is malformed
+    ✔ should throw if helper name does not exists
+    ✔ should return value for simple helper
+    ✔ should return value for helper with named parameters
+    ✔ should return value for helper with arguments
+    ✔ should be able to use a string value in a switch
+    ✔ should be able to use a number value in a repeat
+    ✔ should be able to use a number value in a setvar and reuse the setvar
+    ✔ should be able to use a number value in a setvar and reuse the variable in a helper requiring a number (int)
+    ✔ should be able to use a boolean value in a if
+
+  Template parser
+    Helper: switch
+      ✔ should return different values depending on the string value
+      ✔ should return default values depending on the string value
+      ✔ should return different values depending on the index
+      ✔ should return different values depending on the boolean value
+      ✔ should return different values depending on the boolean value
+    Helper: concat
+      ✔ should concat two strings
+      ✔ should concat two strings and repeat index
+      ✔ should concat two strings and the result of a helper
+      ✔ should concat two strings and number
+      ✔ should concat object path to retrieve body array items
+    Helper: setVar
+      ✔ should set a variable to a string
+      ✔ should set a variable to a number
+      ✔ should set a variable value to body helper result
+      ✔ should set a variable value to oneOf helper result
+      ✔ should set a variable and use it in another helper
+      ✔ should set a variable in a different scope: repeat
+      ✔ should set a variable in root scope and child scope: repeat
+      ✔ should set variables in two nested repeat
+      ✔ should set variables in a each
+      ✔ should set variables in a each in a repeat
+      ✔ should set variables in two each
+      ✔ should set a variable to empty value if none provided
+      ✔ should not set a variable if no name provided
+    Helper: date
+      ✔ Should return an empty string if given the wrong amount of arguments
+      ✔ Should return an empty string if given the wrong amount of arguments
+      ✔ Should return a date using a the default format
+      1) Should return a date using a given format
+      ✔ Should return a date when using queryParams
+    Helper: dateTimeShift
+      ✔ Should not throw an error when passed with invalid parameters.
+      ✔ Should return a date shifted the specified amount of days from now.
+      2) Should return a date shifted by the requested amount from a specified start date.
+      3) Should return a date shifted by the requested amount from the specified start date in the specified format.
+      ✔ Should return a date time shifted by the requested amount from the specified start date in the specified format.
+      ✔ Should return a date time shifted by the requested amount when another helper is used as the date source (safestring).
+      4) Should return a date time shifted by the requested amount when another helper is used as the date and months and days source (safestring).
+    Helper: includes
+      ✔ should return true if a string includes a search string
+      ✔ should return false if a string does not include a search string
+      ✔ should not fail when passing no parameters
+      ✔ should not fail when passing only one parameter
+    Helper: substr
+      ✔ should return a substring of the provided string
+      ✔ should work correctly when from and length parameters are passed as strings
+      ✔ should return a substring of the provided string to the end when the length parameter is excluded (from as a number)
+      ✔ should return a substring of the provided string to the end when the length parameter is excluded (from as a string)
+      ✔ Should work correctly when variables are passed as parameters as numbers
+      ✔ Should work correctly when variables are passed as parameters as strings
+      ✔ Should work correctly when other helpers are used for parameters as numbers
+      ✔ Should work correctly when other helpers are used for parameters as strings
+      ✔ should not fail when passing no parameters
+      ✔ should not fail when passing only one parameter
+    Helper: split
+      ✔ should split a string using spaces as separator
+      ✔ should split a string using commas
+      ✔ should split a string using spaces by default
+      ✔ should split a string using spaces when given anything else but a string as separator
+      ✔ should return an empty string when given anything else but a string as data
+      ✔ should be usable within a #each
+      ✔ should be compatible with SafeString (queryParam)
+    Helper: lowercase
+      ✔ should return nothing when no parameter is passed
+      ✔ should lowercase a string
+      ✔ should be usable within a #switch
+      ✔ should be compatible with SafeString (queryParam)
+    Helper: uppercase
+      ✔ should return nothing when no parameter is passed
+      ✔ should uppercase a string
+      ✔ should be usable within a #switch
+      ✔ should be compatible with SafeString (queryParam)
+    Helper: parseInt
+      ✔ should return nothing when no parameter is passed
+      ✔ should parse string and return an int
+      ✔ should parse string and return an int
+    Helper: join
+      ✔ should join an Array with spaces
+      ✔ should ignore non Array values and return same value
+      ✔ should use comma separator if no separator was provided
+    Helper: slice
+      ✔ should return an empty string if parameter is not an array
+      ✔ should return the stringified array (same content)
+      ✔ should return the stringified first two elements
+      ✔ should return the stringified last two elements
+    Helper: indexOf
+      ✔ should return the index of a matching substring
+      ✔ should return the index of a matching substring from a given starting position
+      ✔ should still work correctly if the position parameter is passed as a string
+      ✔ should be possible to search for a number
+      ✔ should be possible to search for a number (as a string)
+      ✔ Can return the index from a previously set variable
+      ✔ Can return the index from a previously set variable using a variable for the search string
+      ✔ Can return the index from a body property
+      ✔ Can return the index from a body property with a position
+      ✔ should not fail when passing no parameters
+      ✔ should not fail when passing only one parameter
+    Helper: someOf
+      ✔ should return one element
+      ✔ should return 1 to 3 elements
+      ✔ should return 1 to 3 elements as array
+    Helper: len
+      ✔ should return the length of an array
+      ✔ should return the length of a string
+      ✔ should return 0 if value is not an array
+      ✔ should return 0 if no value was provided
+    Helper: base64
+      ✔ should encode string to base64
+      ✔ should encode body property to base64
+      ✔ should encode block to base64
+    Helper: base64
+      ✔ should decode a string from base64
+      ✔ should decode body property from base64
+      ✔ should decode block from base64
+    Helper: add
+      ✔ should add a number to another
+      ✔ should add the number described by a string to another number described by a string
+      ✔ should return the base value when given a single parameter
+      ✔ should return an empty string when given no arguments
+      ✔ should add the body property to the initial value
+      ✔ should omit arguments that are NaN
+    Helper: subtract
+      ✔ should subtract a number to another
+      ✔ should subtract the number described by a string to another number described by a string
+      ✔ should return the base value when given a single parameter
+      ✔ should return an empty string when given no arguments
+      ✔ should subtract the body property to the initial value
+      ✔ should omit arguments that are NaN
+    Helper: multiply
+      ✔ should multiply a number by another
+      ✔ should multiply the number described by a string by another number described by a string
+      ✔ should return the base value when given a single parameter
+      ✔ should return an empty string when given no arguments
+      ✔ should multiply the body property by the initial value
+      ✔ should omit arguments that are NaN
+    Helper: divide
+      ✔ should divide a number by another
+      ✔ should divide the number described by a string by another number described by a string
+      ✔ should return the base value when given a single parameter
+      ✔ should return an empty string when given no arguments
+      ✔ should divide the initial value by the body property
+      ✔ should return an emtpy string when attempting to divide by 0
+      ✔ should omit arguments that are NaN
+    Helper: modulo
+      ✔ should compute the modulo x of a number
+      ✔ should compute the modulo x (passed as a string) of a number described by a string
+      ✔ should return an empty string when given a single parameter
+      ✔ should return an empty string when given no arguments
+      ✔ should compute the modulo of the initial value by the body property
+      ✔ should return an empty string when attempting to compute modulo 0
+    Helper: ceil
+      ✔ should ceil a number
+      ✔ should ceil a number described by a string
+      ✔ should return the base value when given an integer
+      ✔ should return an empty string when given no arguments
+    Helper: floor
+      ✔ should floor a number
+      ✔ should floor a number described by a string
+      ✔ should return the base value when given an integer
+      ✔ should return an empty string when given no arguments
+    Helper: round
+      ✔ should round a number up when min .5
+      ✔ should round a number down when smaller than .5
+      ✔ should take a string
+      ✔ should return empty string if no parameters
+    Helper: toFixed
+      ✔ should fix the number to correct format
+      ✔ should delete all decimal places if no fix value is given
+      ✔ should return 0 if no values are given
+      ✔ should return 0 if wrong values are given as number
+    Helper: gt
+      ✔ should return true if first number is bigger than second number
+      ✔ should return false if first number is smaller than second number
+      ✔ should return false if first number is equal to the second number
+    Helper: gt
+      ✔ should return true if first number is bigger than second number
+      ✔ should return false if first number is smaller than second number
+      ✔ should return false if first number is equal to the second number
+    Helper: gte
+      ✔ should return true if first number is bigger than second number
+      ✔ should return false if first number is smaller than second number
+      ✔ should return true if first number is equal to the second number
+    Helper: lt
+      ✔ should return true if second number is bigger than first number
+      ✔ should return false if second number is bigger than second number
+      ✔ should return false if first number is equal to the second number
+    Helper: lte
+      ✔ should return true if second number is bigger than first number
+      ✔ should return false if second number is bigger than second number
+      ✔ should return true if first number is equal to the second number
+    Helper: eq
+      ✔ should return false if second number is bigger than first number
+      ✔ should return false if second number is bigger than second number
+      ✔ should return true if first number is equal to the second number
+    Helper: stringify
+      ✔ should output objects as string
+
+  Template parser
+    Helper: body
+      ✔ should return number without quotes
+      ✔ should return boolean value without quotes
+      ✔ should return null value without quotes
+      ✔ should always return array as JSON string
+      ✔ should always return object as JSON string
+      ✔ should return default value enclosed in quotes
+      ✔ should return string enclosed in quotes
+      ✔ should not return string enclosed in quotes
+      ✔ should escape newlines and quotes in string
+      ✔ should return the enumerated objects when body contains a root array and a number is passed as path
+      ✔ should return the property with dots value
+    Helper: bodyRaw
+      ✔ should should return the number without quotes
+      ✔ should return an array without quotes
+      ✔ should return a boolean without quotes
+      ✔ should be usable with a each
+      ✔ should be usable within a if clause
+      ✔ should return the default value in a each when no request body
+      ✔ should return the default value in a if clause when no request body
+      ✔ should return the enumerated strings when body contains a root array and no path is provided
+      ✔ should return the enumerated strings when body contains a root array and a number is passed as path
+      ✔ should return the property with dots value
+    Helper: queryParam
+      ✔ should return number without quotes
+      ✔ should return boolean value without quotes
+      ✔ should return null value without quotes
+      ✔ should always return array as JSON string
+      ✔ should always return object as JSON string
+      ✔ should not return string enclosed in quotes
+      ✔ should return string enclosed in quotes
+      ✔ should return default value enclosed in quotes
+      ✔ should escape quotes in string
+    Helper: queryParamRaw
+      ✔ should return the number without quotes
+      ✔ should return an array without quotes
+      ✔ should return a boolean without quotes
+      ✔ should be usable with a each
+      ✔ should be usable within a if clause
+      ✔ should return the default value in a each when no query
+      ✔ should return the default value in a if clause when no request body
+    Helper: baseUrl
+      ✔ should return correct protocol if https is false
+      ✔ should return correct protocol if https is true
+      ✔ should return correct url format with correct port
+      ✔ should return correct url based on hostname
+      ✔ should return correct url format with endpointPrefix
+      ✔ should return correct url format without endpointPrefix
+      ✔ should return correct url format when endpointPrefix is empty string
+    Helper: header
+      ✔ should return the header value
+      ✔ should return an empty string if no name provided
+      ✔ should return a empty string if name not found
+      ✔ should return a default value if provided and name not found
+
+  Utils
+    toBase64
+      ✔ should return string converted to base64 when btoa available
+      ✔ should return string converted to base64 when only Buffer available
+    DecompressBody
+      ✔ should decompress gzip encoded data
+      ✔ should decompress brotli encoded data
+      ✔ should decompress deflate encoded data
+      ✔ should handle plain data
+    fromSafeString
+      ✔ should return a string if input is a string
+      ✔ should return a string if input is a SafeString
+
+
+  248 passing (256ms)
+  4 failing
+
+  1) Template parser
+       Helper: date
+         Should return a date using a given format:
+
+      AssertionError: expected '2022-01-31' to equal '2022-02-01'
+      + expected - actual
+
+      -2022-01-31
+      +2022-02-01
+      
+      at Context.<anonymous> (test/suites/templating-helpers/helpers.spec.ts:322:33)
+      at processImmediate (internal/timers.js:464:21)
+
+  2) Template parser
+       Helper: dateTimeShift
+         Should return a date shifted by the requested amount from a specified start date.:
+     AssertionError: expected '2021-06-02T16:00:00.000-07:00' to match /2021-06-03.*/
+      at Context.<anonymous> (test/suites/templating-helpers/helpers.spec.ts:384:30)
+      at processImmediate (internal/timers.js:464:21)
+
+  3) Template parser
+       Helper: dateTimeShift
+         Should return a date shifted by the requested amount from the specified start date in the specified format.:
+
+      AssertionError: expected '2021-06-02' to equal '2021-06-03'
+      + expected - actual
+
+      -2021-06-02
+      +2021-06-03
+      
+      at Context.<anonymous> (test/suites/templating-helpers/helpers.spec.ts:396:30)
+      at processImmediate (internal/timers.js:464:21)
+
+  4) Template parser
+       Helper: dateTimeShift
+         Should return a date time shifted by the requested amount when another helper is used as the date and months and days source (safestring).:
+
+      AssertionError: expected '2021-02-01' to equal '2021-02-02'
+      + expected - actual
+
+      -2021-02-01
+      +2021-02-02
+      
+      at Context.<anonymous> (test/suites/templating-helpers/helpers.spec.ts:432:30)
+      at processImmediate (internal/timers.js:464:21)
+
+
+
+lerna ERR! npm run test stderr:
+npm ERR! code ELIFECYCLE
+npm ERR! errno 4
+npm ERR! @mockoon/commons-server@3.1.0 test: `ts-mocha -p ./tsconfig-build-cjs.json --timeout 10000 --forbid-only "./test/suites/**/*.spec.ts"`
+npm ERR! Exit status 4
+npm ERR! 
+npm ERR! Failed at the @mockoon/commons-server@3.1.0 test script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /Users/perrin/.npm/_logs/2022-10-17T20_24_04_245Z-debug.log
+lerna ERR! npm run test exited 4 in '@mockoon/commons-server'
+npm ERR! code ELIFECYCLE
+npm ERR! errno 4
+npm ERR! @mockoon/mockoon@1.0.0 test:commons-server: `lerna run --scope @mockoon/commons-server test`
+npm ERR! Exit status 4
+npm ERR! 
+npm ERR! Failed at the @mockoon/mockoon@1.0.0 test:commons-server script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /Users/perrin/.npm/_logs/2022-10-17T20_24_04_288Z-debug.log
+
+
+$ date
+Mon Oct 17 13:24:26 PDT 2022
+

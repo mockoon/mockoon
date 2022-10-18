@@ -1,6 +1,7 @@
 export const CommonsTexts = {
   EN: {
     MESSAGES: {
+      RESET_TARGET_NOT_FOUND: 'This request number reset target is not found: ',
       ROUTE_NO_LONGER_EXISTS: 'This route does no longer exists anymore',
       ROUTE_SERVING_ERROR: 'Error while serving the content',
       ROUTE_FILE_SERVING_ERROR: 'Error while serving the file content',

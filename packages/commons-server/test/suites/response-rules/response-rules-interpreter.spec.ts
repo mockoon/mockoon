@@ -4,6 +4,8 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { expect } from 'chai';
+import { MockoonServer } from '../../../src';
+import { promises as fs } from 'fs';
 import { Request } from 'express';
 import QueryString from 'qs';
 import { xml2js } from 'xml-js';
@@ -51,6 +53,15 @@ const routeResponseTemplate: RouteResponse = {
   default: false
 };
 
+async function getEnvironment(): Promise<Environment> {
+  const environmentJson = await fs.readFile(
+    './test/data/environments/test-env.json',
+    'utf-8'
+  );
+
+  return JSON.parse(environmentJson) as Environment;
+}
+
 describe('Response rules interpreter', () => {
   it('should return default response (no rule fulfilled)', () => {
     const request: Request = {
@@ -66,7 +77,7 @@ describe('Response rules interpreter', () => {
       [routeResponse403, routeResponseTemplate],
       request,
       null
-    ).chooseResponse(1);
+    ).chooseResponse({ endpoint: 1 });
 
     expect(routeResponse.body).to.be.equal('unauthorized');
   });
@@ -102,7 +113,7 @@ describe('Response rules interpreter', () => {
       ],
       request,
       null
-    ).chooseResponse(1);
+    ).chooseResponse({ endpoint: 1 });
 
     expect(routeResponse.body).to.be.equal('unauthorized');
   });
@@ -138,7 +149,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('query1');
     });
@@ -173,7 +184,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('query1');
     });
@@ -208,7 +219,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
@@ -243,7 +254,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('query3');
     });
@@ -278,7 +289,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('query4');
     });
@@ -313,7 +324,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('query5');
     });
@@ -348,7 +359,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
@@ -383,7 +394,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
@@ -418,7 +429,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('query7');
     });
@@ -453,7 +464,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('query7');
     });
@@ -490,7 +501,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('params1');
     });
 
@@ -524,7 +535,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('params1');
     });
 
@@ -558,7 +569,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('params2');
     });
 
@@ -592,7 +603,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -626,7 +637,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -660,7 +671,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
   });
@@ -698,7 +709,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('request_number_1');
     });
 
@@ -734,11 +745,11 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(2);
+      ).chooseResponse({ endpoint: 2 });
       expect(routeResponse.body).to.be.equal('request_number_not_1');
     });
 
-    it("should return default response if request number don't matches", () => {
+    it('should return default response if request number does not match', () => {
       const request: Request = {
         header: function (headerName: string) {
           const headers = {
@@ -770,7 +781,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(2);
+      ).chooseResponse({ endpoint: 2 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -806,11 +817,11 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(99);
+      ).chooseResponse({ endpoint: 99 });
       expect(routeResponse.body).to.be.equal('request_number_regex');
     });
 
-    it("should not return response if request don't matches regex", () => {
+    it('should not return response if request number does not match regex', () => {
       const request: Request = {
         header: function (headerName: string) {
           const headers = {
@@ -842,7 +853,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(101);
+      ).chooseResponse({ endpoint: 101 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -888,15 +899,269 @@ describe('Response rules interpreter', () => {
         null
       );
 
-      expect(responseRulesinterpreter.chooseResponse(1).body).to.be.equal(
-        'request_number_complex1'
+      expect(
+        responseRulesinterpreter.chooseResponse({ endpoint: 1 }).body
+      ).to.be.equal('request_number_complex1');
+      expect(
+        responseRulesinterpreter.chooseResponse({ endpoint: 2 }).body
+      ).to.be.equal('request_number_complex1');
+      expect(
+        responseRulesinterpreter.chooseResponse({ endpoint: 3 }).body
+      ).to.be.equal('unauthorized');
+    });
+
+    it('should return response for single attribute mock resource if attribute matches regex', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json',
+            Authorization: 'test'
+          };
+
+          return headers[headerName];
+        },
+        body: '',
+        query: { attr1: 'alpha' } as QueryString.ParsedQs
+      } as Request;
+
+      const responseRulesinterpreter = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'query',
+                modifier: 'attr1',
+                value: 'a.*a',
+                operator: 'regex',
+                invert: false
+              },
+              {
+                target: 'request_number',
+                modifier: '',
+                value: '1',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            rulesOperator: 'AND',
+            body: 'single_attr_mock_resource'
+          }
+        ],
+        request,
+        null
       );
-      expect(responseRulesinterpreter.chooseResponse(2).body).to.be.equal(
-        'request_number_complex1'
+
+      expect(
+        responseRulesinterpreter.chooseResponse({ endpoint: 1 }).body
+      ).to.be.equal('single_attr_mock_resource');
+      expect(
+        responseRulesinterpreter.chooseResponse({
+          endpoint: 1,
+          'query:attr1:alpha': 1
+        }).body
+      ).to.be.equal('single_attr_mock_resource');
+      expect(
+        responseRulesinterpreter.chooseResponse({
+          endpoint: 1,
+          'query:attr1:alpha': 2
+        }).body
+      ).to.be.equal('unauthorized');
+    });
+
+    it('should return default response for single attribute mock resource if attribute does not match regex', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json',
+            Authorization: 'test'
+          };
+
+          return headers[headerName];
+        },
+        body: '',
+        query: { attr1: 'anthropomorphotheist' } as QueryString.ParsedQs
+      } as Request;
+
+      const responseRulesinterpreter = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'query',
+                modifier: 'attr1',
+                value: 'a.*a',
+                operator: 'regex',
+                invert: false
+              },
+              {
+                target: 'request_number',
+                modifier: '',
+                value: '1',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            rulesOperator: 'AND',
+            body: 'single_attr_mock_resource'
+          }
+        ],
+        request,
+        null
       );
-      expect(responseRulesinterpreter.chooseResponse(3).body).to.be.equal(
-        'unauthorized'
+
+      expect(
+        responseRulesinterpreter.chooseResponse({ endpoint: 1 }).body
+      ).to.be.equal('unauthorized');
+      expect(
+        responseRulesinterpreter.chooseResponse({
+          endpoint: 1,
+          'query:attr1:alpha': 1
+        }).body
+      ).to.be.equal('unauthorized');
+      expect(
+        responseRulesinterpreter.chooseResponse({
+          endpoint: 1,
+          'query:attr1:alpha': 2
+        }).body
+      ).to.be.equal('unauthorized');
+    });
+
+    it('should return response for double attribute mock resource if both attributes match regex', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json',
+            Authorization: 'test'
+          };
+
+          return headers[headerName];
+        },
+        body: '',
+        query: { attr1: 'alpha' } as QueryString.ParsedQs,
+        params: { attr2: 'beta' } as QueryString.ParsedQs
+      } as Request;
+
+      const responseRulesinterpreter = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'query',
+                modifier: 'attr1',
+                value: 'a.*a',
+                operator: 'regex',
+                invert: false
+              },
+              {
+                target: 'params',
+                modifier: 'attr2',
+                value: 'b.*a',
+                operator: 'regex',
+                invert: false
+              },
+              {
+                target: 'request_number',
+                modifier: '',
+                value: '1',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            rulesOperator: 'AND',
+            body: 'double_attr_mock_resource'
+          }
+        ],
+        request,
+        null
       );
+
+      let requestNumber = { endpoint: 1 };
+      expect(
+        responseRulesinterpreter.chooseResponse(requestNumber).body
+      ).to.be.equal('double_attr_mock_resource');
+
+      requestNumber = { endpoint: 1, 'query:attr1:alpha|params:attr2:beta': 1 };
+      expect(
+        responseRulesinterpreter.chooseResponse(requestNumber).body
+      ).to.be.equal('double_attr_mock_resource');
+
+      requestNumber = { endpoint: 1, 'query:attr1:alpha|params:attr2:beta': 2 };
+      expect(
+        responseRulesinterpreter.chooseResponse(requestNumber).body
+      ).to.be.equal('unauthorized');
+    });
+
+    it('should return default response for double attribute mock resource if not both attributes match regex', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json',
+            Authorization: 'test'
+          };
+
+          return headers[headerName];
+        },
+        body: '',
+        query: { attr1: 'alpha' } as QueryString.ParsedQs,
+        params: { attr2: 'bronchomucormycosis' } as QueryString.ParsedQs
+      } as Request;
+
+      const responseRulesinterpreter = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'query',
+                modifier: 'attr1',
+                value: 'a.*a',
+                operator: 'regex',
+                invert: false
+              },
+              {
+                target: 'params',
+                modifier: 'attr2',
+                value: 'b.*a',
+                operator: 'regex',
+                invert: false
+              },
+              {
+                target: 'request_number',
+                modifier: '',
+                value: '1',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            rulesOperator: 'AND',
+            body: 'double_attr_mock_resource'
+          }
+        ],
+        request,
+        null
+      );
+
+      let requestNumber = { endpoint: 1 };
+      expect(
+        responseRulesinterpreter.chooseResponse(requestNumber).body
+      ).to.be.equal('unauthorized');
+
+      requestNumber = { endpoint: 1, 'query:attr1:alpha|params:attr2:beta': 1 };
+      expect(
+        responseRulesinterpreter.chooseResponse(requestNumber).body
+      ).to.be.equal('unauthorized');
+
+      requestNumber = { endpoint: 1, 'query:attr1:alpha|params:attr2:beta': 2 };
+      expect(
+        responseRulesinterpreter.chooseResponse(requestNumber).body
+      ).to.be.equal('unauthorized');
     });
   });
 
@@ -936,21 +1201,21 @@ describe('Response rules interpreter', () => {
         request,
         ResponseMode.SEQUENTIAL
       );
-      expect(responseRulesInterpreter.chooseResponse(1).body).to.be.equal(
-        'request_number_1'
-      );
-      expect(responseRulesInterpreter.chooseResponse(1).body).to.be.equal(
-        'request_number_1'
-      );
-      expect(responseRulesInterpreter.chooseResponse(3).body).to.be.equal(
-        'request_number_3'
-      );
-      expect(responseRulesInterpreter.chooseResponse(4).body).to.be.equal(
-        'request_number_4'
-      );
-      expect(responseRulesInterpreter.chooseResponse(5).body).to.be.equal(
-        'request_number_1'
-      );
+      expect(
+        responseRulesInterpreter.chooseResponse({ endpoint: 1 }).body
+      ).to.be.equal('request_number_1');
+      expect(
+        responseRulesInterpreter.chooseResponse({ endpoint: 1 }).body
+      ).to.be.equal('request_number_1');
+      expect(
+        responseRulesInterpreter.chooseResponse({ endpoint: 3 }).body
+      ).to.be.equal('request_number_3');
+      expect(
+        responseRulesInterpreter.chooseResponse({ endpoint: 4 }).body
+      ).to.be.equal('request_number_4');
+      expect(
+        responseRulesInterpreter.chooseResponse({ endpoint: 5 }).body
+      ).to.be.equal('request_number_1');
     });
   });
 
@@ -983,9 +1248,9 @@ describe('Response rules interpreter', () => {
         request,
         ResponseMode.DISABLE_RULES
       );
-      expect(responseRulesInterpreter.chooseResponse(1).body).to.be.equal(
-        'request_number_2'
-      );
+      expect(
+        responseRulesInterpreter.chooseResponse({ endpoint: 1 }).body
+      ).to.be.equal('request_number_2');
     });
   });
 
@@ -1022,7 +1287,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('header1');
     });
 
@@ -1058,7 +1323,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('header1');
     });
 
@@ -1094,7 +1359,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('header2');
     });
 
@@ -1130,7 +1395,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -1166,7 +1431,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -1202,7 +1467,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
   });
@@ -1244,7 +1509,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('cookie1');
     });
 
@@ -1282,7 +1547,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('cookie1');
     });
 
@@ -1322,7 +1587,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('cookie2');
     });
 
@@ -1362,7 +1627,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -1401,7 +1666,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('cookie2');
     });
 
@@ -1438,7 +1703,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -1475,7 +1740,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('cookie2');
     });
 
@@ -1515,7 +1780,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -1555,7 +1820,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
   });
@@ -1596,7 +1861,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body1');
     });
 
@@ -1632,7 +1897,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body1');
     });
 
@@ -1668,7 +1933,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body2');
     });
 
@@ -1704,7 +1969,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -1740,7 +2005,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body4');
     });
 
@@ -1776,7 +2041,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body5');
     });
 
@@ -1812,7 +2077,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body6');
     });
 
@@ -1848,7 +2113,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body7');
     });
 
@@ -1884,7 +2149,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body8');
     });
 
@@ -1920,7 +2185,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body9');
     });
 
@@ -1956,7 +2221,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body10');
     });
 
@@ -1992,7 +2257,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body11');
     });
 
@@ -2028,7 +2293,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body12');
     });
 
@@ -2064,7 +2329,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body13');
     });
 
@@ -2100,7 +2365,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body14');
     });
 
@@ -2136,7 +2401,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body15');
     });
 
@@ -2172,7 +2437,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body16');
     });
 
@@ -2208,7 +2473,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body17');
     });
 
@@ -2244,7 +2509,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body19');
     });
 
@@ -2280,7 +2545,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body19');
     });
 
@@ -2317,7 +2582,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body20');
     });
 
@@ -2354,7 +2619,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body21');
     });
 
@@ -2391,7 +2656,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body21');
     });
 
@@ -2442,7 +2707,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('body6');
     });
   });
@@ -2489,7 +2754,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('complex1');
     });
 
@@ -2534,7 +2799,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('complex1');
     });
 
@@ -2578,7 +2843,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -2623,7 +2888,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('complex3');
     });
 
@@ -2667,7 +2932,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('unauthorized');
     });
 
@@ -2715,7 +2980,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
       expect(routeResponse.body).to.be.equal('response2');
     });
 
@@ -2736,7 +3001,7 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('content');
     });
@@ -2775,9 +3040,544 @@ describe('Response rules interpreter', () => {
         ],
         request,
         null
-      ).chooseResponse(1);
+      ).chooseResponse({ endpoint: 1 });
 
       expect(routeResponse.body).to.be.equal('content1');
+    });
+  });
+
+  describe('Complex rules (mock resources)', () => {
+    let environment: Environment;
+
+    before(async () => {
+      environment = await getEnvironment();
+    });
+
+    it('should return response based on request number scoped to the endpoint', () => {
+      const header = (headerName: string) => {
+        const headers = {
+          'Content-Type': 'application/json',
+          'Accept-Charset': 'UTF-8'
+        };
+
+        return headers[headerName];
+      };
+
+      const request_w_query: Request = {
+        header,
+        body: '',
+        query: { color: 'turquoise' } as QueryString.ParsedQs
+      } as Request;
+
+      const request_no_query: Request = {
+        header,
+        body: ''
+      } as Request;
+
+      const responses = [
+        routeResponse403,
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'query',
+              modifier: 'color',
+              value: 'u.*u',
+              operator: 'regex',
+              invert: false
+            }
+          ],
+          body: 'response_1'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '1',
+              operator: 'equals',
+              invert: false
+            }
+          ],
+          body: 'response_2_gets_skipped'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '2',
+              operator: 'equals',
+              invert: false
+            }
+          ],
+          body: 'response_3'
+        }
+      ];
+
+      const server = new MockoonServer(environment);
+      const requestNumbers = { endpoint: 1 };
+      const route: Route = {
+        uuid: '',
+        documentation: '',
+        method: 'get',
+        endpoint: '',
+        responses,
+        enabled: true,
+        responseMode: null
+      } as Route;
+
+      let { enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_w_query,
+        requestNumbers
+      );
+      expect(enabledRouteResponse.body).to.be.equal('response_1');
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_no_query,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal('response_3');
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_no_query,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal('unauthorized');
+    });
+
+    it('should return response based on request number scoped to the mock resource', () => {
+      const header = (headerName: string) => {
+        const headers = {
+          'Content-Type': 'application/json',
+          'Accept-Charset': 'UTF-8'
+        };
+
+        return headers[headerName];
+      };
+
+      const request_red: Request = {
+        header,
+        body: '',
+        query: { color: 'red' } as QueryString.ParsedQs
+      } as Request;
+
+      const request_blue: Request = {
+        header,
+        body: '',
+        query: { color: 'blue' } as QueryString.ParsedQs
+      } as Request;
+
+      const request_small: Request = {
+        header,
+        body: '',
+        query: { size: 'small' } as QueryString.ParsedQs
+      } as Request;
+
+      const responses = [
+        routeResponse403,
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'query',
+              modifier: 'size',
+              value: 'small',
+              operator: 'equals',
+              invert: false
+            }
+          ],
+          body: 'no_mock_resource'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '^[13]$',
+              operator: 'regex',
+              invert: false
+            },
+            {
+              target: 'query',
+              modifier: 'color',
+              value: 'e',
+              operator: 'regex',
+              invert: false
+            }
+          ],
+          rulesOperator: 'AND',
+          body: 'mock_resource_request_number_1_or_3'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '2',
+              operator: 'equals',
+              invert: false
+            },
+            {
+              target: 'query',
+              modifier: 'color',
+              value: '[ru]ed?',
+              operator: 'regex',
+              invert: false
+            }
+          ],
+          rulesOperator: 'AND',
+          body: 'mock_resource_request_number_2'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '.',
+              operator: 'regex',
+              invert: false
+            },
+            {
+              target: 'query',
+              modifier: 'color',
+              value: '^(red|blue)$',
+              operator: 'regex',
+              invert: false
+            }
+          ],
+          rulesOperator: 'AND',
+          body: 'mock_resource_request_number_4_or_more'
+        }
+      ];
+
+      const server = new MockoonServer(environment);
+      const requestNumbers = { endpoint: 1 };
+      const route: Route = {
+        uuid: '',
+        documentation: '',
+        method: 'get',
+        endpoint: '',
+        responses,
+        enabled: true,
+        responseMode: null
+      } as Route;
+
+      let { enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_red,
+        requestNumbers
+      );
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_1_or_3'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_small,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal('no_mock_resource');
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_blue,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_1_or_3'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_blue,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_2'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_blue,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_1_or_3'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_blue,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_4_or_more'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_blue,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_4_or_more'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_red,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_2'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_red,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_1_or_3'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_red,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_4_or_more'
+      );
+    });
+
+    it('should return response based on request number after reset', () => {
+      const header = (headerName: string) => {
+        const headers = {
+          'Content-Type': 'application/json',
+          'Accept-Charset': 'UTF-8'
+        };
+
+        return headers[headerName];
+      };
+
+      const request_red_resource: Request = {
+        header,
+        body: '',
+        params: { color: 'red' } as QueryString.ParsedQs
+      } as Request;
+
+      const request_no_resource: Request = {
+        header,
+        body: ''
+      } as Request;
+
+      const request_reset_resource: Request = {
+        header,
+        headers: {
+          'x-mockoon-request-number-reset': 'params:color:red'
+        },
+        body: ''
+      } as Request;
+
+      const request_reset_endpoint: Request = {
+        header,
+        headers: {
+          'x-mockoon-request-number-reset': 'endpoint'
+        },
+        body: ''
+      } as Request;
+
+      const responses = [
+        routeResponse403,
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '1',
+              operator: 'equals',
+              invert: false
+            },
+            {
+              target: 'params',
+              modifier: 'color',
+              value: 'e',
+              operator: 'regex',
+              invert: false
+            }
+          ],
+          rulesOperator: 'AND',
+          body: 'mock_resource_request_number_1'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '2',
+              operator: 'equals',
+              invert: false
+            },
+            {
+              target: 'params',
+              modifier: 'color',
+              value: 'e',
+              operator: 'regex',
+              invert: false
+            }
+          ],
+          rulesOperator: 'AND',
+          body: 'mock_resource_request_number_2'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '.',
+              operator: 'regex',
+              invert: false
+            },
+            {
+              target: 'params',
+              modifier: 'color',
+              value: 'e',
+              operator: 'regex',
+              invert: false
+            }
+          ],
+          rulesOperator: 'AND',
+          body: 'mock_resource_request_number_3_or_more'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '1',
+              operator: 'equals',
+              invert: false
+            }
+          ],
+          body: 'endpoint_request_number_1'
+        },
+        {
+          ...routeResponseTemplate,
+          rules: [
+            {
+              target: 'request_number',
+              modifier: '',
+              value: '.',
+              operator: 'regex',
+              invert: false
+            }
+          ],
+          body: 'endpoint_request_number_2_or_more'
+        }
+      ];
+
+      const server = new MockoonServer(environment);
+      const requestNumbers = { endpoint: 1 };
+      const route: Route = {
+        uuid: '',
+        documentation: '',
+        method: 'get',
+        endpoint: '',
+        responses,
+        enabled: true,
+        responseMode: null
+      } as Route;
+
+      let { enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_red_resource,
+        requestNumbers
+      );
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_1'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_red_resource,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_2'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_red_resource,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_3_or_more'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_no_resource,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'endpoint_request_number_2_or_more'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_reset_resource,
+        requestNumbers
+      ));
+      expect(success.message).to.include('params:color:red');
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_no_resource,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'endpoint_request_number_2_or_more'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_red_resource,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'mock_resource_request_number_1'
+      );
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_reset_endpoint,
+        requestNumbers
+      ));
+      expect(success.message).to.include('endpoint');
+
+      ({ enabledRouteResponse, success, error } = server.selectResponse(
+        route,
+        request_no_resource,
+        requestNumbers
+      ));
+      expect(enabledRouteResponse.body).to.be.equal(
+        'endpoint_request_number_1'
+      );
     });
   });
 });
