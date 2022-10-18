@@ -1022,7 +1022,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Hayden_Zieme0'
+          body: 'Hayley_Zieme0'
         }
       },
       {
@@ -1032,7 +1032,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Hayden_Zieme0'
+          body: 'Hayley_Zieme0'
         }
       }
     ]

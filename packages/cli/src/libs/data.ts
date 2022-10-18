@@ -135,6 +135,10 @@ const migrateAndValidateEnvironment = async (
 
   const validatedEnvironment = EnvironmentSchema.validate(environment).value;
 
+  if (!validatedEnvironment) {
+    throw new Error(Messages.CLI.DATA_INVALID);
+  }
+
   return validatedEnvironment;
 };
 

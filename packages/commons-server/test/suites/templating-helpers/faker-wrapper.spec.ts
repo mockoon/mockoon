@@ -51,7 +51,7 @@ describe('Template parser: Faker wrapper', () => {
       [],
       {} as any
     );
-    expect(parseResult).to.be.equal('Hayden');
+    expect(parseResult).to.be.equal('Hayley');
   });
 
   it('should return value for helper with named parameters', () => {
