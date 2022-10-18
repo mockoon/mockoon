@@ -20,8 +20,8 @@ describe('UI interactions', () => {
 
       await environments.assertMenuHTTPSIconPresent();
       await environments.assertMenuProxyIconVisible();
-      await contextMenu.openContextMenu('environments');
-      await contextMenu.closeContextMenu();
+      await contextMenu.open('environments');
+      await contextMenu.close();
     });
   });
 

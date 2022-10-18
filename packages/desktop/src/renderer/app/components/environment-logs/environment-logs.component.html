@@ -36,7 +36,10 @@
                       </button>
                     </div>
                     <div>
-                      <span *ngIf="log.route" class="float-right text-success">
+                      <span
+                        *ngIf="log.route"
+                        class="float-right text-success logs-metadata"
+                      >
                         <app-svg
                           icon="check"
                           ngbTooltip="Request caught"
@@ -46,7 +49,7 @@
                     <div>
                       <span
                         *ngIf="!log.route && log.proxied"
-                        class="float-right text-primary"
+                        class="float-right text-primary logs-metadata"
                       >
                         <app-svg
                           icon="security"

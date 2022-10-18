@@ -13,6 +13,10 @@ type SettingNames =
   | 'settings-faker-locale';
 
 class Settings {
+  public get prettyPrint(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.modal-dialog label[for="settings-storage-pretty-print"]');
+  }
+
   public async open() {
     await menu.click('MENU_OPEN_SETTINGS');
     await $('.modal-dialog').waitForExist();

@@ -1,4 +1,5 @@
 import { Header } from '@mockoon/commons';
+import { ChainablePromiseElement } from 'webdriverio';
 import utils from '../libs/utils';
 
 type HeaderLocations =
@@ -8,11 +9,30 @@ type HeaderLocations =
   | 'env-proxy-res-headers';
 
 class HeadersUtils {
+  public get secondaryBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.add-header-secondary');
+  }
+
+  public getLine(
+    location: HeaderLocations,
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `app-headers-list#${location} .headers-list .header-item:nth-of-type(${index})`
+    );
+  }
+
+  public getAddButton(
+    location: HeaderLocations
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(`app-headers-list#${location} button.add-header`);
+  }
+
   public async add(location: HeaderLocations, header: Header) {
     const headersComponentSelector = `app-headers-list#${location}`;
     const inputsSelector = `${headersComponentSelector} .headers-list .header-item:last-of-type input:nth-of-type`;
 
-    await $(`${headersComponentSelector} button.add-header`).click();
+    await this.getAddButton(location).click();
     await utils.setElementValue($(`${inputsSelector}(1)`), header.key);
     await utils.setElementValue($(`${inputsSelector}(2)`), header.value);
   }

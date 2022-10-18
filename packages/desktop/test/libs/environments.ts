@@ -8,7 +8,7 @@ class Environments {
   private activeMenuEntrySelector =
     '.environments-menu .nav-item .nav-link.active';
 
-  private get openBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get openBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
       '.environments-menu .nav:first-of-type .nav-item .nav-link.open-environment'
     );

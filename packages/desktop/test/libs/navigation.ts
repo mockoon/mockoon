@@ -35,6 +35,14 @@ class Navigation {
     return $('app-header .header .nav .nav-item:nth-child(3) .nav-link');
   }
 
+  public get proxyTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-header .header .nav .nav-item:nth-child(5) .nav-link');
+  }
+
+  public get settingsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-header .header .nav .nav-item:nth-child(6) .nav-link');
+  }
+
   public async switchView(viewName: ViewsNameType): Promise<void> {
     await $(
       `.header .nav .nav-item:nth-child(${this.tabIndexes[viewName]}) .nav-link`

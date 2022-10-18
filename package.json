@@ -51,7 +51,8 @@
     "package:desktop:linux": "lerna run --scope @mockoon/desktop package:linux",
     "package:desktop:test:win": "lerna run --scope @mockoon/desktop package:test:win",
     "package:desktop:test:mac": "lerna run --scope @mockoon/desktop package:test:mac",
-    "package:desktop:test:linux": "lerna run --scope @mockoon/desktop package:test:linux"
+    "package:desktop:test:linux": "lerna run --scope @mockoon/desktop package:test:linux",
+    "documentation:desktop": "lerna run --scope @mockoon/desktop documentation"
   },
   "devDependencies": {
     "concurrently": "7.3.0",

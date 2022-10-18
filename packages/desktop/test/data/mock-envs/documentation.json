@@ -1,0 +1,206 @@
+{
+  "uuid": "a7186111-8f6f-45f0-aeb0-75fe40892d31",
+  "lastMigration": 23,
+  "name": "Demo API",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "f41d29cf-19d3-48ed-bd52-bc8289ea6d0a",
+      "method": "get",
+      "endpoint": "users",
+      "documentation": "Get all users",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "1e9f5cf6-0f4e-492f-9d4f-8e09c06af45a",
+          "body": "{\"response\": \"{{urlParam 'var'}}\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "property",
+              "value": "value",
+              "operator": "equals",
+              "invert": false
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        },
+        {
+          "uuid": "abb165b9-ae4a-4b27-b758-8ebe0c27c752",
+          "body": "{\"response\": \"{{urlParam 'var'}}\"}",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "Error",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "752ef797-b94a-4151-8a58-b9331e20542a",
+      "method": "get",
+      "endpoint": "ab+cd",
+      "documentation": "Route patterns",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "6432df88-752c-49e4-87ff-51762e44011c",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "2e102f5b-451b-4a6f-b908-48313918a414",
+      "method": "get",
+      "endpoint": "users/:userId",
+      "documentation": "Get user by id",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "4faa6455-4782-400a-a693-73420a1b99de",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "11d2325b-ef62-4c56-a66d-887f75538abd",
+      "method": "get",
+      "endpoint": "file",
+      "documentation": "Get file content",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "ecbaad7f-b60d-4efd-b0c3-f2fa1e6e3835",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "./file.json",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "a19d8512-b4db-4d28-8dba-ef52327da26c",
+      "method": "get",
+      "endpoint": "templating",
+      "documentation": "Templating example",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "5936f956-052b-4d75-b63c-7b232253963e",
+          "body": "{\r\n  \"userId\": \"{{urlParam 'id'}}\",\r\n  \"name\": \"{{queryParam 'name' 'John'}}\",\r\n  \"lang\": \"{{{header 'Accept-Language' 'en'}}}\",\r\n  \"elementTitle\": \"{{body 'elements.0.title' 'default'}}\",\r\n  \"ip\": \"{{ip}}\",\r\n  \"method\": \"{{method}}\",\r\n  \"hostname\": \"{{hostname}}\",\r\n  \"friends\": [\r\n    {{#repeat 2}}\r\n    { \r\n      \"id\": {{@index}}, \r\n      \"name\": \"{{faker 'name.firstName'}} {{faker 'name.lastName'}}\" \r\n    }\r\n    {{/repeat}}\r\n  ], \r\n  \"oneItem\": \"{{oneOf (array 'item1' 'item2' 'item3')}}\", \r\n  \"someItemsAsString\": \"{{someOf (array 'item1' 'item2' 'item3') 1 2}}\", \r\n  \"someItemsAsArray\": {{{someOf (array 'item1' 'item2' 'item3') 1 2 true}}}, \r\n  \"userName\": \r\n    {{#switch (urlParam 'id')}}\r\n      {{#case '1'}}\"John\"{{/case}}\r\n      {{#case '2'}}\"Jack\"{{/case}}\r\n      {{#default}}\"Peter\"{{/default}}\r\n    {{/switch}}\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "./domain.crt",
+    "keyPath": "./domain.key",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "data": []
+}
