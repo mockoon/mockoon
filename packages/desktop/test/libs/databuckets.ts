@@ -28,7 +28,7 @@ class Databuckets {
     return $('.environment-databuckets-footer div');
   }
 
-  private get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.databuckets-menu .nav:first-of-type .nav-item .nav-link');
   }
 

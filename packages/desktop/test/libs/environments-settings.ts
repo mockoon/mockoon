@@ -2,18 +2,41 @@ import { ChainablePromiseElement } from 'webdriverio';
 import utils from '../libs/utils';
 
 type SettingNames =
+  | 'localhostOnly'
   | 'endpointPrefix'
   | 'name'
   | 'port'
   | 'certPath'
   | 'keyPath'
   | 'passphrase'
-  | 'localhostOnly';
+  | 'localhostOnly'
+  // enable tls formControlName
+  | 'enabled';
 
 /**
  * Requires a switch to the settings view
  */
 class EnvironmentsSettings {
+  public get certContainer(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-environment-settings #tls-cert-container');
+  }
+
+  public get prefix(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-environment-settings input[formcontrolname=endpointPrefix]');
+  }
+
+  public get localhostOnly(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-environment-settings label[for=env-settings-localhost-only]');
+  }
+
+  public get enableTLS(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-environment-settings label[for=env-settings-tls-enabled]');
+  }
+
+  public get preflight(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-environment-settings label[for=env-settings-cors]');
+  }
+
   public async toggleSetting(settingName: SettingNames): Promise<void> {
     const setting = this.getSettingCheckbox(settingName);
     await setting.click();

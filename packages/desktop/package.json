@@ -20,6 +20,7 @@
   ],
   "main": "./dist/app.js",
   "scripts": {
+    "documentation": "rm -rf ./tmp && wdio run ./test/wdio-documentation.conf.ts --autoCompileOpts.tsNodeOpts.project=./test/tsconfig.json",
     "lint": "ng lint",
     "test": "wdio run ./test/wdio.conf.ts --autoCompileOpts.tsNodeOpts.project=./test/tsconfig.json",
     "test:packaged:win": "wdio run ./test/wdio-packaged-win.conf.ts --autoCompileOpts.tsNodeOpts.project=./test/tsconfig.json",

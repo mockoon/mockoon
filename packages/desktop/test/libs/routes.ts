@@ -7,6 +7,10 @@ import utils from '../libs/utils';
 class Routes {
   private activeMenuEntrySelector = '.routes-menu .nav-item .nav-link.active';
 
+  public get bodyTypeToggle(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-toggle[formControlName=bodyType]');
+  }
+
   public get documentationInput(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('app-environment-routes input[formcontrolname="documentation"]');
   }
@@ -27,12 +31,20 @@ class Routes {
     return $('.ace_content');
   }
 
+  public get routeResponseMenu(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#route-responses-menu');
+  }
+
   public get rulesTab(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(3)');
   }
 
   public get headersTab(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2)');
+  }
+
+  public get settingsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(4)');
   }
 
   public get randomResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -50,12 +62,102 @@ class Routes {
     return $('.environment-routes-footer div');
   }
 
+  public get disableTemplatingElement(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('label[for="route-settings-disable-templating"]');
+  }
+
+  public get fallback404Element(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('label[for="route-settings-fallback-to-404"]');
+  }
+
+  public get addResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#route-responses-menu #route-response-add');
+  }
+
+  public get duplicateResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#route-responses-menu #route-response-duplication-button');
+  }
+
+  public get routeResponseDropdown(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.route-responses-dropdown-menu');
+  }
+
+  public get responseRuleOperatorToggle(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.rules-operator');
+  }
+
+  public get bodyDataBucketSelect(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('app-custom-select[formcontrolname="databucketID"]');
+  }
+
   private get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.routes-menu .nav:first-of-type .nav-item .nav-link');
   }
 
   private get activeMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(this.activeMenuEntrySelector);
+  }
+
+  public getResponseRule(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(`app-route-response-rules .rule-item:nth-of-type(${index})`);
+  }
+
+  public getResponseRuleTarget(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline select[formcontrolname="target"]`
+    );
+  }
+
+  public getResponseRuleModifier(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline input[formcontrolname="modifier"]`
+    );
+  }
+
+  public getResponseRuleInvert(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline app-toggle[formcontrolname="invert"]`
+    );
+  }
+
+  public getResponseRuleOperator(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline select[formcontrolname="operator"]`
+    );
+  }
+
+  public getResponseRulevalue(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline input[formcontrolname="value"]`
+    );
+  }
+
+  public getResponseRuleReorderBtn(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `app-route-response-rules .rule-item:nth-of-type(${index}) app-svg[icon=drag_indicator]`
+    );
+  }
+
+  public getRouteResponseFlagBtn(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2) app-svg`
+    );
   }
 
   public async select(routeIndex: number): Promise<void> {
@@ -121,10 +223,6 @@ class Routes {
     );
   }
 
-  public async openDropdown(): Promise<void> {
-    await this.addBtn.click();
-  }
-
   public async setFile(value: string): Promise<void> {
     await utils.setElementValue(this.fileInput, value);
   }
@@ -150,7 +248,11 @@ class Routes {
   }
 
   public async toggleDisableTemplating() {
-    await $("label[for='route-settings-disable-templating']").click();
+    await this.disableTemplatingElement.click();
+  }
+
+  public async togglefallback404() {
+    await this.fallback404Element.click();
   }
 
   public async selectRouteResponse(index: number) {
@@ -159,8 +261,18 @@ class Routes {
     ).click();
   }
 
+  public async openDataBucketMenu() {
+    await $('#databuckets-dropdown .dropdown-toggle').click();
+  }
+
+  public async selectDataBucket(index: number) {
+    await $(
+      `#databuckets-dropdown-menu .dropdown-item:nth-child(${index})`
+    ).click();
+  }
+
   public async addRouteResponse() {
-    await $('#route-responses-menu #route-response-add').click();
+    await this.addResponseBtn.click();
   }
 
   public async removeRouteResponse() {
@@ -207,7 +319,7 @@ class Routes {
   }
 
   public async duplicateRouteResponse() {
-    await $('#route-responses-menu #route-response-duplication-button').click();
+    await this.duplicateResponseBtn.click();
   }
 
   public async addResponseRule(rule: ResponseRule) {
@@ -229,6 +341,16 @@ class Routes {
     );
   }
 
+  public async removeResponseRule(index: number) {
+    const deleteBtn = await $(
+      `app-route-response-rules .rule-item:nth-of-type(${index}) .btn.delete-rule`
+    );
+
+    // click and confirm
+    await deleteBtn.click();
+    await deleteBtn.click();
+  }
+
   public async assertRulesCount(expected: number) {
     await utils.countElements(
       $$('app-route-response-rules .rule-item'),
@@ -237,7 +359,7 @@ class Routes {
   }
 
   public async assertRulesOperatorPresence(reverse = false) {
-    await $('.rules-operator').waitForExist({ reverse });
+    await this.responseRuleOperatorToggle.waitForExist({ reverse });
   }
 
   public async assertContentType(expected: string) {

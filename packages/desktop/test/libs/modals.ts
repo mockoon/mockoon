@@ -7,6 +7,10 @@ class Modals {
   private envHostnameSelector =
     '.modal-content .modal-body .list-group .list-group-item:first-child div:last-of-type';
 
+  public get content(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.modal-content');
+  }
+
   private get confirmBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.modal-dialog .modal-footer button:first-of-type');
   }
