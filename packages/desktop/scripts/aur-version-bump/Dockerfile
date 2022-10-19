@@ -14,12 +14,14 @@ RUN mkdir -m 700 /root/.ssh; \
 
 RUN git config --global user.email "hi@255kb.dev"
 RUN git config --global user.name "Guillaume Monnet"
+RUN git config --global --add safe.directory '*'
 
 RUN --mount=type=ssh,id=default git clone ssh://aur@aur.archlinux.org/mockoon-bin.git /repo
 
 RUN chown build-user /repo
 
 COPY bump /usr/local/bin/
+RUN ["chmod", "+x", "/usr/local/bin/bump"]
 
 ENTRYPOINT [ "/usr/local/bin/bump" ]
 

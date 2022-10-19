@@ -29,9 +29,10 @@ about: Checklist for releases (admin use only)
 
 **Website:**
 
-> /!\ Requires above API repo deployment
+> /!\ Requires above API repo deployment to get an updated desktop version
 
-- [ ] Merge release branch on main
+- [ ] Merge release branch on main (publish the changelogs)
+- [ ] Re-run the deployment workflow to update the desktop release version
 
 **Distribution:**
 
