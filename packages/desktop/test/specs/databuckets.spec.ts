@@ -250,12 +250,12 @@ describe('Databuckets selection in responses', () => {
     await http.assertCall({
       method: 'GET',
       path: '/databucket',
-      testedResponse: { body: 'Hayden' }
+      testedResponse: { body: 'Hayley' }
     });
     await http.assertCall({
       method: 'GET',
       path: '/databucket',
-      testedResponse: { body: 'Hayden' }
+      testedResponse: { body: 'Hayley' }
     });
   });
 

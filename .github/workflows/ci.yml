@@ -9,17 +9,17 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Node.js 14.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
+          npm install -g npm@latest
+      - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -38,17 +38,17 @@ jobs:
     needs: lint
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
+          npm install -g npm@latest
+      - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -71,17 +71,17 @@ jobs:
         node: [14, 15, 16]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - name: Update NPM to v7
+      - name: Update NPM
         run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
+          npm install -g npm@latest
+      - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -93,7 +93,7 @@ jobs:
           npm run build:cli
           npm run test:cli
 
-  # run generic unpackaged desktop tests when not on the main branch
+  # run all tests (unpackaged desktop app, CI build)
   test-desktop:
     name: Desktop - Build and test
     runs-on: ubuntu-latest
@@ -101,20 +101,18 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref != 'refs/heads/main'
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
+          npm install -g npm@latest
+      - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -130,7 +128,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           npm run test:desktop
 
-  # run desktop packaged tests when on the main branch (commits on main are always release candidates) or in a PR
+  # run desktop packaged tests when on the main branch (commits on main are always release candidates)
 
   test-desktop-packaged-win:
     name: Desktop packaged Windows - Build and test
@@ -139,24 +137,24 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/main'
 
     env:
       CSC_LINK: ${{secrets.WIN_CSC_LINK}}
       CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
+          npm install -g npm@latest
+      - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -178,7 +176,7 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/main'
 
     env:
       APPLEID: ${{secrets.APPLEID}}
@@ -189,17 +187,17 @@ jobs:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
+          npm install -g npm@latest
+      - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -223,23 +221,23 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/main'
 
     env:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
-      - uses: actions/cache@v2
+          npm install -g npm@latest
+      - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'

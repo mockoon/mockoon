@@ -21,13 +21,13 @@ jobs:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
+          npm install -g npm@latest
       - name: Get version from package.json
         id: app-version
         run: |
@@ -48,7 +48,7 @@ jobs:
         run: |
           shasum -a 256 ./packages/desktop/packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.universal.dmg
       - name: Upload macOS dmg
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dmg
           path: ./packages/desktop/packages/mockoon.setup*.dmg
@@ -62,13 +62,13 @@ jobs:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
+          npm install -g npm@latest
       - name: Get version from package.json
         id: app-version
         run: |
@@ -81,22 +81,22 @@ jobs:
           npm run build:desktop:prod
           npm run package:desktop:linux
       - name: Upload Linux AppImage
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: appimage
           path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.AppImage
       - name: Upload Linux deb
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: deb
           path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.deb
       - name: Upload Linux rpm
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: rpm
           path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.rpm
       - name: Upload Linux snap
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: snap
           path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.snap
@@ -112,13 +112,13 @@ jobs:
       CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
+          npm install -g npm@latest
       - name: Get version from package.json
         id: app-version
         run: |
@@ -133,12 +133,12 @@ jobs:
           npm run package:desktop:win
         shell: pwsh
       - name: Upload Windows setup exe
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: exe
           path: ./packages/desktop/packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
       - name: Upload Windows portable exe
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: exe
           path: ./packages/desktop/packages/mockoon.portable.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
@@ -151,13 +151,13 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
-      - name: Update NPM to v7
+          node-version: 16
+      - name: Update NPM
         run: |
-          npm install -g npm@7
+          npm install -g npm@latest
       - name: Get version from package.json
         id: app-version
         run: |
@@ -172,7 +172,7 @@ jobs:
           npm run package:desktop:win:appx
         shell: pwsh
       - name: Upload Windows appx
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: appx
           path: ./packages/desktop/packages/mockoon.${{steps.app-version.outputs.PACKAGE_VERSION}}.appx

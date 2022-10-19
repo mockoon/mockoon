@@ -28,20 +28,20 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "joi": "17.4.2",
-    "uuid": "8.3.2"
+    "joi": "17.6.3",
+    "uuid": "9.0.0"
   },
   "devDependencies": {
-    "@types/chai": "4.3.1",
-    "@types/mocha": "9.1.1",
+    "@types/chai": "4.3.3",
+    "@types/mocha": "10.0.0",
     "@types/uuid": "8.3.4",
-    "@typescript-eslint/eslint-plugin": "5.30.7",
-    "@typescript-eslint/parser": "5.30.7",
+    "@typescript-eslint/eslint-plugin": "5.40.1",
+    "@typescript-eslint/parser": "5.40.1",
     "chai": "4.3.6",
-    "eslint": "8.20.0",
-    "eslint-plugin-jsdoc": "39.3.3",
-    "mocha": "10.0.0",
+    "eslint": "8.25.0",
+    "eslint-plugin-jsdoc": "39.3.13",
+    "mocha": "10.1.0",
     "ts-mocha": "10.0.0",
-    "typescript": "4.7.4"
+    "typescript": "4.8.4"
   }
 }
