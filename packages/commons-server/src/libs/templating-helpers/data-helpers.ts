@@ -38,7 +38,9 @@ export const DataHelpers = function (
         let path: string | string[] = parameters[1];
         path = convertPathToArray(path);
 
-        value = objectGet(value, path) || value;
+        // ensure a value was found at path
+        const foundValue = objectGet(value, path);
+        value = foundValue !== undefined ? foundValue : value;
       }
 
       if (Array.isArray(value) || typeof value === 'object') {
@@ -79,7 +81,9 @@ export const DataHelpers = function (
         let path: string | string[] = parameters[1];
         path = convertPathToArray(path);
 
-        value = objectGet(targetDatabucket, path) || value;
+        // ensure a value was found at path
+        const foundValue = objectGet(value, path);
+        value = foundValue !== undefined ? foundValue : value;
 
         return value;
       }

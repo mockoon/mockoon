@@ -432,6 +432,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           );
           // serve inline body or databucket
         } else {
+          let templateParse = true;
+
           if (contentType.includes('application/json')) {
             response.set('Content-Type', 'application/json');
           }
@@ -443,18 +445,34 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             enabledRouteResponse.bodyType === BodyTypes.DATABUCKET &&
             enabledRouteResponse.databucketID
           ) {
+            // databuckets are parsed at the server start or beginning of first request execution (no need to parse templating again)
+            templateParse = false;
+
             const servedDatabucket = this.processedDatabuckets.find(
               (processedDatabucket) =>
                 processedDatabucket.id === enabledRouteResponse.databucketID
             );
-            content = servedDatabucket?.value;
+
+            // if linked databucket is an array or object we need to stringify it for some values (array, object, booleans and numbers (bool and nb because expressjs canno serve this as is))
+            if (
+              servedDatabucket?.parsed &&
+              (Array.isArray(servedDatabucket.value) ||
+                typeof servedDatabucket.value === 'object' ||
+                typeof servedDatabucket.value === 'boolean' ||
+                typeof servedDatabucket.value === 'number')
+            ) {
+              content = JSON.stringify(servedDatabucket?.value);
+            } else {
+              content = servedDatabucket?.value;
+            }
           }
 
           this.serveBody(
             content || '',
             enabledRouteResponse,
             request,
-            response
+            response,
+            templateParse
           );
         }
       }, enabledRouteResponse.latency);
@@ -472,10 +490,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     content: string,
     routeResponse: RouteResponse,
     request: Request,
-    response: Response
+    response: Response,
+    templateParse = true
   ) {
     try {
-      if (!routeResponse.disableTemplating) {
+      if (!routeResponse.disableTemplating && templateParse) {
         content = TemplateParser(
           false,
           content || '',

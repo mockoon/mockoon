@@ -250,16 +250,20 @@ describe('Databuckets selection in responses', () => {
     await http.assertCall({
       method: 'GET',
       path: '/databucket',
-      testedResponse: { body: 'Hayley' }
+      testedResponse: {
+        body: '{"response":"Hayley"}'
+      }
     });
     await http.assertCall({
       method: 'GET',
       path: '/databucket',
-      testedResponse: { body: 'Hayley' }
+      testedResponse: {
+        body: '{"response":"Hayley"}'
+      }
     });
   });
 
-  it('should generate databucket with req helper at first call and always serve the same content', async () => {
+  it('should generate databucket with req helper at first call (string) and always serve the same content', async () => {
     await http.assertCall({
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue1',
@@ -269,6 +273,66 @@ describe('Databuckets selection in responses', () => {
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue2',
       testedResponse: { body: 'testvalue1' }
+    });
+  });
+
+  it('should generate databucket with req helper at first call (number) and always serve the same content', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=560',
+      testedResponse: { body: '560' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue2',
+      testedResponse: { body: '560' }
+    });
+  });
+
+  it('should generate databucket with req helper at first call (number) and always serve the same content', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=560',
+      testedResponse: { body: '560' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue2',
+      testedResponse: { body: '560' }
+    });
+  });
+
+  it('should generate databucket with req helper at first call (boolean) and always serve the same content', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=false',
+      testedResponse: { body: 'false' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue2',
+      testedResponse: { body: 'false' }
+    });
+  });
+
+  it('should generate databucket with req helper at first call (null) and always serve the same content', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=null',
+      testedResponse: { body: 'null' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue2',
+      testedResponse: { body: 'null' }
     });
   });
 });

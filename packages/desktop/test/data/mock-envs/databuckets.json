@@ -83,7 +83,7 @@
       "uuid": "c8429435-88aa-45c7-a8b9-32f3b1c259be",
       "id": "abc1",
       "name": "Databucket",
-      "value": "{{faker 'name.firstName'}}"
+      "value": "{\"response\":\"{{faker 'name.firstName'}}\"}"
     },
     {
       "uuid": "dcec9813-d7a6-4a96-b4a8-2bf598b720a6",
