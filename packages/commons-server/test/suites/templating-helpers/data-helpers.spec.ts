@@ -140,7 +140,7 @@ describe('Data helpers', () => {
       expect(parseResult).to.be.equal('test');
     });
 
-    it('should return property at the end of a path', () => {
+    it('should return property at a path', () => {
       const parseResult = TemplateParser(
         false,
         "{{data 'pathDatabucket' 'object1.prop1'}}",
@@ -162,7 +162,27 @@ describe('Data helpers', () => {
       expect(parseResult).to.be.equal('value1');
     });
 
-    it('should return property with dots', () => {
+    it('should return falsy property at a path', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{data 'pathDatabucket' 'object1.prop1'}}",
+        {} as any,
+        [
+          {
+            name: 'pathDatabucket',
+            id: 'w63q',
+            value: {
+              object1: { prop1: false }
+            },
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('false');
+    });
+
+    it('should return property at a path with dots', () => {
       const parseResult = TemplateParser(
         false,
         "{{data 'pathDatabucket' 'object1.prop\\.with\\.dots'}}",
@@ -287,7 +307,7 @@ describe('Data helpers', () => {
       expect(parseResult).to.be.equal('null');
     });
 
-    it('should always return array as JSON string', () => {
+    it('should return array as JSON string', () => {
       const parseResult = TemplateParser(
         false,
         '{{dataRaw "arrayDatabucket"}}',
@@ -308,7 +328,7 @@ describe('Data helpers', () => {
     it('should be usable with a each', () => {
       const parseResult = TemplateParser(
         false,
-        '{{#each (dataRaw "eachDatabucket")}}dolphin{{/each}}',
+        '{{#each (dataRaw "eachDatabucket")}}dolphin{{this}}{{/each}}',
         {} as any,
         [
           {
@@ -320,7 +340,7 @@ describe('Data helpers', () => {
         ],
         {} as any
       );
-      expect(parseResult).to.be.equal('dolphindolphindolphin');
+      expect(parseResult).to.be.equal('dolphin1dolphin2dolphin3');
     });
 
     it('should be usable within a if clause', () => {
@@ -351,6 +371,86 @@ describe('Data helpers', () => {
             name: 'enumDatabucket',
             id: 'h18h',
             value: ['string1', 'string2'],
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('string1string2');
+    });
+
+    it('should return property at a path', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{dataRaw 'pathDatabucket' 'object1.prop1'}}",
+        {} as any,
+        [
+          {
+            name: 'pathDatabucket',
+            id: 'w63q',
+            value: {
+              object1: { prop1: 'value1', prop2: 'value2' },
+              prop: 'value',
+              object2: []
+            },
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('value1');
+    });
+
+    it('should return falsy property at a path', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{#if (dataRaw 'pathDatabucket' 'object1.prop1')}}truthy{{/if}}{{#if (dataRaw 'pathDatabucket' 'object1.prop2')}}falsy{{/if}}",
+        {} as any,
+        [
+          {
+            name: 'pathDatabucket',
+            id: 'w63q',
+            value: {
+              object1: { prop1: true, prop2: false }
+            },
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('truthy');
+    });
+
+    it('should return property at a path with dots', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{dataRaw 'pathDatabucket' 'object1.prop\\.with\\.dots'}}",
+        {} as any,
+        [
+          {
+            name: 'pathDatabucket',
+            id: 'de69',
+            value: {
+              object1: { 'prop.with.dots': 'value1' }
+            },
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('value1');
+    });
+
+    it('should return and use the array at path', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{#each (dataRaw "arrayDatabucket" "arr")}}{{this}}{{/each}}',
+        {} as any,
+        [
+          {
+            name: 'arrayDatabucket',
+            id: 'h18h',
+            value: { arr: ['string1', 'string2'] },
             parsed: true
           }
         ],
