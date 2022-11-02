@@ -43,6 +43,7 @@ export type Transaction = {
   };
   response: {
     statusCode: number;
+    statusMessage: string;
     headers: Header[];
     body: string;
   };

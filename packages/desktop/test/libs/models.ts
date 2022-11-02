@@ -1,6 +1,7 @@
 export type HttpCallResponse = {
   body?: string | { contains: string } | RegExp;
   status?: number;
+  statusMessage?: string;
   headers?: {
     [key in string]: string | string[];
   };

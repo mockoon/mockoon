@@ -81,6 +81,7 @@ export class DataService extends Logger {
       proxied: transaction.proxied,
       response: {
         status: transaction.response.statusCode,
+        statusMessage: transaction.response.statusMessage,
         headers: transaction.response.headers,
         body: transaction.response.body,
         binaryBody: transaction.response.body === BINARY_BODY
