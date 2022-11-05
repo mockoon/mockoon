@@ -71,7 +71,7 @@ export default class Start extends Command {
       default: false
     }),
     'env-prefix': flags.string({
-      char: 'p',
+      char: 'e',
       description: 'Prefix of environment variables available to system helper',
       multiple: false,
       default: 'MOCKOON_'
