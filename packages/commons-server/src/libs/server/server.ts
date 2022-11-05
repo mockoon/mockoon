@@ -499,6 +499,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           false,
           content || '',
           this.environment,
+          this.options.envPrefix || '',
           this.processedDatabuckets,
           request
         );
@@ -555,6 +556,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         false,
         routeResponse.filePath.replace(/\\/g, '/'),
         this.environment,
+        this.options.envPrefix || '',
         this.processedDatabuckets,
         request
       );
@@ -595,6 +597,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               false,
               data.toString(),
               this.environment,
+              this.options.envPrefix || '',
               this.processedDatabuckets,
               request
             );
@@ -841,6 +844,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           false,
           header.value,
           this.environment,
+          this.options.envPrefix || '',
           this.processedDatabuckets,
           request
         );
@@ -995,6 +999,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             false,
             databucket.value,
             environment,
+            this.options.envPrefix || '',
             this.processedDatabuckets
           );
 
@@ -1069,6 +1074,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               false,
               targetDatabucket.value,
               environment,
+              this.options.envPrefix || '',
               this.processedDatabuckets,
               request
             );

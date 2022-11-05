@@ -176,6 +176,7 @@ export default class Start extends Command {
       environmentDir: environmentInfo.initialDataDir
         ? environmentInfo.initialDataDir
         : '',
+      envPrefix: environmentInfo.envPrefix,
       logTransaction: environmentInfo.logTransaction,
       fileTransportsOptions: [
         { filename: join(Config.logsPath, `${environmentInfo.name}-out.log`) }

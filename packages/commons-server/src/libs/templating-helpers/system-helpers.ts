@@ -6,7 +6,9 @@ export const listOfSystemHelperTypes: SystemHelperTypes[] = [
 ];
 
 export const SystemHelpers = function (
-  environment: Environment
+  options: {
+    envPrefix: string
+  }
 ) {
   return {
     // get environment variable
@@ -19,8 +21,12 @@ export const SystemHelpers = function (
         return defaultValue;
       }
 
-      // TODO: @Meldiron Read ENV variable, validate with prefix
-      return variableName + ';' + defaultValue;
+      if (!variableName.startsWith(options.envPrefix)) {
+        return '';
+      }
+
+      const value = process.env[variableName] ?? defaultValue;
+      return value;
     },
   };
 };

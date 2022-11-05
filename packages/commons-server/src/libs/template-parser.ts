@@ -19,13 +19,14 @@ export const TemplateParser = function (
   shouldOmitDataHelper: boolean,
   content: string,
   environment: Environment,
+  envPrefix: string,
   processedDatabuckets: ProcessedDatabucket[],
   request?: Request
 ): string {
   let helpers = {
     ...FakerWrapper,
     ...Helpers,
-    ...SystemHelpers(environment)
+    ...SystemHelpers({envPrefix})
   };
 
   if (!shouldOmitDataHelper) {
