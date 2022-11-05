@@ -4,6 +4,7 @@ import { createServer } from './server';
 const argv = minimist<{
   data: string;
   environmentDir: string;
+  envPrefix: string;
   logTransaction?: boolean;
 }>(process.argv.slice(2));
 
@@ -11,6 +12,7 @@ if (argv.data) {
   createServer({
     data: argv.data,
     environmentDir: argv.environmentDir,
-    logTransaction: argv.logTransaction
+    logTransaction: argv.logTransaction,
+    envPrefix: argv.envPrefix,
   });
 }

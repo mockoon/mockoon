@@ -122,6 +122,7 @@ const addEventListeners = function (
 export const createServer = (parameters: {
   data: string;
   environmentDir: string;
+  envPrefix: string;
   logTransaction?: boolean;
   fileTransportsOptions?: FileTransportOptions[];
 }): void => {
@@ -138,7 +139,8 @@ export const createServer = (parameters: {
         warn: logger.warn.bind(logger),
         error: logger.error.bind(logger)
       }),
-      environmentDirectory: parameters.environmentDir
+      environmentDirectory: parameters.environmentDir,
+      envPrefix: parameters.envPrefix
     });
 
     addEventListeners(server, environment, parameters.logTransaction);

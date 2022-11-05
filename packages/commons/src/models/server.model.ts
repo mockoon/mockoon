@@ -18,6 +18,8 @@ export interface MockoonServerOptions {
     warn?: (...args: any[]) => void;
     error?: (...args: any[]) => void;
   };
+
+  envPrefix?: string;
 }
 
 export type ProcessedDatabucket = {

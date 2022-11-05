@@ -18,6 +18,7 @@ interface EnvironmentInfo {
   hostname: string;
   port: number;
   endpointPrefix: string;
+  envPrefix: string;
   dataFile: string;
   initialDataDir?: string | null;
   logTransaction?: boolean;
@@ -27,6 +28,7 @@ type StartFlags = {
   pname: string[];
   hostname: string[];
   'daemon-off': boolean;
+  'env-prefix': string;
   container: boolean;
   data: string[];
   port: number[];
@@ -68,6 +70,12 @@ export default class Start extends Command {
         'Keep the CLI in the foreground and do not manage the process with PM2',
       default: false
     }),
+    'env-prefix': flags.string({
+      char: 'p',
+      description: 'Prefix of environment variables available to system helper',
+      multiple: false,
+      default: 'MOCKOON_'
+    }),
     /**
      * /!\ Undocumented flag.
      * Mostly for internal use when `start `command is called during
@@ -88,6 +96,8 @@ export default class Start extends Command {
 
   public async run(): Promise<void> {
     const { flags: userFlags } = this.parse(Start);
+
+    await this.validateEnvPrefix(userFlags['env-prefix']);
 
     let environmentsInfo: EnvironmentInfo[] = [];
 
@@ -190,6 +200,9 @@ export default class Start extends Command {
     if (environmentInfo.logTransaction) {
       args.push('--logTransaction');
     }
+    if (environmentInfo.envPrefix) {
+      args.push('--enxPrefix', environmentInfo.envPrefix);
+    }
 
     const process = await ProcessManager.start({
       max_restarts: 1,
@@ -243,7 +256,8 @@ export default class Start extends Command {
         port: environment.port,
         endpointPrefix: environment.endpointPrefix,
         initialDataDir: null,
-        logTransaction: userFlags['log-transaction']
+        logTransaction: userFlags['log-transaction'],
+        envPrefix: userFlags['env-prefix']
       });
     }
 
@@ -271,7 +285,8 @@ export default class Start extends Command {
         environmentsInfo.push({
           ...environmentInfo,
           initialDataDir: getDirname(userFlags.data[envIndex]),
-          logTransaction: userFlags['log-transaction']
+          logTransaction: userFlags['log-transaction'],
+          envPrefix: userFlags['env-prefix']
         });
       } catch (error: any) {
         this.error(error.message);
@@ -295,6 +310,12 @@ export default class Start extends Command {
     }
     if (await portInUse(port, hostname)) {
       this.error(format(Messages.CLI.PORT_ALREADY_USED, port));
+    }
+  }
+
+  private async validateEnvPrefix(prefix: string) {
+    if (prefix === '') {
+      this.error(format(Messages.CLI.PREFIX_IS_INVALID));
     }
   }
 }

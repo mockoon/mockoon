@@ -26,7 +26,8 @@ export const Messages = {
     ENVIRONMENT_NOT_AVAILABLE_ERROR: 'No environments exist in specified file',
     PORT_ALREADY_USED:
       'Port "%d" is already in use\nChange the environment\'s port in the data file or run start command with the "--port" flag',
-    PORT_IS_NOT_VALID: 'Port "%d" is invalid'
+    PORT_IS_NOT_VALID: 'Port "%d" is invalid',
+    PREFIX_IS_INVALID: 'Environment variable prefix cannot be empty.',
   },
   SERVER: {
     STARTED: 'Server started on port %d',

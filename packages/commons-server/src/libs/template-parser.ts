@@ -5,6 +5,7 @@ import { DataHelpers } from './templating-helpers/data-helpers';
 import { FakerWrapper } from './templating-helpers/faker-wrapper';
 import { Helpers } from './templating-helpers/helpers';
 import { RequestHelpers } from './templating-helpers/request-helpers';
+import { SystemHelpers } from './templating-helpers/system-helpers';
 
 /**
  * Parse a content with Handlebars
@@ -23,7 +24,8 @@ export const TemplateParser = function (
 ): string {
   let helpers = {
     ...FakerWrapper,
-    ...Helpers
+    ...Helpers,
+    ...SystemHelpers(environment)
   };
 
   if (!shouldOmitDataHelper) {
