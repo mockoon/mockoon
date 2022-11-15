@@ -22,6 +22,7 @@ import cookieParser from 'cookie-parser';
 import { EventEmitter } from 'events';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import { createReadStream, readFile, readFileSync, statSync } from 'fs';
+import type { RequestListener } from 'http';
 import { createServer as httpCreateServer, Server as httpServer } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import {
@@ -67,16 +68,17 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * Start a server
    */
   public start() {
-    const server = express();
-    server.disable('x-powered-by');
-    server.disable('etag');
+    const requestListener = this.createRequestListener();
 
     // create https or http server instance
     if (this.environment.tlsOptions.enabled) {
       try {
         this.tlsOptions = this.buildTLSOptions(this.environment);
 
-        this.serverInstance = httpsCreateServer(this.tlsOptions, server);
+        this.serverInstance = httpsCreateServer(
+          this.tlsOptions,
+          requestListener
+        );
       } catch (error: any) {
         if (error.code === 'ENOENT') {
           this.emit('error', ServerErrorCodes.CERT_FILE_NOT_FOUND, error);
@@ -85,7 +87,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
       }
     } else {
-      this.serverInstance = httpCreateServer(server);
+      this.serverInstance = httpCreateServer(requestListener);
     }
 
     // make serverInstance killable
@@ -124,21 +126,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.emit('started');
       }
     );
-
-    this.generateDatabuckets(this.environment);
-
-    server.use(this.emitEvent);
-    server.use(this.delayResponse);
-    server.use(this.deduplicateSlashes);
-    server.use(cookieParser());
-    server.use(this.parseBody);
-    server.use(this.logRequest);
-    server.use(this.setResponseHeaders);
-
-    this.setRoutes(server);
-    this.setCors(server);
-    this.enableProxy(server);
-    server.use(this.errorHandler);
   }
 
   /**
@@ -150,6 +137,32 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.emit('stopped');
       });
     }
+  }
+
+  /**
+   * Create a request listener
+   */
+  public createRequestListener(): RequestListener {
+    const app = express();
+    app.disable('x-powered-by');
+    app.disable('etag');
+
+    this.generateDatabuckets(this.environment);
+
+    app.use(this.emitEvent);
+    app.use(this.delayResponse);
+    app.use(this.deduplicateSlashes);
+    app.use(cookieParser());
+    app.use(this.parseBody);
+    app.use(this.logRequest);
+    app.use(this.setResponseHeaders);
+
+    this.setRoutes(app);
+    this.setCors(app);
+    this.enableProxy(app);
+    app.use(this.errorHandler);
+
+    return app;
   }
 
   /**
