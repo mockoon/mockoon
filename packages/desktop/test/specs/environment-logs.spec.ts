@@ -143,12 +143,11 @@ describe('Environment logs', () => {
 
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
-        await environmentsLogs.assertLogItem('Status: 200', 'response', 2, 1);
         await environmentsLogs.assertLogItem(
-          'StatusMessage: OK',
+          'Status: 200 - OK',
           'response',
           2,
-          2
+          1
         );
         await environmentsLogs.assertLogItem(
           'Content-length: 12',
@@ -200,12 +199,11 @@ describe('Environment logs', () => {
 
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
-        await environmentsLogs.assertLogItem('Status: 404', 'response', 2, 1);
         await environmentsLogs.assertLogItem(
-          'StatusMessage: Not Found',
+          'Status: 404 - Not Found',
           'response',
           2,
-          2
+          1
         );
         await environmentsLogs.assertLogItem(
           'Content-length: 150',
@@ -274,7 +272,12 @@ describe('Environment logs', () => {
 
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
-        await environmentsLogs.assertLogItem('Status: 200', 'response', 2, 1);
+        await environmentsLogs.assertLogItem(
+          'Status: 200 - OK',
+          'response',
+          2,
+          1
+        );
         await environmentsLogs.assertLogItem(
           'Content-length: 8696',
           'response',
@@ -336,12 +339,11 @@ describe('Environment logs', () => {
     it('should assert presence on log page and verify selected entry', async () => {
       await navigation.switchView('ENV_LOGS');
       await environmentsLogs.assertActiveLogEntry(2);
-      await environmentsLogs.assertLogItem('Status: 200', 'response', 2, 1);
       await environmentsLogs.assertLogItem(
-        'StatusMessage: OK',
+        'Status: 200 - OK',
         'response',
         2,
-        2
+        1
       );
       await environmentsLogs.assertLogItem(' responsebody ', 'response', 6, 1);
     });
