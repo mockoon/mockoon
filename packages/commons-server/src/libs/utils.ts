@@ -131,6 +131,7 @@ export function CreateTransaction(
     },
     response: {
       statusCode: response.statusCode,
+      statusMessage: response.statusMessage,
       headers: TransformHeaders(response.getHeaders()).sort(AscSort),
       body: DecompressBody(response)
     },

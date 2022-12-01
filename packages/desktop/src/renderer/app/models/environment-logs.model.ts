@@ -13,6 +13,7 @@ export type EnvironmentLogRequest = {
 
 export type EnvironmentLogResponse = {
   status: number;
+  statusMessage: string;
   headers: Header[];
   body: string;
   truncatedBody?: string;

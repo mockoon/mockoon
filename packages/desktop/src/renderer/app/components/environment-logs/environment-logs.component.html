@@ -326,7 +326,14 @@
                 </div>
                 <div [ngbCollapse]="collapseStates['response.general']">
                   <div class="environment-logs-content-item">
-                    <strong>Status:</strong> {{ selectedLog.response?.status }}
+                    <strong>Status:</strong>
+                    {{
+                      selectedLog.response
+                        ? selectedLog.response.status +
+                          ' - ' +
+                          selectedLog.response.statusMessage
+                        : ''
+                    }}
                   </div>
                 </div>
 

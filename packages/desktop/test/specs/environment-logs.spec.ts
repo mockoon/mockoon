@@ -15,7 +15,8 @@ const endpointCall: HttpCall = {
   body: 'requestbody',
   testedResponse: {
     body: 'responsebody',
-    status: 200
+    status: 200,
+    statusMessage: 'OK'
   }
 };
 
@@ -25,7 +26,8 @@ const endpointCall2: HttpCall = {
   method: 'GET',
   testedResponse: {
     body: 'created',
-    status: 201
+    status: 201,
+    statusMessage: 'Created'
   }
 };
 
@@ -34,7 +36,8 @@ const errorCall: HttpCall = {
   path: '/prefix/test',
   method: 'GET',
   testedResponse: {
-    status: 404
+    status: 404,
+    statusMessage: 'Not Found'
   }
 };
 
@@ -43,7 +46,8 @@ const binaryCall: HttpCall = {
   path: '/prefix/file',
   method: 'GET',
   testedResponse: {
-    status: 200
+    status: 200,
+    statusMessage: 'OK'
   }
 };
 
@@ -139,7 +143,12 @@ describe('Environment logs', () => {
 
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
-        await environmentsLogs.assertLogItem('Status: 200', 'response', 2, 1);
+        await environmentsLogs.assertLogItem(
+          'Status: 200 - OK',
+          'response',
+          2,
+          1
+        );
         await environmentsLogs.assertLogItem(
           'Content-length: 12',
           'response',
@@ -190,7 +199,12 @@ describe('Environment logs', () => {
 
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
-        await environmentsLogs.assertLogItem('Status: 404', 'response', 2, 1);
+        await environmentsLogs.assertLogItem(
+          'Status: 404 - Not Found',
+          'response',
+          2,
+          1
+        );
         await environmentsLogs.assertLogItem(
           'Content-length: 150',
           'response',
@@ -258,7 +272,12 @@ describe('Environment logs', () => {
 
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
-        await environmentsLogs.assertLogItem('Status: 200', 'response', 2, 1);
+        await environmentsLogs.assertLogItem(
+          'Status: 200 - OK',
+          'response',
+          2,
+          1
+        );
         await environmentsLogs.assertLogItem(
           'Content-length: 8696',
           'response',
@@ -320,7 +339,12 @@ describe('Environment logs', () => {
     it('should assert presence on log page and verify selected entry', async () => {
       await navigation.switchView('ENV_LOGS');
       await environmentsLogs.assertActiveLogEntry(2);
-      await environmentsLogs.assertLogItem('Status: 200', 'response', 2, 1);
+      await environmentsLogs.assertLogItem(
+        'Status: 200 - OK',
+        'response',
+        2,
+        1
+      );
       await environmentsLogs.assertLogItem(' responsebody ', 'response', 6, 1);
     });
   });

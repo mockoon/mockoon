@@ -127,6 +127,7 @@ class Http {
           response.on('end', () =>
             resolve({
               status: response.statusCode,
+              statusMessage: response.statusMessage,
               headers: response.headers,
               body,
               cert: (response?.connection as any).getPeerCertificate
