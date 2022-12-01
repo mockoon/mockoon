@@ -525,6 +525,24 @@ export const Helpers = {
 
     return '';
   },
+  // Format a date and time to a specific format
+  dateFormat: function (...args: any[]) {
+    const date = fromSafeString(args[0]);
+    const format = fromSafeString(args[1]);
+
+    if (
+      args.length >= 2 &&
+      typeof date === 'string' &&
+      typeof format === 'string'
+    ) {
+      return dateFormat(new Date(date), format, {
+        useAdditionalWeekYearTokens: true,
+        useAdditionalDayOfYearTokens: true
+      });
+    }
+
+    return '';
+  },
   time: function (...args: any[]) {
     let from, to, format;
 

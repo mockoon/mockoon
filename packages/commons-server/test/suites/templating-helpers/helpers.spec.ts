@@ -340,6 +340,43 @@ describe('Template parser', () => {
     });
   });
 
+  describe('Helper: dateFormat', () => {
+    it('Should return an empty string if given the wrong amount of arguments', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{dateFormat}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('Should return an empty string if given the wrong amount of arguments', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{dateFormat '2022-01-01'}}",
+        {} as any,
+        [],
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('Should return a date using a given format', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{dateFormat '2022-02-01' 'YYYY'}}",
+        {} as any,
+        [],
+        {} as any
+      );
+
+      expect(parseResult).to.be.equal('2022');
+    });
+  });
+
   describe('Helper: dateTimeShift', () => {
     it('Should not throw an error when passed with invalid parameters.', () => {
       const parseResult = TemplateParser(
