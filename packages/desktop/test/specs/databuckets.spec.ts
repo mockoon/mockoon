@@ -237,7 +237,7 @@ describe('Databuckets autocompletion', () => {
 
     await utils.countElements(
       $$('.ace_editor.ace_autocomplete .ace_content .ace_line'),
-      4
+      9
     );
   });
 });

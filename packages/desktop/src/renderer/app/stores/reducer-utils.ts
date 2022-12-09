@@ -3,6 +3,7 @@ import {
   GetRouteResponseContentType,
   Route
 } from '@mockoon/commons';
+import { helpersAutocompletions } from 'src/renderer/app/constants/autocomplete.constant';
 import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
 import {
   DuplicatedRoutesTypes,
@@ -99,21 +100,37 @@ export const changeObjectKey = (
   delete target[previousKey];
 };
 
+/**
+ * Create the editor autocomplete list from the current environment data buckets and helpers list
+ *
+ * @param state
+ * @returns
+ */
 export const updateEditorAutocomplete = (state: StoreType) => {
   const currentEnvironment = state.environments.find(
     (environment) => environment.uuid === state.activeEnvironmentUUID
   );
   if (currentEnvironment) {
-    const autoCompletions = currentEnvironment.data.map((databucket) => ({
-      caption: `data '${databucket.id}'`,
-      value: `{{data '${databucket.id}'}}`,
-      meta: `Data "${databucket.name}"`
-    }));
+    const autoCompletions = [];
+    currentEnvironment.data.forEach((databucket) => {
+      autoCompletions.push(
+        {
+          caption: `data '${databucket.id}'`,
+          value: `{{data '${databucket.id}'}}`,
+          meta: `${databucket.name}`
+        },
+        {
+          caption: `dataRaw '${databucket.id}'`,
+          value: `{{dataRaw '${databucket.id}'}}`,
+          meta: `${databucket.name}`
+        }
+      );
+    });
 
     return [
       {
         getCompletions: (editor, session, pos, prefix, callback) => {
-          callback(null, autoCompletions);
+          callback(null, [...autoCompletions, ...helpersAutocompletions]);
         }
       }
     ];
