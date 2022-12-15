@@ -121,7 +121,7 @@ class Environments {
   public async assertMenuHTTPSIconPresent(reverse = false): Promise<void> {
     expect(
       await $(
-        `${this.activeMenuEntrySelector} .menu-subtitle app-svg[icon="https"]`
+        `${this.activeMenuEntrySelector} .nav-link-subtitle app-svg[icon="https"]`
       ).isExisting()
     ).toEqual(reverse ? false : true);
   }

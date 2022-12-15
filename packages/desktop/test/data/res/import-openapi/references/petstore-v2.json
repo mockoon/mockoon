@@ -1,19 +1,19 @@
 {
-  "uuid": "",
-  "lastMigration": 24,
+  "uuid": "5f2b78e0-fb9e-4318-b821-9c11acb79547",
+  "lastMigration": 25,
   "name": "Swagger Petstore v2",
   "endpointPrefix": "v2",
   "latency": 0,
   "port": 3000,
   "routes": [
     {
-      "uuid": "",
+      "uuid": "21a86fac-c2f5-4998-8267-b8245b7f0ddb",
       "documentation": "Add a new pet to the store",
       "method": "post",
       "endpoint": "pet",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "b070678d-f01f-43e1-baf4-db5d3d5e56d9",
           "body": "",
           "latency": 0,
           "statusCode": 405,
@@ -34,13 +34,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "a80e0202-5ceb-49d3-97df-b0d996d5fba2",
       "documentation": "Update an existing pet",
       "method": "put",
       "endpoint": "pet",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "5c4adf71-efd5-4ce2-bd13-a9fad4f59f26",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -57,7 +57,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "73b91946-0823-4b10-b8f7-a356ddaf80bb",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -74,7 +74,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "c69a2ad4-148f-4c43-a644-1765038201bc",
           "body": "",
           "latency": 0,
           "statusCode": 405,
@@ -95,13 +95,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "01f3fe0f-e800-487f-aba4-4b6e3f379e2f",
       "documentation": "Finds Pets by status",
       "method": "get",
       "endpoint": "pet/findByStatus",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "8fd18a0a-c0d1-4da9-804a-4286222f74fa",
           "body": "[\n  {\n    \"id\": {{faker 'datatype.number'}},\n    \"category\": {\n      \"id\": {{faker 'datatype.number'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'datatype.number'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -118,7 +118,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "1c652541-59a8-4e33-9d9e-8e3c6b4787f5",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -139,13 +139,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "e3285a96-7c3a-40fa-920c-5430e82ef037",
       "documentation": "Finds Pets by tags",
       "method": "get",
       "endpoint": "pet/findByTags",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "3358cac9-b05f-4f82-984f-e5f625014025",
           "body": "[\n  {\n    \"id\": {{faker 'datatype.number'}},\n    \"category\": {\n      \"id\": {{faker 'datatype.number'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'datatype.number'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -162,7 +162,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "cead5d3c-a8e1-41be-8e09-90f6b8f0d4eb",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -183,13 +183,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "bbbeb56e-d48b-4255-a8ab-53b24198b971",
       "documentation": "Find pet by ID",
       "method": "get",
       "endpoint": "pet/:petId",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "0d015a3b-c783-4bae-966d-5f42c45ce73d",
           "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"category\": {\n    \"id\": {{faker 'datatype.number'}},\n    \"name\": \"\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"\"\n  ],\n  \"tags\": [\n    {\n      \"id\": {{faker 'datatype.number'}},\n      \"name\": \"\"\n    }\n  ],\n  \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -206,7 +206,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "d1a15a94-ed31-4a3e-8c2e-3173860e3b3d",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -223,7 +223,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "80368754-997d-448e-89bd-3b8f6f6a3910",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -244,13 +244,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "85fe17f3-b1e7-410d-81a2-3bada714da3c",
       "documentation": "Updates a pet in the store with form data",
       "method": "post",
       "endpoint": "pet/:petId",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "e4e5cfd0-77f5-4ccc-8b2f-422141414424",
           "body": "",
           "latency": 0,
           "statusCode": 405,
@@ -271,13 +271,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "493e735d-5e5d-4583-82fc-4efb53ed5831",
       "documentation": "Deletes a pet",
       "method": "delete",
       "endpoint": "pet/:petId",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "c2db44c3-07f4-4670-8c2a-0bf5e7a41af2",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -294,7 +294,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "2357f277-5ea0-4328-bd6c-15934dc57d22",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -315,13 +315,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "7adc8cfd-8a5e-434a-91c8-f4b0e6443d9c",
       "documentation": "uploads an image",
       "method": "post",
       "endpoint": "pet/:petId/uploadImage",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "df57f1e8-592f-4835-a757-b56477daea4f",
           "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"type\": \"\",\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -342,13 +342,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "3373a660-a352-4960-9f0c-d03efe671071",
       "documentation": "Returns pet inventories by status",
       "method": "get",
       "endpoint": "store/inventory",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "8be305fd-9c2d-4da9-a352-afe0bde230c7",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -369,13 +369,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "52217d90-1728-4fb2-9e29-a1c4bf414c23",
       "documentation": "Place an order for a pet",
       "method": "post",
       "endpoint": "store/order",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "6c39a40c-4bfd-49c2-9abb-b310ef6792a5",
           "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"petId\": {{faker 'datatype.number'}},\n  \"quantity\": {{faker 'datatype.number'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
           "latency": 0,
           "statusCode": 200,
@@ -392,7 +392,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "dba33ee1-eec8-4c3b-9eca-2cb20cd57ec2",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -413,13 +413,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "025fe90c-7b81-408a-a853-fbc05eb3ce49",
       "documentation": "Find purchase order by ID",
       "method": "get",
       "endpoint": "store/order/:orderId",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "d62b1cbc-ab9e-46bb-a338-789ddf2eb324",
           "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"petId\": {{faker 'datatype.number'}},\n  \"quantity\": {{faker 'datatype.number'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
           "latency": 0,
           "statusCode": 200,
@@ -436,7 +436,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "01caabda-8252-4441-ab98-a40ca61c1a0d",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -453,7 +453,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "f471f037-8547-4697-a341-e82cbce80669",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -474,13 +474,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "b005a90c-b513-491b-aa8e-1b6ccb0e0c0c",
       "documentation": "Delete purchase order by ID",
       "method": "delete",
       "endpoint": "store/order/:orderId",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "d227c551-cd35-48f5-a814-89927277ba0a",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -497,7 +497,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "9ca07bce-ebff-4fb9-bde1-08baacc8941a",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -518,13 +518,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "161bfdad-a1cd-47c0-8b71-60b4fabc3beb",
       "documentation": "Create user",
       "method": "post",
       "endpoint": "user",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "fdbf9a64-4a64-4fae-a3d2-cffa192b66cb",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -545,13 +545,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "b37de1be-ee83-460f-a1d1-c3e530c6e6c3",
       "documentation": "Creates list of users with given input array",
       "method": "post",
       "endpoint": "user/createWithArray",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "26a9d80f-1007-404c-878a-38410315b7d5",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -572,13 +572,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "78de75f8-3380-4348-a932-e741f7d7ebd9",
       "documentation": "Creates list of users with given input array",
       "method": "post",
       "endpoint": "user/createWithList",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "6b64099b-feb5-495c-a1a3-1b397156dbdf",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -599,13 +599,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "b3fdfe58-6be9-4338-848e-26eab762d940",
       "documentation": "Logs user into the system",
       "method": "get",
       "endpoint": "user/login",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "b3592cf9-e1e4-4418-bcd3-a0cce9cefb4d",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 200,
@@ -626,7 +626,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "e516c482-3a13-4f37-91ea-642abcdc7d4e",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -647,13 +647,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "dd6ad6cf-8a5d-44ba-9904-b2c91203828c",
       "documentation": "Logs out current logged in user session",
       "method": "get",
       "endpoint": "user/logout",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "82812c6f-2463-4b08-9119-27da94249218",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -674,13 +674,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "bbe3288f-c167-4bdf-b7dc-f2b3975c101a",
       "documentation": "Get user by user name",
       "method": "get",
       "endpoint": "user/:username",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "1396423d-28fa-4e96-a2b1-0deb0a7f3154",
           "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"username\": \"\",\n  \"firstName\": \"\",\n  \"lastName\": \"\",\n  \"email\": \"\",\n  \"password\": \"\",\n  \"phone\": \"\",\n  \"userStatus\": {{faker 'datatype.number'}}\n}",
           "latency": 0,
           "statusCode": 200,
@@ -697,7 +697,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "fef817d9-1541-441f-8a20-bc14c1e319ce",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -714,7 +714,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "11e6debc-100b-443c-ae9a-a0f273004650",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -735,13 +735,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "89976e94-37ad-4451-aba9-b51b7d427a5e",
       "documentation": "Updated user",
       "method": "put",
       "endpoint": "user/:username",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "83f3efa3-0499-42a3-ba97-f81023fc1911",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -758,7 +758,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "e6a8abd5-99b2-4b6a-b1e5-6cae22aff188",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -779,13 +779,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "84b8d890-b7ca-49ae-ae0f-c880405283f0",
       "documentation": "Delete user",
       "method": "delete",
       "endpoint": "user/:username",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "40c70f56-9169-4da9-a4a7-c2a5393efa20",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -802,7 +802,7 @@
           "bodyType": "INLINE"
         },
         {
-          "uuid": "",
+          "uuid": "2020723a-1f69-4bcd-bd4e-6967b32778ba",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -840,5 +840,28 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "21a86fac-c2f5-4998-8267-b8245b7f0ddb" },
+    { "type": "route", "uuid": "a80e0202-5ceb-49d3-97df-b0d996d5fba2" },
+    { "type": "route", "uuid": "01f3fe0f-e800-487f-aba4-4b6e3f379e2f" },
+    { "type": "route", "uuid": "e3285a96-7c3a-40fa-920c-5430e82ef037" },
+    { "type": "route", "uuid": "bbbeb56e-d48b-4255-a8ab-53b24198b971" },
+    { "type": "route", "uuid": "85fe17f3-b1e7-410d-81a2-3bada714da3c" },
+    { "type": "route", "uuid": "493e735d-5e5d-4583-82fc-4efb53ed5831" },
+    { "type": "route", "uuid": "7adc8cfd-8a5e-434a-91c8-f4b0e6443d9c" },
+    { "type": "route", "uuid": "3373a660-a352-4960-9f0c-d03efe671071" },
+    { "type": "route", "uuid": "52217d90-1728-4fb2-9e29-a1c4bf414c23" },
+    { "type": "route", "uuid": "025fe90c-7b81-408a-a853-fbc05eb3ce49" },
+    { "type": "route", "uuid": "b005a90c-b513-491b-aa8e-1b6ccb0e0c0c" },
+    { "type": "route", "uuid": "161bfdad-a1cd-47c0-8b71-60b4fabc3beb" },
+    { "type": "route", "uuid": "b37de1be-ee83-460f-a1d1-c3e530c6e6c3" },
+    { "type": "route", "uuid": "78de75f8-3380-4348-a932-e741f7d7ebd9" },
+    { "type": "route", "uuid": "b3fdfe58-6be9-4338-848e-26eab762d940" },
+    { "type": "route", "uuid": "dd6ad6cf-8a5d-44ba-9904-b2c91203828c" },
+    { "type": "route", "uuid": "bbe3288f-c167-4bdf-b7dc-f2b3975c101a" },
+    { "type": "route", "uuid": "89976e94-37ad-4451-aba9-b51b7d427a5e" },
+    { "type": "route", "uuid": "84b8d890-b7ca-49ae-ae0f-c880405283f0" }
+  ]
 }

@@ -1,0 +1,17 @@
+<span
+  *ngIf="!edit || !editCondition"
+  [ngClass]="{
+    'cursor-text': editCondition
+  }"
+  >{{ text ? text : '&nbsp;' }}</span
+>
+<input
+  *ngIf="edit && editCondition"
+  #input
+  type="text"
+  class="form-control invisible-input"
+  [formControl]="data"
+  (click)="$event.stopPropagation()"
+  (keydown)="keydown($event)"
+  (blur)="save()"
+/>

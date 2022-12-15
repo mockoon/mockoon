@@ -1,6 +1,6 @@
 {
   "uuid": "f98d0d37-b586-4a57-bbe5-3699bc46ebbe",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "Compression (proxy)",
   "endpointPrefix": "",
   "latency": 0,
@@ -23,5 +23,7 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": []
 }

@@ -1,4 +1,3 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -51,6 +50,10 @@ import {
   EnvironmentsStatuses,
   TabsNameType
 } from 'src/renderer/app/models/store.model';
+import {
+  DraggableContainers,
+  DropAction
+} from 'src/renderer/app/models/ui.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -267,13 +270,12 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   /**
    * Callback called when reordering route responses
    *
-   * @param event
+   * @param dropAction
    */
-  public reorderRouteResponses(event: CdkDragDrop<string[]>) {
-    this.environmentsService.moveMenuItem(
-      'routeResponses',
-      event.previousIndex,
-      event.currentIndex
+  public reorganizeRouteResponses(dropAction: DropAction) {
+    this.environmentsService.reorganizeItems(
+      dropAction,
+      DraggableContainers.ROUTE_RESPONSES
     );
   }
 

@@ -1,6 +1,6 @@
 {
   "uuid": "d1fec840-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "Giphy",
   "endpointPrefix": "v1",
   "latency": 0,
@@ -974,5 +974,18 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "d1feef54-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d1feef5a-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d1feef60-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d1ff1664-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d1ff166a-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d1ff3d74-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d1ff3d7a-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d1ff3d80-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d20000c4-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "d20027d4-e7d4-11ea-a5ec-979674ac1a4b" }
+  ]
 }

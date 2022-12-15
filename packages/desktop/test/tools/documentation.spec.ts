@@ -163,7 +163,7 @@ const documentationTopics: {
 }[] = [
   {
     enabled: true,
-    folder: 'routing',
+    folder: 'api-endpoints/routing',
     screenshots: [
       {
         tasks: null,
@@ -1253,6 +1253,51 @@ const documentationTopics: {
         fileName: 'legacy-export-file-open-prompt.png'
       }
     ]
+  },
+  {
+    enabled: true,
+    folder: 'api-endpoints/folders',
+    screenshots: [
+      {
+        tasks: async () => {
+          await modals.close();
+          await environments.close(1);
+          await environments.close(1);
+          await environments.open('empty');
+          await navigation.switchView('ENV_SETTINGS');
+          await environmentsSettings.setSettingValue('name', 'Demo API');
+          await navigation.switchView('ENV_ROUTES');
+          await routes.addFolder();
+          await (await routes.getMenuItemEditable(1)).click();
+          await routes.setMenuItemEditableText(1, 'Users');
+          await browser.pause(10000);
+          await contextMenu.open('routes', 1);
+          await contextMenu.click('routes', 1, 1);
+          await routes.pathInput.setValue('/users');
+          await contextMenu.open('routes', 1);
+          await contextMenu.click('routes', 1, 1);
+          await routes.pathInput.setValue('/users/:id');
+          await routes.addFolder();
+          await (await routes.getMenuItemEditable(4)).click();
+          await routes.setMenuItemEditableText(4, 'Invoices');
+          await contextMenu.open('routes', 4);
+          await contextMenu.click('routes', 4, 1);
+          await routes.pathInput.setValue('/invoices');
+          await contextMenu.open('routes', 4);
+          await contextMenu.click('routes', 4, 1);
+          await routes.pathInput.setValue('/invoices/:id');
+        },
+        get screenshotTarget() {
+          return routes.getMenuItem(1);
+        },
+        highlightedTarget: null,
+        highlight: false,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 500, bottom: 400 },
+        fileName: 'routes-nested-folder.png'
+      }
+    ]
   }
 ];
 
@@ -1337,6 +1382,7 @@ describe('Documentation screenshots', () => {
         mainMenuSize: 150,
         secondaryMenuSize: 250
       });
+      await environments.close(1);
       await environments.open('documentation');
 
       await navigation.switchView('ENV_PROXY');

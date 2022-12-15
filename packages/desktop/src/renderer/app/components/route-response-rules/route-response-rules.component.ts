@@ -1,4 +1,3 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,17 +25,17 @@ import {
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
-import { MoveArrayItem } from 'src/renderer/app/libs/utils.lib';
 import {
   SelectOptionsList,
   ToggleItems
 } from 'src/renderer/app/models/common.model';
+import { DropAction } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { moveItemToTargetIndex } from 'src/renderer/app/stores/reducer-utils';
 
 @Component({
   selector: 'app-route-response-rules',
   templateUrl: 'route-response-rules.component.html',
-  styleUrls: ['route-response-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {
@@ -161,13 +160,16 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     return disablingTargets.includes(operator) ? true : null;
   }
 
-  public reorderResponseRules(event: CdkDragDrop<string[]>) {
-    const responseRules = MoveArrayItem<ResponseRule>(
-      this.rules.value,
-      event.previousIndex,
-      event.currentIndex
+  public reorganizeRules(dropAction: DropAction) {
+    this.replaceRules(
+      moveItemToTargetIndex(
+        this.rules.value,
+        dropAction.dropActionType,
+        dropAction.sourceId as number,
+        dropAction.targetId as number
+      ),
+      true
     );
-    this.replaceRules(responseRules, true);
   }
 
   /**

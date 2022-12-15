@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DuplicateEntityToAnotherEnvironment } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { finalizeEntityDuplicationToAnotherEnvironmentAction } from 'src/renderer/app/stores/actions';
+import { cancelEntityDuplicationToAnotherEnvironmentAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
@@ -77,7 +77,7 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
   }
 
   public closeModal() {
-    this.store.update(finalizeEntityDuplicationToAnotherEnvironmentAction());
+    this.store.update(cancelEntityDuplicationToAnotherEnvironmentAction());
     this.modalService.dismissAll(false);
   }
 

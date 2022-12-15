@@ -1,4 +1,3 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule, SecurityContext } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -27,6 +26,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { BannerComponent } from 'src/renderer/app/components/banner/banner.component';
 import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/context-menu.component';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { EnvironmentDatabucketsComponent } from 'src/renderer/app/components/environment-databuckets/environment-databuckets.component';
 import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
@@ -50,10 +50,12 @@ import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-r
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
+import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
+import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
-import { MousedragDeadzoneDirective } from 'src/renderer/app/directives/mousedrag-deadzone.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
+import { SearchFilterDirective } from 'src/renderer/app/directives/search-filter.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/renderer/app/modules-config/markdown.config';
 import { NgbDropdownConfigFactory } from 'src/renderer/app/modules-config/ngb-dropdown.config';
@@ -74,8 +76,10 @@ import { LoaderComponent } from './components/loader/loader.component';
     InputNumberDirective,
     ResizeColumnDirective,
     ValidPathDirective,
-    MousedragDeadzoneDirective,
     FocusOnEventDirective,
+    DraggableDirective,
+    DropzoneDirective,
+    SearchFilterDirective,
     ContextMenuComponent,
     WelcomeModalComponent,
     SettingsModalComponent,
@@ -101,12 +105,12 @@ import { LoaderComponent } from './components/loader/loader.component';
     CustomSelectComponent,
     ToggleComponent,
     SvgComponent,
-    LoaderComponent
+    LoaderComponent,
+    EditableElementComponent
   ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
-    DragDropModule,
     FormsModule,
     HttpClientModule,
     NgbModule,

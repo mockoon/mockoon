@@ -51,7 +51,7 @@ export class ApiService {
             this.environmentsService.closeEnvironment().subscribe();
             break;
           case 'NEW_ROUTE':
-            this.environmentsService.addRoute();
+            this.environmentsService.addRoute('root');
             break;
           case 'NEW_ROUTE_CLIPBOARD':
             this.environmentsService.addRouteFromClipboard().subscribe();
@@ -63,7 +63,7 @@ export class ApiService {
             this.environmentsService.toggleAllEnvironments();
             break;
           case 'DUPLICATE_ROUTE':
-            this.environmentsService.duplicateRoute();
+            this.environmentsService.duplicateRoute('root');
             break;
           case 'DELETE_ROUTE':
             this.environmentsService.removeRoute();
@@ -73,12 +73,6 @@ export class ApiService {
             break;
           case 'NEXT_ENVIRONMENT':
             this.environmentsService.setActiveEnvironment('next');
-            break;
-          case 'PREVIOUS_ROUTE':
-            this.environmentsService.setActiveRoute('previous');
-            break;
-          case 'NEXT_ROUTE':
-            this.environmentsService.setActiveRoute('next');
             break;
           case 'OPEN_SETTINGS':
             this.modalService.dismissAll();

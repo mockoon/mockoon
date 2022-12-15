@@ -1,6 +1,6 @@
 <ng-container *ngIf="routeResponse$ | async">
   <ng-container [formGroup]="form">
-    <div class="rules mt-2 d-flex">
+    <div class="rules d-flex">
       <ng-container *ngIf="form.get('rules').value.length > 1">
         <div class="rules-operator d-flex flex-column justify-content-center">
           <app-toggle
@@ -14,23 +14,23 @@
         <div class="brackets"></div>
       </ng-container>
 
-      <div
-        class="rules-list flex-grow-1"
-        cdkDropList
-        (cdkDropListDropped)="reorderResponseRules($event)"
-      >
+      <div class="rules-list flex-grow-1">
         <ng-container formArrayName="rules">
           <div
-            class="rule-item"
+            class="rule-item py-1"
             *ngFor="
               let rule of form.get('rules')['controls'];
               index as ruleIndex
             "
             [formGroupName]="ruleIndex"
-            cdkDrag
-            cdkDragLockAxis="y"
-            cdkDragBoundary=".rules-list"
-            [cdkDragDisabled]="form.get('rules')['controls'].length <= 1"
+            appDraggable
+            appDropzone
+            dragContainer="route-rules"
+            [dragEnabled]="form.get('rules')['controls'].length > 1"
+            dragParentId="root"
+            [dragIsContainer]="false"
+            [dragId]="ruleIndex"
+            (dropped)="reorganizeRules($event)"
           >
             <div class="form-inline">
               <select
@@ -140,9 +140,9 @@
 
               <div
                 *ngIf="form.get('rules').value.length > 1"
+                #dragHandle
                 class="input-group-prepend clickable"
                 ngbTooltip="Reorder"
-                cdkDragHandle
               >
                 <span class="input-group-text p-1 cursor-grab text-muted">
                   <app-svg icon="drag_indicator"></app-svg>

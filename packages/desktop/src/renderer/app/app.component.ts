@@ -125,7 +125,10 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
     switch (payload.action) {
       case 'duplicate':
         if (payload.subject === 'route') {
-          this.environmentsService.duplicateRoute(payload.subjectUUID);
+          this.environmentsService.duplicateRoute(
+            payload.parentId,
+            payload.subjectUUID
+          );
         } else if (payload.subject === 'environment') {
           this.environmentsService
             .duplicateEnvironment(payload.subjectUUID)
@@ -148,6 +151,18 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
           this.environmentsService.removeRoute(payload.subjectUUID);
         } else if (payload.subject === 'databucket') {
           this.environmentsService.removeDatabucket(payload.subjectUUID);
+        } else if (payload.subject === 'folder') {
+          this.environmentsService.removeFolder(payload.subjectUUID);
+        }
+        break;
+      case 'add_route':
+        if (payload.subject === 'folder') {
+          this.environmentsService.addRoute(payload.subjectUUID);
+        }
+        break;
+      case 'add_folder':
+        if (payload.subject === 'folder') {
+          this.environmentsService.addFolder(payload.subjectUUID);
         }
         break;
       case 'close':

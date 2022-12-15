@@ -1,6 +1,6 @@
 {
   "uuid": "321179b8-861b-4c62-ad5f-b4b0adc8858a",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -741,5 +741,13 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "c595a481-a367-4cc6-8ae1-188b72e9e3c7" },
+    { "type": "route", "uuid": "8329a6ce-cd63-4a9f-bac8-b6e2f7f9b2ce" },
+    { "type": "route", "uuid": "cdc1ec69-6bd5-47c5-bd17-38fdd9c717d3" },
+    { "type": "route", "uuid": "2dcd4a1a-c909-4fbd-a8d1-1f8eb4b9ff08" },
+    { "type": "route", "uuid": "91bb9268-ff26-4e4d-93d8-cb6f1bd39731" }
+  ]
 }

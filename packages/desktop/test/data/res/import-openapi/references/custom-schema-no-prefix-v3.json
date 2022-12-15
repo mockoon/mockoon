@@ -1,19 +1,19 @@
 {
-  "uuid": "",
-  "lastMigration": 24,
+  "uuid": "a0d62338-24ce-4ced-bc97-59bf933d1ce9",
+  "lastMigration": 25,
   "name": "Sample v3 schema",
   "endpointPrefix": "",
   "latency": 0,
   "port": 3000,
   "routes": [
     {
-      "uuid": "",
+      "uuid": "a024635f-b489-475a-a4ae-0d879c8ec6b4",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "416ddd33-4693-4924-aaf9-8082a18a4cc6",
           "body": "[\n  {\n    \"id\": {{faker 'datatype.number'}},\n    \"order\": {{faker 'datatype.float'}},\n    \"quantity\": {{faker 'datatype.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'datatype.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -34,13 +34,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "9863a3ce-ec67-4658-8172-8605936cc8f9",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint2",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "ba3249c3-314f-4c37-bff0-3f64b1ef5e65",
           "body": "[\n  {\n    \"id\": {{faker 'datatype.number'}},\n    \"order\": {{faker 'datatype.float'}},\n    \"quantity\": {{faker 'datatype.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'datatype.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -61,13 +61,13 @@
       "responseMode": null
     },
     {
-      "uuid": "",
+      "uuid": "63662377-902f-4a71-8797-a3d12cdefc4a",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint3",
       "responses": [
         {
-          "uuid": "",
+          "uuid": "279994c3-4fc8-4776-b786-638714b76d72",
           "body": "[\n  {\n    \"id\": {{faker 'datatype.number'}},\n    \"order\": {{faker 'datatype.float'}},\n    \"quantity\": {{faker 'datatype.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'datatype.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -110,5 +110,11 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "a024635f-b489-475a-a4ae-0d879c8ec6b4" },
+    { "type": "route", "uuid": "9863a3ce-ec67-4658-8172-8605936cc8f9" },
+    { "type": "route", "uuid": "63662377-902f-4a71-8797-a3d12cdefc4a" }
+  ]
 }

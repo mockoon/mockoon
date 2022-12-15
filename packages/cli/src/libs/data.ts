@@ -5,6 +5,7 @@ import {
   HighestMigrationId,
   IsLegacyExportData,
   Migrations,
+  repairRefs,
   UnwrapLegacyExport
 } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
@@ -133,11 +134,13 @@ const migrateAndValidateEnvironment = async (
     environment.lastMigration = HighestMigrationId;
   }
 
-  const validatedEnvironment = EnvironmentSchema.validate(environment).value;
+  let validatedEnvironment = EnvironmentSchema.validate(environment).value;
 
   if (!validatedEnvironment) {
     throw new Error(Messages.CLI.DATA_INVALID);
   }
+
+  validatedEnvironment = repairRefs(validatedEnvironment);
 
   return validatedEnvironment;
 };

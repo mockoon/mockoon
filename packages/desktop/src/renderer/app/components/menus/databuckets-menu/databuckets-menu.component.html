@@ -1,6 +1,6 @@
 <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
-  <div class="databuckets-menu d-flex flex-column h-100" appMousedragDeadzone>
-    <div class="menu-header d-flex">
+  <div class="databuckets-menu d-flex flex-column h-100">
+    <div class="d-flex">
       <ul class="nav d-flex w-100 pt-2 pb-2 align-items-center">
         <li class="nav-item">
           <a
@@ -43,19 +43,19 @@
     </div>
 
     <ng-container *ngIf="databucketList$ | async as databucketList">
-      <ul
-        class="nav flex-column menu-list"
-        #databucketsMenu
-        cdkDropList
-        (cdkDropListDropped)="reorderDatabuckets($event)"
-      >
+      <ul class="nav flex-column menu-list pt-1 pb-1 h-100" #databucketsMenu>
         <li
           class="nav-item"
           *ngFor="let environmentDatabucket of databucketList"
-          cdkDrag
-          cdkDragLockAxis="y"
-          cdkDragBoundary=".databuckets-menu .nav.menu-list"
-          [cdkDragDisabled]="dragIsDisabled"
+          [appSearchFilter]="databucketsFilter$"
+          appDraggable
+          appDropzone
+          dragContainer="databuckets"
+          [dragEnabled]="dragIsEnabled"
+          dragParentId="root"
+          [dragIsContainer]="false"
+          [dragId]="environmentDatabucket.uuid"
+          (dropped)="reorganizeDatabuckets($event)"
         >
           <a
             class="nav-link"
@@ -76,7 +76,7 @@
             >
               {{ environmentDatabucket.name }}
             </div>
-            <div class="menu-subtitle ellipsis">
+            <div class="nav-link-subtitle ellipsis">
               {{ environmentDatabucket.documentation }}
             </div>
           </a>

@@ -1,12 +1,14 @@
 import {
   DataBucket,
   Environment,
+  Folder,
   Route,
   RouteResponse
 } from '@mockoon/commons';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
+import { FolderProperties } from 'src/renderer/app/models/folder.model';
 import {
   RouteProperties,
   RouteResponseProperties
@@ -20,10 +22,8 @@ import {
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import {
-  ReducerDirectionType,
-  ReducerIndexes
-} from 'src/renderer/app/stores/reducer';
+import { DropAction } from 'src/renderer/app/models/ui.model';
+import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 
 export const enum ActionTypes {
   SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
@@ -31,7 +31,7 @@ export const enum ActionTypes {
   SET_ACTIVE_ENVIRONMENT_LOG_TAB = 'SET_ACTIVE_ENVIRONMENT_LOG_TAB',
   SET_ACTIVE_ENVIRONMENT = 'SET_ACTIVE_ENVIRONMENT',
   NAVIGATE_ENVIRONMENTS = 'NAVIGATE_ENVIRONMENTS',
-  MOVE_ENVIRONMENTS = 'MOVE_ENVIRONMENTS',
+  REORGANIZE_ENVIRONMENTS = 'REORGANIZE_ENVIRONMENTS',
   ADD_ENVIRONMENT = 'ADD_ENVIRONMENT',
   REMOVE_ENVIRONMENT = 'REMOVE_ENVIRONMENT',
   UPDATE_ENVIRONMENT = 'UPDATE_ENVIRONMENT',
@@ -40,10 +40,12 @@ export const enum ActionTypes {
   UPDATE_ENVIRONMENT_ROUTE_FILTER = 'UPDATE_ENVIRONMENT_ROUTE_FILTER',
   UPDATE_ENVIRONMENT_DATABUCKET_FILTER = 'UPDATE_ENVIRONMENT_DATABUCKET_FILTER',
   SET_ACTIVE_ROUTE = 'SET_ACTIVE_ROUTE',
-  NAVIGATE_ROUTES = 'NAVIGATE_ROUTES',
-  MOVE_ROUTES = 'MOVE_ROUTES',
-  MOVE_DATABUCKETS = 'MOVE_DATABUCKETS',
-  MOVE_ROUTE_RESPONSES = 'MOVE_ROUTE_RESPONSES',
+  REORGANIZE_ROUTES = 'REORGANIZE_ROUTES',
+  REORGANIZE_DATABUCKETS = 'REORGANIZE_DATABUCKETS',
+  REORGANIZE_ROUTE_RESPONSES = 'REORGANIZE_ROUTE_RESPONSES',
+  ADD_FOLDER = 'ADD_FOLDER',
+  REMOVE_FOLDER = 'REMOVE_FOLDER',
+  UPDATE_FOLDER = 'UPDATE_FOLDER',
   ADD_ROUTE = 'ADD_ROUTE',
   REMOVE_ROUTE = 'REMOVE_ROUTE',
   REMOVE_ROUTE_RESPONSE = 'REMOVE_ROUTE_RESPONSE',
@@ -65,7 +67,7 @@ export const enum ActionTypes {
   UPDATE_SETTINGS = 'UPDATE_SETTINGS',
   UPDATE_UI_STATE = 'UPDATE_UI_STATE',
   START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
-  FINALIZE_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'FINALIZE_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
+  CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT'
 }
@@ -128,47 +130,52 @@ export const navigateEnvironmentsAction = (direction: ReducerDirectionType) =>
   } as const);
 
 /**
- * Move an environment
+ * Reorder environments
  *
- * @param indexes - indexes to and from which move
+ * @param dropAction
+ * @returns
  */
-export const moveEnvironmentsAction = (indexes: ReducerIndexes) =>
+export const reorganizeEnvironmentsAction = (dropAction: DropAction<string>) =>
   ({
-    type: ActionTypes.MOVE_ENVIRONMENTS,
-    indexes
+    type: ActionTypes.REORGANIZE_ENVIRONMENTS,
+    dropAction
   } as const);
 
 /**
- * Move a route
  *
- * @param indexes - indexes to and from which move
+ * Reorganize routes and folders
+ *
+ * @param dropAction
+ * @returns
  */
-export const moveRoutesAction = (indexes: ReducerIndexes) =>
+export const reorganizeRoutesAction = (dropAction: DropAction<string>) =>
   ({
-    type: ActionTypes.MOVE_ROUTES,
-    indexes
+    type: ActionTypes.REORGANIZE_ROUTES,
+    dropAction
   } as const);
 
 /**
- * Move a route response
+ * Reorder route responses
  *
- * @param indexes - indexes to and from which move
+ * @param dropAction
  */
-export const moveRouteResponsesAction = (indexes: ReducerIndexes) =>
+export const reorganizeRouteResponsesAction = (
+  dropAction: DropAction<string>
+) =>
   ({
-    type: ActionTypes.MOVE_ROUTE_RESPONSES,
-    indexes
+    type: ActionTypes.REORGANIZE_ROUTE_RESPONSES,
+    dropAction
   } as const);
 
 /**
- * Move a databucket
+ * Reorder databuckets
  *
- * @param indexes - indexes to and from which move
+ * @param dropAction
  */
-export const moveDatabucketsAction = (indexes: ReducerIndexes) =>
+export const reorganizeDatabucketsAction = (dropAction: DropAction<string>) =>
   ({
-    type: ActionTypes.MOVE_DATABUCKETS,
-    indexes
+    type: ActionTypes.REORGANIZE_DATABUCKETS,
+    dropAction
   } as const);
 
 /**
@@ -281,26 +288,56 @@ export const setActiveRouteAction = (routeUUID: string) =>
   } as const);
 
 /**
- * Navigate between routes
+ * Add a folder
  *
- * @param direction - direction to which navigate to
+ * @param folder - folder to add
+ * @param parentId - target parent (root or folder) Id
  */
-export const navigateRoutesAction = (direction: ReducerDirectionType) =>
+export const addFolderAction = (folder: Folder, parentId?: string | 'root') =>
   ({
-    type: ActionTypes.NAVIGATE_ROUTES,
-    direction
+    type: ActionTypes.ADD_FOLDER,
+    folder,
+    parentId
+  } as const);
+
+/**
+ * Remove a folder
+ *
+ * @param folderUUID - folder UUID to remove
+ */
+export const removeFolderAction = (folderUUID: string) =>
+  ({
+    type: ActionTypes.REMOVE_FOLDER,
+    folderUUID
+  } as const);
+
+/**
+ * Update a folder
+ *
+ * @param folderUUID - UUID of the folder to update
+ * @param properties - properties to update
+ */
+export const updateFolderAction = (
+  folderUUID: string,
+  properties: FolderProperties
+) =>
+  ({
+    type: ActionTypes.UPDATE_FOLDER,
+    folderUUID,
+    properties
   } as const);
 
 /**
  * Add a route
  *
  * @param route - route to add
+ * @param parentId - target parent (root or folder) Id
  */
-export const addRouteAction = (route: Route, afterUUID?: string) =>
+export const addRouteAction = (route: Route, parentId: string | 'root') =>
   ({
     type: ActionTypes.ADD_ROUTE,
     route,
-    afterUUID
+    parentId
   } as const);
 
 /**
@@ -389,9 +426,9 @@ export const startEntityDuplicationToAnotherEnvironmentAction = (
 /**
  * Cancels out entity movement
  */
-export const finalizeEntityDuplicationToAnotherEnvironmentAction = () =>
+export const cancelEntityDuplicationToAnotherEnvironmentAction = () =>
   ({
-    type: ActionTypes.FINALIZE_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT
+    type: ActionTypes.CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT
   } as const);
 
 /**
@@ -573,10 +610,10 @@ export type Actions =
   | ReturnType<typeof setActiveEnvironmentLogTabAction>
   | ReturnType<typeof setActiveEnvironmentAction>
   | ReturnType<typeof navigateEnvironmentsAction>
-  | ReturnType<typeof moveEnvironmentsAction>
-  | ReturnType<typeof moveRoutesAction>
-  | ReturnType<typeof moveRouteResponsesAction>
-  | ReturnType<typeof moveDatabucketsAction>
+  | ReturnType<typeof reorganizeEnvironmentsAction>
+  | ReturnType<typeof reorganizeRoutesAction>
+  | ReturnType<typeof reorganizeRouteResponsesAction>
+  | ReturnType<typeof reorganizeDatabucketsAction>
   | ReturnType<typeof addEnvironmentAction>
   | ReturnType<typeof removeEnvironmentAction>
   | ReturnType<typeof updateEnvironmentAction>
@@ -585,7 +622,9 @@ export type Actions =
   | ReturnType<typeof updateEnvironmentroutesFilterAction>
   | ReturnType<typeof updateEnvironmentDatabucketsFilterAction>
   | ReturnType<typeof setActiveRouteAction>
-  | ReturnType<typeof navigateRoutesAction>
+  | ReturnType<typeof addFolderAction>
+  | ReturnType<typeof removeFolderAction>
+  | ReturnType<typeof updateFolderAction>
   | ReturnType<typeof addRouteAction>
   | ReturnType<typeof removeRouteAction>
   | ReturnType<typeof removeRouteResponseAction>
@@ -606,6 +645,6 @@ export type Actions =
   | ReturnType<typeof updateUIStateAction>
   | ReturnType<typeof updateSettingsAction>
   | ReturnType<typeof startEntityDuplicationToAnotherEnvironmentAction>
-  | ReturnType<typeof finalizeEntityDuplicationToAnotherEnvironmentAction>
+  | ReturnType<typeof cancelEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>;

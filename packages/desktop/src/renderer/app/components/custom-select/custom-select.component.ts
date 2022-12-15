@@ -179,8 +179,10 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
         if (this.enableCustomInput) {
           this.customValueInput.nativeElement.focus();
         } else {
-          this.dropdownMenuItems.first.nativeElement.focus();
-          this.focusedItemIndex$.next(0);
+          if (this.dropdownMenuItems.length > 0) {
+            this.dropdownMenuItems.first.nativeElement.focus();
+            this.focusedItemIndex$.next(0);
+          }
         }
       }, 0);
     } else {

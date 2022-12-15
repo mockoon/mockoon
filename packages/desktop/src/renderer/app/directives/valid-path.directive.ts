@@ -30,7 +30,6 @@ export class ValidPathDirective {
    * Handle values entered in the input field
    */
   @HostListener('input', ['$event.target.value'])
-  @HostListener('change', ['$event.target.value'])
   public handleInput(inputValue: string) {
     const cursorPosition = this.elementRef.nativeElement.selectionStart;
     const sanitizedValue = this.sanitize(inputValue);

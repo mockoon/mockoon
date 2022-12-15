@@ -28,7 +28,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 ::selection {
-  background: $blue;
+  background: rgba($blue, 0.5);
 }
 
 html {
@@ -90,10 +90,6 @@ input,
 .menu-list {
   overflow-x: hidden;
   overflow-y: auto;
-
-  .nav-item {
-    box-shadow: inset 0 -1px 0 0 lighten($gray-900, 3%);
-  }
 }
 
 // avoid list style when dragging (item is created outside of a .nav)
@@ -101,11 +97,7 @@ input,
   list-style: none;
 }
 
-.menu-header {
-  box-shadow: inset 0 -1px 0 0 lighten($gray-900, 3%);
-}
-
-.menu-subtitle {
+.nav-link-subtitle {
   color: $gray-500;
   font-size: $small-font-size;
 }
@@ -122,17 +114,8 @@ input,
 .cursor-grab {
   cursor: grab;
 }
-
-.invisible-input {
-  color: inherit;
-  background-color: transparent;
-  border: none;
-  outline: 0;
-  box-shadow: none;
-  padding: 0;
-  margin: 0;
-  height: inherit;
-  width: 100%;
+.cursor-text {
+  cursor: text;
 }
 
 // http methods badges
@@ -245,7 +228,7 @@ $http-methods-light: ('get', lighten($blue, 10%)),
     box-shadow: inset -4px 0 0 0 rgba($blue, 0);
   }
   to {
-    box-shadow: inset -4px 0 0 0 rgba($blue, 0.5);
+    box-shadow: inset -4px 0 0 0 rgba($blue, 0.8);
   }
 }
 
@@ -258,4 +241,48 @@ $http-methods-light: ('get', lighten($blue, 10%)),
   border-left: 3px solid $gray-500;
   margin: $spacer / 2;
   width: 11px;
+}
+
+.drag-highlight {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border: 2px solid rgba($blue, 0.8);
+  }
+}
+
+.drag-highlight-top {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    z-index: 1000;
+    content: '';
+    top: -1px;
+    height: 2px;
+    left: 0;
+    right: 0;
+    border-top: 2px solid rgba($blue, 0.8);
+  }
+}
+
+.drag-highlight-bottom {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    z-index: 1000;
+    content: '';
+    bottom: -1px;
+    height: 2px;
+    left: 0;
+    right: 0;
+    border-top: 2px solid rgba($blue, 0.8);
+  }
 }

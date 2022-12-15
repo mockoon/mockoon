@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -78,5 +78,10 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "9eec44ab-48b1-454f-8cda-ddbc9aeaac0e" },
+    { "type": "route", "uuid": "e929ed63-9c47-4ef0-9192-894de0a104ea" }
+  ]
 }
