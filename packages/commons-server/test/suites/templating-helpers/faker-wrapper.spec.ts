@@ -130,4 +130,15 @@ describe('Template parser: Faker wrapper', () => {
     );
     expect(parseResult).to.be.equal('deactivated');
   });
+
+  it('should be able to use an array', () => {
+    const parseResult = TemplateParser(
+      false,
+      "{{len (faker 'address.nearbyGPSCoordinate')}}",
+      {} as any,
+      [],
+      {} as any
+    );
+    expect(parseResult).to.be.equal('2');
+  });
 });

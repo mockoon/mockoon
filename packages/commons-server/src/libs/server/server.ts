@@ -1004,14 +1004,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             parsed: false
           };
         } else {
-          const templateParsedContent = TemplateParser(
-            false,
-            databucket.value,
-            environment,
-            this.processedDatabuckets
-          );
+          let templateParsedContent;
 
           try {
+            templateParsedContent = TemplateParser(
+              false,
+              databucket.value,
+              environment,
+              this.processedDatabuckets
+            );
+
             const JSONParsedContent = JSON.parse(templateParsedContent);
             newProcessedDatabucket = {
               id: databucket.id,
@@ -1019,13 +1021,22 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               value: JSONParsedContent,
               parsed: true
             };
-          } catch (e) {
-            newProcessedDatabucket = {
-              id: databucket.id,
-              name: databucket.name,
-              value: templateParsedContent,
-              parsed: true
-            };
+          } catch (error: any) {
+            if (error instanceof SyntaxError) {
+              newProcessedDatabucket = {
+                id: databucket.id,
+                name: databucket.name,
+                value: templateParsedContent,
+                parsed: true
+              };
+            } else {
+              newProcessedDatabucket = {
+                id: databucket.id,
+                name: databucket.name,
+                value: error.message,
+                parsed: true
+              };
+            }
           }
         }
         this.processedDatabuckets.push(newProcessedDatabucket);
@@ -1078,19 +1089,23 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           if (targetDatabucket && !targetDatabucket?.parsed) {
             let content = targetDatabucket.value;
-            content = TemplateParser(
-              false,
-              targetDatabucket.value,
-              environment,
-              this.processedDatabuckets,
-              request
-            );
             try {
+              content = TemplateParser(
+                false,
+                targetDatabucket.value,
+                environment,
+                this.processedDatabuckets,
+                request
+              );
               const JSONParsedcontent = JSON.parse(content);
               targetDatabucket.value = JSONParsedcontent;
               targetDatabucket.parsed = true;
-            } catch {
-              targetDatabucket.value = content;
+            } catch (error: any) {
+              if (error instanceof SyntaxError) {
+                targetDatabucket.value = content;
+              } else {
+                targetDatabucket.value = error.message;
+              }
               targetDatabucket.parsed = true;
             }
           }
