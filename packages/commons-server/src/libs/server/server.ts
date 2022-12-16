@@ -1082,14 +1082,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       const results = response.body?.matchAll(
         new RegExp('{{2,3}[\\s|#|\\w|(]*data [\'|"]{1}([^(\'|")]*)', 'g')
       );
-      const databucketIdsToParse = [...(results || [])].map(
-        (match) => match[1]
+      const databucketIdsToParse = new Set(
+        [...(results || [])].map((match) => match[1])
       );
+
       if (response.databucketID) {
-        databucketIdsToParse.push(response.databucketID);
+        databucketIdsToParse.add(response.databucketID);
       }
 
-      if (databucketIdsToParse.length) {
+      if (databucketIdsToParse.size > 0) {
         let targetDatabucket: ProcessedDatabucket | undefined;
 
         for (const databucketIdToParse of databucketIdsToParse) {
