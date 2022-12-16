@@ -1,3 +1,4 @@
+import { Folder, FolderChild } from './folder.model';
 import { Header, Route } from './route.model';
 
 export type TLSOptionsType = 'PFX' | 'CERT';
@@ -38,7 +39,9 @@ export type Environment = {
   hostname: string;
   endpointPrefix: string;
   latency: number;
+  folders: Folder[];
   routes: Route[];
+  rootChildren: FolderChild[];
   proxyMode: boolean;
   proxyRemovePrefix: boolean;
   proxyHost: string;

@@ -1,6 +1,6 @@
 {
   "uuid": "5f5ec26d-9a10-4b34-95a8-a9e4dff5ca41",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "Environment logs 2",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -54,5 +54,9 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "c60595a6-f82b-4d01-b1c1-9a51d2e52bbf" }
+  ]
 }

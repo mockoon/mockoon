@@ -192,10 +192,11 @@ describe('Databucket filter', () => {
     await environments.select(1);
     await navigation.switchView('ENV_DATABUCKETS');
     await databuckets.setFilter('Second');
-    await browser.pause(200);
+    await browser.pause(100);
     await databuckets.assertCount(1);
 
-    await contextMenu.click('databuckets', 1, 2);
+    // menu element is still no. 2 because filtering only add a d-none class
+    await contextMenu.click('databuckets', 2, 2);
     await $(
       '.modal-content .modal-body .list-group .list-group-item:first-child'
     ).click();

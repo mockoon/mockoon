@@ -381,6 +381,7 @@ describe('Environment logs', () => {
 
       it('should open request body in editor', async () => {
         await environmentsLogs.clickOpenBodyInEditorButton('request');
+        await browser.pause(100);
         await modals.assertExists();
         await modals.close();
       });
@@ -389,6 +390,7 @@ describe('Environment logs', () => {
         await environmentsLogs.switchTab('RESPONSE');
 
         await environmentsLogs.clickOpenBodyInEditorButton('response');
+        await browser.pause(100);
         await modals.assertExists();
         await modals.close();
       });
@@ -407,8 +409,7 @@ describe('Environment logs', () => {
 
       it('should changes log setting', async () => {
         await settings.open();
-        // Add 0 to default value of 1
-        await settings.setSettingValue('settings-log-max-count', '0');
+        await settings.setSettingValue('settings-log-max-count', '10');
         await modals.close();
       });
 
@@ -423,7 +424,7 @@ describe('Environment logs', () => {
         });
       }
 
-      it('should has 10 logs', async () => {
+      it('should have 10 logs', async () => {
         await environmentsLogs.assertCount(10);
       });
 
@@ -431,7 +432,7 @@ describe('Environment logs', () => {
         await http.assertCall(endpointCall);
       });
 
-      it('should still has 10 logs', async () => {
+      it('should still have 10 logs', async () => {
         await environmentsLogs.assertCount(10);
       });
     });

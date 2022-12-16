@@ -76,7 +76,7 @@ describe('Schema validation', () => {
     });
   });
 
-  describe('Environments', () => {
+  describe('Environments broken schema', () => {
     it('should verify initial properties (missing, invalid, unknown)', async () => {
       const fileContent: Environment = JSON.parse(
         (await fs.readFile('./tmp/storage/schema-broken.json')).toString()
@@ -133,6 +133,91 @@ describe('Schema validation', () => {
       expect(fileContent.routes[0].responses[0].headers).toHaveLength(1);
       expect(fileContent.routes[0].responses[0].headers[0].key).toEqual(
         'Content-Type'
+      );
+
+      await environments.close(1);
+    });
+  });
+
+  describe('Environments broken refs (folders and routes)', () => {
+    it('should verify initial properties', async () => {
+      const fileContent: Environment = JSON.parse(
+        (await fs.readFile('./tmp/storage/schema-broken-refs.json')).toString()
+      );
+
+      expect(fileContent.routes[0].uuid).toEqual(
+        'e636fcf1-99f1-48d1-a9ec-313cc169a87e'
+      );
+      expect(fileContent.routes[1].uuid).toEqual(
+        'e3b389f4-e9b4-4cdd-92d7-fcb222a23542'
+      );
+      expect(fileContent.routes[2].uuid).toEqual(
+        '8c7ee6e8-b0a8-4373-8b1f-727e40496327'
+      );
+      expect(fileContent.folders[0].uuid).toEqual(
+        '43943472-0116-4fa6-aeda-2d02250118f3'
+      );
+      expect(fileContent.folders[0].children[0].uuid).toEqual('unknownuuid');
+      expect(fileContent.folders[0].children[1].uuid).toEqual('unknownuuid');
+      expect(fileContent.folders[1].uuid).toEqual(
+        '4a8cd2a2-7eb2-43ab-9421-5cb0937a993d'
+      );
+      expect(fileContent.folders[1].children[0].uuid).toEqual(
+        '8c7ee6e8-b0a8-4373-8b1f-727e40496327'
+      );
+      expect(fileContent.rootChildren[0].uuid).toEqual('unknownuuid');
+      expect(fileContent.rootChildren[1].uuid).toEqual('unknownuuid');
+      expect(fileContent.rootChildren[2].uuid).toEqual(
+        '4a8cd2a2-7eb2-43ab-9421-5cb0937a993d'
+      );
+      expect(fileContent.rootChildren[3].uuid).toEqual(
+        'e3b389f4-e9b4-4cdd-92d7-fcb222a23542'
+      );
+    });
+
+    it('should open the environment', async () => {
+      await environments.open('schema-broken-refs');
+    });
+
+    it('should verify saved properties', async () => {
+      await utils.waitForAutosave();
+      const fileContent: Environment = JSON.parse(
+        (await fs.readFile('./tmp/storage/schema-broken-refs.json')).toString()
+      );
+
+      expect(fileContent.routes[0].uuid).toEqual(
+        'e636fcf1-99f1-48d1-a9ec-313cc169a87e'
+      );
+      expect(fileContent.routes[1].uuid).toEqual(
+        'e3b389f4-e9b4-4cdd-92d7-fcb222a23542'
+      );
+      expect(fileContent.routes[2].uuid).toEqual(
+        '8c7ee6e8-b0a8-4373-8b1f-727e40496327'
+      );
+      expect(fileContent.folders[0].uuid).toEqual(
+        '43943472-0116-4fa6-aeda-2d02250118f3'
+      );
+      expect(fileContent.folders[0].children).toHaveLength(0);
+      expect(fileContent.folders[1].uuid).toEqual(
+        '4a8cd2a2-7eb2-43ab-9421-5cb0937a993d'
+      );
+      expect(fileContent.folders[1].children[0].uuid).toEqual(
+        '8c7ee6e8-b0a8-4373-8b1f-727e40496327'
+      );
+
+      expect(fileContent.rootChildren[0].uuid).toEqual(
+        '4a8cd2a2-7eb2-43ab-9421-5cb0937a993d'
+      );
+      expect(fileContent.rootChildren[1].uuid).toEqual(
+        'e3b389f4-e9b4-4cdd-92d7-fcb222a23542'
+      );
+      expect(fileContent.rootChildren[2].type).toEqual('folder');
+      expect(fileContent.rootChildren[2].uuid).toEqual(
+        '43943472-0116-4fa6-aeda-2d02250118f3'
+      );
+      expect(fileContent.rootChildren[3].type).toEqual('route');
+      expect(fileContent.rootChildren[3].uuid).toEqual(
+        'e636fcf1-99f1-48d1-a9ec-313cc169a87e'
       );
 
       await environments.close(1);
@@ -258,6 +343,17 @@ describe('Schema validation', () => {
       expect(validateUUID(envContent.routes[0].responses[0].uuid)).toEqual(
         true
       );
+
+      expect(envContent.routes[1].responses[0].uuid).not.toEqual(initialUUID);
+      expect(validateUUID(envContent.routes[1].responses[0].uuid)).toEqual(
+        true
+      );
+
+      expect(envContent.folders[0].uuid).not.toEqual(initialUUID);
+      expect(validateUUID(envContent.folders[0].uuid)).toEqual(true);
+
+      expect(envContent.rootChildren[0].uuid).not.toEqual(initialUUID);
+      expect(validateUUID(envContent.rootChildren[0].uuid)).toEqual(true);
 
       await environments.close(1);
       await environments.close(1);

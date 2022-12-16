@@ -91,7 +91,15 @@ class Routes {
   }
 
   private get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('.routes-menu .nav:first-of-type .nav-item .nav-link');
+    return $(
+      '.routes-menu .nav:first-of-type .nav-item:nth-of-type(1) .nav-link'
+    );
+  }
+
+  private get addFolderBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      '.routes-menu .nav:first-of-type .nav-item:nth-of-type(2) .nav-link'
+    );
   }
 
   private get activeMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -160,10 +168,44 @@ class Routes {
     );
   }
 
-  public async select(routeIndex: number): Promise<void> {
+  public getMenuItem(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(`.routes-menu .menu-list .nav-item:nth-child(${index}) .nav-link`);
+  }
+
+  public getMenuItemEditable(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(
+      `.routes-menu .menu-list .nav-item:nth-child(${index}) .nav-link app-editable-element`
+    );
+  }
+
+  public async assertMenuItemEditable(index: number): Promise<void> {
     await $(
-      `.routes-menu .menu-list .nav-item:nth-child(${routeIndex}) .nav-link`
-    ).click();
+      `.routes-menu .menu-list .nav-item:nth-child(${index}) .nav-link app-editable-element span`
+    ).waitForExist({
+      reverse: true
+    });
+    await $(
+      `.routes-menu .menu-list .nav-item:nth-child(${index}) .nav-link app-editable-element input`
+    ).waitForExist();
+  }
+
+  public async setMenuItemEditableText(
+    index: number,
+    value: string
+  ): Promise<void> {
+    await browser.keys(['Control', 'a', 'Backspace']);
+    await $(
+      `.routes-menu .menu-list .nav-item:nth-child(${index}) .nav-link app-editable-element input`
+    ).addValue(value);
+    await browser.keys(['Enter']);
+  }
+
+  public async select(routeIndex: number): Promise<void> {
+    await (await this.getMenuItem(routeIndex)).click();
   }
 
   public async selectBodyType(type: BodyTypes) {
@@ -174,8 +216,24 @@ class Routes {
     await this.addBtn.click();
   }
 
+  public async addFolder(): Promise<void> {
+    await this.addFolderBtn.click();
+  }
+
   public async remove(index: number) {
     await contextMenu.clickAndConfirm('routes', index, 6);
+  }
+
+  public async removeFolder(index: number) {
+    await contextMenu.clickAndConfirm('routes', index, 3);
+  }
+
+  public async assertMenuEntryText(
+    index: number,
+    expectedText: string
+  ): Promise<void> {
+    const text = await (await this.getMenuItem(index)).getText();
+    expect(text).toContain(expectedText);
   }
 
   public async assertActiveMenuEntryText(expectedText: string): Promise<void> {
@@ -185,7 +243,7 @@ class Routes {
 
   public async assertCount(expected: number) {
     await utils.countElements(
-      $$('.routes-menu .menu-list .nav-item'),
+      $$('.routes-menu .menu-list .nav-item:not(.d-none)'),
       expected
     );
   }
@@ -403,6 +461,21 @@ class Routes {
     };
 
     await $(selectors[tabName]).click();
+  }
+
+  public async assertRoutePaddingLevel(
+    index: number,
+    level: number
+  ): Promise<void> {
+    const levels = {
+      1: '14px',
+      2: '35px',
+      3: '63px'
+    };
+    const subRoutePadding = await (
+      await this.getMenuItem(index)
+    ).getCSSProperty('padding-left');
+    expect(subRoutePadding.value).toEqual(levels[level]);
   }
 }
 

@@ -50,6 +50,11 @@ class EnvironmentsSettings {
     await utils.setElementValue(setting, value);
   }
 
+  public async clearSettingValue(settingName: SettingNames): Promise<void> {
+    const setting = this.getSettingInput(settingName);
+    await utils.clearElementValue(setting);
+  }
+
   public async assertSettingValue(
     settingName: SettingNames,
     value: string

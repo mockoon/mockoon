@@ -495,6 +495,24 @@ export const Migrations: {
         });
       });
     }
+  },
+  /**
+   * Add folders and rootChildren properties to envs
+   */
+  {
+    id: 25,
+    migrationFunction: (environment: Environment) => {
+      if (environment.folders === undefined) {
+        environment.folders = EnvironmentDefault.folders;
+      }
+
+      if (environment.rootChildren === undefined) {
+        environment.rootChildren = environment.routes.map((route) => ({
+          type: 'route',
+          uuid: route.uuid
+        }));
+      }
+    }
   }
 ];
 

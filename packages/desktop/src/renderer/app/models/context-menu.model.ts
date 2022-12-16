@@ -8,6 +8,8 @@ export type ContextMenuEvent = {
 export type ContextMenuItemPayload = {
   subject: DataSubject;
   action:
+    | 'add_route'
+    | 'add_folder'
     | 'delete'
     | 'close'
     | 'duplicate'
@@ -20,6 +22,7 @@ export type ContextMenuItemPayload = {
     | 'copyDatabucketID'
     | 'toggle';
   subjectUUID: string;
+  parentId?: string | 'root';
 };
 
 export type ContextMenuItem = {

@@ -14,6 +14,7 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { OpenAPI, OpenAPIV2, OpenAPIV3 } from 'openapi-types';
+import { routesFromFolder } from './utils';
 
 type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';
 
@@ -59,6 +60,12 @@ export class OpenAPIConverter {
    * @param environment
    */
   public async convertToOpenAPIV3(environment: Environment) {
+    const routes = routesFromFolder(
+      environment.rootChildren,
+      environment.folders,
+      environment.routes
+    );
+
     const openAPIEnvironment: OpenAPIV3.Document = {
       openapi: '3.0.0',
       info: { title: environment.name, version: '1.0.0' },
@@ -69,81 +76,77 @@ export class OpenAPIConverter {
           }://localhost:${environment.port}/${environment.endpointPrefix}`
         }
       ],
-      paths: environment.routes.reduce<OpenAPIV3.PathsObject>(
-        (paths, route) => {
-          const pathParameters = route.endpoint.match(/:[a-zA-Z0-9_]+/g);
-          let endpoint = '/' + route.endpoint;
+      paths: routes.reduce<OpenAPIV3.PathsObject>((paths, route) => {
+        const pathParameters = route.endpoint.match(/:[a-zA-Z0-9_]+/g);
+        let endpoint = '/' + route.endpoint;
 
-          if (pathParameters && pathParameters.length > 0) {
-            endpoint =
-              '/' + route.endpoint.replace(/:([a-zA-Z0-9_]+)/g, '{$1}');
-          }
+        if (pathParameters && pathParameters.length > 0) {
+          endpoint = '/' + route.endpoint.replace(/:([a-zA-Z0-9_]+)/g, '{$1}');
+        }
 
-          if (!paths[endpoint]) {
-            paths[endpoint] = {};
-          }
+        if (!paths[endpoint]) {
+          paths[endpoint] = {};
+        }
 
-          (paths[endpoint] as OpenAPIV3.OperationObject)[route.method] = {
-            description: route.documentation,
-            responses: route.responses.reduce<OpenAPIV3.ResponsesObject>(
-              (responses, routeResponse) => {
-                const responseContentType = GetRouteResponseContentType(
-                  environment,
-                  routeResponse
-                );
+        (paths[endpoint] as OpenAPIV3.OperationObject)[route.method] = {
+          description: route.documentation,
+          responses: route.responses.reduce<OpenAPIV3.ResponsesObject>(
+            (responses, routeResponse) => {
+              const responseContentType = GetRouteResponseContentType(
+                environment,
+                routeResponse
+              );
 
-                responses[routeResponse.statusCode.toString()] = {
-                  description: routeResponse.label,
-                  content: responseContentType
-                    ? { [responseContentType]: {} }
-                    : {},
-                  headers: [
-                    ...environment.headers,
-                    ...routeResponse.headers
-                  ].reduce<{
-                    [header: string]: OpenAPIV3.HeaderObject;
-                  }>((headers, header) => {
-                    if (header.key.toLowerCase() !== 'content-type') {
-                      headers[header.key] = {
-                        schema: { type: 'string' },
-                        example: header.value
-                      };
-                    }
+              responses[routeResponse.statusCode.toString()] = {
+                description: routeResponse.label,
+                content: responseContentType
+                  ? { [responseContentType]: {} }
+                  : {},
+                headers: [
+                  ...environment.headers,
+                  ...routeResponse.headers
+                ].reduce<{
+                  [header: string]: OpenAPIV3.HeaderObject;
+                }>((headers, header) => {
+                  if (header.key.toLowerCase() !== 'content-type') {
+                    headers[header.key] = {
+                      schema: { type: 'string' },
+                      example: header.value
+                    };
+                  }
 
-                    return headers;
-                  }, {})
-                } as any;
+                  return headers;
+                }, {})
+              } as any;
 
-                return responses;
-              },
-              {}
-            )
-          };
+              return responses;
+            },
+            {}
+          )
+        };
 
-          if (pathParameters && pathParameters.length > 0) {
-            (
-              (paths[endpoint] as OpenAPIV3.OperationObject)[
-                route.method
-              ] as OpenAPIV3.OperationObject
-            ).parameters = pathParameters.reduce<OpenAPIV3.ParameterObject[]>(
-              (parameters, parameter) => {
-                parameters.push({
-                  name: parameter.slice(1, parameter.length),
-                  in: 'path',
-                  schema: { type: 'string' },
-                  required: true
-                });
+        if (pathParameters && pathParameters.length > 0) {
+          (
+            (paths[endpoint] as OpenAPIV3.OperationObject)[
+              route.method
+            ] as OpenAPIV3.OperationObject
+          ).parameters = pathParameters.reduce<OpenAPIV3.ParameterObject[]>(
+            (parameters, parameter) => {
+              parameters.push({
+                name: parameter.slice(1, parameter.length),
+                in: 'path',
+                schema: { type: 'string' },
+                required: true
+              });
 
-                return parameters;
-              },
-              []
-            );
-          }
+              return parameters;
+            },
+            []
+          );
+        }
 
-          return paths;
-        },
-        {}
-      )
+        return paths;
+      }, {})
     };
 
     try {
@@ -183,6 +186,11 @@ export class OpenAPIConverter {
 
     newEnvironment.routes = this.createRoutes(parsedAPI, 'SWAGGER');
 
+    newEnvironment.rootChildren = newEnvironment.routes.map((route) => ({
+      type: 'route',
+      uuid: route.uuid
+    }));
+
     return newEnvironment;
   }
 
@@ -213,6 +221,11 @@ export class OpenAPIConverter {
     newEnvironment.name = parsedAPI.info.title || 'OpenAPI import';
 
     newEnvironment.routes = this.createRoutes(parsedAPI, 'OPENAPI_V3');
+
+    newEnvironment.rootChildren = newEnvironment.routes.map((route) => ({
+      type: 'route',
+      uuid: route.uuid
+    }));
 
     return newEnvironment;
   }

@@ -111,3 +111,82 @@ export const RemoveLeadingSlash = (str: string) => str.replace(/^\//g, '');
 
 export const GenerateDatabucketID = () =>
   (Math.random() + 1).toString(36).substring(2, 6);
+
+/**
+ * Repair routes and folder references.
+ * Remove references to non existing routes and folders.
+ * Deduplicate references to the same route or folder.
+ * Add references to orphan routes and folders at the root level.
+ *
+ * @param environment
+ */
+export const repairRefs = (environment: Environment) => {
+  const routesUUIDs = environment.routes.reduce((set, route) => {
+    set.add(route.uuid);
+
+    return set;
+  }, new Set<string>());
+  const foldersUUIDs = environment.folders.reduce((set, folder) => {
+    set.add(folder.uuid);
+
+    return set;
+  }, new Set<string>());
+
+  // remove folders children that are not existing
+  environment.folders.forEach((folder) => {
+    folder.children = folder.children.filter((folderChild) => {
+      if (folderChild.type === 'route') {
+        const hasItem = routesUUIDs.has(folderChild.uuid);
+        if (hasItem) {
+          routesUUIDs.delete(folderChild.uuid);
+        }
+
+        return hasItem;
+      } else {
+        const hasItem = foldersUUIDs.has(folderChild.uuid);
+        if (hasItem) {
+          foldersUUIDs.delete(folderChild.uuid);
+        }
+
+        return hasItem;
+      }
+    });
+  });
+
+  // remove root level children the are not existing
+  environment.rootChildren = environment.rootChildren.filter((rootChild) => {
+    if (rootChild.type === 'route') {
+      const hasItem = routesUUIDs.has(rootChild.uuid);
+      if (hasItem) {
+        routesUUIDs.delete(rootChild.uuid);
+      }
+
+      return hasItem;
+    } else {
+      const hasItem = foldersUUIDs.has(rootChild.uuid);
+      if (hasItem) {
+        foldersUUIDs.delete(rootChild.uuid);
+      }
+
+      return hasItem;
+    }
+  });
+
+  // add orphan folders to the root level
+  foldersUUIDs.forEach((folderUUID) => {
+    environment.rootChildren.push({
+      type: 'folder',
+      uuid: folderUUID
+    });
+  });
+
+  // add orphan routes to the root level
+  routesUUIDs.forEach((routeUUID) => {
+    environment.rootChildren.push({
+      type: 'route',
+      uuid: routeUUID
+    });
+  });
+
+  return environment;
+};

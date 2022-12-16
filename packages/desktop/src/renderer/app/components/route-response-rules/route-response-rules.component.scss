@@ -1,7 +1,0 @@
-@import 'src/renderer/styles/bootstrap-variables.scss';
-
-.rule-item {
-  &:not(:first-of-type) {
-    margin-top: $spacer / 2;
-  }
-}

@@ -1,6 +1,6 @@
 {
   "uuid": "5dd5c15a-d860-40da-83f4-7606e2c0ee22",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "databuckets",
   "endpointPrefix": "",
   "latency": 0,
@@ -97,5 +97,10 @@
       "name": "Databucket to be removed",
       "value": "Databucket content"
     }
+  ],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c" },
+    { "type": "route", "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511" }
   ]
 }

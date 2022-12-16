@@ -47,7 +47,6 @@ export class InputNumberDirective implements ControlValueAccessor {
    * Handle values entered in the input field
    */
   @HostListener('input', ['$event.target.value'])
-  @HostListener('change', ['$event.target.value'])
   public handleInput(inputValue: string): void {
     const sanitizedValue = this.sanitize(inputValue);
 

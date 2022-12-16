@@ -92,7 +92,7 @@ class Databuckets {
 
   public async assertCount(expected: number) {
     await utils.countElements(
-      $$('.databuckets-menu .menu-list .nav-item'),
+      $$('.databuckets-menu .menu-list .nav-item:not(.d-none)'),
       expected
     );
   }

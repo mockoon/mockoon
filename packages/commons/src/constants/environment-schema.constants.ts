@@ -7,6 +7,7 @@ import {
   Environment,
   EnvironmentTLSOptions
 } from '../models/environment.model';
+import { Folder, FolderChild } from '../models/folder.model';
 import {
   BodyTypes,
   Header,
@@ -27,7 +28,9 @@ export const EnvironmentDefault: Environment = {
   latency: 0,
   port: 3000,
   hostname: '0.0.0.0',
+  folders: [],
   routes: [],
+  rootChildren: [],
   proxyMode: false,
   proxyHost: '',
   proxyRemovePrefix: false,
@@ -45,6 +48,15 @@ export const EnvironmentDefault: Environment = {
   proxyReqHeaders: [],
   proxyResHeaders: [],
   data: []
+};
+
+export const FolderDefault: Folder = {
+  get uuid() {
+    return uuid();
+  },
+  name: 'New folder',
+  collapsed: false,
+  children: []
 };
 
 export const RouteDefault: Route = {
@@ -227,6 +239,24 @@ const RouteResponseSchema = Joi.object<RouteResponse, true>({
   default: Joi.boolean().failover(RouteResponseDefault.default).required()
 });
 
+export const FolderChildSchema = Joi.object<FolderChild, true>({
+  type: Joi.string()
+    .valid('route', 'folder')
+    .required()
+    .options({ stripUnknown: true }),
+  uuid: UUIDSchema
+});
+
+export const FolderSchema = Joi.object<Folder, true>({
+  uuid: UUIDSchema,
+  name: Joi.string().allow('').failover(FolderDefault.name).required(),
+  collapsed: Joi.boolean().failover(FolderDefault.collapsed).required(),
+  children: Joi.array()
+    .items(FolderChildSchema, Joi.any().strip())
+    .failover(FolderDefault.children)
+    .required()
+}).options({ stripUnknown: true });
+
 export const RouteSchema = Joi.object<Route, true>({
   uuid: UUIDSchema,
   documentation: Joi.string()
@@ -279,6 +309,14 @@ export const EnvironmentSchema = Joi.object<Environment, true>({
     .failover(EnvironmentDefault.port)
     .required(),
   hostname: Joi.string().failover(EnvironmentDefault.hostname).required(),
+  rootChildren: Joi.array()
+    .items(FolderChildSchema, Joi.any().strip())
+    .failover(EnvironmentDefault.rootChildren)
+    .required(),
+  folders: Joi.array()
+    .items(FolderSchema, Joi.any().strip())
+    .failover(EnvironmentDefault.folders)
+    .required(),
   routes: Joi.array()
     .items(RouteSchema, Joi.any().strip())
     .failover(EnvironmentDefault.routes)

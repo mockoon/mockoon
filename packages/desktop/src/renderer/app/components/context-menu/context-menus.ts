@@ -48,15 +48,55 @@ export const EnvironmentsContextMenu = (
   }
 ];
 
+export const FoldersContextMenu = (folderUUID: string): ContextMenuItem[] => [
+  {
+    payload: {
+      subject: 'folder',
+      action: 'add_route',
+      subjectUUID: folderUUID
+    },
+    label: 'Add route',
+    icon: 'post_add',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'folder',
+      action: 'add_folder',
+      subjectUUID: folderUUID
+    },
+    label: 'Add folder',
+    icon: 'create_new_folder',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'folder',
+      action: 'delete',
+      subjectUUID: folderUUID
+    },
+    label: 'Delete folder',
+    icon: 'delete',
+    confirm: {
+      icon: 'error',
+      label: 'Confirm deletion'
+    },
+    confirmColor: 'text-danger',
+    disabled: false
+  }
+];
+
 export const RoutesContextMenu = (
   routeUUID: string,
+  parentId: string,
   environments: Environments
 ): ContextMenuItem[] => [
   {
     payload: {
       subject: 'route',
       action: 'duplicate',
-      subjectUUID: routeUUID
+      subjectUUID: routeUUID,
+      parentId
     },
     label: 'Duplicate',
     icon: 'content_copy',

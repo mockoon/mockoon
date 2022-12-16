@@ -1,6 +1,6 @@
 {
   "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "uuid dedup 2",
   "endpointPrefix": "",
   "latency": 0,
@@ -58,5 +58,9 @@
       "id": "abcd",
       "value": "null"
     }
+  ],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a" }
   ]
 }

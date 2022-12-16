@@ -1,4 +1,11 @@
-import { Header, Methods, Transaction } from '@mockoon/commons';
+import {
+  Folder,
+  FolderChild,
+  Header,
+  Methods,
+  Route,
+  Transaction
+} from '@mockoon/commons';
 import { Request, Response } from 'express';
 import { SafeString } from 'handlebars';
 import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
@@ -233,4 +240,44 @@ export const convertPathToArray = (str: string): string | string[] => {
   }
 
   return str;
+};
+
+/**
+ * List routes in the order they appear in a folder children array (can be called recursively)
+ *
+ * @param folderChildren
+ * @param allFolders
+ * @param allRoutes
+ * @returns
+ */
+export const routesFromFolder = (
+  folderChildren: FolderChild[],
+  allFolders: Folder[],
+  allRoutes: Route[]
+): Route[] => {
+  const routesList: Route[] = [];
+
+  folderChildren.forEach((folderChild) => {
+    if (folderChild.type === 'route') {
+      const foundRoute = allRoutes.find(
+        (route) => route.uuid === folderChild.uuid
+      );
+
+      if (foundRoute) {
+        routesList.push(foundRoute);
+      }
+    } else {
+      const subFolder = allFolders.find(
+        (folder) => folder.uuid === folderChild.uuid
+      );
+
+      if (subFolder) {
+        routesList.push(
+          ...routesFromFolder(subFolder.children, allFolders, allRoutes)
+        );
+      }
+    }
+  });
+
+  return routesList;
 };

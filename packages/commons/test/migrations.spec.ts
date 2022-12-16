@@ -299,4 +299,21 @@ describe('Migrations', () => {
       expect(environment.routes[0].responses[0].databucketID).to.be.equal('');
     });
   });
+
+  describe('migration n. 25', () => {
+    it('should add `folders` property to an environment', () => {
+      const environment = { routes: [{ uuid: '1' }, { uuid: '2' }] };
+
+      applyMigration(25, environment);
+
+      expect(environment['folders']).to.be.an('array');
+      expect(environment['folders']).to.be.empty;
+
+      expect(environment['rootChildren']).to.be.an('array');
+      expect(environment['rootChildren']).to.be.deep.equal([
+        { type: 'route', uuid: '1' },
+        { type: 'route', uuid: '2' }
+      ]);
+    });
+  });
 });

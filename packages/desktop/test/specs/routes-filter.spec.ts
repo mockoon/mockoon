@@ -33,6 +33,24 @@ describe('Routes filter', () => {
     await routes.assertCount(1);
   });
 
+  it('should filter route by mulitple words (dolphin + post)', async () => {
+    await routes.clearFilter();
+    await browser.pause(100);
+    await routes.assertCount(3);
+    await routes.setFilter('dolphins post');
+    await browser.pause(100);
+    await routes.assertCount(1);
+  });
+
+  it('should filter route by method', async () => {
+    await routes.clearFilter();
+    await browser.pause(100);
+    await routes.assertCount(3);
+    await routes.setFilter('post');
+    await browser.pause(100);
+    await routes.assertCount(1);
+  });
+
   it('should reset routes filter when clicking on the button Clear filter', async () => {
     await routes.clearFilter();
     await browser.pause(100);
@@ -57,7 +75,8 @@ describe('Routes filter', () => {
     await routes.setFilter('/dolphins');
     await browser.pause(100);
     await routes.assertCount(1);
-    await contextMenu.click('routes', 1, 2);
+    // menu item id is still 3, as filtering is using d-none class
+    await contextMenu.click('routes', 3, 2);
     await $(
       '.modal-content .modal-body .list-group .list-group-item:first-child'
     ).click();

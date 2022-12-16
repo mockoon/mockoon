@@ -15,6 +15,7 @@ glob(
       './test/data/mock-envs/incompatible.json',
       './test/data/mock-envs/migration.json',
       './test/data/mock-envs/schema-broken.json',
+      './test/data/mock-envs/schema-broken-refs.json',
       './test/data/mock-envs/schema-broken-repair.json'
     ]
   },

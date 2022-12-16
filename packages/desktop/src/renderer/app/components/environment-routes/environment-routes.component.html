@@ -126,9 +126,6 @@
                 }"
                 aria-labelledby="route-responses-dropdown"
                 ngbDropdownMenu
-                MousedragDeadzone
-                cdkDropList
-                (cdkDropListDropped)="reorderRouteResponses($event)"
               >
                 <button
                   type="button"
@@ -141,9 +138,14 @@
                     active: activeRouteResponse?.uuid === routeResponse.uuid
                   }"
                   ngbDropdownItem
-                  cdkDrag
-                  cdkDragLockAxis="y"
-                  cdkDragBoundary=".dropdown-menu.route-responses-dropdown-menu"
+                  appDraggable
+                  appDropzone
+                  dragContainer="route-responses"
+                  [dragEnabled]="true"
+                  dragParentId="root"
+                  [dragIsContainer]="false"
+                  [dragId]="routeResponse.uuid"
+                  (dropped)="reorganizeRouteResponses($event)"
                 >
                   <span
                     class="flex-grow-1 mr-2 ellipsis"

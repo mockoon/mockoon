@@ -1,6 +1,6 @@
 {
   "uuid": "b8701e60-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "Regulations.gov",
   "endpointPrefix": "regulations/v3",
   "latency": 0,
@@ -207,5 +207,11 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "b8701e64-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "b8701e68-e7d4-11ea-a5ec-979674ac1a4b" },
+    { "type": "route", "uuid": "b8701e6c-e7d4-11ea-a5ec-979674ac1a4b" }
+  ]
 }

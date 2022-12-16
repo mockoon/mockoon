@@ -7,6 +7,15 @@ import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { Config } from '../../src/shared/config';
 
 class Utils {
+  public async clearElementValue(
+    element: ChainablePromiseElement<WebdriverIO.Element>
+  ): Promise<void> {
+    // clearing by entering text and removing it as some validation directive does not react to 'change' event
+    await element.click();
+    await element.setValue(' ');
+    await browser.keys(['Backspace']);
+  }
+
   public async setElementValue(
     element: ChainablePromiseElement<WebdriverIO.Element>,
     value: string

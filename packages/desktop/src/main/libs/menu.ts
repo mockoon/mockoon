@@ -176,22 +176,6 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'NEXT_ENVIRONMENT');
         }
-      },
-      {
-        id: 'MENU_PREVIOUS_ROUTE',
-        label: 'Select previous route',
-        accelerator: 'Shift+CmdOrCtrl+Up',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'PREVIOUS_ROUTE');
-        }
-      },
-      {
-        id: 'MENU_NEXT_ROUTE',
-        label: 'Select next route',
-        accelerator: 'Shift+CmdOrCtrl+Down',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'NEXT_ROUTE');
-        }
       }
     ]
   });

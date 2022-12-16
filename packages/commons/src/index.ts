@@ -9,5 +9,6 @@ export * from './models/environment.model';
 export * from './models/events.model';
 export * from './models/export.model';
 export * from './models/faker.model';
+export * from './models/folder.model';
 export * from './models/route.model';
 export * from './models/server.model';

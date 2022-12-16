@@ -70,7 +70,6 @@
     "@angular-eslint/schematics": "13.1.0",
     "@angular-eslint/template-parser": "13.1.0",
     "@angular/animations": "13.3.11",
-    "@angular/cdk": "13.3.1",
     "@angular/cli": "13.3.9",
     "@angular/common": "13.3.11",
     "@angular/compiler": "13.3.11",

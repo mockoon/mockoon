@@ -41,22 +41,27 @@ export const GetEditorModeFromContentType = (
 };
 
 /**
- * Create a copy of the array and move a specific index
- * from one index to another
+ * Remove item from array by index
  *
  * @param items
  * @returns
  */
-export const MoveArrayItem = <T>(
-  items: T[],
-  sourceIndex: number,
-  targetIndex: number
-): T[] => {
-  const newItems = items.slice();
+export const RemoveAtIndex = <T>(items: T[], index: number): T =>
+  items.splice(index, 1)[0];
 
-  newItems.splice(targetIndex, 0, newItems.splice(sourceIndex, 1)[0]);
+/**
+ * Insert item in array at index
+ *
+ * @param items
+ * @param index
+ * @param item
+ * @returns
+ *
+ */
+export const InsertAtIndex = <T>(items: T[], index: number, item: T): T[] => {
+  items.splice(index, 0, item);
 
-  return newItems;
+  return items;
 };
 
 /**

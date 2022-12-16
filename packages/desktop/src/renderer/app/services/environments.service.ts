@@ -4,6 +4,7 @@ import {
   BuildDatabucket,
   BuildDemoEnvironment,
   BuildEnvironment,
+  BuildFolder,
   BuildHeader,
   BuildRoute,
   BuildRouteResponse,
@@ -52,6 +53,7 @@ import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { HumanizeText } from 'src/renderer/app/libs/utils.lib';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
+import { FolderProperties } from 'src/renderer/app/models/folder.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
   RouteProperties,
@@ -63,7 +65,8 @@ import {
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
 import {
-  DraggableContainerNames,
+  DraggableContainers,
+  DropAction,
   ScrollDirection
 } from 'src/renderer/app/models/ui.model';
 import { DataService } from 'src/renderer/app/services/data.service';
@@ -76,21 +79,22 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   addDatabucketAction,
   addEnvironmentAction,
+  addFolderAction,
   addRouteAction,
   addRouteResponseAction,
   duplicateDatabucketToAnotherEnvironmentAction,
   duplicateRouteToAnotherEnvironmentAction,
-  moveDatabucketsAction,
-  moveEnvironmentsAction,
-  moveRouteResponsesAction,
-  moveRoutesAction,
   navigateEnvironmentsAction,
-  navigateRoutesAction,
   reloadEnvironmentAction,
   removeDatabucketAction,
   removeEnvironmentAction,
+  removeFolderAction,
   removeRouteAction,
   removeRouteResponseAction,
+  reorganizeDatabucketsAction,
+  reorganizeEnvironmentsAction,
+  reorganizeRouteResponsesAction,
+  reorganizeRoutesAction,
   setActiveDatabucketAction,
   setActiveEnvironmentAction,
   setActiveEnvironmentLogTabAction,
@@ -102,6 +106,7 @@ import {
   startEntityDuplicationToAnotherEnvironmentAction,
   updateDatabucketAction,
   updateEnvironmentAction,
+  updateFolderAction,
   updateRouteAction,
   updateRouteResponseAction,
   updateSettingsAction,
@@ -111,6 +116,7 @@ import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
+import { v4 as uuid } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -411,20 +417,13 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Set active route by UUID or navigation
+   * Set active route by UUID
    */
-  public setActiveRoute(routeUUIDOrDirection: string | ReducerDirectionType) {
+  public setActiveRoute(routeUUID: string) {
     const activeRouteUUID = this.store.get('activeRouteUUID');
 
-    if (activeRouteUUID && activeRouteUUID !== routeUUIDOrDirection) {
-      if (
-        routeUUIDOrDirection === 'next' ||
-        routeUUIDOrDirection === 'previous'
-      ) {
-        this.store.update(navigateRoutesAction(routeUUIDOrDirection));
-      } else {
-        this.store.update(setActiveRouteAction(routeUUIDOrDirection));
-      }
+    if (activeRouteUUID !== routeUUID) {
+      this.store.update(setActiveRouteAction(routeUUID));
     }
   }
 
@@ -562,7 +561,7 @@ export class EnvironmentsService extends Logger {
         port: this.dataService.getNewEnvironmentPort()
       };
 
-      newEnvironment = this.dataService.renewEnvironmentUUIDs(newEnvironment);
+      newEnvironment = this.dataService.deduplicateUUIDs(newEnvironment, true);
 
       return this.addEnvironment(newEnvironment, environmentToDuplicateindex);
     }
@@ -638,12 +637,44 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Add a new folder and save it in the store
+   */
+  public addFolder(folderId: string | 'root', scroll = false) {
+    if (this.store.getActiveEnvironment()) {
+      this.store.update(addFolderAction(BuildFolder(), folderId));
+
+      if (scroll) {
+        this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+      }
+    }
+  }
+
+  /**
+   * Update a folder and save it in the store
+   */
+  public updateFolder(folderUUID: string, folderProperties: FolderProperties) {
+    this.store.update(updateFolderAction(folderUUID, folderProperties));
+  }
+
+  /**
+   * Remove a folder and save
+   */
+  public removeFolder(folderUUID: string) {
+    if (folderUUID) {
+      this.store.update(removeFolderAction(folderUUID));
+    }
+  }
+
+  /**
    * Add a new route and save it in the store
    */
-  public addRoute() {
+  public addRoute(folderId: string | 'root', scroll = false) {
     if (this.store.getActiveEnvironment()) {
-      this.store.update(addRouteAction(BuildRoute()));
-      this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+      this.store.update(addRouteAction(BuildRoute(), folderId));
+
+      if (scroll) {
+        this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+      }
 
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
@@ -660,7 +691,7 @@ export class EnvironmentsService extends Logger {
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
       this.store.update(addDatabucketAction(newDatabucket));
-      this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+      this.uiService.scrollDatabucketsMenu.next(ScrollDirection.BOTTOM);
 
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.DATABUCKET_NAME);
@@ -680,7 +711,7 @@ export class EnvironmentsService extends Logger {
 
         // if has a current environment append imported route
         if (this.store.get('activeEnvironmentUUID')) {
-          this.store.update(addRouteAction(route));
+          this.store.update(addRouteAction(route, 'root'));
 
           return EMPTY;
         } else {
@@ -690,7 +721,8 @@ export class EnvironmentsService extends Logger {
               hasDefaultRoute: true,
               port: this.dataService.getNewEnvironmentPort()
             }),
-            routes: [route]
+            routes: [route],
+            rootChildren: [{ type: 'route', uuid: route.uuid }]
           });
         }
       }),
@@ -718,7 +750,7 @@ export class EnvironmentsService extends Logger {
   /**
    * Set active databucket by UUID
    */
-  public setActiveDatabucket(databucketUUID: string | ReducerDirectionType) {
+  public setActiveDatabucket(databucketUUID: string) {
     const activeDatabucketUUID = this.store.get('activeDatabucketUUID');
 
     if (activeDatabucketUUID && activeDatabucketUUID !== databucketUUID) {
@@ -736,23 +768,23 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Duplicate a route, or the current active route and append it at the end
+   * Duplicate a route, or the current active route and append it at the end of the list in the same folder
    */
-  public duplicateRoute(routeUUID?: string) {
+  public duplicateRoute(parentId: string | 'root', routeUUID?: string) {
     let routeToDuplicate = this.store.getActiveRoute();
+    const activeEnvironment = this.store.getActiveEnvironment();
 
     if (routeUUID) {
-      routeToDuplicate = this.store
-        .getActiveEnvironment()
-        .routes.find((route) => route.uuid === routeUUID);
+      routeToDuplicate = activeEnvironment.routes.find(
+        (route) => route.uuid === routeUUID
+      );
     }
 
     if (routeToDuplicate) {
       let newRoute: Route = CloneObject(routeToDuplicate);
-
       newRoute = this.dataService.renewRouteUUIDs(newRoute);
 
-      this.store.update(addRouteAction(newRoute, routeToDuplicate.uuid));
+      this.store.update(addRouteAction(newRoute, parentId));
     }
   }
 
@@ -766,9 +798,9 @@ export class EnvironmentsService extends Logger {
     const routeToDuplicate = this.store.getRouteByUUID(routeUUID);
 
     if (routeToDuplicate) {
-      const newRoute: Route = this.dataService.renewRouteUUIDs(
-        CloneObject(routeToDuplicate)
-      );
+      let newRoute: Route = CloneObject(routeToDuplicate);
+      newRoute = this.dataService.renewRouteUUIDs(newRoute);
+
       this.store.update(
         duplicateRouteToAnotherEnvironmentAction(
           newRoute,
@@ -790,7 +822,7 @@ export class EnvironmentsService extends Logger {
       let newDatabucket: DataBucket = CloneObject(databucketToDuplicate);
 
       newDatabucket.name = `${databucketToDuplicate.name} (copy)`;
-      newDatabucket = this.dataService.renewDatabucketUUIDs(newDatabucket);
+      newDatabucket.uuid = uuid();
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
       this.store.update(
@@ -810,9 +842,10 @@ export class EnvironmentsService extends Logger {
       this.store.getDatabucketByUUID(databucketUUID);
 
     if (databucketToDuplicate) {
-      let newDatabucket: DataBucket = this.dataService.renewDatabucketUUIDs(
-        CloneObject(databucketToDuplicate)
-      );
+      let newDatabucket: DataBucket = {
+        ...CloneObject(databucketToDuplicate),
+        uuid: uuid()
+      };
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
       this.store.update(
@@ -972,9 +1005,9 @@ export class EnvironmentsService extends Logger {
 
     // check if environments should be started or stopped. If at least one env is turned off, we'll turn all on
     const shouldStart = Object.keys(environmentsStatus).some(
-      (uuid) =>
-        !environmentsStatus[uuid].running ||
-        environmentsStatus[uuid].needRestart
+      (environmentUUID) =>
+        !environmentsStatus[environmentUUID].running ||
+        environmentsStatus[environmentUUID].needRestart
     );
 
     environments.map((environment) => {
@@ -1003,21 +1036,17 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Move a menu item (envs / routes)
+   * Reorganize an items list
    */
-  public moveMenuItem(
-    type: DraggableContainerNames,
-    sourceIndex: number,
-    targetIndex: number
-  ) {
-    const storeActions = {
-      routes: moveRoutesAction,
-      databuckets: moveDatabucketsAction,
-      environments: moveEnvironmentsAction,
-      routeResponses: moveRouteResponsesAction
+  public reorganizeItems(dropAction: DropAction, type: DraggableContainers) {
+    const storeActions: { [key in DraggableContainers] } = {
+      ENVIRONMENTS: reorganizeEnvironmentsAction,
+      ROUTES: reorganizeRoutesAction,
+      ROUTE_RESPONSES: reorganizeRouteResponsesAction,
+      DATABUCKETS: reorganizeDatabucketsAction
     };
 
-    this.store.update(storeActions[type]({ sourceIndex, targetIndex }));
+    this.store.update(storeActions[type](dropAction));
   }
 
   /**
@@ -1078,7 +1107,7 @@ export class EnvironmentsService extends Logger {
         responses: [routeResponse]
       };
 
-      this.store.update(addRouteAction(newRoute));
+      this.store.update(addRouteAction(newRoute, 'root'));
     }
   }
 

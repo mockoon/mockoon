@@ -9,7 +9,9 @@
 }
 .nav-link {
   cursor: pointer;
-  transition: all ease-in-out 150ms, box-shadow 1ms;
+  transition-property: color;
+  transition-property: background-color;
+  transition-duration: 150ms;
 }
 .nav-tabs {
   border-bottom: none;
@@ -230,6 +232,9 @@ label {
 a:not([href]):not([tabindex]) {
   color: $gray-400;
 }
+a.nav-link.disabled:not([href]):not([tabindex]) {
+  color: $gray-600;
+}
 a:focus {
   outline: none;
 }
@@ -248,4 +253,9 @@ small,
 .small {
   padding: 0.2rem 0.4rem;
   font-size: 0.8rem;
+}
+
+.text-break {
+  word-break: break-all !important;
+  word-wrap: break-word !important;
 }

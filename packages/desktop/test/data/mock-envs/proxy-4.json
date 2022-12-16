@@ -1,6 +1,6 @@
 {
   "uuid": "2cbdec80-f284-11e9-a28c-912bdc671020",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "Proxy removes prefix",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -23,5 +23,7 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": []
 }

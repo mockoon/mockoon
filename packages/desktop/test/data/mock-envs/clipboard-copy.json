@@ -1,6 +1,6 @@
 {
   "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-  "lastMigration": 24,
+  "lastMigration": 25,
   "name": "Env clipboard copy",
   "endpointPrefix": "",
   "latency": 0,
@@ -51,5 +51,9 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "64fcbac1-1ac7-11ea-b8fd-577fb167a4ce" }
+  ]
 }

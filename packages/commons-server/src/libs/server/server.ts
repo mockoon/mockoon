@@ -44,6 +44,7 @@ import { listOfRequestHelperTypes } from '../templating-helpers/request-helpers'
 import {
   CreateTransaction,
   resolvePathFromEnvironment,
+  routesFromFolder,
   stringIncludesArrayItems
 } from '../utils';
 
@@ -348,7 +349,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param server - server on which attach routes
    */
   private setRoutes(server: Application) {
-    this.environment.routes.forEach((declaredRoute: Route) => {
+    if (
+      !this.environment.rootChildren ||
+      this.environment.rootChildren.length < 1
+    ) {
+      return;
+    }
+
+    const routes = routesFromFolder(
+      this.environment.rootChildren,
+      this.environment.folders,
+      this.environment.routes
+    );
+
+    routes.forEach((declaredRoute: Route) => {
       // only launch non duplicated routes, or ignore if none.
       if (declaredRoute.enabled) {
         try {

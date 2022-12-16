@@ -1,4 +1,3 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -19,10 +18,13 @@ import {
   tap
 } from 'rxjs/operators';
 import { EnvironmentsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
-import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
-import { ScrollDirection } from 'src/renderer/app/models/ui.model';
+import {
+  DraggableContainers,
+  DropAction,
+  ScrollDirection
+} from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -48,8 +50,7 @@ export class EnvironmentsMenuComponent
   public menuSize = Config.defaultMainMenuSize;
   public editingName = false;
   public activeEnvironmentForm: FormGroup;
-  public dragDisabled = false;
-  public focusableInputs = FocusableInputs;
+  public dragEnabled = true;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -84,32 +85,19 @@ export class EnvironmentsMenuComponent
     this.destroy$.unsubscribe();
   }
 
-  /**
-   * Handle clicks on the env name
-   * enable editing mode and automatically focus the input
-   */
-  public handleNameClick(event: MouseEvent) {
-    event.stopPropagation();
-
-    if (!this.editingName) {
-      this.enableNameEdit();
-
-      setTimeout(() => {
-        this.uiService.focusInput(this.focusableInputs.ENVIRONMENT_NAME);
-      }, 0);
-    }
+  public enableDrag(enable: boolean) {
+    this.dragEnabled = enable;
   }
 
   /**
    * Callback called when reordering environments
    *
-   * @param event
+   * @param dropAction
    */
-  public reorderEnvironments(event: CdkDragDrop<string[]>) {
-    this.environmentsService.moveMenuItem(
-      'environments',
-      event.previousIndex,
-      event.currentIndex
+  public reorganizeEnvironments(dropAction: DropAction) {
+    this.environmentsService.reorganizeItems(
+      dropAction,
+      DraggableContainers.ENVIRONMENTS
     );
   }
 
@@ -166,28 +154,12 @@ export class EnvironmentsMenuComponent
     }
   }
 
-  public disableNameEdit() {
-    this.editingName = false;
-    this.dragDisabled = false;
-  }
-
-  public submitEnvironmentName(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      (event.target as HTMLInputElement).blur();
-    }
-  }
-
-  private enableNameEdit() {
-    this.editingName = true;
-    this.dragDisabled = true;
-  }
-
   /**
    * Init active environment form and subscribe to changes
    */
   private initForms() {
     this.activeEnvironmentForm = this.formBuilder.group({
-      name: new FormControl('', { updateOn: 'blur' })
+      name: new FormControl('')
     });
 
     // send new activeEnvironmentForm values to the store, one by one
