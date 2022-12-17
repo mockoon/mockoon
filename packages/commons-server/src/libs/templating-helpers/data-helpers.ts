@@ -83,7 +83,11 @@ export const DataHelpers = function (
 
         // ensure a value was found at path
         const foundValue = objectGet(value, path);
-        value = foundValue !== undefined ? foundValue : value;
+        if (parameters.length > 1 && parameters[2]) {
+          value = foundValue !== undefined ? foundValue : '';
+        } else {
+          value = foundValue !== undefined ? foundValue : value;
+        }
 
         return value;
       }
