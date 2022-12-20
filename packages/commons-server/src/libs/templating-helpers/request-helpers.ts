@@ -27,7 +27,9 @@ export const RequestHelpers = function (
     // set status code
     status: function (status: any) {
       const intCode = parseInt(status, 10);
-      if (isNaN(intCode)) return;
+      if (isNaN(intCode)) {
+        return;
+      }
       if (!request.locals) {
         request.locals = new Map<string, any>();
       }
