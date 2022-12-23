@@ -1,13 +1,13 @@
-name: Release CLI
+name: Release libs (NPM)
 
 on:
   push:
     tags:
-      - cli-v*
+      - libs-v*
 
 jobs:
   npm-publish:
-    name: Publish libs and CLI
+    name: Publish the libs on NPM
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 15
@@ -32,6 +32,7 @@ jobs:
         run: |
           npm run bootstrap
           npm run build:libs
+          npm run build:serverless
           npm run build:cli
       - name: Add NPM token
         run: |

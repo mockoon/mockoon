@@ -74,7 +74,13 @@ Linux:
 
 ## Install the CLI
 
-Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mockoon/cli). Please look at our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/cli) to learn how to install and use it.
+Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mockoon/cli). Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/cli) to learn how to install and use it.
+
+## Use in cloud functions and serverless environments
+
+Mockoon's Serverless [NPM package](https://www.npmjs.com/package/@mockoon/serverless) provides an easy way to run Mockoon's mock APIs in cloud functions and serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.
+
+Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/serverless) to learn how to use it.
 
 ## Mockoon's documentation
 

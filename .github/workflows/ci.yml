@@ -59,6 +59,36 @@ jobs:
           npm run build:libs
           npm run test:libs
 
+  test-serverless:
+    name: Serverless - Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    needs: [lint, test-libs]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Update NPM
+        run: |
+          npm install -g npm@latest
+      - uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Build and test
+        run: |
+          npm run build:libs
+          npm run build:serverless
+          npm run test:serverless
+
   test-cli:
     name: CLI - Build and test
     runs-on: ubuntu-latest

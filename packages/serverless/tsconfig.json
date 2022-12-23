@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "ESNext",
+    "outDir": "./dist/esm",
+    "noImplicitAny": false,
+    "strictPropertyInitialization": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "importHelpers": false,
+    "typeRoots": ["node_modules/@types"]
+  },
+  "include": ["./src", "./test"]
+}

@@ -4,6 +4,7 @@ about: Checklist for releases (admin use only)
 ---
 
 - [ ] Bump libs versions
+- [ ] Bump serverless version
 - [ ] Bump CLI version
 - [ ] Bump desktop version
 - [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
@@ -18,13 +19,13 @@ about: Checklist for releases (admin use only)
 - [ ] Add desktop binaries to the GitHub release
 - [ ] Set the release to final (non pre-release)
 
-**Release CLI and libs:**
+**Release the libs (commons, commons-server, serverless, CLI):**
 
-- [ ] Create a `cli-vx.x.x` tag to release CLI and libs
+- [ ] Create a `libs-v{YYYY-MM}` tag to release all the NPM libraries
 
 **API:**
 
-- [ ] Update desktop latest version
+- [ ] Update desktop latest version in `/releases/desktop/stable.json`
 - [ ] Merge release branch on main
 
 **Website:**
