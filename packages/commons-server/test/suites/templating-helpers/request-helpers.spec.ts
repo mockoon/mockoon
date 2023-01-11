@@ -12,7 +12,7 @@ const requestMock = {
   }
 } as any;
 
-describe('Template parser', () => {
+describe('Request helpers', () => {
   describe('Helper: body', () => {
     it('should return number without quotes', () => {
       const parseResult = TemplateParser(

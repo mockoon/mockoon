@@ -14,7 +14,7 @@ describe('Data loading', () => {
 
   test
     .stderr()
-    .command(['start', '--data', 'https://example.org'])
+    .command(['start', '--data', 'https://mockoon.com'])
     .catch((context) => {
       expect(context.message).to.contain(
         'This file is not a valid OpenAPI specification (JSON or YAML v2.0.0 and v3.0.0) or Mockoon environment: Unexpected token < in JSON at position 0'

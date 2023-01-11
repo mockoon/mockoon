@@ -4,8 +4,7 @@ import { SafeString } from 'handlebars';
 import { get as objectGet } from 'object-path';
 import { convertPathToArray } from '../utils';
 
-type RequestHelperTypes = keyof ReturnType<typeof RequestHelpers>;
-export const listOfRequestHelperTypes: RequestHelperTypes[] = [
+export const requestHelperNames: (keyof ReturnType<typeof RequestHelpers>)[] = [
   'bodyRaw',
   'body',
   'method',

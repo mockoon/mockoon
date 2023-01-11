@@ -40,7 +40,7 @@ import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
-import { listOfRequestHelperTypes } from '../templating-helpers/request-helpers';
+import { requestHelperNames } from '../templating-helpers/request-helpers';
 import {
   CreateTransaction,
   resolvePathFromEnvironment,
@@ -527,9 +527,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           content || '',
           this.environment,
           this.processedDatabuckets,
-          request
+          request,
+          response
         );
       }
+
+      this.applyResponseLocals(response);
 
       response.body = content;
 
@@ -623,8 +626,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               data.toString(),
               this.environment,
               this.processedDatabuckets,
-              request
+              request,
+              response
             );
+
+            this.applyResponseLocals(response);
 
             response.body = fileContent;
             response.send(fileContent);
@@ -1005,9 +1011,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
         if (
           databucket.value.match(
-            new RegExp(
-              `{{2,3}[\s|#|\\w|(]*(${listOfRequestHelperTypes.join('|')})`
-            )
+            new RegExp(`{{2,3}[\s|#|\\w|(]*(${requestHelperNames.join('|')})`)
           )
         ) {
           // a request helper was found
@@ -1127,5 +1131,17 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
       }
     });
+  }
+
+  /**
+   * Set response properties from the locals object.
+   * Currently supports the statusCode that can be set using templating helper.
+   *
+   * @param response
+   */
+  private applyResponseLocals(response: Response) {
+    if (response.locals.statusCode !== undefined) {
+      response.status(response.locals.statusCode);
+    }
   }
 }

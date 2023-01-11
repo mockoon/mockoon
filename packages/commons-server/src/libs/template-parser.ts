@@ -1,10 +1,11 @@
 import { Environment, ProcessedDatabucket } from '@mockoon/commons';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { compile as hbsCompile } from 'handlebars';
 import { DataHelpers } from './templating-helpers/data-helpers';
 import { FakerWrapper } from './templating-helpers/faker-wrapper';
 import { Helpers } from './templating-helpers/helpers';
 import { RequestHelpers } from './templating-helpers/request-helpers';
+import { ResponseHelpers } from './templating-helpers/response-helpers';
 
 /**
  * Parse a content with Handlebars
@@ -19,7 +20,8 @@ export const TemplateParser = function (
   content: string,
   environment: Environment,
   processedDatabuckets: ProcessedDatabucket[],
-  request?: Request
+  request?: Request,
+  response?: Response
 ): string {
   let helpers = {
     ...FakerWrapper,
@@ -37,6 +39,13 @@ export const TemplateParser = function (
     helpers = {
       ...helpers,
       ...RequestHelpers(request, environment)
+    };
+  }
+
+  if (response) {
+    helpers = {
+      ...helpers,
+      ...ResponseHelpers(response)
     };
   }
 
