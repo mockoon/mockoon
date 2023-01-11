@@ -336,7 +336,7 @@ describe('Template parser', () => {
         {} as any
       );
 
-      expect(parseResult).to.be.equal('2022');
+      expect(parseResult).to.be.equal('2023');
     });
   });
 
