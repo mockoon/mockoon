@@ -5,7 +5,6 @@ declare namespace Express {
     body: any;
     rawBody: Buffer;
     stringBody: string;
-    locals: Map<string, any>;
   }
   export interface Response {
     body: any;

@@ -12,11 +12,7 @@ const requestMock = {
   }
 } as any;
 
-beforeEach(function () {
-  delete requestMock.locals;
-});
-
-describe('Template parser', () => {
+describe('Request helpers', () => {
   describe('Helper: body', () => {
     it('should return number without quotes', () => {
       const parseResult = TemplateParser(
@@ -731,41 +727,6 @@ describe('Template parser', () => {
         requestMock
       );
       expect(parseResult).to.be.equal('defaultvalue');
-    });
-  });
-
-  describe('Helper: status', () => {
-    it('should return request status undefined', () => {
-      const parseResult = TemplateParser(
-        false,
-        'Hello',
-        {} as any,
-        [],
-        requestMock
-      );
-      expect(requestMock.locals).to.be.undefined;
-    });
-
-    it('should return request status 404', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{status 404}}',
-        {} as any,
-        [],
-        requestMock
-      );
-      expect(requestMock.locals.get('statusCode')).to.be.equal(404);
-    });
-
-    it('should return request status 404 if condition is false', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{#if (eq 1 0)}}{{status 404}}{{else}}Hello{{/if}}',
-        {} as any,
-        [],
-        requestMock
-      );
-      expect(requestMock.locals).to.be.undefined;
     });
   });
 });

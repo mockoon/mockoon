@@ -4,8 +4,7 @@ import { SafeString } from 'handlebars';
 import { get as objectGet } from 'object-path';
 import { convertPathToArray } from '../utils';
 
-type RequestHelperTypes = keyof ReturnType<typeof RequestHelpers>;
-export const listOfRequestHelperTypes: RequestHelperTypes[] = [
+export const requestHelperNames: (keyof ReturnType<typeof RequestHelpers>)[] = [
   'bodyRaw',
   'body',
   'method',
@@ -24,17 +23,6 @@ export const RequestHelpers = function (
   environment: Environment
 ) {
   return {
-    // set status code
-    status: function (status: any) {
-      const intCode = parseInt(status, 10);
-      if (isNaN(intCode)) {
-        return;
-      }
-      if (!request.locals) {
-        request.locals = new Map<string, any>();
-      }
-      request.locals.set('statusCode', intCode);
-    },
     // get json property from body
     body: function (
       path: string | string[] | null,
