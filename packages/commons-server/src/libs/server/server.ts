@@ -531,6 +531,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         );
       }
 
+      if (request.locals) {
+        const statusCode = request.locals.get('statusCode');
+        if (statusCode) {
+          response.status(statusCode);
+        }
+      }
+
       response.body = content;
 
       response.send(content);
@@ -625,6 +632,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               this.processedDatabuckets,
               request
             );
+
+            if (request.locals) {
+              const statusCode = request.locals.get('statusCode');
+              if (statusCode) {
+                response.status(statusCode);
+              }
+            }
 
             response.body = fileContent;
             response.send(fileContent);
