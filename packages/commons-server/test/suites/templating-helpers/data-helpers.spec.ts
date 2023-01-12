@@ -162,6 +162,28 @@ describe('Data helpers', () => {
       expect(parseResult).to.be.equal('value1');
     });
 
+    it('should return empty string if property at a path does not exists', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{data 'pathDatabucket' 'object1.prop3'}}",
+        {} as any,
+        [
+          {
+            name: 'pathDatabucket',
+            id: 'w63q',
+            value: {
+              object1: { prop1: 'value1', prop2: 'value2' },
+              prop: 'value',
+              object2: []
+            },
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
     it('should return falsy property at a path', () => {
       const parseResult = TemplateParser(
         false,
@@ -399,6 +421,28 @@ describe('Data helpers', () => {
         {} as any
       );
       expect(parseResult).to.be.equal('value1');
+    });
+
+    it('should return empty string if property does not exist', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{dataRaw 'pathDatabucket' 'object1.prop3'}}",
+        {} as any,
+        [
+          {
+            name: 'pathDatabucket',
+            id: 'w63q',
+            value: {
+              object1: { prop1: 'value1', prop2: 'value2' },
+              prop: 'value',
+              object2: []
+            },
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
     });
 
     it('should return falsy property at a path', () => {

@@ -40,7 +40,7 @@ export const DataHelpers = function (
 
         // ensure a value was found at path
         const foundValue = objectGet(value, path);
-        value = foundValue !== undefined ? foundValue : value;
+        value = foundValue !== undefined ? foundValue : '';
       }
 
       if (Array.isArray(value) || typeof value === 'object') {
@@ -49,7 +49,6 @@ export const DataHelpers = function (
         return new SafeString(value);
       }
     },
-
     dataRaw: function (...args: any[]) {
       const parameters = args.slice(0, -1);
 
@@ -83,7 +82,7 @@ export const DataHelpers = function (
 
         // ensure a value was found at path
         const foundValue = objectGet(value, path);
-        value = foundValue !== undefined ? foundValue : value;
+        value = foundValue !== undefined ? foundValue : '';
 
         return value;
       }
