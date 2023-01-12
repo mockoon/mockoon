@@ -135,9 +135,10 @@
           (routesFilter$ | async) || !level ? undefined : level * 2 + 0.5
       }"
       [formGroup]="folderForm"
+      (click)="toggleCollapse(folder)"
     >
       <div class="d-flex">
-        <div class="text-warning" (click)="toggleCollapse(folder)">
+        <div>
           <app-svg
             [icon]="folder.collapsed ? 'folder' : 'folder_open'"
             class="pr-2"
