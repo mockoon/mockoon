@@ -18,6 +18,7 @@ jobs:
         run: |
           npm install -g npm@latest
       - uses: actions/cache@v3
+        id: cache-modules
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -25,6 +26,9 @@ jobs:
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
       - name: Lint and check format
         run: |
           npm run lint
@@ -47,6 +51,7 @@ jobs:
         run: |
           npm install -g npm@latest
       - uses: actions/cache@v3
+        id: cache-modules
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -54,6 +59,9 @@ jobs:
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
       - name: Build and test
         run: |
           npm run build:libs
@@ -76,6 +84,7 @@ jobs:
         run: |
           npm install -g npm@latest
       - uses: actions/cache@v3
+        id: cache-modules
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -83,6 +92,9 @@ jobs:
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
       - name: Build and test
         run: |
           npm run build:libs
@@ -110,6 +122,7 @@ jobs:
         run: |
           npm install -g npm@latest
       - uses: actions/cache@v3
+        id: cache-modules
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -117,6 +130,9 @@ jobs:
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
       - name: Build and test
         run: |
           npm run build:libs
@@ -141,6 +157,7 @@ jobs:
         run: |
           npm install -g npm@latest
       - uses: actions/cache@v3
+        id: cache-modules
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -148,6 +165,9 @@ jobs:
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
       - name: Build
         run: |
           npm run build:libs
@@ -183,6 +203,7 @@ jobs:
         run: |
           npm install -g npm@latest
       - uses: actions/cache@v3
+        id: cache-modules
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -190,6 +211,9 @@ jobs:
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
       - name: Build
         run: |
           npm run build:libs
@@ -226,6 +250,7 @@ jobs:
         run: |
           npm install -g npm@latest
       - uses: actions/cache@v3
+        id: cache-modules
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -233,6 +258,9 @@ jobs:
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
       - name: Build
         run: |
           npm run build:libs
@@ -266,6 +294,7 @@ jobs:
         run: |
           npm install -g npm@latest
       - uses: actions/cache@v3
+        id: cache-modules
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -273,6 +302,9 @@ jobs:
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
       - name: Build
         run: |
           npm run build:libs

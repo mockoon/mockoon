@@ -23,6 +23,7 @@
   },
   "scripts": {
     "bootstrap": "npm ci && lerna bootstrap",
+    "link": "lerna link",
     "lint": "lerna run lint --stream",
     "format": "lerna exec -- prettier {src,test}/**/*.{ts,js,scss,html} --check",
     "format:write": "lerna exec -- prettier {src,test}/**/*.{ts,js,scss,html} --write",
