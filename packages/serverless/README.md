@@ -38,13 +38,13 @@ In the examples below, we will be loading the data file as if it was located nex
 
 This package exposes a single `MockoonServerless` class. To create a new `RequestListener` (an Express application), use the following code:
 
-```typescript
-import { MockoonServerless } from '@mockoon/serverless';
+```javascript
+const mockoon = require('@mockoon/serverless');
 
 // Load the Mockoon Environment object
 const mockEnv = require('./datafile.json');
 
-const app = new MockoonServerless(mockEnv);
+const app = new mockoon.MockoonServerless(mockEnv);
 
 exports.handler = app;
 ```
@@ -55,13 +55,13 @@ For vendor-specific code, see the sections below.
 
 To use Mockoon Serverless in an AWS Lambda, you can use the following code:
 
-```typescript
-import { MockoonServerless } from '@mockoon/serverless';
+```javascript
+const mockoon = require('@mockoon/serverless');
 
 // Load the Mockoon Environment object
 const mockEnv = require('./datafile.json');
 
-const mockoonServerless = new MockoonServerless(mockEnv);
+const mockoonServerless = new mockoon.MockoonServerless(mockEnv);
 
 module.exports.handler = mockoonServerless.awsHandler();
 ```
@@ -72,13 +72,13 @@ module.exports.handler = mockoonServerless.awsHandler();
 
 To use Mockoon Serverless in a Firebase Function, you can use the following code:
 
-```typescript
-import { MockoonServerless } from '@mockoon/serverless';
+```javascript
+const mockoon = require('@mockoon/serverless');
 
 // Load the Mockoon Environment object
 const mockEnv = require('./datafile.json');
 
-const app = new MockoonServerless(mockEnv);
+const app = new mockoon.MockoonServerless(mockEnv);
 
 exports.app = functions.https.onRequest(app);
 ```
