@@ -222,6 +222,13 @@ export class EnvironmentsService extends Logger {
             }))
           })
         );
+      }),
+      tap(() => {
+        const settings = this.store.get('settings');
+
+        if (!!settings.startEnvironmentsOnLoad) {
+          this.toggleAllEnvironments();
+        }
       })
     );
   }

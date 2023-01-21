@@ -91,7 +91,8 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
       fakerSeed: [SettingsDefault.fakerSeed],
       fileWatcherEnabled: [SettingsDefault.fileWatcherEnabled],
       storagePrettyPrint: [SettingsDefault.storagePrettyPrint],
-      enableTelemetry: [SettingsDefault.enableTelemetry]
+      enableTelemetry: [SettingsDefault.enableTelemetry],
+      startEnvironmentsOnLoad: [SettingsDefault.startEnvironmentsOnLoad]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -131,7 +132,8 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
               fakerSeed: settings.fakerSeed,
               fileWatcherEnabled: settings.fileWatcherEnabled,
               storagePrettyPrint: settings.storagePrettyPrint,
-              enableTelemetry: settings.enableTelemetry
+              enableTelemetry: settings.enableTelemetry,
+              startEnvironmentsOnLoad: settings.startEnvironmentsOnLoad
             },
             { emitEvent: false }
           );
