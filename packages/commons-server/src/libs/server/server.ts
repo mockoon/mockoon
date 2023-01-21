@@ -1011,7 +1011,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
         if (
           databucket.value.match(
-            new RegExp(`{{2,3}[\s|#|\\w|(]*(${requestHelperNames.join('|')})`)
+            new RegExp(`{{2,3}[#(\\s\\w]*(${requestHelperNames.join('|')})`)
           )
         ) {
           // a request helper was found
@@ -1084,7 +1084,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     route.responses.forEach((response) => {
       const results = response.body?.matchAll(
-        new RegExp('{{2,3}[\\s|#|\\w|(]*data [\'|"]{1}([^(\'|")]*)', 'g')
+        new RegExp('{{2,3}[#(\\s\\w]*data [\'|"]{1}([^(\'|")]*)', 'g')
       );
       const databucketIdsToParse = new Set(
         [...(results || [])].map((match) => match[1])
