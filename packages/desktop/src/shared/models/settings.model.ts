@@ -24,4 +24,5 @@ export type Settings = {
   storagePrettyPrint: boolean;
   fileWatcherEnabled: FileWatcherOptions;
   dialogWorkingDir: string;
+  startEnvironmentsOnLoad: boolean;
 };

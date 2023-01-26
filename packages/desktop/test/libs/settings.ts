@@ -10,7 +10,8 @@ type SettingNames =
   | 'settings-storage-file-watcher'
   | 'settings-log-max-count'
   | 'settings-enable-telemetry'
-  | 'settings-faker-locale';
+  | 'settings-faker-locale'
+  | 'start-environments-on-load';
 
 class Settings {
   public get prettyPrint(): ChainablePromiseElement<WebdriverIO.Element> {
