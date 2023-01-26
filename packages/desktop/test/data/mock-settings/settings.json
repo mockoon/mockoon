@@ -11,5 +11,6 @@
   "lastChangelog": "9999.9.9",
   "environments": [],
   "enableTelemetry": true,
-  "storagePrettyPrint": true
+  "storagePrettyPrint": true,
+  "startEnvironmentsOnLoad": false
 }

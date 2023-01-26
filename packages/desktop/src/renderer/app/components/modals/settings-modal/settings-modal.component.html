@@ -223,6 +223,38 @@
           </div>
         </div>
       </div>
+
+      <app-title-separator
+        heading="Environment starts"
+        icon="play_arrow"
+      ></app-title-separator>
+
+      <div class="pl-3">
+        <div class="form-group">
+          <div class="input-group">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="start-environments-on-load"
+                formControlName="startEnvironmentsOnLoad"
+              />
+              <label
+                class="custom-control-label"
+                for="start-environments-on-load"
+                >Starts all environments with application
+              </label>
+            </div>
+            <div class="input-group-append ml-1 align-items-center">
+              <app-svg
+                icon="info"
+                class="ml-1"
+                ngbTooltip="Mockoon will run all environment when the application starts"
+              ></app-svg>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" (click)="close()">
