@@ -67,5 +67,12 @@ export enum Methods {
   patch = 'patch',
   delete = 'delete',
   head = 'head',
-  options = 'options'
+  options = 'options',
+  propfind = 'propfind',
+  proppatch = 'proppatch',
+  move = 'move',
+  copy = 'copy',
+  mkcol = 'mkcol',
+  lock = 'lock',
+  unlock = 'unlock'
 }

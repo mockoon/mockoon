@@ -88,6 +88,10 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public databuckets$: Observable<DropdownItems>;
   public methods: DropdownItems = [
     {
+      label: 'HTTP',
+      category: true
+    },
+    {
       value: Methods.get,
       label: 'GET',
       classes: 'http-method-get-text'
@@ -121,6 +125,45 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       value: Methods.options,
       label: 'OPTIONS',
       classes: 'http-method-options-text'
+    },
+    {
+      label: 'WebDAV',
+      category: true
+    },
+    {
+      value: Methods.propfind,
+      label: 'PROPFIND',
+      classes: 'http-method-propfind-text'
+    },
+    {
+      value: Methods.proppatch,
+      label: 'PROPPATCH',
+      classes: 'http-method-proppatch-text'
+    },
+    {
+      value: Methods.move,
+      label: 'MOVE',
+      classes: 'http-method-move-text'
+    },
+    {
+      value: Methods.copy,
+      label: 'COPY',
+      classes: 'http-method-copy-text'
+    },
+    {
+      value: Methods.mkcol,
+      label: 'MKCOL',
+      classes: 'http-method-mkcol-text'
+    },
+    {
+      value: Methods.lock,
+      label: 'LOCK',
+      classes: 'http-method-lock-text'
+    },
+    {
+      value: Methods.unlock,
+      label: 'UNLOCK',
+      classes: 'http-method-unlock-text'
     }
   ];
   public responseModes: ToggleItems = [

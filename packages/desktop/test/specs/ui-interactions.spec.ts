@@ -271,7 +271,7 @@ describe('UI interactions', () => {
       await file.verifyObjectPropertyInFile(
         './tmp/storage/ui-1.json',
         'routes.0.method',
-        'options'
+        'unlock'
       );
     });
   });
