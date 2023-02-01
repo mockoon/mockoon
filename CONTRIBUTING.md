@@ -83,14 +83,25 @@ ESLint rules and Prettier code styling are enforced by the continuous integratio
 
 ## Run the tests
 
-Some unit and integration tests are present in the 4 packages. You can run them with `npm run test` after building the 4 packages:
+Some unit and integration tests are present in the 4 packages. First you need to build the following 4 packages:
 
-1. `npm un build:libs`.
-2. `npm un build:serverless`.
-3. `npm un build:cli`.
-4. `npm un build:desktop:ci`.
+1. `npm run build:libs`.
+2. `npm run build:serverless`.
+3. `npm run build:cli`.
+4. `npm run build:desktop:ci`.
 
-These tests will also be run on each commit or pull request in the CI environment.
+After the packages are build, you can run the tests necessary to your changes:
+* `npm run test:commons`
+* `npm run test:commons-server`
+* `npm run test:libs`
+* `npm run test:serverless`
+* `npm run test:cli`
+* `npm run test:desktop`
+* `npm run test:desktop:packaged:win`
+* `npm run test:desktop:packaged:mac`
+* `npm run test:desktop:packaged:linux`
+
+All tests will also be run on each commit or pull request in the CI environment.
 
 ## Open a pull request
 
