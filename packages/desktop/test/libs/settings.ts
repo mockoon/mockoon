@@ -36,26 +36,21 @@ class Settings {
     await utils.setElementValue(setting, value);
   }
 
-  public async selectSettingValue(
+  public async setDropdownSettingValue(
     settingName: SettingNames,
-    value: string
+    index: number
   ): Promise<void> {
-    const setting = this.getSettingSelect(settingName);
-    await setting.selectByAttribute('value', value);
+    await $(`#${settingName}-dropdown .dropdown-toggle`).click();
+    await $(
+      `#${settingName}-dropdown-menu .dropdown-item:nth-child(${index})`
+    ).click();
   }
 
-  public async assertSelectSettingValue(
-    settingName: SettingNames,
+  public async assertDropdownSettingValue(
+    settingName: 'fileWatcherEnabled',
     value: string
   ): Promise<void> {
-    const setting = this.getSettingSelect(settingName);
-    expect(await setting.getValue()).toEqual(value);
-  }
-
-  private getSettingSelect(
-    settingName: SettingNames
-  ): ChainablePromiseElement<WebdriverIO.Element> {
-    return $(`.modal-dialog select#${settingName}`);
+    await utils.assertDropdownValue(settingName, value);
   }
 
   private getSettingInput(

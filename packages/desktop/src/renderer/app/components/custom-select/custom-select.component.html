@@ -64,6 +64,7 @@
                   ngbDropdownItem
                   (click)="setValue(item)"
                   (keydown)="itemKeydown(item, $event)"
+                  [disabled]="disabledList?.includes(item.value)"
                 >
                   <span
                     class="flex-grow-1 mr-2 ellipsis"
