@@ -1,6 +1,7 @@
 import environments from '../libs/environments';
 import headersUtils from '../libs/headers-utils';
 import routes from '../libs/routes';
+import utils from '../libs/utils';
 
 describe('Duplicate a route response', () => {
   it('should open the environment', async () => {
@@ -14,7 +15,8 @@ describe('Duplicate a route response', () => {
       target: 'body',
       modifier: 'test',
       value: 'test',
-      operator: 'equals'
+      operator: 'equals',
+      invert: false
     });
     await routes.duplicateRouteResponse();
     await routes.assertCountRouteResponses(2);
@@ -36,18 +38,16 @@ describe('Duplicate a route response', () => {
   it('should verify duplicated route response rules', async () => {
     await routes.assertRulesCount(1);
 
-    const selectorAndValueAssertionPairs = {
-      'app-route-response-rules .rule-item select[formcontrolname="target"]':
-        'body',
-      'app-route-response-rules .rule-item input[formcontrolname="modifier"]':
-        'test',
-      'app-route-response-rules .rule-item input[formcontrolname="value"]':
-        'test'
-    };
-
-    for (const selector of Object.keys(selectorAndValueAssertionPairs)) {
-      const valueToCompare = selectorAndValueAssertionPairs[selector];
-      expect(await $(selector).getValue()).toEqual(valueToCompare);
-    }
+    await utils.assertDropdownValue('target', 'Body');
+    await utils.assertElementValue(
+      $(
+        'app-route-response-rules .rule-item input[formcontrolname="modifier"]'
+      ),
+      'test'
+    );
+    await utils.assertElementValue(
+      $('app-route-response-rules .rule-item input[formcontrolname="value"]'),
+      'test'
+    );
   });
 });

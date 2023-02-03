@@ -26,7 +26,7 @@ import {
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import {
-  SelectOptionsList,
+  DropdownItems,
   ToggleItems
 } from 'src/renderer/app/models/common.model';
 import { DropAction } from 'src/renderer/app/models/ui.model';
@@ -47,19 +47,19 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   public ruleAdded: EventEmitter<any> = new EventEmitter();
   public routeResponse$: Observable<RouteResponse>;
   public form: FormGroup;
-  public responseRuleTargets: SelectOptionsList<ResponseRuleTargets> = [
-    { code: 'body', text: 'Body' },
-    { code: 'query', text: 'Query string' },
-    { code: 'header', text: 'Header' },
-    { code: 'cookie', text: 'Cookie' },
-    { code: 'params', text: 'Route params' },
-    { code: 'request_number', text: 'Request number (starting at 1)' }
+  public responseRuleTargets: DropdownItems<ResponseRuleTargets> = [
+    { value: 'body', label: 'Body' },
+    { value: 'query', label: 'Query string' },
+    { value: 'header', label: 'Header' },
+    { value: 'cookie', label: 'Cookie' },
+    { value: 'params', label: 'Route params' },
+    { value: 'request_number', label: 'Request number (starting at 1)' }
   ];
-  public responseRuleOperators: SelectOptionsList<ResponseRuleOperators> = [
-    { code: 'equals', text: 'equals' },
-    { code: 'regex', text: 'regex match' },
-    { code: 'null', text: 'null' },
-    { code: 'empty_array', text: 'empty array' }
+  public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
+    { value: 'equals', label: 'equals' },
+    { value: 'regex', label: 'regex match' },
+    { value: 'null', label: 'null' },
+    { value: 'empty_array', label: 'empty array' }
   ];
   public modifierPlaceholders = {
     body: 'Object path or empty for full body',
@@ -146,18 +146,6 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     this.rules.push(this.formBuilder.group(BuildResponseRule()));
 
     this.ruleAdded.emit();
-  }
-
-  public shouldOperatorBeDisabled(
-    target: string,
-    operator: ResponseRuleOperators
-  ): boolean {
-    const disablingTargets = this.operatorDisablingForTargets[target];
-    if (!disablingTargets) {
-      return null;
-    }
-
-    return disablingTargets.includes(operator) ? true : null;
   }
 
   public reorganizeRules(dropAction: DropAction) {

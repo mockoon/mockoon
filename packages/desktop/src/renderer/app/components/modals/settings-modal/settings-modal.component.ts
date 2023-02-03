@@ -13,6 +13,7 @@ import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
 import { SettingsDefault } from 'src/renderer/app/constants/settings-schema.constants';
+import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
@@ -29,11 +30,11 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
   public modal: ElementRef;
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
-  public fakerLocales = FakerLocales;
-  public fileWatcherOptions = [
-    { label: 'Disabled', value: FileWatcherOptions.DISABLED },
-    { label: 'Prompt', value: FileWatcherOptions.PROMPT },
-    { label: 'Auto', value: FileWatcherOptions.AUTO }
+  public fakerLocales: DropdownItems = FakerLocales;
+  public fileWatcherOptions: DropdownItems = [
+    { value: FileWatcherOptions.DISABLED, label: 'Disabled' },
+    { value: FileWatcherOptions.PROMPT, label: 'Prompt' },
+    { value: FileWatcherOptions.AUTO, label: 'Auto' }
   ];
   public settingsForm: FormGroup;
   private destroy$ = new Subject<void>();

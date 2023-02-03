@@ -25,6 +25,13 @@ class Utils {
     await element.setValue(value);
   }
 
+  public async assertElementValue(
+    element: ChainablePromiseElement<WebdriverIO.Element>,
+    value: string
+  ): Promise<void> {
+    expect(await element.getValue()).toEqual(value);
+  }
+
   public async assertHasClass(
     element: ChainablePromiseElement<WebdriverIO.Element>,
     className: string,
@@ -37,6 +44,25 @@ class Utils {
     } else {
       expect(classes).toContain(className);
     }
+  }
+
+  public async setDropdownValue(dropdownId: string, index: number) {
+    await $(`#${dropdownId}-dropdown .dropdown-toggle`).click();
+    await $(
+      `#${dropdownId}-dropdown-menu .dropdown-item:nth-child(${index})`
+    ).click();
+  }
+
+  public async assertDropdownValue(
+    targetControlName: string,
+    expected: string
+  ) {
+    await this.assertElementText(
+      $(
+        `app-custom-select[formcontrolname="${targetControlName}"] .dropdown-toggle-label`
+      ),
+      expected
+    );
   }
 
   public async assertHasAttribute(

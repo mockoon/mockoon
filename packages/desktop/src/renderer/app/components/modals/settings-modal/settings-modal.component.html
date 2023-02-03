@@ -85,22 +85,14 @@
       <div class="pl-3">
         <div class="form-group">
           <div class="input-group">
-            <label for="settings-faker-locale" class="col-form-label pr-2">
-              Locale
-            </label>
-            <select
-              class="custom-select col-2"
-              id="settings-faker-locale"
+            <label class="col-form-label pr-2"> Locale </label>
+            <app-custom-select
+              class="col-2"
               formControlName="fakerLocale"
-            >
-              <option
-                *ngFor="let fakerLocale of fakerLocales"
-                [value]="fakerLocale.code"
-                [selected]="settings.fakerLocale === fakerLocale.code"
-              >
-                {{ fakerLocale.label }}
-              </option>
-            </select>
+              [enableCustomInput]="false"
+              [items]="fakerLocales"
+              dropdownId="settings-faker-locale"
+            ></app-custom-select>
             <div class="input-group-append ml-1 align-items-center">
               <app-svg
                 icon="info"
@@ -140,27 +132,16 @@
       <div class="pl-3">
         <div class="form-group">
           <div class="input-group">
-            <label
-              for="settings-storage-file-watcher"
-              class="col-form-label pr-2"
-            >
+            <label class="col-form-label pr-2">
               Environment files watcher
             </label>
-            <select
-              class="custom-select col-2"
-              id="settings-storage-file-watcher"
+            <app-custom-select
+              class="col-2"
               formControlName="fileWatcherEnabled"
-            >
-              <option
-                *ngFor="let fileWatcherOption of fileWatcherOptions"
-                [value]="fileWatcherOption.value"
-                [selected]="
-                  settings.fileWatcherEnabled === fileWatcherOption.value
-                "
-              >
-                {{ fileWatcherOption.label }}
-              </option>
-            </select>
+              [enableCustomInput]="false"
+              [items]="fileWatcherOptions"
+              dropdownId="settings-storage-file-watcher"
+            ></app-custom-select>
             <div class="input-group-append ml-1 align-items-center">
               <app-svg
                 icon="info"

@@ -33,21 +33,13 @@
             (dropped)="reorganizeRules($event)"
           >
             <div class="form-inline">
-              <select
-                class="custom-select col-3 mr-1"
+              <app-custom-select
+                class="col-3 mr-1"
                 formControlName="target"
-                #targetFormControl
-              >
-                <option
-                  *ngFor="let responseRuleTarget of responseRuleTargets"
-                  [value]="responseRuleTarget.code"
-                  [selected]="
-                    targetFormControl.value === responseRuleTarget.code
-                  "
-                >
-                  {{ responseRuleTarget.text }}
-                </option>
-              </select>
+                [enableCustomInput]="false"
+                [items]="responseRuleTargets"
+                [dropdownId]="'rules' + ruleIndex + 'target'"
+              ></app-custom-select>
 
               <input
                 type="text"
@@ -65,7 +57,6 @@
                     : null
                 "
               />
-
               <app-toggle
                 class="mr-1"
                 [uncheckable]="true"
@@ -74,27 +65,18 @@
                 [items]="rulesInvert"
               ></app-toggle>
 
-              <select
-                class="custom-select col-2 mr-1"
+              <app-custom-select
+                class="col-2 mr-1"
                 formControlName="operator"
-                #operatorFormControl
-              >
-                <option
-                  *ngFor="let responseRuleOperator of responseRuleOperators"
-                  [value]="responseRuleOperator.code"
-                  [selected]="
-                    operatorFormControl.value === responseRuleOperator.code
-                  "
-                  [attr.disabled]="
-                    shouldOperatorBeDisabled(
-                      form.get(['rules', ruleIndex, 'target']).value,
-                      responseRuleOperator.code
-                    )
-                  "
-                >
-                  {{ responseRuleOperator.text }}
-                </option>
-              </select>
+                [enableCustomInput]="false"
+                [items]="responseRuleOperators"
+                [dropdownId]="'rules' + ruleIndex + 'operator'"
+                [disabledList]="
+                  operatorDisablingForTargets[
+                    form.get(['rules', ruleIndex, 'target']).value
+                  ]
+                "
+              ></app-custom-select>
 
               <input
                 type="text"

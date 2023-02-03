@@ -5,6 +5,14 @@ import contextMenu from '../libs/context-menu';
 import utils from '../libs/utils';
 
 class Routes {
+  private rulesTargetIndexes = {
+    body: 1,
+    query: 2,
+    header: 3,
+    cookie: 4,
+    params: 5,
+    request_number: 6
+  };
   private activeMenuEntrySelector = '.routes-menu .nav-item .nav-link.active';
 
   public get bodyTypeToggle(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -116,7 +124,7 @@ class Routes {
     index: number
   ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline select[formcontrolname="target"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline [formcontrolname="target"]`
     );
   }
 
@@ -140,7 +148,7 @@ class Routes {
     index: number
   ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline select[formcontrolname="operator"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline [formcontrolname="operator"]`
     );
   }
 
@@ -249,10 +257,7 @@ class Routes {
   }
 
   public async assertMethod(expected: string) {
-    await utils.assertElementText(
-      $('app-custom-select[formcontrolname="method"] .dropdown-toggle-label'),
-      expected
-    );
+    await utils.assertDropdownValue('method', expected);
   }
 
   public async assertPath(expected: string) {
@@ -273,12 +278,7 @@ class Routes {
   }
 
   public async assertRouteResponseStatusCode(expected: string) {
-    await utils.assertElementText(
-      $(
-        'app-custom-select[formcontrolname="statusCode"] .dropdown-toggle-label'
-      ),
-      expected
-    );
+    await utils.assertDropdownValue('statusCode', expected);
   }
 
   public async setFile(value: string): Promise<void> {
@@ -382,9 +382,11 @@ class Routes {
 
   public async addResponseRule(rule: ResponseRule) {
     await $('app-route-response-rules .btn.add-rule').click();
-    await $(
-      'app-route-response-rules .rule-item:last-of-type .form-inline select[formcontrolname="target"]'
-    ).selectByAttribute('value', rule.target);
+    const lastRuleIndex = (await $$('.rule-item').length) - 1;
+    await utils.setDropdownValue(
+      `rules${lastRuleIndex}target`,
+      this.rulesTargetIndexes[rule.target]
+    );
     await utils.setElementValue(
       $(
         'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="modifier"]'
