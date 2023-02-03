@@ -112,6 +112,7 @@ describe('Environment external reload', () => {
   it('should assert the external watch works after a duplicate', async () => {
     await dialogs.save(resolve('./tmp/storage/new-dup-env.json'));
     await environments.duplicate(1);
+    await browser.pause(100);
     await environments.assertActiveMenuEntryText('env 1 (change2) (copy)');
     await utils.waitForAutosave();
     await utils.waitForFileWatcher();
