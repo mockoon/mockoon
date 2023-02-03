@@ -271,7 +271,14 @@ export const RouteSchema = Joi.object<Route, true>({
       Methods.patch,
       Methods.delete,
       Methods.head,
-      Methods.options
+      Methods.options,
+      Methods.propfind,
+      Methods.proppatch,
+      Methods.move,
+      Methods.copy,
+      Methods.mkcol,
+      Methods.lock,
+      Methods.unlock
     )
     .failover(RouteDefault.method)
     .required(),

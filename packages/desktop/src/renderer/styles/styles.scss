@@ -54,6 +54,7 @@ input,
 .dropdown-item {
   transition: all ease-in-out 100ms;
 }
+
 .dropdown-menu {
   max-height: 300px;
   overflow-y: auto;
@@ -62,6 +63,7 @@ input,
   *::-webkit-scrollbar-track {
     background-color: $custom-gray;
   }
+
   &::-webkit-scrollbar-thumb,
   *::-webkit-scrollbar-thumb {
     background: lighten($gray-900, 15%);
@@ -114,25 +116,28 @@ input,
 .cursor-grab {
   cursor: grab;
 }
+
 .cursor-text {
   cursor: text;
 }
 
 // http methods badges
-$http-methods: ('get', lighten($blue, 5%)), ('put', lighten($orange, 5%)),
-  ('post', lighten($green, 5%)), ('delete', lighten($red, 8%)),
-  ('head', lighten($purple, 12%)), ('patch', $teal),
-  ('options', lighten($dark-blue, 15%));
 $http-methods-light: ('get', lighten($blue, 10%)),
   ('put', lighten($orange, 10%)), ('post', lighten($green, 10%)),
   ('delete', lighten($red, 17%)), ('head', lighten($purple, 25%)),
-  ('patch', $teal), ('options', lighten($dark-blue, 30%));
+  ('patch', $teal), ('options', lighten($dark-blue, 30%)),
+  ('propfind', lighten($custom-gray, 45%)),
+  ('proppatch', lighten($custom-gray, 45%)),
+  ('copy', lighten($custom-gray, 45%)), ('move', lighten($custom-gray, 45%)),
+  ('lock', lighten($custom-gray, 45%)), ('unlock', lighten($custom-gray, 45%)),
+  ('mkcol', lighten($custom-gray, 45%));
 @each $method in $http-methods-light {
   .http-method-#{nth($method, 1)} {
     background-color: #{nth($method, 2)};
     color: $gray-900;
   }
 }
+
 @each $method in $http-methods-light {
   .http-method-#{nth($method, 1)}-text {
     color: #{nth($method, 2)};
@@ -142,9 +147,11 @@ $http-methods-light: ('get', lighten($blue, 10%)),
 .flex-fill {
   flex: 1;
 }
+
 .flex-none {
   flex: none !important;
 }
+
 .z-index-1 {
   z-index: 1;
 }
