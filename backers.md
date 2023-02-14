@@ -20,6 +20,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Валентин Радчук
 - Barefootdeveloper
 - Buckley Robinson
+- Burak Sinan Karabulut
 - Colin White
 - Cyhung
 - Dwi Satria
@@ -45,11 +46,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Mokkun
 - Mrsean2k
 - Nils
+- Ninzero
 - Oussama Ghalbzouri
 - Pedro
 - Rafael Braga Nanes
 - Riaz
 - Roybarberuk
+- (Rustam Khasanshin)[https://github.com/Rustery]
 - Samer Samer
 - Samja666
 - Sander
