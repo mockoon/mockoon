@@ -121,8 +121,8 @@ input,
   cursor: text;
 }
 
-// http methods badges
-$http-methods-light: ('get', lighten($blue, 10%)),
+// route badges (methods)
+$route-badges: ('crud', lighten($cyan, 15%)), ('get', lighten($blue, 10%)),
   ('put', lighten($orange, 10%)), ('post', lighten($green, 10%)),
   ('delete', lighten($red, 17%)), ('head', lighten($purple, 25%)),
   ('patch', $teal), ('options', lighten($dark-blue, 30%)),
@@ -131,15 +131,12 @@ $http-methods-light: ('get', lighten($blue, 10%)),
   ('copy', lighten($custom-gray, 45%)), ('move', lighten($custom-gray, 45%)),
   ('lock', lighten($custom-gray, 45%)), ('unlock', lighten($custom-gray, 45%)),
   ('mkcol', lighten($custom-gray, 45%));
-@each $method in $http-methods-light {
-  .http-method-#{nth($method, 1)} {
+@each $method in $route-badges {
+  .route-badge-#{nth($method, 1)} {
     background-color: #{nth($method, 2)};
-    color: $gray-900;
+    color: darken($gray-900, 10%);
   }
-}
-
-@each $method in $http-methods-light {
-  .http-method-#{nth($method, 1)}-text {
+  .route-badge-#{nth($method, 1)}-text {
     color: #{nth($method, 2)};
   }
 }

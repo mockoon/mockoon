@@ -69,6 +69,8 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public disabledList: (number | string)[] = null;
   @Input()
   public defaultClearValue?: any;
+  @Input()
+  public placeholderClasses?: string;
 
   @ViewChild('dropdown')
   public dropdown: NgbDropdown;

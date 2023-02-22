@@ -78,7 +78,7 @@ describe('UI interactions', () => {
 
       expect(await routes.documentationInput.isFocused()).toEqual(true);
 
-      await routes.add();
+      await routes.addHTTPRoute();
 
       expect(await routes.pathInput.isFocused()).toEqual(true);
     });

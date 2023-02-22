@@ -15,6 +15,11 @@ import { convertPathToArray, stringIncludesArrayItems } from './utils';
  * Interpretor for the route response rules.
  * Extract the rules targets from the request (body, headers, etc).
  * Get the first route response for which at least one rule is fulfilled.
+ *
+ * For CRUD routes:
+ * - default response is the one linked to CRUD operations
+ * - SEQUENTIAL, RANDOM and DISABLE_RULES modes are still working
+ * - default response shouldn't have rules
  */
 export class ResponseRulesInterpreter {
   private targets: {

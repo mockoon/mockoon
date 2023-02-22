@@ -1,6 +1,6 @@
 {
   "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
-  "lastMigration": 25,
+  "lastMigration": 26,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -31,7 +31,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "101957a1-2557-41ff-a42c-00af00f7ad66",
@@ -58,7 +59,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "c2f80546-b6ea-44bd-9748-9dd923653f3a",
@@ -85,7 +87,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "493365b8-7f69-434b-adca-e6092a17c1dc",
@@ -112,7 +115,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

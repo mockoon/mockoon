@@ -15,7 +15,8 @@ import {
   ResponseMode,
   ResponseRule,
   Route,
-  RouteResponse
+  RouteResponse,
+  RouteType
 } from '../models/route.model';
 
 export const EnvironmentDefault: Environment = {
@@ -63,6 +64,7 @@ export const RouteDefault: Route = {
   get uuid() {
     return uuid();
   },
+  type: RouteType.HTTP,
   documentation: '',
   method: Methods.get,
   endpoint: '',
@@ -259,11 +261,16 @@ export const FolderSchema = Joi.object<Folder, true>({
 
 export const RouteSchema = Joi.object<Route, true>({
   uuid: UUIDSchema,
+  type: Joi.string()
+    .valid(RouteType.HTTP, RouteType.CRUD)
+    .failover(RouteDefault.type)
+    .required(),
   documentation: Joi.string()
     .allow('')
     .failover(RouteDefault.documentation)
     .required(),
   method: Joi.string()
+    .allow('')
     .valid(
       Methods.get,
       Methods.post,

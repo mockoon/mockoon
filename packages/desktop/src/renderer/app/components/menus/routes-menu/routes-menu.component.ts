@@ -8,7 +8,13 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Environment, Folder, FolderChild, Route } from '@mockoon/commons';
+import {
+  Environment,
+  Folder,
+  FolderChild,
+  Route,
+  RouteType
+} from '@mockoon/commons';
 import { from, merge, Observable, Subject } from 'rxjs';
 import {
   debounceTime,
@@ -164,8 +170,15 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   /**
    * Create a new route in the current environment. Append at the end of the list
    */
-  public addRoute() {
-    this.environmentsService.addRoute('root', true);
+  public addCRUDRoute() {
+    this.environmentsService.addRoute(RouteType.CRUD, 'root', true);
+  }
+
+  /**
+   * Create a new route in the current environment. Append at the end of the list
+   */
+  public addHTTPRoute() {
+    this.environmentsService.addRoute(RouteType.HTTP, 'root', true);
   }
 
   /**

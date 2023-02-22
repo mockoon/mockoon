@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import contextMenu from '../libs/context-menu';
+import contextMenu, { ContextMenuRouteActions } from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import headersUtils from '../libs/headers-utils';
@@ -25,7 +25,11 @@ describe('Duplicate a route to an environment', async () => {
   });
 
   it("should open duplication modal and verify selected route's information on modal", async () => {
-    await contextMenu.click('routes', 3, 2);
+    await contextMenu.click(
+      'routes',
+      3,
+      ContextMenuRouteActions.DUPLICATE_TO_ENV
+    );
 
     await modals.assertExists();
 

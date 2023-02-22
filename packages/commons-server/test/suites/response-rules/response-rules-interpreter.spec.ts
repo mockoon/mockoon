@@ -1,4 +1,5 @@
 import {
+  BodyTypes,
   ResponseMode,
   ResponseRuleTargets,
   RouteResponse
@@ -27,7 +28,9 @@ const routeResponse403: RouteResponse = {
   fallbackTo404: false,
   rules: [],
   rulesOperator: 'OR',
-  default: false
+  default: false,
+  bodyType: BodyTypes.INLINE,
+  databucketID: ''
 };
 
 const routeResponseTemplate: RouteResponse = {
@@ -48,7 +51,9 @@ const routeResponseTemplate: RouteResponse = {
   fallbackTo404: false,
   rules: [],
   rulesOperator: 'OR',
-  default: false
+  default: false,
+  bodyType: BodyTypes.INLINE,
+  databucketID: ''
 };
 
 describe('Response rules interpreter', () => {

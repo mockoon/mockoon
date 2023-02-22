@@ -1,6 +1,6 @@
 {
   "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
-  "lastMigration": 25,
+  "lastMigration": 26,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -31,7 +31,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0b51d671-78fe-4e45-8535-d7077ea25935",
@@ -58,7 +59,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0b49eaa5-4f7f-4727-bf73-13e38ff0024f",
@@ -85,7 +87,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "ce4b4296-17cc-430d-af55-1bba17fe70a1",
@@ -112,7 +115,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "babc1039-6224-4a8a-965f-a7ef422dc8e2",
@@ -139,7 +143,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "15985d8b-3f0a-49d9-a6cf-3ee54121a19e",
@@ -166,7 +171,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "05b7a580-bf3e-4b39-bc71-332719f842e0",
@@ -193,7 +199,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "99bcd9cc-638c-455c-a1d0-2d03408e65b8",
@@ -220,7 +227,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "afcc82aa-4ea0-4874-a520-6f5491ffef5a",
@@ -247,7 +255,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "ecd94987-73d0-490b-8476-3263d2e85e24",
@@ -274,7 +283,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "3b040ecd-a637-491e-819e-de13cc375831",
@@ -301,7 +311,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "646646ed-dcdc-449e-b2bc-c817605c9feb",
@@ -328,7 +339,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "ad945bcc-5aa6-4023-97ca-69848c123ea0",
@@ -355,7 +367,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "d5bb6ebe-ae0a-4d25-be1c-145801cfb349",
@@ -382,7 +395,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "1a4cbe41-ef87-4f9b-8dd4-a3cf899b1e6e",
@@ -412,7 +426,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "47d09e53-e39d-41c8-ab47-1dee08a8a2d5",
@@ -439,7 +454,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "054dec37-f089-4e92-8794-32b04eb6ac58",
@@ -466,7 +482,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "16af46a7-9b69-4f6b-bd6d-0d3866d09482",
@@ -493,7 +510,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "f87f17f2-8cb9-4f2d-9925-7b8b14edfb8c",
@@ -520,7 +538,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "570e06b6-dac0-4229-b592-c369c0acfd92",
@@ -547,7 +566,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "d321789a-db2a-4cd5-a4d4-f10a7c18860b",
@@ -574,7 +594,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "ae5e2150-ebcd-484b-9bca-577f8fb79427",
@@ -601,7 +622,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "cd11c23c-d2b8-47b5-b7fe-832d9f368e7d",
@@ -628,7 +650,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "191326b6-86cf-4d2d-b9d0-7c7f36477068",
@@ -655,7 +678,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "7aa9f6c7-9c41-4f79-a0dd-fb08092ddb2f",
@@ -682,7 +706,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "d222954a-948a-4400-86c8-c55edd4b263b",
@@ -709,7 +734,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "00afbc63-059d-4d9b-bed8-f39f5014140e",
@@ -736,7 +762,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "a40b60eb-f791-4aff-af38-fe99ef37a400",
@@ -763,7 +790,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "2b2e4953-9f9d-4f9c-91bd-02972132e708",
@@ -790,7 +818,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "037afb95-11b6-4b7f-91d1-ad64030094c4",
@@ -817,7 +846,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "c6900dcd-aeb7-43e9-a470-e3a2d6373687",
@@ -844,7 +874,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "9668ef0f-bfd3-4dc7-9942-efe324c5b5e1",
@@ -871,7 +902,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "f41d404f-68ee-4df5-9b96-9394de52bf9d",
@@ -898,7 +930,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "42cfea8a-2e95-4286-9eec-3aad82e39c5d",
@@ -925,7 +958,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "29bd91e1-b39b-4923-b1cb-ff4af7b83389",
@@ -952,7 +986,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "31bf072a-1770-443c-bc43-d20843378e9e",
@@ -979,7 +1014,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "4ac60644-b7ce-4b67-a350-359a1be91b42",
@@ -1006,7 +1042,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "cd81ccb9-23b6-4d4a-ae3c-77107c9e4072",
@@ -1033,7 +1070,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "6873f30d-58e1-425a-a22f-334dbbb10e57",
@@ -1060,7 +1098,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "fef44065-1a70-4fdd-8876-b32f0b5a088b",
@@ -1087,7 +1126,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "deb123f8-8c31-4652-9399-a64ab69b75c1",
@@ -1114,7 +1154,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "921c9906-ea2b-42fa-abe2-55f21200ad2e",
@@ -1141,7 +1182,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "51993754-4d1d-4723-902f-c3ebc8c86e24",
@@ -1168,7 +1210,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "68303f6a-24f0-441c-b34a-a0af2329533a",
@@ -1195,7 +1238,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "181a577f-74f8-42b5-b5d6-082ca6c7c078",
@@ -1222,7 +1266,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "3c11320c-f877-4d33-8c8b-cc00e39ebf48",
@@ -1249,7 +1294,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "2788d9f7-4e73-4a50-9369-094614a7b954",
@@ -1276,7 +1322,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "e15f86c5-038e-4556-aa66-b71e9a02128a",
@@ -1303,7 +1350,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "4baa34c8-097a-4841-a978-e15789f48480",
@@ -1330,7 +1378,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "5c78c723-050e-40b9-b7e0-d216cd2738ff",
@@ -1357,7 +1406,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0d190ff6-f23c-4f03-9d90-08a5542abe3e",
@@ -1384,7 +1434,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
@@ -1411,7 +1462,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
@@ -1438,7 +1490,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
@@ -1465,7 +1518,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
@@ -1492,7 +1546,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
@@ -1519,7 +1574,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "7a748b48-0ebb-4557-88f0-c44d50ae238c",
@@ -1546,7 +1602,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0687ac28-bdd1-43f1-8dfe-0fd523a8c276",
@@ -1573,7 +1630,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

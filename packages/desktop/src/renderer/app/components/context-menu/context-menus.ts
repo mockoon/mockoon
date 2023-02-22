@@ -52,11 +52,21 @@ export const FoldersContextMenu = (folderUUID: string): ContextMenuItem[] => [
   {
     payload: {
       subject: 'folder',
-      action: 'add_route',
+      action: 'add_crud_route',
       subjectUUID: folderUUID
     },
-    label: 'Add route',
-    icon: 'post_add',
+    label: 'Add CRUD route',
+    icon: 'endpoints',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'folder',
+      action: 'add_http_route',
+      subjectUUID: folderUUID
+    },
+    label: 'Add HTTP route',
+    icon: 'endpoint',
     disabled: false
   },
   {
@@ -66,7 +76,7 @@ export const FoldersContextMenu = (folderUUID: string): ContextMenuItem[] => [
       subjectUUID: folderUUID
     },
     label: 'Add folder',
-    icon: 'create_new_folder',
+    icon: 'folder',
     disabled: false
   },
   {

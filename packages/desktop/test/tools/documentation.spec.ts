@@ -1,7 +1,10 @@
 import { BodyTypes } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { ChainablePromiseElement } from 'webdriverio';
-import contextMenu from '../libs/context-menu';
+import contextMenu, {
+  ContextMenuFolderActions,
+  ContextMenuRouteActions
+} from '../libs/context-menu';
 import databuckets from '../libs/databuckets';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
@@ -1270,21 +1273,36 @@ const documentationTopics: {
           await routes.addFolder();
           await (await routes.getMenuItemEditable(1)).click();
           await routes.setMenuItemEditableText(1, 'Users');
-          await browser.pause(10000);
           await contextMenu.open('routes', 1);
-          await contextMenu.click('routes', 1, 1);
+          await contextMenu.click(
+            'routes',
+            1,
+            ContextMenuFolderActions.ADD_HTTP
+          );
           await routes.pathInput.setValue('/users');
           await contextMenu.open('routes', 1);
-          await contextMenu.click('routes', 1, 1);
+          await contextMenu.click(
+            'routes',
+            1,
+            ContextMenuFolderActions.ADD_HTTP
+          );
           await routes.pathInput.setValue('/users/:id');
           await routes.addFolder();
           await (await routes.getMenuItemEditable(4)).click();
           await routes.setMenuItemEditableText(4, 'Invoices');
           await contextMenu.open('routes', 4);
-          await contextMenu.click('routes', 4, 1);
+          await contextMenu.click(
+            'routes',
+            4,
+            ContextMenuFolderActions.ADD_HTTP
+          );
           await routes.pathInput.setValue('/invoices');
           await contextMenu.open('routes', 4);
-          await contextMenu.click('routes', 4, 1);
+          await contextMenu.click(
+            'routes',
+            4,
+            ContextMenuFolderActions.ADD_HTTP
+          );
           await routes.pathInput.setValue('/invoices/:id');
         },
         get screenshotTarget() {
@@ -1296,6 +1314,101 @@ const documentationTopics: {
         screenshotPosition: { left: 0, top: 0 },
         screeenshotGaps: { right: 500, bottom: 400 },
         fileName: 'routes-nested-folder.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'api-endpoints/crud-routes',
+    screenshots: [
+      {
+        tasks: async () => {
+          await contextMenu.open('routes', 1);
+          await contextMenu.clickAndConfirm(
+            'routes',
+            1,
+            ContextMenuFolderActions.DELETE
+          );
+          await contextMenu.open('routes', 1);
+          await contextMenu.clickAndConfirm(
+            'routes',
+            1,
+            ContextMenuFolderActions.DELETE
+          );
+
+          await contextMenu.open('routes', 1);
+          await contextMenu.clickAndConfirm(
+            'routes',
+            1,
+            ContextMenuRouteActions.DELETE
+          );
+
+          await contextMenu.open('routes', 1);
+          await contextMenu.clickAndConfirm(
+            'routes',
+            1,
+            ContextMenuRouteActions.DELETE
+          );
+
+          await contextMenu.open('routes', 1);
+          await contextMenu.clickAndConfirm(
+            'routes',
+            1,
+            ContextMenuRouteActions.DELETE
+          );
+
+          await contextMenu.open('routes', 1);
+          await contextMenu.clickAndConfirm(
+            'routes',
+            1,
+            ContextMenuRouteActions.DELETE
+          );
+
+          await routes.openAddMenu();
+        },
+        get screenshotTarget() {
+          return routes.addMenu;
+        },
+        get highlightedTarget() {
+          return routes.getAddMenuEntry(1);
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 150, bottom: 100 },
+        fileName: 'add-crud-route.png'
+      },
+      {
+        tasks: async () => {
+          await contextMenu.close();
+          await routes.addCRUDRoute();
+          await routes.setPath('users');
+        },
+        get screenshotTarget() {
+          return routes.pathInput;
+        },
+        get highlightedTarget() {
+          return routes.pathInput;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 100, bottom: 100 },
+        fileName: 'set-crud-route-path.png'
+      },
+      {
+        tasks: async () => {},
+        get screenshotTarget() {
+          return routes.bodyDataBucketSelect;
+        },
+        get highlightedTarget() {
+          return routes.bodyDataBucketSelect;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0 },
+        screeenshotGaps: { left: 50, top: 200, bottom: 100 },
+        fileName: 'link-data-bucket-crud-route.png'
       }
     ]
   }

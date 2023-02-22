@@ -26,16 +26,16 @@ export class SvgComponent {
   public size = '16';
   @Input()
   public icon:
+    | 'endpoint'
+    | 'endpoints'
     | 'play_arrow'
     | 'power'
     | 'power_settings_new'
-    | 'post_add'
     | 'refresh'
     | 'repeat'
     | 'save'
     | 'security'
     | 'settings'
-    | 'settings_input_component'
     | 'show_chart'
     | 'shuffle'
     | 'speaker_notes'
@@ -68,7 +68,6 @@ export class SvgComponent {
     | 'note_add'
     | 'folder'
     | 'folder_open'
-    | 'create_new_folder'
     | 'history'
     | 'https'
     | 'info'

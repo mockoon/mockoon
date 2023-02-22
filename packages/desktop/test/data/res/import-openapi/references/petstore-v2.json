@@ -1,6 +1,6 @@
 {
   "uuid": "5f2b78e0-fb9e-4318-b821-9c11acb79547",
-  "lastMigration": 25,
+  "lastMigration": 26,
   "name": "Swagger Petstore v2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -31,7 +31,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "a80e0202-5ceb-49d3-97df-b0d996d5fba2",
@@ -92,7 +93,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "01f3fe0f-e800-487f-aba4-4b6e3f379e2f",
@@ -136,7 +138,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "e3285a96-7c3a-40fa-920c-5430e82ef037",
@@ -180,7 +183,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "bbbeb56e-d48b-4255-a8ab-53b24198b971",
@@ -241,7 +245,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "85fe17f3-b1e7-410d-81a2-3bada714da3c",
@@ -268,7 +273,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "493e735d-5e5d-4583-82fc-4efb53ed5831",
@@ -312,7 +318,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "7adc8cfd-8a5e-434a-91c8-f4b0e6443d9c",
@@ -339,7 +346,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "3373a660-a352-4960-9f0c-d03efe671071",
@@ -366,7 +374,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "52217d90-1728-4fb2-9e29-a1c4bf414c23",
@@ -410,7 +419,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "025fe90c-7b81-408a-a853-fbc05eb3ce49",
@@ -471,7 +481,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "b005a90c-b513-491b-aa8e-1b6ccb0e0c0c",
@@ -515,7 +526,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "161bfdad-a1cd-47c0-8b71-60b4fabc3beb",
@@ -542,7 +554,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "b37de1be-ee83-460f-a1d1-c3e530c6e6c3",
@@ -569,7 +582,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "78de75f8-3380-4348-a932-e741f7d7ebd9",
@@ -596,7 +610,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "b3fdfe58-6be9-4338-848e-26eab762d940",
@@ -644,7 +659,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "dd6ad6cf-8a5d-44ba-9904-b2c91203828c",
@@ -671,7 +687,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "bbe3288f-c167-4bdf-b7dc-f2b3975c101a",
@@ -732,7 +749,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "89976e94-37ad-4451-aba9-b51b7d427a5e",
@@ -776,7 +794,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "84b8d890-b7ca-49ae-ae0f-c880405283f0",
@@ -820,7 +839,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

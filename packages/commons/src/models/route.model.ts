@@ -48,10 +48,16 @@ export type ResponseRuleTargets =
   | 'request_number'
   | 'cookie';
 
+export enum RouteType {
+  HTTP = 'http',
+  CRUD = 'crud'
+}
+
 export type Route = {
   uuid: string;
+  type: RouteType;
   documentation: string;
-  method: keyof typeof Methods;
+  method: keyof typeof Methods | '';
   endpoint: string;
   responses: RouteResponse[];
   enabled: boolean;

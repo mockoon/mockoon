@@ -1,6 +1,8 @@
 import { resolve } from 'path';
 import clipboard from '../libs/clipboard';
-import contextMenu from '../libs/context-menu';
+import contextMenu, {
+  ContextMenuDatabucketActions
+} from '../libs/context-menu';
 import databuckets from '../libs/databuckets';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
@@ -196,7 +198,11 @@ describe('Databucket filter', () => {
     await databuckets.assertCount(1);
 
     // menu element is still no. 2 because filtering only add a d-none class
-    await contextMenu.click('databuckets', 2, 2);
+    await contextMenu.click(
+      'databuckets',
+      2,
+      ContextMenuDatabucketActions.DUPLICATE_TO_ENV
+    );
     await $(
       '.modal-content .modal-body .list-group .list-group-item:first-child'
     ).click();
@@ -231,7 +237,7 @@ describe('Databucket filter', () => {
 describe('Databuckets autocompletion', () => {
   it('should open autocompletion menu when pressing ctrl + space in editor', async () => {
     await navigation.switchView('ENV_ROUTES');
-    await routes.add();
+    await routes.addHTTPRoute();
     await routes.bodyEditor.click();
     await browser.keys(['Control', 'Space']);
     await $('.ace_editor.ace_autocomplete').waitForExist();

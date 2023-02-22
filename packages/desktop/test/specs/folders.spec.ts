@@ -1,4 +1,7 @@
-import contextMenu from '../libs/context-menu';
+import contextMenu, {
+  ContextMenuFolderActions,
+  ContextMenuRouteActions
+} from '../libs/context-menu';
 import environments from '../libs/environments';
 import routes from '../libs/routes';
 
@@ -24,14 +27,18 @@ describe('Folders', () => {
 
   it('should delete folder', async () => {
     await contextMenu.open('routes', 1);
-    await contextMenu.clickAndConfirm('routes', 1, 3);
+    await contextMenu.clickAndConfirm(
+      'routes',
+      1,
+      ContextMenuFolderActions.DELETE
+    );
     await routes.assertCount(0);
   });
 
   it('should create a folder in a folder', async () => {
     await routes.addFolder();
     await contextMenu.open('routes', 1);
-    await contextMenu.click('routes', 1, 2);
+    await contextMenu.click('routes', 1, ContextMenuFolderActions.ADD_FOLDER);
 
     await routes.assertCount(3);
     await routes.assertMenuEntryText(1, 'New folder');
@@ -41,14 +48,14 @@ describe('Folders', () => {
 
   it('should create a route in a subfolder', async () => {
     await contextMenu.open('routes', 2);
-    await contextMenu.click('routes', 2, 1);
+    await contextMenu.click('routes', 2, ContextMenuFolderActions.ADD_HTTP);
     await routes.pathInput.setValue('/subroute');
     await routes.assertCount(3);
     await routes.assertMenuEntryText(3, '/subroute');
   });
 
   it('should add a root level route', async () => {
-    await routes.add();
+    await routes.addHTTPRoute();
     await routes.pathInput.setValue('/rootroute');
     await routes.assertCount(4);
     await routes.assertMenuEntryText(4, '/rootroute');
@@ -71,7 +78,7 @@ describe('Folders', () => {
 
   it('should duplicate the route in the subfolder', async () => {
     await contextMenu.open('routes', 3);
-    await contextMenu.click('routes', 3, 1);
+    await contextMenu.click('routes', 3, ContextMenuRouteActions.DUPLICATE);
     await routes.pathInput.setValue('/subroute2');
     await routes.assertCount(5);
     await routes.assertMenuEntryText(4, '/subroute2');

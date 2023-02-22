@@ -11,11 +11,13 @@ import { CloneObject } from '../libs/utils';
 import { DataBucket, Environment } from '../models/environment.model';
 import { Folder } from '../models/folder.model';
 import {
+  BodyTypes,
   Header,
   Methods,
   ResponseRule,
   Route,
-  RouteResponse
+  RouteResponse,
+  RouteType
 } from '../models/route.model';
 
 /**
@@ -59,12 +61,26 @@ export const BuildFolder = (): Folder => ({
 /**
  * Build a new route
  */
-export const BuildRoute = (hasDefaultRouteResponse = true): Route => ({
-  ...RouteDefault,
-  responses: hasDefaultRouteResponse
-    ? [{ ...BuildRouteResponse(), default: true }]
-    : []
-});
+export const BuildRoute = (
+  type: RouteType,
+  hasDefaultRouteResponse = true
+): Route => {
+  let defaultResponse = { ...BuildRouteResponse(), default: true };
+
+  if (type === RouteType.CRUD) {
+    defaultResponse = {
+      ...defaultResponse,
+      bodyType: BodyTypes.DATABUCKET
+    };
+  }
+
+  return {
+    ...RouteDefault,
+    type,
+    method: type === 'crud' ? '' : Methods.get,
+    responses: hasDefaultRouteResponse ? [defaultResponse] : []
+  };
+};
 
 /**
  * Build a new databucket
@@ -84,7 +100,7 @@ export const BuildEnvironment = (
     hasDefaultHeader: true
   }
 ): Environment => {
-  const newRoute = BuildRoute();
+  const newRoute = BuildRoute(RouteType.HTTP);
 
   return {
     ...EnvironmentDefault,
@@ -105,22 +121,40 @@ export const BuildEnvironment = (
  * Build a demo environment when starting the application for the first time
  */
 export const BuildDemoEnvironment = (): Environment => {
+  const databucket = BuildDatabucket();
   const newRoutes = [
-    BuildRoute(),
-    BuildRoute(),
-    BuildRoute(),
-    BuildRoute(),
-    BuildRoute()
+    { ...BuildRoute(RouteType.CRUD) },
+    BuildRoute(RouteType.HTTP),
+    BuildRoute(RouteType.HTTP),
+    BuildRoute(RouteType.HTTP),
+    BuildRoute(RouteType.HTTP),
+    BuildRoute(RouteType.HTTP)
   ];
 
   return {
     ...BuildEnvironment(),
     name: 'Demo API',
+    data: [
+      {
+        ...databucket,
+        name: 'Users',
+        value:
+          '[\n  {{#repeat 50}}\n  {\n    "id": "{{faker \'datatype.uuid\'}}",\n    "username": "{{faker \'internet.userName\'}}"\n  }\n  {{/repeat}}\n]'
+      }
+    ],
     routes: [
       {
         ...newRoutes[0],
-        method: Methods.get,
         endpoint: 'users',
+        documentation: 'Endpoint performing CRUD operations on a data bucket',
+        responses: [
+          { ...newRoutes[0].responses[0], databucketID: databucket.id }
+        ]
+      },
+      {
+        ...newRoutes[1],
+        method: Methods.get,
+        endpoint: 'template',
         documentation:
           'Generate random body (JSON, text, CSV, etc) with templating',
         responses: [
@@ -133,7 +167,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[1],
+        ...newRoutes[2],
         method: Methods.post,
         endpoint: 'content/:param1',
         documentation: 'Use multiple responses with rules',
@@ -175,7 +209,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[2],
+        ...newRoutes[3],
         method: Methods.get,
         endpoint: 'file/:pageName',
         documentation:
@@ -191,7 +225,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[3],
+        ...newRoutes[4],
         method: Methods.put,
         endpoint: 'path/with/pattern(s)?/*',
         documentation: 'Path supports various patterns',
@@ -204,7 +238,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[4],
+        ...newRoutes[5],
         method: Methods.get,
         endpoint: 'forward-and-record',
         documentation: 'Can Mockoon forward or record entering requests?',

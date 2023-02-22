@@ -48,7 +48,6 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
   public activeDatabucket$: Observable<DataBucket>;
   public databucketsFilter$: Observable<string>;
   public databucketsFilter: FormControl;
-  public dragIsEnabled = true;
   public focusableInputs = FocusableInputs;
   public os$: Observable<string>;
   public menuSize = Config.defaultSecondaryMenuSize;

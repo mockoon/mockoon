@@ -207,9 +207,10 @@ label {
   &-toggle {
     width: 100%;
     text-align: left;
-
-    &::after {
-      margin-left: -1em;
+    &:not(.dropdown-toggle-icon) {
+      &::after {
+        margin-left: -1em;
+      }
     }
 
     .dropdown-toggle-label {

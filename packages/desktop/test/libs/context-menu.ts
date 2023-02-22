@@ -3,6 +3,36 @@ import utils from '../libs/utils';
 
 type Targets = 'environments' | 'routes' | 'databuckets';
 
+export enum ContextMenuEnvironmentActions {
+  DUPLICATE = 1,
+  COPY_JSON = 2,
+  SHOW_FOLDER = 3,
+  CLOSE = 4
+}
+
+export enum ContextMenuDatabucketActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  COPY_ID = 3,
+  DELETE = 4
+}
+
+export enum ContextMenuRouteActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  COPY_JSON = 3,
+  COPY_PATH = 4,
+  TOGGLE = 5,
+  DELETE = 6
+}
+
+export enum ContextMenuFolderActions {
+  ADD_CRUD = 1,
+  ADD_HTTP = 2,
+  ADD_FOLDER = 3,
+  DELETE = 4
+}
+
 class ContextMenu {
   private targetSelectors = {
     environments: '.environments-menu',
@@ -35,7 +65,11 @@ class ContextMenu {
   public async click(
     targetMenu: Targets,
     menuItemIndex?: number,
-    contextMenuItemIndex?: number
+    contextMenuItemIndex?:
+      | ContextMenuEnvironmentActions
+      | ContextMenuRouteActions
+      | ContextMenuFolderActions
+      | ContextMenuDatabucketActions
   ) {
     await this.open(targetMenu, menuItemIndex);
     await this.getItem(contextMenuItemIndex).click();

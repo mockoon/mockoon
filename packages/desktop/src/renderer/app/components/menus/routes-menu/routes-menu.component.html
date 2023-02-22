@@ -1,25 +1,32 @@
 <div class="routes-menu d-flex flex-column h-100">
   <div class="d-flex">
-    <ul class="nav d-flex w-100 pt-2 pb-2 align-items-center">
-      <li class="nav-item">
-        <a
-          class="nav-link text-primary"
-          (click)="addRoute()"
-          ngbTooltip="Add route"
+    <div class="d-flex w-100 pt-2 pb-2 align-items-center">
+      <div ngbDropdown id="routes-add-dropdown">
+        <button
+          class="btn btn-link dropdown-toggle dropdown-toggle-icon"
+          type="button"
+          ngbDropdownToggle
         >
-          <app-svg icon="post_add"></app-svg>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link text-primary"
-          (click)="addFolder()"
-          ngbTooltip="Add folder"
+          <app-svg icon="add_box"></app-svg>
+        </button>
+        <div
+          class="dropdown-menu"
+          id="routes-add-dropdown-menu"
+          ngbDropdownMenu
         >
-          <app-svg icon="create_new_folder"></app-svg>
-        </a>
-      </li>
-      <li class="nav-item flex-grow-1">
+          <button class="btn dropdown-item" (click)="addCRUDRoute()">
+            <app-svg icon="endpoints" class="mr-1"></app-svg> CRUD route
+          </button>
+          <button class="btn dropdown-item" (click)="addHTTPRoute()">
+            <app-svg icon="endpoint" class="mr-1"></app-svg> HTTP route
+          </button>
+          <button class="btn dropdown-item" (click)="addFolder()">
+            <app-svg icon="folder" class="mr-1"></app-svg> Folder
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-grow-1">
         <div class="input-group" *ngIf="os$ | async as os">
           <input
             type="text"
@@ -46,8 +53,8 @@
             <app-svg icon="clear"></app-svg>
           </button>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 
   <ng-container *ngIf="rootFolder$ | async as rootFolder">
@@ -245,10 +252,10 @@
             ></app-svg>
           </span>
           <span
-            class="badge badge-default http-method-{{
-              route.method
+            class="badge badge-default route-badge-{{
+              route.type === 'crud' ? 'crud' : route.method
             }} float-right"
-            >{{ route.method | uppercase }}
+            >{{ route.type === 'crud' ? 'CRUD' : (route.method | uppercase) }}
           </span>
           /{{ route.endpoint }}
         </div>

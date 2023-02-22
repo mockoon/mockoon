@@ -1,6 +1,6 @@
 {
   "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-  "lastMigration": 25,
+  "lastMigration": 26,
   "name": "Environment logs 1",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -76,7 +76,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "08f2985c-26d7-477d-bd71-f4c47e203e14",
@@ -103,7 +104,8 @@
           "bodyType": "FILE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

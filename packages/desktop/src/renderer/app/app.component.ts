@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Environment } from '@mockoon/commons';
+import { Environment, RouteType } from '@mockoon/commons';
 import { from, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
@@ -155,9 +155,20 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
           this.environmentsService.removeFolder(payload.subjectUUID);
         }
         break;
-      case 'add_route':
+      case 'add_crud_route':
         if (payload.subject === 'folder') {
-          this.environmentsService.addRoute(payload.subjectUUID);
+          this.environmentsService.addRoute(
+            RouteType.CRUD,
+            payload.subjectUUID
+          );
+        }
+        break;
+      case 'add_http_route':
+        if (payload.subject === 'folder') {
+          this.environmentsService.addRoute(
+            RouteType.HTTP,
+            payload.subjectUUID
+          );
         }
         break;
       case 'add_folder':

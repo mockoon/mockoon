@@ -1,6 +1,6 @@
 {
   "uuid": "c6199444-5116-490a-99a2-074876253a4a",
-  "lastMigration": 23,
+  "lastMigration": 26,
   "name": "Test env",
   "port": 3000,
   "hostname": "0.0.0.0",
@@ -26,11 +26,14 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "body": "{}",
-          "default": true
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -54,5 +57,12 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": []
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "85e236c4-decc-467c-b288-d243181a250f"
+    }
+  ]
 }

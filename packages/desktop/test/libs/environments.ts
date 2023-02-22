@@ -1,6 +1,8 @@
 import { resolve } from 'path';
 import { ChainablePromiseElement } from 'webdriverio';
-import contextMenu from '../libs/context-menu';
+import contextMenu, {
+  ContextMenuEnvironmentActions
+} from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
 import utils from '../libs/utils';
 
@@ -69,12 +71,20 @@ class Environments {
   }
 
   public async close(index: number): Promise<void> {
-    await contextMenu.click('environments', index, 4);
+    await contextMenu.click(
+      'environments',
+      index,
+      ContextMenuEnvironmentActions.CLOSE
+    );
     await browser.pause(500);
   }
 
   public async duplicate(index: number) {
-    await contextMenu.click('environments', index, 1);
+    await contextMenu.click(
+      'environments',
+      index,
+      ContextMenuEnvironmentActions.DUPLICATE
+    );
   }
 
   public async start(): Promise<void> {

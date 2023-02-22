@@ -1,4 +1,4 @@
-import contextMenu from '../libs/context-menu';
+import contextMenu, { ContextMenuRouteActions } from '../libs/context-menu';
 import environments from '../libs/environments';
 import routes from '../libs/routes';
 
@@ -9,13 +9,17 @@ describe('Environment "restart needed" indicator', () => {
   });
 
   it('should add a route and check that a restart is needed', async () => {
-    await routes.add();
+    await routes.addHTTPRoute();
     await environments.assertNeedsRestart();
     await environments.restart();
   });
 
   it('should remove a route and check that a restart is needed', async () => {
-    await contextMenu.clickAndConfirm('routes', 1, 6);
+    await contextMenu.clickAndConfirm(
+      'routes',
+      1,
+      ContextMenuRouteActions.DELETE
+    );
 
     await environments.assertNeedsRestart();
   });

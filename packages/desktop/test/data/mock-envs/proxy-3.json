@@ -1,6 +1,6 @@
 {
   "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-  "lastMigration": 25,
+  "lastMigration": 26,
   "name": "Proxy disabled",
   "endpointPrefix": "",
   "latency": 0,
@@ -31,7 +31,8 @@
           "bodyType": "INLINE"
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

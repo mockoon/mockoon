@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { RouteType } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
@@ -51,7 +52,7 @@ export class ApiService {
             this.environmentsService.closeEnvironment().subscribe();
             break;
           case 'NEW_ROUTE':
-            this.environmentsService.addRoute('root');
+            this.environmentsService.addRoute(RouteType.HTTP, 'root');
             break;
           case 'NEW_ROUTE_CLIPBOARD':
             this.environmentsService.addRouteFromClipboard().subscribe();

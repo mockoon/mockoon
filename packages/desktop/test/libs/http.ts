@@ -88,7 +88,7 @@ class Http {
     protocol: 'http' | 'https';
     port: number;
     path: string;
-    method: 'GET' | 'POST' | 'PUT' | 'HEAD' | 'OPTIONS';
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'DELETE';
     headers: { [key in string]: string | string[] | number };
     body: any;
     cookie: string;

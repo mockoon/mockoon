@@ -19,6 +19,7 @@ import {
   Route,
   RouteResponse,
   RouteSchema,
+  RouteType,
   UnwrapLegacyExport
 } from '@mockoon/commons';
 import {
@@ -675,9 +676,9 @@ export class EnvironmentsService extends Logger {
   /**
    * Add a new route and save it in the store
    */
-  public addRoute(folderId: string | 'root', scroll = false) {
+  public addRoute(type: RouteType, folderId: string | 'root', scroll = false) {
     if (this.store.getActiveEnvironment()) {
-      this.store.update(addRouteAction(BuildRoute(), folderId));
+      this.store.update(addRouteAction(BuildRoute(type), folderId));
 
       if (scroll) {
         this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
@@ -1108,7 +1109,7 @@ export class EnvironmentsService extends Logger {
       }
 
       const newRoute: Route = {
-        ...BuildRoute(),
+        ...BuildRoute(RouteType.HTTP),
         method: log.method,
         endpoint,
         responses: [routeResponse]

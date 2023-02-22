@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import contextMenu from '../libs/context-menu';
+import contextMenu, { ContextMenuRouteActions } from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import routes from '../libs/routes';
@@ -59,7 +59,7 @@ describe('Routes filter', () => {
 
   it('should reset routes filter when adding a new route', async () => {
     await routes.setFilter('/dolphins');
-    await routes.add();
+    await routes.addHTTPRoute();
     await routes.assertFilter('');
   });
 
@@ -76,7 +76,11 @@ describe('Routes filter', () => {
     await browser.pause(100);
     await routes.assertCount(1);
     // menu item id is still 3, as filtering is using d-none class
-    await contextMenu.click('routes', 3, 2);
+    await contextMenu.click(
+      'routes',
+      3,
+      ContextMenuRouteActions.DUPLICATE_TO_ENV
+    );
     await $(
       '.modal-content .modal-body .list-group .list-group-item:first-child'
     ).click();
