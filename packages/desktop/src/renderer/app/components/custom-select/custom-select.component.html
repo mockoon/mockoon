@@ -18,9 +18,11 @@
           <span *ngIf="selectedItem.label" [ngClass]="selectedItem.classes">{{
             selectedItem.label
           }}</span>
-          <span *ngIf="!selectedItem.label" class="text-muted">{{
-            placeholder
-          }}</span>
+          <span
+            *ngIf="!selectedItem.label"
+            [ngClass]="placeholderClasses ? placeholderClasses : 'text-muted'"
+            >{{ placeholder }}</span
+          >
         </div>
       </ng-container>
     </button>
@@ -66,11 +68,9 @@
                   (keydown)="itemKeydown(item, $event)"
                   [disabled]="disabledList?.includes(item.value)"
                 >
-                  <span
-                    class="flex-grow-1 mr-2 ellipsis"
-                    [ngClass]="item.classes"
-                    >{{ item.label }}</span
-                  >
+                  <span class="mr-2 ellipsis" [ngClass]="item.classes">{{
+                    item.label
+                  }}</span>
                 </button>
               </ng-container>
             </ng-container>

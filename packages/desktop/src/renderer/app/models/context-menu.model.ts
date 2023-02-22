@@ -8,7 +8,8 @@ export type ContextMenuEvent = {
 export type ContextMenuItemPayload = {
   subject: DataSubject;
   action:
-    | 'add_route'
+    | 'add_crud_route'
+    | 'add_http_route'
     | 'add_folder'
     | 'delete'
     | 'close'

@@ -207,7 +207,7 @@ export class Store {
           ? route.responses.findIndex(
               (routeResponse) =>
                 routeResponse.uuid === this.store$.value.activeRouteResponseUUID
-            ) + 1
+            )
           : null
       )
     );

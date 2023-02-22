@@ -46,11 +46,17 @@ export class DropzoneDirective implements OnInit, OnDestroy {
   private dragStoppedSub: Subscription;
   private currentDropzoneSub: Subscription;
   private currentDropAction: DropActionType = null;
+  private _dragEnabled: boolean;
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private dragService: DragService
   ) {}
+
+  @Input()
+  public set dragEnabled(enabled: boolean) {
+    this._dragEnabled = enabled;
+  }
 
   @HostListener('dragenter', ['$event'])
   public onDragEnter(event: DragEvent) {
@@ -206,7 +212,10 @@ export class DropzoneDirective implements OnInit, OnDestroy {
    */
   private canReorder(): boolean {
     return (
-      this.isInSameContainer() && !this.isSelf() && !this.isContainerChild()
+      this._dragEnabled &&
+      this.isInSameContainer() &&
+      !this.isSelf() &&
+      !this.isContainerChild()
     );
   }
 
@@ -221,6 +230,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
    */
   private canDropInside(): boolean {
     return (
+      this._dragEnabled &&
       this.isInSameContainer() &&
       !this.isSelf() &&
       this.dragIsContainer === true &&

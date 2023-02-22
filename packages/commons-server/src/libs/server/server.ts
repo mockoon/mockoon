@@ -13,6 +13,7 @@ import {
   ProcessedDatabucket,
   Route,
   RouteResponse,
+  RouteType,
   ServerErrorCodes,
   ServerEvents
 } from '@mockoon/commons';
@@ -43,10 +44,12 @@ import { TemplateParser } from '../template-parser';
 import { requestHelperNames } from '../templating-helpers/request-helpers';
 import {
   CreateTransaction,
+  dedupSlashes,
   resolvePathFromEnvironment,
   routesFromFolder,
   stringIncludesArrayItems
 } from '../utils';
+import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
 
 /**
  * Create a server instance from an Environment object.
@@ -152,7 +155,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
-    app.use(this.deduplicateSlashes);
+    app.use(this.deduplicateRequestSlashes);
     app.use(cookieParser());
     app.use(this.parseBody);
     app.use(this.logRequest);
@@ -209,12 +212,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param response
    * @param next
    */
-  private deduplicateSlashes(
+  private deduplicateRequestSlashes(
     request: Request,
     response: Response,
     next: NextFunction
   ) {
-    request.url = request.url.replace(/\/{2,}/g, '/');
+    request.url = dedupSlashes(request.url);
 
     next();
   }
@@ -370,9 +373,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             this.environment.endpointPrefix
           }/${declaredRoute.endpoint.replace(/ /g, '%20')}`;
 
-          routePath = routePath.replace(/\/{2,}/g, '/');
+          routePath = dedupSlashes(routePath);
 
-          this.createRESTRoute(server, declaredRoute, routePath);
+          if (declaredRoute.type === RouteType.CRUD) {
+            this.createCRUDRoute(server, declaredRoute, routePath);
+          } else {
+            this.createRESTRoute(server, declaredRoute, routePath);
+          }
         } catch (error: any) {
           let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
 
@@ -393,16 +400,43 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param server
    * @param route
    * @param routePath
-   * @param requestNumber
    */
   private createRESTRoute(
     server: Application,
     route: Route,
     routePath: string
   ) {
-    let requestNumber = 1;
+    server[route.method](routePath, this.createRouteHandler(route, 1));
+  }
 
-    server[route.method](routePath, (request: Request, response: Response) => {
+  /**
+   * Create a CRUD route: GET, POST, PUT, PATCH, DELETE
+   *
+   * @param server
+   * @param route
+   * @param routePath
+   */
+  private createCRUDRoute(
+    server: Application,
+    route: Route,
+    routePath: string
+  ) {
+    const crudRoutes = crudRoutesBuilder(routePath);
+
+    for (const crudRoute of crudRoutes) {
+      server[crudRoute.method](
+        crudRoute.path,
+        this.createRouteHandler(route, 1, crudRoute.id)
+      );
+    }
+  }
+
+  private createRouteHandler(
+    route: Route,
+    requestNumber: number,
+    crudId?: CrudRouteIds
+  ) {
+    return (request: Request, response: Response) => {
       this.generateRequestDatabuckets(route, this.environment, request);
 
       // refresh environment data to get route changes that do not require a restart (headers, body, etc)
@@ -466,7 +500,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           }
 
           // serve inline body as default
-          let content = enabledRouteResponse.body;
+          let content: any = enabledRouteResponse.body;
 
           if (
             enabledRouteResponse.bodyType === BodyTypes.DATABUCKET &&
@@ -480,17 +514,29 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                 processedDatabucket.id === enabledRouteResponse.databucketID
             );
 
-            // if linked databucket is an array or object we need to stringify it for some values (array, object, booleans and numbers (bool and nb because expressjs canno serve this as is))
-            if (
-              servedDatabucket?.parsed &&
-              (Array.isArray(servedDatabucket.value) ||
-                typeof servedDatabucket.value === 'object' ||
-                typeof servedDatabucket.value === 'boolean' ||
-                typeof servedDatabucket.value === 'number')
-            ) {
-              content = JSON.stringify(servedDatabucket?.value);
-            } else {
-              content = servedDatabucket?.value;
+            if (servedDatabucket) {
+              content = servedDatabucket.value;
+
+              if (route.type === RouteType.CRUD && crudId) {
+                content = databucketActions(
+                  crudId,
+                  servedDatabucket,
+                  request,
+                  response
+                );
+              }
+
+              // if returned content is an array or object we need to stringify it for some values (array, object, booleans and numbers (bool and nb because expressjs cannot serve this as is))
+              if (
+                Array.isArray(content) ||
+                typeof content === 'object' ||
+                typeof content === 'boolean' ||
+                typeof content === 'number'
+              ) {
+                content = JSON.stringify(content);
+              } else {
+                content = content;
+              }
             }
           }
 
@@ -503,7 +549,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           );
         }
       }, enabledRouteResponse.latency);
-    });
+    };
   }
 
   /**

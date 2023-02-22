@@ -1,6 +1,6 @@
 {
   "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-  "lastMigration": 25,
+  "lastMigration": 26,
   "name": "Demo users API V2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -34,7 +34,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "e84c9926-6047-11ea-b4a3-058bbf68d234",
@@ -94,7 +95,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "e84c992a-6047-11ea-b4a3-058bbf68d234",
@@ -154,7 +156,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "e84c992e-6047-11ea-b4a3-058bbf68d234",
@@ -189,7 +192,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "27dbe8b0-60b2-11ea-9b62-4340c341e0a1",
@@ -216,7 +220,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

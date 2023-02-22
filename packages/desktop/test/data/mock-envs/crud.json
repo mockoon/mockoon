@@ -1,0 +1,143 @@
+{
+  "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
+  "lastMigration": 26,
+  "name": "CRUD",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "39ca1631-5e09-4622-9293-03989f7b2947",
+      "method": "get",
+      "endpoint": "testboolean",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "ee94fb98-b90f-45f9-a6c3-519c8895bc7c",
+          "body": "{{#if (dataRaw 'abc3')}}on{{else}}off{{/if}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Reponse 1",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
+      "uuid": "348cb6b6-340f-409e-bba8-97eefabb0a3c",
+      "method": "get",
+      "endpoint": "testnumber",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "1a130dea-1e99-4c47-a1d4-3e6892f67025",
+          "body": "{{#if (gt (dataRaw 'abc3') 50)}}gt{{else}}lt{{/if}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Reponse 1",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
+      "uuid": "0bb3cb2b-6484-4d6f-a444-7273ce3c0d00",
+      "method": "get",
+      "endpoint": "teststring",
+      "documentation": "",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "5bca0542-0c74-4253-a69a-29f4136d198c",
+          "body": "{{#if (includes (dataRaw 'abc3') 'teststring')}}yes{{else}}no{{/if}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Reponse 1",
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [],
+  "proxyResHeaders": [],
+  "proxyRemovePrefix": false,
+  "hostname": "0.0.0.0",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "data": [
+    {
+      "uuid": "d65767a7-16e7-4786-bc13-10c0de899349",
+      "id": "abc1",
+      "name": "users",
+      "documentation": "",
+      "value": "[\n  {\n    \"id\":1,\n    \"name\":\"john\"\n  }\n]"
+    },
+    {
+      "uuid": "3bdc5c1f-73e0-4466-b8ed-3dffff7b4fd6",
+      "id": "abc2",
+      "name": "pagination",
+      "documentation": "",
+      "value": "[\n  {\n    \"id\":1,\n    \"username\":\"peter\"\n  },\n  {\n    \"id\":2,\n    \"username\":\"alberto\"\n  },\n  {\n    \"id\":3,\n    \"username\":\"marta\"\n  },\n  {\n    \"id\":4,\n    \"username\":\"mary\"\n  },\n  {\n    \"id\":5,\n    \"username\":\"john\"\n  },\n  {\n    \"id\":6,\n    \"username\":\"douglas\"\n  },\n  {\n    \"id\":7,\n    \"username\":\"paul\"\n  },\n  {\n    \"id\":8,\n    \"username\":\"paula\"\n  },\n  {\n    \"id\":9,\n    \"username\":\"theresa\"\n  },\n  {\n    \"id\":10,\n    \"username\":\"cinderella\"\n  },\n  {\n    \"id\":11,\n    \"username\":\"laura\"\n  }\n]"
+    },
+    {
+      "uuid": "82d9cec7-f552-4f5f-8f7c-cdba91f55734",
+      "id": "abc3",
+      "name": "misc",
+      "documentation": "",
+      "value": "true"
+    },
+    {
+      "uuid": "026f8242-1e22-4da2-85af-18465ec8159a",
+      "id": "abc4",
+      "name": "arraystring",
+      "documentation": "",
+      "value": "[\"aaa\",\"bbb\",\"ccc\"]"
+    }
+  ],
+  "folders": [],
+  "rootChildren": []
+}

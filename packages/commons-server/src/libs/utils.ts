@@ -281,3 +281,11 @@ export const routesFromFolder = (
 
   return routesList;
 };
+
+/**
+ * Remove duplicate slashes from a string
+ *
+ * @param str
+ * @returns
+ */
+export const dedupSlashes = (str: string) => str.replace(/\/{2,}/g, '/');

@@ -1,6 +1,6 @@
 {
   "uuid": "a03a4dc0-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 25,
+  "lastMigration": 26,
   "name": "Sample v2 schema",
   "endpointPrefix": "",
   "latency": 0,
@@ -31,7 +31,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

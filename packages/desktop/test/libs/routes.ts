@@ -1,7 +1,10 @@
 import { BodyTypes, LogicalOperators, ResponseRule } from '@mockoon/commons';
 import { ChainablePromiseElement } from 'webdriverio';
 import { TabsNameType } from '../../src/renderer/app/models/store.model';
-import contextMenu from '../libs/context-menu';
+import contextMenu, {
+  ContextMenuFolderActions,
+  ContextMenuRouteActions
+} from '../libs/context-menu';
 import utils from '../libs/utils';
 
 class Routes {
@@ -86,6 +89,10 @@ class Routes {
     return $('#route-responses-menu #route-response-duplication-button');
   }
 
+  public get routeResponseDropdownlabel(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#route-responses-dropdown .dropdown-toggle-label');
+  }
+
   public get routeResponseDropdown(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.route-responses-dropdown-menu');
   }
@@ -98,20 +105,18 @@ class Routes {
     return $('app-custom-select[formcontrolname="databucketID"]');
   }
 
-  private get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $(
-      '.routes-menu .nav:first-of-type .nav-item:nth-of-type(1) .nav-link'
-    );
-  }
-
-  private get addFolderBtn(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $(
-      '.routes-menu .nav:first-of-type .nav-item:nth-of-type(2) .nav-link'
-    );
+  public get addMenu(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#routes-add-dropdown-menu');
   }
 
   private get activeMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(this.activeMenuEntrySelector);
+  }
+
+  public getAddMenuEntry(
+    index: number
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(`#routes-add-dropdown-menu .dropdown-item:nth-child(${index})`);
   }
 
   public getResponseRule(
@@ -220,20 +225,39 @@ class Routes {
     await $(`#body-type-${BodyTypes[type]}`).click();
   }
 
-  public async add(): Promise<void> {
-    await this.addBtn.click();
+  public async openAddMenu(): Promise<void> {
+    await $('#routes-add-dropdown .dropdown-toggle').click();
+  }
+
+  public async addCRUDRoute(): Promise<void> {
+    await $('#routes-add-dropdown .dropdown-toggle').click();
+    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(1)').click();
+  }
+
+  public async addHTTPRoute(): Promise<void> {
+    await $('#routes-add-dropdown .dropdown-toggle').click();
+    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(2)').click();
   }
 
   public async addFolder(): Promise<void> {
-    await this.addFolderBtn.click();
+    await $('#routes-add-dropdown .dropdown-toggle').click();
+    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(3)').click();
   }
 
   public async remove(index: number) {
-    await contextMenu.clickAndConfirm('routes', index, 6);
+    await contextMenu.clickAndConfirm(
+      'routes',
+      index,
+      ContextMenuRouteActions.DELETE
+    );
   }
 
   public async removeFolder(index: number) {
-    await contextMenu.clickAndConfirm('routes', index, 3);
+    await contextMenu.clickAndConfirm(
+      'routes',
+      index,
+      ContextMenuFolderActions.DELETE
+    );
   }
 
   public async assertMenuEntryText(
@@ -264,6 +288,10 @@ class Routes {
     expect(await this.pathInput.getValue()).toEqual(expected);
   }
 
+  public async setPath(text: string) {
+    await utils.setElementValue(this.pathInput, text);
+  }
+
   public async assertCountRouteResponses(expected: number) {
     await utils.countElements(
       $$('.route-responses-dropdown-menu .dropdown-item'),
@@ -290,7 +318,11 @@ class Routes {
   }
 
   public async toggleDisable(routeIndex: number) {
-    await contextMenu.click('routes', routeIndex, 5);
+    await contextMenu.click(
+      'routes',
+      routeIndex,
+      ContextMenuRouteActions.TOGGLE
+    );
   }
 
   public async setFilter(text: string) {
@@ -317,6 +349,13 @@ class Routes {
     await $(
       `.route-responses-dropdown-menu .dropdown-item:nth-child(${index})`
     ).click();
+  }
+
+  public async assertDataBucketMenuLabel(expected: string) {
+    await utils.assertElementText(
+      $('#databuckets-dropdown .dropdown-toggle-label'),
+      expected
+    );
   }
 
   public async openDataBucketMenu() {
@@ -356,6 +395,10 @@ class Routes {
     } else {
       await utils.assertHasAttribute(flag, 'icon', 'flag');
     }
+  }
+
+  public async assertSelectedRouteResponseLabel(expected: string) {
+    await utils.assertElementText(this.routeResponseDropdownlabel, expected);
   }
 
   public async assertDefaultRouteResponseClass(

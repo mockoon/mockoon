@@ -1,6 +1,6 @@
 {
   "uuid": "0c9cbbb0-e7d5-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 25,
+  "lastMigration": 26,
   "name": "YouTube Analytics",
   "endpointPrefix": "",
   "latency": 0,
@@ -31,7 +31,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0c9cbbb4-e7d5-11ea-a5ec-979674ac1a4b",
@@ -58,7 +59,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0c9cbbb6-e7d5-11ea-a5ec-979674ac1a4b",
@@ -85,7 +87,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0c9cbbb8-e7d5-11ea-a5ec-979674ac1a4b",
@@ -112,7 +115,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0c9cbbba-e7d5-11ea-a5ec-979674ac1a4b",
@@ -139,7 +143,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0c9cbbbc-e7d5-11ea-a5ec-979674ac1a4b",
@@ -166,7 +171,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0c9cbbbe-e7d5-11ea-a5ec-979674ac1a4b",
@@ -193,7 +199,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     },
     {
       "uuid": "0c9cbbc0-e7d5-11ea-a5ec-979674ac1a4b",
@@ -220,7 +227,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

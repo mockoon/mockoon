@@ -2,6 +2,7 @@ import { v4 as uuid } from 'uuid';
 import {
   EnvironmentDefault,
   ResponseRuleDefault,
+  RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
 import { Environment } from '../models/environment.model';
@@ -512,6 +513,19 @@ export const Migrations: {
           uuid: route.uuid
         }));
       }
+    }
+  },
+  /**
+   * Add route type
+   */
+  {
+    id: 26,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        if (route.type === undefined) {
+          route.type = RouteDefault.type;
+        }
+      });
     }
   }
 ];

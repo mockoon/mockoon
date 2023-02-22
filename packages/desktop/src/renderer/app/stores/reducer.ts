@@ -756,12 +756,15 @@ export const environmentReducer = (
         (routeResponse) => routeResponse.uuid !== state.activeRouteResponseUUID
       );
 
-      // mark first route response as default if needed
-      const defaultRouteResponseIndex = newRouteResponses.findIndex(
-        (routeResponse) => routeResponse.default
-      );
-      if (defaultRouteResponseIndex === -1) {
-        newRouteResponses[0] = { ...newRouteResponses[0], default: true };
+      if (newRouteResponses.length > 0) {
+        // mark first route response as default if needed
+        const defaultRouteResponseIndex = newRouteResponses.findIndex(
+          (routeResponse) => routeResponse.default
+        );
+
+        if (defaultRouteResponseIndex === -1) {
+          newRouteResponses[0] = { ...newRouteResponses[0], default: true };
+        }
       }
 
       const newEnvironments = state.environments.map((environment) => {
@@ -784,10 +787,10 @@ export const environmentReducer = (
         return environment;
       });
 
-      // no need to check if we have at least one route response because we cannot delete the last one anyway
       newState = {
         ...state,
-        activeRouteResponseUUID: newRouteResponses[0].uuid,
+        activeRouteResponseUUID:
+          newRouteResponses.length > 0 ? newRouteResponses[0].uuid : null,
         environments: newEnvironments
       };
       break;
@@ -942,7 +945,8 @@ export const environmentReducer = (
         newState = {
           ...state,
           activeRouteUUID: newRoute.uuid,
-          activeRouteResponseUUID: newRoute.responses[0].uuid,
+          activeRouteResponseUUID:
+            newRoute.responses.length > 0 ? newRoute.responses[0].uuid : null,
           activeTab: 'RESPONSE',
           activeView: 'ENV_ROUTES',
           environments: state.environments.map((environment) => {
@@ -1422,7 +1426,10 @@ export const environmentReducer = (
         ...state,
         environments: newEnvironments,
         activeRouteUUID: action.route.uuid,
-        activeRouteResponseUUID: action.route.responses[0].uuid,
+        activeRouteResponseUUID:
+          action.route.responses.length > 0
+            ? action.route.responses[0].uuid
+            : null,
         activeEnvironmentUUID: action.targetEnvironmentUUID,
         activeTab: 'RESPONSE',
         activeView: 'ENV_ROUTES',

@@ -95,7 +95,7 @@ describe('Default route response', () => {
   });
 
   it('should set first route response as default when adding a new route', async () => {
-    await routes.add();
+    await routes.addHTTPRoute();
     await routes.openRouteResponseMenu();
     await routes.assertCountRouteResponses(1);
     await routes.assertDefaultRouteResponse(1);

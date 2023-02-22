@@ -94,37 +94,37 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     {
       value: Methods.get,
       label: 'GET',
-      classes: 'http-method-get-text'
+      classes: 'route-badge-get-text'
     },
     {
       value: Methods.post,
       label: 'POST',
-      classes: 'http-method-post-text'
+      classes: 'route-badge-post-text'
     },
     {
       value: Methods.put,
       label: 'PUT',
-      classes: 'http-method-put-text'
+      classes: 'route-badge-put-text'
     },
     {
       value: Methods.patch,
       label: 'PATCH',
-      classes: 'http-method-patch-text'
+      classes: 'route-badge-patch-text'
     },
     {
       value: Methods.delete,
       label: 'DELETE',
-      classes: 'http-method-delete-text'
+      classes: 'route-badge-delete-text'
     },
     {
       value: Methods.head,
       label: 'HEAD',
-      classes: 'http-method-head-text'
+      classes: 'route-badge-head-text'
     },
     {
       value: Methods.options,
       label: 'OPTIONS',
-      classes: 'http-method-options-text'
+      classes: 'route-badge-options-text'
     },
     {
       label: 'WebDAV',
@@ -133,37 +133,37 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     {
       value: Methods.propfind,
       label: 'PROPFIND',
-      classes: 'http-method-propfind-text'
+      classes: 'route-badge-propfind-text'
     },
     {
       value: Methods.proppatch,
       label: 'PROPPATCH',
-      classes: 'http-method-proppatch-text'
+      classes: 'route-badge-proppatch-text'
     },
     {
       value: Methods.move,
       label: 'MOVE',
-      classes: 'http-method-move-text'
+      classes: 'route-badge-move-text'
     },
     {
       value: Methods.copy,
       label: 'COPY',
-      classes: 'http-method-copy-text'
+      classes: 'route-badge-copy-text'
     },
     {
       value: Methods.mkcol,
       label: 'MKCOL',
-      classes: 'http-method-mkcol-text'
+      classes: 'route-badge-mkcol-text'
     },
     {
       value: Methods.lock,
       label: 'LOCK',
-      classes: 'http-method-lock-text'
+      classes: 'route-badge-lock-text'
     },
     {
       value: Methods.unlock,
       label: 'UNLOCK',
-      classes: 'http-method-unlock-text'
+      classes: 'route-badge-unlock-text'
     }
   ];
   public responseModes: ToggleItems = [
@@ -223,6 +223,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     this.activeRouteResponseLastLog$ =
       this.store.selectActiveRouteResponseLastLog();
     this.activeResponseFileMimeType$ = this.activeRouteResponse$.pipe(
+      filter((activeRouteResponse) => !!activeRouteResponse),
       map((activeRouteResponse) => activeRouteResponse?.filePath),
       filter((filePath) => !!filePath),
       distinctUntilChanged(),

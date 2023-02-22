@@ -11,7 +11,8 @@ import {
   Methods,
   RemoveLeadingSlash,
   Route,
-  RouteResponse
+  RouteResponse,
+  RouteType
 } from '@mockoon/commons';
 import { OpenAPI, OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { routesFromFolder } from './utils';
@@ -335,7 +336,7 @@ export class OpenAPIConverter {
           routeResponses[0].default = true;
 
           const newRoute: Route = {
-            ...BuildRoute(false),
+            ...BuildRoute(RouteType.HTTP, false),
             documentation: parsedRoute.summary || parsedRoute.description || '',
             method: routeMethod as Methods,
             endpoint: RemoveLeadingSlash(this.v2ParametersReplace(routePath)),

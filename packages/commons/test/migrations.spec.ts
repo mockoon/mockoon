@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { BodyTypes, Migrations, ResponseMode } from '../src';
+import { BodyTypes, Migrations, ResponseMode, RouteDefault } from '../src';
 
 const applyMigration = (migrationId: number, environment: any) => {
   const migrationFunction = Migrations.find(
@@ -314,6 +314,17 @@ describe('Migrations', () => {
         { type: 'route', uuid: '1' },
         { type: 'route', uuid: '2' }
       ]);
+    });
+  });
+
+  describe('migration n. 26', () => {
+    it('should add `type` property to routes', () => {
+      const environment = { routes: [{ uuid: '1' }, { uuid: '2' }] };
+
+      applyMigration(26, environment);
+
+      expect(environment.routes[0]['type']).to.equal(RouteDefault.type);
+      expect(environment.routes[1]['type']).to.equal(RouteDefault.type);
     });
   });
 });

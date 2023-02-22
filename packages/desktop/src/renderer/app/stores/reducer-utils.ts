@@ -3,7 +3,8 @@ import {
   Folder,
   FolderChild,
   GetRouteResponseContentType,
-  Route
+  Route,
+  RouteType
 } from '@mockoon/commons';
 import { helpersAutocompletions } from 'src/renderer/app/constants/autocomplete.constant';
 import { DropActionType } from 'src/renderer/app/enums/ui.enum';
@@ -29,8 +30,13 @@ const listDuplicatedRouteUUIDs = (environment: Environment): Set<string> => {
     environment.routes.forEach((otherRoute: Route, otherRouteIndex: number) => {
       if (
         otherRouteIndex > routeIndex &&
-        otherRoute.endpoint === route.endpoint &&
-        otherRoute.method === route.method
+        ((otherRoute.type === RouteType.CRUD &&
+          route.type === RouteType.CRUD &&
+          otherRoute.endpoint === route.endpoint) ||
+          (otherRoute.type === RouteType.HTTP &&
+            route.type === RouteType.HTTP &&
+            otherRoute.endpoint === route.endpoint &&
+            otherRoute.method === route.method))
       ) {
         duplicates.add(otherRoute.uuid);
       }

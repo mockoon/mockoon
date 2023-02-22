@@ -43,7 +43,7 @@ export class HeaderComponent implements OnInit {
       {
         id: 'ENV_ROUTES',
         title: 'Routes',
-        icon: 'settings_input_component',
+        icon: 'endpoints',
         count: this.activeEnvironment$.pipe(
           filter((environment) => !!environment),
           map((environment) => environment.routes.length)
