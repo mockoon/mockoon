@@ -8,6 +8,8 @@ RUN npm install -g @mockoon/cli@$version
 RUN adduser --shell /bin/sh --disabled-password --gecos "" mockoon
 USER mockoon
 
+EXPOSE 3000
+
 ENTRYPOINT ["mockoon-cli", "start", "--hostname", "0.0.0.0", "--daemon-off"]
 
 # Usage: docker run --mount type=bind,source="$(pwd)"/dataFile.json,target=/data,readonly -p <port>:<port> mockoon-test -d data
