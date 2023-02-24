@@ -277,6 +277,10 @@ export class OpenAPIConverter {
                 | OpenAPIV2.SchemaObject
                 | OpenAPIV3.SchemaObject
                 | undefined;
+              let examples:
+                | OpenAPIV2.ExampleObject
+                | OpenAPIV3.ExampleObject
+                | undefined;
 
               if (version === 'SWAGGER') {
                 contentTypeHeaders =
@@ -297,29 +301,42 @@ export class OpenAPIConverter {
               if (contentTypeHeader) {
                 if (version === 'SWAGGER') {
                   schema = routeResponse.schema;
+                  examples = routeResponse.examples;
                 } else if (version === 'OPENAPI_V3') {
                   schema = routeResponse.content?.[contentTypeHeader].schema;
+                  examples = routeResponse.content?.[contentTypeHeader].examples;
                 }
               }
 
-              routeResponses.push({
-                ...BuildRouteResponse(),
-                body: schema
-                  ? this.convertJSONSchemaPrimitives(
-                      JSON.stringify(
-                        this.generateSchema(schema),
-                        null,
-                        INDENT_SIZE
-                      )
-                    )
-                  : '',
-                statusCode: responseStatus === 'default' ? 200 : statusCode,
-                label: routeResponse.description || '',
-                headers: this.buildResponseHeaders(
-                  contentTypeHeaders,
-                  routeResponse.headers
-                )
-              });
+              const headers = this.buildResponseHeaders(
+                contentTypeHeaders,
+                routeResponse.headers
+              )
+
+              // add response based on schema
+              if (schema) {
+                routeResponses.push(this.buildResponse(
+                  this.generateSchema(schema),
+                  routeResponse.description || '',
+                  responseStatus === 'default' ? 200 : statusCode,
+                  headers,
+                ))
+              }
+
+              // add response based on examples
+              if (examples) {
+                const routeResponseExamples = this.parseOpenAPIExamples(
+                  examples,
+                  version,
+                ).map((example) => (this.buildResponse(
+                  example.body,
+                  example.label,
+                  responseStatus === 'default' ? 200 : statusCode,
+                  headers
+                )));
+                routeResponses.push(...routeResponseExamples);
+              }
+
             }
           });
 
@@ -387,6 +404,31 @@ export class OpenAPIConverter {
     }
 
     return [routeContentTypeHeader];
+  }
+
+  /**
+   * Build route response from label, status code, headers and unformatted body.
+   * @param body
+   * @param label
+   * @param statusCode
+   * @param headers
+   * @private
+   */
+  private buildResponse(
+    body: any,
+    label: string,
+    statusCode: number,
+    headers: Header[]
+  ) {
+    return {
+      ...BuildRouteResponse(),
+      body: this.convertJSONSchemaPrimitives(
+        JSON.stringify(body, null, INDENT_SIZE)
+      ),
+      label,
+      statusCode,
+      headers,
+    }
   }
 
   /**
@@ -543,5 +585,29 @@ export class OpenAPIConverter {
       /\"({{faker 'datatype\.(number|boolean|float)'}})\"/g,
       '$1'
     );
+  }
+
+  /**
+   * Extract bodies and labels from OpenAPI examples
+   * @param examples
+   * @param version
+   * @private
+   */
+  private parseOpenAPIExamples(examples: OpenAPIV2.ExampleObject | OpenAPIV3.ExampleObject, version: string) {
+    const responses: Pick<RouteResponse, 'body' | 'label'>[] = [];
+
+    Object.keys(examples).forEach((exampleName) => {
+      const example = examples[exampleName];
+      const exampleBody = version === 'SWAGGER' ? example : example.value;
+
+      const exampleResponse = {
+        body: exampleBody,
+        label: exampleName,
+      };
+
+      responses.push(exampleResponse);
+    });
+
+    return responses;
   }
 }

@@ -1,0 +1,93 @@
+openapi: "3.0.0"
+info:
+  title: Simple API overview
+  version: 2.0.0
+paths:
+  /without-examples:
+    get:
+      operationId: listActivities
+      summary: List activities (without examples)
+      responses:
+        '200':
+          description: |-
+            Default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+  /with-one-example:
+    get:
+      operationId: listActivities
+      summary: List activities (with one example)
+      responses:
+        '200':
+          description: |-
+            Default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+              examples:
+                Sports:
+                  value:
+                    - id: 1
+                      name: Basketball
+                    - id: 2
+                      name: Volleyball
+  /with-examples:
+    get:
+      operationId: listActivities
+      summary: List activities (with examples)
+      responses:
+        '200':
+          description: |-
+            Default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+              examples:
+                Sports:
+                  value:
+                    - id: 1
+                      name: Basketball
+                    - id: 2
+                      name: Volleyball
+                Music:
+                  value:
+                    - id: 3
+                      name: Guitar
+                    - id: 4
+  /without-schema:
+    get:
+      operationId: listActivities
+      summary: List activities (without schema)
+      responses:
+        '200':
+          description: |-
+            Default response
+          content:
+            application/json:
+              examples:
+                Sports:
+                  value:
+                    - id: 1
+                      name: Basketball
+                    - id: 2
+                      name: Volleyball
+components:
+    schemas:
+        Activity:
+          type: object
+          properties:
+              id:
+                type: integer
+                format: int64
+              name:
+                type: string
