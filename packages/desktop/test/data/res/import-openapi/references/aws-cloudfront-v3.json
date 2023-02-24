@@ -1,6 +1,6 @@
 {
   "uuid": "3e16e1a0-a802-11eb-9a34-f1c6ade0819b",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "Amazon CloudFront",
   "endpointPrefix": "",
   "latency": 0,
@@ -4759,7 +4759,7 @@
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

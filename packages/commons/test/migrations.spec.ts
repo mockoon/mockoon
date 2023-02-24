@@ -327,4 +327,17 @@ describe('Migrations', () => {
       expect(environment.routes[1]['type']).to.equal(RouteDefault.type);
     });
   });
+
+  describe('migration n. 27', () => {
+    it('should set hostname to null by default', () => {
+      const environment1 = { hostname: '0.0.0.0' };
+      const environment2 = { hostname: '127.0.0.1' };
+
+      applyMigration(27, environment1);
+      applyMigration(27, environment2);
+
+      expect(environment1.hostname).to.equal('');
+      expect(environment2.hostname).to.equal('127.0.0.1');
+    });
+  });
 });

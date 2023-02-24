@@ -4,7 +4,7 @@ import { MockoonServerless } from '../../src';
 
 const mockEnvironment: Environment = {
   uuid: 'caa83503-bf21-41c6-b71f-8068fa6dd54d',
-  lastMigration: 25,
+  lastMigration: 27,
   name: 'Basic data',
   endpointPrefix: '',
   latency: 0,
@@ -17,7 +17,7 @@ const mockEnvironment: Environment = {
   proxyReqHeaders: [],
   proxyResHeaders: [],
   proxyRemovePrefix: false,
-  hostname: '0.0.0.0',
+  hostname: '',
   tlsOptions: {
     enabled: false,
     type: 'CERT',

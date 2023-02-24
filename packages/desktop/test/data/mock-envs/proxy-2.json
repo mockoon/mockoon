@@ -1,6 +1,6 @@
 {
   "uuid": "2cbdec80-f284-11e9-a28c-912bdc671019",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "Proxy",
   "endpointPrefix": "",
   "latency": 0,
@@ -13,7 +13,7 @@
   "headers": [{ "key": "Content-Type", "value": "application/json" }],
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": true,
     "type": "CERT",

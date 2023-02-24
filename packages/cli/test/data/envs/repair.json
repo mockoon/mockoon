@@ -4,7 +4,7 @@
   "port": 3000,
   "endpointPrefix": "",
   "latency": 0,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "routes": [
     {
       "uuid": "62088a1b-43da-4251-9420-b83b8bf9ede0",

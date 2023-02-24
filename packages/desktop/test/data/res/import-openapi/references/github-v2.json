@@ -1,6 +1,6 @@
 {
   "uuid": "db17bb30-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "GitHub",
   "endpointPrefix": "",
   "latency": 0,
@@ -14698,7 +14698,7 @@
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

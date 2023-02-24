@@ -1,6 +1,6 @@
 {
   "uuid": "83e373f4-63db-4d2b-8d84-f9fc8679c400",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "Slack",
   "endpointPrefix": "api",
   "latency": 0,
@@ -6954,7 +6954,7 @@
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

@@ -40,7 +40,7 @@ export default class Start extends Command {
 
   public static examples = [
     '$ mockoon-cli start --data ~/data.json',
-    '$ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --pname mock1 mock2',
+    '$ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --pname mock1 mock2 --hostname 127.0.0.1 192.168.1.1',
     '$ mockoon-cli start --data https://file-server/data.json',
     '$ mockoon-cli start --data ~/data.json --pname "proc1"',
     '$ mockoon-cli start --data ~/data.json --daemon-off',
@@ -138,10 +138,9 @@ export default class Start extends Command {
   }
 
   private logStartedProcess(environmentInfo: EnvironmentInfo, process: Proc) {
-    const hostname =
-      environmentInfo.hostname === '0.0.0.0'
-        ? 'localhost'
-        : environmentInfo.hostname;
+    const hostname = !environmentInfo.hostname
+      ? 'localhost'
+      : environmentInfo.hostname;
 
     this.log(
       Messages.CLI.PROCESS_STARTED,

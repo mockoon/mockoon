@@ -1,11 +1,11 @@
 {
   "uuid": "06d4e2f2-b7a1-4717-a61d-94666816c30f",
-  "lastMigration": 22,
+  "lastMigration": 27,
   "name": "test",
   "endpointPrefix": "",
   "latency": 0,
   "port": 3000,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "routes": [],
   "proxyMode": false,
   "proxyHost": "",
@@ -20,6 +20,8 @@
     "passphrase": ""
   },
   "cors": true,
+  "data": [],
+  "folders": [],
   "headers": [],
   "proxyReqHeaders": [],
   "proxyResHeaders": []

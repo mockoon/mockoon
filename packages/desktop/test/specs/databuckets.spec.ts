@@ -113,7 +113,7 @@ describe('Databucket duplication to another envionment', () => {
     expect(modalText).toContain('My Databucket');
 
     await modals.assertDuplicationModalEnvName('Basic data');
-    await modals.assertDuplicationModalEnvHostname('0.0.0.0:3000/');
+    await modals.assertDuplicationModalEnvHostname('localhost:3000/');
   });
 
   it('should duplicate the databucket in another env', async () => {

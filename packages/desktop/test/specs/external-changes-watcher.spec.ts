@@ -54,7 +54,7 @@ describe('Environment external reload', () => {
     await environments.assertMenuEntryText(
       1,
       'env 1 (change1)',
-      '0.0.0.0:5005'
+      'localhost:5005'
     );
 
     await navigation.assertHeaderValue('ENV_LOGS', 'Logs');

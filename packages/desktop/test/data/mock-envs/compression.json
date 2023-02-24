@@ -1,6 +1,6 @@
 {
   "uuid": "f98d0d37-b586-4a57-bbe5-3699bc46ebbe",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "Compression (proxy)",
   "endpointPrefix": "",
   "latency": 0,
@@ -13,7 +13,7 @@
   "headers": [{ "key": "Content-Type", "value": "application/json" }],
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

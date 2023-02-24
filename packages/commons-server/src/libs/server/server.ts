@@ -124,8 +124,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     });
 
     this.serverInstance.listen(
-      this.environment.port,
-      this.environment.hostname,
+      { port: this.environment.port, host: this.environment.hostname },
       () => {
         this.emit('started');
       }

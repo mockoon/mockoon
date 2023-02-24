@@ -527,6 +527,17 @@ export const Migrations: {
         }
       });
     }
+  },
+  /**
+   * Environment hostname default to null
+   */
+  {
+    id: 27,
+    migrationFunction: (environment: Environment) => {
+      if (environment.hostname === '0.0.0.0') {
+        environment.hostname = EnvironmentDefault.hostname;
+      }
+    }
   }
 ];
 

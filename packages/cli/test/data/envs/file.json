@@ -1,11 +1,11 @@
 {
   "uuid": "6cca9fb6-3585-4c0f-8cac-1150ce24452b",
   "name": "Environment file",
-  "lastMigration": 25,
+  "lastMigration": 27,
   "port": 3000,
   "endpointPrefix": "",
   "latency": 0,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "routes": [
     {
       "uuid": "e15f2c20-92aa-4390-8f83-2da2473b47ee",
@@ -32,7 +32,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,

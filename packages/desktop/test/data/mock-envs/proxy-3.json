@@ -1,6 +1,6 @@
 {
   "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "Proxy disabled",
   "endpointPrefix": "",
   "latency": 0,
@@ -44,7 +44,7 @@
   "proxyResHeaders": [
     { "key": "x-proxy-response-header", "value": "header value" }
   ],
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": true,
     "type": "CERT",

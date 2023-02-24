@@ -1,6 +1,6 @@
 {
   "uuid": "9ca3284a-d5e8-42a4-b3dc-cd74a304c764",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "UI env name edit",
   "endpointPrefix": "",
   "latency": 0,
@@ -13,7 +13,7 @@
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": true,
     "type": "CERT",

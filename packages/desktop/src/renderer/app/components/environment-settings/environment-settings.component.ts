@@ -94,11 +94,11 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
 
     this.activeEnvironmentForm = this.formBuilder.group({
       name: [EnvironmentDefault.name],
+      hostname: [EnvironmentDefault.hostname],
       port: [EnvironmentDefault.port],
       endpointPrefix: [EnvironmentDefault.endpointPrefix],
       latency: [EnvironmentDefault.latency],
       tlsOptions: this.tlsOptionsFormGroup,
-      localhostOnly: [false],
       cors: [EnvironmentDefault.cors]
     });
 
@@ -106,17 +106,9 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
     merge(
       ...Object.keys(this.activeEnvironmentForm.controls).map((controlName) =>
         this.activeEnvironmentForm.get(controlName).valueChanges.pipe(
-          map((newValue) => {
-            if (controlName === 'localhostOnly') {
-              return {
-                hostname: newValue === true ? '127.0.0.1' : '0.0.0.0'
-              };
-            }
-
-            return {
-              [controlName]: newValue
-            };
-          })
+          map((newValue) => ({
+            [controlName]: newValue
+          }))
         )
       )
     )
@@ -142,11 +134,11 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
           this.activeEnvironmentForm.setValue(
             {
               name: activeEnvironment.name,
+              hostname: activeEnvironment.hostname,
               port: activeEnvironment.port,
               endpointPrefix: activeEnvironment.endpointPrefix,
               latency: activeEnvironment.latency,
               tlsOptions: activeEnvironment.tlsOptions,
-              localhostOnly: activeEnvironment.hostname === '127.0.0.1',
               cors: activeEnvironment.cors
             },
             { emitEvent: false }

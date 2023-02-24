@@ -1,6 +1,6 @@
 {
   "uuid": "5dd5c15a-d860-40da-83f4-7606e2c0ee22",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "databuckets",
   "endpointPrefix": "",
   "latency": 0,
@@ -98,7 +98,7 @@
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

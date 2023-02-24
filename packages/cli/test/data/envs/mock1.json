@@ -1,6 +1,6 @@
 {
   "uuid": "70d8639e-ef20-4d52-9749-c47d9ffc5c67",
-  "lastMigration": 25,
+  "lastMigration": 27,
   "name": "mock1",
   "endpointPrefix": "api",
   "latency": 0,
@@ -36,7 +36,8 @@
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -51,7 +52,7 @@
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

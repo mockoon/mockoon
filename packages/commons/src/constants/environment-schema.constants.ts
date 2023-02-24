@@ -28,7 +28,7 @@ export const EnvironmentDefault: Environment = {
   endpointPrefix: '',
   latency: 0,
   port: 3000,
-  hostname: '0.0.0.0',
+  hostname: '',
   folders: [],
   routes: [],
   rootChildren: [],
@@ -322,7 +322,10 @@ export const EnvironmentSchema = Joi.object<Environment, true>({
     .max(65535)
     .failover(EnvironmentDefault.port)
     .required(),
-  hostname: Joi.string().failover(EnvironmentDefault.hostname).required(),
+  hostname: Joi.string()
+    .allow('')
+    .failover(EnvironmentDefault.hostname)
+    .required(),
   rootChildren: Joi.array()
     .items(FolderChildSchema, Joi.any().strip())
     .failover(EnvironmentDefault.rootChildren)

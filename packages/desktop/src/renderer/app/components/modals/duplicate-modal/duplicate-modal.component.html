@@ -27,7 +27,7 @@
         >
           <div class="ellipsis">{{ environment.name }}</div>
           <div class="nav-link-subtitle ellipsis">
-            {{ environment.hostname }}:{{ environment.port }}/{{
+            {{ environment.hostname || 'localhost' }}:{{ environment.port }}/{{
               environment.endpointPrefix
             }}
           </div>
