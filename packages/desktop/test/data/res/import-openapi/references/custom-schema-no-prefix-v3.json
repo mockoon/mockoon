@@ -1,6 +1,6 @@
 {
   "uuid": "a0d62338-24ce-4ced-bc97-59bf933d1ce9",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "Sample v3 schema",
   "endpointPrefix": "",
   "latency": 0,
@@ -103,7 +103,7 @@
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

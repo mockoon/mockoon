@@ -51,7 +51,7 @@ describe('Environment hostname restriction', async () => {
   describe('Environment answers on localhost only', async () => {
     it('should switch to localhost only and start default environment', async () => {
       await navigation.switchView('ENV_SETTINGS');
-      await environmentsSettings.toggleSetting('localhostOnly');
+      await environmentsSettings.setSettingValue('hostname', '127.0.0.1');
       await environments.restart();
     });
 

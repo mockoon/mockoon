@@ -1,6 +1,6 @@
 {
   "uuid": "530c5c03-82c7-461d-a794-43a67bc5af0b",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "Swagger Petstore v3",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -198,7 +198,7 @@
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

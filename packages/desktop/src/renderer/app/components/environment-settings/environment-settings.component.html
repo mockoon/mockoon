@@ -18,16 +18,23 @@
   <app-title-separator
     heading="API URL"
     icon="power"
-    subheading="API available on {{ activeEnvironment?.hostname }}:{{
-      activeEnvironment?.port
-    }}/{{ activeEnvironment?.endpointPrefix }}"
+    subheading="API available on {{
+      activeEnvironment?.hostname || 'localhost'
+    }}:{{ activeEnvironment?.port }}/{{ activeEnvironment?.endpointPrefix }}"
   ></app-title-separator>
 
   <div class="form-group">
     <div class="input-group">
-      <label for="env-settings-port" class="col-form-label pr-2">
-        {{ activeEnvironment?.hostname }} :</label
-      >
+      <input
+        type="text"
+        class="form-control col-1"
+        id="env-settings-hostname"
+        placeholder="localhost"
+        formControlName="hostname"
+      />
+      <div class="input-group-prepend">
+        <span class="input-group-text font-bold">:</span>
+      </div>
       <input
         type="number"
         class="form-control col-1"
@@ -50,27 +57,11 @@
         appValidPath
         formControlName="endpointPrefix"
       />
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="input-group">
-      <div class="custom-control custom-checkbox">
-        <input
-          type="checkbox"
-          class="custom-control-input"
-          id="env-settings-localhost-only"
-          formControlName="localhostOnly"
-        />
-        <label class="custom-control-label" for="env-settings-localhost-only"
-          >Localhost Only
-        </label>
-      </div>
-      <div class="input-group-append ml-1">
+      <div class="input-group-append align-items-center ml-1">
         <app-svg
           icon="info"
           class="ml-1"
-          ngbTooltip="Listen to 127.0.0.1 only instead of all network adapters"
+          ngbTooltip="Default hostname is :: (IPv6) and 0.0.0.0 (IPv4)"
         ></app-svg>
       </div>
     </div>

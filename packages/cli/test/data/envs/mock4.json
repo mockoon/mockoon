@@ -1,6 +1,6 @@
 {
   "uuid": "5d004e2c-6055-41bc-b0ac-4d0c064dddd1",
-  "lastMigration": 25,
+  "lastMigration": 27,
   "name": "mockhttps",
   "endpointPrefix": "api",
   "latency": 0,
@@ -28,7 +28,7 @@
     }
   ],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": true,
     "type": "CERT",

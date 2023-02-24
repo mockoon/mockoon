@@ -43,7 +43,7 @@ describe('Dockerize command', () => {
           'COPY mockoon-mock1.json ./mockoon-mock1.json'
         );
         expect(dockerfileContent).to.contain(
-          'ENTRYPOINT ["mockoon-cli", "start", "--hostname", "0.0.0.0", "--daemon-off", "--data", "mockoon-mock1.json", "--container"]'
+          'ENTRYPOINT ["mockoon-cli", "start", "--daemon-off", "--data", "mockoon-mock1.json", "--container"]'
         );
         expect(dockerfileContent).to.contain('EXPOSE 3010');
       }
@@ -104,7 +104,7 @@ describe('Dockerize command', () => {
           'COPY mockoon-mock2.json ./mockoon-mock2.json'
         );
         expect(dockerfileContent).to.contain(
-          'ENTRYPOINT ["mockoon-cli", "start", "--hostname", "0.0.0.0", "--daemon-off", "--data", "mockoon-mock1.json", "mockoon-mock2.json", "--container"]'
+          'ENTRYPOINT ["mockoon-cli", "start", "--daemon-off", "--data", "mockoon-mock1.json", "mockoon-mock2.json", "--container"]'
         );
         expect(dockerfileContent).to.contain('EXPOSE 3010 3011');
       }

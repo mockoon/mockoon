@@ -96,9 +96,9 @@
                     ngbTooltip="TLS enabled"
                   ></app-svg>
                   <span
-                    >{{ environment.hostname }}:{{ environment.port }}/{{
-                      environment.endpointPrefix
-                    }}</span
+                    >{{ environment.hostname || 'localhost' }}:{{
+                      environment.port
+                    }}/{{ environment.endpointPrefix }}</span
                   >
                 </div>
               </div>

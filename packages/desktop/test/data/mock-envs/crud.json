@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "CRUD",
   "endpointPrefix": "",
   "latency": 0,
@@ -98,7 +98,7 @@
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

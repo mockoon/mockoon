@@ -1,6 +1,6 @@
 {
   "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
-  "lastMigration": 26,
+  "lastMigration": 27,
   "name": "uuid dedup 1",
   "endpointPrefix": "",
   "latency": 0,
@@ -42,7 +42,7 @@
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
   "proxyRemovePrefix": false,
-  "hostname": "0.0.0.0",
+  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",

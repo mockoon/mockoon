@@ -134,7 +134,7 @@ OPTIONS
   -d, --data              [required] Path(s) or URL(s) to your Mockoon file(s)
   -N, --pname             Override process(es) name(s)
   -p, --port              Override environment(s) port(s)
-  -l, --hostname=0.0.0.0  Override default listening hostname(s) (0.0.0.0)
+  -l, --hostname          Override default listening hostname(s)
   -t, --log-transaction   Log the full HTTP transaction (request and response)
   -r, --repair            If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
   -D, --daemon-off        Keep the CLI in the foreground and do not manage the process with PM2
@@ -142,7 +142,7 @@ OPTIONS
 
 EXAMPLES
   $ mockoon-cli start --data ~/data.json
-  $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --pname mock1 mock2
+  $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --pname mock1 mock2 --hostname 127.0.0.1 192.168.1.1
   $ mockoon-cli start --data https://file-server/data.json
   $ mockoon-cli start --data ~/data.json --pname "proc1"
   $ mockoon-cli start --data ~/data.json --daemon-off
