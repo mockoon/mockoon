@@ -462,6 +462,76 @@ describe('Response rules interpreter', () => {
 
       expect(routeResponse.body).to.be.equal('query7');
     });
+
+    it('should return default response if query param does not match (regex, bad case)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: '',
+        query: { obj: { prop: 'value' } } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'query',
+                modifier: 'obj.prop',
+                value: 'Value',
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'query8'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+
+      expect(routeResponse.body).to.be.equal('unauthorized');
+    });
+
+    it('should return response if query param matches (regex_i)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: '',
+        query: { obj: { prop: 'value' } } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'query',
+                modifier: 'obj.prop',
+                value: 'Value',
+                operator: 'regex_i',
+                invert: false
+              }
+            ],
+            body: 'query9'
+          }
+        ],
+        request,
+        null
+      ).chooseResponse(1);
+
+      expect(routeResponse.body).to.be.equal('query9');
+    });
   });
 
   describe('Route params rules', () => {

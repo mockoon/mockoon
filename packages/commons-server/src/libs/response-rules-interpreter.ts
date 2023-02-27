@@ -160,8 +160,11 @@ export class ResponseRulesInterpreter {
 
     let regex: RegExp;
 
-    if (rule.operator === 'regex') {
-      regex = new RegExp(rule.value);
+    if (rule.operator.includes('regex')) {
+      regex = new RegExp(
+        rule.value,
+        rule.operator === 'regex_i' ? 'i' : undefined
+      );
 
       return Array.isArray(value)
         ? value.some((arrayValue) => regex.test(arrayValue))

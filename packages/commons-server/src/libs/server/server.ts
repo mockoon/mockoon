@@ -939,9 +939,17 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param errorMessage
    * @param status
    */
-  private sendError(response: Response, errorMessage: string, status?: number) {
+  private sendError(
+    response: Response,
+    errorMessage: string | Error,
+    status?: number
+  ) {
     response.set('Content-Type', 'text/plain');
     response.body = errorMessage;
+
+    if (errorMessage instanceof Error) {
+      errorMessage = errorMessage.message;
+    }
 
     if (status !== undefined) {
       response.status(status);
