@@ -7,10 +7,10 @@ export const MarkedOptionsFactory = (): MarkedOptions => {
   // Open all links in an external browser
   renderer.link = (href: string, title: string, text: string) => {
     if (!href.startsWith('http')) {
-      href = `https://mockoon.com/${href}`;
+      href = `${Config.websiteURL}${href}`;
     }
 
-    return `<a href="openexternal::${href}" target="_blank">${text}</a>`;
+    return `<a href="${href}" target="_blank">${text}</a>`;
   };
 
   // Make images responsive

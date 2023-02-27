@@ -86,13 +86,11 @@ export const initMainWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/renderer/index.html`);
 
-  // intercept all links and open in a new window
-  mainWindow.webContents.on('new-window', (event, targetUrl) => {
-    event.preventDefault();
+  // open all links in external browser
+  mainWindow.webContents.setWindowOpenHandler((data) => {
+    shell.openExternal(data.url);
 
-    if (targetUrl.includes('openexternal::')) {
-      shell.openExternal(targetUrl.split('::')[1]);
-    }
+    return { action: 'deny' };
   });
 
   Menu.setApplicationMenu(createMenu(mainWindow));
