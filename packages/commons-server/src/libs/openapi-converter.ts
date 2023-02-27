@@ -311,7 +311,7 @@ export class OpenAPIConverter {
               const headers = this.buildResponseHeaders(
                 contentTypeHeaders,
                 routeResponse.headers
-              )
+              );
 
               // add response based on schema
               if (schema) {
@@ -320,7 +320,7 @@ export class OpenAPIConverter {
                   routeResponse.description || '',
                   responseStatus === 'default' ? 200 : statusCode,
                   headers,
-                ))
+                ));
               }
 
               // add response based on examples
@@ -428,7 +428,7 @@ export class OpenAPIConverter {
       label,
       statusCode,
       headers,
-    }
+    };
   }
 
   /**

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import {OpenAPIConverter} from "../../../src";
+import {OpenAPIConverter} from '../../../src';
 
 describe('OpenAPI converter', () => {
   it('should return default response if route has no examples (no response added)', async () => {
@@ -52,7 +52,7 @@ describe('OpenAPI converter', () => {
     "id": 2,
     "name": "Volleyball"
   }
-]`
+]`;
 
     expect(routeWithOneExample?.responses[1].body).to.be.equal(expectedBody);
   });
