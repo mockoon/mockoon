@@ -58,11 +58,11 @@
     "documentation:desktop": "lerna run --stream --scope @mockoon/desktop documentation"
   },
   "devDependencies": {
-    "concurrently": "7.4.0",
+    "concurrently": "7.6.0",
     "dotenv": "16.0.3",
-    "eslint-config-prettier": "8.5.0",
-    "lerna": "6.0.1",
-    "prettier": "2.7.1",
-    "prettier-plugin-organize-imports": "3.1.1"
+    "eslint-config-prettier": "8.6.0",
+    "lerna": "6.5.1",
+    "prettier": "2.8.4",
+    "prettier-plugin-organize-imports": "3.2.2"
   }
 }
