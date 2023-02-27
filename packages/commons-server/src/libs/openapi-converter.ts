@@ -304,7 +304,8 @@ export class OpenAPIConverter {
                   examples = routeResponse.examples;
                 } else if (version === 'OPENAPI_V3') {
                   schema = routeResponse.content?.[contentTypeHeader].schema;
-                  examples = routeResponse.content?.[contentTypeHeader].examples;
+                  examples =
+                    routeResponse.content?.[contentTypeHeader].examples;
                 }
               }
 
@@ -315,28 +316,31 @@ export class OpenAPIConverter {
 
               // add response based on schema
               if (schema) {
-                routeResponses.push(this.buildResponse(
-                  this.generateSchema(schema),
-                  routeResponse.description || '',
-                  responseStatus === 'default' ? 200 : statusCode,
-                  headers,
-                ));
+                routeResponses.push(
+                  this.buildResponse(
+                    this.generateSchema(schema),
+                    routeResponse.description || '',
+                    responseStatus === 'default' ? 200 : statusCode,
+                    headers
+                  )
+                );
               }
 
               // add response based on examples
               if (examples) {
                 const routeResponseExamples = this.parseOpenAPIExamples(
                   examples,
-                  version,
-                ).map((example) => (this.buildResponse(
-                  example.body,
-                  example.label,
-                  responseStatus === 'default' ? 200 : statusCode,
-                  headers
-                )));
+                  version
+                ).map((example) =>
+                  this.buildResponse(
+                    example.body,
+                    example.label,
+                    responseStatus === 'default' ? 200 : statusCode,
+                    headers
+                  )
+                );
                 routeResponses.push(...routeResponseExamples);
               }
-
             }
           });
 
@@ -427,7 +431,7 @@ export class OpenAPIConverter {
       ),
       label,
       statusCode,
-      headers,
+      headers
     };
   }
 
@@ -593,7 +597,10 @@ export class OpenAPIConverter {
    * @param version
    * @private
    */
-  private parseOpenAPIExamples(examples: OpenAPIV2.ExampleObject | OpenAPIV3.ExampleObject, version: string) {
+  private parseOpenAPIExamples(
+    examples: OpenAPIV2.ExampleObject | OpenAPIV3.ExampleObject,
+    version: string
+  ) {
     const responses: Pick<RouteResponse, 'body' | 'label'>[] = [];
 
     Object.keys(examples).forEach((exampleName) => {
@@ -602,7 +609,7 @@ export class OpenAPIConverter {
 
       const exampleResponse = {
         body: exampleBody,
-        label: exampleName,
+        label: exampleName
       };
 
       responses.push(exampleResponse);
