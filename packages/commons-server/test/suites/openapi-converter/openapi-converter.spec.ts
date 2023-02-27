@@ -27,8 +27,8 @@ describe('OpenAPI converter', () => {
       (route) => route.endpoint === 'with-one-example'
     );
 
-    expect(routeWithOneExample?.responses.length).to.be.equal(1);
-    expect(routeWithOneExample?.responses[0].label).to.be.equal('Sports');
+    expect(routeWithOneExample?.responses.length).to.be.equal(2);
+    expect(routeWithOneExample?.responses[1].label).to.be.equal('Sports');
   });
 
   it('should add route response from example (OpenAPI v3)', async () => {
@@ -96,18 +96,5 @@ describe('OpenAPI converter', () => {
 
     expect(defaultResponse?.default).to.be.equal(true);
     expect(exampleResponse?.default).to.be.equal(false);
-  });
-
-  it('should make route response from example as default if no schema provided', async () => {
-    const openAPIConverter = new OpenAPIConverter();
-    const environment = await openAPIConverter.convertFromOpenAPI(
-      './test/data/openapi/openapi-v3.yaml'
-    );
-    const routeWithExamples = environment?.routes.find(
-      (route) => route.endpoint === 'without-schema'
-    );
-
-    expect(routeWithExamples?.responses.length).to.be.equal(1);
-    expect(routeWithExamples?.responses[0].label).to.be.equal('Sports');
   });
 });

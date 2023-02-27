@@ -314,17 +314,14 @@ export class OpenAPIConverter {
                 routeResponse.headers
               );
 
-              // add response based on schema
-              if (schema) {
-                routeResponses.push(
-                  this.buildResponse(
-                    this.generateSchema(schema),
-                    routeResponse.description || '',
-                    responseStatus === 'default' ? 200 : statusCode,
-                    headers
-                  )
-                );
-              }
+              routeResponses.push(
+                this.buildResponse(
+                  schema ? this.generateSchema(schema) : undefined,
+                  routeResponse.description || '',
+                  responseStatus === 'default' ? 200 : statusCode,
+                  headers
+                )
+              );
 
               // add response based on examples
               if (examples) {
@@ -419,16 +416,19 @@ export class OpenAPIConverter {
    * @private
    */
   private buildResponse(
-    body: any,
+    body: Object | undefined,
     label: string,
     statusCode: number,
     headers: Header[]
   ) {
     return {
       ...BuildRouteResponse(),
-      body: this.convertJSONSchemaPrimitives(
-        JSON.stringify(body, null, INDENT_SIZE)
-      ),
+      body:
+        body !== undefined
+          ? this.convertJSONSchemaPrimitives(
+              JSON.stringify(body, null, INDENT_SIZE)
+            )
+          : '',
       label,
       statusCode,
       headers
