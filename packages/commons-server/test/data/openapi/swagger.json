@@ -1,0 +1,29 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Simple API overview",
+    "version": "v2"
+  },
+  "paths": {
+    "/with-one-example": {
+      "get": {
+        "operationId": "listActivities",
+        "summary": "List activities (with one example)",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default response",
+            "examples": {
+              "Sports": "[\n        {\n            \"id\": \"1\",\n            \"name\": \"Basketball\"}\n ]"
+            }
+          }
+        }
+      }
+    }
+  },
+  "consumes": [
+    "application/json"
+  ]
+}
