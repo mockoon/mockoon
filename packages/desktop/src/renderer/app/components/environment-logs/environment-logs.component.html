@@ -1,6 +1,23 @@
 <ng-container *ngIf="environmentLogs$ | async as environmentLogs">
   <ng-container *ngIf="environmentLogs?.length; else emptyLogsTemplate">
-    <div class="h-100 environment-logs d-flex">
+    <div class="environment-logs-header ml-auto">
+      <button
+        *ngIf="environmentLogs?.length"
+        type="button"
+        class="btn btn-link btn-icon pl-2 float-right {{
+          (clearEnvironmentLogsRequested$ | async).enabled ? 'text-danger' : ''
+        }}"
+        [ngbTooltip]="
+          (clearEnvironmentLogsRequested$ | async).enabled
+            ? 'Confirm'
+            : 'Clear logs'
+        "
+        (click)="clearEnvironmentLogs()"
+      >
+        <app-svg icon="delete"></app-svg>
+      </button>
+    </div>
+    <div class="environment-logs d-flex flex-fill mh0">
       <div class="h-100 environment-logs-column">
         <ul class="nav flex-column menu-list h-100">
           <li class="nav-item" *ngFor="let log of environmentLogs">
@@ -85,50 +102,28 @@
               activeEnvironmentLogsTab$ | async as activeEnvironmentLogsTab
             "
           >
-            <div class="d-flex justify-content-between">
-              <ul class="nav nav-tabs">
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    [ngClass]="{
-                      active: activeEnvironmentLogsTab === 'REQUEST'
-                    }"
-                    (click)="setActiveTab('REQUEST')"
-                    >Request <app-svg icon="call_received"></app-svg
-                  ></a>
-                </li>
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    [ngClass]="{
-                      active: activeEnvironmentLogsTab === 'RESPONSE'
-                    }"
-                    (click)="setActiveTab('RESPONSE')"
-                    >Response <app-svg icon="call_made"></app-svg>
-                  </a>
-                </li>
-              </ul>
-
-              <div>
-                <button
-                  *ngIf="environmentLogs?.length"
-                  type="button"
-                  class="btn btn-link btn-icon pl-2 float-right {{
-                    (clearEnvironmentLogsRequested$ | async).enabled
-                      ? 'text-danger'
-                      : ''
-                  }}"
-                  [ngbTooltip]="
-                    (clearEnvironmentLogsRequested$ | async).enabled
-                      ? 'Confirm'
-                      : 'Clear logs'
-                  "
-                  (click)="clearEnvironmentLogs()"
-                >
-                  <app-svg icon="delete"></app-svg>
-                </button>
-              </div>
-            </div>
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [ngClass]="{
+                    active: activeEnvironmentLogsTab === 'REQUEST'
+                  }"
+                  (click)="setActiveTab('REQUEST')"
+                  >Request <app-svg icon="call_received"></app-svg
+                ></a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [ngClass]="{
+                    active: activeEnvironmentLogsTab === 'RESPONSE'
+                  }"
+                  (click)="setActiveTab('RESPONSE')"
+                  >Response <app-svg icon="call_made"></app-svg>
+                </a>
+              </li>
+            </ul>
 
             <div class="environment-logs-content-container">
               <div

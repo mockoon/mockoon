@@ -140,7 +140,7 @@ class EnvironmentsLogs {
   }
 
   public async clear() {
-    const selector = $('.environment-logs-content button.btn-link');
+    const selector = $('.environment-logs-header button.btn-link');
     // click twice to confirm (cannot double click)
     await selector.click();
     await selector.click();
