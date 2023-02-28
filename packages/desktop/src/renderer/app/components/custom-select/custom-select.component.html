@@ -1,99 +1,97 @@
-<div class="input-group">
-  <div
-    id="{{ dropdownId }}-dropdown"
-    class="flex-fill"
-    ngbDropdown
-    #dropdown="ngbDropdown"
-    (openChange)="onDropdownOpenChange($event)"
-    #dropdownElement
+<div
+  id="{{ dropdownId }}-dropdown"
+  class="flex-fill"
+  ngbDropdown
+  #dropdown="ngbDropdown"
+  (openChange)="onDropdownOpenChange($event)"
+  #dropdownElement
+>
+  <button
+    type="button"
+    class="btn btn-custom dropdown-toggle mr-1"
+    role="button"
+    ngbDropdownToggle
   >
-    <button
-      type="button"
-      class="btn btn-custom dropdown-toggle mr-1"
-      role="button"
-      ngbDropdownToggle
-    >
-      <ng-container *ngIf="selectedItem$ | async as selectedItem">
-        <div *ngIf="selectedItem.value !== null" class="dropdown-toggle-label">
-          <span *ngIf="selectedItem.label" [ngClass]="selectedItem.classes">{{
-            selectedItem.label
-          }}</span>
-          <span
-            *ngIf="!selectedItem.label"
-            [ngClass]="placeholderClasses ? placeholderClasses : 'text-muted'"
-            >{{ placeholder }}</span
-          >
-        </div>
-      </ng-container>
-    </button>
-
-    <div
-      id="{{ dropdownId }}-dropdown-menu"
-      class="dropdown-menu"
-      [ngStyle]="{
-        'min-width': dropdownElement.offsetWidth + 'px',
-        'max-width': dropdownElement.offsetWidth + 'px'
-      }"
-      ngbDropdownMenu
-    >
-      <div *ngIf="enableCustomInput" class="custom-value">
-        <input
-          #customValueInput
-          type="text"
-          [placeholder]="customInputPlaceholder"
-          class="form-control"
-          [formControl]="customValue"
-          (keydown)="enterCustomValue($event)"
-          [mask]="validation.mask"
-          [patterns]="validation.maskPatterns"
-        />
+    <ng-container *ngIf="selectedItem$ | async as selectedItem">
+      <div *ngIf="selectedItem.value !== null" class="dropdown-toggle-label">
+        <span *ngIf="selectedItem.label" [ngClass]="selectedItem.classes">{{
+          selectedItem.label
+        }}</span>
+        <span
+          *ngIf="!selectedItem.label"
+          [ngClass]="placeholderClasses ? placeholderClasses : 'text-muted'"
+          >{{ placeholder }}</span
+        >
       </div>
+    </ng-container>
+  </button>
 
-      <div class="dropdown-menu-content">
-        <ng-container *ngIf="filteredItems$ | async as itemsList">
-          <ng-container *ngIf="itemsList.length > 0; else emptyList">
-            <ng-container *ngFor="let item of itemsList">
-              <ng-container [ngSwitch]="item.category">
-                <h6 *ngSwitchCase="true" class="dropdown-header">
-                  {{ item.label }}
-                </h6>
+  <div
+    id="{{ dropdownId }}-dropdown-menu"
+    class="dropdown-menu"
+    [ngStyle]="{
+      'min-width': dropdownElement.offsetWidth + 'px',
+      'max-width': dropdownElement.offsetWidth + 'px'
+    }"
+    ngbDropdownMenu
+  >
+    <div *ngIf="enableCustomInput" class="custom-value">
+      <input
+        #customValueInput
+        type="text"
+        [placeholder]="customInputPlaceholder"
+        class="form-control"
+        [formControl]="customValue"
+        (keydown)="enterCustomValue($event)"
+        [mask]="validation.mask"
+        [patterns]="validation.maskPatterns"
+      />
+    </div>
 
-                <button
-                  *ngSwitchDefault
-                  #dropdownMenuItems
-                  type="button"
-                  class="btn dropdown-item d-flex"
-                  ngbDropdownItem
-                  (click)="setValue(item)"
-                  (keydown)="itemKeydown(item, $event)"
-                  [disabled]="disabledList?.includes(item.value)"
-                >
-                  <span class="mr-2 ellipsis" [ngClass]="item.classes">{{
-                    item.label
-                  }}</span>
-                </button>
-              </ng-container>
+    <div class="dropdown-menu-content">
+      <ng-container *ngIf="filteredItems$ | async as itemsList">
+        <ng-container *ngIf="itemsList.length > 0; else emptyList">
+          <ng-container *ngFor="let item of itemsList">
+            <ng-container [ngSwitch]="item.category">
+              <h6 *ngSwitchCase="true" class="dropdown-header">
+                {{ item.label }}
+              </h6>
+
+              <button
+                *ngSwitchDefault
+                #dropdownMenuItems
+                type="button"
+                class="btn dropdown-item d-flex"
+                ngbDropdownItem
+                (click)="setValue(item)"
+                (keydown)="itemKeydown(item, $event)"
+                [disabled]="disabledList?.includes(item.value)"
+              >
+                <span class="mr-2 ellipsis" [ngClass]="item.classes">{{
+                  item.label
+                }}</span>
+              </button>
             </ng-container>
           </ng-container>
         </ng-container>
-        <ng-template #emptyList>
-          <div class="message message-md text-left p-btn">
-            {{ emptyListMessage }}
-          </div>
-        </ng-template>
-      </div>
+      </ng-container>
+      <ng-template #emptyList>
+        <div class="message message-md text-left p-btn">
+          {{ emptyListMessage }}
+        </div>
+      </ng-template>
     </div>
   </div>
-
-  <ng-container *ngIf="selectedItem$ | async as selectedItem">
-    <button
-      *ngIf="clearable && selectedItem.value !== defaultClearValue"
-      type="button"
-      (click)="clearValue()"
-      class="btn btn-custom"
-      ngbTooltip="Clear selection"
-    >
-      <app-svg icon="clear"></app-svg>
-    </button>
-  </ng-container>
 </div>
+
+<ng-container *ngIf="selectedItem$ | async as selectedItem">
+  <button
+    *ngIf="clearable && selectedItem.value !== defaultClearValue"
+    type="button"
+    (click)="clearValue()"
+    class="btn btn-custom"
+    ngbTooltip="Clear selection"
+  >
+    <app-svg icon="clear"></app-svg>
+  </button>
+</ng-container>

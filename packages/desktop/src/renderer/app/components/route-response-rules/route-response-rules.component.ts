@@ -57,7 +57,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   ];
   public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
     { value: 'equals', label: 'equals' },
-    { value: 'regex', label: 'regex match' },
+    { value: 'regex', label: 'regex' },
+    { value: 'regex_i', label: 'regex (i)' },
     { value: 'null', label: 'null' },
     { value: 'empty_array', label: 'empty array' }
   ];
@@ -72,6 +73,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   public valuePlaceholders = {
     equals: 'Value',
     regex: 'Regex (without /../)',
+    regex_i: 'Regex (without /../i)',
     null: '',
     empty_array: ''
   };

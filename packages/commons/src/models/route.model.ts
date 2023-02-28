@@ -30,7 +30,12 @@ export enum ResponseMode {
   DISABLE_RULES = 'DISABLE_RULES'
 }
 
-export type ResponseRuleOperators = 'equals' | 'regex' | 'null' | 'empty_array';
+export type ResponseRuleOperators =
+  | 'equals'
+  | 'regex'
+  | 'regex_i'
+  | 'null'
+  | 'empty_array';
 
 export type ResponseRule = {
   target: ResponseRuleTargets;
