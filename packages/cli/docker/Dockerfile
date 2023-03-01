@@ -4,6 +4,9 @@ ARG version=latest
 
 RUN npm install -g @mockoon/cli@$version
 
+# Install curl for healthcheck
+RUN apk --no-cache add curl
+
 # Do not run as root.
 RUN adduser --shell /bin/sh --disabled-password --gecos "" mockoon
 USER mockoon
