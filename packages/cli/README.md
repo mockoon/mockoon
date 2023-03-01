@@ -254,6 +254,26 @@ Or directly pass a URL to the `mockoon-cli start` command, without mounting a lo
 
 Mockoon CLI's logs will be sent to both stdout (console) and the [usual files](#logs).
 
+You can also use `docker-compose` with a `docker-compose.yml` file:
+
+```
+mock-server:
+  image: mockoon/cli:latest
+  command: ["--data", "data", "--port", "3000"]
+  healthcheck:
+    test: ["CMD-SHELL", "curl -f http://localhost:3000/your-healthcheck-route || exit 1"]
+    interval: 30s
+    timeout: 5s
+    retries: 2
+    start_period: 10s
+  volumes:
+    - /home/your-data-file.json:/data:readonly
+```
+
+This snippet also provides an optional healthcheck, which means you can block until the server is able to handle responses when bring it up by running `docker compose up --detach --wait`.
+
+Note: this example requires a `your-healthcheck-route` route configured to return a 200 status code without latency.
+
 ### Using the `dockerize` command
 
 You can use the [`dockerize` command](#mockoon-cli-dockerize) to generate a new Dockerfile that will allow you to build a self-contained image. Thus, no Mockoon CLI specific parameters will be needed when running the container. You can still provide arguments at runtime if needed (see the last example).
