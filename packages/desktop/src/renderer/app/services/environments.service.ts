@@ -991,12 +991,12 @@ export class EnvironmentsService extends Logger {
     }
 
     const environmentsStatus = this.store.get('environmentsStatus');
-    const activeEnvironmentState = environmentsStatus[environment.uuid];
+    const activeEnvironmentStatus = environmentsStatus[environment.uuid];
 
-    if (activeEnvironmentState.running) {
+    if (activeEnvironmentStatus.running) {
       this.serverService.stop(environment.uuid);
 
-      if (activeEnvironmentState.needRestart) {
+      if (activeEnvironmentStatus.needRestart) {
         this.serverService.start(environment, environmentPath);
       }
     } else {

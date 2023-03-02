@@ -40,12 +40,12 @@
               class="btn btn-link"
               [ngClass]="{
                 'is-primary':
-                  !environmentsStatus[activeEnvironment.uuid].running ||
+                  !environmentsStatus[activeEnvironment.uuid]?.running ||
                   activeRoute.method !== 'get'
               }"
               (click)="openRouteInBrowser()"
               [disabled]="
-                !environmentsStatus[activeEnvironment.uuid].running ||
+                !environmentsStatus[activeEnvironment.uuid]?.running ||
                 ((activeRoute.method !== 'get' ||
                   activeRoute.type !== 'http') &&
                   activeRoute.type !== 'crud')

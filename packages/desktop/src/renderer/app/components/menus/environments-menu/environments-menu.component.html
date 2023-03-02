@@ -42,9 +42,10 @@
               [ngClass]="{
                 active: activeEnvironment?.uuid === environment.uuid,
                 running:
-                  environmentsStatus[environment.uuid].running &&
-                  !environmentsStatus[environment.uuid].needRestart,
-                'need-restart': environmentsStatus[environment.uuid].needRestart
+                  environmentsStatus[environment.uuid]?.running &&
+                  !environmentsStatus[environment.uuid]?.needRestart,
+                'need-restart':
+                  environmentsStatus[environment.uuid]?.needRestart
               }"
               (click)="selectEnvironment(environment.uuid)"
               (contextmenu)="openContextMenu(environment.uuid, $event)"

@@ -19,7 +19,6 @@ export class ServerService extends Logger {
     protected toastService: ToastsService,
     private dataService: DataService,
     private store: Store,
-    private eventsService: EventsService,
     private zone: NgZone,
     private telemetryService: TelemetryService
   ) {
