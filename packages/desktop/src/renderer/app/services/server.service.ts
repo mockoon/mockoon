@@ -4,7 +4,6 @@ import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { DataService } from 'src/renderer/app/services/data.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import {
