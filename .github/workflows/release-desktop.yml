@@ -32,7 +32,7 @@ jobs:
         id: app-version
         run: |
           PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
-          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
       - name: Build and package application
         run: |
           npm run bootstrap
@@ -73,7 +73,7 @@ jobs:
         id: app-version
         run: |
           PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
-          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
       - name: Build and package application
         run: |
           npm run bootstrap
@@ -123,7 +123,7 @@ jobs:
         id: app-version
         run: |
           $PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
-          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
         shell: pwsh
       - name: Build and package application
         run: |
@@ -162,7 +162,7 @@ jobs:
         id: app-version
         run: |
           $PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
-          echo "::set-output name=PACKAGE_VERSION::$PACKAGE_VERSION"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
         shell: pwsh
       - name: Build and package application
         run: |
