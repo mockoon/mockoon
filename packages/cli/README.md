@@ -254,6 +254,8 @@ Or directly pass a URL to the `mockoon-cli start` command, without mounting a lo
 
 Mockoon CLI's logs will be sent to both stdout (console) and the [usual files](#logs).
 
+#### Docker compose
+
 You can also use `docker-compose` with a `docker-compose.yml` file:
 
 ```
@@ -270,9 +272,11 @@ mock-server:
     - /home/your-data-file.json:/data:readonly
 ```
 
+> Please note that our [Docker image includes an `ENTRYPOINT`](https://github.com/mockoon/mockoon/blob/main/packages/cli/docker/Dockerfile#L16) that you may override or not. If you don't override it, and use Docker compose `command`, do not include `mockoon-cli start` as it is already included in the `ENTRYPOINT`.
+
 This snippet also provides an optional healthcheck, which means you can block until the server is able to handle responses when bring it up by running `docker compose up --detach --wait`.
 
-Note: this example requires a `your-healthcheck-route` route configured to return a 200 status code without latency.
+> This example requires a `your-healthcheck-route` route configured to return a 200 status code without latency.
 
 ### Using the `dockerize` command
 
