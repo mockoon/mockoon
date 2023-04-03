@@ -99,7 +99,7 @@
     "chromedriver": "108.0.0",
     "date-fns": "2.29.3",
     "electron": "22.3.1",
-    "electron-builder": "23.6.0",
+    "electron-builder": "24.1.2",
     "electron-notarize": "1.2.2",
     "eslint": "8.35.0",
     "eslint-plugin-import": "2.27.5",
