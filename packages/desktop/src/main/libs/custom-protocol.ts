@@ -6,6 +6,14 @@ import { ProtocolAction } from 'src/shared/models/protocol.model';
 const validActions: ProtocolAction[] = ['load-environment', 'load-export-data'];
 
 export const registerProtocol = () => {
+  /**
+   * Not registering the protocol on Linux until HTML file association is fixed
+   * See: https://github.com/mockoon/mockoon/issues/977
+   */
+  if (process.platform === 'linux') {
+    return;
+  }
+
   app.setAsDefaultProtocolClient('mockoon');
 };
 
