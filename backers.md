@@ -6,7 +6,10 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 
 # Platinum sponsor
 
-[![Appwrite](https://mockoon.com/images/sponsors/appwrite-300.png)](https://appwrite.io/)
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/"><img src="https://mockoon.com/images/sponsors/github-300-light.png" width="300" alt="GitHub logo" /></a>
+<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite-300.png" width="300" alt="Appwrite logo" /></a>
+</div>
 
 # One-time and past sponsors
 
@@ -30,6 +33,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Everett
 - [fl0rian-p](https://github.com/fl0rian-p)
 - François Grémont
+- [GitHub](https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/)
 - Jakub Bartkowiak
 - Jakub Ślusarski
 - Jeremy
