@@ -7,7 +7,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 # Platinum sponsor
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/"><img src="https://mockoon.com/images/sponsors/github-300-light.png" width="300" alt="GitHub logo" /></a>
+<a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/">
+    <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/github-300-light.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github-300.png">
+    <img src="https://mockoon.com/images/sponsors/github-300-light.png" width="300" alt="GitHub logo" />
+    </picture>
+</a>
 <a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite-300.png" width="300" alt="Appwrite logo" /></a>
 </div>
 
