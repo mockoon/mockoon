@@ -527,21 +527,22 @@ export const Helpers = {
   },
   // Format a date and time to a specific format
   dateFormat: function (...args: any[]) {
-    const date = fromSafeString(args[0]);
+    let date: string | Date = fromSafeString(args[0]);
+    date = typeof date === 'string' ? new Date(date) : date;
     const format = fromSafeString(args[1]);
 
     if (
-      args.length >= 2 &&
-      typeof date === 'string' &&
-      typeof format === 'string'
+      args.length < 2 ||
+      !(date instanceof Date) ||
+      typeof format !== 'string'
     ) {
-      return dateFormat(new Date(date), format, {
-        useAdditionalWeekYearTokens: true,
-        useAdditionalDayOfYearTokens: true
-      });
+      return '';
     }
 
-    return '';
+    return dateFormat(date, format, {
+      useAdditionalWeekYearTokens: true,
+      useAdditionalDayOfYearTokens: true
+    });
   },
   time: function (...args: any[]) {
     let from, to, format;
