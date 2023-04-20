@@ -469,6 +469,21 @@ export const Helpers = {
 
     options.data[name] = value;
   },
+  getVar: function (...args: any[]) {
+    // return if not all parameters have been provided
+    if (arguments.length < 2) {
+      return;
+    }
+
+    const options = args[args.length - 1];
+    const name = args[0];
+
+    if (!options.data) {
+      options.data = {};
+    }
+
+    return options.data[name];
+  },
   int: function (...args: any[]) {
     const options: { min?: number; max?: number; precision?: number } = {
       precision: 1

@@ -274,6 +274,60 @@ describe('Template parser', () => {
     });
   });
 
+  describe('Helper: getVar', () => {
+    it('should return empty if no var name provided', () => {
+      const parseResult = TemplateParser(
+        false,
+
+        "{{setVar 'testvar' 'testvalue'}}{{getVar}}",
+
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should get a variable from simple var name', () => {
+      const parseResult = TemplateParser(
+        false,
+
+        "{{setVar 'testvar' 'testvalue'}}{{getVar 'testvar'}}",
+
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('testvalue');
+    });
+
+    it('should get a variable from dynamically built var name', () => {
+      const parseResult = TemplateParser(
+        false,
+
+        "{{setVar 'testvar' 'testvalue'}}{{getVar (concat 'test' 'var')}}",
+
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('testvalue');
+    });
+
+    it('should get a variable from dynamically built var name', () => {
+      const parseResult = TemplateParser(
+        false,
+
+        "{{setVar 'testvar' 'testvalue'}}{{getVar (bodyRaw 'prop1')}}",
+
+        {} as any,
+        [],
+        { body: { prop1: 'testvar' } } as any
+      );
+      expect(parseResult).to.be.equal('testvalue');
+    });
+  });
+
   describe('Helper: date', () => {
     it('should return an empty string if given the wrong amount of arguments', () => {
       const parseResult = TemplateParser(
