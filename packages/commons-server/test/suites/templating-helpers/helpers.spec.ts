@@ -2040,4 +2040,120 @@ describe('Template parser', () => {
 }`);
     });
   });
+
+  describe('Helper: padStart', () => {
+    it('should return empty string if no param provided', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{padStart}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return string as is if no length and no padchar', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{padStart (bodyRaw "prop1")}}',
+        {} as any,
+        [],
+        {
+          body: {
+            prop1: '123'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('123');
+    });
+
+    it('should return string padded with spaces if no padchar', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{padStart (bodyRaw "prop1") 10}}',
+        {} as any,
+        [],
+        {
+          body: {
+            prop1: '123'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('       123');
+    });
+
+    it('should return string padded with chosen char', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{padStart (bodyRaw "prop1") 10 "*"}}',
+        {} as any,
+        [],
+        {
+          body: {
+            prop1: '123'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('*******123');
+    });
+  });
+
+  describe('Helper: padEnd', () => {
+    it('should return empty string if no param provided', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{padEnd}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return string as is if no length and no padchar', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{padEnd (bodyRaw "prop1")}}',
+        {} as any,
+        [],
+        {
+          body: {
+            prop1: '123'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('123');
+    });
+
+    it('should return string padded with spaces if no padchar', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{padEnd (bodyRaw "prop1") 10}}',
+        {} as any,
+        [],
+        {
+          body: {
+            prop1: '123'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('123       ');
+    });
+
+    it('should return string padded with chosen char', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{padEnd (bodyRaw "prop1") 10 "*"}}',
+        {} as any,
+        [],
+        {
+          body: {
+            prop1: '123'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('123*******');
+    });
+  });
 });
