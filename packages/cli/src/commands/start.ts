@@ -21,6 +21,7 @@ interface EnvironmentInfo {
   dataFile: string;
   initialDataDir?: string | null;
   logTransaction?: boolean;
+  disableLogToFile?: boolean;
 }
 
 type StartFlags = {
@@ -33,6 +34,7 @@ type StartFlags = {
   'log-transaction': boolean;
   repair: boolean;
   help: void;
+  'disable-log-to-file': boolean;
 };
 
 export default class Start extends Command {
@@ -167,7 +169,7 @@ export default class Start extends Command {
         : '',
       logTransaction: environmentInfo.logTransaction,
       fileTransportsOptions: [
-        { filename: join(Config.logsPath, `${environmentInfo.name}-out.log`) }
+        { filename: environmentInfo.disableLogToFile ? '/dev/null' : join(Config.logsPath, `${environmentInfo.name}-out.log`) }
       ]
     };
 
@@ -196,8 +198,8 @@ export default class Start extends Command {
       min_uptime: 10000,
       kill_timeout: 2000,
       args,
-      error: join(Config.logsPath, `${environmentInfo.name}-error.log`),
-      output: join(Config.logsPath, `${environmentInfo.name}-out.log`),
+      error: environmentInfo.disableLogToFile ? '/dev/null' : join(Config.logsPath, `${environmentInfo.name}-error.log`),
+      output: environmentInfo.disableLogToFile ? '/dev/null' : join(Config.logsPath, `${environmentInfo.name}-out.log`),
       name: environmentInfo.name,
       script: resolve(__dirname, '../libs/server-start-script.js'),
       exec_mode: 'fork'
@@ -242,7 +244,8 @@ export default class Start extends Command {
         port: environment.port,
         endpointPrefix: environment.endpointPrefix,
         initialDataDir: null,
-        logTransaction: userFlags['log-transaction']
+        logTransaction: userFlags['log-transaction'],
+        disableLogToFile: userFlags['disable-log-to-file']
       });
     }
 
@@ -270,7 +273,8 @@ export default class Start extends Command {
         environmentsInfo.push({
           ...environmentInfo,
           initialDataDir: getDirname(userFlags.data[envIndex]),
-          logTransaction: userFlags['log-transaction']
+          logTransaction: userFlags['log-transaction'],
+          disableLogToFile: userFlags['disable-log-to-file']
         });
       } catch (error: any) {
         this.error(error.message);
