@@ -5,11 +5,6 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js', 'build/*', 'dist/*', 'tmp/*', 'bin/*'],
   extends: ['prettier'],
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    tsconfigRootDir: __dirname,
-    project: 'tsconfig.json',
-    sourceType: 'module'
-  },
   plugins: ['eslint-plugin-jsdoc', '@typescript-eslint'],
   rules: {
     '@typescript-eslint/consistent-type-definitions': 'off',

@@ -1,4 +1,4 @@
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
 import * as mkdirp from 'mkdirp';
 import { render as mustacheRender } from 'mustache';
@@ -24,7 +24,7 @@ export default class Dockerize extends Command {
   public static flags = {
     ...commonFlags,
     ...startFlags,
-    output: flags.string({
+    output: Flags.string({
       char: 'o',
       description: 'Generated Dockerfile path and name (e.g. `./Dockerfile`)',
       required: true
@@ -32,7 +32,7 @@ export default class Dockerize extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags: userFlags } = this.parse(Dockerize);
+    const { flags: userFlags } = await this.parse(Dockerize);
     const resolvedDockerfilePath = pathResolve(userFlags.output);
     const dockerfilePath: ParsedPath = pathParse(resolvedDockerfilePath);
 
