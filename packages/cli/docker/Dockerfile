@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 ARG version=latest
 
@@ -16,5 +16,3 @@ EXPOSE 3000
 ENTRYPOINT ["mockoon-cli", "start", "--daemon-off"]
 
 # Usage: docker run --mount type=bind,source="$(pwd)"/dataFile.json,target=/data,readonly -p <port>:<port> mockoon-test -d data
-# Dockerize command template
-CMD ["-d", "/data/dataFile.json"]

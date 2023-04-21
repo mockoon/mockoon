@@ -105,7 +105,7 @@ $ mockoon-cli start --data https://domain.com/your-opeanapi-file.yaml
 
 ## Compatibility
 
-Mockoon's CLI has been tested on Node.js versions 14, 15 and 16.
+Mockoon's CLI has been tested on Node.js versions 16, 18 and 20.
 
 ## Commands
 
@@ -240,7 +240,7 @@ OPTIONS
 
 ### Using the generic Docker image
 
-A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:14-alpine` and installs the latest version of Mockoon CLI.
+A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:18-alpine` and installs the latest version of Mockoon CLI.
 
 All of `mockoon-cli start` flags (`--port`, etc.) must be provided when running the container.
 
