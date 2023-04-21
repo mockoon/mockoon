@@ -17,9 +17,11 @@ describe('Data loading', () => {
     .stderr()
     .command(['start', '--data', 'https://mockoon.com'])
     .catch((context) => {
-      expect(context.message).to.contain(
-        'This file is not a valid OpenAPI specification (JSON or YAML v2.0.0 and v3.0.0) or Mockoon environment: Unexpected token \'<\', "<!DOCTYPE "... is not valid JSON'
-      );
+      // different error message for Node.js < or > 20
+      expect(context.message).to.be.oneOf([
+        'This file is not a valid OpenAPI specification (JSON or YAML v2.0.0 and v3.0.0) or Mockoon environment: Unexpected token \'<\', "<!DOCTYPE "... is not valid JSON',
+        'This file is not a valid OpenAPI specification (JSON or YAML v2.0.0 and v3.0.0) or Mockoon environment: Unexpected token < in JSON at position 0'
+      ]);
     })
     .it('should fail when the response is no valid JSON');
 
@@ -49,9 +51,11 @@ describe('Data loading', () => {
     .stderr()
     .command(['start', '--data', './test/data/envs/broken.json'])
     .catch((context) => {
-      expect(context.message).to.contain(
-        "This file is not a valid OpenAPI specification (JSON or YAML v2.0.0 and v3.0.0) or Mockoon environment: Expected property name or '}' in JSON at position 5"
-      );
+      // different error message for Node.js < or > 20
+      expect(context.message).to.contain.oneOf([
+        "This file is not a valid OpenAPI specification (JSON or YAML v2.0.0 and v3.0.0) or Mockoon environment: Expected property name or '}' in JSON at position 5",
+        'Unexpected token D in JSON at position'
+      ]);
     })
     .it('should fail when JSON data is invalid');
 
