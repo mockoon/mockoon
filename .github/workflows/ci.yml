@@ -13,7 +13,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
@@ -46,7 +46,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
@@ -79,7 +79,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
@@ -110,7 +110,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [14, 15, 16]
+        node: [15, 16]
 
     steps:
       - uses: actions/checkout@v3
@@ -152,7 +152,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
@@ -198,7 +198,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
@@ -245,7 +245,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
@@ -289,7 +289,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: "16.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
