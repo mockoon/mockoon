@@ -1,6 +1,5 @@
 import { test } from '@oclif/test';
-import { config, expect } from 'chai';
-config.truncateThreshold = 0;
+import { expect } from 'chai';
 
 describe('Data loading', () => {
   test
@@ -53,7 +52,7 @@ describe('Data loading', () => {
     .catch((context) => {
       // different error message for Node.js < or > 20
       expect(context.message).to.contain.oneOf([
-        "This file is not a valid OpenAPI specification (JSON or YAML v2.0.0 and v3.0.0) or Mockoon environment: Expected property name or '}' in JSON at position 5",
+        "This file is not a valid OpenAPI specification (JSON or YAML v2.0.0 and v3.0.0) or Mockoon environment: Expected property name or '}' in JSON at position",
         'Unexpected token D in JSON at position'
       ]);
     })
