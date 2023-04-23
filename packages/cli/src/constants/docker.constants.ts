@@ -1,4 +1,4 @@
-export const DOCKER_TEMPLATE = `FROM node:14-alpine
+export const DOCKER_TEMPLATE = `FROM node:18-alpine
 
 RUN npm install -g @mockoon/cli@{{{version}}}
 {{#filePaths}}

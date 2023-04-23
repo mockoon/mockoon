@@ -56,7 +56,7 @@ describe('Environment hostname restriction', async () => {
     });
 
     it('should answers on localhost', async () => {
-      await http.assertCallWithPortAndHostname(endpointCall, 3000, 'localhost');
+      await http.assertCallWithPortAndHostname(endpointCall, 3000, '127.0.0.1');
     });
 
     it('should answers on 127.0.0.1', async () => {

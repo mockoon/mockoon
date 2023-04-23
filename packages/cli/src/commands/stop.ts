@@ -1,4 +1,4 @@
-import { Command } from '@oclif/command';
+import { Args, Command } from '@oclif/core';
 import * as inquirer from 'inquirer';
 import { ProcessDescription } from 'pm2';
 import { commonFlags } from '../constants/command.constants';
@@ -20,16 +20,15 @@ export default class Stop extends Command {
     ...commonFlags
   };
 
-  public static args = [
-    {
-      name: 'id',
+  public static args = {
+    id: Args.string({
       description: 'Running API pid or name',
       required: false
-    }
-  ];
+    })
+  };
 
   public async run(): Promise<void> {
-    const { args } = this.parse(Stop);
+    const { args } = await this.parse(Stop);
     let relistProcesses = false;
     let processesToStop: (string | number)[] = [];
 

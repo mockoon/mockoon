@@ -1,4 +1,4 @@
-import { Hook } from '@oclif/config';
+import { Hook } from '@oclif/core';
 import * as mkdirp from 'mkdirp';
 import { Config } from '../config';
 

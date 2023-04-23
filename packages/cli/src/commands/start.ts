@@ -1,5 +1,5 @@
 import { Environment, Environments } from '@mockoon/commons';
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import { readFile as readJSONFile } from 'jsonfile';
 import { join, resolve } from 'path';
 import { Proc, ProcessDescription } from 'pm2';
@@ -52,19 +52,19 @@ export default class Start extends Command {
   public static flags = {
     ...commonFlags,
     ...startFlags,
-    pname: flags.string({
+    pname: Flags.string({
       char: 'N',
       description: 'Override the process(es) name(s)',
       multiple: true,
       default: []
     }),
-    hostname: flags.string({
+    hostname: Flags.string({
       char: 'l',
       description: 'Listening hostname(s)',
       multiple: true,
       default: []
     }),
-    'daemon-off': flags.boolean({
+    'daemon-off': Flags.boolean({
       char: 'D',
       description:
         'Keep the CLI in the foreground and do not manage the process with PM2',
@@ -82,14 +82,14 @@ export default class Start extends Command {
      * from the Dockerfile when building the Docker image rather than
      * having the image build failing due to a failure in the `start` command.
      */
-    container: flags.boolean({
+    container: Flags.boolean({
       char: 'c',
       hidden: true
     })
   };
 
   public async run(): Promise<void> {
-    const { flags: userFlags } = this.parse(Start);
+    const { flags: userFlags } = await this.parse(Start);
 
     let environmentsInfo: EnvironmentInfo[] = [];
 

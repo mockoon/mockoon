@@ -1,4 +1,4 @@
-import { Command } from '@oclif/command';
+import { Args, Command } from '@oclif/core';
 import { ProcessDescription } from 'pm2';
 import { format } from 'util';
 import { commonFlags } from '../constants/command.constants';
@@ -19,17 +19,16 @@ export default class List extends Command {
     ...commonFlags
   };
 
-  public static args = [
-    {
-      name: 'id',
+  public static args = {
+    id: Args.string({
       description: 'Running API pid or name',
       required: false
-    }
-  ];
+    })
+  };
   public static aliases = ['info'];
 
   public async run(): Promise<void> {
-    const { args } = this.parse(List);
+    const { args } = await this.parse(List);
 
     try {
       let processes: ProcessDescription[] = await ProcessManager.list();
@@ -37,7 +36,8 @@ export default class List extends Command {
       if (args.id !== undefined) {
         processes = processes.filter(
           (process) =>
-            process.pm_id === parseInt(args.id, 10) || process.name === args.id
+            process.pm_id === parseInt(args.id as string, 10) ||
+            process.name === args.id
         );
       }
 

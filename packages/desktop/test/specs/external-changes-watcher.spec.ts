@@ -120,6 +120,7 @@ describe('Environment external reload', () => {
       name: 'env 3 (change1)'
     });
 
+    await browser.pause(2000);
     await environments.assertActiveMenuEntryText('env 3 (change1)');
     await environments.close(2);
   });

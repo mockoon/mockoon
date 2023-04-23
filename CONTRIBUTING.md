@@ -68,6 +68,7 @@ Branches naming convention:
 
 - features and enhancements: `feature/{issue_number}-description`
 - bug fixes: `fix/{issue_number}-description`
+- chores: `chore/{issue_number}-description`
 
 ## Adding migrations
 
@@ -91,15 +92,16 @@ Some unit and integration tests are present in the 4 packages. First you need to
 4. `npm run build:desktop:ci`.
 
 After the packages are build, you can run the tests necessary to your changes:
-* `npm run test:commons`
-* `npm run test:commons-server`
-* `npm run test:libs`
-* `npm run test:serverless`
-* `npm run test:cli`
-* `npm run test:desktop`
-* `npm run test:desktop:packaged:win`
-* `npm run test:desktop:packaged:mac`
-* `npm run test:desktop:packaged:linux`
+
+- `npm run test:commons`
+- `npm run test:commons-server`
+- `npm run test:libs`
+- `npm run test:serverless`
+- `npm run test:cli`
+- `npm run test:desktop`
+- `npm run test:desktop:packaged:win`
+- `npm run test:desktop:packaged:mac`
+- `npm run test:desktop:packaged:linux`
 
 All tests will also be run on each commit or pull request in the CI environment.
 
