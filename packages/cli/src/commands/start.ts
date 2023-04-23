@@ -168,9 +168,13 @@ export default class Start extends Command {
         ? environmentInfo.initialDataDir
         : '',
       logTransaction: environmentInfo.logTransaction,
-      fileTransportsOptions: (environmentInfo.disableLogToFile ? [] : [{
-        filename: join(Config.logsPath, `${environmentInfo.name}-out.log`)}
-      ])
+      fileTransportsOptions: environmentInfo.disableLogToFile
+        ? []
+        : [
+            {
+              filename: join(Config.logsPath, `${environmentInfo.name}-out.log`)
+            }
+          ]
     };
 
     createServer(parameters);
@@ -198,8 +202,12 @@ export default class Start extends Command {
       min_uptime: 10000,
       kill_timeout: 2000,
       args,
-      error: environmentInfo.disableLogToFile ? undefined : join(Config.logsPath, `${environmentInfo.name}-error.log`),
-      output: environmentInfo.disableLogToFile ? undefined : join(Config.logsPath, `${environmentInfo.name}-out.log`),
+      error: environmentInfo.disableLogToFile
+        ? undefined
+        : join(Config.logsPath, `${environmentInfo.name}-error.log`),
+      output: environmentInfo.disableLogToFile
+        ? undefined
+        : join(Config.logsPath, `${environmentInfo.name}-out.log`),
       name: environmentInfo.name,
       script: resolve(__dirname, '../libs/server-start-script.js'),
       exec_mode: 'fork'

@@ -117,14 +117,17 @@ describe('Logging: logging to file disabled', () => {
       );
     });
 
-  test.it('should call GET /api/test endpoint and verify logs file does not exist', async () => {
-    const result = await axios.get('http://localhost:3000/api/test');
+  test.it(
+    'should call GET /api/test endpoint and verify logs file does not exist',
+    async () => {
+      const result = await axios.get('http://localhost:3000/api/test');
 
-    expect(result.data).to.contain('mock-content-1');
+      expect(result.data).to.contain('mock-content-1');
 
-    await delay(1000);
-    expect(existsSync(logsFilePath)).to.equal(false);
-  });
+      await delay(1000);
+      expect(existsSync(logsFilePath)).to.equal(false);
+    }
+  );
 
   stopProcesses('all', ['mockoon-logging-test']);
 });
