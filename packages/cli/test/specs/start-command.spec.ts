@@ -6,8 +6,7 @@ describe('Start command', () => {
     .stderr()
     .command(['start'])
     .catch((context) => {
-      expect(context.message).to.contain('Missing required flag:');
-      expect(context.message).to.contain('-d, --data DATA');
+      expect(context.message).to.contain('Missing required flag data');
     })
     .it('should fail when data flag is missing');
 

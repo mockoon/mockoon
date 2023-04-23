@@ -1,4 +1,4 @@
-import { cli } from 'cli-ux';
+import { ux } from '@oclif/core';
 import * as isPortReachable from 'is-port-reachable';
 import { dirname } from 'path';
 import { ProcessDescription } from 'pm2';
@@ -14,7 +14,7 @@ import { ConfigProcess, ProcessListManager } from './process-manager';
 export const logProcesses = (processes: ProcessDescription[]): void => {
   const configProcesses: ConfigProcess[] = ProcessListManager.getProcesses();
 
-  cli.table(
+  ux.table(
     processes as Record<string, any>[],
     {
       name: {

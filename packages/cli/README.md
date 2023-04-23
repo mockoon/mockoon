@@ -105,7 +105,7 @@ $ mockoon-cli start --data https://domain.com/your-opeanapi-file.yaml
 
 ## Compatibility
 
-Mockoon's CLI has been tested on Node.js versions 14, 15 and 16.
+Mockoon's CLI has been tested on Node.js versions 16, 18 and 20.
 
 ## Commands
 
@@ -240,7 +240,7 @@ OPTIONS
 
 ### Using the generic Docker image
 
-A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:14-alpine` and installs the latest version of Mockoon CLI.
+A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:18-alpine` and installs the latest version of Mockoon CLI.
 
 All of `mockoon-cli start` flags (`--port`, etc.) must be provided when running the container.
 
@@ -350,6 +350,46 @@ Example:
 
 The `transaction` model can be found [here](https://github.com/mockoon/commons/blob/main/src/models/server.model.ts#L26-L44).
 
+### Disable logging
+
+You can disable the logging to the console by redirecting the stdout and stderr outputs:
+
+- Unix:
+
+  ```sh-sessions
+  mockoon-cli start --data ./data.json > /dev/null 2>&1
+  ```
+
+  or:
+
+  ```sh-sessions
+  mockoon-cli start --data ./data.json &> /dev/null
+  ```
+
+- Windows (cmd):
+
+  ```sh-sessions
+  mockoon-cli start --data ./data.json 2> NUL
+  ```
+
+  or:
+
+  ```sh-sessions
+  mockoon-cli start --data ./data.json > NUL 2>&1
+  ```
+
+- Windows (PowerShell):
+
+  ```sh-sessions
+  mockoon-cli start --data ./data.json 2> $null
+  ```
+
+  or:
+
+  ```sh-sessions
+  mockoon-cli start --data ./data.json > $null 2>&1
+  ```
+
 ## PM2
 
 Mockoon CLI uses [PM2](https://pm2.keymetrics.io/) to start, stop or list the running mock APIs when you are not using the `--daemon-off` flag. Therefore, you can directly use PM2 commands to manage the processes.
@@ -381,3 +421,7 @@ Please also take a look at our [Code of Conduct](https://github.com/mockoon/mock
 If you want to know what will be coming in the next release you can check the global [Roadmap](https://github.com/orgs/mockoon/projects/9).
 
 New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).
+
+```
+
+```

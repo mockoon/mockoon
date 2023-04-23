@@ -100,7 +100,7 @@ describe('Run two mocks with same name', () => {
       try {
         await axios.get('http://localhost:3001/api/test');
       } catch (error: any) {
-        expect(error.message).to.equal('connect ECONNREFUSED 127.0.0.1:3001');
+        expect(error.code).to.equal('ECONNREFUSED');
       }
     }
   );
