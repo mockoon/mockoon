@@ -28,7 +28,7 @@ export const startFlags = {
       'If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting',
     default: false
   }),
-  'disable-log-to-file': flags.boolean({
+  'disable-log-to-file': Flags.boolean({
     char: 'X',
     description: 'Only log to stdout and stderr',
     default: false
