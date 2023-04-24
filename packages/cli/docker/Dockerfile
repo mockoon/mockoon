@@ -13,6 +13,6 @@ USER mockoon
 
 EXPOSE 3000
 
-ENTRYPOINT ["mockoon-cli", "start", "--daemon-off"]
+ENTRYPOINT ["mockoon-cli", "start", "--daemon-off", "--disable-log-to-file"]
 
 # Usage: docker run --mount type=bind,source="$(pwd)"/dataFile.json,target=/data,readonly -p <port>:<port> mockoon-test -d data

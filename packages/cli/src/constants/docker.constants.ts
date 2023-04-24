@@ -14,6 +14,6 @@ USER mockoon
 
 EXPOSE{{#ports}} {{.}}{{/ports}}
 
-ENTRYPOINT ["mockoon-cli", "start", "--daemon-off", "--data", {{#filePaths}}"{{.}}", {{/filePaths}}"--container"{{{args}}}]
+ENTRYPOINT ["mockoon-cli", "start", "--daemon-off", "--disable-log-to-file", "--data", {{#filePaths}}"{{.}}", {{/filePaths}}"--container"{{{args}}}]
 
 # Usage: docker run -p <host_port>:<container_port> mockoon-test`;

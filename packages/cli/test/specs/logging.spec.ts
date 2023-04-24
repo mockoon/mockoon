@@ -96,3 +96,38 @@ describe('Logging: with transaction logs', () => {
 
   stopProcesses('all', ['mockoon-logging-test']);
 });
+
+describe('Logging: logging to file disabled', () => {
+  test
+    .stdout()
+    .do(() => {
+      cleanLogs();
+    })
+    .command([
+      'start',
+      '--disable-log-to-file',
+      '--data',
+      './test/data/envs/mock1.json',
+      '--pname',
+      'logging-test'
+    ])
+    .it('should start mock on port 3000', (context) => {
+      expect(context.stdout).to.contain(
+        'Mock started at http://localhost:3000 (pid: 0, name: mockoon-logging-test)'
+      );
+    });
+
+  test.it(
+    'should call GET /api/test endpoint and verify logs file does not exist',
+    async () => {
+      const result = await axios.get('http://localhost:3000/api/test');
+
+      expect(result.data).to.contain('mock-content-1');
+
+      await delay(1000);
+      expect(existsSync(logsFilePath)).to.equal(false);
+    }
+  );
+
+  stopProcesses('all', ['mockoon-logging-test']);
+});
