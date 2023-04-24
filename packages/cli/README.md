@@ -131,14 +131,15 @@ USAGE
   $ mockoon-cli start
 
 OPTIONS
-  -d, --data              [required] Path(s) or URL(s) to your Mockoon file(s)
-  -N, --pname             Override process(es) name(s)
-  -p, --port              Override environment(s) port(s)
-  -l, --hostname          Override default listening hostname(s)
-  -t, --log-transaction   Log the full HTTP transaction (request and response)
-  -r, --repair            If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
-  -D, --daemon-off        Keep the CLI in the foreground and do not manage the process with PM2
-  -h, --help              Show CLI help
+  -d, --data                 [required] Path(s) or URL(s) to your Mockoon file(s)
+  -N, --pname                Override process(es) name(s)
+  -p, --port                 Override environment(s) port(s)
+  -l, --hostname             Override default listening hostname(s)
+  -t, --log-transaction      Log the full HTTP transaction (request and response)
+  -X, --disable-log-to-file  Disable logging to file
+  -r, --repair               If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
+  -D, --daemon-off           Keep the CLI in the foreground and do not manage the process with PM2
+  -h, --help                 Show CLI help
 
 EXAMPLES
   $ mockoon-cli start --data ~/data.json
@@ -198,6 +199,7 @@ EXAMPLE
 
 Generates a Dockerfile used to build a self-contained image of one or more mock API. After building the image, no additional parameters will be needed when running the container.
 This command takes similar flags as the [`start` command](#mockoon-start).
+The `--daemon-off` and `--disable-log-to-file` flags will be enabled by default in the resulting Dockerfile.
 
 Please note that this command will copy your Mockoon environment from the file you provide and put it side by side with the generated Dockerfile. Both files are required in order to build the image.
 
@@ -208,12 +210,13 @@ USAGE
   $ mockoon-cli dockerize
 
 OPTIONS
-  -d, --data              [required] Path or URL to your Mockoon file
-  -p, --port              Override environment's port
-  -o, --output            [required] Generated Dockerfile path and name (e.g. `./Dockerfile`)
-  -t, --log-transaction   Log the full HTTP transaction (request and response)
-  -r, --repair            If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
-  -h, --help              Show CLI help
+  -d, --data                  [required] Path or URL to your Mockoon file
+  -p, --port                  Override environment's port
+  -o, --output                [required] Generated Dockerfile path and name (e.g. `./Dockerfile`)
+  -t, --log-transaction       Log the full HTTP transaction (request and response)
+  -X, --disable-log-to-file   Disable logging to file
+  -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
+  -h, --help                  Show CLI help
 
 EXAMPLES
   $ mockoon-cli dockerize --data ~/data.json --output ./Dockerfile
@@ -252,7 +255,7 @@ Or directly pass a URL to the `mockoon-cli start` command, without mounting a lo
 
 `docker run -d -p 3000:3000 mockoon/cli:latest -d https://raw.githubusercontent.com/mockoon/mock-samples/main/samples/generate-mock-data.json --port 3000`
 
-Mockoon CLI's logs will be sent to both stdout (console) and the [usual files](#logs).
+Mockoon CLI's logs will be sent to stdout/stderr (console). File logging is disabled by default in the Docker image.
 
 #### Docker compose
 
@@ -312,6 +315,8 @@ The `out.log` file contains all other log entries (all levels) produced by the r
 
 When running the CLI with the [`--daemon-off` flag](#mockoon-cli-start), logs are sent to both stdout (console) and the above files.
 
+### Transaction logging
+
 When using the `--log-transaction` flag, logs will contain the full transaction (request and response) with the same information you can see in the desktop application.
 
 Example:
@@ -348,7 +353,7 @@ Example:
 }
 ```
 
-The `transaction` model can be found [here](https://github.com/mockoon/commons/blob/main/src/models/server.model.ts#L26-L44).
+The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L33-L53).
 
 ### Disable logging
 
@@ -389,6 +394,8 @@ You can disable the logging to the console by redirecting the stdout and stderr 
   ```sh-sessions
   mockoon-cli start --data ./data.json > $null 2>&1
   ```
+
+You can also disable file logging by using th `--disable-log-to-file` flag. This is enabled by default in the Docker image.
 
 ## PM2
 
