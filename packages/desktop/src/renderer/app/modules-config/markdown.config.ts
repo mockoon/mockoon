@@ -4,6 +4,11 @@ import { Config } from 'src/shared/config';
 export const MarkedOptionsFactory = (): MarkedOptions => {
   const renderer = new MarkedRenderer();
 
+  renderer.table = (header: string, body: string) => {
+    header = header.replace('NOSTYLE', '');
+
+    return `<table class="table table-borderless"><tbody>${body}</tbody></table>`;
+  };
   // Open all links in an external browser
   renderer.link = (href: string, title: string, text: string) => {
     if (!href.startsWith('http')) {
@@ -19,6 +24,11 @@ export const MarkedOptionsFactory = (): MarkedOptions => {
 
     return `<img src="${src}" class="img-fluid mx-auto d-block" alt="${text}">`;
   };
+
+  renderer.hr = () => '<hr class="my-5">';
+
+  renderer.heading = (text: string, level: number) =>
+    `<h${level} class="mt-5 mb-4">${text}</h${level}>`;
 
   return {
     renderer,
