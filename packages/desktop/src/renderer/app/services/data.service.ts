@@ -5,6 +5,7 @@ import {
   Environment,
   EnvironmentSchema,
   GenerateDatabucketID,
+  generateUUID,
   HighestMigrationId,
   repairRefs,
   Route,
@@ -15,7 +16,6 @@ import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { MigrationService } from 'src/renderer/app/services/migration.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { v4 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class DataService extends Logger {
@@ -66,7 +66,7 @@ export class DataService extends Logger {
    */
   public formatLog(transaction: Transaction): EnvironmentLog {
     return {
-      UUID: uuid(),
+      UUID: generateUUID(),
       routeUUID: transaction.routeUUID,
       routeResponseUUID: transaction.routeResponseUUID,
       timestamp: new Date(),
@@ -210,13 +210,13 @@ export class DataService extends Logger {
     }
 
     if (force || UUIDs.has(newEnvironment.uuid)) {
-      newEnvironment.uuid = uuid();
+      newEnvironment.uuid = generateUUID();
     }
     UUIDs.add(newEnvironment.uuid);
 
     newEnvironment.data.forEach((data) => {
       if (force || UUIDs.has(data.uuid)) {
-        data.uuid = uuid();
+        data.uuid = generateUUID();
       }
       UUIDs.add(data.uuid);
     });
@@ -224,14 +224,14 @@ export class DataService extends Logger {
     newEnvironment.routes.forEach((route) => {
       if (force || UUIDs.has(route.uuid)) {
         // keep old ref first
-        renewedUUIDs[route.uuid] = uuid();
+        renewedUUIDs[route.uuid] = generateUUID();
         route.uuid = renewedUUIDs[route.uuid];
       }
       UUIDs.add(route.uuid);
 
       route.responses.forEach((response) => {
         if (force || UUIDs.has(response.uuid)) {
-          response.uuid = uuid();
+          response.uuid = generateUUID();
         }
         UUIDs.add(response.uuid);
       });
@@ -240,7 +240,7 @@ export class DataService extends Logger {
     newEnvironment.folders.forEach((folder) => {
       if (force || UUIDs.has(folder.uuid)) {
         // keep old ref first
-        renewedUUIDs[folder.uuid] = uuid();
+        renewedUUIDs[folder.uuid] = generateUUID();
         folder.uuid = renewedUUIDs[folder.uuid];
       }
       UUIDs.add(folder.uuid);
@@ -257,10 +257,10 @@ export class DataService extends Logger {
    * @param params
    */
   public renewRouteUUIDs(route: Route) {
-    route.uuid = uuid();
+    route.uuid = generateUUID();
 
     route.responses.forEach((routeResponse) => {
-      routeResponse.uuid = uuid();
+      routeResponse.uuid = generateUUID();
     });
 
     return route;

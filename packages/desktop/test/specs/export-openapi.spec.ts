@@ -1,5 +1,5 @@
+import { generateUUID } from '@mockoon/commons';
 import { promises as fs } from 'fs';
-import { v4 as uuid } from 'uuid';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import menu from '../libs/menu';
@@ -10,7 +10,7 @@ describe('OpenAPI export', () => {
     await environments.open('openapi');
   });
 
-  const filePath = `./tmp/storage/${uuid()}.json`;
+  const filePath = `./tmp/storage/${generateUUID()}.json`;
 
   it('should export the environment and match the reference file', async () => {
     await dialogs.save(filePath);

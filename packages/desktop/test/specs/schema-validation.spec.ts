@@ -1,7 +1,6 @@
 import { Environment, HighestMigrationId } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { resolve } from 'path';
-import { validate as validateUUID } from 'uuid';
 import { Settings } from '../../src/shared/models/settings.model';
 import clipboard from '../libs/clipboard';
 import dialogs from '../libs/dialogs';
@@ -11,6 +10,14 @@ import menu from '../libs/menu';
 import modals from '../libs/modals';
 import routes from '../libs/routes';
 import utils from '../libs/utils';
+
+const validateUUID = (uuid: string) => {
+  const uuidRegex = new RegExp(
+    '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'
+  );
+
+  return uuidRegex.test(uuid);
+};
 
 describe('Schema validation', () => {
   describe('Settings', () => {

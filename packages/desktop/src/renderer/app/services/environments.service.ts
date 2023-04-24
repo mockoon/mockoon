@@ -13,6 +13,7 @@ import {
   DataBucket,
   Environment,
   EnvironmentDefault,
+  generateUUID,
   Header,
   HighestMigrationId,
   IsLegacyExportData,
@@ -117,7 +118,6 @@ import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
-import { v4 as uuid } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -830,7 +830,7 @@ export class EnvironmentsService extends Logger {
       let newDatabucket: DataBucket = CloneObject(databucketToDuplicate);
 
       newDatabucket.name = `${databucketToDuplicate.name} (copy)`;
-      newDatabucket.uuid = uuid();
+      newDatabucket.uuid = generateUUID();
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
       this.store.update(
@@ -852,7 +852,7 @@ export class EnvironmentsService extends Logger {
     if (databucketToDuplicate) {
       let newDatabucket: DataBucket = {
         ...CloneObject(databucketToDuplicate),
-        uuid: uuid()
+        uuid: generateUUID()
       };
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 

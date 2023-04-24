@@ -1,6 +1,5 @@
-import { ProcessedDatabucket } from '@mockoon/commons';
+import { generateUUID, ProcessedDatabucket } from '@mockoon/commons';
 import { Request, Response } from 'express';
-import { v4 as uuid } from 'uuid';
 import { dedupSlashes } from '../utils';
 
 export type CrudRouteIds =
@@ -193,7 +192,10 @@ export const databucketActions = (
     case 'create': {
       if (Array.isArray(databucket.value)) {
         if (typeof requestBody === 'object' && requestBody != null) {
-          requestBody = { [crudRouteParamName]: uuid(), ...requestBody };
+          requestBody = {
+            [crudRouteParamName]: generateUUID(),
+            ...requestBody
+          };
         }
 
         databucket.value.push(requestBody);

@@ -1,7 +1,6 @@
 import * as Joi from 'joi';
-import { v4 as uuid } from 'uuid';
 import { HighestMigrationId } from '../libs/migrations';
-import { GenerateDatabucketID } from '../libs/utils';
+import { GenerateDatabucketID, generateUUID } from '../libs/utils';
 import {
   DataBucket,
   Environment,
@@ -21,7 +20,7 @@ import {
 
 export const EnvironmentDefault: Environment = {
   get uuid() {
-    return uuid();
+    return generateUUID();
   },
   lastMigration: HighestMigrationId,
   name: 'New environment',
@@ -53,7 +52,7 @@ export const EnvironmentDefault: Environment = {
 
 export const FolderDefault: Folder = {
   get uuid() {
-    return uuid();
+    return generateUUID();
   },
   name: 'New folder',
   collapsed: false,
@@ -62,7 +61,7 @@ export const FolderDefault: Folder = {
 
 export const RouteDefault: Route = {
   get uuid() {
-    return uuid();
+    return generateUUID();
   },
   type: RouteType.HTTP,
   documentation: '',
@@ -75,7 +74,7 @@ export const RouteDefault: Route = {
 
 export const RouteResponseDefault: RouteResponse = {
   get uuid() {
-    return uuid();
+    return generateUUID();
   },
   body: '{}',
   latency: 0,
@@ -108,7 +107,7 @@ export const HeaderDefault: Header = {
 
 export const DataBucketDefault: DataBucket = {
   get uuid() {
-    return uuid();
+    return generateUUID();
   },
   get id() {
     return GenerateDatabucketID();
@@ -120,7 +119,7 @@ export const DataBucketDefault: DataBucket = {
 
 const UUIDSchema = Joi.string()
   .uuid()
-  .failover(() => uuid())
+  .failover(() => generateUUID())
   .required();
 
 const HeaderSchema = Joi.object<Header, true>({

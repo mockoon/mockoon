@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { generateUUID } from '@mockoon/commons';
 import { ToastTypes } from 'src/renderer/app/models/toasts.model';
 import {
   addToastAction,
   removeToastAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { v4 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class ToastsService {
@@ -20,7 +20,7 @@ export class ToastsService {
   public addToast(type: ToastTypes, message: string) {
     this.store.update(
       addToastAction({
-        UUID: uuid(),
+        UUID: generateUUID(),
         type,
         message
       })
