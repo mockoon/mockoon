@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import {
   EnvironmentDefault,
   ResponseRuleDefault,
@@ -14,6 +13,7 @@ import {
   Route,
   RouteResponse
 } from '../models/route.model';
+import { generateUUID } from './utils';
 
 /**
  * Old types use for compatibility purposes
@@ -83,7 +83,7 @@ export const Migrations: {
       environment.routes.forEach((route) => {
         // add uuid
         if (!route.uuid) {
-          route.uuid = uuid();
+          route.uuid = generateUUID();
         }
 
         if (route['customHeaders']) {
@@ -95,7 +95,7 @@ export const Migrations: {
           // add custom header only if no content type
           if (!ContentTypeHeader) {
             route['customHeaders'].unshift({
-              uuid: uuid(),
+              uuid: generateUUID(),
               key: 'Content-Type',
               value: route['contentType']
             });
@@ -115,7 +115,7 @@ export const Migrations: {
       environment.routes.forEach((route) => {
         // add missing uuid
         if (!route.uuid) {
-          route.uuid = uuid();
+          route.uuid = generateUUID();
         }
       });
     }
@@ -127,7 +127,9 @@ export const Migrations: {
     migrationFunction: (environment: Environment) => {
       // add new headers property to environments
       if (!environment.headers) {
-        (environment.headers as any) = [{ uuid: uuid(), key: '', value: '' }];
+        (environment.headers as any) = [
+          { uuid: generateUUID(), key: '', value: '' }
+        ];
       }
 
       (environment.routes as RouteWithFile[]).forEach((route) => {
@@ -177,7 +179,7 @@ export const Migrations: {
       (environment.routes as RouteAsResponse[]).forEach((route) => {
         route.responses = [];
         (route.responses as RouteResponseWithStringStatus[]).push({
-          uuid: uuid(),
+          uuid: generateUUID(),
           statusCode: route.statusCode as string,
           label: '',
           latency: route.latency,
@@ -206,7 +208,7 @@ export const Migrations: {
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
-          routeResponse.uuid = uuid();
+          routeResponse.uuid = generateUUID();
         });
       });
     }

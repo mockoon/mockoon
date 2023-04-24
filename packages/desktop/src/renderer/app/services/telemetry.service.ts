@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Functions, httpsCallableData } from '@angular/fire/functions';
+import { generateUUID } from '@mockoon/commons';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
 import {
   BehaviorSubject,
@@ -29,7 +30,6 @@ import { LocalStorageService } from 'src/renderer/app/services/local-storage.ser
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/shared/config';
-import { v4 as uuid } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -165,7 +165,7 @@ export class TelemetryService {
     geoipEndpoint: string
   ): Observable<[string, string]> {
     return combineLatest([
-      of(this.localStorageService.getItem('installationId') || uuid()),
+      of(this.localStorageService.getItem('installationId') || generateUUID()),
       of(this.localStorageService.getItem('country')).pipe(
         switchMap((country) =>
           country

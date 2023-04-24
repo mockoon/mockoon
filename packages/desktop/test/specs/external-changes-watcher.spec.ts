@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { generateUUID } from '@mockoon/commons';
 import { resolve } from 'path';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
@@ -11,7 +11,7 @@ import settings from '../libs/settings';
 import utils from '../libs/utils';
 
 describe('Environment external reload', () => {
-  const newUUID = randomUUID();
+  const newUUID = generateUUID();
 
   it('should enable automated file watching and assert that file watching is disabled by default', async () => {
     // wait a bit for app to load, apparently cannot open the modal too soon
@@ -97,11 +97,11 @@ describe('Environment external reload', () => {
     await file.editEnvironment('./tmp/storage/ui-1.json', {
       name: 'env 1 (change2)',
       port: 5005,
-      uuid: randomUUID()
+      uuid: generateUUID()
     });
     await file.editEnvironment('./tmp/storage/ui-2.json', {
       name: 'env 2 (change1)',
-      uuid: randomUUID()
+      uuid: generateUUID()
     });
 
     await browser.pause(2000);

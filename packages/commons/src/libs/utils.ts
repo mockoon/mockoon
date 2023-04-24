@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Environment, Environments } from '../models/environment.model';
 import { LegacyExport } from '../models/export.model';
 import { Header, RouteResponse } from '../models/route.model';
@@ -190,3 +191,6 @@ export const repairRefs = (environment: Environment) => {
 
   return environment;
 };
+
+export const generateUUID = () =>
+  typeof window !== 'undefined' ? window.crypto.randomUUID() : randomUUID();

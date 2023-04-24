@@ -28,13 +28,12 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "joi": "17.8.3",
-    "uuid": "9.0.0"
+    "joi": "17.8.3"
   },
   "devDependencies": {
     "@types/chai": "4.3.4",
     "@types/mocha": "10.0.1",
-    "@types/uuid": "9.0.1",
+    "@types/node": "18.15.13",
     "@typescript-eslint/eslint-plugin": "5.53.0",
     "@typescript-eslint/parser": "5.53.0",
     "chai": "4.3.7",

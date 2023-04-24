@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import {
   DataBucketDefault,
   EnvironmentDefault,
@@ -7,7 +6,7 @@ import {
   RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
-import { CloneObject } from '../libs/utils';
+import { CloneObject, generateUUID } from '../libs/utils';
 import { DataBucket, Environment } from '../models/environment.model';
 import { Folder } from '../models/folder.model';
 import {
@@ -46,7 +45,7 @@ export const CloneRouteResponse = (
   routeResponse: RouteResponse
 ): RouteResponse => ({
   ...CloneObject(routeResponse),
-  uuid: uuid(),
+  uuid: generateUUID(),
   label: `${routeResponse.label} (copy)`,
   default: false
 });
