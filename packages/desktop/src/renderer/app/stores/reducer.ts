@@ -671,6 +671,7 @@ export const environmentReducer = (
     }
 
     case ActionTypes.REMOVE_ROUTE: {
+      let newActiveEnvironment: Environment;
       const activeEnvironment = state.environments.find(
         (environment) => environment.uuid === state.activeEnvironmentUUID
       );
@@ -713,12 +714,14 @@ export const environmentReducer = (
 
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === state.activeEnvironmentUUID) {
-          return {
+          newActiveEnvironment = {
             ...environment,
             routes: newRoutes,
             folders: newFolders,
             rootChildren: newRootChildren
           };
+
+          return newActiveEnvironment;
         }
 
         return environment;
@@ -731,7 +734,7 @@ export const environmentReducer = (
         ({
           routeUUID: newActiveRouteUUID,
           routeResponseUUID: newActiveRouteResponseUUID
-        } = getFirstRouteAndResponseUUIDs(activeEnvironment));
+        } = getFirstRouteAndResponseUUIDs(newActiveEnvironment));
       }
 
       newState = {
