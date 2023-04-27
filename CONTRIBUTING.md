@@ -37,6 +37,7 @@ Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./pac
 **Applications**:
 
 - _@mockoon/cli_; the CLI built with Oclif
+- _@mockoon/serverless_; the package to run Mockoon as a serverless function (AWS lambda, etc.)
 - _@mockoon/desktop_: the desktop application built with Electron and Angular (for the renderer process)
 
 ## Build and run the applications locally during development
@@ -76,7 +77,7 @@ When a feature or bugfix requires a change in the data model (`Environment`, `Ro
 
 - Add a new migration function in the @mockoon/commons library `./packages/commons/src/libs/migrations.ts` file.
 - Add a new test for the migration in the same library `./packages/commons/test/data/migrations/{MIGRATION_ID}/environments.json` and `./packages/commons//test/suites/migrations.spec.ts` files.
-- Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' `environments.json` samples to the latest migration. Please note that some folders/sample files marked with a `.do-not-update-files` must never be migrated.
+- Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' `environments.json` samples to the latest migration. Please note that some folders/sample files are excluded from the migration on purpose.
 
 ## Lint and format
 
@@ -116,28 +117,31 @@ Open a pull request to be merged in the `main` branch. All branches should start
 - Increment the version (which follows [semver](https://semver.org/)) in each package.json file depending on the changes, using `npm run set-versions`. To ignore a package give it the same version. Lerna will take care of increasing the internal dependencies version numbers.
 - Push.
 
-**Libs' process (commons, commons-server, serverless, CLI):**
-
-Create a `libs-v{YYYY-MM}` tag to automatically release all the libraries on NPM (commons, commons-server, serverless, CLI).
-
-> /!\\ Do not create a **GitHub release** for the libs, as desktop versions <=1.19.0 relies on https://api.github.com/repos/mockoon/mockoon/releases/latest to get the latest release version. As we are using a monorepo, this would mess up the legacy auto update from the desktop application.
+> Versions are synchronized between the desktop application, CLI and the libraries. We release all of them at the same time with a **major** version bump when a data migration is included in the relase, or when new common features are added (common = feature working in both desktop and CLI). The libraries can be released independently from the desktop application for minor and patch versions when the changes are only affecting the libraries.
 
 **Desktop application's process:**
 
 > /!\\ Respect the desktop tag format `vx.x.x` and the GitHub release creation as the desktop application automated update depends on it.
 
-1. Create a `vx.x.x` tag to trigger the build of binaries for the desktop application.
-   The desktop Electron application will be packaged using the local symlinked libraries. So, the desktop's release can be independent from the libraries release.
-   The GitHub workflow will automatically package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing and notarization. Code signing is currently managed by @255kb.
-   Binaries will be saved as Actions artifacts.
+1. Create a GitHub release targeting the `vx.x.x` tag.
 
-2. Create a GitHub release targeting the `vx.x.x` tag.
+> /!\\ Mark the release as a pre-release, and only set it as a final release when all binaries are successfully build, tested and uploaded. Otherwise, it will trigger the auto-update for versions <1.19.0.
 
-> /!\\ Mark the release as a pre-release, and only set it as a final release when all binaries are successfully build, tested and uploaded.
+The desktop Electron application will be packaged using the local symlinked libraries. So, the desktop's release can be independent from the libraries release.
+The GitHub workflow will automatically package the application for different platforms with `npm run package:win|mac|linux`. Including Windows/macOS code signing and notarization. Code signing is currently managed by @255kb.
+Binaries will be saved as Actions artifacts.
+
+2. Manually test the binaries if needed (changes not covered by automated tests).
 
 3. Upload the artifacts binaries to the new GitHub release.
 
 4. Publish the release (remove the "pre-release" label).
+
+**Libs' process (commons, commons-server, serverless, CLI):**
+
+Create a `libs-vx.x.x` tag to automatically release all the libraries on NPM (commons, commons-server, serverless, CLI).
+
+> /!\\ Do not create a **GitHub release** for the libs, as desktop versions <=1.19.0 relies on https://api.github.com/repos/mockoon/mockoon/releases/latest to get the latest release version. As we are using a monorepo, this would mess up the legacy auto update from the desktop application.
 
 ## Desktop application distribution
 

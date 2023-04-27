@@ -21,7 +21,7 @@ about: Checklist for releases (admin use only)
 
 **Release the libs (commons, commons-server, serverless, CLI):**
 
-- [ ] Create a `libs-v{YYYY-MM}` tag to release all the NPM libraries
+- [ ] Create a `libs-v{x.x.x}` tag to release all the NPM libraries
 
 **API:**
 

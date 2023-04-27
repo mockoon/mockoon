@@ -1,5 +1,6 @@
 import { app, BrowserWindow, Menu, shell } from 'electron';
 import { transports } from 'electron-log';
+import { Config } from 'src/shared/config';
 
 export const createMenu = (mainWindow: BrowserWindow): Menu => {
   const menu: any = [
@@ -268,7 +269,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       },
       { type: 'separator' },
       {
-        label: 'Release notes',
+        label: `Release notes v${Config.appVersion}`,
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'OPEN_CHANGELOG');
         }

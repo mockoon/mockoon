@@ -62,7 +62,7 @@ Mockoon is an open-source project built by volunteer maintainers. If you like ou
 
 ## Download the desktop application
 
-You can get Mockoon desktop's [latest release](https://github.com/mockoon/mockoon/releases/latest) directly from this repository or on the official [website](https://mockoon.com/#download). Mockoon desktop is also available through:
+You can get Mockoon desktop's [latest release](https://github.com/mockoon/mockoon/releases/latest) directly from this repository or on the official [website](https://mockoon.com/download/). Mockoon desktop is also available through:
 
 MacOS:
 
@@ -95,7 +95,7 @@ You will find Mockoon's [documentation](https://mockoon.com/docs/latest) on the 
 
 ## Changelogs
 
-You will find Mockoon [desktop](https://mockoon.com/releases/desktop/) and [CLI](https://mockoon.com/releases/cli/) changelogs on the official website.
+You will find Mockoon applications [changelogs](https://mockoon.com/releases/) on the official website.
 
 ## Support/feedback
 

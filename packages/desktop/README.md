@@ -3,7 +3,7 @@
     <img width="200" height="200" src="https://mockoon.com/images/logo-square-app.png">
   </a>
   <br>
-  <a href="https://mockoon.com/#download"><img src="https://img.shields.io/badge/Download%20app-Go-green.svg?style=flat-square&colorB=1997c6"/></a>
+  <a href="https://mockoon.com/download/"><img src="https://img.shields.io/badge/Download%20app-Go-green.svg?style=flat-square&colorB=1997c6"/></a>
   <a href="https://mockoon.com/"><img src="https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6"/></a>
   <a href="http://eepurl.com/dskB2X"><img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/></a>
   <a href="https://twitter.com/GetMockoon"><img src="https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2"/></a>
@@ -49,7 +49,7 @@ Mockoon is an open-source project built by volunteer maintainers. If you like ou
 
 ## Download the desktop application
 
-You can get Mockoon desktop's [latest release](https://github.com/mockoon/mockoon/releases/latest) directly from this repository or on the official [website](https://mockoon.com/#download). Mockoon desktop is also available through:
+You can get Mockoon desktop's [latest release](https://github.com/mockoon/mockoon/releases/latest) directly from this repository or on the official [website](https://mockoon.com/download/). Mockoon desktop is also available through:
 
 MacOS:
 
@@ -72,7 +72,7 @@ You will find the [documentation](https://mockoon.com/docs/latest) on the offici
 
 ## Changelogs
 
-You will find Mockoon [desktop](https://mockoon.com/releases/desktop/) changelogs on the official website.
+You will find Mockoon applications [changelogs](https://mockoon.com/releases/) on the official website.
 
 ## Support/feedback
 

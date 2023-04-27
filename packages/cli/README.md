@@ -58,7 +58,7 @@ $ mockoon-cli COMMAND
 
 ## Changelogs
 
-You will find Mockoon [CLI](https://mockoon.com/releases/cli/) changelogs on the official website.
+You will find Mockoon applications [changelogs](https://mockoon.com/releases/) on the official website.
 
 ## Run a mock API with the CLI
 
