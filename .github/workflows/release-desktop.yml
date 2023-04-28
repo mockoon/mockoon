@@ -28,11 +28,6 @@ jobs:
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - name: Get version from package.json
-        id: app-version
-        run: |
-          PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
       - name: Build and package application
         run: |
           npm run bootstrap
@@ -46,7 +41,7 @@ jobs:
           codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac-universal/Mockoon.app
       - name: Get universal binary shasum
         run: |
-          shasum -a 256 ./packages/desktop/packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.universal.dmg
+          shasum -a 256 ./packages/desktop/packages/mockoon.setup.*.universal.dmg
       - name: Upload macOS dmg
         uses: actions/upload-artifact@v3
         with:
@@ -69,11 +64,6 @@ jobs:
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - name: Get version from package.json
-        id: app-version
-        run: |
-          PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
       - name: Build and package application
         run: |
           npm run bootstrap
@@ -84,22 +74,22 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: appimage
-          path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.AppImage
+          path: ./packages/desktop/packages/mockoon-*.AppImage
       - name: Upload Linux deb
         uses: actions/upload-artifact@v3
         with:
           name: deb
-          path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.deb
+          path: ./packages/desktop/packages/mockoon-*.deb
       - name: Upload Linux rpm
         uses: actions/upload-artifact@v3
         with:
           name: rpm
-          path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.rpm
+          path: ./packages/desktop/packages/mockoon-*.rpm
       - name: Upload Linux snap
         uses: actions/upload-artifact@v3
         with:
           name: snap
-          path: ./packages/desktop/packages/mockoon-${{steps.app-version.outputs.PACKAGE_VERSION}}.snap
+          path: ./packages/desktop/packages/mockoon-*.snap
 
   build-windows:
     name: Build Windows binaries
@@ -119,12 +109,6 @@ jobs:
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - name: Get version from package.json
-        id: app-version
-        run: |
-          $PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
-        shell: pwsh
       - name: Build and package application
         run: |
           npm run bootstrap
@@ -136,12 +120,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: exe
-          path: ./packages/desktop/packages/mockoon.setup.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
+          path: ./packages/desktop/packages/mockoon.setup.*.exe
       - name: Upload Windows portable exe
         uses: actions/upload-artifact@v3
         with:
           name: exe
-          path: ./packages/desktop/packages/mockoon.portable.${{steps.app-version.outputs.PACKAGE_VERSION}}.exe
+          path: ./packages/desktop/packages/mockoon.portable.*.exe
 
   # APPX build requires no code signing env vars to work, thus the separated job
   build-windows-appx:
@@ -158,12 +142,6 @@ jobs:
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - name: Get version from package.json
-        id: app-version
-        run: |
-          $PACKAGE_VERSION=$(node -p -e "require('./packages/desktop/package.json').version")
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
-        shell: pwsh
       - name: Build and package application
         run: |
           npm run bootstrap
@@ -175,4 +153,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: appx
-          path: ./packages/desktop/packages/mockoon.${{steps.app-version.outputs.PACKAGE_VERSION}}.appx
+          path: ./packages/desktop/packages/mockoon.*.appx
