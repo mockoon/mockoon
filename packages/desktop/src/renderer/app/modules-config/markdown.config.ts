@@ -27,8 +27,18 @@ export const MarkedOptionsFactory = (): MarkedOptions => {
 
   renderer.hr = () => '<hr class="my-5">';
 
-  renderer.heading = (text: string, level: number) =>
-    `<h${level} class="mt-5 mb-4">${text}</h${level}>`;
+  renderer.heading = (text: string, level: number) => {
+    let hasVertBar = false;
+
+    if (text.includes('|')) {
+      hasVertBar = true;
+      text = text.replace('|', '');
+    }
+
+    return `<h${level} class="mt-5 mb-4">${
+      hasVertBar ? '<span class="text-primary pr-2">|</span>' : ''
+    }${text}</h${level}>`;
+  };
 
   return {
     renderer,

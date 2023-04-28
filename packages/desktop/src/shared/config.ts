@@ -13,7 +13,7 @@ export const Config = {
   githubBinaryURL: 'https://github.com/mockoon/mockoon/releases/download/',
   latestReleaseDataURL: `${apiURL}releases/desktop/stable.json`,
   changelogMarkdownURL: `${websiteURL}desktop-changelogs-markdown/`,
-  releasePublicURL: `${websiteURL}releases/desktop/`,
+  releasePublicURL: `${websiteURL}releases/`,
   docs: {
     templating: docsURL + 'templating/overview/',
     proxy: docsURL + 'proxy-mode/',
