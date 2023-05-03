@@ -2,19 +2,28 @@ Thank you to all the supporters who donated over time, and all the ones who want
 
 You can join them by visiting our Sponsor page on [GitHub Sponsors](https://github.com/sponsors/mockoon)
 
-[![sponsor button](https://mockoon.com/images/sponsor-btn-250.png?)](https://github.com/sponsors/mockoon)
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
+</div>
 
-# Platinum sponsor
+# Platinum sponsors
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
 <a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/">
     <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/github-300-light.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github-300.png">
-    <img src="https://mockoon.com/images/sponsors/github-300-light.png" width="300" alt="GitHub logo" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/github.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
+    <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
     </picture>
 </a>
-<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite-300.png" width="300" alt="Appwrite logo" /></a>
+<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite-300.png" alt="Appwrite logo" /></a>
+<a href="https://www.peakcrypto.com/">
+    <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
+    <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
+    </picture>
+</a>
 </div>
 
 # One-time and past sponsors
@@ -58,6 +67,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Nils
 - Ninzero
 - Oussama Ghalbzouri
+- [Peak Crypto](https://www.peakcrypto.com/)
 - Pedro
 - Rafael Braga Nanes
 - Riaz

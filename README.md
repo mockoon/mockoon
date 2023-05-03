@@ -39,17 +39,25 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
 
 ---
 
-## Our platinum sponsor
+## Our platinum sponsors
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
 <a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/github-300-light.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github-300.png">
-    <img src="https://mockoon.com/images/sponsors/github-300-light.png" width="300" alt="GitHub logo" />
-  </picture>
+    <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/github.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
+    <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
+    </picture>
 </a>
-<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite-300.png" width="300" alt="Appwrite logo" /></a>
+<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite.png" alt="Appwrite logo" /></a>
+<a href="https://www.peakcrypto.com/">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
+<source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
+<img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
+</picture>
+</a>
+
 </div>
 
 Mockoon is an open-source project built by volunteer maintainers. If you like our application, please consider sponsoring us and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
