@@ -38,7 +38,7 @@
             (dropped)="reorganizeEnvironments($event)"
           >
             <a
-              class="nav-link"
+              class="nav-link d-flex"
               [ngClass]="{
                 active: activeEnvironment?.uuid === environment.uuid,
                 running:
@@ -53,6 +53,7 @@
               <div
                 *ngIf="settings$ | async as settings"
                 [formGroup]="activeEnvironmentForm"
+                class="mw0"
               >
                 <div class="d-flex">
                   <app-editable-element
@@ -67,19 +68,6 @@
                     "
                     (editChange)="enableDrag(!$event)"
                   ></app-editable-element>
-
-                  <div class="ml-auto">
-                    <app-svg
-                      class="text-primary"
-                      [ngClass]="{
-                        visible: environment.proxyMode,
-                        invisible: !environment.proxyMode
-                      }"
-                      icon="security"
-                      size="12"
-                      ngbTooltip="Proxy mode enabled"
-                    ></app-svg>
-                  </div>
                 </div>
 
                 <div
@@ -101,6 +89,36 @@
                       environment.port
                     }}/{{ environment.endpointPrefix }}</span
                   >
+                </div>
+              </div>
+              <div class="ml-auto pl-2">
+                <!-- Using .visible and .invisible to avoid content jumping -->
+                <div>
+                  <app-svg
+                    class="text-primary"
+                    [ngClass]="{
+                      visible: environment.proxyMode,
+                      invisible: !environment.proxyMode
+                    }"
+                    icon="security"
+                    size="12"
+                    ngbTooltip="Proxy mode enabled"
+                  ></app-svg>
+                </div>
+                <div
+                  *ngIf="(logsRecording$ | async)[environment.uuid] === true"
+                >
+                  <app-svg
+                    class="text-danger animation-flash"
+                    [ngClass]="{
+                      visible:
+                        (logsRecording$ | async)[environment.uuid] === true,
+                      invisible: !(logsRecording$ | async)[environment.uuid]
+                    }"
+                    icon="record"
+                    size="12"
+                    ngbTooltip="Recording in progress"
+                  ></app-svg>
                 </div>
               </div>
             </a>

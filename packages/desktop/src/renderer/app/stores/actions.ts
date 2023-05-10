@@ -332,12 +332,21 @@ export const updateFolderAction = (
  *
  * @param route - route to add
  * @param parentId - target parent (root or folder) Id
+ * @param focus - indicates if the route must be focused after addition and the UI reset (switch tabs)
+ * @param environmentUUID - environment UUID to which the route is linked to
  */
-export const addRouteAction = (route: Route, parentId: string | 'root') =>
+export const addRouteAction = (
+  route: Route,
+  parentId: string | 'root',
+  focus = true,
+  environmentUUID?: string
+) =>
   ({
     type: ActionTypes.ADD_ROUTE,
     route,
-    parentId
+    parentId,
+    focus,
+    environmentUUID
   } as const);
 
 /**

@@ -52,7 +52,10 @@ import {
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { HumanizeText } from 'src/renderer/app/libs/utils.lib';
+import {
+  environmentHasRoute,
+  HumanizeText
+} from 'src/renderer/app/libs/utils.lib';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
 import { FolderProperties } from 'src/renderer/app/models/folder.model';
@@ -86,6 +89,7 @@ import {
   addRouteResponseAction,
   duplicateDatabucketToAnotherEnvironmentAction,
   duplicateRouteToAnotherEnvironmentAction,
+  logRequestAction,
   navigateEnvironmentsAction,
   reloadEnvironmentAction,
   removeDatabucketAction,
@@ -1060,15 +1064,36 @@ export class EnvironmentsService extends Logger {
   /**
    * Create a route based on a environment log entry
    */
-  public createRouteFromLog(logUUID?: string) {
+  public createRouteFromLog(
+    environmentUUID: string,
+    logUUID: string,
+    force = false
+  ) {
     const environmentsLogs = this.store.get('environmentsLogs');
-    const uuidEnvironment = this.store.get('activeEnvironmentUUID');
-    const log = environmentsLogs[uuidEnvironment].find(
+    const targetEnvironment = this.store.getEnvironmentByUUID(environmentUUID);
+    const log = environmentsLogs[environmentUUID].find(
       (environmentLog) => environmentLog.UUID === logUUID
     );
 
     if (log) {
       let routeResponse: RouteResponse;
+      const prefix = targetEnvironment.endpointPrefix;
+      let endpoint = log.url.slice(1); // Remove the initial slash '/'
+      if (prefix && endpoint.startsWith(prefix)) {
+        endpoint = endpoint.slice(prefix.length + 1); // Remove the prefix and the slash
+      }
+
+      // check if route already exists
+      if (
+        !force &&
+        environmentHasRoute(targetEnvironment, {
+          endpoint,
+          method: log.method,
+          type: RouteType.HTTP
+        })
+      ) {
+        return;
+      }
 
       if (log.response) {
         const headers: Header[] = [];
@@ -1102,12 +1127,6 @@ export class EnvironmentsService extends Logger {
         routeResponse = BuildRouteResponse();
       }
 
-      const prefix = this.store.getActiveEnvironment().endpointPrefix;
-      let endpoint = log.url.slice(1); // Remove the initial slash '/'
-      if (prefix && endpoint.startsWith(prefix)) {
-        endpoint = endpoint.slice(prefix.length + 1); // Remove the prefix and the slash
-      }
-
       const newRoute: Route = {
         ...BuildRoute(RouteType.HTTP),
         method: log.method,
@@ -1115,7 +1134,9 @@ export class EnvironmentsService extends Logger {
         responses: [routeResponse]
       };
 
-      this.store.update(addRouteAction(newRoute, 'root'));
+      this.store.update(
+        addRouteAction(newRoute, 'root', force, environmentUUID)
+      );
     }
   }
 
@@ -1195,6 +1216,26 @@ export class EnvironmentsService extends Logger {
     }
   }
 
+  /**
+   * Listen to server transactions and record them
+   *
+   * @returns
+   */
+  public listenServerTransactions() {
+    return this.eventsService.serverTransaction$.pipe(
+      tap((data) => {
+        const formattedLog = this.dataService.formatLog(data.transaction);
+
+        this.store.update(logRequestAction(data.environmentUUID, formattedLog));
+
+        if (
+          this.eventsService.logsRecording$.value[data.environmentUUID] === true
+        ) {
+          this.createRouteFromLog(data.environmentUUID, formattedLog.UUID);
+        }
+      })
+    );
+  }
   /**
    * Verify data is not too recent or is a mockoon file.
    * To be used in switchMap mostly.

@@ -15,6 +15,10 @@ class EnvironmentsLogs {
     return $('.environment-logs-open-request-body');
   }
 
+  public get startRecordingBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.environment-logs-header button#start-recording');
+  }
+
   public getMetadataIcon(
     logIndex: number
   ): ChainablePromiseElement<WebdriverIO.Element> {
@@ -139,8 +143,20 @@ class EnvironmentsLogs {
     ).click();
   }
 
+  public async startRecording() {
+    const selector = this.startRecordingBtn;
+
+    await selector.click();
+  }
+
+  public async stopRecording() {
+    const selector = $('.environment-logs-header button#stop-recording');
+
+    await selector.click();
+  }
+
   public async clear() {
-    const selector = $('.environment-logs-header button.btn-link');
+    const selector = $('.environment-logs-header button#clear-logs');
     // click twice to confirm (cannot double click)
     await selector.click();
     await selector.click();

@@ -51,6 +51,7 @@ export class EnvironmentsMenuComponent
   public editingName = false;
   public activeEnvironmentForm: FormGroup;
   public dragEnabled = true;
+  public logsRecording$ = this.eventsService.logsRecording$;
   private destroy$ = new Subject<void>();
 
   constructor(
