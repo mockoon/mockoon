@@ -1,10 +1,39 @@
-<ng-container *ngIf="environmentLogs$ | async as environmentLogs">
-  <ng-container *ngIf="environmentLogs?.length; else emptyLogsTemplate">
-    <div class="environment-logs-header ml-auto">
+<ng-container
+  *ngIf="{
+    environmentLogs: environmentLogs$ | async,
+    activeEnvironmentUUID: activeEnvironmentUUID$ | async,
+    logsRecording: logsRecording$ | async
+  } as data"
+>
+  <div class="environment-logs-header d-flex justify-content-between">
+    <div>
       <button
-        *ngIf="environmentLogs?.length"
+        *ngIf="!data.logsRecording?.[data.activeEnvironmentUUID]"
         type="button"
-        class="btn btn-link btn-icon pl-2 float-right {{
+        id="start-recording"
+        class="btn btn-link btn-icon pl-2"
+        ngbTooltip="Record"
+        (click)="startRecording(data.activeEnvironmentUUID)"
+      >
+        <app-svg icon="record"></app-svg>
+      </button>
+      <button
+        *ngIf="data.logsRecording?.[data.activeEnvironmentUUID] === true"
+        type="button"
+        id="stop-recording"
+        class="btn btn-link btn-icon pl-2 text-danger"
+        ngbTooltip="Stop recording"
+        (click)="stopRecording(data.activeEnvironmentUUID)"
+      >
+        <app-svg icon="stop"></app-svg>
+      </button>
+    </div>
+    <div>
+      <button
+        *ngIf="data.environmentLogs?.length"
+        type="button"
+        id="clear-logs"
+        class="btn btn-link btn-icon pl-2 {{
           (clearEnvironmentLogsRequested$ | async).enabled ? 'text-danger' : ''
         }}"
         [ngbTooltip]="
@@ -17,10 +46,15 @@
         <app-svg icon="delete"></app-svg>
       </button>
     </div>
-    <div class="environment-logs d-flex flex-fill mh0">
+  </div>
+  <div
+    class="environment-logs flex-fill mh0"
+    [ngClass]="{ 'd-flex': data.environmentLogs?.length }"
+  >
+    <ng-container *ngIf="data.environmentLogs?.length; else emptyLogsTemplate">
       <div class="h-100 environment-logs-column">
         <ul class="nav flex-column menu-list h-100">
-          <li class="nav-item" *ngFor="let log of environmentLogs">
+          <li class="nav-item" *ngFor="let log of data.environmentLogs">
             <a
               class="nav-link"
               [ngClass]="{
@@ -44,7 +78,12 @@
                       <button
                         type="button"
                         class="btn btn-link btn-icon btn-mock"
-                        (click)="createRouteFromLog(log.UUID)"
+                        (click)="
+                          createRouteFromLog(
+                            data.activeEnvironmentUUID,
+                            log.UUID
+                          )
+                        "
                       >
                         <app-svg
                           icon="control_point_duplicate"
@@ -416,8 +455,8 @@
           </ng-container>
         </div>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
+  </div>
 </ng-container>
 
 <ng-template #emptyLogsTemplate>

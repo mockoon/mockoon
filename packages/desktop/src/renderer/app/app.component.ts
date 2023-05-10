@@ -62,6 +62,7 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
     this.settingsService.saveSettings().subscribe();
     this.environmentsService.loadEnvironments().subscribe();
     this.environmentsService.saveEnvironments().subscribe();
+    this.environmentsService.listenServerTransactions().subscribe();
   }
 
   @HostListener('document:click')

@@ -3,14 +3,14 @@ import {
   Folder,
   FolderChild,
   GetRouteResponseContentType,
-  Route,
-  RouteType
+  Route
 } from '@mockoon/commons';
 import { helpersAutocompletions } from 'src/renderer/app/constants/autocomplete.constant';
 import { DropActionType } from 'src/renderer/app/enums/ui.enum';
 import {
   GetEditorModeFromContentType,
   InsertAtIndex,
+  isRouteDuplicates,
   RemoveAtIndex
 } from 'src/renderer/app/libs/utils.lib';
 import {
@@ -30,13 +30,7 @@ const listDuplicatedRouteUUIDs = (environment: Environment): Set<string> => {
     environment.routes.forEach((otherRoute: Route, otherRouteIndex: number) => {
       if (
         otherRouteIndex > routeIndex &&
-        ((otherRoute.type === RouteType.CRUD &&
-          route.type === RouteType.CRUD &&
-          otherRoute.endpoint === route.endpoint) ||
-          (otherRoute.type === RouteType.HTTP &&
-            route.type === RouteType.HTTP &&
-            otherRoute.endpoint === route.endpoint &&
-            otherRoute.method === route.method))
+        isRouteDuplicates(route, otherRoute)
       ) {
         duplicates.add(otherRoute.uuid);
       }

@@ -944,16 +944,27 @@ export const environmentReducer = (
       // only add a route if there is at least one environment
       if (state.environments.length > 0) {
         const newRoute = action.route;
+        const targetEnvironmentUUID =
+          action.environmentUUID || state.activeEnvironmentUUID;
+
+        let focusUpdate = {};
+
+        if (action.focus) {
+          focusUpdate = {
+            activeRouteUUID: newRoute.uuid,
+            activeRouteResponseUUID:
+              newRoute.responses.length > 0 ? newRoute.responses[0].uuid : null,
+            activeTab: 'RESPONSE',
+            activeView: 'ENV_ROUTES',
+            routesFilter: ''
+          };
+        }
 
         newState = {
           ...state,
-          activeRouteUUID: newRoute.uuid,
-          activeRouteResponseUUID:
-            newRoute.responses.length > 0 ? newRoute.responses[0].uuid : null,
-          activeTab: 'RESPONSE',
-          activeView: 'ENV_ROUTES',
+          ...focusUpdate,
           environments: state.environments.map((environment) => {
-            if (environment.uuid === state.activeEnvironmentUUID) {
+            if (environment.uuid === targetEnvironmentUUID) {
               let rootChildren = environment.rootChildren;
               const routes = [...environment.routes];
               let folders = environment.folders;
@@ -992,8 +1003,11 @@ export const environmentReducer = (
 
             return environment;
           }),
-          environmentsStatus: markEnvStatusRestart(state),
-          routesFilter: ''
+          environmentsStatus: markEnvStatusRestart(
+            state,
+            true,
+            targetEnvironmentUUID
+          )
         };
         break;
       }

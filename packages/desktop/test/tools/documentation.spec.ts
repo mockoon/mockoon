@@ -354,7 +354,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'requests-logging',
+    folder: 'logging-and-recording/requests-logging',
     screenshots: [
       {
         tasks: async () => {
@@ -450,7 +450,13 @@ const documentationTopics: {
         screenshotPosition: { top: 0, right: 0 },
         screeenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-metadata.png'
-      },
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'logging-and-recording/auto-mocking-and-recording',
+    screenshots: [
       {
         tasks: async () => {},
         get screenshotTarget() {
@@ -464,6 +470,37 @@ const documentationTopics: {
         screenshotPosition: { top: 0, right: 0 },
         screeenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-auto-mocking.png'
+      },
+      {
+        tasks: async () => {},
+        get screenshotTarget() {
+          return environmentsLogs.container;
+        },
+        get highlightedTarget() {
+          return environmentsLogs.startRecordingBtn;
+        },
+
+        highlight: true,
+        highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
+        screenshotPosition: { top: 0, right: 0 },
+        screeenshotGaps: { left: 50, bottom: -300 },
+        fileName: 'logs-start-recording.png'
+      },
+      {
+        tasks: async () => {
+          await environmentsLogs.startRecording();
+        },
+        get screenshotTarget() {
+          return environmentsLogs.container;
+        },
+        get highlightedTarget() {
+          return environments.recordingIndicator;
+        },
+        highlight: true,
+        highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { bottom: -500, right: -300 },
+        fileName: 'logs-recording-in-progress.png'
       }
     ]
   },
@@ -473,6 +510,7 @@ const documentationTopics: {
     screenshots: [
       {
         tasks: async () => {
+          await environmentsLogs.stopRecording();
           await navigation.switchView('ENV_ROUTES');
         },
         get highlightedTarget() {

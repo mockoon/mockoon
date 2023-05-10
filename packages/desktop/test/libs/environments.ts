@@ -16,6 +16,10 @@ class Environments {
     );
   }
 
+  public get recordingIndicator(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(`${this.activeMenuEntrySelector} app-svg[icon="record"]`);
+  }
+
   private get startBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.btn[ngbtooltip="Start server"]');
   }
@@ -146,9 +150,25 @@ class Environments {
     ).toEqual(true);
   }
 
+  public async assertMenuRecordingIconVisible(reverse = false): Promise<void> {
+    expect(
+      await $(
+        `${this.activeMenuEntrySelector} app-svg[icon="record"]${
+          reverse ? '.invisible' : '.visible'
+        }`
+      ).isExisting()
+    ).toEqual(true);
+  }
+
   public async assertNeedsRestart() {
     await $(
       '.environments-menu .menu-list .nav-item .nav-link.active.need-restart'
+    ).waitForExist();
+  }
+
+  public async assertStarted() {
+    await $(
+      '.environments-menu .menu-list .nav-item .nav-link.active.running'
     ).waitForExist();
   }
 }

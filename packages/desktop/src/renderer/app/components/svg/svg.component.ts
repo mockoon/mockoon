@@ -26,6 +26,7 @@ export class SvgComponent {
   public size = '16';
   @Input()
   public icon:
+    | 'record'
     | 'endpoint'
     | 'endpoints'
     | 'play_arrow'

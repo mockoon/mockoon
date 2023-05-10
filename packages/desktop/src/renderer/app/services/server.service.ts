@@ -3,23 +3,20 @@ import { Environment } from '@mockoon/commons';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { MessageParams } from 'src/renderer/app/models/messages.model';
-import { DataService } from 'src/renderer/app/services/data.service';
+import { EventsService } from 'src/renderer/app/services/events.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
-import {
-  logRequestAction,
-  updateEnvironmentStatusAction
-} from 'src/renderer/app/stores/actions';
+import { updateEnvironmentStatusAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
 export class ServerService extends Logger {
   constructor(
     protected toastService: ToastsService,
-    private dataService: DataService,
     private store: Store,
     private zone: NgZone,
-    private telemetryService: TelemetryService
+    private telemetryService: TelemetryService,
+    private eventsService: EventsService
   ) {
     super('[SERVICE][SERVER]', toastService);
 
@@ -100,12 +97,10 @@ export class ServerService extends Logger {
         case 'transaction-complete':
           if (data.transaction) {
             this.zone.run(() => {
-              this.store.update(
-                logRequestAction(
-                  environment.uuid,
-                  this.dataService.formatLog(data.transaction)
-                )
-              );
+              this.eventsService.serverTransaction$.next({
+                environmentUUID,
+                transaction: data.transaction
+              });
             });
           }
           break;

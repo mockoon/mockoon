@@ -1,4 +1,4 @@
-import { Environment, Route } from '@mockoon/commons';
+import { Environment, Route, RouteType } from '@mockoon/commons';
 import { EditorModes } from 'src/renderer/app/models/editor.model';
 
 export const ArrayContainsObjectKey = (
@@ -102,3 +102,38 @@ export const BuildFullPath = (environment: Environment, route: Route) => {
 
   return routeUrl;
 };
+
+/**
+ * Check if two routes are duplicates, if:
+ * - CRUD + same endpoint
+ * - HTTP + same endpoint + same method
+ *
+ * @param routeA
+ * @param routeB
+ * @returns
+ */
+export const isRouteDuplicates = (
+  routeA: Route | Pick<Route, 'type' | 'endpoint' | 'method'>,
+  routeB: Route | Pick<Route, 'type' | 'endpoint' | 'method'>
+): boolean =>
+  (routeB.type === RouteType.CRUD &&
+    routeA.type === RouteType.CRUD &&
+    routeB.endpoint === routeA.endpoint) ||
+  (routeB.type === RouteType.HTTP &&
+    routeA.type === RouteType.HTTP &&
+    routeB.endpoint === routeA.endpoint &&
+    routeB.method === routeA.method);
+
+/**
+ * Check if an environment has a route that is a duplicate of the provided route
+ *
+ * @param environment
+ * @param route
+ * @param excludeRouteUUID
+ * @returns
+ */
+export const environmentHasRoute = (
+  environment: Environment,
+  route: Route | Pick<Route, 'type' | 'endpoint' | 'method'>
+): boolean =>
+  environment.routes.some((envRoute) => isRouteDuplicates(envRoute, route));

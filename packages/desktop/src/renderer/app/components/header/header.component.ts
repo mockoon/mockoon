@@ -25,7 +25,7 @@ export class HeaderComponent implements OnInit {
     id: ViewsNameType;
     title: string;
     icon: string;
-    count?: Observable<number>;
+    count$?: Observable<number>;
   }[];
 
   constructor(
@@ -44,7 +44,7 @@ export class HeaderComponent implements OnInit {
         id: 'ENV_ROUTES',
         title: 'Routes',
         icon: 'endpoints',
-        count: this.activeEnvironment$.pipe(
+        count$: this.activeEnvironment$.pipe(
           filter((environment) => !!environment),
           map((environment) => environment.routes.length)
         )
@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit {
         id: 'ENV_DATABUCKETS',
         title: 'Data',
         icon: 'data',
-        count: this.activeEnvironment$.pipe(
+        count$: this.activeEnvironment$.pipe(
           filter((environment) => !!environment),
           map((environment) => environment.data.length)
         )
@@ -62,7 +62,7 @@ export class HeaderComponent implements OnInit {
         id: 'ENV_HEADERS',
         title: 'Headers',
         icon: 'featured_play_list',
-        count: this.activeEnvironment$.pipe(
+        count$: this.activeEnvironment$.pipe(
           filter((environment) => !!environment),
           map((environment) => environment.headers.length)
         )
@@ -71,7 +71,7 @@ export class HeaderComponent implements OnInit {
         id: 'ENV_LOGS',
         title: 'Logs',
         icon: 'history',
-        count: this.environmentLogs$.pipe(
+        count$: this.environmentLogs$.pipe(
           filter((environmentLogs) => !!environmentLogs),
           map((environmentLogs) => environmentLogs.length)
         )

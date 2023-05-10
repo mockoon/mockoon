@@ -39,6 +39,7 @@ type CollapseStates = {
 export class EnvironmentLogsComponent implements OnInit {
   public environmentLogs$: Observable<EnvironmentLog[]>;
   public activeEnvironmentLogsTab$: Observable<EnvironmentLogsTabsNameType>;
+  public activeEnvironmentUUID$: Observable<string>;
   public activeEnvironmentLogUUID$: Observable<string>;
   public activeEnvironmentLog$: Observable<EnvironmentLog>;
   public collapseStates: CollapseStates = {
@@ -53,6 +54,7 @@ export class EnvironmentLogsComponent implements OnInit {
   };
   public menuSize = Config.defaultSecondaryMenuSize;
   public clearEnvironmentLogsRequested$ = new TimedBoolean();
+  public logsRecording$ = this.eventsService.logsRecording$;
 
   constructor(
     private store: Store,
@@ -62,6 +64,7 @@ export class EnvironmentLogsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.activeEnvironmentUUID$ = this.store.select('activeEnvironmentUUID');
     this.environmentLogs$ = this.store.selectActiveEnvironmentLogs();
 
     this.activeEnvironmentLogUUID$ = this.environmentLogs$.pipe(
@@ -137,8 +140,8 @@ export class EnvironmentLogsComponent implements OnInit {
    *
    * @param logUUID
    */
-  public createRouteFromLog(logUUID: string) {
-    this.environmentsService.createRouteFromLog(logUUID);
+  public createRouteFromLog(environmentUUID: string, logUUID: string) {
+    this.environmentsService.createRouteFromLog(environmentUUID, logUUID, true);
   }
 
   /**
@@ -172,5 +175,32 @@ export class EnvironmentLogsComponent implements OnInit {
         clearLogsAction(this.store.get('activeEnvironmentUUID'))
       );
     }
+  }
+
+  /**
+   * Start recording entering requests/responses
+   */
+  public startRecording(environmentUUID: string) {
+    this.eventsService.logsRecording$.next({
+      ...this.eventsService.logsRecording$.value,
+      [environmentUUID]: true
+    });
+
+    const environmentsStatus = this.store.get('environmentsStatus');
+    const activeEnvironmentStatus = environmentsStatus[environmentUUID];
+
+    if (!activeEnvironmentStatus.running) {
+      this.environmentsService.toggleEnvironment(environmentUUID);
+    }
+  }
+
+  /**
+   * Stop recording entering requests/responses
+   */
+  public stopRecording(environmentUUID: string) {
+    this.eventsService.logsRecording$.next({
+      ...this.eventsService.logsRecording$.value,
+      [environmentUUID]: false
+    });
   }
 }
