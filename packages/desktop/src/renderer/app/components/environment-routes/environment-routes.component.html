@@ -382,23 +382,20 @@
         >
           <!-- status code + latency -->
           <div class="d-flex pt-3 px-2 justify-content-between">
-            <div
+            <app-custom-select
               *ngIf="activeRoute.type === 'crud' && activeRouteResponse.default"
-              class="input-group"
-            >
-              <app-custom-select
-                class="col-8"
-                formControlName="databucketID"
-                [enableCustomInput]="false"
-                [items]="databuckets$ | async"
-                dropdownId="databuckets"
-                emptyListMessage="No databucket defined"
-                placeholder="Select a databucket for CRUD operations"
-                placeholderClasses="text-warning"
-                [clearable]="false"
-                [defaultClearValue]="''"
-              ></app-custom-select>
-            </div>
+              class="col-8"
+              formControlName="databucketID"
+              [enableCustomInput]="false"
+              [items]="databuckets$ | async"
+              dropdownId="databuckets"
+              emptyListMessage="No databucket defined"
+              placeholder="Select a databucket for CRUD operations"
+              placeholderClasses="text-warning"
+              [clearable]="false"
+              [defaultClearValue]="''"
+            ></app-custom-select>
+
             <div
               *ngIf="
                 activeRoute.type === 'http' ||

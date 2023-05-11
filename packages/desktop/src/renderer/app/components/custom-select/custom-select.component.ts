@@ -243,8 +243,8 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
       if (
         !this.isNumber ||
         (this.isNumber &&
-          customValue >= this.validation.min &&
-          customValue <= this.validation.max)
+          (customValue as number) >= this.validation.min &&
+          (customValue as number) <= this.validation.max)
       ) {
         this.setValue(this.findItem(customValue));
       }
