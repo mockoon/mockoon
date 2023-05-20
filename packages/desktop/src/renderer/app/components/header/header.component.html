@@ -51,7 +51,7 @@
               <app-svg [icon]="tab.icon" class="pr-2"></app-svg>
               {{ tab.title }}
               <span
-                *ngIf="tab.count | async as tabCount"
+                *ngIf="tab.count$ | async as tabCount"
                 class="badge badge-hollow font-weight-bold ml-2"
               >
                 {{ tabCount }}

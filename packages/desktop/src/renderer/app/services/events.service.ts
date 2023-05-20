@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Header } from '@mockoon/commons';
+import { Header, Transaction } from '@mockoon/commons';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
@@ -20,6 +20,13 @@ export class EventsService {
   public updateAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   );
+  // environment UUID -> boolean
+  public logsRecording$: BehaviorSubject<{ [key in string]: boolean }> =
+    new BehaviorSubject({});
+  public serverTransaction$: Subject<{
+    environmentUUID: string;
+    transaction: Transaction;
+  }> = new Subject();
 
   constructor() {}
 }

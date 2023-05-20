@@ -50,6 +50,26 @@ class Navigation {
     await browser.pause(100);
   }
 
+  public async assertActiveTab(viewName: ViewsNameType): Promise<void> {
+    switch (viewName) {
+      case 'ENV_DATABUCKETS':
+        await utils.assertHasClass(this.databucketsTab, 'active');
+        break;
+
+      case 'ENV_ROUTES':
+        await utils.assertHasClass(this.routesTab, 'active');
+        break;
+
+      case 'ENV_HEADERS':
+        await utils.assertHasClass(this.headersTab, 'active');
+        break;
+
+      case 'ENV_LOGS':
+        await utils.assertHasClass(this.logsTab, 'active');
+        break;
+    }
+  }
+
   public async assertHeaderValue(
     viewName: ViewsNameType,
     value: string
