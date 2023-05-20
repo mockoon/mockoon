@@ -76,8 +76,18 @@
                     </div>
                   </div>
                 </div>
-                <div class="nav-link-subtitle ellipsis">
-                  {{ log.timestamp | date : 'yyyy-MM-dd HH:mm:ss:SSS' }}
+                <div class="d-flex align-items-center">
+                  <div class="d-flex nav-link-subtitle ellipsis">
+                    {{ log.timestamp | date : 'yyyy-MM-dd HH:mm:ss:SSS' }}
+                  </div>
+                  <div class="d-flex ml-auto ellipsis nav-link-subtitle">
+                    <span
+                      class="mt-0 badge badge-default ml-0 response-badge-{{
+                        log.response.status.toString().slice(0, 1).concat('xx')
+                      }}"
+                      >{{ log.response.status }}</span
+                    >
+                  </div>
                 </div>
               </div>
             </a>
