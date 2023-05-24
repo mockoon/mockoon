@@ -141,6 +141,20 @@ $route-badges: ('crud', lighten($cyan, 15%)), ('get', lighten($blue, 10%)),
   }
 }
 
+// response badges (methods)
+$response-badges: ('get', lighten($blue, 10%)), ('4xx', lighten($orange, 10%)),
+  ('2xx', lighten($green, 10%)), ('5xx', lighten($red, 17%)),
+  ('3xx', lighten($purple, 25%)), ('1xx', lighten($custom-gray, 45%));
+@each $status in $response-badges {
+  .response-badge-#{nth($status, 1)} {
+    background-color: #{nth($status, 2)};
+    color: darken($gray-900, 10%);
+  }
+  .response-badge-#{nth($status, 1)}-text {
+    color: #{nth($status, 2)};
+  }
+}
+
 .flex-fill {
   flex: 1;
 }
