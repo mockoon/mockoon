@@ -49,13 +49,13 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
     <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
     </picture>
 </a>
-<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite.png" alt="Appwrite logo" /></a>
+
 <a href="https://www.peakcrypto.com/">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
-<source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
-<img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
-</picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
+    <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
+  </picture>
 </a>
 
 </div>

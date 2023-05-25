@@ -16,7 +16,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
     <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
     </picture>
 </a>
-<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite-300.png" alt="Appwrite logo" /></a>
+
 <a href="https://www.peakcrypto.com/">
     <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
@@ -72,7 +72,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Rafael Braga Nanes
 - Riaz
 - Roybarberuk
-- (Rustam Khasanshin)[https://github.com/Rustery]
+- [Rustam Khasanshin](https://github.com/Rustery)
 - Samer Samer
 - Samja666
 - Sander
