@@ -5,6 +5,9 @@ RUN npm install -g @mockoon/cli@{{{version}}}
 COPY {{{.}}} ./{{{.}}}
 {{/filePaths}}
 
+# Install curl for healthcheck and tzdata for timezone support.
+RUN apk --no-cache add curl tzdata
+
 # Do not run as root.
 RUN adduser --shell /bin/sh --disabled-password --gecos "" mockoon
 {{#filePaths}}
