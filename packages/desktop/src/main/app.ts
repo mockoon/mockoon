@@ -18,6 +18,7 @@ import { checkForUpdate } from 'src/main/libs/update';
 declare const isTesting: boolean;
 declare const isDev: boolean;
 
+// setting log folder make sense for dev mode and tests only, and portable mode
 const setAppAndLogPath = (path: string) => {
   app.setPath('userData', path);
 
@@ -29,10 +30,16 @@ if (isTesting || isDev) {
   setAppAndLogPath(pathResolve('./tmp'));
 }
 
-// set local data folder when is portable mode
+// set data folder when is portable mode
 const portableExecDir = process.env.PORTABLE_EXECUTABLE_DIR;
 if (portableExecDir) {
   setAppAndLogPath(pathJoin(portableExecDir, 'mockoon-data'));
+}
+
+// set data folder when inside a snap package (default folder get wiped on snap updates)
+if (process.platform === 'linux' && process.env.SNAP) {
+  app.setPath('userData', pathJoin(process.env.SNAP_USER_COMMON));
+  app.setAppLogsPath();
 }
 
 // log uncaught errors
