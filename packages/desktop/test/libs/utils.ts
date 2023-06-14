@@ -4,7 +4,9 @@ import {
   ElementArray
 } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
-import { Config } from '../../src/shared/config';
+import { SharedConfig } from '../../src/shared/shared-config';
+
+const Config = SharedConfig({ apiURL: '', websiteURL: '' });
 
 class Utils {
   public async clearElementValue(
@@ -82,9 +84,12 @@ class Utils {
 
   public async assertElementText(
     element: ChainablePromiseElement<WebdriverIO.Element>,
-    text: string
+    text: string,
+    multiline = false
   ): Promise<void> {
-    expect(await element.getText()).toEqual(text);
+    expect(await element.getText()).toEqual(
+      multiline ? text.replace(/[ ]/g, '\n') : text
+    );
   }
 
   public async assertElementTextContain(

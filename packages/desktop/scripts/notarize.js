@@ -10,6 +10,7 @@ exports.default = async function notarizing(context) {
   const appName = context.packager.appInfo.productFilename;
 
   return await notarize({
+    tool: 'notarytool',
     appBundleId: 'com.mockoon.app',
     appPath: `${appOutDir}/${appName}.app`,
     appleId: process.env.APPLEID,

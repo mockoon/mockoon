@@ -38,9 +38,18 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({
-        appVersion: JSON.stringify(process.env.npm_package_version),
-        isDev: argv.mode === 'development',
-        isTesting: env.isTesting ? true : false
+        IS_DEV: argv.mode === 'development',
+        IS_TESTING: env.isTesting ? true : false,
+        WEBSITE_URL: JSON.stringify(
+          argv.mode === 'development'
+            ? 'http://localhost:3000/'
+            : 'https://mockoon.com/'
+        ),
+        API_URL: JSON.stringify(
+          argv.mode === 'development'
+            ? 'http://localhost:5003/'
+            : 'https://api.mockoon.com/'
+        )
       })
     ]
   };

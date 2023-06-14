@@ -1,14 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Environment } from '@mockoon/commons';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
+import { User } from 'src/renderer/app/models/user.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { EventsService } from 'src/renderer/app/services/events.service';
+import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/renderer/config';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +23,8 @@ import { Store } from 'src/renderer/app/stores/store';
 })
 export class HeaderComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;
+  public user$: Observable<User>;
+  public refreshingAccount$ = new BehaviorSubject(false);
   public activeView$: Observable<ViewsNameType>;
   public activeEnvironmentState$: Observable<EnvironmentStatus>;
   public environmentLogs$: Observable<EnvironmentLog[]>;
@@ -28,12 +35,22 @@ export class HeaderComponent implements OnInit {
     count$?: Observable<number>;
   }[];
 
+  public planLabels = {
+    FREE: 'Free',
+    SOLO: 'Solo',
+    TEAM: 'Team',
+    ENTERPRISE: 'Enterprise'
+  };
+
   constructor(
     private store: Store,
-    private environmentsService: EnvironmentsService
+    private environmentsService: EnvironmentsService,
+    private userService: UserService,
+    private eventsService: EventsService
   ) {}
 
   ngOnInit() {
+    this.user$ = this.store.select('user');
     this.activeView$ = this.store.select('activeView');
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeEnvironmentState$ = this.store.selectActiveEnvironmentStatus();
@@ -97,5 +114,44 @@ export class HeaderComponent implements OnInit {
    */
   public toggleEnvironment() {
     this.environmentsService.toggleEnvironment();
+  }
+
+  /**
+   * Open the login page in the default browser
+   */
+  public login() {
+    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.loginURL);
+    this.eventsService.authModalEvents.next();
+  }
+
+  /**
+   * Open the signup page in the default browser
+   */
+  public signup() {
+    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.signupURL);
+  }
+
+  /**
+   * Logout the user
+   */
+  public logout() {
+    this.userService.logout().subscribe();
+  }
+
+  /**
+   * Open the account page in the default browser
+   */
+  public account() {
+    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.accountURL);
+  }
+
+  /**
+   * Refresh the user account information
+   */
+  public refreshAccount() {
+    this.refreshingAccount$.next(true);
+    this.userService.getUserInfo().subscribe(() => {
+      this.refreshingAccount$.next(false);
+    });
   }
 }

@@ -220,6 +220,14 @@ $response-badges: ('get', lighten($blue, 10%)), ('4xx', lighten($orange, 10%)),
   }
 }
 
+.success-message {
+  font-size: 0.8rem;
+  color: $success;
+}
+.error-message {
+  font-size: 0.8rem;
+  color: $danger;
+}
 .warning-message {
   font-size: 0.8rem;
   color: $warning;
@@ -303,4 +311,29 @@ $response-badges: ('get', lighten($blue, 10%)), ('4xx', lighten($orange, 10%)),
     right: 0;
     border-top: 2px solid rgba($blue, 0.8);
   }
+}
+
+.with-indicator {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background-color: #39c939;
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+}
+
+.no-interact {
+  pointer-events: none;
+  user-select: none;
+}
+
+.text-shadow {
+  text-shadow: $box-shadow !important;
 }

@@ -185,6 +185,41 @@ ace.define(
         border: 1px solid transparent;
         background-color: #393e4a;
       }
+
+      .editor-fade-out {
+        .ace_line_group:nth-child(n+6) .ace_line {
+          position: relative;
+
+          &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+          }
+        }
+        .ace_line_group:nth-child(n+6) .ace_line {
+          &::after {
+            background: linear-gradient(to bottom, transparent, #25283080 100%);
+          }
+        }
+        .ace_line_group:nth-child(n+7) .ace_line {
+          &::after {
+            background: linear-gradient(to bottom, #25283080, #252830BF 100%);
+          }
+        }
+        .ace_line_group:nth-child(n+8) .ace_line {
+          &::after {
+            background: linear-gradient(to bottom, #252830BF, #252830 100%);
+          }
+        }
+        .ace_line_group:nth-child(n+9) .ace_line {
+          &::after {
+            background: #252830;
+          }
+        }
+      }
     `;
 
     const dom = acequire('../lib/dom');

@@ -194,3 +194,19 @@ export const repairRefs = (environment: Environment) => {
 
 export const generateUUID = () =>
   typeof window !== 'undefined' ? window.crypto.randomUUID() : randomUUID();
+
+/**
+ * Return a random integer
+ *
+ * @param a
+ * @param b
+ */
+export const RandomInt = (a = 1, b = 0) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
+
+export const randomArrayItem = <T>(array: T[]) =>
+  array[RandomInt(0, array.length - 1)];

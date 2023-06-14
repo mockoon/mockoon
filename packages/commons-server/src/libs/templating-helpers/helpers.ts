@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { RandomInt } from '@mockoon/commons';
 import { format as dateFormat } from 'date-fns';
 import { HelperOptions, SafeString } from 'handlebars';
 import { EOL } from 'os';
@@ -6,7 +7,6 @@ import {
   FromBase64,
   fromSafeString,
   numberFromSafeString,
-  RandomInt,
   ToBase64
 } from '../utils';
 

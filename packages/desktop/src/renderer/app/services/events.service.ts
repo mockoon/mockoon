@@ -15,7 +15,12 @@ export class EventsService {
     headers: Header[];
   }>();
   public editorModalEvents: EventEmitter<EditorModalEvent> = new EventEmitter();
+  public authModalEvents: EventEmitter<void> = new EventEmitter();
+  public templatesModalEvents: EventEmitter<void> = new EventEmitter();
   public confirmModalEvents = new BehaviorSubject<ConfirmModalEvent>(null);
+  public generatingTemplate$ = new BehaviorSubject<
+    'INPROGRESS' | 'DONE' | 'NONE'
+  >('NONE');
   public focusInput: Subject<FocusableInputs> = new Subject();
   public updateAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(
     false

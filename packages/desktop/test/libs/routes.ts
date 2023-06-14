@@ -229,19 +229,24 @@ class Routes {
     await $('#routes-add-dropdown .dropdown-toggle').click();
   }
 
-  public async addCRUDRoute(): Promise<void> {
+  public async openTemplates(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(1)').click();
   }
 
-  public async addHTTPRoute(): Promise<void> {
+  public async addCRUDRoute(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(2)').click();
   }
 
-  public async addFolder(): Promise<void> {
+  public async addHTTPRoute(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(3)').click();
+  }
+
+  public async addFolder(): Promise<void> {
+    await $('#routes-add-dropdown .dropdown-toggle').click();
+    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(4)').click();
   }
 
   public async remove(index: number) {

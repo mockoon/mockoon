@@ -76,19 +76,19 @@ class Navigation {
   ): Promise<void> {
     switch (viewName) {
       case 'ENV_DATABUCKETS':
-        await utils.assertElementText(this.databucketsTab, value);
+        await utils.assertElementText(this.databucketsTab, value, true);
         break;
 
       case 'ENV_ROUTES':
-        await utils.assertElementText(this.routesTab, value);
+        await utils.assertElementText(this.routesTab, value, true);
         break;
 
       case 'ENV_HEADERS':
-        await utils.assertElementText(this.headersTab, value);
+        await utils.assertElementText(this.headersTab, value, true);
         break;
 
       case 'ENV_LOGS':
-        await utils.assertElementText(this.logsTab, value);
+        await utils.assertElementText(this.logsTab, value, true);
         break;
     }
   }

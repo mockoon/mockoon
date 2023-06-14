@@ -4,5 +4,7 @@ export const environment: AppEnvironment = {
   production: true,
   remoteConfig: 'prod',
   useFirebaseEmulator: false,
-  ci: false
+  ci: false,
+  websiteURL: 'https://mockoon.com/',
+  apiURL: 'https://api.mockoon.com/'
 };

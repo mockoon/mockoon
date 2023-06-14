@@ -15,8 +15,8 @@ import { initMainWindow, saveOpenUrlArgs } from 'src/main/libs/main-window';
 import { ServerInstance } from 'src/main/libs/server-management';
 import { checkForUpdate } from 'src/main/libs/update';
 
-declare const isTesting: boolean;
-declare const isDev: boolean;
+declare const IS_TESTING: boolean;
+declare const IS_DEV: boolean;
 
 // setting log folder make sense for dev mode and tests only, and portable mode
 const setAppAndLogPath = (path: string) => {
@@ -26,7 +26,7 @@ const setAppAndLogPath = (path: string) => {
 };
 
 // set local data folder when in dev mode or running tests
-if (isTesting || isDev) {
+if (IS_TESTING || IS_DEV) {
   setAppAndLogPath(pathResolve('./tmp'));
 }
 
@@ -60,7 +60,7 @@ const initApp = () => {
   mainWindow = initMainWindow();
   initIPCListeners(mainWindow);
 
-  if (isDev) {
+  if (IS_DEV) {
     // when serving (dev mode) enable hot reloading
     import('src/main/libs/hot-reload').then((hotReloadModule) => {
       hotReloadModule.hotReload();
@@ -114,7 +114,7 @@ if (!appLock) {
 
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q (except when running tests)
-    if (process.platform !== 'darwin' || isTesting) {
+    if (process.platform !== 'darwin' || IS_TESTING) {
       app.quit();
     }
   });

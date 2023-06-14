@@ -4,7 +4,7 @@
   color: $gray-400;
   background-color: lighten($gray-900, 5%);
   z-index: 15;
-  height: 32px;
+  min-height: 32px;
 
   .footer-item {
     transition: all ease-in-out 200ms;
