@@ -14,6 +14,7 @@ jobs:
 
     env:
       APPLEID: ${{secrets.APPLEID}}
+      TEAMID: ${{secrets.TEAMID}}
       APPLEIDPASS: ${{secrets.APPLEIDPASS}}
       ASCPROVIDER: ${{secrets.ASCPROVIDER}}
       CSC_LINK: ${{secrets.MACOS_CSC_LINK}}
