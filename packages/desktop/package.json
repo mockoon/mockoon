@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/desktop",
   "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "author": {
     "name": "Guillaume Monnet",
@@ -50,8 +50,8 @@
     "package:test:mac": "npm run clean-packages && electron-builder --publish never --config ./build-configs/test/electron-builder.mac.js"
   },
   "dependencies": {
-    "@mockoon/commons": "3.0.0",
-    "@mockoon/commons-server": "3.5.0",
+    "@mockoon/commons": "3.1.0",
+    "@mockoon/commons-server": "3.6.0",
     "axios": "0.27.2",
     "chokidar": "3.5.3",
     "electron-json-storage": "4.5.0",

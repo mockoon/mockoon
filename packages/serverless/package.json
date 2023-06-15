@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/serverless",
   "description": "Mockoon's serverless library. Use Mockoon in serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "guillaume@1kb.software",
@@ -31,8 +31,8 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@mockoon/commons": "3.0.0",
-    "@mockoon/commons-server": "3.5.0",
+    "@mockoon/commons": "3.1.0",
+    "@mockoon/commons-server": "3.6.0",
     "serverless-http": "3.1.1"
   },
   "devDependencies": {
