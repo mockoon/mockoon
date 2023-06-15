@@ -226,7 +226,7 @@ jobs:
   test-desktop-packaged-mac:
     name: Desktop packaged MacOS - Build and test
     runs-on: macos-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
 
     needs: [lint, test-libs]
 
