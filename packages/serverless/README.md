@@ -83,6 +83,37 @@ const app = new mockoon.MockoonServerless(mockEnv);
 exports.app = functions.https.onRequest(app);
 ```
 
+### Netlify Functions
+
+To use Mockoon Serverless with Netlify's serverless functions
+
+First create a new Netlify function, if you're not sure how please [read here](https://docs.netlify.com/functions/create/?fn-language=js), with the following code
+
+```javascript
+const mockoon = require('@mockoon/serverless');
+const serverless = require('serverless-http')
+
+// Load the Mockoon Environment object
+const mockEnv = require('./datafile.json');
+
+const mockoonServerless = new mockoon.MockoonServerless(mockEnv)
+
+exports.handler = serverless(mockoonServerless.firebaseApp())
+```
+
+Then you will need to setup a redirect to direct requests to the api. This also means in mockoon you will need to configure the api url setting. In the example we have set the API URL in mockoon the mockoon config to be /api, so in the netlify.toml file add:
+
+```toml
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/NAME_OF_YOUR_FUNCTION/:splat"
+```
+
+Now when you deploy to netlify, any requests as an example to https://APP_NAME.netlify.app/api/endpoint would match /endpoint setup in your mockoon config. You can also test locally using the Netlify CLI
+
+
 ## Limitations
 
 Due to the stateless nature of cloud functions, some of Mockoon's features will not work:
