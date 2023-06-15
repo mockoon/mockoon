@@ -85,34 +85,43 @@ exports.app = functions.https.onRequest(app);
 
 ### Netlify Functions
 
-To use Mockoon Serverless with Netlify's serverless functions
-
-First create a new Netlify function, if you're not sure how please [read here](https://docs.netlify.com/functions/create/?fn-language=js), with the following code
+To use Mockoon Serverless with Netlify's serverless functions, first create a new Netlify function with the following code:
 
 ```javascript
 const mockoon = require('@mockoon/serverless');
-const serverless = require('serverless-http')
 
 // Load the Mockoon Environment object
 const mockEnv = require('./datafile.json');
 
-const mockoonServerless = new mockoon.MockoonServerless(mockEnv)
+const mockoonServerless = new mockoon.MockoonServerless(mockEnv);
 
-exports.handler = serverless(mockoonServerless.firebaseApp())
+exports.handler = mockoonServerless.netlifyHandler();
 ```
 
-Then you will need to setup a redirect to direct requests to the api. This also means in mockoon you will need to configure the api url setting. In the example we have set the API URL in mockoon the mockoon config to be /api, so in the netlify.toml file add:
+If you're not sure how to create a Netlify function, please [read their official documentation](https://docs.netlify.com/functions/create/?fn-language=js).
+
+Then, you will need to setup a [redirect](https://docs.netlify.com/integrations/frameworks/express/) to direct requests to the mock API. A prefix like `api` is frequently used to distinguish between the requests targeting hosted websites, from requests targeting the API. Netlify will forward the full path to the running Mockoon serverless function which means that you need the [same prefix in your mock](https://mockoon.com/docs/latest/api-endpoints/routing/#api-prefix) configuration.
+To add this redirection in your `netlify.toml` you have two possibilities:
 
 ```toml
 [[redirects]]
   force = true
   from = "/api/*"
   status = 200
-  to = "/.netlify/functions/NAME_OF_YOUR_FUNCTION/:splat"
+  to = "/.netlify/functions/{NAME_OF_YOUR_FUNCTION}/api/:splat"
 ```
 
-Now when you deploy to netlify, any requests as an example to https://APP_NAME.netlify.app/api/endpoint would match /endpoint setup in your mockoon config. You can also test locally using the Netlify CLI
+or
 
+```toml
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/{NAME_OF_YOUR_FUNCTION}"
+```
+
+After deploying to Netlify, any request starting with `/api/*` (e.g. `https://APP_NAME.netlify.app/api/endpoint`) would match the corresponding route (e.g. `/api/endpoint`) in your Mockoon config. You can also test locally using the Netlify CLI.
 
 ## Limitations
 

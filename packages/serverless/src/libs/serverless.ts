@@ -32,11 +32,20 @@ export class MockoonServerless {
   }
 
   /**
-   * Returns a serverless-http wrapped request listener for Google Cloud Functions.
+   * Returns a request listener for Google Cloud Functions.
    *
    * @returns
    */
   public firebaseApp(): RequestListener {
     return this.requestListener();
+  }
+
+  /**
+   * Returns a serverless-http wrapped request listener for Netlify.
+   *
+   * @returns
+   */
+  public netlifyHandler(): RequestListener {
+    return ServerlessHttp(this.requestListener());
   }
 }
