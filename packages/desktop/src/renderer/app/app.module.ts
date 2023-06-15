@@ -1,6 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule, SecurityContext } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
 import {
   connectFunctionsEmulator,
   getFunctions,
@@ -21,6 +22,7 @@ import {
   NgbTooltipConfig,
   NgbTypeaheadConfig
 } from '@ng-bootstrap/ng-bootstrap';
+import { browserLocalPersistence, connectAuthEmulator } from 'firebase/auth';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { NgxMaskModule } from 'ngx-mask';
 import { BannerComponent } from 'src/renderer/app/components/banner/banner.component';
@@ -40,11 +42,13 @@ import { HeadersListComponent } from 'src/renderer/app/components/headers-list/h
 import { DatabucketsMenuComponent } from 'src/renderer/app/components/menus/databuckets-menu/databuckets-menu.component';
 import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
 import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-menu/routes-menu.component';
+import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-modal/auth-modal.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
+import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -64,8 +68,8 @@ import { NgbTooltipConfigFactory } from 'src/renderer/app/modules-config/ngb-too
 import { NgbTypeaheadConfigFactory } from 'src/renderer/app/modules-config/ngb-typeahead.config';
 import { NgbConfigFactory } from 'src/renderer/app/modules-config/ngb.config';
 import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handler';
+import { Config } from 'src/renderer/config';
 import { environment } from 'src/renderer/environments/environment';
-import { Config } from 'src/shared/config';
 import { AppComponent } from './app.component';
 import { LoaderComponent } from './components/loader/loader.component';
 
@@ -81,11 +85,13 @@ import { LoaderComponent } from './components/loader/loader.component';
     DropzoneDirective,
     SearchFilterDirective,
     ContextMenuComponent,
+    AuthModalComponent,
     WelcomeModalComponent,
     SettingsModalComponent,
     ChangelogModalComponent,
     EditorModalComponent,
     ConfirmModalComponent,
+    TemplatesModalComponent,
     EnvironmentLogsComponent,
     EnvironmentProxyComponent,
     EnvironmentHeadersComponent,
@@ -122,6 +128,18 @@ import { LoaderComponent } from './components/loader/loader.component';
       }
     }),
     provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
+    provideAuth(() => {
+      const auth = getAuth();
+      auth.setPersistence(browserLocalPersistence);
+
+      if (environment.useFirebaseEmulator) {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true
+        });
+      }
+
+      return auth;
+    }),
     provideRemoteConfig(() => {
       const remoteConfig = getRemoteConfig();
 

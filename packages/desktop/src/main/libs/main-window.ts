@@ -6,8 +6,8 @@ import { parseProtocolArgs } from 'src/main/libs/custom-protocol';
 import { createMenu } from 'src/main/libs/menu';
 import { createSplashScreen } from 'src/main/libs/splashscreen';
 
-declare const isTesting: boolean;
-declare const isDev: boolean;
+declare const IS_TESTING: boolean;
+declare const IS_DEV: boolean;
 
 // store URL received in open-url event when app is closed (macos only)
 let openUrlArgs: string[];
@@ -31,7 +31,7 @@ export const initMainWindow = () => {
   let splashScreen: BrowserWindow;
 
   // only show the splashscreen when not running the tests
-  if (!isTesting) {
+  if (!IS_TESTING) {
     splashScreen = createSplashScreen();
   }
 
@@ -59,7 +59,7 @@ export const initMainWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: true,
-      devTools: isDev ? true : false,
+      devTools: IS_DEV ? true : false,
       spellcheck: false,
       preload: pathJoin(__dirname, '/preload.js')
     }
@@ -76,7 +76,7 @@ export const initMainWindow = () => {
       setTimeout(() => {
         showMainWindow(mainWindowState);
 
-        if (isDev) {
+        if (IS_DEV) {
           mainWindow.webContents.openDevTools();
         }
       }, 100);

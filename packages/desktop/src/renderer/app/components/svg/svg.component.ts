@@ -10,7 +10,12 @@ import {
  * - we don't have that many icons
  * - we don't want to add many dependencies (svg-to-ts, etc)
  * - using an SVG sprite can cause some UI flickering when change detection is triggered
- * - icon font was increasing the loading time
+ * - icon font was increasing the loading time and icons were invisible for some seconds (or displaying the icon name instead)
+ *
+ * Add a new icon:
+ * - download the SVG from https://fonts.google.com/icons?selected=Material+Icons
+ * - copy the svg content and add it to the html template with a ngSwitchCase
+ * - add the new name to the type below
  *
  */
 @Component({
@@ -27,6 +32,10 @@ export class SvgComponent {
   @Input()
   public icon:
     | 'record'
+    | 'dots'
+    | 'magic'
+    | 'spinner'
+    | 'account'
     | 'endpoint'
     | 'endpoints'
     | 'play_arrow'

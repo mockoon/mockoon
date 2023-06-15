@@ -34,11 +34,21 @@ export const environmentReducer = (
   let newState: StoreType;
 
   switch (action.type) {
+    case ActionTypes.UPDATE_USER: {
+      newState = {
+        ...state,
+        user:
+          action.properties === null
+            ? null
+            : { ...state.user, ...action.properties }
+      };
+      break;
+    }
+
     case ActionTypes.SET_ACTIVE_TAB: {
       newState = {
         ...state,
-        activeTab: action.activeTab,
-        environments: state.environments
+        activeTab: action.activeTab
       };
       break;
     }
@@ -46,8 +56,7 @@ export const environmentReducer = (
     case ActionTypes.SET_ACTIVE_VIEW: {
       newState = {
         ...state,
-        activeView: action.activeView,
-        environments: state.environments
+        activeView: action.activeView
       };
       break;
     }
@@ -55,8 +64,15 @@ export const environmentReducer = (
     case ActionTypes.SET_ACTIVE_ENVIRONMENT_LOG_TAB: {
       newState = {
         ...state,
-        activeEnvironmentLogsTab: action.activeTab,
-        environments: state.environments
+        activeEnvironmentLogsTab: action.activeTab
+      };
+      break;
+    }
+
+    case ActionTypes.SET_ACTIVE_TEMPLATES_TAB: {
+      newState = {
+        ...state,
+        activeTemplatesTab: action.activeTab
       };
       break;
     }
@@ -87,8 +103,11 @@ export const environmentReducer = (
             ? activeEnvironment.data[0].uuid
             : null,
           environments: state.environments,
-          routesFilter: '',
-          databucketsFilter: ''
+          filters: {
+            ...state.filters,
+            routes: '',
+            databuckets: ''
+          }
         };
         break;
       }
@@ -135,8 +154,11 @@ export const environmentReducer = (
           ? newEnvironment.data[0].uuid
           : null,
         environments: state.environments,
-        routesFilter: '',
-        databucketsFilter: ''
+        filters: {
+          ...state.filters,
+          routes: '',
+          databuckets: ''
+        }
       };
       break;
     }
@@ -432,8 +454,11 @@ export const environmentReducer = (
           ...state.activeEnvironmentLogsUUID,
           [newEnvironment.uuid]: null
         },
-        routesFilter: '',
-        databucketsFilter: '',
+        filters: {
+          ...state.filters,
+          routes: '',
+          databuckets: ''
+        },
         settings: newSettings
       };
       break;
@@ -458,8 +483,11 @@ export const environmentReducer = (
         environmentsStatus: newEnvironmentsStatus,
         environmentsLogs: newEnvironmentsLogs,
         activeEnvironmentLogsUUID: newActiveEnvironmentLogsUUID,
-        routesFilter: '',
-        databucketsFilter: '',
+        filters: {
+          ...state.filters,
+          routes: '',
+          databuckets: ''
+        },
         settings: {
           ...state.settings,
           environments: state.settings.environments.filter(
@@ -654,18 +682,10 @@ export const environmentReducer = (
       break;
     }
 
-    case ActionTypes.UPDATE_ENVIRONMENT_ROUTE_FILTER: {
+    case ActionTypes.UPDATE_FILTER: {
       newState = {
         ...state,
-        routesFilter: action.routesFilter
-      };
-      break;
-    }
-
-    case ActionTypes.UPDATE_ENVIRONMENT_DATABUCKET_FILTER: {
-      newState = {
-        ...state,
-        databucketsFilter: action.databucketsFilter
+        filters: { ...state.filters, [action.filter]: action.filterValue }
       };
       break;
     }
@@ -839,7 +859,10 @@ export const environmentReducer = (
 
           return environment;
         }),
-        routesFilter: ''
+        filters: {
+          ...state.filters,
+          routes: ''
+        }
       };
 
       break;
@@ -911,7 +934,10 @@ export const environmentReducer = (
 
           return environment;
         }),
-        routesFilter: ''
+        filters: {
+          ...state.filters,
+          routes: ''
+        }
       };
 
       break;
@@ -947,7 +973,7 @@ export const environmentReducer = (
         const targetEnvironmentUUID =
           action.environmentUUID || state.activeEnvironmentUUID;
 
-        let focusUpdate = {};
+        let focusUpdate: Partial<StoreType> = {};
 
         if (action.focus) {
           focusUpdate = {
@@ -956,7 +982,10 @@ export const environmentReducer = (
               newRoute.responses.length > 0 ? newRoute.responses[0].uuid : null,
             activeTab: 'RESPONSE',
             activeView: 'ENV_ROUTES',
-            routesFilter: ''
+            filters: {
+              ...state.filters,
+              routes: ''
+            }
           };
         }
 
@@ -1094,7 +1123,10 @@ export const environmentReducer = (
             return environment;
           }),
           environmentsStatus: markEnvStatusRestart(state),
-          databucketsFilter: ''
+          filters: {
+            ...state.filters,
+            databuckets: ''
+          }
         };
         break;
       }
@@ -1455,7 +1487,11 @@ export const environmentReducer = (
           true,
           action.targetEnvironmentUUID
         ),
-        routesFilter: ''
+        filters: {
+          ...state.filters,
+          routes: '',
+          databuckets: ''
+        }
       };
       break;
     }
@@ -1506,7 +1542,11 @@ export const environmentReducer = (
           true,
           action.targetEnvironmentUUID
         ),
-        databucketsFilter: ''
+        filters: {
+          ...state.filters,
+          routes: '',
+          databuckets: ''
+        }
       };
       break;
     }

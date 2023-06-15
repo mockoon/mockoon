@@ -1,5 +1,5 @@
 import { MarkedOptions, MarkedRenderer } from 'ngx-markdown';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/renderer/config';
 
 export const MarkedOptionsFactory = (): MarkedOptions => {
   const renderer = new MarkedRenderer();

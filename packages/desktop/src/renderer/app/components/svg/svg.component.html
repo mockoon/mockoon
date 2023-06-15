@@ -2,10 +2,67 @@
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
+    *ngSwitchCase="'dots'"
+  >
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path
+      d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+    />
+  </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    *ngSwitchCase="'magic'"
+  >
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path
+      d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"
+    />
+  </svg>
+  <svg
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    *ngSwitchCase="'spinner'"
+  >
+    <style>
+      .spinner_ajPY {
+        transform-origin: center;
+        animation: spinner_AtaB 0.75s infinite linear;
+      }
+      @keyframes spinner_AtaB {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <path
+      d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+      opacity=".25"
+    />
+    <path
+      d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
+      class="spinner_ajPY"
+    />
+  </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
     *ngSwitchCase="'record'"
   >
     <path d="M24 24H0V0h24v24z" fill="none" />
     <circle cx="12" cy="12" r="8" />
+  </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    *ngSwitchCase="'account'"
+  >
+    <g><rect fill="none" height="24" width="24" /></g>
+    <g>
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"
+      />
+    </g>
   </svg>
   <svg
     xmlns="http://www.w3.org/2000/svg"

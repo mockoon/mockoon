@@ -46,7 +46,7 @@ import {
 } from 'src/main/libs/watch-file';
 import { Settings } from 'src/shared/models/settings.model';
 
-declare const isTesting: boolean;
+declare const IS_TESTING: boolean;
 
 const dialogMocks: { [x: string]: string[] } = { save: [], open: [] };
 
@@ -185,7 +185,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   ipcMain.handle('APP_SHOW_OPEN_DIALOG', async (event, options) => {
     options.defaultPath = getDialogDefaultPath();
 
-    if (isTesting) {
+    if (IS_TESTING) {
       return { filePaths: [dialogMocks.open.pop()] };
     } else {
       return await dialog.showOpenDialog(mainWindow, options);
@@ -198,7 +198,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   ipcMain.handle('APP_SHOW_SAVE_DIALOG', async (event, options) => {
     options.defaultPath = getDialogDefaultPath();
 
-    if (isTesting) {
+    if (IS_TESTING) {
       return { filePath: dialogMocks.save.pop() };
     } else {
       return await dialog.showSaveDialog(mainWindow, options);
@@ -286,7 +286,7 @@ export const clearIPCChannels = () => {
  *
  * (This mock will be striped from the prod build by Webpack)
  */
-if (isTesting) {
+if (IS_TESTING) {
   createServer((req, res) => {
     const chunks: any[] = [];
 

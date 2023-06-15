@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import {
   DataBucket,
   Environment,
-  INDENT_SIZE,
   Route,
   RouteResponse
 } from '@mockoon/commons';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
+import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
@@ -22,6 +22,7 @@ export class Store {
     activeView: 'ENV_ROUTES',
     activeTab: 'RESPONSE',
     activeEnvironmentLogsTab: 'REQUEST',
+    activeTemplatesTab: 'LIST',
     activeEnvironmentLogsUUID: {},
     activeEnvironmentUUID: null,
     activeRouteUUID: null,
@@ -29,26 +30,7 @@ export class Store {
     activeRouteResponseUUID: null,
     environments: [],
     environmentsStatus: {},
-    bodyEditorConfig: {
-      options: {
-        fontSize: '1rem',
-        wrap: 'free',
-        showPrintMargin: false,
-        tooltipFollowsMouse: false,
-        useWorker: false,
-        tabSize: INDENT_SIZE,
-        enableBasicAutocompletion: [
-          {
-            getCompletions: (editor, session, pos, prefix, callback) => {
-              // note, won't fire if caret is at a word that does not have these letters
-              callback(null, []);
-            }
-          }
-        ]
-      },
-      mode: 'json',
-      theme: 'editor-theme'
-    },
+    bodyEditorConfig: defaultEditorOptions,
     duplicatedRoutes: {},
     environmentsLogs: {},
     toasts: [],
@@ -58,8 +40,12 @@ export class Store {
     },
     settings: null,
     duplicateEntityToAnotherEnvironment: { moving: false },
-    routesFilter: '',
-    databucketsFilter: ''
+    filters: {
+      routes: '',
+      databuckets: '',
+      templates: ''
+    },
+    user: null
   });
 
   constructor() {}
@@ -79,6 +65,18 @@ export class Store {
    */
   public get<T extends keyof StoreType>(path: T): StoreType[T] {
     return this.store$.value[path];
+  }
+
+  /**
+   * Select a filter
+   */
+  public selectFilter<T extends keyof StoreType['filters']>(
+    filter: T
+  ): Observable<string> {
+    return this.store$.asObservable().pipe(
+      map((store) => store?.filters[filter]),
+      distinctUntilChanged()
+    );
   }
 
   /**

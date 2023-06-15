@@ -16,7 +16,7 @@ import { SettingsDefault } from 'src/renderer/app/constants/settings-schema.cons
 import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/renderer/config';
 import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
 
 @Component({

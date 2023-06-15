@@ -1,26 +1,39 @@
 import { Injectable, NgZone } from '@angular/core';
-import { RouteType } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  filter,
+  map,
+  tap
+} from 'rxjs/operators';
+import { Logger } from 'src/renderer/app/classes/logger';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
+import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
-export class ApiService {
+export class ApiService extends Logger {
   constructor(
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
     private modalService: NgbModal,
     private importExportService: ImportExportService,
     private store: Store,
-    private zone: NgZone
-  ) {}
+    private zone: NgZone,
+    private userService: UserService,
+    protected toastsService: ToastsService
+  ) {
+    super('[SERVICE][API]', toastsService);
+  }
 
   public init(
     changelogModal: ChangelogModalComponent,
@@ -52,7 +65,7 @@ export class ApiService {
             this.environmentsService.closeEnvironment().subscribe();
             break;
           case 'NEW_ROUTE':
-            this.environmentsService.addRoute(RouteType.HTTP, 'root');
+            this.environmentsService.addHTTPRoute('root');
             break;
           case 'NEW_ROUTE_CLIPBOARD':
             this.environmentsService.addRouteFromClipboard().subscribe();
@@ -97,6 +110,21 @@ export class ApiService {
     MainAPI.receive('APP_CUSTOM_PROTOCOL', (action, parameters) => {
       this.zone.run(() => {
         switch (action) {
+          case 'auth':
+            this.userService
+              .authWithToken(parameters.token)
+              .pipe(
+                tap(() => {
+                  this.logMessage('info', 'LOGIN_SUCCESS');
+                }),
+                catchError(() => {
+                  this.logMessage('error', 'LOGIN_ERROR');
+
+                  return EMPTY;
+                })
+              )
+              .subscribe();
+            break;
           case 'load-environment':
           case 'load-export-data':
             this.environmentsService

@@ -2,7 +2,7 @@ import openAPI from '@apidevtools/swagger-parser';
 import {
   BuildEnvironment,
   BuildHeader,
-  BuildRoute,
+  BuildHTTPRoute,
   BuildRouteResponse,
   Environment,
   GetRouteResponseContentType,
@@ -11,8 +11,7 @@ import {
   Methods,
   RemoveLeadingSlash,
   Route,
-  RouteResponse,
-  RouteType
+  RouteResponse
 } from '@mockoon/commons';
 import { OpenAPI, OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { routesFromFolder } from './utils';
@@ -354,7 +353,7 @@ export class OpenAPIConverter {
           routeResponses[0].default = true;
 
           const newRoute: Route = {
-            ...BuildRoute(RouteType.HTTP, false),
+            ...BuildHTTPRoute(false),
             documentation: parsedRoute.summary || parsedRoute.description || '',
             method: routeMethod as Methods,
             endpoint: RemoveLeadingSlash(this.v2ParametersReplace(routePath)),

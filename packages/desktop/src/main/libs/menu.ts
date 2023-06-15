@@ -1,6 +1,6 @@
 import { app, BrowserWindow, Menu, shell } from 'electron';
 import { transports } from 'electron-log';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/main/config';
 
 export const createMenu = (mainWindow: BrowserWindow): Menu => {
   const menu: any = [

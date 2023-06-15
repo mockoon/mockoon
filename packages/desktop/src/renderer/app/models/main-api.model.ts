@@ -13,7 +13,6 @@ import {
   SaveDialogReturnValue
 } from 'electron';
 import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
-import { ProtocolAction } from 'src/shared/models/protocol.model';
 import {
   EnvironmentDescriptor,
   Settings
@@ -120,8 +119,14 @@ export interface MainAPIModel {
   receive(channel: 'APP_UPDATE_AVAILABLE', listener: () => void): void;
   receive(
     channel: 'APP_CUSTOM_PROTOCOL',
-    listener: (action: ProtocolAction, parameters: { url: string }) => void
+    listener:
+      | ((
+          action: 'load-environment' | 'load-export-data',
+          parameters: { url: string }
+        ) => void)
+      | ((action: 'auth', parameters: { token: string }) => void)
   ): void;
+
   receive(
     channel: 'APP_FILE_EXTERNAL_CHANGE',
     listener: (previousUUID: string, environmentPath: string) => void

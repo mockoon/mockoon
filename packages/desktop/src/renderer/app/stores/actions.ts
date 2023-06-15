@@ -18,17 +18,21 @@ import {
   EnvironmentLogsTabsNameType,
   EnvironmentStatusProperties,
   TabsNameType,
+  TemplatesTabsName,
   UIStateProperties,
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { DropAction } from 'src/renderer/app/models/ui.model';
+import { UserProperties } from 'src/renderer/app/models/user.model';
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 
 export const enum ActionTypes {
+  UPDATE_USER = 'UPDATE_USER',
   SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
   SET_ACTIVE_VIEW = 'SET_ACTIVE_VIEW',
   SET_ACTIVE_ENVIRONMENT_LOG_TAB = 'SET_ACTIVE_ENVIRONMENT_LOG_TAB',
+  SET_ACTIVE_TEMPLATES_TAB = 'SET_ACTIVE_TEMPLATES_TAB',
   SET_ACTIVE_ENVIRONMENT = 'SET_ACTIVE_ENVIRONMENT',
   NAVIGATE_ENVIRONMENTS = 'NAVIGATE_ENVIRONMENTS',
   REORGANIZE_ENVIRONMENTS = 'REORGANIZE_ENVIRONMENTS',
@@ -37,8 +41,7 @@ export const enum ActionTypes {
   UPDATE_ENVIRONMENT = 'UPDATE_ENVIRONMENT',
   RELOAD_ENVIRONMENT = 'RELOAD_ENVIRONMENT',
   UPDATE_ENVIRONMENT_STATUS = 'UPDATE_ENVIRONMENT_STATUS',
-  UPDATE_ENVIRONMENT_ROUTE_FILTER = 'UPDATE_ENVIRONMENT_ROUTE_FILTER',
-  UPDATE_ENVIRONMENT_DATABUCKET_FILTER = 'UPDATE_ENVIRONMENT_DATABUCKET_FILTER',
+  UPDATE_FILTER = 'UPDATE_FILTER',
   SET_ACTIVE_ROUTE = 'SET_ACTIVE_ROUTE',
   REORGANIZE_ROUTES = 'REORGANIZE_ROUTES',
   REORGANIZE_DATABUCKETS = 'REORGANIZE_DATABUCKETS',
@@ -73,6 +76,17 @@ export const enum ActionTypes {
 }
 
 /**
+ * Update the user information
+ *
+ * @param properties - user properties to update
+ */
+export const setUpdateUserAction = (properties: UserProperties) =>
+  ({
+    type: ActionTypes.UPDATE_USER,
+    properties
+  } as const);
+
+/**
  * Change the active route tab
  *
  * @param activeTab - id of the tab to set as active
@@ -104,6 +118,17 @@ export const setActiveEnvironmentLogTabAction = (
 ) =>
   ({
     type: ActionTypes.SET_ACTIVE_ENVIRONMENT_LOG_TAB,
+    activeTab
+  } as const);
+
+/**
+ * Change the active templates tab
+ *
+ * @param activeTab - id of the tab to set as active
+ */
+export const setActiveTemplatesTabAction = (activeTab: TemplatesTabsName) =>
+  ({
+    type: ActionTypes.SET_ACTIVE_TEMPLATES_TAB,
     activeTab
   } as const);
 
@@ -253,27 +278,18 @@ export const updateEnvironmentStatusAction = (
   } as const);
 
 /**
- * Update a route filter
+ * Update a filter
  *
- * @param properties - properties to update
+ * @param filterValue
  */
-export const updateEnvironmentroutesFilterAction = (routesFilter: string) =>
-  ({
-    type: ActionTypes.UPDATE_ENVIRONMENT_ROUTE_FILTER,
-    routesFilter
-  } as const);
-
-/**
- * Update a databucket filter
- *
- * @param databucketsFilter - databuckets filter to update
- */
-export const updateEnvironmentDatabucketsFilterAction = (
-  databucketsFilter: string
+export const updateFilterAction = (
+  filter: 'routes' | 'databuckets' | 'templates',
+  filterValue: string
 ) =>
   ({
-    type: ActionTypes.UPDATE_ENVIRONMENT_DATABUCKET_FILTER,
-    databucketsFilter
+    type: ActionTypes.UPDATE_FILTER,
+    filter,
+    filterValue
   } as const);
 
 /**
@@ -614,9 +630,11 @@ export const updateUIStateAction = (properties: UIStateProperties) =>
   } as const);
 
 export type Actions =
+  | ReturnType<typeof setUpdateUserAction>
   | ReturnType<typeof setActiveTabAction>
   | ReturnType<typeof setActiveViewAction>
   | ReturnType<typeof setActiveEnvironmentLogTabAction>
+  | ReturnType<typeof setActiveTemplatesTabAction>
   | ReturnType<typeof setActiveEnvironmentAction>
   | ReturnType<typeof navigateEnvironmentsAction>
   | ReturnType<typeof reorganizeEnvironmentsAction>
@@ -628,8 +646,7 @@ export type Actions =
   | ReturnType<typeof updateEnvironmentAction>
   | ReturnType<typeof reloadEnvironmentAction>
   | ReturnType<typeof updateEnvironmentStatusAction>
-  | ReturnType<typeof updateEnvironmentroutesFilterAction>
-  | ReturnType<typeof updateEnvironmentDatabucketsFilterAction>
+  | ReturnType<typeof updateFilterAction>
   | ReturnType<typeof setActiveRouteAction>
   | ReturnType<typeof addFolderAction>
   | ReturnType<typeof removeFolderAction>

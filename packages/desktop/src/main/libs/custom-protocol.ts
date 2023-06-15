@@ -3,7 +3,11 @@ import { info as logInfo } from 'electron-log';
 import { parse as qsParse } from 'querystring';
 import { ProtocolAction } from 'src/shared/models/protocol.model';
 
-const validActions: ProtocolAction[] = ['load-environment', 'load-export-data'];
+const validActions: ProtocolAction[] = [
+  'auth',
+  'load-environment',
+  'load-export-data'
+];
 
 export const registerProtocol = () => {
   /**
@@ -37,7 +41,7 @@ export const parseProtocolArgs = (
         return;
       }
 
-      logInfo(`[MAIN]Custom protocol received ${target}`);
+      logInfo(`[MAIN]Custom protocol received ${action}`);
 
       mainWindow.webContents.send('APP_CUSTOM_PROTOCOL', action, parameters);
     }
