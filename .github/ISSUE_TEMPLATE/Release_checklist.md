@@ -23,16 +23,19 @@ about: Checklist for releases (admin use only)
 
 - [ ] Create a `libs-v{x.x.x}` tag to release all the NPM libraries
 
+**Website (publish changelogs):**
+
+- [ ] Merge release branch on main (publish the changelogs)
+
 **API:**
 
 - [ ] Update desktop latest version in `/releases/desktop/stable.json`
 - [ ] Merge release branch on main
 
-**Website:**
+**Website (update desktop version):**
 
 > /!\ Requires above API repo deployment to get an updated desktop version
 
-- [ ] Merge release branch on main (publish the changelogs)
 - [ ] Re-run the deployment workflow to update the desktop release version
 
 **Distribution:**
