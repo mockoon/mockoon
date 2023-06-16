@@ -69,11 +69,11 @@ const getDisabledProxyCall: HttpCall = {
 };
 
 const externalCall: HttpCall = {
-  description: 'Call GET /about/ on Mockoon website',
+  description: 'Call GET /health on external API',
   protocol: 'https',
-  path: '/about/',
+  path: '/health',
   method: 'GET',
-  testedResponse: { status: 200, body: { contains: 'Meet the team' } }
+  testedResponse: { status: 200, body: { contains: 'ok' } }
 };
 
 describe('Proxy (with TLS and proxy headers)', () => {
@@ -82,6 +82,7 @@ describe('Proxy (with TLS and proxy headers)', () => {
     await environments.open('proxy-2');
     await environments.open('proxy-3');
     await environments.open('proxy-4');
+    await environments.open('proxy-5-external');
   });
 
   it('should add environment headers and proxy headers', async () => {
@@ -125,6 +126,8 @@ describe('Proxy (with TLS and proxy headers)', () => {
 
   it('should start environments', async () => {
     await environments.select(1);
+    await environments.start();
+    await environments.select(5);
     await environments.start();
     await environments.select(2);
     await environments.start();
