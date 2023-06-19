@@ -413,6 +413,20 @@ Mockoon is an open-source project built by volunteer maintainers. If you like ou
 <a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
+## Subscribe to Mockoon Pro
+
+With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
+
+- 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
+- 📃 Access to dozens of [ready to use JSON templates](https://mockoon.com/templates/).
+- 💬 Priority support and training.
+
+Upgrade today and take your API development to the next level.
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png?" width="250" alt="pro button" /></a>
+</div>
+
 ## Support/feedback
 
 You can discuss all things related to Mockoon's CLI, and ask for help, on the [official community](https://github.com/mockoon/mockoon/discussions). It's also a good place to discuss bugs and feature requests before opening an issue on this repository. For more chat-like discussions, you can also join our [Discord server](https://discord.gg/MutRpsY5gE).
@@ -425,7 +439,7 @@ Please also take a look at our [Code of Conduct](https://github.com/mockoon/mock
 
 ## Roadmap
 
-If you want to know what will be coming in the next release you can check the global [Roadmap](https://github.com/orgs/mockoon/projects/9).
+If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/).
 
 New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).
 

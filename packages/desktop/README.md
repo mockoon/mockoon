@@ -66,6 +66,20 @@ Linux:
 - [_Snap store_](https://snapcraft.io/mockoon): `snap install mockoon`.
 - [_AUR_](https://aur.archlinux.org/packages/mockoon-bin): `yay -S mockoon-bin`.
 
+## Subscribe to Mockoon Pro
+
+With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
+
+- 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
+- 📃 Access to dozens of [ready to use JSON templates](https://mockoon.com/templates/).
+- 💬 Priority support and training.
+
+Upgrade today and take your API development to the next level.
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png?" width="250" alt="pro button" /></a>
+</div>
+
 ## Documentation
 
 You will find the [documentation](https://mockoon.com/docs/latest) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
@@ -86,6 +100,6 @@ Please also take a look at our [Code of Conduct](https://github.com/mockoon/mock
 
 ## Roadmap
 
-If you want to know what will be coming in the next release you can check the global [Roadmap](https://github.com/orgs/mockoon/projects/9).
+If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/).
 
 New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).
