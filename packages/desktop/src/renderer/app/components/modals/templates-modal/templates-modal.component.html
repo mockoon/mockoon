@@ -24,7 +24,7 @@
               >Templates</a
             >
           </li>
-          <li>
+          <li class="nav-item">
             <a
               class="nav-link"
               [ngClass]="{
@@ -162,6 +162,7 @@
               (keydown.enter)="generate()"
             />
             <button
+              id="templates-generate-button"
               type="button"
               class="btn btn-secondary"
               (click)="generate()"
@@ -181,6 +182,7 @@
             </div>
           </div>
           <div
+            id="templates-generate-options"
             class="mb-4 d-flex align-items-center"
             [formGroup]="generateOptions"
           >
