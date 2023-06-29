@@ -6,7 +6,7 @@ import { SettingsService } from 'src/renderer/app/services/settings.service';
 @Injectable({ providedIn: 'root' })
 export class MigrationService extends Logger {
   constructor(private settingsService: SettingsService) {
-    super('[SERVICE][MIGRATION]');
+    super('[RENDERER][SERVICE][MIGRATION] ');
   }
 
   /**

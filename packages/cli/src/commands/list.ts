@@ -1,8 +1,8 @@
 import { Args, Command } from '@oclif/core';
 import { ProcessDescription } from 'pm2';
 import { format } from 'util';
+import { CLIMessages } from '../constants/cli-messages.constants';
 import { commonFlags } from '../constants/command.constants';
-import { Messages } from '../constants/messages.constants';
 import { ProcessManager } from '../libs/process-manager';
 import { logProcesses } from '../libs/utils';
 
@@ -46,8 +46,8 @@ export default class List extends Command {
       } else {
         this.log(
           args.id
-            ? format(Messages.CLI.NO_RUNNING_PROCESS_FOUND, args.id)
-            : Messages.CLI.NO_RUNNING_PROCESS
+            ? format(CLIMessages.NO_RUNNING_PROCESS_FOUND, args.id)
+            : CLIMessages.NO_RUNNING_PROCESS
         );
       }
     } catch (error: any) {

@@ -1,5 +1,4 @@
 import { app, BrowserWindow, Menu, shell } from 'electron';
-import { transports } from 'electron-log';
 import { Config } from 'src/main/config';
 
 export const createMenu = (mainWindow: BrowserWindow): Menu => {
@@ -320,9 +319,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       {
         label: 'Show logs folder',
         click: () => {
-          if (transports?.file?.getFile().path) {
-            shell.showItemInFolder(transports.file.getFile().path);
-          }
+          shell.showItemInFolder(app.getPath('logs'));
         }
       }
     ]

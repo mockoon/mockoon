@@ -24,7 +24,7 @@ export class DataService extends Logger {
     private store: Store,
     private migrationService: MigrationService
   ) {
-    super('[SERVICE][DATA]', toastsService);
+    super('[RENDERER][SERVICE][DATA] ', toastsService);
   }
 
   /**

@@ -5,9 +5,9 @@ import { render as mustacheRender } from 'mustache';
 import { parse as pathParse, ParsedPath, resolve as pathResolve } from 'path';
 import { format } from 'util';
 import { Config } from '../config';
+import { CLIMessages } from '../constants/cli-messages.constants';
 import { commonFlags, startFlags } from '../constants/command.constants';
 import { DOCKER_TEMPLATE } from '../constants/docker.constants';
-import { Messages } from '../constants/messages.constants';
 import { parseDataFiles, prepareEnvironment } from '../libs/data';
 import { portIsValid } from '../libs/utils';
 
@@ -60,7 +60,7 @@ export default class Dockerize extends Command {
 
         if (!portIsValid(environmentInfo.port)) {
           this.error(
-            format(Messages.CLI.PORT_IS_NOT_VALID, environmentInfo.port)
+            format(CLIMessages.PORT_IS_NOT_VALID, environmentInfo.port)
           );
         }
       }
@@ -79,9 +79,9 @@ export default class Dockerize extends Command {
 
       await fs.writeFile(resolvedDockerfilePath, dockerFile);
 
-      this.log(Messages.CLI.DOCKERIZE_SUCCESS, resolvedDockerfilePath);
+      this.log(CLIMessages.DOCKERIZE_SUCCESS, resolvedDockerfilePath);
       this.log(
-        Messages.CLI.DOCKERIZE_BUILD_COMMAND,
+        CLIMessages.DOCKERIZE_BUILD_COMMAND,
         dockerfilePath.dir,
         environmentsInfo.length > 1
           ? 'mockoon-mocks'
