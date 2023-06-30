@@ -150,7 +150,7 @@ export class EnvironmentsService extends Logger {
     protected toastService: ToastsService,
     private http: HttpClient
   ) {
-    super('[SERVICE][ENVIRONMENTS]', toastService);
+    super('[RENDERER][SERVICE][ENVIRONMENTS] ', toastService);
   }
 
   /**

@@ -1,55 +1,20 @@
 import { app, BrowserWindow } from 'electron';
 import {
-  catchErrors as logCatchErrors,
-  error as logError,
-  info as logInfo,
-  transports as logTransports
-} from 'electron-log';
-import { join as pathJoin, resolve as pathResolve } from 'path';
-import {
   parseProtocolArgs,
   registerProtocol
 } from 'src/main/libs/custom-protocol';
 import { clearIPCChannels, initIPCListeners } from 'src/main/libs/ipc';
+import { createMainLogger, logInfo } from 'src/main/libs/logs';
 import { initMainWindow, saveOpenUrlArgs } from 'src/main/libs/main-window';
+import { setPaths } from 'src/main/libs/paths';
 import { ServerInstance } from 'src/main/libs/server-management';
 import { checkForUpdate } from 'src/main/libs/update';
 
 declare const IS_TESTING: boolean;
 declare const IS_DEV: boolean;
 
-// setting log folder make sense for dev mode and tests only, and portable mode
-const setAppAndLogPath = (path: string) => {
-  app.setPath('userData', path);
-
-  logTransports.file.resolvePath = () => pathJoin(path, '/logs', 'main.log');
-};
-
-// set local data folder when in dev mode or running tests
-if (IS_TESTING || IS_DEV) {
-  setAppAndLogPath(pathResolve('./tmp'));
-}
-
-// set data folder when is portable mode
-const portableExecDir = process.env.PORTABLE_EXECUTABLE_DIR;
-if (portableExecDir) {
-  setAppAndLogPath(pathJoin(portableExecDir, 'mockoon-data'));
-}
-
-// set data folder when inside a snap package (default folder get wiped on snap updates)
-if (process.platform === 'linux' && process.env.SNAP) {
-  app.setPath('userData', pathJoin(process.env.SNAP_USER_COMMON));
-  app.setAppLogsPath();
-}
-
-// log uncaught errors
-logCatchErrors({
-  onError: (error: Error) => {
-    logError(error);
-
-    return false;
-  }
-});
+setPaths();
+createMainLogger();
 
 let mainWindow: BrowserWindow;
 
@@ -70,7 +35,7 @@ const initApp = () => {
 
 if (!appLock) {
   logInfo(
-    '[MAIN]An instance of the application is already running. Stopping process.'
+    '[MAIN] An instance of the application is already running. Stopping process.'
   );
   app.quit();
 } else {
