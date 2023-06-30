@@ -1158,7 +1158,7 @@ const documentationTopics: {
           await settings.open();
         },
         get highlightedTarget() {
-          return $('app-title-separator:nth-of-type(3)');
+          return $('app-title-separator[heading="Faker.js"]');
         },
         get screenshotTarget() {
           return modals.content;
