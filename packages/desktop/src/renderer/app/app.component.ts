@@ -202,6 +202,13 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
           );
         }
         break;
+      case 'move':
+        if (payload.subject === 'environment') {
+          this.environmentsService
+            .moveEnvironmentFileToFolder(payload.subjectUUID)
+            .subscribe();
+        }
+        break;
     }
   }
 

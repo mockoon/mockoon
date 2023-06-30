@@ -665,6 +665,22 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.REFRESH_ENVIRONMENT: {
+      const environments = state.environments.map((environment) => {
+        if (environment.uuid === action.environmentUUID) {
+          return { ...environment };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments
+      };
+      break;
+    }
+
     case ActionTypes.UPDATE_ENVIRONMENT_STATUS: {
       const newEnvironmentsStatus: EnvironmentsStatuses = {
         ...state.environmentsStatus
