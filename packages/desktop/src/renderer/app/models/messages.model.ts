@@ -6,7 +6,6 @@ export type MessageParams = {
   error?: Error & { code?: string };
 };
 export type MessageCodes =
-  // TODO maybe remove servererrorcodes if we don't report them
   | keyof typeof ServerErrorCodes
   | 'INITIALIZING_APP'
   | 'UNKNOWN_ERROR'
@@ -35,4 +34,5 @@ export type MessageCodes =
   | 'STORAGE_SAVE_ERROR'
   | 'MIGRATING_ENVIRONMENT'
   | 'LOGIN_ERROR'
-  | 'LOGIN_SUCCESS';
+  | 'LOGIN_SUCCESS'
+  | 'ENVIRONMENT_MOVED';

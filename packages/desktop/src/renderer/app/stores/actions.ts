@@ -40,6 +40,7 @@ export const enum ActionTypes {
   REMOVE_ENVIRONMENT = 'REMOVE_ENVIRONMENT',
   UPDATE_ENVIRONMENT = 'UPDATE_ENVIRONMENT',
   RELOAD_ENVIRONMENT = 'RELOAD_ENVIRONMENT',
+  REFRESH_ENVIRONMENT = 'REFRESH_ENVIRONMENT',
   UPDATE_ENVIRONMENT_STATUS = 'UPDATE_ENVIRONMENT_STATUS',
   UPDATE_FILTER = 'UPDATE_FILTER',
   SET_ACTIVE_ROUTE = 'SET_ACTIVE_ROUTE',
@@ -260,6 +261,17 @@ export const reloadEnvironmentAction = (
     type: ActionTypes.RELOAD_ENVIRONMENT,
     previousUUID,
     newEnvironment
+  } as const);
+
+/**
+ * Trigger a save of an environment without modyfing its state
+ *
+ * @param environmentUUID
+ */
+export const refreshEnvironmentAction = (environmentUUID: string) =>
+  ({
+    type: ActionTypes.REFRESH_ENVIRONMENT,
+    environmentUUID
   } as const);
 
 /**
@@ -645,6 +657,7 @@ export type Actions =
   | ReturnType<typeof removeEnvironmentAction>
   | ReturnType<typeof updateEnvironmentAction>
   | ReturnType<typeof reloadEnvironmentAction>
+  | ReturnType<typeof refreshEnvironmentAction>
   | ReturnType<typeof updateEnvironmentStatusAction>
   | ReturnType<typeof updateFilterAction>
   | ReturnType<typeof setActiveRouteAction>

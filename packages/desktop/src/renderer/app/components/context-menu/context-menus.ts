@@ -22,7 +22,7 @@ export const EnvironmentsContextMenu = (
     },
     label: 'Copy configuration to clipboard (JSON)',
     icon: 'assignment',
-    separator: true,
+    separator: false,
     disabled: false
   },
   {
@@ -31,9 +31,19 @@ export const EnvironmentsContextMenu = (
       action: 'showInFolder',
       subjectUUID: environmentUUID
     },
-    label: 'Show in folder',
+    label: 'Show data file in explorer/finder',
     icon: 'folder',
-    separator: true,
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'environment',
+      action: 'move',
+      subjectUUID: environmentUUID
+    },
+    label: 'Move data file to folder',
+    icon: 'folder_move',
+    separator: false,
     disabled: false
   },
   {

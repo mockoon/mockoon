@@ -78,6 +78,7 @@ export class SvgComponent {
     | 'note_add'
     | 'folder'
     | 'folder_open'
+    | 'folder_move'
     | 'history'
     | 'https'
     | 'info'
