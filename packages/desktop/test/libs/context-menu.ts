@@ -7,7 +7,8 @@ export enum ContextMenuEnvironmentActions {
   DUPLICATE = 1,
   COPY_JSON = 2,
   SHOW_FOLDER = 3,
-  CLOSE = 4
+  MOVE_FOLDER = 4,
+  CLOSE = 5
 }
 
 export enum ContextMenuDatabucketActions {
