@@ -196,7 +196,9 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
    * This IPC channel must be mocked when running e2e tests
    */
   ipcMain.handle('APP_SHOW_SAVE_DIALOG', async (event, options) => {
-    options.defaultPath = getDialogDefaultPath();
+    if (!options.defaultPath) {
+      options.defaultPath = getDialogDefaultPath();
+    }
 
     if (IS_TESTING) {
       return { filePath: dialogMocks.save.pop() };

@@ -284,5 +284,11 @@ export const DesktopMessages: {
     log: true,
     toastType: 'success',
     showToast: true
+  }),
+  ENVIRONMENT_MOVED: (messageParams) => ({
+    message: `Environment ${messageParams.environmentUUID} was moved to the new location.`,
+    log: true,
+    toastType: 'success',
+    showToast: true
   })
 };

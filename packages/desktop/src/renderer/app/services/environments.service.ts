@@ -94,6 +94,7 @@ import {
   duplicateRouteToAnotherEnvironmentAction,
   logRequestAction,
   navigateEnvironmentsAction,
+  refreshEnvironmentAction,
   reloadEnvironmentAction,
   removeDatabucketAction,
   removeEnvironmentAction,
@@ -1224,6 +1225,72 @@ export class EnvironmentsService extends Logger {
     ).path;
 
     MainAPI.send('APP_SHOW_FILE', environmentPath);
+  }
+
+  /**
+   * Move an environment file to a folder
+   *
+   * @param environmentUUID
+   */
+  public moveEnvironmentFileToFolder(environmentUUID: string) {
+    const settings = this.store.get('settings');
+    const environmentInfo = settings.environments.find(
+      (environment) => environment.uuid === environmentUUID
+    );
+
+    // prefill dialog with current environment folder and filename
+    return this.dialogsService
+      .showSaveDialog('Choose a folder', true, environmentInfo.path)
+      .pipe(
+        switchMap((filePath) => {
+          if (!filePath) {
+            return EMPTY;
+          }
+
+          if (
+            this.store
+              .get('settings')
+              .environments.find(
+                (environmentItem) => environmentItem.path === filePath
+              ) !== undefined
+          ) {
+            return throwError(() => 'ENVIRONMENT_FILE_IN_USE');
+          }
+
+          return zip(
+            of(filePath),
+            from(MainAPI.invoke('APP_GET_FILENAME', filePath))
+          );
+        }),
+        catchError((errorCode) => {
+          this.logMessage('error', errorCode as MessageCodes);
+
+          return EMPTY;
+        }),
+        tap(([filePath, filename]) => {
+          this.store.update(
+            updateSettingsAction({
+              environments: settings.environments.map((environment) => {
+                if (environment.uuid === environmentUUID) {
+                  return {
+                    uuid: environmentUUID,
+                    path: filePath
+                  };
+                }
+
+                return environment;
+              })
+            })
+          );
+
+          // trigger a save to update the environment file, otherwise file will be created only during next modification
+          this.store.update(refreshEnvironmentAction(environmentUUID));
+
+          this.logMessage('info', 'ENVIRONMENT_MOVED', {
+            environmentUUID
+          });
+        })
+      );
   }
 
   /**
