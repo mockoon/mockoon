@@ -94,9 +94,9 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.on('APP_LOGS', (event, data) => {
     if (data.type === 'info') {
-      logInfo(data.message);
+      logInfo(data.message, data.payload);
     } else if (data.type === 'error') {
-      logError(data.message);
+      logError(data.message, data.payload);
     }
   });
 

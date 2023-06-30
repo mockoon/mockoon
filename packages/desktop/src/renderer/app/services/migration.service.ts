@@ -19,6 +19,7 @@ export class MigrationService extends Logger {
     if (migrationStartId > -1) {
       this.logMessage('info', 'MIGRATING_ENVIRONMENT', {
         environmentUUID: environment.uuid,
+        environmentName: environment.name,
         migrationStartId
       });
 

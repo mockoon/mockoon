@@ -44,7 +44,10 @@ export class Logger {
     const message = DesktopMessages[messageCode](messageParams);
 
     if (message.log) {
-      this[level](`${message.loggerMessage || message.message}`);
+      this[level](
+        `${message.loggerMessage || message.message}`,
+        message.logPayload
+      );
     }
 
     if (this.toastService && message.showToast) {
@@ -57,10 +60,11 @@ export class Logger {
    *
    * @param message
    */
-  private info(message: string) {
+  private info(message: string, payload: any) {
     MainAPI.send('APP_LOGS', {
       type: 'info',
-      message: this.buildMessage(message)
+      message: this.buildMessage(message),
+      payload
     });
   }
 
@@ -69,10 +73,11 @@ export class Logger {
    *
    * @param message
    */
-  private error(message: string) {
+  private error(message: string, payload: any) {
     MainAPI.send('APP_LOGS', {
       type: 'error',
-      message: this.buildMessage(message)
+      message: this.buildMessage(message),
+      payload
     });
   }
 

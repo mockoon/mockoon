@@ -11,6 +11,7 @@ export const DesktopMessages: {
         message: string;
         // should send log or not
         log: boolean;
+        logPayload?: any;
         // override logging message
         loggerMessage?: string;
         // should display a toast or not
@@ -21,6 +22,7 @@ export const DesktopMessages: {
         message: string;
         // should send log or not
         log: boolean;
+        logPayload?: any;
         // override logging message
         loggerMessage?: string;
         // should display a toast or not
@@ -122,75 +124,63 @@ export const DesktopMessages: {
     showToast: true,
     toastType: 'error'
   }),
-  OPENAPI_EXPORT: (messageParams) => ({
-    message: `Exporting environment ${messageParams.environmentUUID} to OpenAPI format`,
-    log: true,
-    showToast: false
-  }),
   OPENAPI_EXPORT_SUCCESS: (messageParams) => ({
     message: `Environment ${messageParams.environmentName} has been successfully exported`,
-    log: true,
+    log: false,
     showToast: true,
     toastType: 'success'
   }),
   OPENAPI_EXPORT_ERROR: (messageParams) => ({
     message: `Error while exporting environment to OpenAPI format: ${messageParams.error.message}`,
-    loggerMessage: `Error while exporting environment ${messageParams.environmentUUID} to OpenAPI format: ${messageParams.error.message}`,
     log: true,
+    logPayload: {
+      environmentUUID: messageParams.environmentUUID,
+      environmentName: messageParams.environmentName
+    },
     showToast: true,
     toastType: 'error'
-  }),
-  OPENAPI_IMPORT: (messageParams) => ({
-    message: `Importing environment ${messageParams.filePath} from OpenAPI format`,
-    log: true,
-    showToast: false
   }),
   OPENAPI_IMPORT_SUCCESS: (messageParams) => ({
     message: `Environment "${messageParams.environmentName}" has been successfully imported`,
     showToast: true,
-    log: true,
+    log: false,
     toastType: 'success'
   }),
   OPENAPI_IMPORT_ERROR: (messageParams) => ({
     message: `Error while importing environment from OpenAPI format: ${messageParams.error.message}`,
-    loggerMessage: `Error while importing environment from OpenAPI format: ${messageParams.error.message}`,
     showToast: true,
     log: true,
     toastType: 'error'
   }),
-  COPY_ENVIRONMENT_CLIPBOARD: (messageParams) => ({
-    message: `Copying environment ${messageParams.environmentUUID} to the clipboard`,
-    log: true,
-    showToast: false
-  }),
-  COPY_ENVIRONMENT_CLIPBOARD_SUCCESS: (messageParams) => ({
+  COPY_ENVIRONMENT_CLIPBOARD_SUCCESS: () => ({
     message: 'Environment has been successfully copied to the clipboard',
-    loggerMessage: `Environment ${messageParams.environmentUUID} has been successfully copied to the clipboard`,
     showToast: true,
-    log: true,
+    log: false,
     toastType: 'success'
   }),
   COPY_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
     message: `An error occured while copying the environment to the clipboard: ${messageParams.error.message}`,
     showToast: true,
     log: true,
+    logPayload: { environmentUUID: messageParams.environmentUUID },
     toastType: 'error'
   }),
+  // TODO ??
   COPY_ROUTE_CLIPBOARD: (messageParams) => ({
     message: `Copying route ${messageParams.routeUUID} to the clipboard`,
     log: true,
     showToast: false
   }),
-  COPY_ROUTE_CLIPBOARD_SUCCESS: (messageParams) => ({
+  COPY_ROUTE_CLIPBOARD_SUCCESS: () => ({
     message: 'Route has been successfully copied to the clipboard',
-    loggerMessage: `Route ${messageParams.routeUUID} has been successfully copied to the clipboard`,
-    log: true,
+    log: false,
     showToast: true,
     toastType: 'success'
   }),
   COPY_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
     message: `An error occured while copying the route to the clipboard: ${messageParams.error.message}`,
     log: true,
+    logPayload: { routeUUID: messageParams.routeUUID },
     showToast: true,
     toastType: 'error'
   }),
@@ -219,20 +209,23 @@ export const DesktopMessages: {
   }),
   ENVIRONMENT_FILE_IN_USE: () => ({
     message: 'This environment file is already in use',
-    log: true,
+    log: false,
     showToast: true,
     toastType: 'error'
   }),
   FIRST_LOAD_DEMO_ENVIRONMENT: () => ({
-    message: 'First load, adding demo environment',
+    message: 'First load, creating demo environment',
     log: true,
     showToast: false
   }),
   ENVIRONMENT_MORE_RECENT_VERSION: (messageParams) => ({
     message: `Environment "${
-      messageParams.name || messageParams.uuid
+      messageParams.environmentName || messageParams.environmentUUID
     }" was created with a more recent version of Mockoon. Please upgrade.`,
     log: true,
+    loggerMessage:
+      'Environment was created with a more recent version of Mockoon. Please upgrade.',
+    logPayload: messageParams,
     showToast: true,
     toastType: 'warning'
   }),
@@ -244,9 +237,12 @@ export const DesktopMessages: {
   }),
   ENVIRONMENT_MIGRATION_FAILED: (messageParams) => ({
     message: `Migration of environment "${
-      messageParams.name || messageParams.uuid
+      messageParams.environmentName || messageParams.environmentUUID
     }" failed. The environment was automatically repaired and migrated to the latest version.`,
     log: true,
+    loggerMessage:
+      'Migration of environment failed. The environment was automatically repaired and migrated to the latest version.',
+    logPayload: messageParams,
     showToast: true,
     toastType: 'warning'
   }),
@@ -271,6 +267,11 @@ export const DesktopMessages: {
   MIGRATING_ENVIRONMENT: (messageParams) => ({
     message: `Migrating environment ${messageParams.environmentUUID} starting at ${messageParams.migrationStartId}`,
     log: true,
+    loggerMessage: `Migrating environment starting at ${messageParams.migrationStartId}`,
+    logPayload: {
+      environmentUUID: messageParams.environmentUUID,
+      environmentName: messageParams.environmentName
+    },
     showToast: false
   }),
   LOGIN_ERROR: () => ({
@@ -288,6 +289,8 @@ export const DesktopMessages: {
   ENVIRONMENT_MOVED: (messageParams) => ({
     message: `Environment ${messageParams.environmentUUID} was moved to the new location.`,
     log: true,
+    loggerMessage: 'Environment was moved to the new location.',
+    logPayload: messageParams,
     toastType: 'success',
     showToast: true
   })

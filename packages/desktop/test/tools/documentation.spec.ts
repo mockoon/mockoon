@@ -1214,6 +1214,26 @@ const documentationTopics: {
   },
   {
     enabled: true,
+    folder: 'mockoon-data-files/data-storage-location',
+    screenshots: [
+      {
+        tasks: async () => {
+          await contextMenu.close();
+          await contextMenu.open('environments', 1);
+        },
+        get highlightedTarget() {
+          return contextMenu.getItem(4);
+        },
+        highlight: true,
+        screenshotPosition: { top: 0, left: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { right: 150, bottom: 150 },
+        fileName: 'environment-move-to-folder.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
     folder: 'mockoon-data-files/sharing-mock-api-files',
     screenshots: [
       {
