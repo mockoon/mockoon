@@ -1,6 +1,9 @@
 import * as minimist from 'minimist';
 import { createServer } from './server';
 
+/**
+ * Script used by PM2 to start/restart a mock server
+ */
 const argv = minimist<{
   data: string;
   environmentDir: string;

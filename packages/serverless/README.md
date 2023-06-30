@@ -123,7 +123,65 @@ or
 
 After deploying to Netlify, any request starting with `/api/*` (e.g. `https://APP_NAME.netlify.app/api/endpoint`) would match the corresponding route (e.g. `/api/endpoint`) in your Mockoon config. You can also test locally using the Netlify CLI.
 
-## Limitations
+## Logging
+
+Mockoon's Serverless package logs all server events (start, stop, proxy creation, transactions, etc.) to the console. You can also enable full transaction logging to log all requests and responses (see below).
+
+### Transaction logging
+
+When using the `logTransaction` option, logs will contain the full transaction (request and response) with the same information you can see in the desktop application "Logs" tab.
+
+Example:
+
+```json
+{
+  "app": "mockoon-server",
+  "level": "info",
+  "message": "Transaction recorded",
+  "timestamp": "YYYY-MM-DDTHH:mm:ss.sssZ",
+  "environmentName": "Demo API",
+  "environmentUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "requestMethod": "GET",
+  "requestPath": "/test",
+  "requestProxied": false,
+  "responseStatus": 200,
+  "transaction": {
+    "proxied": false,
+    "request": {
+      "body": "{}",
+      "headers": [{ "key": "accept", "value": "*/*" }],
+      "method": "GET",
+      "params": [],
+      "query": "",
+      "queryParams": {},
+      "route": "/test",
+      "urlPath": "/test"
+    },
+    "response": {
+      "body": "{}",
+      "headers": [
+        { "key": "content-type", "value": "application/json; charset=utf-8" }
+      ],
+      "statusCode": 200,
+      "statusMessage": "OK"
+    },
+    "routeResponseUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "routeUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  }
+}
+```
+
+To enable full transaction logging, set `logTransaction` to `true` in the constructor options:
+
+```javascript
+const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
+  logTransaction: true
+});
+```
+
+The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L33-L53).
+
+## Serverless package limitations
 
 Due to the stateless nature of cloud functions, some of Mockoon's features will not work:
 

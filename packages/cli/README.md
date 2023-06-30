@@ -354,38 +354,44 @@ When running the CLI with the [`--daemon-off` flag](#mockoon-cli-start), logs ar
 
 ### Transaction logging
 
-When using the `--log-transaction` flag, logs will contain the full transaction (request and response) with the same information you can see in the desktop application.
+When using the `--log-transaction` flag, logs will contain the full transaction (request and response) with the same information you can see in the desktop application "Logs" tab.
 
 Example:
 
 ```json
 {
+  "app": "mockoon-server",
   "level": "info",
-  "message": "GET /api/test | 200",
-  "timestamp": "2021-12-08T14:50:05.004Z",
+  "message": "Transaction recorded",
+  "timestamp": "YYYY-MM-DDTHH:mm:ss.sssZ",
+  "environmentName": "Demo API",
+  "environmentUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "requestMethod": "GET",
+  "requestPath": "/test",
+  "requestProxied": false,
+  "responseStatus": 200,
   "transaction": {
     "proxied": false,
     "request": {
-      "body": "",
-      "headers": [
-        { "key": "accept", "value": "application/json, text/plain, */*" }
-      ],
+      "body": "{}",
+      "headers": [{ "key": "accept", "value": "*/*" }],
       "method": "GET",
       "params": [],
-      "queryParams": [],
-      "route": "/api/test",
-      "urlPath": "/api/test"
+      "query": "",
+      "queryParams": {},
+      "route": "/test",
+      "urlPath": "/test"
     },
     "response": {
-      "body": "response",
+      "body": "{}",
       "headers": [
-        { "key": "content-length", "value": "8" },
         { "key": "content-type", "value": "application/json; charset=utf-8" }
       ],
-      "statusCode": 200
+      "statusCode": 200,
+      "statusMessage": "OK"
     },
-    "routeResponseUUID": "b1ba948f-82b3-4cc2-8067-692e562319ab",
-    "routeUUID": "304a761f-351d-415a-bf59-6e927322ae63"
+    "routeResponseUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "routeUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
   }
 }
 ```

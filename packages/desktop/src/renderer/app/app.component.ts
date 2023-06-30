@@ -61,7 +61,7 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
     private appQuitService: AppQuitService,
     private userService: UserService
   ) {
-    super('[COMPONENT][APP]', toastService);
+    super('[RENDERER][COMPONENT][APP] ', toastService);
     this.settingsService.monitorSettings().subscribe();
     this.settingsService.loadSettings().subscribe();
     this.settingsService.saveSettings().subscribe();

@@ -1,8 +1,9 @@
 import { Environment, Environments, Transaction } from '@mockoon/commons';
-import { MockoonServer } from '@mockoon/commons-server';
-import { info as logInfo } from 'electron-log';
+import { listenServerEvents, MockoonServer } from '@mockoon/commons-server';
 import { dirname } from 'path';
+import { mainLogger } from 'src/main/libs/logs';
 import { getMainWindow } from 'src/main/libs/main-window';
+import { getSettings } from 'src/main/libs/settings';
 
 export class ServerInstance {
   private static instances: { [key in string]: ServerInstance } = {};
@@ -31,9 +32,6 @@ export class ServerInstance {
 
   public static stopAll() {
     Object.keys(ServerInstance.instances).forEach((runningEnvironmentUUID) => {
-      logInfo(
-        `[SERVICE][SERVER]Server ${runningEnvironmentUUID} has been stopped`
-      );
       this.stop(runningEnvironmentUUID);
     });
   }
@@ -45,6 +43,13 @@ export class ServerInstance {
       environmentDirectory,
       refreshEnvironmentFunction: () => this.environment
     });
+
+    listenServerEvents(
+      server,
+      this.environment,
+      mainLogger(),
+      getSettings().logTransactions
+    );
 
     server.once('started', () => {
       this.mockoonServer = server;
@@ -69,16 +74,6 @@ export class ServerInstance {
         );
 
         return;
-      }
-    });
-
-    server.once('creating-proxy', () => {
-      if (!mainWindow.isDestroyed()) {
-        mainWindow.webContents.send(
-          'APP_SERVER_EVENT',
-          this.environment.uuid,
-          'creating-proxy'
-        );
       }
     });
 

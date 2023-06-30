@@ -99,7 +99,7 @@ export const UnwrapLegacyExport = (exportData: LegacyExport): Environments =>
  * Clone an object using JSON.stringify
  * /!\ Suitable for Environment, Route, etc but not for complex objects containing Map, Set, etc
  */
-export const CloneObject = (objectToClone: any) =>
+export const CloneObject = <T>(objectToClone: T): T =>
   JSON.parse(JSON.stringify(objectToClone));
 
 /**
