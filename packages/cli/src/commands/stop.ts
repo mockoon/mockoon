@@ -1,8 +1,8 @@
 import { Args, Command } from '@oclif/core';
 import * as inquirer from 'inquirer';
 import { ProcessDescription } from 'pm2';
+import { CLIMessages } from '../constants/cli-messages.constants';
 import { commonFlags } from '../constants/command.constants';
-import { Messages } from '../constants/messages.constants';
 import { cleanDataFiles } from '../libs/data';
 import { ProcessListManager, ProcessManager } from '../libs/process-manager';
 import { logProcesses } from '../libs/utils';
@@ -35,7 +35,7 @@ export default class Stop extends Command {
     const processes: ProcessDescription[] = await ProcessManager.list();
 
     if (processes.length === 0) {
-      this.log(Messages.CLI.NO_RUNNING_PROCESS);
+      this.log(CLIMessages.NO_RUNNING_PROCESS);
 
       ProcessManager.disconnect();
 
@@ -83,7 +83,7 @@ export default class Stop extends Command {
         stoppedProcesses.forEach((stoppedProcess) => {
           if (stoppedProcess !== undefined) {
             this.log(
-              Messages.CLI.PROCESS_STOPPED,
+              CLIMessages.PROCESS_STOPPED,
               stoppedProcess.pm_id,
               stoppedProcess.name
             );
@@ -94,7 +94,7 @@ export default class Stop extends Command {
       } catch (error: any) {
         if (error.message === 'process name not found' && args.id === 'all') {
           // if 'all' was specified and no process was stopped, do not list and immediately exit
-          this.log(Messages.CLI.NO_RUNNING_PROCESS);
+          this.log(CLIMessages.NO_RUNNING_PROCESS);
         } else {
           this.error(error.message, { exit: false });
           relistProcesses = true;
@@ -108,10 +108,10 @@ export default class Stop extends Command {
 
       if (relistProcesses) {
         if (runningProcesses.length) {
-          this.log(Messages.CLI.RUNNING_PROCESSES);
+          this.log(CLIMessages.RUNNING_PROCESSES);
           logProcesses(runningProcesses);
         } else {
-          this.log(Messages.CLI.NO_RUNNING_PROCESS);
+          this.log(CLIMessages.NO_RUNNING_PROCESS);
         }
       }
 

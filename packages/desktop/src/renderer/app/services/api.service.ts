@@ -32,7 +32,7 @@ export class ApiService extends Logger {
     private userService: UserService,
     protected toastsService: ToastsService
   ) {
-    super('[SERVICE][API]', toastsService);
+    super('[RENDERER][SERVICE][API] ', toastsService);
   }
 
   public init(

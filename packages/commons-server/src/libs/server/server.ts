@@ -1,7 +1,6 @@
 import {
   BINARY_BODY,
   BodyTypes,
-  CommonsTexts,
   CORSHeaders,
   Environment,
   GetContentType,
@@ -9,7 +8,6 @@ import {
   Header,
   IsValidURL,
   MimeTypesWithTemplating,
-  MockoonServerOptions,
   ProcessedDatabucket,
   Route,
   RouteResponse,
@@ -36,8 +34,10 @@ import { basename } from 'path';
 import { parse as qsParse } from 'qs';
 import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
+import { format } from 'util';
 import { xml2js } from 'xml-js';
 import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
+import { ServerMessages } from '../../constants/server-messages.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
@@ -63,7 +63,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
   constructor(
     private environment: Environment,
-    private options: MockoonServerOptions = {}
+    private options: {
+      /**
+       *    Directory where to find the environment file.
+       *
+       */
+      environmentDirectory?: string;
+
+      /**
+       * Method used by the library to refresh the environment information
+       */
+      refreshEnvironmentFunction?: (
+        environmentUUID: string
+      ) => Environment | null;
+    } = {}
   ) {
     super();
   }
@@ -123,12 +136,18 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.emit('error', errorCode, error);
     });
 
-    this.serverInstance.listen(
-      { port: this.environment.port, host: this.environment.hostname },
-      () => {
-        this.emit('started');
+    try {
+      this.serverInstance.listen(
+        { port: this.environment.port, host: this.environment.hostname },
+        () => {
+          this.emit('started');
+        }
+      );
+    } catch (error: any) {
+      if (error.code === 'ERR_SOCKET_BAD_PORT') {
+        this.emit('error', ServerErrorCodes.PORT_INVALID, error);
       }
-    );
+    }
   }
 
   /**
@@ -387,7 +406,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR_REGEX;
           }
 
-          this.emit('error', errorCode, error);
+          this.emit('error', errorCode, error, {
+            routePath: declaredRoute.endpoint,
+            routeUUID: declaredRoute.uuid
+          });
         }
       }
     });
@@ -443,11 +465,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       const currentRoute = this.getRefreshedRoute(route);
 
       if (!currentRoute) {
-        this.sendError(
-          response,
-          CommonsTexts.EN.MESSAGES.ROUTE_NO_LONGER_EXISTS,
-          404
-        );
+        this.emit('error', ServerErrorCodes.ROUTE_NO_LONGER_EXISTS, null, {
+          routePath: route.endpoint,
+          routeUUID: route.uuid
+        });
+
+        this.sendError(response, ServerMessages.ROUTE_NO_LONGER_EXISTS, 404);
 
         return;
       }
@@ -485,6 +508,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           enabledRouteResponse.filePath
         ) {
           this.sendFile(
+            route,
             enabledRouteResponse,
             routeContentType,
             request,
@@ -541,6 +565,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           this.serveBody(
             content || '',
+            route,
             enabledRouteResponse,
             request,
             response,
@@ -560,6 +585,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   private serveBody(
     content: string,
+    route: Route,
     routeResponse: RouteResponse,
     request: Request,
     response: Response,
@@ -583,11 +609,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       response.send(content);
     } catch (error: any) {
-      this.emit('error', ServerErrorCodes.ROUTE_SERVING_ERROR, error);
+      this.emit('error', ServerErrorCodes.ROUTE_SERVING_ERROR, error, {
+        routePath: route.endpoint,
+        routeUUID: route.uuid
+      });
 
       this.sendError(
         response,
-        `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}: ${error.message}`
+        format(ServerMessages.ROUTE_SERVING_ERROR, error.message)
       );
     }
   }
@@ -602,16 +631,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param response
    */
   private sendFile(
+    route: Route,
     routeResponse: RouteResponse,
     routeContentType: string | null,
     request: Request,
     response: Response
   ) {
     const fileServingError = (error) => {
-      this.emit('error', ServerErrorCodes.ROUTE_FILE_SERVING_ERROR, error);
+      this.emit('error', ServerErrorCodes.ROUTE_FILE_SERVING_ERROR, error, {
+        routePath: route.endpoint,
+        routeUUID: route.uuid
+      });
       this.sendError(
         response,
-        `${CommonsTexts.EN.MESSAGES.ROUTE_FILE_SERVING_ERROR}: ${error.message}`
+        format(ServerMessages.ROUTE_FILE_SERVING_ERROR, error.message)
       );
     };
 
@@ -619,7 +652,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       if (routeResponse.fallbackTo404) {
         response.status(404);
         const content = routeResponse.body ? routeResponse.body : '';
-        this.serveBody(content, routeResponse, request, response);
+        this.serveBody(content, route, routeResponse, request, response);
       } else {
         fileServingError(error);
       }
@@ -704,11 +737,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
       }
     } catch (error: any) {
-      this.emit('error', ServerErrorCodes.ROUTE_SERVING_ERROR, error);
+      this.emit('error', ServerErrorCodes.ROUTE_SERVING_ERROR, error, {
+        routePath: route.endpoint,
+        routeUUID: route.uuid
+      });
 
       this.sendError(
         response,
-        `${CommonsTexts.EN.MESSAGES.ROUTE_SERVING_ERROR}: ${error.message}`
+        format(ServerMessages.ROUTE_SERVING_ERROR, error.message)
       );
     }
   }
@@ -758,7 +794,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           target: this.environment.proxyHost,
           secure: false,
           changeOrigin: true,
-          logProvider: this.options.logProvider,
+          logLevel: 'silent',
           pathRewrite: (path, req) => {
             if (
               this.environment.proxyRemovePrefix === true &&
@@ -807,9 +843,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           },
           onError: (error, request, response) => {
             this.emit('error', ServerErrorCodes.PROXY_ERROR, error);
+
             this.sendError(
               response as Response,
-              `${CommonsTexts.EN.MESSAGES.PROXY_ERROR}${this.environment.proxyHost}${request.url}: ${error}`,
+              `${format(
+                ServerMessages.PROXY_ERROR,
+                this.environment.proxyHost
+              )} ${request.url}: ${error}`,
               504
             );
           }
@@ -922,9 +962,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           this.processedDatabuckets,
           request
         );
-      } catch (error) {
-        const errorMessage = CommonsTexts.EN.MESSAGES.HEADER_PARSING_ERROR;
-        parsedHeaderValue = errorMessage;
+      } catch (error: any) {
+        this.emit('error', ServerErrorCodes.HEADER_PARSING_ERROR, error, {
+          headerKey: header.key,
+          headerValue: header.value
+        });
+
+        parsedHeaderValue = ServerMessages.HEADER_PARSING_ERROR_LIGHT;
       }
     }
 

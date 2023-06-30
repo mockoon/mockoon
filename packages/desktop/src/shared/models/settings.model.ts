@@ -25,4 +25,5 @@ export type Settings = {
   fileWatcherEnabled: FileWatcherOptions;
   dialogWorkingDir: string;
   startEnvironmentsOnLoad: boolean;
+  logTransactions: boolean;
 };

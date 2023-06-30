@@ -18,7 +18,7 @@ export class StorageService extends Logger {
   private saving$ = new BehaviorSubject<boolean>(false);
 
   constructor(protected toastsService: ToastsService) {
-    super('[SERVICE][STORAGE]', toastsService);
+    super('[RENDERER][SERVICE][STORAGE] ', toastsService);
   }
 
   /**

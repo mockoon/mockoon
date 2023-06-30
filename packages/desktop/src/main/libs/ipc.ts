@@ -13,7 +13,6 @@ import {
   shell
 } from 'electron';
 import { getDataPath } from 'electron-json-storage';
-import { error as logError, info as logInfo } from 'electron-log';
 import { promises as fsPromises } from 'fs';
 import { createServer } from 'http';
 import { lookup as mimeTypeLookup } from 'mime-types';
@@ -27,6 +26,7 @@ import {
   IPCMainListenerChannels
 } from 'src/main/constants/ipc.constants';
 import { migrateData } from 'src/main/libs/data-migration';
+import { logError, logInfo } from 'src/main/libs/logs';
 import {
   toggleEnvironmentMenuItems,
   toggleRouteMenuItems

@@ -1,24 +1,4 @@
-import { Environment } from './environment.model';
 import { Header, Methods } from './route.model';
-
-export interface MockoonServerOptions {
-  environmentDirectory?: string;
-  /**
-   * Method used by the library to refresh the environment information
-   */
-  refreshEnvironmentFunction?: (environmentUUID: string) => Environment | null;
-
-  /**
-   * Allow passing a custom log provider
-   */
-  logProvider?: () => {
-    log: (...args: any[]) => void;
-    debug?: (...args: any[]) => void;
-    info?: (...args: any[]) => void;
-    warn?: (...args: any[]) => void;
-    error?: (...args: any[]) => void;
-  };
-}
 
 export type ProcessedDatabucket = {
   id: string;
