@@ -806,7 +806,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
           body: 'body',
           headers: {
             'test-header':
-              '-- Parsing error. Check logs for more information --'
+              '-- Header parsing error, see logs for more details --'
           }
         }
       },

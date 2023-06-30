@@ -6,12 +6,10 @@ export type MessageParams = {
   error?: Error & { code?: string };
 };
 export type MessageCodes =
+  // TODO maybe remove servererrorcodes if we don't report them
   | keyof typeof ServerErrorCodes
   | 'INITIALIZING_APP'
   | 'UNKNOWN_ERROR'
-  | 'ENVIRONMENT_STOPPED'
-  | 'ENVIRONMENT_STARTED'
-  | 'CREATING_PROXY'
   | 'OPENAPI_EXPORT'
   | 'OPENAPI_EXPORT_SUCCESS'
   | 'OPENAPI_EXPORT_ERROR'

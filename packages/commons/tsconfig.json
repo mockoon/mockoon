@@ -11,5 +11,9 @@
     "typeRoots": ["node_modules/@types"],
     "importHelpers": false
   },
-  "include": ["./src", "./test"]
+  "include": [
+    "./src",
+    "./test",
+    "../commons-server/src/constants/common-messages.constants.ts"
+  ]
 }

@@ -1,10 +1,17 @@
 import { Environment } from '@mockoon/commons';
-import { MockoonServer } from '@mockoon/commons-server';
+import {
+  createLoggerInstance,
+  listenServerEvents,
+  MockoonServer
+} from '@mockoon/commons-server';
 import { RequestListener } from 'http';
 import ServerlessHttp from 'serverless-http';
 
 export class MockoonServerless {
-  constructor(private environment: Environment) {
+  constructor(
+    private environment: Environment,
+    private options: { logTransaction: boolean } = { logTransaction: false }
+  ) {
     if (!environment) {
       throw new Error('No environment data provided');
     }
@@ -17,7 +24,14 @@ export class MockoonServerless {
    * @returns
    */
   public requestListener(): RequestListener {
+    const logger = createLoggerInstance();
     const server = new MockoonServer(this.environment);
+    listenServerEvents(
+      server,
+      this.environment,
+      logger,
+      this.options.logTransaction
+    );
 
     return server.createRequestListener();
   }

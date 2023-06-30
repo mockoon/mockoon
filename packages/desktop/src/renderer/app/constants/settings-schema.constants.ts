@@ -23,7 +23,8 @@ export const SettingsDefault: Settings = {
   storagePrettyPrint: true,
   fileWatcherEnabled: FileWatcherOptions.DISABLED,
   dialogWorkingDir: '',
-  startEnvironmentsOnLoad: false
+  startEnvironmentsOnLoad: false,
+  logTransactions: false
 };
 
 export const SettingsSchema = Joi.object<Settings & PreMigrationSettings, true>(
@@ -92,6 +93,9 @@ export const SettingsSchema = Joi.object<Settings & PreMigrationSettings, true>(
       .required(),
     startEnvironmentsOnLoad: Joi.boolean()
       .failover(SettingsDefault.startEnvironmentsOnLoad)
+      .required(),
+    logTransactions: Joi.boolean()
+      .failover(SettingsDefault.logTransactions)
       .required()
   }
 )

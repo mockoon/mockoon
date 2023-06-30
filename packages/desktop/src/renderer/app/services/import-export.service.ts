@@ -18,7 +18,7 @@ export class ImportExportService extends Logger {
     private environmentsService: EnvironmentsService,
     private dataService: DataService
   ) {
-    super('[SERVICE][IMPORT-EXPORT]', toastService);
+    super('[RENDERER][SERVICE][IMPORT-EXPORT] ', toastService);
   }
 
   /**

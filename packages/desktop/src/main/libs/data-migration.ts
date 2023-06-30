@@ -4,13 +4,13 @@ import {
   getDataPath,
   set as storageSet
 } from 'electron-json-storage';
-import { info as logInfo } from 'electron-log';
 import { sep as pathSeparator } from 'path';
+import { logInfo } from 'src/main/libs/logs';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 import { promisify } from 'util';
 
 export const migrateData = async () => {
-  logInfo('[MAIN][MIGRATION]Migrating data to new storage system');
+  logInfo('[MAIN][MIGRATION] Migrating data to new storage system');
 
   const environmentsList: EnvironmentDescriptor[] = [];
 
@@ -33,7 +33,7 @@ export const migrateData = async () => {
     await promisify(storageSet)(environmentName, environment);
   }
 
-  logInfo('[MAIN][MIGRATION]Migration to new storage system done');
+  logInfo('[MAIN][MIGRATION] Migration to new storage system done');
 
   return environmentsList;
 };

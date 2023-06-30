@@ -5,8 +5,8 @@ import { join, resolve } from 'path';
 import { Proc, ProcessDescription } from 'pm2';
 import { format } from 'util';
 import { Config } from '../config';
+import { CLIMessages } from '../constants/cli-messages.constants';
 import { commonFlags, startFlags } from '../constants/command.constants';
-import { Messages } from '../constants/messages.constants';
 import { parseDataFiles, prepareEnvironment } from '../libs/data';
 import { ProcessListManager, ProcessManager } from '../libs/process-manager';
 import { createServer } from '../libs/server';
@@ -145,7 +145,7 @@ export default class Start extends Command {
       : environmentInfo.hostname;
 
     this.log(
-      Messages.CLI.PROCESS_STARTED,
+      CLIMessages.PROCESS_STARTED,
       environmentInfo.protocol,
       hostname,
       environmentInfo.port,
@@ -168,13 +168,11 @@ export default class Start extends Command {
         ? environmentInfo.initialDataDir
         : '',
       logTransaction: environmentInfo.logTransaction,
-      fileTransportsOptions: environmentInfo.disableLogToFile
-        ? []
-        : [
-            {
-              filename: join(Config.logsPath, `${environmentInfo.name}-out.log`)
-            }
-          ]
+      fileTransportOptions: environmentInfo.disableLogToFile
+        ? null
+        : {
+            filename: join(Config.logsPath, `${environmentInfo.name}-out.log`)
+          }
     };
 
     createServer(parameters);
@@ -227,7 +225,7 @@ export default class Start extends Command {
     // if process is errored we want to delete it
     await ProcessManager.delete(name);
 
-    this.error(format(Messages.CLI.PROCESS_START_LOG_ERROR, name, name));
+    this.error(format(CLIMessages.PROCESS_START_LOG_ERROR, name, name));
   }
 
   private async getEnvInfoListFromContainerFlag(
@@ -296,16 +294,16 @@ export default class Start extends Command {
     const runningProcesses: ProcessDescription[] = await ProcessManager.list();
     const processNamesList = runningProcesses.map((process) => process.name);
     if (processNamesList.includes(name)) {
-      this.error(format(Messages.CLI.PROCESS_NAME_USED_ERROR, name));
+      this.error(format(CLIMessages.PROCESS_NAME_USED_ERROR, name));
     }
   }
 
   private async validatePort(port: number, hostname: string) {
     if (!portIsValid(port)) {
-      this.error(format(Messages.CLI.PORT_IS_NOT_VALID, port));
+      this.error(format(CLIMessages.PORT_IS_NOT_VALID, port));
     }
     if (await portInUse(port, hostname)) {
-      this.error(format(Messages.CLI.PORT_ALREADY_USED, port));
+      this.error(format(CLIMessages.PORT_ALREADY_USED, port));
     }
   }
 }
