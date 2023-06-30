@@ -1299,20 +1299,15 @@ export class EnvironmentsService extends Logger {
    * @param environmentUUID
    */
   public copyEnvironmentToClipboard(environmentUUID: string) {
-    this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD', {
-      environmentUUID
-    });
-
     const environment = this.store.getEnvironmentByUUID(environmentUUID);
 
     try {
       MainAPI.send('APP_WRITE_CLIPBOARD', JSON.stringify(environment, null, 4));
 
-      this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD_SUCCESS', {
-        environmentUUID
-      });
+      this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD_SUCCESS');
     } catch (error) {
       this.logMessage('error', 'COPY_ENVIRONMENT_CLIPBOARD_ERROR', {
+        environmentUUID,
         error
       });
     }
@@ -1324,20 +1319,15 @@ export class EnvironmentsService extends Logger {
    * @param routeUUID
    */
   public copyRouteToClipboard(routeUUID: string) {
-    this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD', {
-      routeUUID
-    });
-
     const route = this.store.getRouteByUUID(routeUUID);
 
     try {
       MainAPI.send('APP_WRITE_CLIPBOARD', JSON.stringify(route, null, 4));
 
-      this.logMessage('info', 'COPY_ROUTE_CLIPBOARD_SUCCESS', {
-        routeUUID
-      });
+      this.logMessage('info', 'COPY_ROUTE_CLIPBOARD_SUCCESS');
     } catch (error) {
       this.logMessage('error', 'COPY_ROUTE_CLIPBOARD_ERROR', {
+        routeUUID,
         error
       });
     }
@@ -1373,8 +1363,8 @@ export class EnvironmentsService extends Logger {
   private verifyData(environment: Environment): Observable<Environment> {
     if (environment.lastMigration > HighestMigrationId) {
       this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
-        name: environment.name,
-        uuid: environment.uuid
+        environmentName: environment.name,
+        environmentUUID: environment.uuid
       });
 
       return EMPTY;
