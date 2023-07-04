@@ -33,7 +33,8 @@ The CLI supports the same features as the main application: [templating system](
   - [`mockoon-cli stop [ID]`](#mockoon-cli-stop-id)
   - [`mockoon-cli dockerize`](#mockoon-cli-dockerize)
   - [`mockoon-cli help [COMMAND]`](#mockoon-cli-help-command)
-- [Docker](#docker)
+- [Use the GitHub Action](#use-the-github-action)
+- [Docker image](#docker-image)
   - [Using the generic Docker image](#using-the-generic-docker-image)
   - [Using the `dockerize` command](#using-the-dockerize-command)
 - [Logs](#logs)
@@ -239,7 +240,43 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-## Docker
+## Use the GitHub Action
+
+We maintain a [GitHub Action](https://github.com/marketplace/actions/mockoon-cli) that allows you to run your Mockoon CLI in your CI/CD pipelines.
+
+You can find a [sample workflow](https://github.com/marketplace/actions/mockoon-cli#github-action-usage) in the GitHub Action's documentation.
+
+Here is an example of a workflow that will run your mock API on every push to the `main` branch:
+
+```yaml
+name: Mockoon CLI demo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mockoon-cli-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Mockoon CLI
+        uses: mockoon/cli-action@v1
+        with:
+          # Mockoon CLI version, default to 'latest'
+          version: 'latest'
+          # Mockoon local data file or URL
+          data-file: './mockoon-data.json'
+          # port, default to 3000
+          port: 3000
+      - name: Make test call
+        run: curl -X GET http://localhost:3000/endpoint`
+```
+
+The GitHub Action is running the CLI as a [managed process with PM2](#pm2).
+
+## Docker image
 
 ### Using the generic Docker image
 
@@ -442,7 +479,3 @@ Please also take a look at our [Code of Conduct](https://github.com/mockoon/mock
 If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/).
 
 New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).
-
-```
-
-```
