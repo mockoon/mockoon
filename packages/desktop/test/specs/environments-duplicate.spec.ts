@@ -38,6 +38,7 @@ describe('Duplicate environments', () => {
     it('should duplicate the environment', async () => {
       await dialogs.save(resolve('./tmp/storage/dup-env2-test.json'));
       await environments.duplicate(1);
+      await browser.pause(100);
       await environments.assertCount(2);
       await navigation.switchView('ENV_SETTINGS');
       await environmentsSettings.assertSettingValue('port', '3001');

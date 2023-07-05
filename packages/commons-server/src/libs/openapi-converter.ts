@@ -1,5 +1,6 @@
 import openAPI from '@apidevtools/swagger-parser';
 import {
+  BodyTypes,
   BuildEnvironment,
   BuildHeader,
   BuildHTTPRoute,
@@ -11,7 +12,8 @@ import {
   Methods,
   RemoveLeadingSlash,
   Route,
-  RouteResponse
+  RouteResponse,
+  RouteType
 } from '@mockoon/commons';
 import { OpenAPI, OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { routesFromFolder } from './utils';
@@ -77,6 +79,10 @@ export class OpenAPIConverter {
         }
       ],
       paths: routes.reduce<OpenAPIV3.PathsObject>((paths, route) => {
+        if (route.type !== RouteType.HTTP) {
+          return paths;
+        }
+
         const pathParameters = route.endpoint.match(/:[a-zA-Z0-9_]+/g);
         let endpoint = '/' + route.endpoint;
 
@@ -97,11 +103,24 @@ export class OpenAPIConverter {
                 routeResponse
               );
 
+              let responseBody = {};
+
+              // use inline body as an example if it parses correctly (valid JSON no containing templating)
+              if (
+                routeResponse.bodyType === BodyTypes.INLINE &&
+                routeResponse.body
+              ) {
+                try {
+                  JSON.parse(routeResponse.body);
+                  responseBody = routeResponse.body;
+                } catch (error) {}
+              }
+
               responses[routeResponse.statusCode.toString()] = {
                 description: routeResponse.label,
                 content: responseContentType
-                  ? { [responseContentType]: {} }
-                  : {},
+                  ? { [responseContentType]: { example: responseBody } }
+                  : { '*/*': { example: responseBody } },
                 headers: [
                   ...environment.headers,
                   ...routeResponse.headers
