@@ -27,7 +27,8 @@ export type RouteResponse = {
 export enum ResponseMode {
   RANDOM = 'RANDOM',
   SEQUENTIAL = 'SEQUENTIAL',
-  DISABLE_RULES = 'DISABLE_RULES'
+  DISABLE_RULES = 'DISABLE_RULES',
+  PROXY_MISSING = 'PROXY_MISSING',
 }
 
 export type ResponseRuleOperators =
