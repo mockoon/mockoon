@@ -485,6 +485,26 @@ describe('Data helpers', () => {
       expect(parseResult).to.be.equal('value1');
     });
 
+    it('should return property at a path with dots, when path comes from a SafeString', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{dataRaw 'pathDatabucket' (queryParam 'path')}}",
+        {} as any,
+        [
+          {
+            name: 'pathDatabucket',
+            id: 'de69',
+            value: {
+              'prop.with.dots': 'value1'
+            },
+            parsed: true
+          }
+        ],
+        { query: { path: 'prop\\.with\\.dots' } } as any
+      );
+      expect(parseResult).to.be.equal('value1');
+    });
+
     it('should return and use the array at path', () => {
       const parseResult = TemplateParser(
         false,
