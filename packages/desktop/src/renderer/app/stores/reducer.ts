@@ -567,7 +567,6 @@ export const environmentReducer = (
       let activeEnvironmentLogsUUID = state.activeEnvironmentLogsUUID;
       let duplicatedRoutes = state.duplicatedRoutes;
       let settings = state.settings;
-      let activeView = state.activeView;
 
       // replace environment with new content
       const environments = state.environments.map((environment) => {
@@ -590,9 +589,6 @@ export const environmentReducer = (
         activeDatabucketUUID = action.newEnvironment.data.length
           ? action.newEnvironment.data[0].uuid
           : null;
-
-        // switch to the reload view as we don't have all views that can react to changes
-        activeView = 'ENV_RELOAD';
       }
 
       // always reset env logs and the active log entry as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
@@ -659,8 +655,7 @@ export const environmentReducer = (
         environmentsLogs,
         activeEnvironmentLogsUUID,
         duplicatedRoutes,
-        settings,
-        activeView
+        settings
       };
       break;
     }

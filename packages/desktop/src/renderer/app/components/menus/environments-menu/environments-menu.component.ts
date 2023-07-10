@@ -175,7 +175,7 @@ export class EnvironmentsMenuComponent
     )
       .pipe(
         tap((newProperty) => {
-          this.environmentsService.updateActiveEnvironment(newProperty);
+          this.environmentsService.updateActiveEnvironment(newProperty, true);
         }),
         takeUntil(this.destroy$)
       )
