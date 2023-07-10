@@ -41,7 +41,6 @@ import {
 import {
   catchError,
   debounceTime,
-  delay,
   filter,
   first,
   map,
@@ -334,7 +333,6 @@ export class EnvironmentsService extends Logger {
         confirmButtonText: 'Reload all',
         cancelButtonText: 'Ignore',
         subIcon: 'info',
-        subIconClass: 'text-primary',
         list$: this.environmentChanges$.pipe(
           map((environmentChanges) =>
             environmentChanges.map(
@@ -400,10 +398,6 @@ export class EnvironmentsService extends Logger {
         if (environmentStatus.running) {
           this.serverService.start(newEnvironment, environmentPath);
         }
-      }),
-      delay(1000),
-      tap(() => {
-        this.store.update(setActiveViewAction('ENV_ROUTES'));
       })
     );
   }
@@ -1017,8 +1011,11 @@ export class EnvironmentsService extends Logger {
   /**
    * Update the active environment
    */
-  public updateActiveEnvironment(properties: EnvironmentProperties) {
-    this.store.update(updateEnvironmentAction(properties));
+  public updateActiveEnvironment(
+    properties: EnvironmentProperties,
+    force = false
+  ) {
+    this.store.update(updateEnvironmentAction(properties), force);
   }
 
   /**
