@@ -13,7 +13,6 @@ import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
-  distinctUntilKeyChanged,
   filter,
   map,
   takeUntil,
@@ -27,6 +26,7 @@ import {
 import { HeadersProperties } from 'src/renderer/app/models/common.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
   selector: 'app-headers-list',
@@ -58,7 +58,8 @@ export class HeadersListComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private store: Store
   ) {}
 
   public get headers() {
@@ -73,7 +74,7 @@ export class HeadersListComponent implements OnInit, OnDestroy {
     // initialize the form depending on the env/route response headers
     this.dataSubject$ = this.activeDataSubject$.pipe(
       filter((dataSubject) => !!dataSubject),
-      distinctUntilKeyChanged('uuid'),
+      this.store.distinctUUIDOrForce(),
       tap((dataSubject) => {
         this.replaceHeaders(dataSubject[this.headersPropertyName], false);
       })

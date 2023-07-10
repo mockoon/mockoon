@@ -12,13 +12,7 @@ import {
   IsValidURL
 } from '@mockoon/commons';
 import { merge, Observable, Subject } from 'rxjs';
-import {
-  distinctUntilKeyChanged,
-  filter,
-  map,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
+import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { HeadersProperties } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -100,7 +94,7 @@ export class EnvironmentProxyComponent implements OnInit, OnDestroy {
     this.activeEnvironment$
       .pipe(
         filter((environment) => !!environment),
-        distinctUntilKeyChanged('uuid'),
+        this.store.distinctUUIDOrForce(),
         tap((activeEnvironment) => {
           this.environmentProxyForm.setValue(
             {
