@@ -45,6 +45,7 @@
     "mime-types": "2.1.35",
     "object-path": "0.11.8",
     "qs": "6.11.0",
+    "range-parser": "1.2.1",
     "typed-emitter": "2.1.0",
     "xml-js": "1.6.11"
   },

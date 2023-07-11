@@ -34,6 +34,7 @@ import killable from 'killable';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { basename } from 'path';
 import { parse as qsParse } from 'qs';
+import rangeParser from 'range-parser';
 import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
 import { xml2js } from 'xml-js';
@@ -685,20 +686,46 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         });
       } else {
         try {
-          response.body = BINARY_BODY;
-          const { size } = statSync(filePath);
-          this.setHeaders(
-            [
-              {
-                key: 'Content-Length',
-                value: size.toString()
-              }
-            ],
-            response,
-            request
-          );
-          // use read stream for better performance
-          createReadStream(filePath).pipe(response);
+          const stat = statSync(filePath);
+          const fileSize = stat.size;
+          const range = request.headers.range;
+
+          if (range) {
+            const parsedRange = rangeParser(fileSize, range)[0];
+
+            if (parsedRange) {
+              const start = parsedRange.start;
+              const end = parsedRange.end;
+              const chunksize = end - start + 1;
+              const file = createReadStream(filePath, { start, end });
+              const head = {
+                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': chunksize,
+                'Content-Type': fileMimeType
+              };
+
+              response.writeHead(206, head);
+              file.pipe(response);
+            } else {
+              response.status(416).send('Requested range not satisfiable');
+
+              return;
+            }
+          } else {
+            response.body = BINARY_BODY;
+            this.setHeaders(
+              [
+                {
+                  key: 'Content-Length',
+                  value: fileSize.toString()
+                }
+              ],
+              response,
+              request
+            );
+            createReadStream(filePath).pipe(response);
+          }
         } catch (error: any) {
           errorThrowOrFallback(error);
         }
