@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  BuildCRUDRoute,
   BuildDatabucket,
   BuildDemoEnvironment,
   BuildEnvironment,
   BuildFolder,
   BuildHeader,
-  BuildRoute,
+  BuildHTTPRoute,
   BuildRouteResponse,
   CloneObject,
   CloneRouteResponse,
@@ -18,7 +19,9 @@ import {
   HighestMigrationId,
   IsLegacyExportData,
   Route,
+  RouteDefault,
   RouteResponse,
+  RouteResponseDefault,
   RouteSchema,
   RouteType,
   UnwrapLegacyExport
@@ -120,7 +123,7 @@ import {
 } from 'src/renderer/app/stores/actions';
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/renderer/config';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 @Injectable({
@@ -678,11 +681,64 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Add a new route and save it in the store
+   * Add a new HTTP route and save it in the store
    */
-  public addRoute(type: RouteType, folderId: string | 'root', scroll = false) {
+  public addHTTPRoute(
+    folderId: string | 'root',
+    scroll = false,
+    options: {
+      endpoint: typeof RouteDefault.endpoint;
+      body: typeof RouteResponseDefault.body;
+    } = {
+      endpoint: RouteDefault.endpoint,
+      body: RouteResponseDefault.body
+    }
+  ) {
     if (this.store.getActiveEnvironment()) {
-      this.store.update(addRouteAction(BuildRoute(type), folderId));
+      this.store.update(
+        addRouteAction(BuildHTTPRoute(true, options), folderId)
+      );
+
+      if (scroll) {
+        this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
+      }
+
+      setTimeout(() => {
+        this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
+      }, 0);
+    }
+  }
+
+  /**
+   * Add a new CRUD route and save it in the store
+   */
+  public addCRUDRoute(
+    folderId: string | 'root',
+    scroll = false,
+    options: {
+      endpoint: typeof RouteDefault.endpoint;
+      dataBucket: Partial<DataBucket>;
+    } = {
+      endpoint: RouteDefault.endpoint,
+      dataBucket: null
+    }
+  ) {
+    if (this.store.getActiveEnvironment()) {
+      let newCRUDRoute = BuildCRUDRoute(true, {
+        endpoint: options.endpoint,
+        databucketID: RouteResponseDefault.databucketID
+      });
+
+      if (options.dataBucket) {
+        const newBucket = this.addDatabucket(options.dataBucket);
+
+        newCRUDRoute = BuildCRUDRoute(true, {
+          endpoint: options.endpoint,
+          databucketID: newBucket.id
+        });
+      }
+
+      this.store.update(addRouteAction(newCRUDRoute, folderId));
 
       if (scroll) {
         this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
@@ -697,9 +753,9 @@ export class EnvironmentsService extends Logger {
   /**
    * Add a new databucket and save it in the store
    */
-  public addDatabucket() {
+  public addDatabucket(dataBucket: Partial<DataBucket> = null) {
     if (this.store.getActiveEnvironment()) {
-      let newDatabucket = BuildDatabucket();
+      let newDatabucket = BuildDatabucket(dataBucket);
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
       this.store.update(addDatabucketAction(newDatabucket));
@@ -708,7 +764,11 @@ export class EnvironmentsService extends Logger {
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.DATABUCKET_NAME);
       }, 0);
+
+      return newDatabucket;
     }
+
+    return null;
   }
 
   /**
@@ -1128,7 +1188,7 @@ export class EnvironmentsService extends Logger {
       }
 
       const newRoute: Route = {
-        ...BuildRoute(RouteType.HTTP),
+        ...BuildHTTPRoute(),
         method: log.method,
         endpoint,
         responses: [routeResponse]

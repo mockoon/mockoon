@@ -6,12 +6,13 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Environment, RouteType } from '@mockoon/commons';
+import { Environment } from '@mockoon/commons';
 import { from, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
+import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { BuildFullPath } from 'src/renderer/app/libs/utils.lib';
@@ -27,6 +28,7 @@ import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
@@ -39,6 +41,8 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
   public changelogModal: ChangelogModalComponent;
   @ViewChild('settingsModal')
   public settingsModal: SettingsModalComponent;
+  @ViewChild('templatesModal')
+  public templatesModal: TemplatesModalComponent;
   public activeEnvironment$: Observable<Environment>;
   public activeView$: Observable<ViewsNameType>;
   public scrollToBottom = this.uiService.scrollToBottom;
@@ -54,7 +58,8 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
     private uiService: UIService,
     private apiService: ApiService,
     private settingsService: SettingsService,
-    private appQuitService: AppQuitService
+    private appQuitService: AppQuitService,
+    private userService: UserService
   ) {
     super('[COMPONENT][APP]', toastService);
     this.settingsService.monitorSettings().subscribe();
@@ -71,14 +76,16 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
   }
 
   @HostListener('document:keydown', ['$event'])
-  public focusRouteFilterInput(event: KeyboardEvent) {
+  public focusFilterInput(event: KeyboardEvent) {
     if (
       ((event.ctrlKey && this.os !== 'darwin') ||
         (event.metaKey && this.os === 'darwin')) &&
       event.shiftKey &&
       event.key.toLowerCase() === 'f'
     ) {
-      if (this.store.get('activeView') === 'ENV_ROUTES') {
+      if (this.templatesModal.open) {
+        this.eventsService.focusInput.next(FocusableInputs.TEMPLATES_FILTER);
+      } else if (this.store.get('activeView') === 'ENV_ROUTES') {
         this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
       } else if (this.store.get('activeView') === 'ENV_DATABUCKETS') {
         this.eventsService.focusInput.next(FocusableInputs.DATABUCKET_FILTER);
@@ -88,6 +95,7 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.appQuitService.init().subscribe();
+    this.userService.init().subscribe();
 
     this.logMessage('info', 'INITIALIZING_APP');
 
@@ -158,18 +166,12 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
         break;
       case 'add_crud_route':
         if (payload.subject === 'folder') {
-          this.environmentsService.addRoute(
-            RouteType.CRUD,
-            payload.subjectUUID
-          );
+          this.environmentsService.addCRUDRoute(payload.subjectUUID);
         }
         break;
       case 'add_http_route':
         if (payload.subject === 'folder') {
-          this.environmentsService.addRoute(
-            RouteType.HTTP,
-            payload.subjectUUID
-          );
+          this.environmentsService.addHTTPRoute(payload.subjectUUID);
         }
         break;
       case 'add_folder':

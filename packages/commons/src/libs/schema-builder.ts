@@ -58,25 +58,59 @@ export const BuildFolder = (): Folder => ({
 });
 
 /**
- * Build a new route
+ * Build a new HTTP route
  */
-export const BuildRoute = (
-  type: RouteType,
-  hasDefaultRouteResponse = true
-): Route => {
-  let defaultResponse = { ...BuildRouteResponse(), default: true };
-
-  if (type === RouteType.CRUD) {
-    defaultResponse = {
-      ...defaultResponse,
-      bodyType: BodyTypes.DATABUCKET
-    };
+export const BuildHTTPRoute = (
+  hasDefaultRouteResponse = true,
+  options: {
+    endpoint: typeof RouteDefault.endpoint;
+    body: typeof RouteResponseDefault.body;
+  } = {
+    endpoint: RouteDefault.endpoint,
+    body: RouteResponseDefault.body
   }
+): Route => {
+  const defaultResponse = {
+    ...BuildRouteResponse(),
+    default: true,
+    body: options.body
+  };
 
   return {
     ...RouteDefault,
-    type,
-    method: type === 'crud' ? '' : Methods.get,
+    type: RouteType.HTTP,
+    method: Methods.get,
+    endpoint: options.endpoint,
+    responses: hasDefaultRouteResponse ? [defaultResponse] : []
+  };
+};
+
+/**
+ * Build a new CRUD route
+ */
+export const BuildCRUDRoute = (
+  hasDefaultRouteResponse = true,
+  options: {
+    endpoint: typeof RouteDefault.endpoint;
+    databucketID: typeof RouteResponseDefault.databucketID;
+  } = {
+    endpoint: RouteDefault.endpoint,
+    databucketID: RouteResponseDefault.databucketID
+  }
+): Route => {
+  let defaultResponse = { ...BuildRouteResponse(), default: true };
+
+  defaultResponse = {
+    ...defaultResponse,
+    bodyType: BodyTypes.DATABUCKET,
+    databucketID: options.databucketID
+  };
+
+  return {
+    ...RouteDefault,
+    type: RouteType.CRUD,
+    method: '',
+    endpoint: options.endpoint,
     responses: hasDefaultRouteResponse ? [defaultResponse] : []
   };
 };
@@ -84,7 +118,15 @@ export const BuildRoute = (
 /**
  * Build a new databucket
  */
-export const BuildDatabucket = (): DataBucket => ({ ...DataBucketDefault });
+export const BuildDatabucket = (
+  dataBucket: Partial<DataBucket> = {
+    name: DataBucketDefault.name,
+    value: DataBucketDefault.value
+  }
+): DataBucket => ({
+  ...DataBucketDefault,
+  ...dataBucket
+});
 
 /**
  * Build a new environment
@@ -99,7 +141,7 @@ export const BuildEnvironment = (
     hasDefaultHeader: true
   }
 ): Environment => {
-  const newRoute = BuildRoute(RouteType.HTTP);
+  const newRoute = BuildHTTPRoute();
 
   return {
     ...EnvironmentDefault,
@@ -122,12 +164,12 @@ export const BuildEnvironment = (
 export const BuildDemoEnvironment = (): Environment => {
   const databucket = BuildDatabucket();
   const newRoutes = [
-    { ...BuildRoute(RouteType.CRUD) },
-    BuildRoute(RouteType.HTTP),
-    BuildRoute(RouteType.HTTP),
-    BuildRoute(RouteType.HTTP),
-    BuildRoute(RouteType.HTTP),
-    BuildRoute(RouteType.HTTP)
+    { ...BuildCRUDRoute() },
+    BuildHTTPRoute(),
+    BuildHTTPRoute(),
+    BuildHTTPRoute(),
+    BuildHTTPRoute(),
+    BuildHTTPRoute()
   ];
 
   return {

@@ -1,7 +1,7 @@
 <div class="footer d-flex">
   <div class="d-flex mr-auto">
     <div class="footer-item with-border-right" *ngIf="updateAvailable$ | async">
-      <button class="btn text-success" (click)="applyUpdate()">
+      <button class="btn btn-custom text-success" (click)="applyUpdate()">
         <app-svg icon="update"></app-svg> Update available. Click to
         {{ (platform$ | async) === 'win32' ? 'install' : 'download' }}
       </button>
@@ -12,14 +12,35 @@
     </div>
   </div>
 
-  <div class="d-flex">
+  <div class="d-flex align-items-center">
     <ng-container *ngIf="uiState$ | async as uiState">
       <div *ngIf="uiState.closing || uiState.saving" class="footer-item">
         <div class="footer-save animation-flash">
-          <app-svg icon="save"></app-svg>
+          <app-svg icon="save" class="mr-1"></app-svg>
           <ng-container *ngIf="uiState.closing">Shutting down...</ng-container>
           <ng-container *ngIf="uiState.saving">Saving...</ng-container>
         </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="generatingTemplate$ | async as generatingTemplate">
+      <div *ngIf="generatingTemplate !== 'NONE'" class="footer-item">
+        <button
+          *ngIf="generatingTemplate === 'DONE'"
+          class="btn btn-custom text-success"
+          (click)="openTemplateModal()"
+        >
+          <app-svg icon="magic" class="mr-1"></app-svg>
+          Template generated
+        </button>
+        <button
+          *ngIf="generatingTemplate === 'INPROGRESS'"
+          class="btn btn-custom text-warning"
+          (click)="openTemplateModal()"
+        >
+          <app-svg icon="spinner" class="mr-1"></app-svg>
+          Generating template
+        </button>
       </div>
     </ng-container>
   </div>

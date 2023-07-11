@@ -1,6 +1,6 @@
 import { app, BrowserWindow, Menu, shell } from 'electron';
 import { transports } from 'electron-log';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/main/config';
 
 export const createMenu = (mainWindow: BrowserWindow): Menu => {
   const menu: any = [
@@ -68,6 +68,44 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       ]
     }
   ];
+
+  const handleZoomIn = () => {
+    const menuInstance = Menu.getApplicationMenu();
+    menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = true;
+
+    if (mainWindow.webContents.zoomFactor >= 1.3) {
+      return;
+    }
+
+    mainWindow.webContents.zoomFactor += 0.1;
+
+    if (mainWindow.webContents.zoomFactor >= 1.3) {
+      menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = false;
+    }
+  };
+
+  const handleZoomOut = () => {
+    const menuInstance = Menu.getApplicationMenu();
+    menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = true;
+
+    if (mainWindow.webContents.zoomFactor <= 0.8) {
+      return;
+    }
+
+    mainWindow.webContents.zoomFactor -= 0.1;
+
+    if (mainWindow.webContents.zoomFactor <= 0.8) {
+      menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = false;
+    }
+  };
+
+  const handleZoomReset = () => {
+    const menuInstance = Menu.getApplicationMenu();
+    menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = true;
+    menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = true;
+
+    mainWindow.webContents.zoomFactor = 1;
+  };
 
   if (process.platform === 'darwin') {
     menu[0].submenu.push(
@@ -197,6 +235,56 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'EXPORT_OPENAPI_FILE');
         }
+      }
+    ]
+  });
+
+  menu.push({
+    label: 'View',
+    submenu: [
+      {
+        id: 'MENU_ZOOM_OUT',
+        label: 'Zoom out',
+        accelerator: 'CmdOrCtrl+NumSub',
+        click: handleZoomOut
+      },
+      // zoom out aliases
+      {
+        label: 'Zoom out',
+        accelerator: 'CmdOrCtrl+-',
+        click: handleZoomOut,
+        visible: false
+      },
+      {
+        label: 'Reset zoom',
+        accelerator: 'CmdOrCtrl+Num0',
+        click: handleZoomReset
+      },
+      // reset zoom aliases
+      {
+        label: 'Reset zoom',
+        accelerator: 'CmdOrCtrl+0',
+        click: handleZoomReset,
+        visible: false
+      },
+      {
+        id: 'MENU_ZOOM_IN',
+        label: 'Zoom in',
+        accelerator: 'CmdOrCtrl+Plus',
+        click: handleZoomIn
+      },
+      // zoom in aliases
+      {
+        label: 'Zoom in',
+        accelerator: 'CmdOrCtrl+NumAdd',
+        click: handleZoomIn,
+        visible: false
+      },
+      {
+        label: 'Zoom in',
+        accelerator: 'CmdOrCtrl+=',
+        click: handleZoomIn,
+        visible: false
       }
     ]
   });

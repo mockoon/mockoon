@@ -17,7 +17,7 @@ import {
   setActiveEnvironmentLogUUIDAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/renderer/config';
 
 type CollapseStates = {
   'request.general': boolean;

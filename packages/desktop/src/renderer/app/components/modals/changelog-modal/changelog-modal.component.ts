@@ -21,7 +21,7 @@ import { gt as semverGt } from 'semver';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/renderer/config';
 
 @Component({
   selector: 'app-changelog-modal',

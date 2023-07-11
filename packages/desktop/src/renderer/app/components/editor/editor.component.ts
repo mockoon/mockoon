@@ -55,6 +55,7 @@ export class EditorComponent
   public timeoutSaving: any;
   private _options = {};
   private _readOnly = false;
+  private _hideInterface = false;
   private _theme = 'editor-theme';
   private _mode = 'html';
   private _autoUpdateContent = true;
@@ -115,6 +116,11 @@ export class EditorComponent
   @Input()
   public set readOnly(readOnly: any) {
     this.setReadOnly(readOnly);
+  }
+
+  @Input()
+  public set hideCursor(hideCursor: any) {
+    this.setHideInterface(hideCursor);
   }
 
   @Input()
@@ -207,6 +213,13 @@ export class EditorComponent
   private setReadOnly(readOnly: any) {
     this._readOnly = readOnly;
     this._editor.setReadOnly(readOnly);
+  }
+
+  private setHideInterface(hideInterface: any) {
+    this._hideInterface = hideInterface;
+
+    this._editor.renderer.setShowGutter(!hideInterface);
+    (this._editor.renderer as any).$cursorLayer.element.style.display = 'none';
   }
 
   private setTheme(theme: any) {

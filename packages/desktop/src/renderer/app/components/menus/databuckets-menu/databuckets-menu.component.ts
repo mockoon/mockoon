@@ -29,9 +29,9 @@ import {
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { updateEnvironmentDatabucketsFilterAction } from 'src/renderer/app/stores/actions';
+import { updateFilterAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
 
 @Component({
@@ -75,7 +75,7 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
     this.settings$ = this.store.select('settings');
-    this.databucketsFilter$ = this.store.select('databucketsFilter').pipe(
+    this.databucketsFilter$ = this.store.selectFilter('databuckets').pipe(
       tap((search) => {
         this.databucketsFilter.patchValue(search, { emitEvent: false });
       })
@@ -100,7 +100,7 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(10),
         tap((search) =>
-          this.store.update(updateEnvironmentDatabucketsFilterAction(search))
+          this.store.update(updateFilterAction('databuckets', search))
         ),
         takeUntil(this.destroy$)
       )
@@ -162,6 +162,6 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
    * Clear the databucket filter
    */
   public clearFilter() {
-    this.store.update(updateEnvironmentDatabucketsFilterAction(''));
+    this.store.update(updateFilterAction('databuckets', ''));
   }
 }

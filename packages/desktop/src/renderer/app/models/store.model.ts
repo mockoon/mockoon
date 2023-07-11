@@ -5,6 +5,7 @@ import {
   EnvironmentLogs
 } from 'src/renderer/app/models/environment-logs.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
+import { User } from 'src/renderer/app/models/user.model';
 import { Settings } from 'src/shared/models/settings.model';
 
 export type ViewsNameType =
@@ -19,6 +20,8 @@ export type ViewsNameType =
 export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
+
+export type TemplatesTabsName = 'LIST' | 'GENERATE';
 
 export type EnvironmentStatus = {
   running: boolean;
@@ -51,6 +54,7 @@ export type StoreType = {
   activeTab: TabsNameType;
   activeView: ViewsNameType;
   activeEnvironmentLogsTab: EnvironmentLogsTabsNameType;
+  activeTemplatesTab: TemplatesTabsName;
   activeEnvironmentUUID: string;
   activeRouteUUID: string;
   activeRouteResponseUUID: string;
@@ -67,6 +71,10 @@ export type StoreType = {
   uiState: UIState;
   settings: Settings;
   duplicateEntityToAnotherEnvironment: DuplicateEntityToAnotherEnvironment;
-  routesFilter: string;
-  databucketsFilter: string;
+  filters: {
+    routes: string;
+    databuckets: string;
+    templates: string;
+  };
+  user: User;
 };

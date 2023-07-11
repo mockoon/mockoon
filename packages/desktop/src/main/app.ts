@@ -15,9 +15,10 @@ import { initMainWindow, saveOpenUrlArgs } from 'src/main/libs/main-window';
 import { ServerInstance } from 'src/main/libs/server-management';
 import { checkForUpdate } from 'src/main/libs/update';
 
-declare const isTesting: boolean;
-declare const isDev: boolean;
+declare const IS_TESTING: boolean;
+declare const IS_DEV: boolean;
 
+// setting log folder make sense for dev mode and tests only, and portable mode
 const setAppAndLogPath = (path: string) => {
   app.setPath('userData', path);
 
@@ -25,14 +26,20 @@ const setAppAndLogPath = (path: string) => {
 };
 
 // set local data folder when in dev mode or running tests
-if (isTesting || isDev) {
+if (IS_TESTING || IS_DEV) {
   setAppAndLogPath(pathResolve('./tmp'));
 }
 
-// set local data folder when is portable mode
+// set data folder when is portable mode
 const portableExecDir = process.env.PORTABLE_EXECUTABLE_DIR;
 if (portableExecDir) {
   setAppAndLogPath(pathJoin(portableExecDir, 'mockoon-data'));
+}
+
+// set data folder when inside a snap package (default folder get wiped on snap updates)
+if (process.platform === 'linux' && process.env.SNAP) {
+  app.setPath('userData', pathJoin(process.env.SNAP_USER_COMMON));
+  app.setAppLogsPath();
 }
 
 // log uncaught errors
@@ -53,7 +60,7 @@ const initApp = () => {
   mainWindow = initMainWindow();
   initIPCListeners(mainWindow);
 
-  if (isDev) {
+  if (IS_DEV) {
     // when serving (dev mode) enable hot reloading
     import('src/main/libs/hot-reload').then((hotReloadModule) => {
       hotReloadModule.hotReload();
@@ -107,7 +114,7 @@ if (!appLock) {
 
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q (except when running tests)
-    if (process.platform !== 'darwin' || isTesting) {
+    if (process.platform !== 'darwin' || IS_TESTING) {
       app.quit();
     }
   });

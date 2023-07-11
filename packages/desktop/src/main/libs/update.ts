@@ -5,11 +5,10 @@ import { error as logError, info as logInfo } from 'electron-log';
 import { createWriteStream, promises as fsPromises } from 'fs';
 import { join as pathJoin } from 'path';
 import { gt as semverGt } from 'semver';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/main/config';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 
-declare const appVersion: string;
 let updateAvailableVersion: string;
 const isNotPortable = !process.env.PORTABLE_EXECUTABLE_DIR;
 
@@ -36,7 +35,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   try {
     // try to remove existing old update
     await fsPromises.unlink(
-      pathJoin(userDataPath, `mockoon.setup.${appVersion}.exe`)
+      pathJoin(userDataPath, `mockoon.setup.${Config.appVersion}.exe`)
     );
     logInfo('[MAIN][UPDATE]Removed old update file');
   } catch (error) {}
@@ -53,7 +52,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
 
   const latestVersion = releaseResponse.data.tag;
 
-  if (semverGt(latestVersion, appVersion)) {
+  if (semverGt(latestVersion, Config.appVersion)) {
     logInfo(`[MAIN][UPDATE]Found a new version v${latestVersion}`);
 
     if (process.platform === 'win32' && isNotPortable) {

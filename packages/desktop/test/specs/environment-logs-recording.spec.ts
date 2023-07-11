@@ -25,15 +25,6 @@ const secondEnvCall: HttpCall = {
   }
 };
 
-/**
- * TODO
- *
- * recording to different env
- * recording is creating route only once
- *
- *
- */
-
 describe('Environment logs recording', () => {
   it('should open the environments', async () => {
     await environments.open('empty');

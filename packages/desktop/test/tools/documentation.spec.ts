@@ -15,7 +15,7 @@ import headersUtils from '../libs/headers-utils';
 import http from '../libs/http';
 import modals from '../libs/modals';
 import navigation from '../libs/navigation';
-import routes from '../libs/routes';
+import routes, { RoutesMenuActions } from '../libs/routes';
 import settings from '../libs/settings';
 import utils from '../libs/utils';
 
@@ -1408,7 +1408,7 @@ const documentationTopics: {
           return routes.addMenu;
         },
         get highlightedTarget() {
-          return routes.getAddMenuEntry(1);
+          return routes.getAddMenuEntry(RoutesMenuActions.ADD_CRUD_ROUTE);
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
@@ -1447,6 +1447,112 @@ const documentationTopics: {
         screenshotPosition: { right: 0 },
         screeenshotGaps: { left: 50, top: 200, bottom: 100 },
         fileName: 'link-data-bucket-crud-route.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'api-endpoints/templates-and-ai-assistant',
+    screenshots: [
+      {
+        tasks: async () => {
+          await routes.remove(1);
+          await navigation.switchView('ENV_ROUTES');
+
+          await routes.openAddMenu();
+        },
+        get screenshotTarget() {
+          return routes.addMenu;
+        },
+        get highlightedTarget() {
+          return routes.getAddMenuEntry(RoutesMenuActions.OPEN_TEMPLATES);
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 150, bottom: 100 },
+        fileName: 'pre-generated-templates-modal.png'
+      },
+      {
+        tasks: async () => {
+          await $('body').click();
+          await routes.openTemplates();
+        },
+        get highlightedTarget() {
+          return $('.modal-footer button:last-of-type');
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'templates-create-get-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.selectTemplateTab(2);
+        },
+        get highlightedTarget() {
+          return routes.getTemplateTab(2);
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'ai-assistant-generate-template-tab.png'
+      },
+      {
+        tasks: async () => {},
+        get highlightedTarget() {
+          return routes.templateGenerateOptions;
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'ai-assistant-template-generate-options.png'
+      },
+      {
+        tasks: async () => {
+          await routes.setTemplatePrompt('list of users');
+        },
+        get highlightedTarget() {
+          return routes.templateGenerateBtn;
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'ai-assistant-generate-button.png'
+      },
+      {
+        tasks: async () => {
+          await routes.clickTemplateGenerate();
+          // account for openai api call
+          await browser.pause(20000);
+        },
+        get highlightedTarget() {
+          return $('.modal-footer .ml-auto button:last-of-type');
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'templates-generate-get-route.png'
       }
     ]
   }

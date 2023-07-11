@@ -15,14 +15,16 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
     <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
     <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
     </picture>
-</a>
-<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite-300.png" alt="Appwrite logo" /></a>
+</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="https://www.peakcrypto.com/">
     <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
     <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
     <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
     </picture>
+</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://www.emqx.io/">  
+    <img src="https://mockoon.com/images/sponsors/emqx.png" alt="Peakcrypto logo" />
 </a>
 </div>
 
@@ -45,6 +47,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Efe
 - [Egor Stronhin](https://github.com/egor-xyz)
 - Emadashi
+- [EMQX](https://www.emqx.io/)
 - Everett
 - [fl0rian-p](https://github.com/fl0rian-p)
 - François Grémont
@@ -72,7 +75,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Rafael Braga Nanes
 - Riaz
 - Roybarberuk
-- (Rustam Khasanshin)[https://github.com/Rustery]
+- [Rustam Khasanshin](https://github.com/Rustery)
 - Samer Samer
 - Samja666
 - Sander

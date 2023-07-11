@@ -43,7 +43,7 @@
   ],
   "proxyMode": true,
   "proxyRemovePrefix": false,
-  "proxyHost": "https://mockoon.com/",
+  "proxyHost": "https://127.0.0.1:3004/",
   "cors": true,
   "headers": [],
   "proxyReqHeaders": [{ "key": "", "value": "" }],

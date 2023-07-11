@@ -245,5 +245,15 @@ export const Messages: {
   MIGRATING_ENVIRONMENT: (messageParams) => ({
     message: `Migrating environment ${messageParams.environmentUUID} starting at ${messageParams.migrationStartId}`,
     showToast: false
+  }),
+  LOGIN_ERROR: () => ({
+    message: 'Error while logging in. Please check your credentials.',
+    toastType: 'warning',
+    showToast: true
+  }),
+  LOGIN_SUCCESS: () => ({
+    message: 'You are now logged in.',
+    toastType: 'success',
+    showToast: true
   })
 };

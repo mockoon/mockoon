@@ -1,9 +1,9 @@
 import { FSWatcher, watch } from 'chokidar';
 import { info as logInfo } from 'electron-log';
 import { resolve } from 'path';
+import { Config } from 'src/main/config';
 import { getMainWindow } from 'src/main/libs/main-window';
 import { getSettings } from 'src/main/libs/settings';
-import { Config } from 'src/shared/config';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
 let watchers: { UUID: string; watcher: FSWatcher }[] = [];

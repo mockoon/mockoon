@@ -2,7 +2,7 @@
   <ng-container
     *ngIf="activeEnvironmentState$ | async as activeEnvironmentState"
   >
-    <div class="header d-flex">
+    <div class="header d-flex align-items-center">
       <div>
         <button
           *ngIf="
@@ -44,7 +44,7 @@
         <ul *ngIf="activeView$ | async as activeView" class="nav nav-tabs">
           <li *ngFor="let tab of tabs" class="nav-item">
             <a
-              class="nav-link"
+              class="nav-link d-flex align-items-center"
               [ngClass]="{ active: activeView === tab.id }"
               (click)="setActiveView(tab.id)"
             >
@@ -60,6 +60,71 @@
           </li>
         </ul>
       </div>
+      <ng-container *ngIf="{ user: user$ | async } as data">
+        <div
+          ngbDropdown
+          class="ml-auto"
+          placement="bottom-right"
+          #dropdownElement
+        >
+          <button
+            class="btn dropdown-toggle dropdown-toggle-icon mr-1"
+            type="button"
+            ngbDropdownToggle
+          >
+            <span [ngClass]="{ 'with-indicator': !!data.user }">
+              <app-svg icon="account"></app-svg
+            ></span>
+          </button>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <ng-container *ngIf="!!data.user">
+              <div>
+                <h6 class="dropdown-header d-flex flex-column">
+                  <p class="mb-1">
+                    {{ data?.user?.email }}
+                  </p>
+                  <div class="d-flex align-items-center">
+                    <div class="badge badge-warning">
+                      {{ planLabels[data.user?.plan] }} plan
+                    </div>
+                    <button
+                      class="btn btn-link btn-icon py-0 px-1"
+                      (click)="refreshAccount()"
+                      ngbTooltip="Refresh account information"
+                    >
+                      <app-svg
+                        *ngIf="refreshingAccount$ | async"
+                        icon="spinner"
+                      ></app-svg>
+                      <app-svg
+                        *ngIf="(refreshingAccount$ | async) === false"
+                        icon="refresh"
+                      ></app-svg>
+                    </button>
+                  </div>
+                </h6>
+              </div>
+              <button class="btn dropdown-item" (click)="account()">
+                My account
+                <app-svg icon="open_in_new" class="pl-2"></app-svg>
+              </button>
+              <button class="btn dropdown-item" (click)="logout()">
+                Log out
+              </button>
+            </ng-container>
+            <ng-container *ngIf="!data.user">
+              <button class="btn dropdown-item" (click)="login()">
+                Log in
+                <app-svg icon="open_in_new" class="pl-2"></app-svg>
+              </button>
+              <button class="btn dropdown-item" (click)="signup()">
+                Sign up
+                <app-svg icon="open_in_new" class="pl-2"></app-svg>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </ng-container>
 </ng-container>

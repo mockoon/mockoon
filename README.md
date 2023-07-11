@@ -48,14 +48,16 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
     <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
     <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
     </picture>
-</a>
-<a href="https://appwrite.io/"><img src="https://mockoon.com/images/sponsors/appwrite.png" alt="Appwrite logo" /></a>
+</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="https://www.peakcrypto.com/">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
-<source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
-<img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
-</picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
+    <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
+  </picture>
+</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://www.emqx.io/">  
+    <img src="https://mockoon.com/images/sponsors/emqx.png" alt="Peakcrypto logo" />
 </a>
 
 </div>
@@ -89,13 +91,27 @@ Linux:
 
 ## Install the CLI
 
-Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mockoon/cli). Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/cli) to learn how to install and use it.
+Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mockoon/cli). Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md) to learn how to install and use it.
 
 ## Use in cloud functions and serverless environments
 
 Mockoon's Serverless [NPM package](https://www.npmjs.com/package/@mockoon/serverless) provides an easy way to run Mockoon's mock APIs in cloud functions and serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.
 
-Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/serverless) to learn how to use it.
+Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/serverless/README.md) to learn how to use it.
+
+## Subscribe to Mockoon Pro
+
+With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
+
+- 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
+- 📃 Access to dozens of [ready to use JSON templates](https://mockoon.com/templates/).
+- 💬 Priority support and training.
+
+Upgrade today and take your API development to the next level.
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png?" width="250" alt="pro button" /></a>
+</div>
 
 ## Mockoon's documentation
 
@@ -117,6 +133,6 @@ Please also take a look at our [Code of Conduct](https://github.com/mockoon/mock
 
 ## Roadmap
 
-If you want to know what will be coming in the next release you can check the global [Roadmap](https://github.com/orgs/mockoon/projects/9).
+If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/).
 
 New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).

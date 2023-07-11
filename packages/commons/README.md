@@ -27,12 +27,26 @@ If you are interested in contributing to Mockoon, please take a look at the [con
 
 Please also take a look at our [Code of Conduct](https://github.com/mockoon/mockoon/blob/main/CODE_OF_CONDUCT.md).
 
+## Subscribe to Mockoon Pro
+
+With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
+
+- 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
+- 📃 Access to dozens of [ready to use JSON templates](https://mockoon.com/templates/).
+- 💬 Priority support and training.
+
+Upgrade today and take your API development to the next level.
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png?" width="250" alt="pro button" /></a>
+</div>
+
 ## Documentation
 
 You will find Mockoon's [documentation](https://mockoon.com/docs/latest) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
 
 ## Roadmap
 
-If you want to know what will be coming in the next release you can check the global [Roadmap](https://github.com/orgs/mockoon/projects/9).
+If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/).
 
 New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).

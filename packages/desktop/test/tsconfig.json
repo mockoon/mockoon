@@ -1,5 +1,4 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./test",
     "module": "commonjs",

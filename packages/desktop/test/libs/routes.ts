@@ -7,6 +7,12 @@ import contextMenu, {
 } from '../libs/context-menu';
 import utils from '../libs/utils';
 
+export enum RoutesMenuActions {
+  OPEN_TEMPLATES = 1,
+  ADD_CRUD_ROUTE = 2,
+  ADD_HTTP_ROUTE = 3,
+  ADD_FOLDER = 4
+}
 class Routes {
   private rulesTargetIndexes = {
     body: 1,
@@ -109,12 +115,30 @@ class Routes {
     return $('#routes-add-dropdown-menu');
   }
 
+  public get templateGenerateBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.modal-content #templates-generate-button');
+  }
+
+  public get templateGenerateOptions(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.modal-content #templates-generate-options');
+  }
+
+  public get templatePromptInput(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.modal-content input.form-control');
+  }
+
   private get activeMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
     return $(this.activeMenuEntrySelector);
   }
 
+  public getTemplateTab(
+    index: 1 | 2
+  ): ChainablePromiseElement<WebdriverIO.Element> {
+    return $(`.modal-content .nav .nav-item:nth-child(${index}) .nav-link`);
+  }
+
   public getAddMenuEntry(
-    index: number
+    index: RoutesMenuActions
   ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(`#routes-add-dropdown-menu .dropdown-item:nth-child(${index})`);
   }
@@ -229,19 +253,28 @@ class Routes {
     await $('#routes-add-dropdown .dropdown-toggle').click();
   }
 
-  public async addCRUDRoute(): Promise<void> {
+  public async openTemplates(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(1)').click();
   }
 
-  public async addHTTPRoute(): Promise<void> {
+  public async addCRUDRoute(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(2)').click();
   }
 
-  public async addFolder(): Promise<void> {
+  public async addHTTPRoute(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(3)').click();
+  }
+
+  public async addFolder(): Promise<void> {
+    await $('#routes-add-dropdown .dropdown-toggle').click();
+    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(4)').click();
+  }
+
+  public async selectTemplateTab(index: 1 | 2): Promise<void> {
+    await this.getTemplateTab(index).click();
   }
 
   public async remove(index: number) {
@@ -258,6 +291,10 @@ class Routes {
       index,
       ContextMenuFolderActions.DELETE
     );
+  }
+
+  public async selectTemplate(index: 1 | 2): Promise<void> {
+    this.getTemplateTab(index).click();
   }
 
   public async assertMenuEntryText(
@@ -286,6 +323,14 @@ class Routes {
 
   public async assertPath(expected: string) {
     expect(await this.pathInput.getValue()).toEqual(expected);
+  }
+
+  public async setTemplatePrompt(text: string) {
+    await utils.setElementValue(this.templatePromptInput, text);
+  }
+
+  public async clickTemplateGenerate() {
+    await this.templateGenerateBtn.click();
   }
 
   public async setPath(text: string) {

@@ -15,6 +15,7 @@ describe('Duplicate environments', () => {
     it('should duplicate first environment', async () => {
       await dialogs.save(resolve('./tmp/storage/dup-env-test.json'));
       await environments.duplicate(1);
+      await browser.pause(100);
       await environments.assertCount(2);
     });
 

@@ -8,13 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import {
-  Environment,
-  Folder,
-  FolderChild,
-  Route,
-  RouteType
-} from '@mockoon/commons';
+import { Environment, Folder, FolderChild, Route } from '@mockoon/commons';
 import { from, merge, Observable, Subject } from 'rxjs';
 import {
   debounceTime,
@@ -44,9 +38,9 @@ import {
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { updateEnvironmentroutesFilterAction } from 'src/renderer/app/stores/actions';
+import { updateFilterAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/shared/config';
+import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
 
 type FullFolder = {
@@ -107,7 +101,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.settings$ = this.store.select('settings');
-    this.routesFilter$ = this.store.select('routesFilter').pipe(
+    this.routesFilter$ = this.store.selectFilter('routes').pipe(
       tap((search) => {
         this.routesFilter.patchValue(search, { emitEvent: false });
       })
@@ -141,7 +135,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(10),
         tap((search) =>
-          this.store.update(updateEnvironmentroutesFilterAction(search))
+          this.store.update(updateFilterAction('routes', search))
         ),
         takeUntil(this.destroy$)
       )
@@ -171,14 +165,21 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
    * Create a new route in the current environment. Append at the end of the list
    */
   public addCRUDRoute() {
-    this.environmentsService.addRoute(RouteType.CRUD, 'root', true);
+    this.environmentsService.addCRUDRoute('root', true);
+  }
+
+  /**
+   * Generate a new template
+   */
+  public addCRUDRouteTemplate() {
+    this.eventsService.templatesModalEvents.next();
   }
 
   /**
    * Create a new route in the current environment. Append at the end of the list
    */
   public addHTTPRoute() {
-    this.environmentsService.addRoute(RouteType.HTTP, 'root', true);
+    this.environmentsService.addHTTPRoute('root', true);
   }
 
   /**
@@ -256,7 +257,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
    * Clear the filter route
    */
   public clearFilter() {
-    this.store.update(updateEnvironmentroutesFilterAction(''));
+    this.store.update(updateFilterAction('routes', ''));
   }
 
   /**

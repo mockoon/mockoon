@@ -83,6 +83,46 @@ const app = new mockoon.MockoonServerless(mockEnv);
 exports.app = functions.https.onRequest(app);
 ```
 
+### Netlify Functions
+
+To use Mockoon Serverless with Netlify's serverless functions, first create a new Netlify function with the following code:
+
+```javascript
+const mockoon = require('@mockoon/serverless');
+
+// Load the Mockoon Environment object
+const mockEnv = require('./datafile.json');
+
+const mockoonServerless = new mockoon.MockoonServerless(mockEnv);
+
+exports.handler = mockoonServerless.netlifyHandler();
+```
+
+If you're not sure how to create a Netlify function, please [read their official documentation](https://docs.netlify.com/functions/create/?fn-language=js).
+
+Then, you will need to setup a [redirect](https://docs.netlify.com/integrations/frameworks/express/) to direct requests to the mock API. A prefix like `api` is frequently used to distinguish between the requests targeting hosted websites, from requests targeting the API. Netlify will forward the full path to the running Mockoon serverless function which means that you need the [same prefix in your mock](https://mockoon.com/docs/latest/api-endpoints/routing/#api-prefix) configuration.
+To add this redirection in your `netlify.toml` you have two possibilities:
+
+```toml
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/{NAME_OF_YOUR_FUNCTION}/api/:splat"
+```
+
+or
+
+```toml
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/{NAME_OF_YOUR_FUNCTION}"
+```
+
+After deploying to Netlify, any request starting with `/api/*` (e.g. `https://APP_NAME.netlify.app/api/endpoint`) would match the corresponding route (e.g. `/api/endpoint`) in your Mockoon config. You can also test locally using the Netlify CLI.
+
 ## Limitations
 
 Due to the stateless nature of cloud functions, some of Mockoon's features will not work:
@@ -106,6 +146,6 @@ You will find Mockoon's [documentation](https://mockoon.com/docs/latest) on the 
 
 ## Roadmap
 
-If you want to know what will be coming in the next release you can check the global [Roadmap](https://github.com/orgs/mockoon/projects/9).
+If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/).
 
 New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).
