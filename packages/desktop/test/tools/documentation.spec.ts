@@ -1158,7 +1158,7 @@ const documentationTopics: {
           await settings.open();
         },
         get highlightedTarget() {
-          return $('app-title-separator:nth-of-type(3)');
+          return $('app-title-separator[heading="Faker.js"]');
         },
         get screenshotTarget() {
           return modals.content;
@@ -1209,6 +1209,26 @@ const documentationTopics: {
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-show-in-folder.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'mockoon-data-files/data-storage-location',
+    screenshots: [
+      {
+        tasks: async () => {
+          await contextMenu.close();
+          await contextMenu.open('environments', 1);
+        },
+        get highlightedTarget() {
+          return contextMenu.getItem(4);
+        },
+        highlight: true,
+        screenshotPosition: { top: 0, left: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { right: 150, bottom: 150 },
+        fileName: 'environment-move-to-folder.png'
       }
     ]
   },

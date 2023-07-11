@@ -46,7 +46,10 @@ describe('Logging: basic logging', () => {
     const logs = await parseLogs();
 
     expect(logs[0].message).to.equal('Server started on port 3000');
-    expect(logs[1].message).to.equal('GET /api/test | 200');
+    expect(logs[1].message).to.equal('Transaction recorded');
+    expect(logs[1].requestMethod).to.equal('GET');
+    expect(logs[1].requestPath).to.equal('/api/test');
+    expect(logs[1].responseStatus).to.equal(200);
     expect(logs[1].transaction).to.equal(undefined);
   });
 
@@ -85,7 +88,10 @@ describe('Logging: with transaction logs', () => {
       const logs = await parseLogs();
 
       expect(logs[0].message).to.equal('Server started on port 3000');
-      expect(logs[1].message).to.equal('GET /api/test | 200');
+      expect(logs[1].message).to.equal('Transaction recorded');
+      expect(logs[1].requestMethod).to.equal('GET');
+      expect(logs[1].requestPath).to.equal('/api/test');
+      expect(logs[1].responseStatus).to.equal(200);
       expect(logs[1].transaction.request.method).to.equal('GET');
 
       expect(logs[1].transaction.request.route).to.equal('/api/test');

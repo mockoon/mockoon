@@ -16,7 +16,7 @@ import * as mkdirp from 'mkdirp';
 import { join } from 'path';
 import { ProcessDescription } from 'pm2';
 import { Config } from '../config';
-import { Messages } from '../constants/messages.constants';
+import { CLIMessages } from '../constants/cli-messages.constants';
 import { transformEnvironmentName } from './utils';
 
 /**
@@ -75,7 +75,7 @@ export const parseDataFiles = async (
           newFilePaths.push(filePath);
         }
       } catch (JSONError: any) {
-        throw new Error(`${Messages.CLI.DATA_INVALID}: ${JSONError.message}`);
+        throw new Error(`${CLIMessages.DATA_INVALID}: ${JSONError.message}`);
       }
     }
 
@@ -83,7 +83,7 @@ export const parseDataFiles = async (
   }
 
   if (environments.length === 0) {
-    throw new Error(Messages.CLI.ENVIRONMENT_NOT_AVAILABLE_ERROR);
+    throw new Error(CLIMessages.ENVIRONMENT_NOT_AVAILABLE_ERROR);
   }
 
   return { filePaths: newFilePaths, environments };
@@ -114,13 +114,13 @@ const migrateAndValidateEnvironment = async (
     ]);
 
     if (!promptResponse.repair) {
-      throw new Error(Messages.CLI.DATA_TOO_OLD_ERROR);
+      throw new Error(CLIMessages.DATA_TOO_OLD_ERROR);
     }
   }
 
   // environment data migrated with a more recent version (if installed CLI version does not include @mockoon/commons with required migrations)
   if (environment.lastMigration > HighestMigrationId) {
-    throw new Error(Messages.CLI.DATA_TOO_RECENT_ERROR);
+    throw new Error(CLIMessages.DATA_TOO_RECENT_ERROR);
   }
 
   try {
@@ -137,7 +137,7 @@ const migrateAndValidateEnvironment = async (
   let validatedEnvironment = EnvironmentSchema.validate(environment).value;
 
   if (!validatedEnvironment) {
-    throw new Error(Messages.CLI.DATA_INVALID);
+    throw new Error(CLIMessages.DATA_INVALID);
   }
 
   validatedEnvironment = repairRefs(validatedEnvironment);

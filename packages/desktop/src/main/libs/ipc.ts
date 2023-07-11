@@ -13,7 +13,6 @@ import {
   shell
 } from 'electron';
 import { getDataPath } from 'electron-json-storage';
-import { error as logError, info as logInfo } from 'electron-log';
 import { promises as fsPromises } from 'fs';
 import { createServer } from 'http';
 import { lookup as mimeTypeLookup } from 'mime-types';
@@ -27,6 +26,7 @@ import {
   IPCMainListenerChannels
 } from 'src/main/constants/ipc.constants';
 import { migrateData } from 'src/main/libs/data-migration';
+import { logError, logInfo } from 'src/main/libs/logs';
 import {
   toggleEnvironmentMenuItems,
   toggleRouteMenuItems
@@ -94,9 +94,9 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.on('APP_LOGS', (event, data) => {
     if (data.type === 'info') {
-      logInfo(data.message);
+      logInfo(data.message, data.payload);
     } else if (data.type === 'error') {
-      logError(data.message);
+      logError(data.message, data.payload);
     }
   });
 
@@ -196,7 +196,9 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
    * This IPC channel must be mocked when running e2e tests
    */
   ipcMain.handle('APP_SHOW_SAVE_DIALOG', async (event, options) => {
-    options.defaultPath = getDialogDefaultPath();
+    if (!options.defaultPath) {
+      options.defaultPath = getDialogDefaultPath();
+    }
 
     if (IS_TESTING) {
       return { filePath: dialogMocks.save.pop() };

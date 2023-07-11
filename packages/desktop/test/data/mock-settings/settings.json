@@ -12,5 +12,6 @@
   "environments": [],
   "enableTelemetry": true,
   "storagePrettyPrint": true,
-  "startEnvironmentsOnLoad": false
+  "startEnvironmentsOnLoad": false,
+  "logTransactions": false
 }

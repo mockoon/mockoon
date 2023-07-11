@@ -18,6 +18,7 @@ export type ContextMenuItemPayload = {
     | 'env_settings'
     | 'env_logs'
     | 'showInFolder'
+    | 'move'
     | 'copyJSON'
     | 'copyFullPath'
     | 'copyDatabucketID'

@@ -6,7 +6,7 @@ import { SettingsService } from 'src/renderer/app/services/settings.service';
 @Injectable({ providedIn: 'root' })
 export class MigrationService extends Logger {
   constructor(private settingsService: SettingsService) {
-    super('[SERVICE][MIGRATION]');
+    super('[RENDERER][SERVICE][MIGRATION] ');
   }
 
   /**
@@ -19,6 +19,7 @@ export class MigrationService extends Logger {
     if (migrationStartId > -1) {
       this.logMessage('info', 'MIGRATING_ENVIRONMENT', {
         environmentUUID: environment.uuid,
+        environmentName: environment.name,
         migrationStartId
       });
 
