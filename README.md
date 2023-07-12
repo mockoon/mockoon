@@ -39,27 +39,33 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
 
 ---
 
-## Our platinum sponsors
+## Our sponsors
+
+### Platinum
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/">
-    <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/github.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
-    <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
-    </picture>
-</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://www.peakcrypto.com/">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
-    <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
-  </picture>
-</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://www.emqx.io/">  
-    <img src="https://mockoon.com/images/sponsors/emqx.png" alt="Peakcrypto logo" />
-</a>
+  <a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/github.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
+      <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
+      </picture>
+  </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://www.peakcrypto.com/">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
+      <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
+      </picture>
+  </a>
+</div>
 
+### Silver
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">  
+  <a href="https://www.emqx.io/">  
+      <img src="https://mockoon.com/images/sponsors/emqx.png" alt="Peakcrypto logo" />
+  </a>
 </div>
 
 Mockoon is an open-source project built by volunteer maintainers. If you like our application, please consider sponsoring us and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
