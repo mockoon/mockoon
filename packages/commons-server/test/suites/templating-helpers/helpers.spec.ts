@@ -2210,4 +2210,64 @@ describe('Template parser', () => {
       expect(parseResult).to.be.equal('123*******');
     });
   });
+
+  describe('Helper: oneOf', () => {
+    it('should return empty string if no param provided', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{oneOf}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return empty string if first param is not an array', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{oneOf true}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return a stringified object if choses from array of object and stringify is true', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{oneOf (dataRaw "abc1") true}}',
+        {} as any,
+        [
+          {
+            id: 'abc1',
+            name: 'db1',
+            parsed: true,
+            value: [{ id: 1, value: 'value1' }]
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('{"id":1,"value":"value1"}');
+    });
+
+    it('should return an [object Object] string if choses from array of object and stringify is false', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{oneOf (dataRaw "abc1")}}',
+        {} as any,
+        [
+          {
+            id: 'abc1',
+            name: 'db1',
+            parsed: true,
+            value: [{ id: 1, value: 'value1' }]
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('[object Object]');
+    });
+  });
 });
