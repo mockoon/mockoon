@@ -663,6 +663,31 @@
                 </div>
               </div>
             </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    id="route-settings-skip-if-no-rule-match"
+                    formControlName="skipIfNoRuleMatch"
+                    [disabled]='activeRouteResponse?.default'
+                  />
+                  <label
+                    class="custom-control-label"
+                    for="route-settings-skip-if-no-rule-match"
+                  >Skip route if rules don't match
+                  </label>
+                </div>
+                <div class="input-group-append ml-1">
+                  <app-svg
+                    icon="info"
+                    class="ml-1"
+                    ngbTooltip="Skips this whole route if the default response has this flagged and no rules match"
+                  ></app-svg>
+                </div>
+              </div>
+            </div>
           </div>
         </ng-container>
 

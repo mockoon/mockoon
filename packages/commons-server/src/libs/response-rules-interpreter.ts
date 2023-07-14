@@ -40,7 +40,7 @@ export class ResponseRulesInterpreter {
    * Choose the route response depending on the first fulfilled rule.
    * If no rule has been fulfilled get the first route response.
    */
-  public chooseResponse(requestNumber: number): RouteResponse {
+  public chooseResponse(requestNumber: number): RouteResponse | null {
     // if no rules were fulfilled find the default one, or first one if no default
     const defaultResponse =
       this.routeResponses.find((routeResponse) => routeResponse.default) ||
@@ -72,6 +72,10 @@ export class ResponseRulesInterpreter {
               this.isValid(rule, requestNumber)
             );
       });
+
+      if (response === undefined && defaultResponse.skipIfNoRuleMatch) {
+        return null;
+      }
 
       if (response === undefined) {
         response = defaultResponse;

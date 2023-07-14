@@ -540,6 +540,19 @@ export const Migrations: {
         environment.hostname = EnvironmentDefault.hostname;
       }
     }
+  },
+  /**
+   * default responses.skipIfNoRuleMatch to false
+   */
+  {
+    id: 28,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((response) => {
+          response.skipIfNoRuleMatch = false;
+        });
+      });
+    }
   }
 ];
 

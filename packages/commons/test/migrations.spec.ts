@@ -340,4 +340,17 @@ describe('Migrations', () => {
       expect(environment2.hostname).to.equal('127.0.0.1');
     });
   });
+
+  describe('migration n. 28', () => {
+    it('should set skipIfNoRuleMatch to false by default', () => {
+      const environment1 = { routes: [{ responses: [{}] }] };
+
+      applyMigration(28, environment1);
+
+      // @ts-ignore
+      expect(environment1.routes[0].responses[0].skipIfNoRuleMatch).to.equal(
+        false
+      );
+    });
+  });
 });

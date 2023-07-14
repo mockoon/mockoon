@@ -69,6 +69,7 @@ export const RouteDefault: Route = {
   endpoint: '',
   responses: [],
   enabled: true,
+  skipIfNoRuleMatch: false,
   responseMode: null
 };
 
@@ -89,6 +90,7 @@ export const RouteResponseDefault: RouteResponse = {
   rulesOperator: 'OR',
   disableTemplating: false,
   fallbackTo404: false,
+  skipIfNoRuleMatch: false,
   default: false
 };
 
@@ -237,6 +239,9 @@ const RouteResponseSchema = Joi.object<RouteResponse, true>({
   fallbackTo404: Joi.boolean()
     .failover(RouteResponseDefault.fallbackTo404)
     .required(),
+  skipIfNoRuleMatch: Joi.boolean()
+    .default(RouteResponseDefault.skipIfNoRuleMatch)
+    .required(),
   default: Joi.boolean().failover(RouteResponseDefault.default).required()
 });
 
@@ -294,6 +299,9 @@ export const RouteSchema = Joi.object<Route, true>({
     .failover(RouteDefault.responses)
     .required(),
   enabled: Joi.boolean().failover(RouteDefault.enabled).required(),
+  skipIfNoRuleMatch: Joi.boolean()
+    .failover(RouteDefault.skipIfNoRuleMatch)
+    .required(),
   responseMode: Joi.string()
     .allow(null)
     .valid(

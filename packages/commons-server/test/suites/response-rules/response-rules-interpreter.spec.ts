@@ -2855,4 +2855,132 @@ describe('Response rules interpreter', () => {
       expect(routeResponse.body).to.be.equal('content1');
     });
   });
+
+  describe('skip non matching routes', ()=>{
+
+
+    it('should return response if rules fulfilled and ignore the response marked as default', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        stringBody: 'bodyvalue',
+        body: 'bodyvalue'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          {
+            ...routeResponseTemplate,
+            body: 'content1',
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: 'bodyvalue',
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            rulesOperator: 'OR',
+            default: true,
+            skipIfNoRuleMatch: true
+          },
+          { ...routeResponseTemplate, body: 'content2', default: true }
+        ],
+        request,
+        null,
+
+      ).chooseResponse(1);
+
+      expect(routeResponse.body).to.be.equal('content1');
+    });
+
+    it('should not return response if rules not fulfilled', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        stringBody: 'not matching',
+        body: 'not matching'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          {
+            ...routeResponseTemplate,
+            body: 'content1',
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: 'bodyvalue',
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            rulesOperator: 'OR',
+            default: true,
+            skipIfNoRuleMatch: true
+          },
+          { ...routeResponseTemplate, body: 'content2', default: true }
+        ],
+        request,
+        null,
+
+      ).chooseResponse(1);
+
+      expect(routeResponse).to.be.null;
+    });
+
+    it('should return default response if not default is marked as skip', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        stringBody: 'not matching',
+        body: 'not matching'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          {
+            ...routeResponseTemplate,
+            body: 'content1',
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: 'bodyvalue',
+                operator: 'regex',
+                invert: false
+              },
+            ],
+            rulesOperator: 'OR',
+            default: true,
+            skipIfNoRuleMatch: false
+          },
+          { ...routeResponseTemplate, body: 'content2', default: false, skipIfNoRuleMatch: true }
+        ],
+        request,
+        null,
+
+      ).chooseResponse(1);
+
+      expect(routeResponse.body).to.be.equal('content1');
+    });
+
+  });
 });

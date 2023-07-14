@@ -22,6 +22,7 @@ export type RouteResponse = {
   disableTemplating: boolean;
   fallbackTo404: boolean;
   default: boolean;
+  skipIfNoRuleMatch: boolean;
 };
 
 export enum ResponseMode {
@@ -66,6 +67,7 @@ export type Route = {
   endpoint: string;
   responses: RouteResponse[];
   enabled: boolean;
+  skipIfNoRuleMatch: boolean;
   responseMode: ResponseMode | null;
 };
 

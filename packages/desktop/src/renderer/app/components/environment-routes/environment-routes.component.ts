@@ -525,7 +525,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       body: [RouteResponseDefault.body],
       rules: this.formBuilder.array([]),
       disableTemplating: [RouteResponseDefault.disableTemplating],
-      fallbackTo404: [RouteResponseDefault.fallbackTo404]
+      fallbackTo404: [RouteResponseDefault.fallbackTo404],
+      skipIfNoRuleMatch: [RouteResponseDefault.skipIfNoRuleMatch]
     });
 
     // send new activeRouteResponseForm values to the store, one by one
