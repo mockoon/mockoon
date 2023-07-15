@@ -1,4 +1,4 @@
-import { generateUUID, ProcessedDatabucket } from '@mockoon/commons';
+import { generateUUID, ProcessedDatabucket, Route } from '@mockoon/commons';
 import { Request, Response } from 'express';
 import { dedupSlashes } from '../utils';
 
@@ -28,19 +28,20 @@ export const crudRouteParamName = 'id';
  * @param request
  * @returns
  */
-const findItemIndex = (databucketValue: any, request: Request) =>
+const findItemIndex = (
+  databucketValue: any,
+  request: Request,
+  routeCrudKey: Route['crudKey']
+) =>
   databucketValue.findIndex((value: any, index: number) => {
     if (typeof value === 'object' && value !== null) {
-      if (value[crudRouteParamName] == null) {
+      if (routeCrudKey == null) {
         return false;
       }
 
-      return (
-        value[crudRouteParamName].toString() ===
-        request.params[crudRouteParamName]
-      );
+      return value[routeCrudKey].toString() === request.params[routeCrudKey];
     } else {
-      let indexParam = parseInt(request.params[crudRouteParamName], 10);
+      let indexParam = parseInt(request.params[routeCrudKey], 10);
       indexParam = isNaN(indexParam) ? 0 : indexParam;
 
       return indexParam === index;
@@ -53,13 +54,16 @@ const findItemIndex = (databucketValue: any, request: Request) =>
  * @param routePath
  * @returns
  */
-export const crudRoutesBuilder = (routePath: string): CrudRoutes => {
+export const crudRoutesBuilder = (
+  routePath: string,
+  routeCrudKey: string
+): CrudRoutes => {
   const routes: CrudRoutes = [
     { id: 'get', method: 'get', path: `${routePath}` },
     {
       id: 'getbyId',
       method: 'get',
-      path: `${routePath}/:${crudRouteParamName}`
+      path: `${routePath}/:${routeCrudKey}`
     },
     { id: 'create', method: 'post', path: `${routePath}` },
     {
@@ -70,7 +74,7 @@ export const crudRoutesBuilder = (routePath: string): CrudRoutes => {
     {
       id: 'updateById',
       method: 'put',
-      path: `${routePath}/:${crudRouteParamName}`
+      path: `${routePath}/:${routeCrudKey}`
     },
     {
       id: 'updateMerge',
@@ -80,7 +84,7 @@ export const crudRoutesBuilder = (routePath: string): CrudRoutes => {
     {
       id: 'updateMergeById',
       method: 'patch',
-      path: `${routePath}/:${crudRouteParamName}`
+      path: `${routePath}/:${routeCrudKey}`
     },
     {
       id: 'delete',
@@ -90,7 +94,7 @@ export const crudRoutesBuilder = (routePath: string): CrudRoutes => {
     {
       id: 'deleteById',
       method: 'delete',
-      path: `${routePath}/:${crudRouteParamName}`
+      path: `${routePath}/:${routeCrudKey}`
     }
   ];
 
@@ -109,7 +113,8 @@ export const databucketActions = (
   crudId: CrudRouteIds,
   databucket: ProcessedDatabucket,
   request: Request,
-  response: Response
+  response: Response,
+  routeCrudKey: Route['crudKey']
 ): any => {
   if (databucket.parsed) {
     response.set('Content-Type', 'application/json');
@@ -176,7 +181,11 @@ export const databucketActions = (
 
     case 'getbyId': {
       if (Array.isArray(databucket.value)) {
-        const foundIndex = findItemIndex(databucket.value, request);
+        const foundIndex = findItemIndex(
+          databucket.value,
+          request,
+          routeCrudKey
+        );
 
         if (foundIndex !== -1) {
           responseBody = databucket.value[foundIndex];
@@ -192,10 +201,12 @@ export const databucketActions = (
     case 'create': {
       if (Array.isArray(databucket.value)) {
         if (typeof requestBody === 'object' && requestBody != null) {
-          requestBody = {
-            [crudRouteParamName]: generateUUID(),
-            ...requestBody
-          };
+          if (routeCrudKey === 'id') {
+            requestBody = {
+              [routeCrudKey]: generateUUID(),
+              ...requestBody
+            };
+          }
         }
 
         databucket.value.push(requestBody);
@@ -218,7 +229,11 @@ export const databucketActions = (
 
     case 'updateById': {
       if (Array.isArray(databucket.value)) {
-        const indexToModify = findItemIndex(databucket.value, request);
+        const indexToModify = findItemIndex(
+          databucket.value,
+          request,
+          routeCrudKey
+        );
 
         if (indexToModify !== -1) {
           if (
@@ -273,7 +288,11 @@ export const databucketActions = (
 
     case 'updateMergeById': {
       if (Array.isArray(databucket.value)) {
-        const indexToModify = findItemIndex(databucket.value, request);
+        const indexToModify = findItemIndex(
+          databucket.value,
+          request,
+          routeCrudKey
+        );
 
         if (indexToModify !== -1) {
           databucket.value[indexToModify] =
@@ -318,7 +337,11 @@ export const databucketActions = (
 
     case 'deleteById': {
       if (Array.isArray(databucket.value)) {
-        const indexToDelete = findItemIndex(databucket.value, request);
+        const indexToDelete = findItemIndex(
+          databucket.value,
+          request,
+          routeCrudKey
+        );
 
         if (indexToDelete === -1) {
           response.status(404);

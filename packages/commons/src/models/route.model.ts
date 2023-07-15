@@ -67,6 +67,7 @@ export type Route = {
   responses: RouteResponse[];
   enabled: boolean;
   responseMode: ResponseMode | null;
+  crudKey: string;
 };
 
 export type Header = { key: string; value: string };

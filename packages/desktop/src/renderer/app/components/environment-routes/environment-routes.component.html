@@ -447,6 +447,18 @@
             />
           </div>
 
+          <ng-container [formGroup]="activeRouteForm">
+            <div class="input-group pt-2 px-2 col-6">
+              <input
+                *ngIf="activeRoute.type === 'crud'"
+                type="text"
+                class="form-control"
+                formControlName="crudKey"
+                placeholder="Add the index for crud operations"
+              />
+            </div>
+          </ng-container>
+
           <ng-container
             *ngIf="
               activeRoute.type === 'http' ||

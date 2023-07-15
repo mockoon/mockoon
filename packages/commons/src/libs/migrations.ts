@@ -540,6 +540,19 @@ export const Migrations: {
         environment.hostname = EnvironmentDefault.hostname;
       }
     }
+  },
+  /**
+   * Route crudKey default to "id"
+   */
+  {
+    id: 28,
+    migrationFunction: (environment: Environment) => {
+      environment.routes.forEach((route: Route) => {
+        if (route.crudKey === undefined) {
+          route.crudKey = 'id';
+        }
+      });
+    }
   }
 ];
 

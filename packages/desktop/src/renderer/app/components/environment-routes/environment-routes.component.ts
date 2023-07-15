@@ -477,7 +477,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       documentation: [RouteDefault.documentation],
       method: [RouteDefault.method],
       endpoint: [RouteDefault.endpoint],
-      responseMode: [RouteDefault.responseMode]
+      responseMode: [RouteDefault.responseMode],
+      crudKey: [RouteDefault.crudKey]
     });
 
     this.defaultResponseTooltip$ = this.activeRouteForm
@@ -562,12 +563,12 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             documentation: activeRoute.documentation,
             method: activeRoute.method,
             endpoint: activeRoute.endpoint,
-            responseMode: activeRoute.responseMode
+            responseMode: activeRoute.responseMode,
+            crudKey: activeRoute.crudKey
           },
           { emitEvent: false }
         );
       });
-
     // subscribe to active route response changes to reset the form
     this.activeRouteResponse$
       .pipe(

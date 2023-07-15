@@ -420,7 +420,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     route: Route,
     routePath: string
   ) {
-    const crudRoutes = crudRoutesBuilder(routePath);
+    console.log(route.crudKey);
+    const crudRoutes = crudRoutesBuilder(routePath, route.crudKey);
 
     for (const crudRoute of crudRoutes) {
       server[crudRoute.method](
@@ -521,7 +522,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                   crudId,
                   servedDatabucket,
                   request,
-                  response
+                  response,
+                  route.crudKey
                 );
               }
 

@@ -69,7 +69,8 @@ export const RouteDefault: Route = {
   endpoint: '',
   responses: [],
   enabled: true,
-  responseMode: null
+  responseMode: null,
+  crudKey: 'id'
 };
 
 export const RouteResponseDefault: RouteResponse = {
@@ -302,7 +303,8 @@ export const RouteSchema = Joi.object<Route, true>({
       ResponseMode.DISABLE_RULES
     )
     .failover(RouteDefault.responseMode)
-    .required()
+    .required(),
+  crudKey: Joi.string().failover(RouteDefault.crudKey).required()
 });
 
 export const EnvironmentSchema = Joi.object<Environment, true>({

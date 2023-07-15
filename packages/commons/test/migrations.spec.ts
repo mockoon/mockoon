@@ -340,4 +340,30 @@ describe('Migrations', () => {
       expect(environment2.hostname).to.equal('127.0.0.1');
     });
   });
+
+  describe('migration n. 28', () => {
+    it('Should add crudKey and default to id', () => {
+      const environment = {
+        routes: [{ uuid: '1' }]
+      };
+
+      applyMigration(28, environment);
+
+      expect(environment.routes[0]['crudKey']).to.equal(RouteDefault.crudKey);
+    });
+  });
+
+  describe('migration n. 28', () => {
+    it('Dont set crudKey to id if already defined', () => {
+      const environment = {
+        routes: [{ uuid: '1', crudKey: 'uuid' }]
+      };
+
+      applyMigration(28, environment);
+
+      expect(environment.routes[0]['crudKey']).to.not.equal(
+        RouteDefault.crudKey
+      );
+    });
+  });
 });
