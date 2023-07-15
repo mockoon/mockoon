@@ -15,6 +15,7 @@ import {
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import {
+  findRouteFolderHierarchy,
   getBodyEditorMode,
   getFirstRouteAndResponseUUIDs,
   insertItemAtTarget,
@@ -357,6 +358,36 @@ export const environmentReducer = (
         const activeRoute = activeEnvironment.routes.find(
           (route) => route.uuid === action.routeUUID
         );
+        const foldersUUIDHierarchy = findRouteFolderHierarchy(
+          action.routeUUID,
+          activeEnvironment
+        );
+        let newEnvironments = state.environments;
+
+        // uncollapse folders in hierarchy if some are collapsed (selecting a route in a collapsed folder is only possible after a search)
+        if (foldersUUIDHierarchy.length > 0) {
+          newEnvironments = state.environments.map((environment) => {
+            if (environment.uuid === state.activeEnvironmentUUID) {
+              const newFolders = environment.folders.map((folder) => {
+                if (foldersUUIDHierarchy.includes(folder.uuid)) {
+                  return {
+                    ...folder,
+                    collapsed: false
+                  };
+                }
+
+                return folder;
+              });
+
+              return {
+                ...environment,
+                folders: newFolders
+              };
+            }
+
+            return environment;
+          });
+        }
 
         newState = {
           ...state,
@@ -366,7 +397,7 @@ export const environmentReducer = (
             : null,
           activeTab: 'RESPONSE',
           activeView: 'ENV_ROUTES',
-          environments: state.environments
+          environments: newEnvironments
         };
         break;
       }
