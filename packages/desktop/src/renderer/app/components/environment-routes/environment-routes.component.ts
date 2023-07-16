@@ -477,8 +477,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       documentation: [RouteDefault.documentation],
       method: [RouteDefault.method],
       endpoint: [RouteDefault.endpoint],
-      responseMode: [RouteDefault.responseMode],
-      crudKey: [RouteDefault.crudKey]
+      responseMode: [RouteDefault.responseMode]
     });
 
     this.defaultResponseTooltip$ = this.activeRouteForm
@@ -526,7 +525,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       body: [RouteResponseDefault.body],
       rules: this.formBuilder.array([]),
       disableTemplating: [RouteResponseDefault.disableTemplating],
-      fallbackTo404: [RouteResponseDefault.fallbackTo404]
+      fallbackTo404: [RouteResponseDefault.fallbackTo404],
+      crudKey: [RouteResponseDefault.crudKey]
     });
 
     // send new activeRouteResponseForm values to the store, one by one
@@ -563,8 +563,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             documentation: activeRoute.documentation,
             method: activeRoute.method,
             endpoint: activeRoute.endpoint,
-            responseMode: activeRoute.responseMode,
-            crudKey: activeRoute.crudKey
+            responseMode: activeRoute.responseMode
           },
           { emitEvent: false }
         );
@@ -593,7 +592,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             body: activeRouteResponse.body,
             rules: activeRouteResponse.rules,
             disableTemplating: activeRouteResponse.disableTemplating,
-            fallbackTo404: activeRouteResponse.fallbackTo404
+            fallbackTo404: activeRouteResponse.fallbackTo404,
+            crudKey: activeRouteResponse.crudKey
           },
           { emitEvent: false }
         );

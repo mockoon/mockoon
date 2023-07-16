@@ -1,4 +1,8 @@
-import { generateUUID, ProcessedDatabucket, Route } from '@mockoon/commons';
+import {
+  generateUUID,
+  ProcessedDatabucket,
+  RouteResponse
+} from '@mockoon/commons';
 import { Request, Response } from 'express';
 import { dedupSlashes } from '../utils';
 
@@ -31,17 +35,17 @@ export const crudRouteParamName = 'id';
 const findItemIndex = (
   databucketValue: any,
   request: Request,
-  routeCrudKey: Route['crudKey']
+  routeCrudKey: RouteResponse['crudKey']
 ) =>
   databucketValue.findIndex((value: any, index: number) => {
     if (typeof value === 'object' && value !== null) {
-      if (routeCrudKey == null) {
+      if (value[routeCrudKey] == null) {
         return false;
       }
 
-      return value[routeCrudKey].toString() === request.params[routeCrudKey];
+      return value[routeCrudKey].toString() === request.params.id;
     } else {
-      let indexParam = parseInt(request.params[routeCrudKey], 10);
+      let indexParam = parseInt(request.params.id, 10);
       indexParam = isNaN(indexParam) ? 0 : indexParam;
 
       return indexParam === index;
@@ -54,16 +58,13 @@ const findItemIndex = (
  * @param routePath
  * @returns
  */
-export const crudRoutesBuilder = (
-  routePath: string,
-  routeCrudKey: string
-): CrudRoutes => {
+export const crudRoutesBuilder = (routePath: string): CrudRoutes => {
   const routes: CrudRoutes = [
     { id: 'get', method: 'get', path: `${routePath}` },
     {
       id: 'getbyId',
       method: 'get',
-      path: `${routePath}/:${routeCrudKey}`
+      path: `${routePath}/:id`
     },
     { id: 'create', method: 'post', path: `${routePath}` },
     {
@@ -74,7 +75,7 @@ export const crudRoutesBuilder = (
     {
       id: 'updateById',
       method: 'put',
-      path: `${routePath}/:${routeCrudKey}`
+      path: `${routePath}/:id`
     },
     {
       id: 'updateMerge',
@@ -84,7 +85,7 @@ export const crudRoutesBuilder = (
     {
       id: 'updateMergeById',
       method: 'patch',
-      path: `${routePath}/:${routeCrudKey}`
+      path: `${routePath}/:id`
     },
     {
       id: 'delete',
@@ -94,7 +95,7 @@ export const crudRoutesBuilder = (
     {
       id: 'deleteById',
       method: 'delete',
-      path: `${routePath}/:${routeCrudKey}`
+      path: `${routePath}/:id`
     }
   ];
 
@@ -114,7 +115,7 @@ export const databucketActions = (
   databucket: ProcessedDatabucket,
   request: Request,
   response: Response,
-  routeCrudKey: Route['crudKey']
+  routeCrudKey: RouteResponse['crudKey']
 ): any => {
   if (databucket.parsed) {
     response.set('Content-Type', 'application/json');
@@ -201,12 +202,10 @@ export const databucketActions = (
     case 'create': {
       if (Array.isArray(databucket.value)) {
         if (typeof requestBody === 'object' && requestBody != null) {
-          if (routeCrudKey === 'id') {
-            requestBody = {
-              [routeCrudKey]: generateUUID(),
-              ...requestBody
-            };
-          }
+          requestBody = {
+            [routeCrudKey]: generateUUID(),
+            ...requestBody
+          };
         }
 
         databucket.value.push(requestBody);

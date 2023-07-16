@@ -155,7 +155,7 @@ describe('Databucket Actions', () => {
       databucket.value.push(fakePerson);
     }
 
-    request.query.limit = 24; //non string
+    request.query.limit = 24;
 
     const responseBody = databucketActions(
       'get',
@@ -165,7 +165,7 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(responseBody).to.have.lengthOf(10); // Asserting the default limit of 10
+    expect(responseBody).to.have.lengthOf(10);
   });
 
   // Case: get by ID:
@@ -198,7 +198,6 @@ describe('Databucket Actions', () => {
     databucket.value = data;
 
     response = { status: chai.spy(), set: () => {} };
-    const routeCrudKey = 'id';
 
     request.params = { id: '4' };
 
@@ -218,7 +217,6 @@ describe('Databucket Actions', () => {
     databucket.value = { id: 1, name: 'John' };
 
     response = { status: chai.spy(), set: () => {} };
-    const routeCrudKey = 'id';
 
     request.params = { id: '1' };
 
@@ -260,7 +258,6 @@ describe('Databucket Actions', () => {
 
     request = { params: { id: '2' }, body: requestBody };
     response = { status: chai.spy(), set: () => {} };
-    const routeCrudKey = 'id';
 
     databucket.value = [
       { id: 1, name: 'John Doe' },

@@ -446,18 +446,18 @@
               placeholder="Add documentation for this response"
             />
           </div>
-
-          <ng-container [formGroup]="activeRouteForm">
-            <div class="input-group pt-2 px-2 col-6">
-              <input
-                *ngIf="activeRoute.type === 'crud'"
-                type="text"
-                class="form-control"
-                formControlName="crudKey"
-                placeholder="Add the index for crud operations"
-              />
-            </div>
-          </ng-container>
+          <div
+            *ngIf="activeRoute.type === 'crud' && activeRouteResponse.default"
+            class="input-group pt-2 px-2"
+          >
+            <input
+              type="text"
+              class="form-control col-6"
+              formControlName="crudKey"
+              placeholder="id property for crud
+            operations ('id', 'uuid', etc.)"
+            />
+          </div>
 
           <ng-container
             *ngIf="

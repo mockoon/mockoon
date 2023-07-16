@@ -1,6 +1,6 @@
 {
   "uuid": "5f2b78e0-fb9e-4318-b821-9c11acb79547",
-  "lastMigration": 27,
+  "lastMigration": 28,
   "name": "Swagger Petstore v2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -27,7 +27,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -55,7 +56,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "73b91946-0823-4b10-b8f7-a356ddaf80bb",
@@ -72,7 +74,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "c69a2ad4-148f-4c43-a644-1765038201bc",
@@ -89,7 +92,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -117,7 +121,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "1c652541-59a8-4e33-9d9e-8e3c6b4787f5",
@@ -134,7 +139,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -162,7 +168,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "cead5d3c-a8e1-41be-8e09-90f6b8f0d4eb",
@@ -179,7 +186,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -207,7 +215,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "d1a15a94-ed31-4a3e-8c2e-3173860e3b3d",
@@ -224,7 +233,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "80368754-997d-448e-89bd-3b8f6f6a3910",
@@ -241,7 +251,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -269,7 +280,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -297,7 +309,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "2357f277-5ea0-4328-bd6c-15934dc57d22",
@@ -314,7 +327,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -342,7 +356,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -370,7 +385,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -398,7 +414,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "dba33ee1-eec8-4c3b-9eca-2cb20cd57ec2",
@@ -415,7 +432,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -443,7 +461,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "01caabda-8252-4441-ab98-a40ca61c1a0d",
@@ -460,7 +479,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "f471f037-8547-4697-a341-e82cbce80669",
@@ -477,7 +497,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -505,7 +526,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "9ca07bce-ebff-4fb9-bde1-08baacc8941a",
@@ -522,7 +544,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -550,7 +573,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -578,7 +602,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -606,7 +631,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -638,7 +664,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "e516c482-3a13-4f37-91ea-642abcdc7d4e",
@@ -655,7 +682,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -683,7 +711,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -711,7 +740,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "fef817d9-1541-441f-8a20-bc14c1e319ce",
@@ -728,7 +758,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "11e6debc-100b-443c-ae9a-a0f273004650",
@@ -745,7 +776,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -773,7 +805,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "e6a8abd5-99b2-4b6a-b1e5-6cae22aff188",
@@ -790,7 +823,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -818,7 +852,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "2020723a-1f69-4bcd-bd4e-6967b32778ba",
@@ -835,7 +870,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,

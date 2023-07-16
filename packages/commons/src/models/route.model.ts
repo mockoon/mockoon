@@ -22,6 +22,7 @@ export type RouteResponse = {
   disableTemplating: boolean;
   fallbackTo404: boolean;
   default: boolean;
+  crudKey: string;
 };
 
 export enum ResponseMode {
@@ -67,7 +68,6 @@ export type Route = {
   responses: RouteResponse[];
   enabled: boolean;
   responseMode: ResponseMode | null;
-  crudKey: string;
 };
 
 export type Header = { key: string; value: string };

@@ -1,6 +1,6 @@
 {
   "uuid": "b8701e60-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 27,
+  "lastMigration": 28,
   "name": "Regulations.gov",
   "endpointPrefix": "regulations/v3",
   "latency": 0,
@@ -27,7 +27,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b8701e62-e7d4-11ea-a5ec-979674ac1a4b",
@@ -44,7 +45,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b8701e63-e7d4-11ea-a5ec-979674ac1a4b",
@@ -61,7 +63,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -89,7 +92,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b8701e66-e7d4-11ea-a5ec-979674ac1a4b",
@@ -106,7 +110,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b8701e67-e7d4-11ea-a5ec-979674ac1a4b",
@@ -123,7 +128,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -151,7 +157,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b8701e6a-e7d4-11ea-a5ec-979674ac1a4b",
@@ -168,7 +175,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b8701e6b-e7d4-11ea-a5ec-979674ac1a4b",
@@ -185,7 +193,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,

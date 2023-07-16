@@ -548,9 +548,11 @@ export const Migrations: {
     id: 28,
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
-        if (route.crudKey === undefined) {
-          route.crudKey = 'id';
-        }
+        route.responses.forEach((routeResponse) => {
+          if (routeResponse.crudKey === undefined) {
+            routeResponse.crudKey = RouteResponseDefault.crudKey;
+          }
+        });
       });
     }
   }

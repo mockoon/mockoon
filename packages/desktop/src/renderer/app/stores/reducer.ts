@@ -1049,8 +1049,7 @@ export const environmentReducer = (
       const propertiesNeedingRestart: (keyof Route)[] = [
         'endpoint',
         'method',
-        'enabled',
-        'crudKey'
+        'enabled'
       ];
       const specifiedUUID = action.properties.uuid;
 
