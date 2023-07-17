@@ -46,7 +46,7 @@ Prepare the repository:
 
 1. Clone the repository: `git@github.com:mockoon/mockoon.git`.
 2. Install the dependencies and create internal symlinks: `npm run bootstrap`.
-3. Build the 2 libraries: `npm run build:libs`.
+3. Build the 2 libraries: `npm run build:libs`. You can also build them in watch mode with `npm run build:libs:watch`.
 
 For the CLI:
 
@@ -55,8 +55,8 @@ For the CLI:
 
 For the desktop application:
 
-- Build the application processes (Electron main and renderer processes) `npm run build:desktop:dev` or with hot reload `npm run build:desktop:dev:watch`.
-- Start the application with `npm run start:desktop:dev`.
+- Build the application processes (Electron main and renderer processes) `npm run build:desktop:dev` or in watch mode `npm run build:desktop:dev:watch`.
+- Start the application with `npm run start:desktop:dev`. The application will restart automatically when you make changes to the `commons` or `commons-server` libraries or to the desktop application's code.
 
 ## Work on your feature or bugfix
 

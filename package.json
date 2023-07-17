@@ -32,6 +32,7 @@
     "build:commons": "lerna run --stream --scope @mockoon/commons build",
     "build:commons-server": "lerna run --stream --scope @mockoon/commons-server build",
     "build:libs": "lerna run --stream --scope @mockoon/commons build && lerna run --scope @mockoon/commons-server build",
+    "build:libs:watch": "concurrently \"lerna run --stream --scope @mockoon/commons build:watch\" \"lerna run --scope @mockoon/commons-server build:watch\"",
     "build:serverless": "lerna run --stream --scope @mockoon/serverless build",
     "build:cli": "lerna run --stream --scope @mockoon/cli build",
     "start:desktop:dev": "lerna run --stream --scope @mockoon/desktop start",
