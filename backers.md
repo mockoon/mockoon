@@ -18,6 +18,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
       <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
       </picture>
   </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://localazy.com/register?ref=a9CiDC61gOac-azO">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/localazy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/localazy.png">
+      <img src="https://mockoon.com/images/sponsors/light/localazy.png" alt="Localazy logo" />
+      </picture>
+  </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://www.peakcrypto.com/">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
@@ -66,6 +73,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [John Michael Luy](https://github.com/jmluy)
 - Jonatan Gonzalez
 - Kelly Farris
+- [Localazy](https://localazy.com/register?ref=a9CiDC61gOac-azO)
 - [mallowigi](https://github.com/mallowigi)
 - [Matus Benko](https://github.com/PrimaMateria)
 - Max Sommer
