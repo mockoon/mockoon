@@ -1464,9 +1464,23 @@ const documentationTopics: {
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: { right: 0 },
-        screeenshotGaps: { left: 50, top: 200, bottom: 100 },
+        screenshotPosition: { right: 0, left: 0 },
+        screeenshotGaps: { top: 200, bottom: 100 },
         fileName: 'link-data-bucket-crud-route.png'
+      },
+      {
+        tasks: async () => {},
+        get screenshotTarget() {
+          return routes.idPropertyDataBucketSelect;
+        },
+        get highlightedTarget() {
+          return routes.idPropertyDataBucketSelect;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0, left: 0 },
+        screeenshotGaps: { top: 200, bottom: 100 },
+        fileName: 'customize-crud-id-property-key.png'
       }
     ]
   },

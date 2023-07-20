@@ -384,7 +384,7 @@
           <div class="d-flex pt-3 px-2 justify-content-between">
             <app-custom-select
               *ngIf="activeRoute.type === 'crud' && activeRouteResponse.default"
-              class="col-8"
+              class="col-6 pr-1"
               formControlName="databucketID"
               [enableCustomInput]="false"
               [items]="databuckets$ | async"
@@ -395,6 +395,14 @@
               [clearable]="false"
               [defaultClearValue]="''"
             ></app-custom-select>
+
+            <input
+              *ngIf="activeRoute.type === 'crud' && activeRouteResponse.default"
+              type="text"
+              class="form-control col-4"
+              formControlName="crudKey"
+              placeholder="id property for crud operations ('id', 'uuid', etc.)"
+            />
 
             <div
               *ngIf="
@@ -417,9 +425,9 @@
               >
               </app-custom-select>
             </div>
-            <div class="input-group">
+            <div class="input-group col-3 col-lg-2">
               <div
-                class="input-group-prepend ml-auto"
+                class="input-group-prepend"
                 ngbTooltip="Response latency (ms)"
               >
                 <span class="input-group-text">
@@ -428,7 +436,7 @@
               </div>
               <input
                 type="number"
-                class="form-control col-3 col-lg-2"
+                class="form-control"
                 [appInputNumber]="{
                   min: 0,
                   max: Infinity,
@@ -446,7 +454,7 @@
               placeholder="Add documentation for this response"
             />
           </div>
-          <div
+          <!-- <div
             *ngIf="activeRoute.type === 'crud' && activeRouteResponse.default"
             class="input-group pt-2 px-2"
           >
@@ -456,7 +464,7 @@
               formControlName="crudKey"
               placeholder="id property for crud operations ('id', 'uuid', etc.)"
             />
-          </div>
+          </div> -->
 
           <ng-container
             *ngIf="
