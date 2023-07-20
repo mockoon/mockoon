@@ -526,7 +526,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       body: [RouteResponseDefault.body],
       rules: this.formBuilder.array([]),
       disableTemplating: [RouteResponseDefault.disableTemplating],
-      fallbackTo404: [RouteResponseDefault.fallbackTo404]
+      fallbackTo404: [RouteResponseDefault.fallbackTo404],
+      crudKey: [RouteResponseDefault.crudKey]
     });
 
     // send new activeRouteResponseForm values to the store, one by one
@@ -569,7 +570,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
           { emitEvent: false }
         );
       });
-
     // subscribe to active route response changes to reset the form
     this.activeRouteResponse$
       .pipe(
@@ -590,7 +590,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             body: activeRouteResponse.body,
             rules: activeRouteResponse.rules,
             disableTemplating: activeRouteResponse.disableTemplating,
-            fallbackTo404: activeRouteResponse.fallbackTo404
+            fallbackTo404: activeRouteResponse.fallbackTo404,
+            crudKey: activeRouteResponse.crudKey
           },
           { emitEvent: false }
         );

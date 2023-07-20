@@ -1,6 +1,6 @@
 {
   "uuid": "2fdc0fe1-66ed-44af-a268-eb73a72f5910",
-  "lastMigration": 27,
+  "lastMigration": 28,
   "name": "Proxy external",
   "endpointPrefix": "",
   "latency": 0,
@@ -28,7 +28,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "responseMode": null,

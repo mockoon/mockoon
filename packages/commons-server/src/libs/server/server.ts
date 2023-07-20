@@ -545,7 +545,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                   crudId,
                   servedDatabucket,
                   request,
-                  response
+                  response,
+                  currentRoute.responses[0].crudKey
                 );
               }
 

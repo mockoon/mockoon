@@ -1,5 +1,11 @@
 import { expect } from 'chai';
-import { BodyTypes, Migrations, ResponseMode, RouteDefault } from '../src';
+import {
+  BodyTypes,
+  Migrations,
+  ResponseMode,
+  RouteDefault,
+  RouteResponseDefault
+} from '../src';
 
 const applyMigration = (migrationId: number, environment: any) => {
   const migrationFunction = Migrations.find(
@@ -338,6 +344,47 @@ describe('Migrations', () => {
 
       expect(environment1.hostname).to.equal('');
       expect(environment2.hostname).to.equal('127.0.0.1');
+    });
+  });
+
+  describe('migration n. 28', () => {
+    it('should provide a default crudKey property to it', () => {
+      const environment: any = {
+        routes: [{ responses: [{ filePath: './file' }, { filePath: '' }] }]
+      };
+
+      applyMigration(28, environment);
+
+      expect(environment.routes[0].responses[0].crudKey).to.equal(
+        RouteResponseDefault.crudKey
+      );
+      expect(environment.routes[0].responses[1].crudKey).to.equal(
+        RouteResponseDefault.crudKey
+      );
+    });
+
+    it('Dont set crudKey to id if already defined', () => {
+      const environment: any = {
+        routes: [
+          {
+            responses: [
+              { crudKey: 'uuid', filePath: './file' },
+              { crudKey: 'uuid', filePath: '' }
+            ]
+          }
+        ]
+      };
+
+      applyMigration(28, environment);
+
+      expect(environment.routes[0].responses[0].crudKey).to.not.equal(
+        RouteResponseDefault.crudKey
+      );
+      expect(environment.routes[0].responses[1].crudKey).to.not.equal(
+        RouteResponseDefault.crudKey
+      );
+      expect(environment.routes[0].responses[0].crudKey).to.deep.equal('uuid');
+      expect(environment.routes[0].responses[1].crudKey).to.deep.equal('uuid');
     });
   });
 });
