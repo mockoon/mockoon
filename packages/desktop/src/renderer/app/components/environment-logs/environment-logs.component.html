@@ -2,7 +2,8 @@
   *ngIf="{
     environmentLogs: environmentLogs$ | async,
     activeEnvironmentUUID: activeEnvironmentUUID$ | async,
-    logsRecording: logsRecording$ | async
+    logsRecording: logsRecording$ | async,
+    settings: settings$ | async
   } as data"
 >
   <div class="environment-logs-header d-flex justify-content-between">
@@ -72,7 +73,15 @@
                       >{{ log.method | uppercase }}</span
                     >
                   </div>
-                  <div class="ellipsis route">{{ log.url }}</div>
+                  <div
+                    class="route"
+                    [ngClass]="{
+                      ellipsis: data.settings.truncateRouteName,
+                      'text-break': !data.settings.truncateRouteName
+                    }"
+                  >
+                    {{ log.url }}
+                  </div>
                   <div class="ml-auto pl-1 d-flex">
                     <div>
                       <button

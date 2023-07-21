@@ -18,6 +18,7 @@ import {
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { Settings } from 'src/shared/models/settings.model';
 
 type CollapseStates = {
   'request.general': boolean;
@@ -42,6 +43,7 @@ export class EnvironmentLogsComponent implements OnInit {
   public activeEnvironmentUUID$: Observable<string>;
   public activeEnvironmentLogUUID$: Observable<string>;
   public activeEnvironmentLog$: Observable<EnvironmentLog>;
+  public settings$: Observable<Settings>;
   public collapseStates: CollapseStates = {
     'request.general': false,
     'request.headers': false,
@@ -64,6 +66,7 @@ export class EnvironmentLogsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.settings$ = this.store.select('settings');
     this.activeEnvironmentUUID$ = this.store.select('activeEnvironmentUUID');
     this.environmentLogs$ = this.store.selectActiveEnvironmentLogs();
 
