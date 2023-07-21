@@ -28,9 +28,9 @@ The CLI supports the same features as the main application: [templating system](
   - [Use an OpenAPI specification file](#use-an-openapi-specification-file)
 - [Compatibility](#compatibility)
 - [Commands](#commands)
-  - [`mockoon-cli start`](#mockoon-cli-start)
-  - [`mockoon-cli dockerize`](#mockoon-cli-dockerize)
-  - [`mockoon-cli help [COMMAND]`](#mockoon-cli-help-command)
+  - [Start command](#start-command)
+  - [Dockerize command](#dockerize-command)
+  - [Help command](#help-command)
 - [Use the GitHub Action](#use-the-github-action)
 - [Docker image](#docker-image)
   - [Using the generic Docker image](#using-the-generic-docker-image)
@@ -107,11 +107,11 @@ Mockoon's CLI has been tested on Node.js versions 16, 18 and 20.
 
 ## Commands
 
-- [`mockoon-cli start`](#mockoon-cli-start)
-- [`mockoon-cli dockerize`](#mockoon-cli-dockerize)
-- [`mockoon-cli help [COMMAND]`](#mockoon-cli-help-command)
+- [Start command](#start-command)
+- [Dockerize command](#dockerize-command)
+- [Help command](#help-command)
 
-### `mockoon-cli start`
+### Start command
 
 Starts one (or more) mock API from Mockoon's environment file(s) as a foreground process.
 
@@ -140,7 +140,7 @@ EXAMPLES
   $ mockoon-cli start --data ~/data.json --log-transaction
 ```
 
-### `mockoon-cli dockerize`
+### Dockerize command
 
 Generates a Dockerfile used to build a self-contained image of one or more mock API. After building the image, no additional parameters will be needed when running the container.
 This command takes similar flags as the [`start` command](#mockoon-start).
@@ -167,7 +167,7 @@ EXAMPLES
   $ mockoon-cli dockerize --data https://file-server/data.json --output ./Dockerfile
 ```
 
-### `mockoon-cli help [COMMAND]`
+### Help command
 
 Returns information about a command.
 
