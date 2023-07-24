@@ -20,7 +20,7 @@ Feed it with a Mockoon's [data file](https://mockoon.com/docs/latest/mockoon-dat
 
 The CLI supports the same features as the main application: [templating system](https://mockoon.com/docs/latest/templating/overview/), [proxy mode](https://mockoon.com/docs/latest/proxy-mode/), [route response rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/), etc.
 
-![Mockoon CLI screenshot](https://mockoon.com/images/cli-repo-hero.png)
+![Mockoon CLI screenshot](https://mockoon.com/images/cli-hero-repo.png)
 
 - [Installation](#installation)
 - [Run a mock API with the CLI](#run-a-mock-api-with-the-cli)
