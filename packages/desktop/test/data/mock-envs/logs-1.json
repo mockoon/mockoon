@@ -1,6 +1,6 @@
 {
   "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-  "lastMigration": 27,
+  "lastMigration": 28,
   "name": "Environment logs 1",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -31,7 +31,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "10e32786-2fc9-4490-9f85-b4fe1763717a",
@@ -56,7 +57,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "31f4e399-4878-4bbe-bf86-6fcaf29e5bba",
@@ -73,7 +75,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "responseMode": null,
@@ -101,7 +104,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "FILE"
+          "bodyType": "FILE",
+          "crudKey": "id"
         }
       ],
       "responseMode": null,

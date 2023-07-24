@@ -18,7 +18,7 @@ export class ServerService extends Logger {
     private telemetryService: TelemetryService,
     private eventsService: EventsService
   ) {
-    super('[SERVICE][SERVER]', toastService);
+    super('[RENDERER][SERVICE][SERVER] ', toastService);
 
     this.addEventListener();
   }
@@ -55,12 +55,12 @@ export class ServerService extends Logger {
       const loggerMessageParams: MessageParams = {
         port: environment.port,
         uuid: environment.uuid,
+        hostname: environment.hostname,
         proxyHost: environment.proxyHost
       };
 
       switch (eventName) {
         case 'started':
-          this.logMessage('info', 'ENVIRONMENT_STARTED', loggerMessageParams);
           this.zone.run(() => {
             this.store.update(
               updateEnvironmentStatusAction(
@@ -72,7 +72,6 @@ export class ServerService extends Logger {
           break;
 
         case 'stopped':
-          this.logMessage('info', 'ENVIRONMENT_STOPPED', loggerMessageParams);
           this.zone.run(() => {
             this.store.update(
               updateEnvironmentStatusAction(
@@ -84,10 +83,6 @@ export class ServerService extends Logger {
               )
             );
           });
-          break;
-
-        case 'creating-proxy':
-          this.logMessage('info', 'CREATING_PROXY', loggerMessageParams);
           break;
 
         case 'entering-request':

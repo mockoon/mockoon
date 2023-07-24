@@ -28,7 +28,13 @@
       "request": "launch",
       "name": "CLI",
       "program": "${workspaceFolder}/packages/cli/bin/run",
-      "args": ["start", "-d", "./test.json"]
+      "args": [
+        "start",
+        "-d",
+        "./packages/cli/test/data/envs/mock1.json",
+        "-l",
+        "unknownhost"
+      ]
     }
   ],
   "compounds": [

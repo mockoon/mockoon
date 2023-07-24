@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { spawn } from 'child_process';
 import { app, BrowserWindow, shell } from 'electron';
-import { error as logError, info as logInfo } from 'electron-log';
 import { createWriteStream, promises as fsPromises } from 'fs';
 import { join as pathJoin } from 'path';
 import { gt as semverGt } from 'semver';
 import { Config } from 'src/main/config';
+import { logError, logInfo } from 'src/main/libs/logs';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 
@@ -37,7 +37,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
     await fsPromises.unlink(
       pathJoin(userDataPath, `mockoon.setup.${Config.appVersion}.exe`)
     );
-    logInfo('[MAIN][UPDATE]Removed old update file');
+    logInfo('[MAIN][UPDATE] Removed old update file');
   } catch (error) {}
 
   try {
@@ -45,7 +45,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
       headers: { pragma: 'no-cache', 'cache-control': 'no-cache' }
     });
   } catch (error: any) {
-    logError(`[MAIN][UPDATE]Error while checking for update: ${error.message}`);
+    logInfo(`[MAIN][UPDATE] Error while checking for update: ${error.message}`);
 
     return;
   }
@@ -53,7 +53,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   const latestVersion = releaseResponse.data.tag;
 
   if (semverGt(latestVersion, Config.appVersion)) {
-    logInfo(`[MAIN][UPDATE]Found a new version v${latestVersion}`);
+    logInfo(`[MAIN][UPDATE] Found a new version v${latestVersion}`);
 
     if (process.platform === 'win32' && isNotPortable) {
       const binaryFilename = `mockoon.setup.${latestVersion}.exe`;
@@ -61,14 +61,14 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
 
       try {
         await fsPromises.access(updateFilePath);
-        logInfo('[MAIN][UPDATE]Binary file already downloaded');
+        logInfo('[MAIN][UPDATE] Binary file already downloaded');
         notifyUpdate(mainWindow);
         updateAvailableVersion = latestVersion;
 
         return;
       } catch (error) {}
 
-      logInfo('[MAIN][UPDATE]Downloading binary file');
+      logInfo('[MAIN][UPDATE] Downloading binary file');
 
       try {
         const response = await axios.get(
@@ -76,12 +76,12 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
           { responseType: 'stream' }
         );
         await streamPipeline(response.data, createWriteStream(updateFilePath));
-        logInfo('[MAIN][UPDATE]Binary file ready');
+        logInfo('[MAIN][UPDATE] Binary file ready');
         notifyUpdate(mainWindow);
         updateAvailableVersion = latestVersion;
       } catch (error: any) {
         logError(
-          `[MAIN][UPDATE]Error while downloading the binary: ${error.message}`
+          `[MAIN][UPDATE] Error while downloading the binary: ${error.message}`
         );
       }
     } else {
@@ -89,7 +89,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
       updateAvailableVersion = latestVersion;
     }
   } else {
-    logInfo('[MAIN][UPDATE]Application is up to date');
+    logInfo('[MAIN][UPDATE] Application is up to date');
   }
 };
 

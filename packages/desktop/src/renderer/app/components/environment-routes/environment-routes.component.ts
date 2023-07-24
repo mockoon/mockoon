@@ -23,7 +23,6 @@ import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { combineLatest, from, merge, Observable, Subject } from 'rxjs';
 import {
   distinctUntilChanged,
-  distinctUntilKeyChanged,
   filter,
   map,
   mergeMap,
@@ -215,7 +214,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.activeEnvironment$ = this.store.selectActiveEnvironment();
+    this.activeEnvironment$ = this.store
+      .selectActiveEnvironment()
+      .pipe(distinctUntilChanged());
     this.activeRoute$ = this.store.selectActiveRoute();
     this.activeRouteResponse$ = this.store.selectActiveRouteResponse();
     this.activeRouteResponseIndex$ =
@@ -525,7 +526,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       body: [RouteResponseDefault.body],
       rules: this.formBuilder.array([]),
       disableTemplating: [RouteResponseDefault.disableTemplating],
-      fallbackTo404: [RouteResponseDefault.fallbackTo404]
+      fallbackTo404: [RouteResponseDefault.fallbackTo404],
+      crudKey: [RouteResponseDefault.crudKey]
     });
 
     // send new activeRouteResponseForm values to the store, one by one
@@ -546,14 +548,15 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listen to stores to init form values
+   * Listen to store to init form values
+   * Init only when the UUID changes or when the action is forcing an update
    */
   private initFormValues() {
     // subscribe to active route changes to reset the form
     this.activeRoute$
       .pipe(
         filter((route) => !!route),
-        distinctUntilKeyChanged('uuid'),
+        this.store.distinctUUIDOrForce(),
         takeUntil(this.destroy$)
       )
       .subscribe((activeRoute) => {
@@ -567,16 +570,11 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
           { emitEvent: false }
         );
       });
-
     // subscribe to active route response changes to reset the form
     this.activeRouteResponse$
       .pipe(
         filter((routeResponse) => !!routeResponse),
-        // monitor changes in uuid and body (for body formatter method)
-        distinctUntilChanged(
-          (previous, next) =>
-            previous.uuid === next.uuid && previous.body === next.body
-        ),
+        this.store.distinctUUIDOrForce(),
         takeUntil(this.destroy$)
       )
       .subscribe((activeRouteResponse) => {
@@ -592,7 +590,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             body: activeRouteResponse.body,
             rules: activeRouteResponse.rules,
             disableTemplating: activeRouteResponse.disableTemplating,
-            fallbackTo404: activeRouteResponse.fallbackTo404
+            fallbackTo404: activeRouteResponse.fallbackTo404,
+            crudKey: activeRouteResponse.crudKey
           },
           { emitEvent: false }
         );

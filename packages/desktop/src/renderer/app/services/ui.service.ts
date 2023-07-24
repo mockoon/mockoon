@@ -13,7 +13,10 @@ export class UIService {
   public scrollRoutesMenu: Subject<ScrollDirection> = new Subject();
   public scrollDatabucketsMenu: Subject<ScrollDirection> = new Subject();
 
-  constructor(private store: Store, private eventsService: EventsService) {}
+  constructor(
+    private store: Store,
+    private eventsService: EventsService
+  ) {}
 
   /**
    * Scroll to bottom of an element

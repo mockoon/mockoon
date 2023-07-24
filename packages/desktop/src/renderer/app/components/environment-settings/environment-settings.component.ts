@@ -7,13 +7,7 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Environment, EnvironmentDefault } from '@mockoon/commons';
 import { merge, Observable, Subject } from 'rxjs';
-import {
-  distinctUntilChanged,
-  filter,
-  map,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
+import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -129,7 +123,7 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
     this.activeEnvironment$
       .pipe(
         filter((environment) => !!environment),
-        distinctUntilChanged(),
+        this.store.distinctUUIDOrForce(),
         tap((activeEnvironment) => {
           this.activeEnvironmentForm.setValue(
             {

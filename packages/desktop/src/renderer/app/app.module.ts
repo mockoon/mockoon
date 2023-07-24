@@ -71,7 +71,6 @@ import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handl
 import { Config } from 'src/renderer/config';
 import { environment } from 'src/renderer/environments/environment';
 import { AppComponent } from './app.component';
-import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +110,6 @@ import { LoaderComponent } from './components/loader/loader.component';
     CustomSelectComponent,
     ToggleComponent,
     SvgComponent,
-    LoaderComponent,
     EditableElementComponent
   ],
   imports: [

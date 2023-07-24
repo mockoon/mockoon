@@ -5,17 +5,8 @@ import {
   OnInit
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { DataBucket, DataBucketDefault, Environment } from '@mockoon/commons';
-import {
-  distinctUntilKeyChanged,
-  filter,
-  map,
-  merge,
-  Observable,
-  Subject,
-  takeUntil,
-  tap
-} from 'rxjs';
+import { DataBucket, DataBucketDefault } from '@mockoon/commons';
+import { filter, map, merge, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -28,7 +19,6 @@ import { Store } from 'src/renderer/app/stores/store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
-  public activeEnvironment$: Observable<Environment>;
   public activeDatabucket$: Observable<DataBucket>;
   public activeDatabucketForm: FormGroup;
   public form: FormGroup;
@@ -92,7 +82,7 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
     this.activeDatabucket$
       .pipe(
         filter((databucket) => !!databucket),
-        distinctUntilKeyChanged('uuid'),
+        this.store.distinctUUIDOrForce(),
         takeUntil(this.destroy$)
       )
       .subscribe((activeDatabucket) => {

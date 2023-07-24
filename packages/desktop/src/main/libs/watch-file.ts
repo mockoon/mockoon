@@ -1,7 +1,7 @@
 import { FSWatcher, watch } from 'chokidar';
-import { info as logInfo } from 'electron-log';
 import { resolve } from 'path';
 import { Config } from 'src/main/config';
+import { logInfo } from 'src/main/libs/logs';
 import { getMainWindow } from 'src/main/libs/main-window';
 import { getSettings } from 'src/main/libs/settings';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
@@ -42,13 +42,20 @@ export const watchEnvironmentFile = (UUID: string, filePath: string) => {
 
   if (findExistingWatcher(UUID) === -1) {
     const watchTimeout = setTimeout(() => {
-      logInfo(`${logPrefix} watching ${filePath}/${UUID}`);
+      logInfo(`${logPrefix}Start watching environment`, {
+        environmentUUID: UUID,
+        environmentPath: filePath
+      });
 
       const watcher = watch(resolve(filePath), { atomic: true }).on(
         'change',
         () => {
           logInfo(
-            `${logPrefix}${filePath}/${UUID} was modified externally, notifying renderer process`
+            `${logPrefix}Environment was modified externally, notifying renderer process`,
+            {
+              environmentUUID: UUID,
+              environmentPath: filePath
+            }
           );
 
           getMainWindow().webContents.send(
@@ -77,7 +84,9 @@ export const unwatchEnvironmentFile = async (UUID: string) => {
   const existingWatcherIndex = findExistingWatcher(UUID);
 
   if (existingWatcherIndex >= 0) {
-    logInfo(`${logPrefix} unwatching ${UUID}`);
+    logInfo(`${logPrefix}Stop watching environment`, {
+      environmentUUID: UUID
+    });
 
     await watchers[existingWatcherIndex].watcher.close();
     watchers.splice(existingWatcherIndex, 1);
@@ -92,7 +101,9 @@ export const unwatchAllEnvironmentFiles = async () => {
   clearAllScheduledWatchers();
 
   for (const watcherItem of watchers) {
-    logInfo(`${logPrefix} unwatching ${watcherItem.UUID}`);
+    logInfo(`${logPrefix}Stop watching environment`, {
+      environmentUUID: watcherItem.UUID
+    });
 
     await watcherItem.watcher.close();
   }

@@ -5,15 +5,20 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  MonoTypeOperatorFunction,
+  Observable,
+  pipe
+} from 'rxjs';
+import { distinctUntilChanged, map, withLatestFrom } from 'rxjs/operators';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
   StoreType
 } from 'src/renderer/app/models/store.model';
-import { Actions } from 'src/renderer/app/stores/actions';
+import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
 
 @Injectable({ providedIn: 'root' })
@@ -47,6 +52,15 @@ export class Store {
     },
     user: null
   });
+  /**
+   * Emits latest store action
+   * Most views are updating the store by themselves and only listen for UUID changes to update their view. Sometimes, a view update is needed when the store is updated by another view, or when the store is updated by an external source (liek file monitoring).
+   * Some actions are forcing a UI refresh, and it's also possible to force a UI refresh manually by emitting a new action with the force property set to true (e.g. environments menu name edit need to update the settings view when it's opened)
+   */
+  private storeAction$ = new BehaviorSubject<{
+    type: ActionTypes;
+    force: boolean;
+  }>(null);
 
   constructor() {}
 
@@ -339,7 +353,8 @@ export class Store {
   /**
    * Update the store using the reducer
    */
-  public update(action: Actions) {
+  public update(action: Actions, force = false) {
+    this.storeAction$.next({ type: action.type, force });
     this.store$.next(environmentReducer(this.store$.value, action));
   }
 
@@ -358,5 +373,24 @@ export class Store {
     return this.store$.value.settings.environments.find(
       (descriptor) => descriptor.uuid === environmentUUID
     ).path;
+  }
+
+  /**
+   * Custom operator to prevent emitting the same UUID twice except if emit is forced (reducer actions that are external updates, like a refresh)
+   *
+   */
+  public distinctUUIDOrForce<
+    T extends { uuid: string }
+  >(): MonoTypeOperatorFunction<T> {
+    return pipe(
+      withLatestFrom(this.storeAction$),
+      distinctUntilChanged(
+        ([previousObject], [nextObject, nextAction]) =>
+          previousObject.uuid === nextObject.uuid &&
+          nextAction.type !== ActionTypes.RELOAD_ENVIRONMENT &&
+          !nextAction.force
+      ),
+      map(([object]) => object)
+    );
   }
 }

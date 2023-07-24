@@ -95,7 +95,7 @@ export interface MainAPIModel {
   ): void;
   send(
     channel: 'APP_LOGS',
-    data: { type: 'error' | 'info'; message: string }
+    data: { type: 'error' | 'info'; message: string; payload?: any }
   ): void;
   send(
     channel: 'APP_SET_FAKER_OPTIONS',

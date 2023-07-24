@@ -32,6 +32,7 @@
     "build:commons": "lerna run --stream --scope @mockoon/commons build",
     "build:commons-server": "lerna run --stream --scope @mockoon/commons-server build",
     "build:libs": "lerna run --stream --scope @mockoon/commons build && lerna run --scope @mockoon/commons-server build",
+    "build:libs:watch": "concurrently \"lerna run --stream --scope @mockoon/commons build:watch\" \"lerna run --scope @mockoon/commons-server build:watch\"",
     "build:serverless": "lerna run --stream --scope @mockoon/serverless build",
     "build:cli": "lerna run --stream --scope @mockoon/cli build",
     "start:desktop:dev": "lerna run --stream --scope @mockoon/desktop start",
@@ -58,11 +59,11 @@
     "documentation:desktop": "lerna run --stream --scope @mockoon/desktop documentation"
   },
   "devDependencies": {
-    "concurrently": "7.6.0",
-    "dotenv": "16.0.3",
-    "eslint-config-prettier": "8.6.0",
+    "concurrently": "8.2.0",
+    "dotenv": "16.3.1",
+    "eslint-config-prettier": "8.8.0",
     "lerna": "6.5.1",
-    "prettier": "2.8.4",
-    "prettier-plugin-organize-imports": "3.2.2"
+    "prettier": "3.0.0",
+    "prettier-plugin-organize-imports": "3.2.3"
   }
 }

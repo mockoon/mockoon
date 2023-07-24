@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as glob from 'glob';
-import * as mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import { basename } from 'path';
 import { promisify } from 'util';
 

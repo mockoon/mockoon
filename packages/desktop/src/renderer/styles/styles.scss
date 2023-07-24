@@ -263,7 +263,9 @@ $response-badges: ('get', lighten($blue, 10%)), ('4xx', lighten($orange, 10%)),
     linear-gradient($gray-500, $gray-500);
   background-repeat: no-repeat;
   background-size: 8px 3px;
-  background-position: top left, bottom left;
+  background-position:
+    top left,
+    bottom left;
   border-left: 3px solid $gray-500;
   margin: $spacer / 2;
   width: 11px;

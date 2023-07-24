@@ -11,7 +11,8 @@
   "scripts": {
     "lint": "eslint -c .eslintrc.js --ext .js,.ts .",
     "test": "ts-mocha -p ./tsconfig-build-cjs.json --timeout 10000 --forbid-only \"./test/suites/**/*.spec.ts\"",
-    "build": "tsc -p tsconfig-build.json && tsc -p tsconfig-build-cjs.json"
+    "build": "tsc -p tsconfig-build.json && tsc -p tsconfig-build-cjs.json",
+    "build:watch": "concurrently \"tsc -p tsconfig-build.json --watch --preserveWatchOutput\" \"tsc -p tsconfig-build-cjs.json --watch --preserveWatchOutput\""
   },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -46,6 +47,7 @@
     "object-path": "0.11.8",
     "qs": "6.11.0",
     "typed-emitter": "2.1.0",
+    "winston": "3.9.0",
     "xml-js": "1.6.11"
   },
   "devDependencies": {
@@ -61,6 +63,7 @@
     "@typescript-eslint/eslint-plugin": "5.53.0",
     "@typescript-eslint/parser": "5.53.0",
     "chai": "4.3.7",
+    "chai-spies": "1.0.0",
     "eslint": "8.35.0",
     "eslint-plugin-jsdoc": "40.0.0",
     "mocha": "10.2.0",

@@ -27,7 +27,7 @@ export const FakerWrapper = {
     // check faker helper name pattern
     if (
       !fakerName ||
-      !fakerName.match(/^[a-z]+\.[a-z]+$/i) ||
+      !fakerName.match(/^[a-z]+\.[a-z0-9]+$/i) ||
       !fakerPrimaryMethod ||
       !fakerSecondaryMethod ||
       !faker[fakerPrimaryMethod] ||

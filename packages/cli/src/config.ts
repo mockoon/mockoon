@@ -6,10 +6,5 @@ const dirName = '.mockoon-cli';
 
 export const Config = {
   version,
-  dataPath: join(homedir(), `/${dirName}/data/`),
-  logsPath: join(homedir(), `/${dirName}/logs/`),
-  configPath: join(homedir(), `/${dirName}/`),
-  get processesFilePath(): string {
-    return join(this.configPath, 'processes.json');
-  }
+  logsPath: join(homedir(), `/${dirName}/logs/`)
 };

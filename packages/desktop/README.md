@@ -20,7 +20,7 @@ It's a set of tools (desktop application and CLI) that help you work faster with
 ➡️ [Download](https://mockoon.com/download/)
 
 <div align="center">
-  <img width="50%" src="https://mockoon.com/images/repo-illustration.png">
+  <img width="50%" src="https://mockoon.com/images/hero-repo.png">
 </div>
 
 ## Features
