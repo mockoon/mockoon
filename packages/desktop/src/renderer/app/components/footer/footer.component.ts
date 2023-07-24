@@ -24,7 +24,10 @@ export class FooterComponent implements OnInit {
   public uiState$: Observable<UIState>;
   public generatingTemplate$ = this.eventsService.generatingTemplate$;
 
-  constructor(private store: Store, private eventsService: EventsService) {}
+  constructor(
+    private store: Store,
+    private eventsService: EventsService
+  ) {}
 
   ngOnInit() {
     this.updateAvailable$ = this.eventsService.updateAvailable$;

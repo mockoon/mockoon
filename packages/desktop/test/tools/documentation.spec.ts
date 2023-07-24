@@ -73,8 +73,8 @@ const highlight = async (
       element.style.top=(targetPosition.top - ${highlightGaps.top}) + "px";
       element.style.left=(targetPosition.left - ${highlightGaps.left}) + "px";
       element.style.width=(targetPosition.width + ${highlightGaps.left} + ${
-      highlightGaps.right
-    }) + "px";
+        highlightGaps.right
+      }) + "px";
       element.style.height=(${height}) + "px";
       element.style.border="3px solid red";
       element.style.zIndex='10000';

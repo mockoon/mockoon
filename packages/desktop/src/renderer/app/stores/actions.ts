@@ -85,7 +85,7 @@ export const setUpdateUserAction = (properties: UserProperties) =>
   ({
     type: ActionTypes.UPDATE_USER,
     properties
-  } as const);
+  }) as const;
 
 /**
  * Change the active route tab
@@ -96,7 +96,7 @@ export const setActiveTabAction = (activeTab: TabsNameType) =>
   ({
     type: ActionTypes.SET_ACTIVE_TAB,
     activeTab
-  } as const);
+  }) as const;
 
 /**
  * Change the active main view
@@ -107,7 +107,7 @@ export const setActiveViewAction = (activeView: ViewsNameType) =>
   ({
     type: ActionTypes.SET_ACTIVE_VIEW,
     activeView
-  } as const);
+  }) as const;
 
 /**
  * Change the active environment logs tab
@@ -120,7 +120,7 @@ export const setActiveEnvironmentLogTabAction = (
   ({
     type: ActionTypes.SET_ACTIVE_ENVIRONMENT_LOG_TAB,
     activeTab
-  } as const);
+  }) as const;
 
 /**
  * Change the active templates tab
@@ -131,7 +131,7 @@ export const setActiveTemplatesTabAction = (activeTab: TemplatesTabsName) =>
   ({
     type: ActionTypes.SET_ACTIVE_TEMPLATES_TAB,
     activeTab
-  } as const);
+  }) as const;
 
 /**
  * Set the active environment (currently displayed)
@@ -142,7 +142,7 @@ export const setActiveEnvironmentAction = (environmentUUID: string) =>
   ({
     type: ActionTypes.SET_ACTIVE_ENVIRONMENT,
     environmentUUID
-  } as const);
+  }) as const;
 
 /**
  * Navigate between environments
@@ -153,7 +153,7 @@ export const navigateEnvironmentsAction = (direction: ReducerDirectionType) =>
   ({
     type: ActionTypes.NAVIGATE_ENVIRONMENTS,
     direction
-  } as const);
+  }) as const;
 
 /**
  * Reorder environments
@@ -165,7 +165,7 @@ export const reorganizeEnvironmentsAction = (dropAction: DropAction<string>) =>
   ({
     type: ActionTypes.REORGANIZE_ENVIRONMENTS,
     dropAction
-  } as const);
+  }) as const;
 
 /**
  *
@@ -178,7 +178,7 @@ export const reorganizeRoutesAction = (dropAction: DropAction<string>) =>
   ({
     type: ActionTypes.REORGANIZE_ROUTES,
     dropAction
-  } as const);
+  }) as const;
 
 /**
  * Reorder route responses
@@ -191,7 +191,7 @@ export const reorganizeRouteResponsesAction = (
   ({
     type: ActionTypes.REORGANIZE_ROUTE_RESPONSES,
     dropAction
-  } as const);
+  }) as const;
 
 /**
  * Reorder databuckets
@@ -202,7 +202,7 @@ export const reorganizeDatabucketsAction = (dropAction: DropAction<string>) =>
   ({
     type: ActionTypes.REORGANIZE_DATABUCKETS,
     dropAction
-  } as const);
+  }) as const;
 
 /**
  * Add a new environment
@@ -224,7 +224,7 @@ export const addEnvironmentAction = (
     type: ActionTypes.ADD_ENVIRONMENT,
     environment,
     ...options
-  } as const);
+  }) as const;
 
 /**
  * Remove an environment
@@ -235,7 +235,7 @@ export const removeEnvironmentAction = (environmentUUID: string) =>
   ({
     type: ActionTypes.REMOVE_ENVIRONMENT,
     environmentUUID
-  } as const);
+  }) as const;
 
 /**
  * Update an environment
@@ -246,7 +246,7 @@ export const updateEnvironmentAction = (properties: EnvironmentProperties) =>
   ({
     type: ActionTypes.UPDATE_ENVIRONMENT,
     properties
-  } as const);
+  }) as const;
 
 /**
  * Reload an environment
@@ -261,7 +261,7 @@ export const reloadEnvironmentAction = (
     type: ActionTypes.RELOAD_ENVIRONMENT,
     previousUUID,
     newEnvironment
-  } as const);
+  }) as const;
 
 /**
  * Trigger a save of an environment without modyfing its state
@@ -272,7 +272,7 @@ export const refreshEnvironmentAction = (environmentUUID: string) =>
   ({
     type: ActionTypes.REFRESH_ENVIRONMENT,
     environmentUUID
-  } as const);
+  }) as const;
 
 /**
  * Update an environment status
@@ -287,7 +287,7 @@ export const updateEnvironmentStatusAction = (
     type: ActionTypes.UPDATE_ENVIRONMENT_STATUS,
     properties,
     environmentUUID
-  } as const);
+  }) as const;
 
 /**
  * Update a filter
@@ -302,7 +302,7 @@ export const updateFilterAction = (
     type: ActionTypes.UPDATE_FILTER,
     filter,
     filterValue
-  } as const);
+  }) as const;
 
 /**
  * Set the active route (currently displayed)
@@ -313,7 +313,7 @@ export const setActiveRouteAction = (routeUUID: string) =>
   ({
     type: ActionTypes.SET_ACTIVE_ROUTE,
     routeUUID
-  } as const);
+  }) as const;
 
 /**
  * Add a folder
@@ -326,7 +326,7 @@ export const addFolderAction = (folder: Folder, parentId?: string | 'root') =>
     type: ActionTypes.ADD_FOLDER,
     folder,
     parentId
-  } as const);
+  }) as const;
 
 /**
  * Remove a folder
@@ -337,7 +337,7 @@ export const removeFolderAction = (folderUUID: string) =>
   ({
     type: ActionTypes.REMOVE_FOLDER,
     folderUUID
-  } as const);
+  }) as const;
 
 /**
  * Update a folder
@@ -353,7 +353,7 @@ export const updateFolderAction = (
     type: ActionTypes.UPDATE_FOLDER,
     folderUUID,
     properties
-  } as const);
+  }) as const;
 
 /**
  * Add a route
@@ -375,7 +375,7 @@ export const addRouteAction = (
     parentId,
     focus,
     environmentUUID
-  } as const);
+  }) as const;
 
 /**
  * Remove a route
@@ -386,7 +386,7 @@ export const removeRouteAction = (routeUUID: string) =>
   ({
     type: ActionTypes.REMOVE_ROUTE,
     routeUUID
-  } as const);
+  }) as const;
 
 /**
  * Remove the currently selected route response
@@ -394,7 +394,7 @@ export const removeRouteAction = (routeUUID: string) =>
 export const removeRouteResponseAction = () =>
   ({
     type: ActionTypes.REMOVE_ROUTE_RESPONSE
-  } as const);
+  }) as const;
 
 /**
  * Update a route
@@ -405,7 +405,7 @@ export const updateRouteAction = (properties: RouteProperties) =>
   ({
     type: ActionTypes.UPDATE_ROUTE,
     properties
-  } as const);
+  }) as const;
 
 /**
  * Set the active route response (currently displayed)
@@ -416,7 +416,7 @@ export const setActiveRouteResponseAction = (routeResponseUUID: string) =>
   ({
     type: ActionTypes.SET_ACTIVE_ROUTE_RESPONSE,
     routeResponseUUID
-  } as const);
+  }) as const;
 
 /**
  * Add a new route response
@@ -432,7 +432,7 @@ export const addRouteResponseAction = (
     type: ActionTypes.ADD_ROUTE_RESPONSE,
     routeResponse,
     isDuplication
-  } as const);
+  }) as const;
 
 /**
  * Finalizes route movement to another environment
@@ -445,7 +445,7 @@ export const duplicateRouteToAnotherEnvironmentAction = (
     type: ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT,
     route,
     targetEnvironmentUUID
-  } as const);
+  }) as const;
 
 /**
  * Triggers movement of an entity to another environment
@@ -458,7 +458,7 @@ export const startEntityDuplicationToAnotherEnvironmentAction = (
     type: ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
     subjectUUID,
     subject
-  } as const);
+  }) as const;
 
 /**
  * Cancels out entity movement
@@ -466,7 +466,7 @@ export const startEntityDuplicationToAnotherEnvironmentAction = (
 export const cancelEntityDuplicationToAnotherEnvironmentAction = () =>
   ({
     type: ActionTypes.CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT
-  } as const);
+  }) as const;
 
 /**
  * Finalizes databucket movement to another environment
@@ -479,7 +479,7 @@ export const duplicateDatabucketToAnotherEnvironmentAction = (
     type: ActionTypes.DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT,
     databucket,
     targetEnvironmentUUID
-  } as const);
+  }) as const;
 
 /**
  * Update the active route response
@@ -492,7 +492,7 @@ export const updateRouteResponseAction = (
   ({
     type: ActionTypes.UPDATE_ROUTE_RESPONSE,
     properties
-  } as const);
+  }) as const;
 
 /**
  * Set a route response as default
@@ -503,7 +503,7 @@ export const setDefaultRouteResponseAction = (routeResponseIndex: number) =>
   ({
     type: ActionTypes.SET_DEFAULT_ROUTE_RESPONSE,
     routeResponseIndex
-  } as const);
+  }) as const;
 
 /**
  * Set the active databucket (currently displayed)
@@ -514,7 +514,7 @@ export const setActiveDatabucketAction = (databucketUUID: string) =>
   ({
     type: ActionTypes.SET_ACTIVE_DATABUCKET,
     databucketUUID
-  } as const);
+  }) as const;
 
 /**
  * Add a databucket
@@ -529,7 +529,7 @@ export const addDatabucketAction = (
     type: ActionTypes.ADD_DATABUCKET,
     databucket,
     afterUUID
-  } as const);
+  }) as const;
 
 /**
  * Remove a databucket
@@ -540,7 +540,7 @@ export const removeDatabucketAction = (databucketUUID: string) =>
   ({
     type: ActionTypes.REMOVE_DATABUCKET,
     databucketUUID
-  } as const);
+  }) as const;
 
 /**
  * Update a databucket
@@ -551,7 +551,7 @@ export const updateDatabucketAction = (properties: DatabucketProperties) =>
   ({
     type: ActionTypes.UPDATE_DATABUCKET,
     properties
-  } as const);
+  }) as const;
 
 /**
  * Log the request (request and response)
@@ -568,7 +568,7 @@ export const logRequestAction = (
     type: ActionTypes.LOG_REQUEST,
     environmentUUID,
     logItem
-  } as const);
+  }) as const;
 
 /**
  * Clear an environment logs
@@ -579,7 +579,7 @@ export const clearLogsAction = (environmentUUID: string) =>
   ({
     type: ActionTypes.CLEAR_LOGS,
     environmentUUID
-  } as const);
+  }) as const;
 
 /**
  * Set the active environment log UUID for a given environment
@@ -595,7 +595,7 @@ export const setActiveEnvironmentLogUUIDAction = (
     type: ActionTypes.SET_ACTIVE_ENVIRONMENT_LOG,
     environmentUUID,
     activeEnvironmentLogUUID
-  } as const);
+  }) as const;
 
 /**
  * Add a toast
@@ -606,7 +606,7 @@ export const addToastAction = (toast: Toast) =>
   ({
     type: ActionTypes.ADD_TOAST,
     toast
-  } as const);
+  }) as const;
 
 /**
  * Remove a toast
@@ -617,7 +617,7 @@ export const removeToastAction = (toastUUID: string) =>
   ({
     type: ActionTypes.REMOVE_TOAST,
     toastUUID
-  } as const);
+  }) as const;
 
 /**
  * Update user settings
@@ -628,7 +628,7 @@ export const updateSettingsAction = (properties: SettingsProperties) =>
   ({
     type: ActionTypes.UPDATE_SETTINGS,
     properties
-  } as const);
+  }) as const;
 
 /**
  * Update UI state
@@ -639,7 +639,7 @@ export const updateUIStateAction = (properties: UIStateProperties) =>
   ({
     type: ActionTypes.UPDATE_UI_STATE,
     properties
-  } as const);
+  }) as const;
 
 export type Actions =
   | ReturnType<typeof setUpdateUserAction>
