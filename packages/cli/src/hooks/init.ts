@@ -1,5 +1,5 @@
 import { Hook } from '@oclif/core';
-import * as mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import { Config } from '../config';
 
 /**

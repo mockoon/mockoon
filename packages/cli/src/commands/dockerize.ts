@@ -1,7 +1,7 @@
 import { Command, Flags } from '@oclif/core';
 import axios from 'axios';
 import { promises as fs } from 'fs';
-import * as mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import { render as mustacheRender } from 'mustache';
 import { parse as pathParse, ParsedPath, resolve as pathResolve } from 'path';
 import { Config } from '../config';
