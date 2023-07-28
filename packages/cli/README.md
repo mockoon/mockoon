@@ -118,6 +118,8 @@ Starts one (or more) mock API from Mockoon's environment file(s) as a foreground
 The mocks will run by default on the ports and hostnames specified in the files. You can override these values by using the `--port` and `--hostname` flags.
 `--data`, `--port` and `--hostname` flags support multiple entries to run multiple mock APIs at once (see examples below).
 
+> 💡 To run the CLI as a background process, add an `&` at the end of the command: `mockoon-cli start -d ./data-file.json &`.
+
 > This command is compatible with [legacy export files](https://mockoon.com/docs/latest/mockoon-data-files/import-export-mockoon-format/).
 
 ```
@@ -215,6 +217,8 @@ jobs:
       - name: Make test call
         run: curl -X GET http://localhost:3000/endpoint`
 ```
+
+> 💡 If you are building your own actions with the CLI, do not forget to add an `&` at the end of the command to run it in the background and avoid blocking the workflow: `mockoon-cli start -d ./data-file.json &`.
 
 ## Docker image
 
