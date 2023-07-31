@@ -58,6 +58,10 @@ For the desktop application:
 - Build the application processes (Electron main and renderer processes) `npm run build:desktop:dev` or in watch mode `npm run build:desktop:dev:watch`.
 - Start the application with `npm run start:desktop:dev`. The application will restart automatically when you make changes to the `commons` or `commons-server` libraries or to the desktop application's code.
 
+### VSCode remote debugging
+
+To debug the desktop application, you can use the VSCode launch configuration `Desktop: All processes` (You need to stop the `npm run start:desktop:dev` command). It will start the application in debug mode and attach the debugger to it. You will then be able to set breakpoints in VSCode on the desktop application's code and on the libraries code (`commons` or `commons-server`).
+
 ## Work on your feature or bugfix
 
 - Start your `feature` or `fix` from `main`
