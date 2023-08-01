@@ -13,7 +13,7 @@ import {
   StoreType
 } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
+import { ActionTypes, Actions } from 'src/renderer/app/stores/actions';
 import {
   findRouteFolderHierarchy,
   getBodyEditorMode,
@@ -565,7 +565,8 @@ export const environmentReducer = (
         'proxyRemovePrefix',
         'tlsOptions',
         'hostname',
-        'cors'
+        'cors',
+        'routesFolder'
       ];
 
       newState = {

@@ -263,5 +263,26 @@
         ></app-svg>
       </div>
     </div>
+
+    <div class="input-group">
+      <div class="custom-control custom-checkbox">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          id="env-settings-routesFolder"
+          formControlName="routesFolder"
+        />
+        <label class="custom-control-label" for="env-settings-routesFolder"
+          >Save each route as JSON
+        </label>
+      </div>
+      <div class="input-group-append ml-1">
+        <app-svg
+          icon="info"
+          class="ml-1"
+          ngbTooltip="Mockoon will save each route as a JSON file in the routes folder"
+        ></app-svg>
+      </div>
+    </div>
   </div>
 </div>

@@ -6,17 +6,18 @@ import {
 } from '@mockoon/commons-server';
 import {
   BrowserWindow,
+  Menu,
   clipboard,
   dialog,
   ipcMain,
-  Menu,
   shell
 } from 'electron';
 import { getDataPath } from 'electron-json-storage';
-import { promises as fsPromises } from 'fs';
+import { existsSync as fsExistsSync, promises as fsPromises } from 'fs';
 import { createServer } from 'http';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import {
+  dirname as pathDirname,
   format as pathFormat,
   join as pathJoin,
   parse as pathParse
@@ -137,18 +138,49 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.handle('APP_GET_OS', () => process.platform);
 
-  ipcMain.handle(
-    'APP_READ_ENVIRONMENT_DATA',
-    async (event, path: string) => await readJSONData(path)
-  );
+  ipcMain.handle('APP_READ_ENVIRONMENT_DATA', async (event, path: string) => {
+    const root = await readJSONData(path);
+    if (!root.routesFolder) {
+      return root;
+    }
+
+    const routesFolderPath = pathJoin(pathDirname(path), './routes');
+
+    if (fsExistsSync(routesFolderPath)) {
+      const routeFiles = await fsPromises.readdir(routesFolderPath);
+
+      const routes = await Promise.all(
+        routeFiles
+          .map((file) => readJSONData(pathJoin(routesFolderPath, file)))
+          .filter(Boolean)
+      );
+
+      return { ...root, routes };
+    }
+
+    return root;
+  });
 
   ipcMain.handle(
     'APP_WRITE_ENVIRONMENT_DATA',
     async (event, data, path: string, storagePrettyPrint?: boolean) => {
       unwatchEnvironmentFile(data.uuid);
 
-      await writeJSONData(data, path, storagePrettyPrint);
-
+      if (!data.routesFolder) {
+        await writeJSONData(data, path, storagePrettyPrint);
+      } else {
+        const { routes, ...restData } = data;
+        const routesFolderPath = pathJoin(pathDirname(path), './routes');
+        await writeJSONData(restData, path, storagePrettyPrint);
+        routes.forEach(async (route: any) => {
+          const name = route.endpoint.replace(/\//g, '-');
+          await writeJSONData(
+            route,
+            pathJoin(routesFolderPath, `${name}.json`),
+            storagePrettyPrint
+          );
+        });
+      }
       watchEnvironmentFile(data.uuid, path);
     }
   );

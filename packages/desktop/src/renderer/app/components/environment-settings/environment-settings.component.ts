@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Environment, EnvironmentDefault } from '@mockoon/commons';
-import { merge, Observable, Subject } from 'rxjs';
+import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
@@ -93,7 +93,8 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
       endpointPrefix: [EnvironmentDefault.endpointPrefix],
       latency: [EnvironmentDefault.latency],
       tlsOptions: this.tlsOptionsFormGroup,
-      cors: [EnvironmentDefault.cors]
+      cors: [EnvironmentDefault.cors],
+      routesFolder: [EnvironmentDefault.routesFolder]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -133,7 +134,8 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
               endpointPrefix: activeEnvironment.endpointPrefix,
               latency: activeEnvironment.latency,
               tlsOptions: activeEnvironment.tlsOptions,
-              cors: activeEnvironment.cors
+              cors: activeEnvironment.cors,
+              routesFolder: activeEnvironment.routesFolder
             },
             { emitEvent: false }
           );
