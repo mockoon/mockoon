@@ -374,6 +374,11 @@ You can disable the logging to the console by redirecting the stdout and stderr 
   mockoon-cli start --data ./data.json > $null 2>&1
   ```
 
+- Cross platform: use `dev-null-cli` package
+  ```sh-sessions
+  mockoon-cli start --data ./data.json | npx dev-null
+  ```
+
 You can also disable file logging by using th `--disable-log-to-file` flag. This is enabled by default in the Docker image.
 
 ## Mockoon's documentation
