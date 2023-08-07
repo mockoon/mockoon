@@ -163,11 +163,13 @@ export class ResponseRulesInterpreter {
       rule.value = '';
     }
 
+    const parsedRuleValue = this.parseValue(rule.value);
+
     let regex: RegExp;
 
     if (rule.operator.includes('regex')) {
       regex = new RegExp(
-        rule.value,
+        parsedRuleValue,
         rule.operator === 'regex_i' ? 'i' : undefined
       );
 
@@ -177,10 +179,10 @@ export class ResponseRulesInterpreter {
     }
 
     if (Array.isArray(value)) {
-      return value.includes(rule.value);
+      return value.includes(parsedRuleValue);
     }
 
-    return String(value) === String(this.parseValue(rule.value));
+    return String(value) === String(parsedRuleValue);
   };
 
   /**
