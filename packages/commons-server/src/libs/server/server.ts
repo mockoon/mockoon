@@ -478,7 +478,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       const enabledRouteResponse = new ResponseRulesInterpreter(
         currentRoute.responses,
         request,
-        currentRoute.responseMode
+        currentRoute.responseMode,
+        this.environment,
+        this.processedDatabuckets
       ).chooseResponse(requestNumber);
 
       requestNumber += 1;
