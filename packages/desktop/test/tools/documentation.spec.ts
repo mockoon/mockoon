@@ -1146,6 +1146,29 @@ const documentationTopics: {
         screenshotPosition: { right: 0 },
         screeenshotGaps: { top: 20, left: 40, bottom: 120 },
         fileName: 'headers-templating.png'
+      },
+      {
+        tasks: async () => {
+          await routes.switchTab('RULES');
+          await routes.addResponseRule({
+            target: 'header',
+            value: "{{data 'token'}}",
+            invert: false,
+            modifier: 'Authorization',
+            operator: 'equals'
+          });
+        },
+        get screenshotTarget() {
+          return routes.getResponseRule(1);
+        },
+        get highlightedTarget() {
+          return routes.getResponseRulevalue(1);
+        },
+        highlight: false,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0 },
+        screeenshotGaps: { top: 50, left: 40, bottom: 80 },
+        fileName: 'template-helper-response-rule-value.png'
       }
     ]
   },
