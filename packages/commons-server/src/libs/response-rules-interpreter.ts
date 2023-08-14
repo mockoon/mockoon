@@ -78,7 +78,10 @@ export class ResponseRulesInterpreter {
             );
       });
 
-      if(response === undefined && this.responseMode === ResponseMode.FALLBACK){
+      if (
+        response === undefined &&
+        this.responseMode === ResponseMode.FALLBACK
+      ) {
         return null;
       }
 

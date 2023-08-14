@@ -3135,9 +3135,7 @@ describe('Response rules interpreter', () => {
     });
   });
 
-  describe('proxy rules', ()=>{
-
-
+  describe('proxy rules', () => {
     it('should return response if rules fulfilled and ignore the response marked as default', () => {
       const request: Request = {
         header: function (headerName: string) {
@@ -3166,14 +3164,13 @@ describe('Response rules interpreter', () => {
               }
             ],
             rulesOperator: 'OR',
-            default: false,
+            default: false
           },
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
         request,
-      ResponseMode.FALLBACK,
-
-    ).chooseResponse(1);
+        ResponseMode.FALLBACK
+      ).chooseResponse(1);
 
       expect(routeResponse.body).to.be.equal('content1');
     });
@@ -3206,17 +3203,15 @@ describe('Response rules interpreter', () => {
               }
             ],
             rulesOperator: 'OR',
-            default: false,
+            default: false
           },
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
         request,
-        ResponseMode.FALLBACK,
-
+        ResponseMode.FALLBACK
       ).chooseResponse(1);
 
       expect(routeResponse).to.be.null;
     });
-
   });
 });

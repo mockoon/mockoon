@@ -483,7 +483,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.processedDatabuckets
       ).chooseResponse(requestNumber);
 
-      if(!enabledRouteResponse){
+      if (!enabledRouteResponse) {
         return next();
       }
 

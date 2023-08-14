@@ -41,10 +41,7 @@ describe('Server should handle proxy configuration', () => {
       .okay());
 
   it('Should proxy when route is not present', () =>
-    request('/test')
-      .type('application/json')
-      .json({})
-      .okay());
+    request('/test').type('application/json').json({}).okay());
 
   it('Should return response when request matches', () =>
     request('/test2?rule=match')
