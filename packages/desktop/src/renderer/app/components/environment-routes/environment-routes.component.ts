@@ -182,6 +182,11 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       icon: 'rule',
       tooltip: 'Disabled rules mode (default response only)',
       activeClass: 'text-warning'
+    },
+    {
+      value: ResponseMode.FALLBACK,
+      icon: 'low_priority',
+      tooltip: 'Fallback response mode (does not return a response if )',
     }
   ];
   public bodyType: ToggleItems = [

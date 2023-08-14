@@ -73,8 +73,8 @@ export class ResponseRulesInterpreter {
             );
       });
 
-      if(response === undefined && this.responseMode === ResponseMode.PROXY_MISSING){
-        return null
+      if(response === undefined && this.responseMode === ResponseMode.FALLBACK){
+        return null;
       }
 
       if (response === undefined) {

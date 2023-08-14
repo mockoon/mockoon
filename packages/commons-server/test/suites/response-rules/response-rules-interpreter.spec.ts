@@ -2851,7 +2851,7 @@ describe('Response rules interpreter', () => {
     });
   });
 
-  describe("proxy rules", ()=>{
+  describe('proxy rules', ()=>{
 
 
     it('should return response if rules fulfilled and ignore the response marked as default', () => {
@@ -2887,7 +2887,7 @@ describe('Response rules interpreter', () => {
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
         request,
-      ResponseMode.PROXY_MISSING,
+      ResponseMode.FALLBACK,
 
     ).chooseResponse(1);
 
@@ -2927,12 +2927,12 @@ describe('Response rules interpreter', () => {
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
         request,
-        ResponseMode.PROXY_MISSING,
+        ResponseMode.FALLBACK,
 
       ).chooseResponse(1);
 
       expect(routeResponse).to.be.null;
     });
 
-  })
+  });
 });

@@ -459,7 +459,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       ).chooseResponse(requestNumber);
 
       if(!enabledRouteResponse){
-        return next()
+        return next();
       }
 
       requestNumber += 1;
