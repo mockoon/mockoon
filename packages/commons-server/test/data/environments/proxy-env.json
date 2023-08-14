@@ -1,8 +1,8 @@
 {
   "uuid": "c6199444-5116-490a-99a2-074876253a4a",
   "lastMigration": 27,
-  "name": "Test env",
-  "port": 3000,
+  "name": "Proxy env",
+  "port": 3001,
   "hostname": "",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,7 @@
       "uuid": "85e236c4-decc-467c-b288-d243181a250f",
       "documentation": "doc",
       "method": "get",
-      "endpoint": "test",
+      "endpoint": "hard-route",
       "responses": [
         {
           "uuid": "cd4eb020-310f-4bca-adda-98410cf65a62",
@@ -19,13 +19,18 @@
           "rulesOperator": "OR",
           "statusCode": 200,
           "label": "Route",
-          "headers": [],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
           "latency": 0,
           "filePath": "",
           "sendFileAsBody": false,
           "disableTemplating": false,
           "fallbackTo404": false,
-          "body": "{}",
+          "body": "{\"route\":\"hard\"}",
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE"
@@ -36,42 +41,50 @@
       "type": "http"
     },
     {
-      "uuid": "1d4dff08-def4-41eb-bebd-d6f3c670618e",
-      "type": "http",
-      "documentation": "",
+      "uuid": "12b5ee07-d223-451a-a904-ea9cf23adb45",
+      "documentation": "doc",
       "method": "get",
       "endpoint": "test2",
       "responses": [
         {
-          "uuid": "58c5bd0d-97ca-4552-9087-1024fa54f1e8",
-          "body": "{\n  \"route\": \"test2\"\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [
+          "uuid": "71279121-c250-4fea-b8d3-934a55185f7d",
+          "rules": [
             {
-              "key": "Content-Type",
-              "value": "application/json"
+              "target": "query",
+              "modifier": "rule",
+              "value": "match",
+              "invert": false,
+              "operator": "equals"
             }
           ],
-          "bodyType": "INLINE",
-          "filePath": "",
-          "databucketID": "",
-          "sendFileAsBody": false,
-          "rules": [],
           "rulesOperator": "OR",
+          "statusCode": 200,
+          "label": "Route",
+          "headers": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ],
+          "latency": 0,
+          "filePath": "",
+          "sendFileAsBody": false,
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": true
+          "body": "{\n  \"route\": \"match\"\n}",
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE"
         }
       ],
       "enabled": true,
-      "responseMode": null
+      "responseMode": "FALLBACK",
+      "type": "http"
     }
   ],
-  "proxyMode": false,
+  "proxyMode": true,
   "proxyRemovePrefix": false,
-  "proxyHost": "",
+  "proxyHost": "http://localhost:3000",
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
   "cors": false,
@@ -95,11 +108,11 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "85e236c4-decc-467c-b288-d243181a250f"
+      "uuid": "12b5ee07-d223-451a-a904-ea9cf23adb45"
     },
     {
       "type": "route",
-      "uuid": "1d4dff08-def4-41eb-bebd-d6f3c670618e"
+      "uuid": "85e236c4-decc-467c-b288-d243181a250f"
     }
   ]
 }
