@@ -31,7 +31,10 @@ export class InputNumberDirective implements ControlValueAccessor {
   public onChange: (_: any) => void;
   public onTouched: (_: any) => void;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
+  constructor(
+    private renderer: Renderer2,
+    private elementRef: ElementRef
+  ) {}
 
   /**
    * Prevent some characters usually accepted in an input[type=number]

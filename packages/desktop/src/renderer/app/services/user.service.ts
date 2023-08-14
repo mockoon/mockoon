@@ -12,7 +12,10 @@ export class UserService {
   private auth: Auth = inject(Auth);
   private authUser$ = user(this.auth);
 
-  constructor(private httpClient: HttpClient, private store: Store) {}
+  constructor(
+    private httpClient: HttpClient,
+    private store: Store
+  ) {}
 
   /**
    * Monitor auth state and update the store

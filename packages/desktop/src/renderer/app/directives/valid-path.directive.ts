@@ -24,7 +24,10 @@ export class ValidPathDirective {
   public onChange: (_: any) => void;
   public onTouched: (_: any) => void;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
+  constructor(
+    private renderer: Renderer2,
+    private elementRef: ElementRef
+  ) {}
 
   /**
    * Handle values entered in the input field

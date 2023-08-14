@@ -1,6 +1,5 @@
 import {
   Environment,
-  Environments,
   EnvironmentSchema,
   HighestMigrationId,
   IsLegacyExportData,
@@ -9,30 +8,23 @@ import {
   UnwrapLegacyExport
 } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
+import { confirm } from '@oclif/core/lib/cli-ux';
 import axios from 'axios';
 import { promises as fs } from 'fs';
-import { prompt } from 'inquirer';
-import * as mkdirp from 'mkdirp';
-import { join } from 'path';
-import { ProcessDescription } from 'pm2';
-import { Config } from '../config';
-import { Messages } from '../constants/messages.constants';
-import { transformEnvironmentName } from './utils';
+import { CLIMessages } from '../constants/cli-messages.constants';
 
 /**
- * Load and parse a JSON data file.
+ * Load and parse one or more JSON data file(s).
  * Supports both legacy export files (with one or multiple envs) or new environment files.
- * If a legacy export is encountered, unwrap it and update `--data` flag to reflect the number of environments unwrapped
+ * If a legacy export is encountered, unwrap it.
  *
- * @param filePath
+ * @param filePaths
  */
 export const parseDataFiles = async (
   filePaths: string[]
-): Promise<{ filePaths: string[]; environments: Environments }> => {
+): Promise<{ originalPath: string; environment: Environment }[]> => {
   const openAPIConverter = new OpenAPIConverter();
-  let environments: Environments = [];
-  let newFilePaths: string[] = [];
-
+  let environments: { originalPath: string; environment: Environment }[] = [];
   let filePathIndex = 0;
 
   for (const filePath of filePaths) {
@@ -40,8 +32,7 @@ export const parseDataFiles = async (
       const environment = await openAPIConverter.convertFromOpenAPI(filePath);
 
       if (environment) {
-        environments.push(environment);
-        newFilePaths.push(filePath);
+        environments.push({ environment, originalPath: filePath });
       }
     } catch (openAPIError: any) {
       try {
@@ -61,21 +52,18 @@ export const parseDataFiles = async (
           const unwrappedExport = UnwrapLegacyExport(data);
 
           // Extract all environments, eventually filter items of type 'route'
-          environments = [...environments, ...unwrappedExport];
-
-          // if we unwrapped more than one exported environment, add as many `--data` flag entries
-          if (unwrappedExport.length >= 1) {
-            newFilePaths = [
-              ...newFilePaths,
-              ...new Array(unwrappedExport.length).fill(filePath)
-            ];
-          }
+          environments = [
+            ...environments,
+            ...unwrappedExport.map((environment) => ({
+              environment,
+              originalPath: filePath
+            }))
+          ];
         } else if (typeof data === 'object') {
-          environments.push(data);
-          newFilePaths.push(filePath);
+          environments.push({ environment: data, originalPath: filePath });
         }
       } catch (JSONError: any) {
-        throw new Error(`${Messages.CLI.DATA_INVALID}: ${JSONError.message}`);
+        throw new Error(`${CLIMessages.DATA_INVALID}: ${JSONError.message}`);
       }
     }
 
@@ -83,10 +71,10 @@ export const parseDataFiles = async (
   }
 
   if (environments.length === 0) {
-    throw new Error(Messages.CLI.ENVIRONMENT_NOT_AVAILABLE_ERROR);
+    throw new Error(CLIMessages.ENVIRONMENT_NOT_AVAILABLE_ERROR);
   }
 
-  return { filePaths: newFilePaths, environments };
+  return environments;
 };
 
 /**
@@ -102,25 +90,20 @@ const migrateAndValidateEnvironment = async (
 ) => {
   // environment data are too old: lastMigration is not present
   if (environment.lastMigration === undefined && !forceRepair) {
-    const promptResponse: { repair: string } = await prompt([
-      {
-        name: 'repair',
-        message: `${
-          environment.name ? '"' + environment.name + '"' : 'This environment'
-        } does not seem to be a valid Mockoon environment or is too old. Let Mockoon attempt to repair it?`,
-        type: 'confirm',
-        default: true
-      }
-    ]);
+    const promptResponse: boolean = await confirm(
+      `${
+        environment.name ? '"' + environment.name + '"' : 'This environment'
+      } does not seem to be a valid Mockoon environment or is too old. Let Mockoon attempt to repair it? (y/n)`
+    );
 
-    if (!promptResponse.repair) {
-      throw new Error(Messages.CLI.DATA_TOO_OLD_ERROR);
+    if (!promptResponse) {
+      throw new Error(CLIMessages.DATA_TOO_OLD_ERROR);
     }
   }
 
   // environment data migrated with a more recent version (if installed CLI version does not include @mockoon/commons with required migrations)
   if (environment.lastMigration > HighestMigrationId) {
-    throw new Error(Messages.CLI.DATA_TOO_RECENT_ERROR);
+    throw new Error(CLIMessages.DATA_TOO_RECENT_ERROR);
   }
 
   try {
@@ -137,7 +120,7 @@ const migrateAndValidateEnvironment = async (
   let validatedEnvironment = EnvironmentSchema.validate(environment).value;
 
   if (!validatedEnvironment) {
-    throw new Error(Messages.CLI.DATA_INVALID);
+    throw new Error(CLIMessages.DATA_INVALID);
   }
 
   validatedEnvironment = repairRefs(validatedEnvironment);
@@ -146,8 +129,7 @@ const migrateAndValidateEnvironment = async (
 };
 
 /**
- * Migrate the environment
- * Copy the environment to a new temporary file.
+ * Migrate the environment and override user defined options
  *
  * @param environments - path to the data file or export data
  * @param options
@@ -156,27 +138,13 @@ export const prepareEnvironment = async (params: {
   environment: Environment;
   userOptions: {
     port?: number;
-    pname?: string;
     hostname?: string;
   };
-  dockerfileDir?: string;
   repair?: boolean;
-}): Promise<{
-  name: string;
-  protocol: string;
-  hostname: string;
-  endpointPrefix: string;
-  port: number;
-  dataFile: string;
-}> => {
+}): Promise<Environment> => {
   params.environment = await migrateAndValidateEnvironment(
     params.environment,
     params.repair
-  );
-
-  // transform the provided name or env's name to be used as process name
-  params.environment.name = transformEnvironmentName(
-    params.userOptions.pname || params.environment.name
   );
 
   if (params.userOptions.port !== undefined) {
@@ -187,46 +155,5 @@ export const prepareEnvironment = async (params: {
     params.environment.hostname = params.userOptions.hostname;
   }
 
-  let dataFile: string = join(
-    Config.dataPath,
-    `${params.environment.name}.json`
-  );
-
-  // if we are building a Dockerfile, we want the data in the same folder
-  if (params.dockerfileDir) {
-    await mkdirp(params.dockerfileDir);
-    dataFile = `${params.dockerfileDir}/${params.environment.name}.json`;
-  }
-
-  // save environment to data path
-  await fs.writeFile(dataFile, JSON.stringify(params.environment));
-
-  return {
-    name: params.environment.name,
-    protocol: params.environment.tlsOptions.enabled ? 'https' : 'http',
-    hostname: params.environment.hostname,
-    port: params.environment.port,
-    endpointPrefix: params.environment.endpointPrefix,
-    dataFile
-  };
-};
-
-/**
- * Clean the temporary data files by deleting the ones with no
- * matching running process
- *
- * @param processes
- */
-export const cleanDataFiles = async (
-  processes: ProcessDescription[]
-): Promise<void> => {
-  const files = await fs.readdir(Config.dataPath);
-
-  files.forEach(async (file) => {
-    if (
-      processes.findIndex((process) => `${process.name}.json` === file) === -1
-    ) {
-      await fs.unlink(join(Config.dataPath, file));
-    }
-  });
+  return params.environment;
 };

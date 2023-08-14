@@ -336,3 +336,54 @@ export const getFirstRouteAndResponseUUIDs = (
 
   return { routeUUID, routeResponseUUID };
 };
+
+/**
+ * Return an array of parent folder UUIDs for a given route UUID, or an empty array if the route is at root level
+ *
+ * @param routeUUID
+ * @param environment
+ * @returns
+ */
+export const findRouteFolderHierarchy = (
+  routeUUID: string,
+  environment: Environment
+): string[] => {
+  const inRootLevel = environment.rootChildren.some(
+    (child) => child.type === 'route' && child.uuid === routeUUID
+  );
+
+  if (inRootLevel) {
+    return [];
+  }
+
+  const uuids: string[] = [];
+  const parentFolder = environment.folders.find((folder) =>
+    folder.children.some(
+      (child) => child.type === 'route' && child.uuid === routeUUID
+    )
+  );
+
+  if (parentFolder) {
+    let parentFolderUUID = parentFolder.uuid;
+    uuids.push(parentFolderUUID);
+
+    while (parentFolderUUID !== null) {
+      const secondaryParentFolder = environment.folders.find((folder) =>
+        folder.children.some(
+          (child) => child.type === 'folder' && child.uuid === parentFolderUUID
+        )
+      );
+
+      if (secondaryParentFolder) {
+        uuids.push(secondaryParentFolder.uuid);
+        parentFolderUUID = secondaryParentFolder.uuid;
+      } else {
+        parentFolderUUID = null;
+      }
+    }
+
+    return uuids;
+  }
+
+  return [];
+};

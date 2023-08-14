@@ -1,6 +1,6 @@
 {
   "uuid": "530c5c03-82c7-461d-a794-43a67bc5af0b",
-  "lastMigration": 27,
+  "lastMigration": 28,
   "name": "Swagger Petstore v3",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -31,7 +31,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "f04edb71-ef4d-48b9-819c-2b2c7012013b",
@@ -48,7 +49,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -76,7 +78,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "5e8b6981-cf59-49e6-91af-4bdae8a7c3c1",
@@ -93,7 +96,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -121,7 +125,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "212dc002-1793-4402-ac43-1d177ac2da16",
@@ -138,7 +143,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -166,7 +172,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "d51a51a3-41b7-478b-8063-99973b33f4f5",
@@ -183,7 +190,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,

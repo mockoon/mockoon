@@ -18,7 +18,7 @@ export class ImportExportService extends Logger {
     private environmentsService: EnvironmentsService,
     private dataService: DataService
   ) {
-    super('[SERVICE][IMPORT-EXPORT]', toastService);
+    super('[RENDERER][SERVICE][IMPORT-EXPORT] ', toastService);
   }
 
   /**
@@ -31,10 +31,6 @@ export class ImportExportService extends Logger {
       .pipe(
         switchMap((filePath) => {
           if (filePath) {
-            this.logMessage('info', 'OPENAPI_IMPORT', {
-              filePath
-            });
-
             return from(
               MainAPI.invoke(
                 'APP_OPENAPI_CONVERT_FROM',
@@ -80,10 +76,6 @@ export class ImportExportService extends Logger {
       .pipe(
         switchMap((filePath) => {
           if (filePath) {
-            this.logMessage('info', 'OPENAPI_EXPORT', {
-              environmentUUID: activeEnvironment.uuid
-            });
-
             return from(
               MainAPI.invoke('APP_OPENAPI_CONVERT_TO', activeEnvironment)
             ).pipe(
@@ -108,6 +100,7 @@ export class ImportExportService extends Logger {
         catchError((error) => {
           this.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
             error,
+            environmentName: activeEnvironment.name,
             environmentUUID: activeEnvironment.uuid
           });
 

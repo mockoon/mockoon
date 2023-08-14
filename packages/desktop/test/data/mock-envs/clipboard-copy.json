@@ -1,6 +1,6 @@
 {
   "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-  "lastMigration": 27,
+  "lastMigration": 28,
   "name": "Env clipboard copy",
   "endpointPrefix": "",
   "latency": 0,
@@ -28,7 +28,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "responseMode": null,

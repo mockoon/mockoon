@@ -73,8 +73,8 @@ const highlight = async (
       element.style.top=(targetPosition.top - ${highlightGaps.top}) + "px";
       element.style.left=(targetPosition.left - ${highlightGaps.left}) + "px";
       element.style.width=(targetPosition.width + ${highlightGaps.left} + ${
-      highlightGaps.right
-    }) + "px";
+        highlightGaps.right
+      }) + "px";
       element.style.height=(${height}) + "px";
       element.style.border="3px solid red";
       element.style.zIndex='10000';
@@ -1146,6 +1146,29 @@ const documentationTopics: {
         screenshotPosition: { right: 0 },
         screeenshotGaps: { top: 20, left: 40, bottom: 120 },
         fileName: 'headers-templating.png'
+      },
+      {
+        tasks: async () => {
+          await routes.switchTab('RULES');
+          await routes.addResponseRule({
+            target: 'header',
+            value: "{{data 'token'}}",
+            invert: false,
+            modifier: 'Authorization',
+            operator: 'equals'
+          });
+        },
+        get screenshotTarget() {
+          return routes.getResponseRule(1);
+        },
+        get highlightedTarget() {
+          return routes.getResponseRulevalue(1);
+        },
+        highlight: false,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0 },
+        screeenshotGaps: { top: 50, left: 40, bottom: 80 },
+        fileName: 'template-helper-response-rule-value.png'
       }
     ]
   },
@@ -1158,7 +1181,7 @@ const documentationTopics: {
           await settings.open();
         },
         get highlightedTarget() {
-          return $('app-title-separator:nth-of-type(3)');
+          return $('app-title-separator[heading="Faker.js"]');
         },
         get screenshotTarget() {
           return modals.content;
@@ -1209,6 +1232,26 @@ const documentationTopics: {
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-show-in-folder.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'mockoon-data-files/data-storage-location',
+    screenshots: [
+      {
+        tasks: async () => {
+          await contextMenu.close();
+          await contextMenu.open('environments', 1);
+        },
+        get highlightedTarget() {
+          return contextMenu.getItem(4);
+        },
+        highlight: true,
+        screenshotPosition: { top: 0, left: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { right: 150, bottom: 150 },
+        fileName: 'environment-move-to-folder.png'
       }
     ]
   },
@@ -1444,9 +1487,23 @@ const documentationTopics: {
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: { right: 0 },
-        screeenshotGaps: { left: 50, top: 200, bottom: 100 },
+        screenshotPosition: { right: 0, left: 0 },
+        screeenshotGaps: { top: 200, bottom: 100 },
         fileName: 'link-data-bucket-crud-route.png'
+      },
+      {
+        tasks: async () => {},
+        get screenshotTarget() {
+          return routes.idPropertyDataBucketSelect;
+        },
+        get highlightedTarget() {
+          return routes.idPropertyDataBucketSelect;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0, left: 0 },
+        screeenshotGaps: { top: 200, bottom: 100 },
+        fileName: 'customize-crud-id-property-key.png'
       }
     ]
   },

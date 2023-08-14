@@ -168,7 +168,8 @@
     </a>
   </li>
 
-  <ng-container *ngIf="!folder.collapsed">
+  <!-- Display sub items if folder is not collapsed or if a search is in progress -->
+  <ng-container *ngIf="!folder.collapsed || (routesFilter$ | async)">
     <li
       *ngIf="folder.children.length === 0"
       class="nav-item"

@@ -41,7 +41,6 @@ import {
 import {
   catchError,
   debounceTime,
-  delay,
   filter,
   first,
   map,
@@ -94,6 +93,7 @@ import {
   duplicateRouteToAnotherEnvironmentAction,
   logRequestAction,
   navigateEnvironmentsAction,
+  refreshEnvironmentAction,
   reloadEnvironmentAction,
   removeDatabucketAction,
   removeEnvironmentAction,
@@ -150,7 +150,7 @@ export class EnvironmentsService extends Logger {
     protected toastService: ToastsService,
     private http: HttpClient
   ) {
-    super('[SERVICE][ENVIRONMENTS]', toastService);
+    super('[RENDERER][SERVICE][ENVIRONMENTS] ', toastService);
   }
 
   /**
@@ -333,7 +333,6 @@ export class EnvironmentsService extends Logger {
         confirmButtonText: 'Reload all',
         cancelButtonText: 'Ignore',
         subIcon: 'info',
-        subIconClass: 'text-primary',
         list$: this.environmentChanges$.pipe(
           map((environmentChanges) =>
             environmentChanges.map(
@@ -399,10 +398,6 @@ export class EnvironmentsService extends Logger {
         if (environmentStatus.running) {
           this.serverService.start(newEnvironment, environmentPath);
         }
-      }),
-      delay(1000),
-      tap(() => {
-        this.store.update(setActiveViewAction('ENV_ROUTES'));
       })
     );
   }
@@ -1016,8 +1011,11 @@ export class EnvironmentsService extends Logger {
   /**
    * Update the active environment
    */
-  public updateActiveEnvironment(properties: EnvironmentProperties) {
-    this.store.update(updateEnvironmentAction(properties));
+  public updateActiveEnvironment(
+    properties: EnvironmentProperties,
+    force = false
+  ) {
+    this.store.update(updateEnvironmentAction(properties), force);
   }
 
   /**
@@ -1227,25 +1225,86 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Move an environment file to a folder
+   *
+   * @param environmentUUID
+   */
+  public moveEnvironmentFileToFolder(environmentUUID: string) {
+    const settings = this.store.get('settings');
+    const environmentInfo = settings.environments.find(
+      (environment) => environment.uuid === environmentUUID
+    );
+
+    // prefill dialog with current environment folder and filename
+    return this.dialogsService
+      .showSaveDialog('Choose a folder', true, environmentInfo.path)
+      .pipe(
+        switchMap((filePath) => {
+          if (!filePath) {
+            return EMPTY;
+          }
+
+          if (
+            this.store
+              .get('settings')
+              .environments.find(
+                (environmentItem) => environmentItem.path === filePath
+              ) !== undefined
+          ) {
+            return throwError(() => 'ENVIRONMENT_FILE_IN_USE');
+          }
+
+          return zip(
+            of(filePath),
+            from(MainAPI.invoke('APP_GET_FILENAME', filePath))
+          );
+        }),
+        catchError((errorCode) => {
+          this.logMessage('error', errorCode as MessageCodes);
+
+          return EMPTY;
+        }),
+        tap(([filePath, filename]) => {
+          this.store.update(
+            updateSettingsAction({
+              environments: settings.environments.map((environment) => {
+                if (environment.uuid === environmentUUID) {
+                  return {
+                    uuid: environmentUUID,
+                    path: filePath
+                  };
+                }
+
+                return environment;
+              })
+            })
+          );
+
+          // trigger a save to update the environment file, otherwise file will be created only during next modification
+          this.store.update(refreshEnvironmentAction(environmentUUID));
+
+          this.logMessage('info', 'ENVIRONMENT_MOVED', {
+            environmentUUID
+          });
+        })
+      );
+  }
+
+  /**
    * Copy an environment JSON to the clipboard
    *
    * @param environmentUUID
    */
   public copyEnvironmentToClipboard(environmentUUID: string) {
-    this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD', {
-      environmentUUID
-    });
-
     const environment = this.store.getEnvironmentByUUID(environmentUUID);
 
     try {
       MainAPI.send('APP_WRITE_CLIPBOARD', JSON.stringify(environment, null, 4));
 
-      this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD_SUCCESS', {
-        environmentUUID
-      });
+      this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD_SUCCESS');
     } catch (error) {
       this.logMessage('error', 'COPY_ENVIRONMENT_CLIPBOARD_ERROR', {
+        environmentUUID,
         error
       });
     }
@@ -1257,20 +1316,15 @@ export class EnvironmentsService extends Logger {
    * @param routeUUID
    */
   public copyRouteToClipboard(routeUUID: string) {
-    this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD', {
-      routeUUID
-    });
-
     const route = this.store.getRouteByUUID(routeUUID);
 
     try {
       MainAPI.send('APP_WRITE_CLIPBOARD', JSON.stringify(route, null, 4));
 
-      this.logMessage('info', 'COPY_ROUTE_CLIPBOARD_SUCCESS', {
-        routeUUID
-      });
+      this.logMessage('info', 'COPY_ROUTE_CLIPBOARD_SUCCESS');
     } catch (error) {
       this.logMessage('error', 'COPY_ROUTE_CLIPBOARD_ERROR', {
+        routeUUID,
         error
       });
     }
@@ -1306,8 +1360,8 @@ export class EnvironmentsService extends Logger {
   private verifyData(environment: Environment): Observable<Environment> {
     if (environment.lastMigration > HighestMigrationId) {
       this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
-        name: environment.name,
-        uuid: environment.uuid
+        environmentName: environment.name,
+        environmentUUID: environment.uuid
       });
 
       return EMPTY;

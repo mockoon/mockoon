@@ -5,7 +5,7 @@
   <br>
   <a href="https://mockoon.com/download/"><img src="https://img.shields.io/badge/Download%20app-Go-green.svg?style=flat-square&colorB=1997c6"/></a>
   <a href="https://mockoon.com/"><img src="https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6"/></a>
-  <a href="http://eepurl.com/dskB2X"><img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/></a>
+  <a href="https://mockoon.com/newsletter/"><img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/></a>
   <a href="https://twitter.com/GetMockoon"><img src="https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2"/></a>
   <a href="https://discord.gg/MutRpsY5gE"><img src="https://img.shields.io/badge/Discord-go-blue.svg?style=flat-square&colorA=6c84d9&colorB=1da1f2"/></a>
   <br>
@@ -20,7 +20,7 @@ Feed it with a Mockoon's [data file](https://mockoon.com/docs/latest/mockoon-dat
 
 The CLI supports the same features as the main application: [templating system](https://mockoon.com/docs/latest/templating/overview/), [proxy mode](https://mockoon.com/docs/latest/proxy-mode/), [route response rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/), etc.
 
-![Mockoon CLI screenshot](https://github.com/mockoon/mockoon/raw/main/packages/cli/docs/screenshot.png)
+![Mockoon CLI screenshot](https://mockoon.com/images/cli-hero-repo.png)
 
 - [Installation](#installation)
 - [Run a mock API with the CLI](#run-a-mock-api-with-the-cli)
@@ -28,17 +28,14 @@ The CLI supports the same features as the main application: [templating system](
   - [Use an OpenAPI specification file](#use-an-openapi-specification-file)
 - [Compatibility](#compatibility)
 - [Commands](#commands)
-  - [`mockoon-cli start`](#mockoon-cli-start)
-  - [`mockoon-cli list [ID]`](#mockoon-cli-list-id)
-  - [`mockoon-cli stop [ID]`](#mockoon-cli-stop-id)
-  - [`mockoon-cli dockerize`](#mockoon-cli-dockerize)
-  - [`mockoon-cli help [COMMAND]`](#mockoon-cli-help-command)
+  - [Start command](#start-command)
+  - [Dockerize command](#dockerize-command)
+  - [Help command](#help-command)
 - [Use the GitHub Action](#use-the-github-action)
 - [Docker image](#docker-image)
   - [Using the generic Docker image](#using-the-generic-docker-image)
   - [Using the `dockerize` command](#using-the-dockerize-command)
 - [Logs](#logs)
-- [PM2](#pm2)
 - [Mockoon's documentation](#mockoons-documentation)
 - [Sponsors](#sponsors)
 - [Support/feedback](#supportfeedback)
@@ -74,7 +71,7 @@ $ mockoon-cli start --data ~/path/to/your-environment-file.json
 ```
 
 > To locate your environment file from the main application, right-click on a environment and select "Show in folder" in the context menu:
-> ![context menu - show in folder](https://github.com/mockoon/mockoon/raw/main/packages/cli/docs/environment-show-in-folder.png)
+> ![context menu - show in folder](https://mockoon.com/images/docs/repo/cli/environment-show-in-folder.png)
 
 You can also directly load Mockoon's environment file from a URL. To do so, provide the URL as the `data` parameter instead of a local path:
 
@@ -90,7 +87,7 @@ $ mockoon-cli start --data https://domain.com/your-environment-file.json
 
 Another option is to directly pass an OpenAPI specification file as the `data` parameter. Mockoon supports both JSON and YAML formats in versions 2.0.0 and 3.0.0.
 
-> /!\ There is currently no equivalent between all the OpenAPI specifications and Mockoon's features ([more info](https://mockoon.com/docs/latest/openapi/openapi-specification-compatibility/)). If you want to run your Mockoon mock APIs with the CLI with all the features (templating, rules, etc.), you must use Mockoon's data files ([see above](#use-your-mockoon-environment-file)) directly, or you may lose part of your mock's behavior.
+> ⚠️ There is currently no equivalent between all the OpenAPI specifications and Mockoon's features ([more info](https://mockoon.com/docs/latest/openapi/openapi-specification-compatibility/)). If you want to run your Mockoon mock APIs with the CLI with all the features (templating, rules, etc.), you must use Mockoon's data files ([see above](#use-your-mockoon-environment-file)) directly, or you may lose part of your mock's behavior.
 
 You can provide a path to a local OpenAPI specification file or directly the file's URL:
 
@@ -110,22 +107,20 @@ Mockoon's CLI has been tested on Node.js versions 16, 18 and 20.
 
 ## Commands
 
-- [`mockoon-cli start`](#mockoon-cli-start)
-- [`mockoon-cli list [ID]`](#mockoon-cli-list-id)
-- [`mockoon-cli stop [ID]`](#mockoon-cli-stop-id)
-- [`mockoon-cli dockerize`](#mockoon-cli-dockerize)
-- [`mockoon-cli help [COMMAND]`](#mockoon-cli-help-command)
+- [Start command](#start-command)
+- [Dockerize command](#dockerize-command)
+- [Help command](#help-command)
 
-### `mockoon-cli start`
+### Start command
 
-Starts one (or more) mock API from Mockoon's environment file(s).
+Starts one (or more) mock API from Mockoon's environment file(s) as a foreground process.
 
-The process will be created by default with the name and port of the Mockoon's environment. You can override these values by using the `--port` and `--pname` flags.
-`--data`, `--port`, `--pname` and `--hostname` flags support multiple entries to run multiple mock APIs at once (see examples below).
+The mocks will run by default on the ports and hostnames specified in the files. You can override these values by using the `--port` and `--hostname` flags.
+`--data`, `--port` and `--hostname` flags support multiple entries to run multiple mock APIs at once (see examples below).
 
-Using the `--daemon-off` flag will keep the CLI in the foreground. The mock API process will not be [managed by PM2](#pm2). When running as a blocking process, all the logs are sent to both stdout (console) and the [usual files](logs).
+> 💡 To run the CLI as a background process, add an `&` at the end of the command: `mockoon-cli start -d ./data-file.json &`.
 
-> This command is compatible with [legacy export files](https://mockoon.com/docs/latest/mockoon-data-files/import-export-mockoon-format/). As an export file can contain multiple environments, you can indicate the one you want to run by specifying its `--index` or its `--name`. If only one environment is present in the file, you can omit the index, and the CLI will run it by default.
+> This command is compatible with [legacy export files](https://mockoon.com/docs/latest/mockoon-data-files/import-export-mockoon-format/).
 
 ```
 USAGE
@@ -133,76 +128,27 @@ USAGE
 
 OPTIONS
   -d, --data                 [required] Path(s) or URL(s) to your Mockoon file(s)
-  -N, --pname                Override process(es) name(s)
   -p, --port                 Override environment(s) port(s)
   -l, --hostname             Override default listening hostname(s)
   -t, --log-transaction      Log the full HTTP transaction (request and response)
   -X, --disable-log-to-file  Disable logging to file
   -r, --repair               If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
-  -D, --daemon-off           Keep the CLI in the foreground and do not manage the process with PM2
   -h, --help                 Show CLI help
 
 EXAMPLES
   $ mockoon-cli start --data ~/data.json
-  $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --pname mock1 mock2 --hostname 127.0.0.1 192.168.1.1
+  $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1
   $ mockoon-cli start --data https://file-server/data.json
-  $ mockoon-cli start --data ~/data.json --pname "proc1"
-  $ mockoon-cli start --data ~/data.json --daemon-off
   $ mockoon-cli start --data ~/data.json --log-transaction
 ```
 
-### `mockoon-cli list [ID]`
-
-_Command alias: `info`_
-
-Lists all the running mock APIs and display some information: process name, pid, status, cpu, memory, port.
-You can also get the same information for a specific mock API by providing its pid or name.
-
-```
-USAGE
-  $ mockoon-cli list
-
-ARGUMENTS
-  ID  Running API pid or name
-
-OPTIONS
-  -h, --help  show CLI help
-
-EXAMPLE
-  $ mockoon-cli list
-  $ mockoon-cli info
-  $ mockoon-cli list 0
-  $ mockoon-cli list "Mock_environment"
-```
-
-### `mockoon-cli stop [ID]`
-
-Stops one or more running processes. When 'all' is provided, all processes will be stopped.
-
-```
-USAGE
-  $ mockoon-cli stop [ID]
-
-ARGUMENTS
-  ID  Running API pid or name
-
-OPTIONS
-  -h, --help  show CLI help
-
-EXAMPLE
-  $ mockoon-cli stop
-  $ mockoon-cli stop 0
-  $ mockoon-cli stop "name"
-  $ mockoon-cli stop "all"
-```
-
-### `mockoon-cli dockerize`
+### Dockerize command
 
 Generates a Dockerfile used to build a self-contained image of one or more mock API. After building the image, no additional parameters will be needed when running the container.
 This command takes similar flags as the [`start` command](#mockoon-start).
-The `--daemon-off` and `--disable-log-to-file` flags will be enabled by default in the resulting Dockerfile.
+The `--disable-log-to-file` flag will be enabled by default in the resulting Dockerfile.
 
-Please note that this command will copy your Mockoon environment from the file you provide and put it side by side with the generated Dockerfile. Both files are required in order to build the image.
+Please note that this command will copy your Mockoon environments files you provide with the `--data` flag and put them side by side with the generated Dockerfile.
 
 For more information on how to build the image: [Using the dockerize command](#using-the-dockerize-command)
 
@@ -212,11 +158,9 @@ USAGE
 
 OPTIONS
   -d, --data                  [required] Path or URL to your Mockoon file
-  -p, --port                  Override environment's port
-  -o, --output                [required] Generated Dockerfile path and name (e.g. `./Dockerfile`)
+  -p, --port                  [required] Ports to expose in the Docker container. It should match the number of environment data files you provide with the --data flag.
+  -o, --output                [required] Generated Dockerfile path and name (e.g. `./folder/Dockerfile`)
   -t, --log-transaction       Log the full HTTP transaction (request and response)
-  -X, --disable-log-to-file   Disable logging to file
-  -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
   -h, --help                  Show CLI help
 
 EXAMPLES
@@ -225,7 +169,7 @@ EXAMPLES
   $ mockoon-cli dockerize --data https://file-server/data.json --output ./Dockerfile
 ```
 
-### `mockoon-cli help [COMMAND]`
+### Help command
 
 Returns information about a command.
 
@@ -260,7 +204,7 @@ jobs:
   mockoon-cli-demo:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run Mockoon CLI
         uses: mockoon/cli-action@v1
         with:
@@ -274,7 +218,7 @@ jobs:
         run: curl -X GET http://localhost:3000/endpoint`
 ```
 
-The GitHub Action is running the CLI as a [managed process with PM2](#pm2).
+> 💡 If you are building your own actions with the CLI, do not forget to add an `&` at the end of the command to run it in the background and avoid blocking the workflow: `mockoon-cli start -d ./data-file.json &`.
 
 ## Docker image
 
@@ -320,72 +264,70 @@ This snippet also provides an optional healthcheck, which means you can block un
 
 ### Using the `dockerize` command
 
-You can use the [`dockerize` command](#mockoon-cli-dockerize) to generate a new Dockerfile that will allow you to build a self-contained image. Thus, no Mockoon CLI specific parameters will be needed when running the container. You can still provide arguments at runtime if needed (see the last example).
+You can use the [`dockerize` command](#mockoon-cli-dockerize) to generate a new Dockerfile that will allow you to build a self-contained image. Thus, no Mockoon CLI specific parameters will be needed when running the container.
 
 - Run the `dockerize` command:
 
   `mockoon-cli dockerize --data ./sample-data.json --port 3000 --output ./tmp/Dockerfile`
 
-- navigate to the `tmp` folder, where the Dockerfile has been generated:
+- navigate to the `tmp` folder, where the Dockerfile has been generated and the environment file(s) copied:
 
   `cd tmp`
 
 - Build the image:
 
-  `docker build -t mockoon-mock1 .`
+  `docker build -t mockoon-image .`
 
 - Run the container:
 
-  `docker run -d -p <host_port>:3000 mockoon-mock1`
-
-- Or run the container with arguments:
-
-  `docker run -d -p <host_port>:3000 mockoon-mock1 --log-transaction`
+  `docker run -d -p <host_port>:3000 mockoon-image`
 
 ## Logs
 
-Logs are located in `~/.mockoon-cli/logs/{mock-name}-[error|out].log`.
+Logs are located in `~/.mockoon-cli/logs/{mock-name}.log`. This file contains all the log entries (all levels) produced by the running mock server. Most of the errors occurring in Mockoon CLI (or the main application) are not critical and therefore considered as normal output. As an example, if the JSON body from an entering request is erroneous, Mockoon will log a JSON parsing error, but it won't block the normal execution of the application.
 
-The `error.log` file contains mostly server errors that occur at startup time and prevent the mock API to run (port already in use, etc.). They shouldn't occur that often.
-
-The `out.log` file contains all other log entries (all levels) produced by the running mock server. Most of the errors occurring in Mockoon CLI (or the main application) are not critical and therefore considered as normal output. As an example, if the JSON body from an entering request is erroneous, Mockoon will log a JSON parsing error, but it won't block the normal execution of the application.
-
-When running the CLI with the [`--daemon-off` flag](#mockoon-cli-start), logs are sent to both stdout (console) and the above files.
+As the CLI is running in the foreground, logs are also sent to stdout (console).
 
 ### Transaction logging
 
-When using the `--log-transaction` flag, logs will contain the full transaction (request and response) with the same information you can see in the desktop application.
+When using the `--log-transaction` flag, logs will contain the full transaction (request and response) with the same information you can see in the desktop application "Logs" tab.
 
 Example:
 
 ```json
 {
+  "app": "mockoon-server",
   "level": "info",
-  "message": "GET /api/test | 200",
-  "timestamp": "2021-12-08T14:50:05.004Z",
+  "message": "Transaction recorded",
+  "timestamp": "YYYY-MM-DDTHH:mm:ss.sssZ",
+  "environmentName": "Demo API",
+  "environmentUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "requestMethod": "GET",
+  "requestPath": "/test",
+  "requestProxied": false,
+  "responseStatus": 200,
   "transaction": {
     "proxied": false,
     "request": {
-      "body": "",
-      "headers": [
-        { "key": "accept", "value": "application/json, text/plain, */*" }
-      ],
+      "body": "{}",
+      "headers": [{ "key": "accept", "value": "*/*" }],
       "method": "GET",
       "params": [],
-      "queryParams": [],
-      "route": "/api/test",
-      "urlPath": "/api/test"
+      "query": "",
+      "queryParams": {},
+      "route": "/test",
+      "urlPath": "/test"
     },
     "response": {
-      "body": "response",
+      "body": "{}",
       "headers": [
-        { "key": "content-length", "value": "8" },
         { "key": "content-type", "value": "application/json; charset=utf-8" }
       ],
-      "statusCode": 200
+      "statusCode": 200,
+      "statusMessage": "OK"
     },
-    "routeResponseUUID": "b1ba948f-82b3-4cc2-8067-692e562319ab",
-    "routeUUID": "304a761f-351d-415a-bf59-6e927322ae63"
+    "routeResponseUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "routeUUID": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
   }
 }
 ```
@@ -432,11 +374,12 @@ You can disable the logging to the console by redirecting the stdout and stderr 
   mockoon-cli start --data ./data.json > $null 2>&1
   ```
 
+- Cross platform: use `dev-null-cli` package
+  ```sh-sessions
+  mockoon-cli start --data ./data.json | npx dev-null
+  ```
+
 You can also disable file logging by using th `--disable-log-to-file` flag. This is enabled by default in the Docker image.
-
-## PM2
-
-Mockoon CLI uses [PM2](https://pm2.keymetrics.io/) to start, stop or list the running mock APIs when you are not using the `--daemon-off` flag. Therefore, you can directly use PM2 commands to manage the processes.
 
 ## Mockoon's documentation
 
@@ -478,4 +421,4 @@ Please also take a look at our [Code of Conduct](https://github.com/mockoon/mock
 
 If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/).
 
-New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](http://eepurl.com/dskB2X).
+New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](https://mockoon.com/newsletter/).

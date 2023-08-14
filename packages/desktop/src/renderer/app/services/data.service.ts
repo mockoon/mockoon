@@ -24,7 +24,7 @@ export class DataService extends Logger {
     private store: Store,
     private migrationService: MigrationService
   ) {
-    super('[SERVICE][DATA]', toastsService);
+    super('[RENDERER][SERVICE][DATA] ', toastsService);
   }
 
   /**
@@ -43,8 +43,8 @@ export class DataService extends Logger {
         this.migrationService.migrateEnvironment(environment);
     } catch (error) {
       this.logMessage('error', 'ENVIRONMENT_MIGRATION_FAILED', {
-        name: environment.name,
-        uuid: environment.uuid
+        environmentName: environment.name,
+        environmentUUID: environment.uuid
       });
 
       migratedEnvironment = environment;

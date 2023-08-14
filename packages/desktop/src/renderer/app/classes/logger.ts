@@ -1,5 +1,5 @@
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { Messages } from 'src/renderer/app/constants/messages.constants';
+import { DesktopMessages } from 'src/renderer/app/constants/desktop-messages.constants';
 import {
   MessageCodes,
   MessageLevels,
@@ -28,6 +28,11 @@ export class Logger {
     messageCode: MessageCodes,
     messageParams: MessageParams = { error: { message: '', name: '' } }
   ) {
+    // if message not implemented, return
+    if (!DesktopMessages[messageCode]) {
+      return;
+    }
+
     // Strip IPC error prefix
     if (messageParams?.error?.message) {
       messageParams.error.message = messageParams.error.message.replace(
@@ -36,9 +41,14 @@ export class Logger {
       );
     }
 
-    const message = Messages[messageCode](messageParams);
+    const message = DesktopMessages[messageCode](messageParams);
 
-    this[level](`${message.loggerMessage || message.message}`);
+    if (message.log) {
+      this[level](
+        `${message.loggerMessage || message.message}`,
+        message.logPayload
+      );
+    }
 
     if (this.toastService && message.showToast) {
       this.toastService.addToast(message.toastType, message.message);
@@ -50,10 +60,11 @@ export class Logger {
    *
    * @param message
    */
-  private info(message: string) {
+  private info(message: string, payload: any) {
     MainAPI.send('APP_LOGS', {
       type: 'info',
-      message: this.buildMessage(message)
+      message: this.buildMessage(message),
+      payload
     });
   }
 
@@ -62,10 +73,11 @@ export class Logger {
    *
    * @param message
    */
-  private error(message: string) {
+  private error(message: string, payload: any) {
     MainAPI.send('APP_LOGS', {
       type: 'error',
-      message: this.buildMessage(message)
+      message: this.buildMessage(message),
+      payload
     });
   }
 

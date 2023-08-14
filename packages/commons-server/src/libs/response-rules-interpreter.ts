@@ -1,4 +1,6 @@
 import {
+  Environment,
+  ProcessedDatabucket,
   ResponseMode,
   ResponseRule,
   ResponseRuleTargets,
@@ -10,6 +12,7 @@ import { get as objectPathGet } from 'object-path';
 import { ParsedQs } from 'qs';
 import { ParsedBodyMimeTypes } from '../constants/common.constants';
 import { convertPathToArray, stringIncludesArrayItems } from './utils';
+import { TemplateParser } from './template-parser';
 
 /**
  * Interpretor for the route response rules.
@@ -31,7 +34,9 @@ export class ResponseRulesInterpreter {
   constructor(
     private routeResponses: RouteResponse[],
     private request: Request,
-    private responseMode: Route['responseMode']
+    private responseMode: Route['responseMode'],
+    private environment: Environment,
+    private processedDatabuckets: ProcessedDatabucket[]
   ) {
     this.extractTargets();
   }
@@ -162,11 +167,13 @@ export class ResponseRulesInterpreter {
       rule.value = '';
     }
 
+    const parsedRuleValue = this.parseValue(rule.value);
+
     let regex: RegExp;
 
     if (rule.operator.includes('regex')) {
       regex = new RegExp(
-        rule.value,
+        parsedRuleValue,
         rule.operator === 'regex_i' ? 'i' : undefined
       );
 
@@ -176,10 +183,10 @@ export class ResponseRulesInterpreter {
     }
 
     if (Array.isArray(value)) {
-      return value.includes(rule.value);
+      return value.includes(parsedRuleValue);
     }
 
-    return String(value) === String(rule.value);
+    return String(value) === String(parsedRuleValue);
   };
 
   /**
@@ -201,5 +208,28 @@ export class ResponseRulesInterpreter {
       params: this.request.params,
       bodyRaw: this.request.stringBody
     };
+  }
+
+  /**
+   * Parse the value using the template parser allowing data helpers.
+   *
+   * @param value the value to parse
+   * @returns the parsed value or the unparsed input value if parsing fails
+   */
+  private parseValue(value: string): string {
+    let parsedValue: string;
+    try {
+      parsedValue = TemplateParser(
+        false,
+        value,
+        this.environment,
+        this.processedDatabuckets,
+        this.request
+      );
+    } catch (error) {
+      return value;
+    }
+
+    return parsedValue;
   }
 }

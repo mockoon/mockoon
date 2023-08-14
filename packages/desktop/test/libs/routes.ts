@@ -111,6 +111,10 @@ class Routes {
     return $('app-custom-select[formcontrolname="databucketID"]');
   }
 
+  public get idPropertyDataBucketSelect(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.form-control[formcontrolname="crudKey"]');
+  }
+
   public get addMenu(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#routes-add-dropdown-menu');
   }

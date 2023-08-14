@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/commons",
   "description": "Mockoon's commons library. Used in Mockoon desktop application and CLI.",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "guillaume@1kb.software",
@@ -11,7 +11,8 @@
   "scripts": {
     "lint": "eslint -c .eslintrc.js --ext .js,.ts .",
     "test": "ts-mocha -p ./tsconfig-build-cjs.json --timeout 10000 --forbid-only test/**/*.spec.ts",
-    "build": "tsc -p tsconfig-build.json && tsc -p tsconfig-build-cjs.json"
+    "build": "tsc -p tsconfig-build.json && tsc -p tsconfig-build-cjs.json",
+    "build:watch": "concurrently \"tsc -p tsconfig-build.json --watch --preserveWatchOutput\" \"tsc -p tsconfig-build-cjs.json --watch --preserveWatchOutput\""
   },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",

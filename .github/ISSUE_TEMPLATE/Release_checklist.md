@@ -3,10 +3,7 @@ name: Release checklist
 about: Checklist for releases (admin use only)
 ---
 
-- [ ] Bump libs versions
-- [ ] Bump serverless version
-- [ ] Bump CLI version
-- [ ] Bump desktop version
+- [ ] Bump packages versions
 - [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
 - [ ] Wait for desktop binaries build (automated after pre-release publication)
 

@@ -14,8 +14,7 @@ export type ViewsNameType =
   | 'ENV_HEADERS'
   | 'ENV_LOGS'
   | 'ENV_PROXY'
-  | 'ENV_SETTINGS'
-  | 'ENV_RELOAD';
+  | 'ENV_SETTINGS';
 
 export type TabsNameType = 'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS';
 
