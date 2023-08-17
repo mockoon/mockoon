@@ -32,6 +32,12 @@ export enum ResponseMode {
   FALLBACK = 'FALLBACK'
 }
 
+export const RulesDisablingResponseModes: ResponseMode[] = [
+  ResponseMode.RANDOM,
+  ResponseMode.SEQUENTIAL,
+  ResponseMode.DISABLE_RULES
+];
+
 export type ResponseRuleOperators =
   | 'equals'
   | 'regex'

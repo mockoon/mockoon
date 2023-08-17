@@ -14,7 +14,8 @@ import {
   ResponseRuleOperators,
   ResponseRuleTargets,
   Route,
-  RouteResponse
+  RouteResponse,
+  RulesDisablingResponseModes
 } from '@mockoon/commons';
 import { Observable, Subject } from 'rxjs';
 import {
@@ -47,6 +48,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   public ruleAdded: EventEmitter<any> = new EventEmitter();
   public routeResponse$: Observable<RouteResponse>;
   public form: FormGroup;
+  public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;
   public responseRuleTargets: DropdownItems<ResponseRuleTargets> = [
     { value: 'body', label: 'Body' },
     { value: 'query', label: 'Query string' },
