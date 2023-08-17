@@ -146,8 +146,9 @@
       </button>
       <ng-container *ngIf="activeRoute$ | async as activeRoute">
         <div
-          *ngIf="rulesDisablingResponseModes.includes(activeRoute.responseMode )"
-          class="warning-message ml-auto text-center pr-2" id='disabled-rules-warning-message'
+          *ngIf="rulesDisablingResponseModes.includes(activeRoute.responseMode)"
+          class="warning-message ml-auto text-center pr-2"
+          id="disabled-rules-warning-message"
         >
           {{ texts.DISABLED_RULES_WARNING }}
         </div>

@@ -301,10 +301,14 @@
                   [ngClass]="{ active: activeTab === 'RULES' }"
                   (click)="setActiveTab('RULES')"
                   ><span
-                    *ngIf="rulesDisablingResponseModes.includes(activeRoute.responseMode )"
+                    *ngIf="
+                      rulesDisablingResponseModes.includes(
+                        activeRoute.responseMode
+                      )
+                    "
                     class="text-warning"
                     [ngbTooltip]="texts.DISABLED_RULES_WARNING"
-                    id='disabled-rules-warning-icon'
+                    id="disabled-rules-warning-icon"
                     ><app-svg icon="warning" class="pr-1"></app-svg>
                   </span>
                   Rules
