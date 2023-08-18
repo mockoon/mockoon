@@ -38,6 +38,13 @@ export const RulesDisablingResponseModes: ResponseMode[] = [
   ResponseMode.DISABLE_RULES
 ];
 
+export const RulesNotUsingDefaultResponse: ResponseMode[] = [
+  ResponseMode.RANDOM,
+  ResponseMode.SEQUENTIAL,
+  ResponseMode.DISABLE_RULES,
+  ResponseMode.FALLBACK
+];
+
 export type ResponseRuleOperators =
   | 'equals'
   | 'regex'

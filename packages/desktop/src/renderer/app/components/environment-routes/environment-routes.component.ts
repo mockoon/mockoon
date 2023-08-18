@@ -18,7 +18,8 @@ import {
   RouteDefault,
   RouteResponse,
   RouteResponseDefault,
-  RulesDisablingResponseModes
+  RulesDisablingResponseModes,
+  RulesNotUsingDefaultResponse
 } from '@mockoon/commons';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { combineLatest, from, merge, Observable, Subject } from 'rxjs';
@@ -207,6 +208,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
 
   public rulesDisablingResponseModes: ResponseMode[] =
     RulesDisablingResponseModes;
+  public rulesNotUsingDefaultResponse: ResponseMode[] =
+    RulesNotUsingDefaultResponse;
 
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;

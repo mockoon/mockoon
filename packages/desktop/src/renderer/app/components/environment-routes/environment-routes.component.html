@@ -223,11 +223,9 @@
                       class="px-2"
                       [ngClass]="{
                         'text-primary':
-                          activeRoute.responseMode !== 'SEQUENTIAL' &&
-                          activeRoute.responseMode !== 'RANDOM',
+                          !rulesNotUsingDefaultResponse.includes(activeRoute.responseMode),
                         'text-muted':
-                          activeRoute.responseMode === 'SEQUENTIAL' ||
-                          activeRoute.responseMode === 'RANDOM'
+                          rulesNotUsingDefaultResponse.includes(activeRoute.responseMode)
                       }"
                       [ngbTooltip]="defaultResponseTooltip$ | async"
                     >
