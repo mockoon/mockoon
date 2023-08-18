@@ -222,10 +222,12 @@
                       (click)="setDefaultRouteResponse(null, $event)"
                       class="px-2"
                       [ngClass]="{
-                        'text-primary':
-                          !rulesNotUsingDefaultResponse.includes(activeRoute.responseMode),
-                        'text-muted':
-                          rulesNotUsingDefaultResponse.includes(activeRoute.responseMode)
+                        'text-primary': !rulesNotUsingDefaultResponse.includes(
+                          activeRoute.responseMode
+                        ),
+                        'text-muted': rulesNotUsingDefaultResponse.includes(
+                          activeRoute.responseMode
+                        )
                       }"
                       [ngbTooltip]="defaultResponseTooltip$ | async"
                     >
