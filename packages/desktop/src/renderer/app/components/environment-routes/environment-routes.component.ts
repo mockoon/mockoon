@@ -188,7 +188,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       value: ResponseMode.FALLBACK,
       icon: 'low_priority',
       tooltip:
-        'Fallback response mode (does not return the default response if none of the rules match, will use the proxy if configured)'
+        'Fallback response mode (does not return the default response if none of the rules match, will jump to the next route or use the proxy if configured)'
     }
   ];
   public bodyType: ToggleItems = [
