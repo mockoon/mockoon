@@ -75,6 +75,18 @@ class Routes {
     return $('#response-modes-DISABLE_RULES');
   }
 
+  public get fallbackResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#response-modes-FALLBACK');
+  }
+
+  public get rulesWarningMessage(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#disabled-rules-warning-message');
+  }
+
+  public get rulesWarningIcon(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#disabled-rules-warning-icon');
+  }
+
   public get contentTypeElement(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.environment-routes-footer div');
   }
@@ -536,6 +548,10 @@ class Routes {
 
   public async toggleRouteResponseSequential() {
     await $('#response-modes-SEQUENTIAL').click();
+  }
+
+  public async toggleRouteResponseFallback() {
+    await $('#response-modes-FALLBACK').click();
   }
 
   public async toggleRouteResponseDisableRules() {

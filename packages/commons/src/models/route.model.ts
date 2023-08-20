@@ -28,8 +28,22 @@ export type RouteResponse = {
 export enum ResponseMode {
   RANDOM = 'RANDOM',
   SEQUENTIAL = 'SEQUENTIAL',
-  DISABLE_RULES = 'DISABLE_RULES'
+  DISABLE_RULES = 'DISABLE_RULES',
+  FALLBACK = 'FALLBACK'
 }
+
+export const RulesDisablingResponseModes: ResponseMode[] = [
+  ResponseMode.RANDOM,
+  ResponseMode.SEQUENTIAL,
+  ResponseMode.DISABLE_RULES
+];
+
+export const RulesNotUsingDefaultResponse: ResponseMode[] = [
+  ResponseMode.RANDOM,
+  ResponseMode.SEQUENTIAL,
+  ResponseMode.DISABLE_RULES,
+  ResponseMode.FALLBACK
+];
 
 export type ResponseRuleOperators =
   | 'equals'

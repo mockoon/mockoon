@@ -457,7 +457,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     requestNumber: number,
     crudId?: CrudRouteIds
   ) {
-    return (request: Request, response: Response) => {
+    return (request: Request, response: Response, next: NextFunction) => {
       this.generateRequestDatabuckets(route, this.environment, request);
 
       // refresh environment data to get route changes that do not require a restart (headers, body, etc)
@@ -482,6 +482,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.environment,
         this.processedDatabuckets
       ).chooseResponse(requestNumber);
+
+      if (!enabledRouteResponse) {
+        return next();
+      }
 
       requestNumber += 1;
 

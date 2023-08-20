@@ -301,7 +301,8 @@ export const RouteSchema = Joi.object<Route, true>({
     .valid(
       ResponseMode.RANDOM,
       ResponseMode.SEQUENTIAL,
-      ResponseMode.DISABLE_RULES
+      ResponseMode.DISABLE_RULES,
+      ResponseMode.FALLBACK
     )
     .failover(RouteDefault.responseMode)
     .required()

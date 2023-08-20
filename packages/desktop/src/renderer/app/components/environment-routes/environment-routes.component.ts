@@ -17,7 +17,9 @@ import {
   Route,
   RouteDefault,
   RouteResponse,
-  RouteResponseDefault
+  RouteResponseDefault,
+  RulesDisablingResponseModes,
+  RulesNotUsingDefaultResponse
 } from '@mockoon/commons';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { combineLatest, from, merge, Observable, Subject } from 'rxjs';
@@ -181,6 +183,12 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       icon: 'rule',
       tooltip: 'Disabled rules mode (default response only)',
       activeClass: 'text-warning'
+    },
+    {
+      value: ResponseMode.FALLBACK,
+      icon: 'low_priority',
+      tooltip:
+        'Fallback response mode (does not return the default response if none of the rules match, will jump to the next route or use the proxy if configured)'
     }
   ];
   public bodyType: ToggleItems = [
@@ -197,6 +205,11 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       label: 'Data'
     }
   ];
+
+  public rulesDisablingResponseModes: ResponseMode[] =
+    RulesDisablingResponseModes;
+  public rulesNotUsingDefaultResponse: ResponseMode[] =
+    RulesNotUsingDefaultResponse;
 
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;

@@ -88,6 +88,7 @@ export class SvgComponent {
     | 'open_in_new'
     | 'priority_high'
     | 'data'
+    | 'low_priority'
     | string;
 
   constructor() {}
