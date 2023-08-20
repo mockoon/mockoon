@@ -31,17 +31,17 @@
     <app-environments-menu class="h-100"></app-environments-menu>
 
     <!-- Right "column" = header + routes menu + main-content -->
-    <div
-      *ngIf="
-        activeEnvironment$ | async as activeEnvironment;
-        else noActiveEnvironment
-      "
-      class="d-flex flex-column flex-fill h-100"
-    >
+    <div class="d-flex flex-column flex-fill h-100">
       <!-- Header: env name +start / env port + prefix -->
       <app-header></app-header>
 
-      <div class="main-content flex-fill mh0 h-100">
+      <div
+        *ngIf="
+          activeEnvironment$ | async as activeEnvironment;
+          else noActiveEnvironment
+        "
+        class="main-content flex-fill mh0 h-100"
+      >
         <ng-container [ngSwitch]="activeView$ | async">
           <app-environment-routes
             *ngSwitchCase="'ENV_ROUTES'"
@@ -81,7 +81,7 @@
 </div>
 
 <ng-template #noActiveEnvironment>
-  <div class="flex-fill">
+  <div class="flex-fill main-content">
     <p class="message mt-4">No environment opened</p>
   </div>
 </ng-template>

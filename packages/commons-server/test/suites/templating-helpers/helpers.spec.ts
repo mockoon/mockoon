@@ -2270,4 +2270,90 @@ describe('Template parser', () => {
       expect(parseResult).to.be.equal('[object Object]');
     });
   });
+
+  describe('Helper: object', () => {
+    it('should return an empty object if empty object passed', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{ stringify (object) }}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('{}');
+    });
+
+    it('should return valid key=value object if key=value passed', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (object key="value") }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify({ key: 'value' }, null, 2)
+      );
+    });
+
+    it('should return valid multiple keys object if multiple keys passed', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (object key="value" secondKey="secondValue" numericKey=5) }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify(
+          {
+            numericKey: 5,
+            secondKey: 'secondValue',
+            key: 'value'
+          },
+          null,
+          2
+        )
+      );
+    });
+  });
+
+  describe('Helper: filter', () => {
+    it('should return correctly filtered array with primitives OR condition', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{ stringify (filter (array 1 2 3 4 true false) 3 1 true) }}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(JSON.stringify([1, 3, true], null, 2));
+    });
+
+    it('should return correctly filtered array with mixed data OR condition', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (filter (array (object key="value") 2 3) (object key="value") 3) }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify([{ key: 'value' }, 3], null, 2)
+      );
+    });
+
+    it('should return correctly filtered array with mixed AND condition', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (filter (array (object a="a1" b="b2") (object a="a1" b="b1") 2 3) (object a="a1" b="b1") 3) }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify([{ b: 'b1', a: 'a1' }, 3], null, 2)
+      );
+    });
+  });
 });
