@@ -109,7 +109,7 @@ export const RequestHelpers = function (
     },
     // use params from query string ?param1=xxx&param2=yyy
     queryParam: function (
-      path: string,
+      path: string | string[],
       defaultValue: string,
       stringify: boolean
     ) {
@@ -139,6 +139,10 @@ export const RequestHelpers = function (
         return new SafeString(JSON.stringify(request.query));
       }
 
+      if (typeof path === 'string') {
+        path = convertPathToArray(path);
+      }
+
       let value = objectGet(request.query, path);
       value = value === undefined ? defaultValue : value;
 
@@ -151,7 +155,7 @@ export const RequestHelpers = function (
 
     // use raw params from query string ?param1=xxx&param2=yyy
     queryParamRaw: function (...args: any[]) {
-      let path = '';
+      let path: string | string[] = '';
       let defaultValue = '';
       const parameters = args.slice(0, -1); // remove last item (handlebars options argument)
 
@@ -169,6 +173,10 @@ export const RequestHelpers = function (
       // if no path has been provided we want the full raw query string object as is
       if (!path) {
         return request.query;
+      }
+
+      if (typeof path === 'string') {
+        path = convertPathToArray(path);
       }
 
       let value = objectGet(request.query, path);
