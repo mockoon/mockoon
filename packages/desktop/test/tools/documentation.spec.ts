@@ -862,6 +862,19 @@ const documentationTopics: {
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { top: 20, bottom: 120, left: 920 },
         fileName: 'sequential-route-responses.png'
+      },
+      {
+        tasks: async () => {
+          await routes.toggleRouteResponseFallback();
+        },
+        get highlightedTarget() {
+          return routes.fallbackResponseBtn;
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 960 },
+        fileName: 'fallback-mode-responses.png'
       }
     ]
   },
