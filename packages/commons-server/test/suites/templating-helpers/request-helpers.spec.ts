@@ -404,6 +404,17 @@ describe('Request helpers', () => {
       );
       expect(parseResult).to.be.equal('"This is a \\"message\\" with quotes."');
     });
+
+    it('should return the value of parameter with dots in parameter name', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{queryParam 'param1\\.name' undefined true}}",
+        {} as any,
+        [],
+        { query: { 'param1.name': 'value' } } as any
+      );
+      expect(parseResult).to.be.equal('"value"');
+    });
   });
 
   describe('Helper: queryParamRaw', () => {
@@ -506,6 +517,16 @@ describe('Request helpers', () => {
         {} as any
       );
       expect(parseResult).to.be.equal('dolphin');
+    });
+    it('should return the value of parameter with dots in parameter name', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{queryParam 'param1\\.name' undefined true}}",
+        {} as any,
+        [],
+        { query: { 'param1.name': 'value' } } as any
+      );
+      expect(parseResult).to.be.equal('"value"');
     });
   });
 
