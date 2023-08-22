@@ -511,7 +511,7 @@ describe('Request helpers', () => {
     it('should return the default value in a if clause when no request body', () => {
       const parseResult = TemplateParser(
         false,
-        "{{#if (queryParam 'dolphin' true)}}dolphin{{/if}}",
+        "{{#if (queryParamRaw 'dolphin' true)}}dolphin{{/if}}",
         {} as any,
         [],
         {} as any
@@ -521,12 +521,12 @@ describe('Request helpers', () => {
     it('should return the value of parameter with dots in parameter name', () => {
       const parseResult = TemplateParser(
         false,
-        "{{queryParam 'param1\\.name' undefined true}}",
+        "{{queryParamRaw 'param1\\.name' undefined true}}",
         {} as any,
         [],
         { query: { 'param1.name': 'value' } } as any
       );
-      expect(parseResult).to.be.equal('"value"');
+      expect(parseResult).to.be.equal('value');
     });
   });
 
