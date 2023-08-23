@@ -2071,6 +2071,39 @@ describe('Template parser', () => {
       );
       expect(parseResult).to.be.equal('true');
     });
+
+    it('should return false if first number is number and second is string', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{eq 1 "1"}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('false');
+    });
+
+    it('should return true if first value is string equal to second string', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{eq "v1" "v1"}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('true');
+    });
+
+    it('should return false if first value is string and not equal to second string', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{eq "v1" "v11"}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('false');
+    });
   });
 
   describe('Helper: stringify', () => {

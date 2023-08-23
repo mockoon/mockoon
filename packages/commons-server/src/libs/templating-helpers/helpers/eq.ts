@@ -1,11 +1,12 @@
-const eq = function (num1: number | string, num2: number | string) {
-  const number1 = Number(num1);
-  const number2 = Number(num2);
-  if (Number.isNaN(number1) || Number.isNaN(number2)) {
+const eq = function (val1: number | string, val2: number | string) {
+  const t1 = typeof val1;
+  const t2 = typeof val2;
+
+  if (t1 !== t2) {
     return false;
   }
 
-  return number1 === number2;
+  return val1 === val2;
 };
 
 export default eq;
