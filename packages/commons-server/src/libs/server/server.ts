@@ -3,6 +3,7 @@ import {
   BodyTypes,
   CORSHeaders,
   Environment,
+  FileExtensionsWithTemplating,
   GetContentType,
   GetRouteResponseContentType,
   Header,
@@ -30,7 +31,7 @@ import {
 } from 'https';
 import killable from 'killable';
 import { lookup as mimeTypeLookup } from 'mime-types';
-import { basename } from 'path';
+import { basename, extname } from 'path';
 import { parse as qsParse } from 'qs';
 import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
@@ -695,7 +696,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       // parse templating for a limited list of mime types
       if (
-        MimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
+        (MimeTypesWithTemplating.indexOf(fileMimeType) > -1 ||
+          FileExtensionsWithTemplating.indexOf(extname(filePath)) > -1) &&
         !routeResponse.disableTemplating
       ) {
         readFile(filePath, (readError, data) => {

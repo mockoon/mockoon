@@ -7,6 +7,7 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   Environment,
+  FileExtensionsWithTemplating,
   GetContentType,
   GetRouteResponseContentType,
   Header,
@@ -22,7 +23,7 @@ import {
   RulesNotUsingDefaultResponse
 } from '@mockoon/commons';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest, from, merge, Observable, Subject } from 'rxjs';
+import { Observable, Subject, combineLatest, from, merge } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -36,8 +37,8 @@ import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { StatusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
-  defaultContentType,
-  StatusCodes
+  StatusCodes,
+  defaultContentType
 } from 'src/renderer/app/constants/routes.constants';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -242,11 +243,20 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       filter((filePath) => !!filePath),
       distinctUntilChanged(),
       mergeMap((filePath) =>
-        from(MainAPI.invoke('APP_GET_MIME_TYPE', filePath))
+        from(MainAPI.invoke('APP_GET_MIME_TYPE', filePath)).pipe(
+          map((mimeType) => ({
+            mimeType,
+            filePath
+          }))
+        )
       ),
-      map((mimeType) => ({
+      map(({ mimeType, filePath }) => ({
         mimeType,
-        supportsTemplating: MimeTypesWithTemplating.indexOf(mimeType) > -1
+        supportsTemplating:
+          MimeTypesWithTemplating.indexOf(mimeType) > -1 ||
+          FileExtensionsWithTemplating.indexOf(
+            `.${filePath.split('.').pop()}`
+          ) > -1
       }))
     );
     this.databuckets$ = this.activeEnvironment$.pipe(

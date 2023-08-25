@@ -26,5 +26,8 @@ export const MimeTypesWithTemplating = [
   'application/typescript',
   'text/plain',
   'application/xhtml+xml',
-  'application/xml'
+  'application/xml',
+  'text/x-handlebars-template'
 ];
+
+export const FileExtensionsWithTemplating = ['.handlebars'];
