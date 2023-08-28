@@ -2388,5 +2388,29 @@ describe('Template parser', () => {
         JSON.stringify([{ b: 'b1', a: 'a1' }, 3], null, 2)
       );
     });
+
+    it('should return correctly return array filtered by nested values', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (filter (array (object parent=(object child="child-val") b="b1") (object parent=(object child="child-val2") b="b2") 2 3) (object parent=(object child="child-val"))) }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify([{ b: 'b1', parent: { child: 'child-val' } }], null, 2)
+      );
+    });
+
+    it('should return correctly return array filtered array when nested value not equals', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (filter (array (object parent=(object child="child-val") b="b1") (object parent=(object child="child-val2") b="b2") 2 3) (object parent="parent-val")) }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(JSON.stringify([], null, 2));
+    });
   });
 });
