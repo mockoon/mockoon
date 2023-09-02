@@ -1,6 +1,7 @@
 import {
   BodyTypes,
   EnvironmentDefault,
+  GenerateDatabucketID,
   ResponseMode,
   ResponseRuleTargets,
   RouteResponse
@@ -10,7 +11,6 @@ import { Request } from 'express';
 import QueryString from 'qs';
 import { xml2js } from 'xml-js';
 import { ResponseRulesInterpreter } from '../../../src/libs/response-rules-interpreter';
-import { GenerateDatabucketID } from '@mockoon/commons/src';
 
 const routeResponse403: RouteResponse = {
   uuid: '',

@@ -42,6 +42,7 @@
     "express": "4.18.2",
     "handlebars": "4.7.7",
     "http-proxy-middleware": "2.0.6",
+    "jsonpath-plus": "7.2.0",
     "killable": "1.0.1",
     "mime-types": "2.1.35",
     "object-path": "0.11.8",
