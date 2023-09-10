@@ -9,7 +9,6 @@ import {
 } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
 import { confirm } from '@oclif/core/lib/cli-ux';
-import axios from 'axios';
 import { promises as fs } from 'fs';
 import { CLIMessages } from '../constants/cli-messages.constants';
 
@@ -39,7 +38,7 @@ export const parseDataFiles = async (
         let data: any;
 
         if (filePath.startsWith('http')) {
-          data = (await axios.get(filePath, { timeout: 30000 })).data;
+          data = await (await fetch(filePath)).text();
         } else {
           data = await fs.readFile(filePath, { encoding: 'utf-8' });
         }

@@ -28,7 +28,7 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "dependencies": {
     "@mockoon/commons": "4.1.0",

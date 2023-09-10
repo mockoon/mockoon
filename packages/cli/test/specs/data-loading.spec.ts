@@ -29,8 +29,9 @@ describe('Data loading', () => {
     .command(['start', '--data', 'https://malformed url'])
     .catch((context) => {
       const contains =
-        context.message.indexOf('getaddrinfo ENOTFOUND') >= 0 ||
-        context.message.indexOf('getaddrinfo EAI_AGAIN') >= 0;
+        context.message.indexOf(
+          'Failed to parse URL from https://malformed url'
+        ) >= 0;
       expect(contains).to.eql(true);
     })
     .it('should fail when the URL is invalid');
@@ -39,9 +40,7 @@ describe('Data loading', () => {
     .stderr()
     .command(['start', '--data', 'https://not-existing-url'])
     .catch((context) => {
-      const contains =
-        context.message.indexOf('getaddrinfo ENOTFOUND') >= 0 ||
-        context.message.indexOf('getaddrinfo EAI_AGAIN') >= 0;
+      const contains = context.message.indexOf('fetch failed') >= 0;
       expect(contains).to.eql(true);
     })
     .it('should fail when the address cannot be found');

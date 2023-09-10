@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { spawn } from 'child_process';
 import { app, BrowserWindow, shell } from 'electron';
 import { createWriteStream, promises as fsPromises } from 'fs';
@@ -6,8 +5,9 @@ import { join as pathJoin } from 'path';
 import { gt as semverGt } from 'semver';
 import { Config } from 'src/main/config';
 import { logError, logInfo } from 'src/main/libs/logs';
-import { pipeline } from 'stream';
-import { promisify } from 'util';
+import { Readable } from 'stream';
+import { finished } from 'stream/promises';
+import { ReadableStream } from 'stream/web';
 
 let updateAvailableVersion: string;
 const isNotPortable = !process.env.PORTABLE_EXECUTABLE_DIR;
@@ -29,8 +29,7 @@ const notifyUpdate = (mainWindow: BrowserWindow) => {
 
 export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   const userDataPath = app.getPath('userData');
-  const streamPipeline = promisify(pipeline);
-  let releaseResponse: { data: { tag: string } };
+  let releaseResponse: { tag: string };
 
   try {
     // try to remove existing old update
@@ -41,16 +40,21 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   } catch (error) {}
 
   try {
-    releaseResponse = await axios.get(Config.latestReleaseDataURL, {
-      headers: { pragma: 'no-cache', 'cache-control': 'no-cache' }
-    });
+    releaseResponse = await (
+      await fetch(Config.latestReleaseDataURL, {
+        headers: new Headers({
+          pragma: 'no-cache',
+          'cache-control': 'no-cache'
+        })
+      })
+    ).json();
   } catch (error: any) {
     logInfo(`[MAIN][UPDATE] Error while checking for update: ${error.message}`);
 
     return;
   }
 
-  const latestVersion = releaseResponse.data.tag;
+  const latestVersion = releaseResponse.tag;
 
   if (semverGt(latestVersion, Config.appVersion)) {
     logInfo(`[MAIN][UPDATE] Found a new version v${latestVersion}`);
@@ -71,11 +75,16 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
       logInfo('[MAIN][UPDATE] Downloading binary file');
 
       try {
-        const response = await axios.get(
-          `${Config.githubBinaryURL}v${latestVersion}/${binaryFilename}`,
-          { responseType: 'stream' }
+        const response = await fetch(
+          `${Config.githubBinaryURL}v${latestVersion}/${binaryFilename}`
         );
-        await streamPipeline(response.data, createWriteStream(updateFilePath));
+
+        await finished(
+          Readable.fromWeb(response.body as ReadableStream<any>).pipe(
+            createWriteStream(updateFilePath)
+          )
+        );
+
         logInfo('[MAIN][UPDATE] Binary file ready');
         notifyUpdate(mainWindow);
         updateAvailableVersion = latestVersion;

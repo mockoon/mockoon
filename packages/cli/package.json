@@ -49,7 +49,6 @@
     "@mockoon/commons-server": "4.1.0",
     "@oclif/core": "2.9.4",
     "@oclif/plugin-help": "5.2.14",
-    "axios": "0.27.2",
     "jsonfile": "6.1.0",
     "mkdirp": "3.0.1",
     "mustache": "4.2.0",
@@ -76,6 +75,6 @@
     "typescript": "4.9.5"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   }
 }

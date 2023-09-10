@@ -1,6 +1,5 @@
 import * as cliUX from '@oclif/core/lib/cli-ux';
 import { test } from '@oclif/test';
-import axios from 'axios';
 import { expect } from 'chai';
 
 /**
@@ -26,9 +25,9 @@ describe('Data validation', () => {
       .stub(cliUX, 'confirm', () => true)
       .command(['start', '--data', './test/data/envs/repair.json'])
       .do(async () => {
-        const call1 = await axios.get('http://localhost:3000/users');
+        const call1 = await (await fetch('http://localhost:3000/users')).text();
 
-        expect(call1.data).to.contain('ok');
+        expect(call1).to.contain('ok');
       })
       .finally(() => {
         process.emit('SIGINT');
@@ -47,9 +46,9 @@ describe('Data validation', () => {
       .stdout()
       .command(['start', '--data', './test/data/envs/repair.json', '--repair'])
       .do(async () => {
-        const call1 = await axios.get('http://localhost:3000/users');
+        const call1 = await (await fetch('http://localhost:3000/users')).text();
 
-        expect(call1.data).to.contain('ok');
+        expect(call1).to.contain('ok');
       })
       .finally(() => {
         process.emit('SIGINT');

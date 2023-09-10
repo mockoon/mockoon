@@ -1,5 +1,4 @@
 import { test } from '@oclif/test';
-import axios from 'axios';
 import { expect } from 'chai';
 
 describe('Run OpenAPI spec (YAML)', () => {
@@ -7,9 +6,11 @@ describe('Run OpenAPI spec (YAML)', () => {
     .stdout()
     .command(['start', '--data', './test/data/openapi/petstore.yaml'])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/v1/pets');
+      const result = await (
+        await fetch('http://localhost:3000/v1/pets')
+      ).json();
 
-      expect(result.data[0].id).to.not.equal(undefined);
+      expect(result[0].id).to.not.equal(undefined);
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -27,9 +28,11 @@ describe('Run OpenAPI spec (JSON)', () => {
     .stdout()
     .command(['start', '--data', './test/data/openapi/petstore.json'])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/v1/pets');
+      const result = await (
+        await fetch('http://localhost:3000/v1/pets')
+      ).json();
 
-      expect(result.data[0].id).to.not.equal(undefined);
+      expect(result[0].id).to.not.equal(undefined);
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -51,9 +54,11 @@ describe('Run OpenAPI spec from URL (JSON)', () => {
       'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml'
     ])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/v1/pets');
+      const result = await (
+        await fetch('http://localhost:3000/v1/pets')
+      ).json();
 
-      expect(result.data[0].id).to.not.equal(undefined);
+      expect(result[0].id).to.not.equal(undefined);
     })
     .finally(() => {
       process.emit('SIGINT');

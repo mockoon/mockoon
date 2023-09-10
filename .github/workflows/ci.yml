@@ -110,7 +110,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [16, 18, 20]
+        node: [18, 20]
 
     steps:
       - uses: actions/checkout@v3
