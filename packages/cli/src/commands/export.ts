@@ -4,16 +4,17 @@ import { promises as fs } from 'fs';
 import { parseDataFiles } from '../libs/data';
 
 export default class Export extends Command {
-  public static description = 'Export a mock API';
+  public static description =
+    'Export a mock API to an OpenAPI v3 specification file (JSON)';
 
   public static examples = [
-    '$ mockoon-cli export --data ~/data.json --output ./output.json',
-    '$ mockoon-cli export --data ~/data.json --output ./output.json --type open-api-v3'
+    '$ mockoon-cli export --input ~/data.json --output ./output.json',
+    '$ mockoon-cli export --input ~/data.json --output ./output.json --prettify'
   ];
 
   public static flags = {
-    data: Flags.string({
-      char: 'd',
+    input: Flags.string({
+      char: 'i',
       description: 'Path or URL to your Mockoon data file',
       required: true
     }),
@@ -22,12 +23,10 @@ export default class Export extends Command {
       description: 'Generated OpenApi v3 path and name (e.g. `./output.json`)',
       required: true
     }),
-    type: Flags.string({
-      char: 't',
-      description: 'Export type',
-      options: ['open-api-v3'],
-      default: 'open-api-v3',
-      required: false
+    prettify: Flags.boolean({
+      char: 'p',
+      description: 'Prettify output',
+      default: false
     })
   };
 
@@ -35,16 +34,12 @@ export default class Export extends Command {
     const { flags: userFlags } = await this.parse(Export);
 
     try {
-      const parsedEnvironments = await parseDataFiles([userFlags.data]);
-      let data: string;
-
-      switch (userFlags.type) {
-        default:
-          const openApiConverter = new OpenAPIConverter();
-          data = await openApiConverter.convertToOpenAPIV3(
-            parsedEnvironments[0].environment
-          );
-      }
+      const parsedEnvironments = await parseDataFiles([userFlags.input]);
+      const openApiConverter = new OpenAPIConverter();
+      const data: string = await openApiConverter.convertToOpenAPIV3(
+        parsedEnvironments[0].environment,
+        userFlags.prettify
+      );
 
       await fs.writeFile(userFlags.output, data, 'utf-8');
     } catch (error: any) {
