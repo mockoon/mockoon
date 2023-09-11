@@ -611,7 +611,7 @@ describe('Request helpers', () => {
       );
       expect(parseResult).to.be.equal('value');
     });
-    it('should return the properties matching jsonpath rexpression', () => {
+    it('should return the properties matching jsonpath expression', () => {
       const parseResult = TemplateParser(
         false,
         "{{queryParamRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParamRaw '$.attributes.sub_attributes.*'}}{{queryParamRaw '$.attributes.[attribute.with.dot].name'}}",
