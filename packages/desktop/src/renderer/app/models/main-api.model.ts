@@ -13,15 +13,9 @@ import {
   SaveDialogReturnValue
 } from 'electron';
 import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
-import {
-  EnvironmentDescriptor,
-  Settings
-} from 'src/shared/models/settings.model';
+import { Settings } from 'src/shared/models/settings.model';
 
 export interface MainAPIModel {
-  invoke<T>(
-    channel: 'APP_NEW_STORAGE_MIGRATION'
-  ): Promise<EnvironmentDescriptor[]>;
   invoke(
     channel: 'APP_READ_ENVIRONMENT_DATA',
     path: string
@@ -120,10 +114,7 @@ export interface MainAPIModel {
   receive(
     channel: 'APP_CUSTOM_PROTOCOL',
     listener:
-      | ((
-          action: 'load-environment' | 'load-export-data',
-          parameters: { url: string }
-        ) => void)
+      | ((action: 'load-environment', parameters: { url: string }) => void)
       | ((action: 'auth', parameters: { token: string }) => void)
   ): void;
 
