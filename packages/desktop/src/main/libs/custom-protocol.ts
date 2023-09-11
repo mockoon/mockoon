@@ -3,11 +3,7 @@ import { parse as qsParse } from 'querystring';
 import { logInfo } from 'src/main/libs/logs';
 import { ProtocolAction } from 'src/shared/models/protocol.model';
 
-const validActions: ProtocolAction[] = [
-  'auth',
-  'load-environment',
-  'load-export-data'
-];
+const validActions: ProtocolAction[] = ['auth', 'load-environment'];
 
 export const registerProtocol = () => {
   /**

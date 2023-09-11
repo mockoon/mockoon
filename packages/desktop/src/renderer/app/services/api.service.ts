@@ -126,7 +126,6 @@ export class ApiService extends Logger {
               .subscribe();
             break;
           case 'load-environment':
-          case 'load-export-data':
             this.environmentsService
               .newEnvironmentFromURL(parameters.url)
               .subscribe();

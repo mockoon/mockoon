@@ -17,14 +17,12 @@ import {
   generateUUID,
   Header,
   HighestMigrationId,
-  IsLegacyExportData,
   Route,
   RouteDefault,
   RouteResponse,
   RouteResponseDefault,
   RouteSchema,
-  RouteType,
-  UnwrapLegacyExport
+  RouteType
 } from '@mockoon/commons';
 import {
   BehaviorSubject,
@@ -1350,6 +1348,7 @@ export class EnvironmentsService extends Logger {
       })
     );
   }
+
   /**
    * Verify data is not too recent or is a mockoon file.
    * To be used in switchMap mostly.
@@ -1365,33 +1364,6 @@ export class EnvironmentsService extends Logger {
       });
 
       return EMPTY;
-    }
-
-    if (IsLegacyExportData(environment)) {
-      const confirmImport$ = new Subject<boolean>();
-
-      this.eventsService.confirmModalEvents.next({
-        title: 'Legacy export format detected',
-        text: 'This content seems to be in an old export format.',
-        sub: 'Mockoon will attempt to migrate the content, which may be altered and overwritten.',
-        subIcon: 'warning',
-        subIconClass: 'text-warning',
-        confirmed$: confirmImport$
-      });
-
-      return confirmImport$.pipe(
-        switchMap((confirmed) => {
-          if (confirmed) {
-            const unwrappedEnvironments = UnwrapLegacyExport(environment);
-
-            if (unwrappedEnvironments.length) {
-              return of(unwrappedEnvironments[0]);
-            }
-          }
-
-          return EMPTY;
-        })
-      );
     }
 
     if (environment.lastMigration === undefined) {

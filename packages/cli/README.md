@@ -79,10 +79,6 @@ You can also directly load Mockoon's environment file from a URL. To do so, prov
 $ mockoon-cli start --data https://domain.com/your-environment-file.json
 ```
 
-> **Use a legacy export file**
->
-> While we recommend using the method above to launch your mocks with the CLI, you can still use Mockoon's [legacy export files](https://mockoon.com/docs/latest/mockoon-data-files/import-export-mockoon-format/).
-
 ### Use an OpenAPI specification file
 
 Another option is to directly pass an OpenAPI specification file as the `data` parameter. Mockoon supports both JSON and YAML formats in versions 2.0.0 and 3.0.0.
@@ -119,8 +115,6 @@ The mocks will run by default on the ports and hostnames specified in the files.
 `--data`, `--port` and `--hostname` flags support multiple entries to run multiple mock APIs at once (see examples below).
 
 > 💡 To run the CLI as a background process, add an `&` at the end of the command: `mockoon-cli start -d ./data-file.json &`.
-
-> This command is compatible with [legacy export files](https://mockoon.com/docs/latest/mockoon-data-files/import-export-mockoon-format/).
 
 ```
 USAGE
