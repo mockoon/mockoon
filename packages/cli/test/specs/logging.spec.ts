@@ -1,5 +1,4 @@
 import { test } from '@oclif/test';
-import axios from 'axios';
 import { expect } from 'chai';
 import { existsSync, promises as fs, unlinkSync } from 'fs';
 import { EOL } from 'os';
@@ -26,9 +25,11 @@ describe('Logging: basic logging', () => {
     })
     .command(['start', '--data', './test/data/envs/mock1.json'])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/api/test');
+      const result = await (
+        await fetch('http://localhost:3000/api/test')
+      ).text();
 
-      expect(result.data).to.contain('mock-content-1');
+      expect(result).to.contain('mock-content-1');
 
       await delay(1000);
       const logs = await parseLogs();
@@ -64,9 +65,11 @@ describe('Logging: with transaction logs', () => {
       '--log-transaction'
     ])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/api/test');
+      const result = await (
+        await fetch('http://localhost:3000/api/test')
+      ).text();
 
-      expect(result.data).to.contain('mock-content-1');
+      expect(result).to.contain('mock-content-1');
 
       await delay(1000);
 
@@ -107,9 +110,11 @@ describe('Logging: logging to file disabled', () => {
       './test/data/envs/mock1.json'
     ])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/api/test');
+      const result = await (
+        await fetch('http://localhost:3000/api/test')
+      ).text();
 
-      expect(result.data).to.contain('mock-content-1');
+      expect(result).to.contain('mock-content-1');
 
       await delay(1000);
       expect(existsSync(logsFilePath)).to.equal(false);
