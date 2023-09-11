@@ -1,5 +1,4 @@
 import { test } from '@oclif/test';
-import axios from 'axios';
 import { expect } from 'chai';
 
 describe('Relative file path', () => {
@@ -7,9 +6,9 @@ describe('Relative file path', () => {
     .stdout()
     .command(['start', '--data', './test/data/envs/file.json'])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/file');
+      const result = await (await fetch('http://localhost:3000/file')).text();
 
-      expect(result.data).to.contain('filecontent');
+      expect(result).to.contain('filecontent');
     })
     .finally(() => {
       process.emit('SIGINT');

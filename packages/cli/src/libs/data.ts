@@ -2,21 +2,16 @@ import {
   Environment,
   EnvironmentSchema,
   HighestMigrationId,
-  IsLegacyExportData,
   Migrations,
-  repairRefs,
-  UnwrapLegacyExport
+  repairRefs
 } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
 import { confirm } from '@oclif/core/lib/cli-ux';
-import axios from 'axios';
 import { promises as fs } from 'fs';
 import { CLIMessages } from '../constants/cli-messages.constants';
 
 /**
  * Load and parse one or more JSON data file(s).
- * Supports both legacy export files (with one or multiple envs) or new environment files.
- * If a legacy export is encountered, unwrap it.
  *
  * @param filePaths
  */
@@ -24,7 +19,7 @@ export const parseDataFiles = async (
   filePaths: string[]
 ): Promise<{ originalPath: string; environment: Environment }[]> => {
   const openAPIConverter = new OpenAPIConverter();
-  let environments: { originalPath: string; environment: Environment }[] = [];
+  const environments: { originalPath: string; environment: Environment }[] = [];
   let filePathIndex = 0;
 
   for (const filePath of filePaths) {
@@ -39,7 +34,7 @@ export const parseDataFiles = async (
         let data: any;
 
         if (filePath.startsWith('http')) {
-          data = (await axios.get(filePath, { timeout: 30000 })).data;
+          data = await (await fetch(filePath)).text();
         } else {
           data = await fs.readFile(filePath, { encoding: 'utf-8' });
         }
@@ -48,18 +43,7 @@ export const parseDataFiles = async (
           data = JSON.parse(data);
         }
 
-        if (IsLegacyExportData(data)) {
-          const unwrappedExport = UnwrapLegacyExport(data);
-
-          // Extract all environments, eventually filter items of type 'route'
-          environments = [
-            ...environments,
-            ...unwrappedExport.map((environment) => ({
-              environment,
-              originalPath: filePath
-            }))
-          ];
-        } else if (typeof data === 'object') {
+        if (typeof data === 'object') {
           environments.push({ environment: data, originalPath: filePath });
         }
       } catch (JSONError: any) {

@@ -1,5 +1,4 @@
 import { Command, Flags } from '@oclif/core';
-import axios from 'axios';
 import { promises as fs } from 'fs';
 import { mkdirp } from 'mkdirp';
 import { render as mustacheRender } from 'mustache';
@@ -65,13 +64,7 @@ export default class Dockerize extends Command {
             : parsedDataPath.base;
 
         if (dataPath.startsWith('http')) {
-          const resdata = (
-            await axios.get(dataPath, {
-              timeout: 30000,
-              responseType: 'text',
-              transformResponse: [(data) => data]
-            })
-          ).data;
+          const resdata = await (await fetch(dataPath)).text();
 
           await fs.writeFile(
             pathResolve(dockerfilePath.dir, fileName),

@@ -1329,30 +1329,6 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'mockoon-data-files/import-export-mockoon-format',
-    screenshots: [
-      {
-        tasks: async () => {
-          await contextMenu.close();
-          await fs.copyFile(
-            './test/data/res/legacy-export/environment-legacy-export.json',
-            './tmp/storage/environment-legacy-export.json'
-          );
-          await environments.open('environment-legacy-export', false);
-        },
-        get highlightedTarget() {
-          return modals.content;
-        },
-        highlight: false,
-        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
-        fileName: 'legacy-export-file-open-prompt.png'
-      }
-    ]
-  },
-  {
-    enabled: true,
     folder: 'api-endpoints/folders',
     screenshots: [
       {

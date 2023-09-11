@@ -1,5 +1,4 @@
 import { test } from '@oclif/test';
-import axios from 'axios';
 import { expect } from 'chai';
 
 describe('Run single mock', () => {
@@ -7,9 +6,11 @@ describe('Run single mock', () => {
     .stdout()
     .command(['start', '--data', './test/data/envs/mock1.json'])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/api/test');
+      const result = await (
+        await fetch('http://localhost:3000/api/test')
+      ).text();
 
-      expect(result.data).to.contain('mock-content-1');
+      expect(result).to.contain('mock-content-1');
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -31,7 +32,8 @@ describe('Run single mock from URL', () => {
       '3000'
     ])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/posts');
+      const result = await fetch('http://localhost:3000/posts');
+
       expect(result.status).to.equal(200);
     })
     .finally(() => {

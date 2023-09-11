@@ -6,10 +6,10 @@ import {
 } from '@mockoon/commons-server';
 import {
   BrowserWindow,
+  Menu,
   clipboard,
   dialog,
   ipcMain,
-  Menu,
   shell
 } from 'electron';
 import { getDataPath } from 'electron-json-storage';
@@ -25,7 +25,6 @@ import {
   IPCMainHandlerChannels,
   IPCMainListenerChannels
 } from 'src/main/constants/ipc.constants';
-import { migrateData } from 'src/main/libs/data-migration';
 import { logError, logInfo } from 'src/main/libs/logs';
 import {
   toggleEnvironmentMenuItems,
@@ -257,11 +256,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   ipcMain.handle('APP_STOP_SERVER', (event, environmentUUID: string) => {
     ServerInstance.stop(environmentUUID);
   });
-
-  ipcMain.handle(
-    'APP_NEW_STORAGE_MIGRATION',
-    async (event) => await migrateData()
-  );
 };
 
 /**
