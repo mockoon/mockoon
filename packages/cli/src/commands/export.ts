@@ -1,7 +1,9 @@
+import { Environment } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
 import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
-import { parseDataFiles } from '../libs/data';
+import { CLIMessages } from '../constants/cli-messages.constants';
+import { parseDataFiles, prepareEnvironment } from '../libs/data';
 
 export default class Export extends Command {
   public static description =
@@ -35,9 +37,18 @@ export default class Export extends Command {
 
     try {
       const parsedEnvironments = await parseDataFiles([userFlags.input]);
+
+      if (parsedEnvironments.length !== 1) {
+        this.error(CLIMessages.ONLY_ONE_ENVIRONMENT_ALLOWED);
+      }
+
+      const environment: Environment = await prepareEnvironment({
+        environment: parsedEnvironments[0].environment,
+        userOptions: {}
+      });
       const openApiConverter = new OpenAPIConverter();
       const data: string = await openApiConverter.convertToOpenAPIV3(
-        parsedEnvironments[0].environment,
+        environment,
         userFlags.prettify
       );
 

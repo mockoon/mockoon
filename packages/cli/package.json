@@ -64,6 +64,7 @@
     "@typescript-eslint/eslint-plugin": "6.7.3",
     "@typescript-eslint/parser": "6.7.3",
     "chai": "4.3.10",
+    "chai-exclude": "^2.1.0",
     "eslint": "8.50.0",
     "eslint-config-oclif": "5.0.0",
     "eslint-config-oclif-typescript": "2.0.1",
