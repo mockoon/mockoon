@@ -222,7 +222,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'response-headers',
+    folder: 'response-configuration/response-headers',
     screenshots: [
       {
         tasks: async () => {
@@ -284,7 +284,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'proxy-mode',
+    folder: 'server-configuration/proxy-mode',
     screenshots: [
       {
         tasks: async () => {
@@ -506,7 +506,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'serving-over-tls',
+    folder: 'server-configuration/serving-over-tls',
     screenshots: [
       {
         tasks: async () => {
@@ -554,7 +554,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'cors',
+    folder: 'server-configuration/cors',
     screenshots: [
       {
         tasks: async () => {
@@ -625,7 +625,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'listening-hostname',
+    folder: 'server-configuration/listening-hostname',
     screenshots: [
       {
         tasks: async () => {
@@ -658,7 +658,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'response-body/overview',
+    folder: 'response-configuration/response-body',
     screenshots: [
       {
         tasks: async () => {
@@ -720,7 +720,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'response-body/file-serving',
+    folder: 'response-configuration/file-serving',
     screenshots: [
       {
         tasks: async () => {
