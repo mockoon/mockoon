@@ -225,6 +225,38 @@ describe('Data helpers', () => {
       );
       expect(parseResult).to.be.equal('value1');
     });
+    it('should return the data matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{data 'jsonpathDatabucket' '$.[?(@property.match(/attribute\\.1.*/))]'}}{{data 'jsonpathDatabucket' '$.attributes.sub_attributes.*'}}{{data 'jsonpathDatabucket' '$.attributes.[attribute.with.dot].name'}}",
+        {} as any,
+        [
+          {
+            name: 'jsonpathDatabucket',
+            id: 'de69',
+            value: {
+              'attribute.1.value.1': 'attribute-value-1',
+              'attribute.1.value.2': 'attribute-value-2',
+              attributes: {
+                sub_attributes: {
+                  attribute_1_name: 'attribute-1-name',
+                  attribute_2_name: 'attribute-2-name',
+                  Attribute_3_Name: 'attribute-3-name'
+                },
+                'attribute.with.dot': {
+                  name: 'value'
+                }
+              }
+            },
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]["value"]'
+      );
+    });
   });
 
   describe('Helper: DataRaw', () => {
@@ -521,6 +553,38 @@ describe('Data helpers', () => {
         {} as any
       );
       expect(parseResult).to.be.equal('string1string2');
+    });
+    it('should return the data matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{dataRaw 'jsonpathDatabucket' '$.[?(@property.match(/attribute\\.1.*/))]'}}{{dataRaw 'jsonpathDatabucket' '$.attributes.sub_attributes.*'}}{{dataRaw 'jsonpathDatabucket' '$.attributes.[attribute.with.dot].name'}}",
+        {} as any,
+        [
+          {
+            name: 'jsonpathDatabucket',
+            id: 'de69',
+            value: {
+              'attribute.1.value.1': 'attribute-value-1',
+              'attribute.1.value.2': 'attribute-value-2',
+              attributes: {
+                sub_attributes: {
+                  attribute_1_name: 'attribute-1-name',
+                  attribute_2_name: 'attribute-2-name',
+                  Attribute_3_Name: 'attribute-3-name'
+                },
+                'attribute.with.dot': {
+                  name: 'value'
+                }
+              }
+            },
+            parsed: true
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
+      );
     });
   });
 });
