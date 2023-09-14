@@ -20,3 +20,7 @@ IMPORTANT RULES:
 - [ ] data migration automated tests added (@mockoon/commons)
 - [ ] CLI automated tests added (@mockoon/cli)
 - [ ] desktop automated tests added (@mockoon/desktop)
+
+<!-- Link to the original issue -->
+
+Closes #{issue_number}
