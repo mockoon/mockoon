@@ -149,7 +149,9 @@ const documentationTopics: {
   folder: string;
   screenshots: {
     // tasks to be performed before taking the screenshot
-    tasks?: () => void;
+    tasks?: () => Promise<void>;
+    // tasks to be performed after taking the screenshot
+    postTasks?: () => Promise<void>;
     // provide screenshot target if different from highlighted element (has priority over highlighted element when taking the screenshot)
     screenshotTarget?: ChainablePromiseElement<WebdriverIO.Element>;
     highlightedTarget: ChainablePromiseElement<WebdriverIO.Element>;
@@ -1237,6 +1239,9 @@ const documentationTopics: {
           await navigation.switchView('ENV_ROUTES');
           await contextMenu.open('environments', 1);
         },
+        postTasks: async () => {
+          await contextMenu.close();
+        },
         get highlightedTarget() {
           return contextMenu.getItem(3);
         },
@@ -1245,17 +1250,13 @@ const documentationTopics: {
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-show-in-folder.png'
-      }
-    ]
-  },
-  {
-    enabled: true,
-    folder: 'mockoon-data-files/data-storage-location',
-    screenshots: [
+      },
       {
         tasks: async () => {
-          await contextMenu.close();
           await contextMenu.open('environments', 1);
+        },
+        postTasks: async () => {
+          await contextMenu.close();
         },
         get highlightedTarget() {
           return contextMenu.getItem(4);
@@ -1265,6 +1266,26 @@ const documentationTopics: {
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-move-to-folder.png'
+      },
+      {
+        tasks: async () => {
+          await settings.open();
+          await browser.pause(500);
+        },
+        postTasks: async () => {
+          await modals.close();
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        get highlightedTarget() {
+          return settings.fileWatchingInputGroup;
+        },
+        highlight: true,
+        highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'enable-file-watching.png'
       }
     ]
   },
@@ -1291,6 +1312,9 @@ const documentationTopics: {
           await settings.open();
           await browser.pause(500);
         },
+        postTasks: async () => {
+          await modals.close();
+        },
         get screenshotTarget() {
           return modals.content;
         },
@@ -1311,10 +1335,12 @@ const documentationTopics: {
     screenshots: [
       {
         tasks: async () => {
-          await modals.close();
           await navigation.switchView('ENV_ROUTES');
           await routes.select(1);
           await contextMenu.open('environments', 1);
+        },
+        postTasks: async () => {
+          await contextMenu.close();
         },
         get highlightedTarget() {
           return contextMenu.getItem(2);
@@ -1333,8 +1359,7 @@ const documentationTopics: {
     screenshots: [
       {
         tasks: async () => {
-          await modals.close();
-          await environments.close(1);
+          await contextMenu.open('environments', 1);
           await environments.close(1);
           await environments.open('empty');
           await navigation.switchView('ENV_SETTINGS');
@@ -1436,6 +1461,9 @@ const documentationTopics: {
 
           await routes.openAddMenu();
         },
+        postTasks: async () => {
+          await contextMenu.close();
+        },
         get screenshotTarget() {
           return routes.addMenu;
         },
@@ -1450,7 +1478,6 @@ const documentationTopics: {
       },
       {
         tasks: async () => {
-          await contextMenu.close();
           await routes.addCRUDRoute();
           await routes.setPath('users');
         },
@@ -1636,8 +1663,6 @@ describe('Documentation screenshots', () => {
 
       for (const screenshot of documentationTopic.screenshots) {
         it(screenshot.fileName, async () => {
-          await clearElements();
-
           if (screenshot.tasks) {
             await screenshot.tasks();
           }
@@ -1658,6 +1683,12 @@ describe('Documentation screenshots', () => {
             documentationTopic.folder,
             screenshot.fileName
           );
+
+          await clearElements();
+
+          if (screenshot.postTasks) {
+            await screenshot.postTasks();
+          }
         });
       }
     });
