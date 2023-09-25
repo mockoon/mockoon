@@ -8,8 +8,14 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Environment, Folder, FolderChild, Route } from '@mockoon/commons';
-import { from, merge, Observable, Subject } from 'rxjs';
+import {
+  Environment,
+  Folder,
+  FolderChild,
+  ResponseMode,
+  Route
+} from '@mockoon/commons';
+import { Observable, Subject, from, merge } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -75,6 +81,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public os$: Observable<string>;
   public menuSize = Config.defaultSecondaryMenuSize;
   public draggedFolderCollapsed: boolean;
+  public ResponseMode = ResponseMode;
   private destroy$ = new Subject<void>();
 
   constructor(

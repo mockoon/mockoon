@@ -1112,7 +1112,7 @@ describe('CRUD endpoints', () => {
   it('should create a new CRUD endpoint and verify UI', async () => {
     await routes.addCRUDRoute();
     await routes.setPath('users');
-    await routes.assertMenuEntryText(4, 'CRUD\n/users');
+    await routes.assertMenuEntryText(4, '/users\nCRUD');
     await routes.assertSelectedRouteResponseLabel('CRUD operations');
   });
 

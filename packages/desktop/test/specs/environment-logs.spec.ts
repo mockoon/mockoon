@@ -249,7 +249,7 @@ describe('Environment logs', () => {
       });
 
       it('should removed the prefix after mocking', async () => {
-        await routes.assertActiveMenuEntryText('GET\n/test');
+        await routes.assertActiveMenuEntryText('/test\nGET');
       });
     });
 
