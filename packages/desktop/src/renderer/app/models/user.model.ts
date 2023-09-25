@@ -6,6 +6,7 @@ export enum Plans {
 }
 type TeamRoles = 'owner' | 'user';
 export type User = {
+  uid: string;
   email: string;
   plan: Plans;
   teamId: string;
