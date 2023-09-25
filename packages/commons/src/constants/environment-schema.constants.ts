@@ -273,6 +273,7 @@ export const RouteSchema = Joi.object<Route, true>({
   method: Joi.string()
     .allow('')
     .valid(
+      Methods.all,
       Methods.get,
       Methods.post,
       Methods.put,

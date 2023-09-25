@@ -90,6 +90,11 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public databuckets$: Observable<DropdownItems>;
   public methods: DropdownItems = [
     {
+      value: Methods.all,
+      label: 'All methods',
+      classes: 'route-badge-all-text'
+    },
+    {
       label: 'HTTP',
       category: true
     },
