@@ -43,7 +43,7 @@ describe('Duplicate a route to an environment', async () => {
 
   it('should duplicate selected route to selected environment', async () => {
     await modals.confirmDuplicateToEnvModal(1);
-    await routes.assertActiveMenuEntryText('POST\n/dolphins');
+    await routes.assertActiveMenuEntryText('/dolphins\nPOST');
 
     await navigation.switchView('ENV_SETTINGS');
     await environments.assertActiveMenuEntryText('New env test');
