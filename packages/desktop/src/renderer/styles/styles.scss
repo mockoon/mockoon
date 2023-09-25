@@ -122,10 +122,11 @@ input,
 }
 
 // route badges (methods)
-$route-badges: ('crud', lighten($cyan, 15%)), ('get', lighten($blue, 10%)),
-  ('put', lighten($orange, 10%)), ('post', lighten($green, 10%)),
-  ('delete', lighten($red, 17%)), ('head', lighten($purple, 25%)),
-  ('patch', $teal), ('options', lighten($dark-blue, 30%)),
+$route-badges: ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
+  ('get', lighten($blue, 10%)), ('put', lighten($orange, 10%)),
+  ('post', lighten($green, 10%)), ('delete', lighten($red, 17%)),
+  ('head', lighten($purple, 25%)), ('patch', $yellow),
+  ('options', lighten($dark-blue, 30%)),
   ('propfind', lighten($custom-gray, 45%)),
   ('proppatch', lighten($custom-gray, 45%)),
   ('copy', lighten($custom-gray, 45%)), ('move', lighten($custom-gray, 45%)),
@@ -141,10 +142,10 @@ $route-badges: ('crud', lighten($cyan, 15%)), ('get', lighten($blue, 10%)),
   }
 }
 
-// response badges (methods)
-$response-badges: ('get', lighten($blue, 10%)), ('4xx', lighten($orange, 10%)),
-  ('2xx', lighten($green, 10%)), ('5xx', lighten($red, 17%)),
-  ('3xx', lighten($purple, 25%)), ('1xx', lighten($custom-gray, 45%));
+// response badges (status codes)
+$response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
+  ('5xx', lighten($red, 17%)), ('3xx', lighten($purple, 25%)),
+  ('1xx', lighten($custom-gray, 45%));
 @each $status in $response-badges {
   .response-badge-#{nth($status, 1)} {
     background-color: #{nth($status, 2)};

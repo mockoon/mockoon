@@ -87,6 +87,7 @@ export type Route = {
 export type Header = { key: string; value: string };
 
 export enum Methods {
+  all = 'all',
   get = 'get',
   post = 'post',
   put = 'put',
