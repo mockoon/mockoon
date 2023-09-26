@@ -22,6 +22,13 @@ class Routes {
     params: 5,
     request_number: 6
   };
+  private rulesOperatorsIndexes = {
+    equals: 1,
+    regex: 2,
+    regex_i: 3,
+    null: 4,
+    empty_array: 5
+  };
   private activeMenuEntrySelector = '.routes-menu .nav-item .nav-link.active';
 
   public get bodyTypeToggle(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -105,6 +112,10 @@ class Routes {
 
   public get duplicateResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-menu #route-response-duplication-button');
+  }
+
+  public get routeResponseStatusDropdown(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#status-code-dropdown');
   }
 
   public get routeResponseDropdownlabel(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -337,6 +348,10 @@ class Routes {
     await utils.assertDropdownValue('method', expected);
   }
 
+  public async setMethod(index: number) {
+    await utils.setDropdownValue('methods', index);
+  }
+
   public async assertPath(expected: string) {
     expect(await this.pathInput.getValue()).toEqual(expected);
   }
@@ -368,6 +383,10 @@ class Routes {
 
   public async assertRouteResponseStatusCode(expected: string) {
     await utils.assertDropdownValue('statusCode', expected);
+  }
+
+  public async setRouteResponseStatusCode(statusIndex: number) {
+    await utils.setDropdownValue('status-code', statusIndex);
   }
 
   public async setFile(value: string): Promise<void> {
@@ -497,12 +516,19 @@ class Routes {
       ),
       rule.modifier
     );
-    await utils.setElementValue(
-      $(
-        'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="value"]'
-      ),
-      rule.value
+    await utils.setDropdownValue(
+      `rules${lastRuleIndex}operator`,
+      this.rulesOperatorsIndexes[rule.operator]
     );
+
+    if (rule.operator !== 'null') {
+      await utils.setElementValue(
+        $(
+          'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="value"]'
+        ),
+        rule.value
+      );
+    }
   }
 
   public async removeResponseRule(index: number) {

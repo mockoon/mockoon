@@ -1615,6 +1615,9 @@ const documentationTopics: {
           // account for openai api call
           await browser.pause(20000);
         },
+        postTasks: async () => {
+          await modals.close();
+        },
         get highlightedTarget() {
           return $('.modal-footer .ml-auto button:last-of-type');
         },
@@ -1626,6 +1629,82 @@ const documentationTopics: {
         screenshotPosition: {},
         screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'templates-generate-get-route.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'route-responses/global-routes-with-rules',
+    screenshots: [
+      {
+        tasks: async () => {
+          await routes.addHTTPRoute();
+          await routes.setPath('*');
+          await routes.setMethod(1);
+
+          await routes.addHTTPRoute();
+          await routes.setPath('users');
+
+          await routes.select(1);
+        },
+        get highlightedTarget() {
+          return routes.getMenuItem(1);
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 300, bottom: 200 },
+        fileName: 'create-wildcard-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.toggleRouteResponseFallback();
+        },
+        get highlightedTarget() {
+          return routes.fallbackResponseBtn;
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 960 },
+        fileName: 'activate-fallback-mode.png'
+      },
+      {
+        tasks: async () => {
+          // 401
+          await routes.setRouteResponseStatusCode(30);
+        },
+        get highlightedTarget() {
+          return routes.routeResponseStatusDropdown;
+        },
+        get screenshotTarget() {
+          return routes.routeResponseDropdownlabel;
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { top: 40, bottom: 200, left: 100 },
+        fileName: 'response-status-code-401.png'
+      },
+      {
+        tasks: async () => {
+          await routes.switchTab('RULES');
+          await routes.addResponseRule({
+            target: 'header',
+            invert: false,
+            modifier: 'Authorization',
+            operator: 'null',
+            value: ''
+          });
+        },
+        get highlightedTarget() {
+          return routes.getResponseRule(1);
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 10, right: 5, bottom: 40, left: 10 },
+        screeenshotGaps: { top: 200, bottom: 20, left: 20 },
+        fileName: 'response-rule-header-null.png'
       }
     ]
   }
