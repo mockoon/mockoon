@@ -63,7 +63,9 @@ jobs:
         id: app-version
         run: |
           PACKAGE_VERSION=$(node -p -e "require('./packages/cli/package.json').version")
+          PACKAGE_MAJOR_VERSION=$(node -p -e "require('./packages/cli/package.json').version.split('.')[0]")
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+          echo "PACKAGE_MAJOR_VERSION=$PACKAGE_MAJOR_VERSION" >> $GITHUB_OUTPUT
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -84,5 +86,6 @@ jobs:
           tags: |
             mockoon/cli:latest
             mockoon/cli:${{steps.app-version.outputs.PACKAGE_VERSION}}
+            mockoon/cli:${{steps.app-version.outputs.PACKAGE_MAJOR_VERSION}}
           build-args: |
             version=${{steps.app-version.outputs.PACKAGE_VERSION}}
