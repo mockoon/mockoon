@@ -66,6 +66,10 @@ export const initMainWindow = () => {
     }
   });
 
+  if (IS_DEV) {
+    mainWindow.webContents.openDevTools();
+  }
+
   // when main app finished loading, hide splashscreen and show the mainWindow
   mainWindow.webContents.on('dom-ready', () => {
     setTimeout(() => {
@@ -78,10 +82,6 @@ export const initMainWindow = () => {
         showMainWindow(mainWindowState);
 
         checkForUpdate(mainWindow);
-
-        if (IS_DEV) {
-          mainWindow.webContents.openDevTools();
-        }
       }, 100);
     }, 500);
   });

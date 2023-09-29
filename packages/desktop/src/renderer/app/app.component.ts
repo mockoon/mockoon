@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { from, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -30,6 +31,7 @@ import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { environment } from 'src/renderer/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -59,9 +61,15 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
     private apiService: ApiService,
     private settingsService: SettingsService,
     private appQuitService: AppQuitService,
-    private userService: UserService
+    private userService: UserService,
+    private title: Title
   ) {
     super('[RENDERER][COMPONENT][APP] ', toastService);
+
+    if (!environment.production) {
+      this.title.setTitle(`${this.title.getTitle()} [DEV]`);
+    }
+
     this.settingsService.monitorSettings().subscribe();
     this.settingsService.loadSettings().subscribe();
     this.settingsService.saveSettings().subscribe();
