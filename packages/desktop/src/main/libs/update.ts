@@ -79,6 +79,10 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
           `${Config.githubBinaryURL}v${latestVersion}/${binaryFilename}`
         );
 
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+
         await finished(
           Readable.fromWeb(response.body as ReadableStream<any>).pipe(
             createWriteStream(updateFilePath)
