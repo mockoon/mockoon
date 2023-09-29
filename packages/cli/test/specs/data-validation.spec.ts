@@ -9,7 +9,7 @@ describe('Data validation', () => {
   describe('Repair not accepted', () => {
     test
       .stderr()
-      .stub(cliUX, 'confirm', () => false)
+      .stub(cliUX, 'confirm', (stub) => stub.returns(false))
       .command(['start', '--data', './test/data/envs/repair.json'])
       .catch((context) => {
         expect(context.message).to.contain(
@@ -22,7 +22,7 @@ describe('Data validation', () => {
   describe('Repair accepted', () => {
     test
       .stdout()
-      .stub(cliUX, 'confirm', () => true)
+      .stub(cliUX, 'confirm', (stub) => stub.returns(true))
       .command(['start', '--data', './test/data/envs/repair.json'])
       .do(async () => {
         const call1 = await (await fetch('http://localhost:3000/users')).text();

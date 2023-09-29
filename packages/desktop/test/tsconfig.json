@@ -2,6 +2,6 @@
   "compilerOptions": {
     "baseUrl": "./test",
     "module": "commonjs",
-    "types": ["node", "webdriverio/async", "@wdio/mocha-framework"]
+    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"]
   }
 }
