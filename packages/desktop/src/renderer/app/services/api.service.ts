@@ -39,9 +39,9 @@ export class ApiService extends Logger {
     changelogModal: ChangelogModalComponent,
     settingsModal: SettingsModalComponent
   ) {
-    MainAPI.receive('APP_UPDATE_AVAILABLE', () => {
+    MainAPI.receive('APP_UPDATE_AVAILABLE', (version) => {
       this.zone.run(() => {
-        this.eventsService.updateAvailable$.next(true);
+        this.eventsService.updateAvailable$.next(version);
       });
     });
 

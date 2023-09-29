@@ -110,7 +110,10 @@ export interface MainAPIModel {
     ) => void
   ): void;
   receive(channel: 'APP_MENU', listener: (action: string) => void): void;
-  receive(channel: 'APP_UPDATE_AVAILABLE', listener: () => void): void;
+  receive(
+    channel: 'APP_UPDATE_AVAILABLE',
+    listener: (version: string) => void
+  ): void;
   receive(
     channel: 'APP_CUSTOM_PROTOCOL',
     listener:

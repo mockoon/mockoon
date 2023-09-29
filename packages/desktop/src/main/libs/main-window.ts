@@ -5,6 +5,7 @@ import { argv } from 'process';
 import { parseProtocolArgs } from 'src/main/libs/custom-protocol';
 import { createMenu } from 'src/main/libs/menu';
 import { createSplashScreen } from 'src/main/libs/splashscreen';
+import { checkForUpdate } from 'src/main/libs/update';
 
 declare const IS_TESTING: boolean;
 declare const IS_DEV: boolean;
@@ -75,6 +76,8 @@ export const initMainWindow = () => {
       // adding a timeout diff (100ms) between splashscreen close and mainWindow.show to fix a bug: https://github.com/electron/electron/issues/27353
       setTimeout(() => {
         showMainWindow(mainWindowState);
+
+        checkForUpdate(mainWindow);
 
         if (IS_DEV) {
           mainWindow.webContents.openDevTools();

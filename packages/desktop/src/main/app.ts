@@ -8,7 +8,6 @@ import { createMainLogger, logInfo } from 'src/main/libs/logs';
 import { initMainWindow, saveOpenUrlArgs } from 'src/main/libs/main-window';
 import { setPaths } from 'src/main/libs/paths';
 import { ServerInstance } from 'src/main/libs/server-management';
-import { checkForUpdate } from 'src/main/libs/update';
 
 declare const IS_TESTING: boolean;
 declare const IS_DEV: boolean;
@@ -59,8 +58,6 @@ if (!appLock) {
   app.on('ready', () => {
     registerProtocol();
     initApp();
-
-    checkForUpdate(mainWindow);
 
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

@@ -19,11 +19,11 @@ const isNotPortable = !process.env.PORTABLE_EXECUTABLE_DIR;
  *
  * @param mainWindow
  */
-const notifyUpdate = (mainWindow: BrowserWindow) => {
-  mainWindow.webContents.send('APP_UPDATE_AVAILABLE');
+const notifyUpdate = (mainWindow: BrowserWindow, version: string) => {
+  mainWindow.webContents.send('APP_UPDATE_AVAILABLE', version);
 
-  mainWindow.webContents.once('dom-ready', () => {
-    mainWindow.webContents.send('APP_UPDATE_AVAILABLE');
+  mainWindow.webContents.once('did-finish-load', () => {
+    mainWindow.webContents.send('APP_UPDATE_AVAILABLE', version);
   });
 };
 
@@ -66,7 +66,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
       try {
         await fsPromises.access(updateFilePath);
         logInfo('[MAIN][UPDATE] Binary file already downloaded');
-        notifyUpdate(mainWindow);
+        notifyUpdate(mainWindow, latestVersion);
         updateAvailableVersion = latestVersion;
 
         return;
@@ -86,7 +86,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
         );
 
         logInfo('[MAIN][UPDATE] Binary file ready');
-        notifyUpdate(mainWindow);
+        notifyUpdate(mainWindow, latestVersion);
         updateAvailableVersion = latestVersion;
       } catch (error: any) {
         logError(
@@ -94,7 +94,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
         );
       }
     } else {
-      notifyUpdate(mainWindow);
+      notifyUpdate(mainWindow, latestVersion);
       updateAvailableVersion = latestVersion;
     }
   } else {
