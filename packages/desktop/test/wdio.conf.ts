@@ -1,15 +1,18 @@
+import { Options } from '@wdio/types';
 import { join } from 'path';
 import bootstrap from './libs/bootstrap';
 
-export const config: WebdriverIO.Config = {
-  specs: ['./test/specs/**/*.spec.ts'],
+export const config: Options.Testrunner = {
+  specs: ['./specs/**/*.spec.ts'],
   exclude: [],
   maxInstances: 1,
   logLevel: 'warn',
+  runner: 'local',
   capabilities: [
     {
       maxInstances: 1,
       browserName: 'chrome',
+      browserVersion: '116',
       'goog:chromeOptions': {
         binary: join(
           process.cwd(),

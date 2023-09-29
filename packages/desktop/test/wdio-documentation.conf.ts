@@ -1,8 +1,9 @@
+import { Options } from '@wdio/types';
 import { config as defaultConfig } from './wdio.conf';
 
-const config: WebdriverIO.Config = {
+const config: Options.Testrunner = {
   ...defaultConfig,
-  specs: ['./test/tools/documentation.spec.ts']
+  specs: ['./tools/documentation.spec.ts']
 };
 
 export { config };

@@ -1,13 +1,15 @@
+import { Options } from '@wdio/types';
 import { join } from 'path';
 import { config as defaultConfig } from './wdio.conf';
 
-const config: WebdriverIO.Config = {
+const config: Options.Testrunner = {
   ...defaultConfig,
-  specs: ['./test/specs/packaged.spec.ts'],
+  specs: ['./specs/packaged.spec.ts'],
   capabilities: [
     {
       maxInstances: 1,
       browserName: 'chrome',
+      browserVersion: '116',
       'goog:chromeOptions': {
         binary: join(process.cwd(), 'packages', 'linux-unpacked', 'mockoon'),
         args: ['--remote-debugging-port=9222']

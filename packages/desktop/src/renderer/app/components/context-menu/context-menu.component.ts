@@ -25,7 +25,7 @@ export class ContextMenuComponent implements OnInit {
   @Output()
   public itemClicked: EventEmitter<ContextMenuItemPayload> = new EventEmitter();
   public menuState$: Observable<ContentMenuState>;
-  private timeout: NodeJS.Timer;
+  private timeout: ReturnType<typeof setTimeout>;
 
   constructor(private eventsService: EventsService) {}
 

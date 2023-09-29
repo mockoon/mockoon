@@ -1127,7 +1127,9 @@ describe('CRUD endpoints', () => {
   it('should add a second response with rule', async () => {
     await routes.addRouteResponse();
     await (await routes.bodyEditor).click();
-    await (await routes.bodyEditor).keys(['Backspace', 'Backspace', 'a']);
+
+    await browser.keys(['Backspace', 'Backspace', 'a']);
+
     await routes.switchTab('RULES');
     await routes.addResponseRule({
       target: 'header',
