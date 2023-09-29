@@ -192,6 +192,11 @@ class Utils {
 
     return result;
   }
+
+  public async closeTooltip() {
+    // close tooltips
+    await $('body').click({ x: 0, y: 0 });
+  }
 }
 
 export default new Utils();
