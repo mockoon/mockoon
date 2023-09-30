@@ -13,6 +13,7 @@ import {
   BodyTypes,
   Header,
   Methods,
+  ResponseMode,
   ResponseRule,
   Route,
   RouteResponse,
@@ -164,6 +165,7 @@ export const BuildEnvironment = (
 export const BuildDemoEnvironment = (): Environment => {
   const databucket = BuildDatabucket();
   const newRoutes = [
+    BuildHTTPRoute(),
     { ...BuildCRUDRoute() },
     BuildHTTPRoute(),
     BuildHTTPRoute(),
@@ -186,14 +188,38 @@ export const BuildDemoEnvironment = (): Environment => {
     routes: [
       {
         ...newRoutes[0],
-        endpoint: 'users',
-        documentation: 'Endpoint performing CRUD operations on a data bucket',
+        method: Methods.all,
+        endpoint: '*',
+        documentation: 'Global rules',
+        responseMode: ResponseMode.FALLBACK,
         responses: [
-          { ...newRoutes[0].responses[0], databucketID: databucket.id }
+          {
+            ...BuildRouteResponse(),
+            label: "Requires the presence of an 'Authorization' header",
+            body: '{\n  "error": "Unauthorized"\n}',
+            statusCode: 401,
+            rules: [
+              {
+                target: 'header',
+                modifier: 'Authorization',
+                operator: 'null',
+                invert: false,
+                value: ''
+              }
+            ]
+          }
         ]
       },
       {
         ...newRoutes[1],
+        endpoint: 'users',
+        documentation: 'Endpoint performing CRUD operations on a data bucket',
+        responses: [
+          { ...newRoutes[1].responses[0], databucketID: databucket.id }
+        ]
+      },
+      {
+        ...newRoutes[2],
         method: Methods.get,
         endpoint: 'template',
         documentation:
@@ -208,7 +234,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[2],
+        ...newRoutes[3],
         method: Methods.post,
         endpoint: 'content/:param1',
         documentation: 'Use multiple responses with rules',
@@ -250,7 +276,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[3],
+        ...newRoutes[4],
         method: Methods.get,
         endpoint: 'file/:pageName',
         documentation:
@@ -266,7 +292,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[4],
+        ...newRoutes[5],
         method: Methods.put,
         endpoint: 'path/with/pattern(s)?/*',
         documentation: 'Path supports various patterns',
@@ -279,7 +305,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[5],
+        ...newRoutes[6],
         method: Methods.get,
         endpoint: 'forward-and-record',
         documentation: 'Can Mockoon forward or record entering requests?',
