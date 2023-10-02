@@ -12,7 +12,7 @@ RUN mkdir -m 700 /root/.ssh; \
   touch -m 600 /root/.ssh/known_hosts; \
   ssh-keyscan github.com aur.archlinux.org > /root/.ssh/known_hosts
 
-RUN git config --global user.email "hi@255kb.dev"
+RUN git config --global user.email "guillaume@mockoon.com"
 RUN git config --global user.name "Guillaume Monnet"
 RUN git config --global --add safe.directory '*'
 
