@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker } from '../../faker';
 
 const float = function (...args: any[]) {
   const options: { min?: number; max?: number; precision?: number } = {
@@ -13,7 +13,7 @@ const float = function (...args: any[]) {
     options.max = args[1];
   }
 
-  return faker.datatype.number(options);
+  return faker.number.float(options);
 };
 
 export default float;

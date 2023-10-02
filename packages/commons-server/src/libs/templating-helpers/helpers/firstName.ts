@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker, safeFakerReturn } from '../../faker';
 
 const firstName = function () {
-  return faker.name.firstName();
+  return safeFakerReturn(faker.person.firstName);
 };
 
 export default firstName;

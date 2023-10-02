@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker, safeFakerReturn } from '../../faker';
 
 const tld = function () {
-  return faker.internet.domainSuffix();
+  return safeFakerReturn(faker.internet.domainSuffix);
 };
 
 export default tld;

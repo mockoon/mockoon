@@ -2,7 +2,7 @@ export const demoTemplates = [
   {
     prompt: 'Holiday destinations',
     value:
-      '[\n  {{#repeat 5}}\n    {\n      "name": "{{faker \'address.city\'}}",\n      "country": "{{faker \'address.country\'}}",\n      "description": "{{faker \'lorem.paragraph\'}}",\n      "rating": {{faker \'datatype.number\' min=1 max=5}}},\n      "isPopular": {{faker \'datatype.boolean\'}}\n    }\n  {{/repeat}}\n]'
+      '[\n  {{#repeat 5}}\n    {\n      "name": "{{faker \'location.city\'}}",\n      "country": "{{faker \'location.country\'}}",\n      "description": "{{faker \'lorem.paragraph\'}}",\n      "rating": {{faker \'number.int\' min=1 max=5}}},\n      "isPopular": {{faker \'datatype.boolean\'}}\n    }\n  {{/repeat}}\n]'
   },
   {
     prompt: 'Top 10 German companies by market cap',
@@ -17,7 +17,7 @@ export const demoTemplates = [
   {
     prompt: 'Australian mammals',
     value:
-      "[\n  {{#repeat 10}}\n    {\n      \"name\": \"{{faker 'name.firstName'}}\",\n      \"species\": \"{{faker 'animal.type'}}\",\n      \"isMarsupial\": {{faker 'datatype.boolean'}},\n      \"averageWeight\": {{faker 'datatype.float' between='0.1' and='1000' precision='0.01'}}\n    }\n    {{#unless @last}},{{/unless}}\n  {{/repeat}}\n]"
+      "[\n  {{#repeat 10}}\n    {\n      \"name\": \"{{faker 'person.firstName'}}\",\n      \"species\": \"{{faker 'animal.type'}}\",\n      \"isMarsupial\": {{faker 'datatype.boolean'}},\n      \"averageWeight\": {{faker 'number.float' min='0.1' max='1000' precision='0.01'}}\n    }\n    {{#unless @last}},{{/unless}}\n  {{/repeat}}\n]"
   },
   {
     prompt: 'Mediterranean recipes',

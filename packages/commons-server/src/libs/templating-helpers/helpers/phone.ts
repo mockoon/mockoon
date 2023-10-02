@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker, safeFakerReturn } from '../../../libs/faker';
 
 const phone = function () {
-  return faker.phone.phoneNumber();
+  return safeFakerReturn(faker.phone.number);
 };
 
 export default phone;

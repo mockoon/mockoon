@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
 import { expect } from 'chai';
 import { format as dateFormat } from 'date-fns';
+import { localFaker as faker } from '../../../src';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
 faker.seed(1);
