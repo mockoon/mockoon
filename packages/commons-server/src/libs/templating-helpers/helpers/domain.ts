@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker, safeFakerReturn } from '../../faker';
 
 const domain = function () {
-  return faker.internet.domainName();
+  return safeFakerReturn(faker.internet.domainName);
 };
 
 export default domain;

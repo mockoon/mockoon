@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker, safeFakerReturn } from '../../faker';
 
 const street = function () {
-  return faker.address.streetAddress();
+  return safeFakerReturn(faker.location.streetAddress);
 };
 
 export default street;
