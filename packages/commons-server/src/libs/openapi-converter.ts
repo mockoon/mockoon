@@ -511,15 +511,15 @@ export class OpenAPIConverter {
     schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject
   ) {
     const typeFactories = {
-      integer: () => "{{faker 'datatype.number'}}",
-      number: () => "{{faker 'datatype.number'}}",
-      number_float: () => "{{faker 'datatype.float'}}",
-      number_double: () => "{{faker 'datatype.float'}}",
+      integer: () => "{{faker 'number.int'}}",
+      number: () => "{{faker 'number.int'}}",
+      number_float: () => "{{faker 'number.float'}}",
+      number_double: () => "{{faker 'number.float'}}",
       string: () => '',
       string_date: () => "{{date '2019' (now) 'yyyy-MM-dd'}}",
       'string_date-time': () => "{{faker 'date.recent' 365}}",
       string_email: () => "{{faker 'internet.email'}}",
-      string_uuid: () => "{{faker 'datatype.uuid'}}",
+      string_uuid: () => "{{faker 'string.uuid'}}",
       boolean: () => "{{faker 'datatype.boolean'}}",
       array: (arraySchema) => {
         const newObject = this.generateSchema(arraySchema.items);
@@ -604,7 +604,7 @@ export class OpenAPIConverter {
    */
   private convertJSONSchemaPrimitives(jsonSchema: string) {
     return jsonSchema.replace(
-      /\"({{faker 'datatype\.(number|boolean|float)'}})\"/g,
+      /\"({{faker '(?:number\.int|number\.float|datatype\.boolean)'}})\"/g,
       '$1'
     );
   }

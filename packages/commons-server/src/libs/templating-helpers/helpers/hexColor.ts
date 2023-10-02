@@ -1,10 +1,12 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker } from '../../faker';
 
 const hexColor = function () {
   return Math.floor(
-    faker.datatype.number({ min: 0, max: 1, precision: Math.pow(10, -16) }) *
+    faker.number.float({ min: 0, max: 1, precision: Math.pow(10, -16) }) *
       16777215
-  ).toString(16);
+  )
+    .toString(16)
+    .padStart(6, '0');
 };
 
 export default hexColor;

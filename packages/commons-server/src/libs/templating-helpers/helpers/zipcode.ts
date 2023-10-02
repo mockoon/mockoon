@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker, safeFakerReturn } from '../../faker';
 
 const zipcode = function () {
-  return faker.address.zipCode();
+  return safeFakerReturn(faker.location.zipCode);
 };
 
 export default zipcode;

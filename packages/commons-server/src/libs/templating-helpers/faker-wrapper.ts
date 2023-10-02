@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
 import { HelperOptions } from 'handlebars';
-import { fromSafeString, IsEmpty } from '../utils';
+import { localFaker as faker, safeFakerReturn } from '../../libs/faker';
+import { IsEmpty, fromSafeString } from '../utils';
 
 export const FakerWrapper = {
   faker: function (...args: any[]) {
@@ -55,6 +55,6 @@ export const FakerWrapper = {
       fakerArgs.push(hbsOptions.hash);
     }
 
-    return fakerFunction(...fakerArgs);
+    return safeFakerReturn(() => fakerFunction(...fakerArgs));
   }
 };

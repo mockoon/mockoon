@@ -1,5 +1,5 @@
 // returns a Mongodb ObjectId
-import { faker } from '@faker-js/faker';
+import { localFaker as faker } from '../../faker';
 
 const objectId = function () {
   return faker.database.mongodbObjectId();

@@ -1,6 +1,6 @@
-import { fromSafeString } from '../../utils';
-import { faker } from '@faker-js/faker';
 import { format as dateFormat } from 'date-fns';
+import { localFaker as faker } from '../../faker';
+import { fromSafeString } from '../../utils';
 
 const date = function (...args: any[]) {
   let format;
@@ -8,7 +8,7 @@ const date = function (...args: any[]) {
   const to = fromSafeString(args[1]);
 
   if (args.length >= 3 && typeof from === 'string' && typeof to === 'string') {
-    const randomDate = faker.date.between(from, to);
+    const randomDate = faker.date.between({ from: from, to: to });
 
     if (args.length === 4 && typeof args[2] === 'string') {
       format = args[2];

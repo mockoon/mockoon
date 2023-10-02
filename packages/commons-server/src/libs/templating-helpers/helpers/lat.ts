@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker } from '../../faker';
 
 const lat = function () {
-  return faker.address.latitude();
+  return faker.location.latitude();
 };
 
 export default lat;

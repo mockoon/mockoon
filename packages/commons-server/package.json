@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@faker-js/faker": "7.6.0",
+    "@faker-js/faker": "8.1.0",
     "@mockoon/commons": "4.1.0",
     "append-field": "1.0.0",
     "busboy": "1.6.0",

@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker, safeFakerReturn } from '../../faker';
 
 const countryCode = function () {
-  return faker.address.countryCode();
+  return safeFakerReturn(faker.location.countryCode);
 };
 
 export default countryCode;
