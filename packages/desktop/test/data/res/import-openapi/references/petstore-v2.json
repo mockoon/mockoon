@@ -1,6 +1,6 @@
 {
   "uuid": "5f2b78e0-fb9e-4318-b821-9c11acb79547",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "Swagger Petstore v2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -108,7 +108,7 @@
       "responses": [
         {
           "uuid": "8fd18a0a-c0d1-4da9-804a-4286222f74fa",
-          "body": "[\n  {\n    \"id\": {{faker 'datatype.number'}},\n    \"category\": {\n      \"id\": {{faker 'datatype.number'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'datatype.number'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
+          "body": "[\n  {\n    \"id\": {{faker 'number.int'}},\n    \"category\": {\n      \"id\": {{faker 'number.int'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'number.int'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -155,7 +155,7 @@
       "responses": [
         {
           "uuid": "3358cac9-b05f-4f82-984f-e5f625014025",
-          "body": "[\n  {\n    \"id\": {{faker 'datatype.number'}},\n    \"category\": {\n      \"id\": {{faker 'datatype.number'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'datatype.number'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
+          "body": "[\n  {\n    \"id\": {{faker 'number.int'}},\n    \"category\": {\n      \"id\": {{faker 'number.int'}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'number.int'}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -202,7 +202,7 @@
       "responses": [
         {
           "uuid": "0d015a3b-c783-4bae-966d-5f42c45ce73d",
-          "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"category\": {\n    \"id\": {{faker 'datatype.number'}},\n    \"name\": \"\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"\"\n  ],\n  \"tags\": [\n    {\n      \"id\": {{faker 'datatype.number'}},\n      \"name\": \"\"\n    }\n  ],\n  \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n}",
+          "body": "{\n  \"id\": {{faker 'number.int'}},\n  \"category\": {\n    \"id\": {{faker 'number.int'}},\n    \"name\": \"\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"\"\n  ],\n  \"tags\": [\n    {\n      \"id\": {{faker 'number.int'}},\n      \"name\": \"\"\n    }\n  ],\n  \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -343,7 +343,7 @@
       "responses": [
         {
           "uuid": "df57f1e8-592f-4835-a757-b56477daea4f",
-          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"type\": \"\",\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'number.int'}},\n  \"type\": \"\",\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -401,7 +401,7 @@
       "responses": [
         {
           "uuid": "6c39a40c-4bfd-49c2-9abb-b310ef6792a5",
-          "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"petId\": {{faker 'datatype.number'}},\n  \"quantity\": {{faker 'datatype.number'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
+          "body": "{\n  \"id\": {{faker 'number.int'}},\n  \"petId\": {{faker 'number.int'}},\n  \"quantity\": {{faker 'number.int'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -448,7 +448,7 @@
       "responses": [
         {
           "uuid": "d62b1cbc-ab9e-46bb-a338-789ddf2eb324",
-          "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"petId\": {{faker 'datatype.number'}},\n  \"quantity\": {{faker 'datatype.number'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
+          "body": "{\n  \"id\": {{faker 'number.int'}},\n  \"petId\": {{faker 'number.int'}},\n  \"quantity\": {{faker 'number.int'}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -727,7 +727,7 @@
       "responses": [
         {
           "uuid": "1396423d-28fa-4e96-a2b1-0deb0a7f3154",
-          "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"username\": \"\",\n  \"firstName\": \"\",\n  \"lastName\": \"\",\n  \"email\": \"\",\n  \"password\": \"\",\n  \"phone\": \"\",\n  \"userStatus\": {{faker 'datatype.number'}}\n}",
+          "body": "{\n  \"id\": {{faker 'number.int'}},\n  \"username\": \"\",\n  \"firstName\": \"\",\n  \"lastName\": \"\",\n  \"email\": \"\",\n  \"password\": \"\",\n  \"phone\": \"\",\n  \"userStatus\": {{faker 'number.int'}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",

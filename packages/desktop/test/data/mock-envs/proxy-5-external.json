@@ -1,6 +1,6 @@
 {
   "uuid": "2fdc0fe1-66ed-44af-a268-eb73a72f5910",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "Proxy external",
   "endpointPrefix": "",
   "latency": 0,

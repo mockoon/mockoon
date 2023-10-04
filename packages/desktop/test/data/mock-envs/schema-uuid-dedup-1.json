@@ -1,6 +1,6 @@
 {
   "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "uuid dedup 1",
   "endpointPrefix": "",
   "latency": 0,

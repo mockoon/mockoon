@@ -1,6 +1,6 @@
 {
   "uuid": "f98d0d37-b586-4a57-bbe5-3699bc46ebbe",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "Compression (proxy)",
   "endpointPrefix": "",
   "latency": 0,

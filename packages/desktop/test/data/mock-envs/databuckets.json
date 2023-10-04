@@ -1,6 +1,6 @@
 {
   "uuid": "5dd5c15a-d860-40da-83f4-7606e2c0ee22",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "databuckets",
   "endpointPrefix": "",
   "latency": 0,

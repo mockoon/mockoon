@@ -1,6 +1,6 @@
 {
   "uuid": "a7186111-8f6f-45f0-aeb0-75fe40892d31",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "Demo API",
   "endpointPrefix": "",
   "latency": 0,

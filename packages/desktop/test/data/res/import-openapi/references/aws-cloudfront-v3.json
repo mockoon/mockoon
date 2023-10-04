@@ -1,6 +1,6 @@
 {
   "uuid": "3e16e1a0-a802-11eb-9a34-f1c6ade0819b",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "Amazon CloudFront",
   "endpointPrefix": "",
   "latency": 0,
