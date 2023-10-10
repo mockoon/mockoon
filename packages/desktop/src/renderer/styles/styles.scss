@@ -272,7 +272,7 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
   width: 11px;
 }
 
-.drag-highlight {
+.drag-item.drag-highlight {
   position: relative;
 
   &::after {
@@ -286,14 +286,13 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
   }
 }
 
-.drag-highlight-top {
+.drag-item.drag-highlight-top {
   position: relative;
 
   &::before {
     position: absolute;
     z-index: 1000;
     content: '';
-    top: -1px;
     height: 2px;
     left: 0;
     right: 0;
@@ -301,18 +300,41 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
   }
 }
 
-.drag-highlight-bottom {
+.drag-item.drag-highlight-top:not(:first-of-type) {
+  &::before {
+    top: -1px;
+  }
+}
+
+.drag-item.drag-highlight-top:first-of-type {
+  &::before {
+    top: 0;
+  }
+}
+
+.drag-item.drag-highlight-bottom {
   position: relative;
 
   &::after {
     position: absolute;
     z-index: 1000;
     content: '';
-    bottom: -1px;
     height: 2px;
     left: 0;
     right: 0;
     border-top: 2px solid rgba($blue, 0.8);
+  }
+}
+
+.drag-item.drag-highlight-bottom:not(:last-of-type) {
+  &::after {
+    bottom: -1px;
+  }
+}
+
+.drag-item.drag-highlight-bottom:last-of-type {
+  &::after {
+    bottom: 0px;
   }
 }
 
