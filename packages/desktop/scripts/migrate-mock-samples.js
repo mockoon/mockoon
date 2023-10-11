@@ -53,9 +53,13 @@ async function migrateFiles(directoryPath) {
 
 // Check if a directory path argument is provided
 if (process.argv.length < 3) {
+<<<<<<< HEAD
   console.error(
     'Please provide the mockoon-samples repository path as an argument and run again.'
   );
+=======
+  console.error('Please provide a directory path as an argument.');
+>>>>>>> 264be0da95eb3366fcdcf0751f9c68ba130e1875
 } else {
   const directoryPath = process.argv[2];
   migrateFiles(directoryPath);
