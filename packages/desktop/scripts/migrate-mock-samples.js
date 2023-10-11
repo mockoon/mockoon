@@ -4,6 +4,11 @@ const prettier = require('prettier');
 const prettierConfig = require('../../../package.json').prettier;
 const glob = require('glob');
 
+/**
+ * Use this script to migrate the mockoon samples in mockoon-sample environments.
+ * Run `node migrate-mock-samples path/to/mockoon-sample`.
+ */
+
 async function migrateFiles(directoryPath) {
   try {
     // Check if the provided argument is a valid directory
@@ -48,7 +53,9 @@ async function migrateFiles(directoryPath) {
 
 // Check if a directory path argument is provided
 if (process.argv.length < 3) {
-  console.error('Please provide a directory path as an argument.');
+  console.error(
+    'Please provide the mockoon-samples repository path as an argument and run again.'
+  );
 } else {
   const directoryPath = process.argv[2];
   migrateFiles(directoryPath);
