@@ -89,7 +89,7 @@ export const helpersAutocompletions = [
   { caption: 'int', value: '{{int min max}}', meta: '' },
   { caption: 'float', value: '{{float min max}}', meta: '' },
   { caption: 'boolean', value: '{{boolean}}', meta: '' },
-  { caption: 'title', value: '{{title}}', meta: '' },
+  { caption: 'title', value: '{{title sex}}', meta: '' },
   { caption: 'firstName', value: '{{firstName}}', meta: '' },
   { caption: 'lastName', value: '{{lastName}}', meta: '' },
   { caption: 'company', value: '{{company}}', meta: '' },

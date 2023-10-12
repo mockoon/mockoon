@@ -4,7 +4,7 @@ import {
   RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
-import { Environment } from '../models/environment.model';
+import { DataBucket, Environment } from '../models/environment.model';
 import {
   BodyTypes,
   Header,
@@ -13,6 +13,7 @@ import {
   Route,
   RouteResponse
 } from '../models/route.model';
+import { fakerV8Migration } from './fakerv8-migration';
 import { generateUUID } from './utils';
 
 /**
@@ -552,6 +553,24 @@ export const Migrations: {
           if (routeResponse.crudKey === undefined) {
             routeResponse.crudKey = RouteResponseDefault.crudKey;
           }
+        });
+      });
+    }
+  },
+  /**
+   * Migrate faker methods to v8
+   */
+  {
+    id: 29,
+    migrationFunction: (environment: Environment) => {
+      if (environment.data) {
+        environment.data.forEach((data: DataBucket) => {
+          data.value = fakerV8Migration(data.value);
+        });
+      }
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((routeResponse) => {
+          routeResponse.body = fakerV8Migration(routeResponse.body);
         });
       });
     }

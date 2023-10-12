@@ -1,5 +1,5 @@
-import { faker } from '@faker-js/faker';
 import { expect } from 'chai';
+import { localFaker as faker } from '../../../src/libs/faker';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
 faker.seed(1);
@@ -46,7 +46,7 @@ describe('Template parser: Faker wrapper', () => {
   it('should return value for simple helper', () => {
     const parseResult = TemplateParser(
       false,
-      "{{faker 'name.firstName'}}",
+      "{{faker 'person.firstName'}}",
       {} as any,
       [],
       {} as any
@@ -57,7 +57,7 @@ describe('Template parser: Faker wrapper', () => {
   it('should return value for helper with named parameters', () => {
     const parseResult = TemplateParser(
       false,
-      "{{faker 'datatype.number' min=10 max=20}}",
+      "{{faker 'number.int' min=10 max=20}}",
       {} as any,
       [],
       {} as any
@@ -68,18 +68,18 @@ describe('Template parser: Faker wrapper', () => {
   it('should return value for helper with arguments', () => {
     const parseResult = TemplateParser(
       false,
-      "{{faker 'random.alphaNumeric' 1}}",
+      "{{faker 'string.alphanumeric' 1}}",
       {} as any,
       [],
       {} as any
     );
-    expect(parseResult).to.be.equal('p');
+    expect(parseResult).to.be.equal('I');
   });
 
   it('should be able to use a string value in a switch', () => {
     const parseResult = TemplateParser(
       false,
-      "{{#switch (faker 'name.firstName')}}{{#case 'Torey'}}Torey{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}",
+      "{{#switch (faker 'person.firstName')}}{{#case 'Torey'}}Torey{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}",
       {} as any,
       [],
       {} as any
@@ -90,7 +90,7 @@ describe('Template parser: Faker wrapper', () => {
   it('should be able to use a number value in a repeat', () => {
     const parseResult = TemplateParser(
       false,
-      "{{#repeat (faker 'datatype.number' min=5 max=10) comma=false}}test{{/repeat}}",
+      "{{#repeat (faker 'number.int' min=5 max=10) comma=false}}test{{/repeat}}",
       {} as any,
       [],
       {} as any
@@ -101,7 +101,7 @@ describe('Template parser: Faker wrapper', () => {
   it('should be able to use a number value in a setvar and reuse the setvar', () => {
     const parseResult = TemplateParser(
       false,
-      "{{setVar 'nb' (faker 'datatype.number' min=5 max=10)}}{{@nb}}",
+      "{{setVar 'nb' (faker 'number.int' min=5 max=10)}}{{@nb}}",
       {} as any,
       [],
       {} as any
@@ -112,7 +112,7 @@ describe('Template parser: Faker wrapper', () => {
   it('should be able to use a number value in a setvar and reuse the variable in a helper requiring a number (int)', () => {
     const parseResult = TemplateParser(
       false,
-      "{{setVar 'nb' (faker 'datatype.number' min=50 max=100)}}{{@nb}}{{int 10 @nb}}",
+      "{{setVar 'nb' (faker 'number.int' min=50 max=100)}}{{@nb}}{{int 10 @nb}}",
       {} as any,
       [],
       {} as any
@@ -128,13 +128,13 @@ describe('Template parser: Faker wrapper', () => {
       [],
       {} as any
     );
-    expect(parseResult).to.be.equal('deactivated');
+    expect(parseResult).to.be.equal('activated');
   });
 
   it('should be able to use an array', () => {
     const parseResult = TemplateParser(
       false,
-      "{{len (faker 'address.nearbyGPSCoordinate')}}",
+      "{{len (faker 'location.nearbyGPSCoordinate')}}",
       {} as any,
       [],
       {} as any

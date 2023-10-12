@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker } from '../../faker';
 
 const guid = function () {
-  return faker.datatype.uuid();
+  return faker.string.uuid();
 };
 
 export default guid;

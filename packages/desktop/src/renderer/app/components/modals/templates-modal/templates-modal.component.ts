@@ -21,22 +21,22 @@ import { RandomInt } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
+  EMPTY,
+  Observable,
+  Subject,
   catchError,
   concat,
   concatMap,
   debounceTime,
   delay,
-  EMPTY,
   filter,
   finalize,
   from,
   map,
   merge,
   mergeMap,
-  Observable,
   of,
   repeat,
-  Subject,
   switchMap,
   takeUntil,
   tap,
@@ -137,7 +137,7 @@ export class TemplatesModalComponent
           value: 'templating',
           label: 'templating',
           tooltip:
-            "Generate dynamic content with templating helpers (e.g. {{faker 'name.firstName' }})"
+            "Generate dynamic content with templating helpers (e.g. {{faker 'person.firstName' }})"
         }
       ]
     }

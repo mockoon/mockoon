@@ -1,6 +1,6 @@
 {
   "uuid": "5dd5c15a-d860-40da-83f4-7606e2c0ee22",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "databuckets",
   "endpointPrefix": "",
   "latency": 0,
@@ -116,7 +116,7 @@
       "uuid": "c8429435-88aa-45c7-a8b9-32f3b1c259be",
       "id": "abc1",
       "name": "Databucket",
-      "value": "{\"response\":\"{{faker 'name.firstName'}}\"}"
+      "value": "{\"response\":\"{{faker 'person.firstName'}}\"}"
     },
     {
       "uuid": "dcec9813-d7a6-4a96-b4a8-2bf598b720a6",

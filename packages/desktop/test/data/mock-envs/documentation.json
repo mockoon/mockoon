@@ -1,6 +1,6 @@
 {
   "uuid": "a7186111-8f6f-45f0-aeb0-75fe40892d31",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "Demo API",
   "endpointPrefix": "",
   "latency": 0,
@@ -157,7 +157,7 @@
       "responses": [
         {
           "uuid": "5936f956-052b-4d75-b63c-7b232253963e",
-          "body": "{\r\n  \"userId\": \"{{urlParam 'id'}}\",\r\n  \"name\": \"{{queryParam 'name' 'John'}}\",\r\n  \"lang\": \"{{{header 'Accept-Language' 'en'}}}\",\r\n  \"elementTitle\": \"{{body 'elements.0.title' 'default'}}\",\r\n  \"ip\": \"{{ip}}\",\r\n  \"method\": \"{{method}}\",\r\n  \"hostname\": \"{{hostname}}\",\r\n  \"friends\": [\r\n    {{#repeat 2}}\r\n    { \r\n      \"id\": {{@index}}, \r\n      \"name\": \"{{faker 'name.firstName'}} {{faker 'name.lastName'}}\" \r\n    }\r\n    {{/repeat}}\r\n  ], \r\n  \"oneItem\": \"{{oneOf (array 'item1' 'item2' 'item3')}}\", \r\n  \"someItemsAsString\": \"{{someOf (array 'item1' 'item2' 'item3') 1 2}}\", \r\n  \"someItemsAsArray\": {{{someOf (array 'item1' 'item2' 'item3') 1 2 true}}}, \r\n  \"userName\": \r\n    {{#switch (urlParam 'id')}}\r\n      {{#case '1'}}\"John\"{{/case}}\r\n      {{#case '2'}}\"Jack\"{{/case}}\r\n      {{#default}}\"Peter\"{{/default}}\r\n    {{/switch}}\r\n}",
+          "body": "{\r\n  \"userId\": \"{{urlParam 'id'}}\",\r\n  \"name\": \"{{queryParam 'name' 'John'}}\",\r\n  \"lang\": \"{{{header 'Accept-Language' 'en'}}}\",\r\n  \"elementTitle\": \"{{body 'elements.0.title' 'default'}}\",\r\n  \"ip\": \"{{ip}}\",\r\n  \"method\": \"{{method}}\",\r\n  \"hostname\": \"{{hostname}}\",\r\n  \"friends\": [\r\n    {{#repeat 2}}\r\n    { \r\n      \"id\": {{@index}}, \r\n      \"name\": \"{{faker 'person.firstName'}} {{faker 'person.lastName'}}\" \r\n    }\r\n    {{/repeat}}\r\n  ], \r\n  \"oneItem\": \"{{oneOf (array 'item1' 'item2' 'item3')}}\", \r\n  \"someItemsAsString\": \"{{someOf (array 'item1' 'item2' 'item3') 1 2}}\", \r\n  \"someItemsAsArray\": {{{someOf (array 'item1' 'item2' 'item3') 1 2 true}}}, \r\n  \"userName\": \r\n    {{#switch (urlParam 'id')}}\r\n      {{#case '1'}}\"John\"{{/case}}\r\n      {{#case '2'}}\"Jack\"{{/case}}\r\n      {{#default}}\"Peter\"{{/default}}\r\n    {{/switch}}\r\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",

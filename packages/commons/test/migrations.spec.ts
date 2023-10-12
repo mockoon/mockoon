@@ -387,4 +387,55 @@ describe('Migrations', () => {
       expect(environment.routes[0].responses[1].crudKey).to.deep.equal('uuid');
     });
   });
+  describe('migration n. 29', () => {
+    it('Update faker functions in inline body to version 8', () => {
+      const environment: any = {
+        routes: [
+          {
+            responses: [
+              {
+                bodyType: 'INLINE',
+                body: '{\n  "name": "{{{faker \'name.firstName\'}}}"\n    "title": "{{{setVar \'x\' (faker \'name.prefix\' sex=\'male\')}}}"\n}'
+              }
+            ]
+          }
+        ]
+      };
+      applyMigration(29, environment);
+
+      expect(environment.routes[0].responses[0].body).to.equal(
+        '{\n  "name": "{{{faker \'person.firstName\'}}}"\n    "title": "{{{setVar \'x\' (faker \'person.prefix\' sex=\'male\')}}}"\n}'
+      );
+    });
+
+    it('Update faker functions in databucket to version 8', () => {
+      const environment: any = {
+        routes: [
+          {
+            responses: [
+              {
+                bodyType: 'DATABUCKET',
+                databucketID: 's3km'
+              }
+            ]
+          }
+        ],
+        data: [
+          {
+            uuid: '18d9dcec-5fc7-422d-98e8-4d9a7330b4f4',
+            id: 's3km',
+            name: 'bucket_1',
+            documentation: '',
+            value:
+              '{\n  "name": "{{faker \'name.firstName\'}}"\n    "image": "{{faker \'image.abstract\' width=128 height=128}}"\n}'
+          }
+        ]
+      };
+      applyMigration(29, environment);
+
+      expect(environment.data[0].value).to.equal(
+        '{\n  "name": "{{faker \'person.firstName\'}}"\n    "image": "{{faker \'image.urlLoremFlickr\' width=128 height=128 category="abstract"}}"\n}'
+      );
+    });
+  });
 });
