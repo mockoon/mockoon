@@ -4,8 +4,7 @@ import {
   RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
-import { FAKER_V7_TO_V8_MAPPING } from '../constants/faker-migration-map.constants';
-import { Environment } from '../models/environment.model';
+import { DataBucket, Environment } from '../models/environment.model';
 import {
   BodyTypes,
   Header,
@@ -14,6 +13,7 @@ import {
   Route,
   RouteResponse
 } from '../models/route.model';
+import { fakerV8Migration } from './fakerv8-migration';
 import { generateUUID } from './utils';
 
 /**
@@ -557,53 +557,20 @@ export const Migrations: {
       });
     }
   },
+  /**
+   * Migrate faker methods to v8
+   */
   {
     id: 29,
     migrationFunction: (environment: Environment) => {
+      if (environment.data) {
+        environment.data.forEach((data: DataBucket) => {
+          data.value = fakerV8Migration(data.value);
+        });
+      }
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
-          let body: string | undefined;
-          let valueIndex = -1;
-          // Get effective response body from body parameter or databucket value
-          // We are not updating if bodyType is FILE.
-          if (routeResponse.bodyType === BodyTypes.INLINE) {
-            body = routeResponse.body;
-          } else if (routeResponse.bodyType === BodyTypes.DATABUCKET) {
-            valueIndex = environment.data.findIndex(
-              (dataItem) => dataItem.id === routeResponse.databucketID
-            );
-            body = valueIndex > -1 ? environment.data[valueIndex].value : body;
-          }
-          if (body) {
-            for (const [key, value] of Object.entries(FAKER_V7_TO_V8_MAPPING)) {
-              const oldMethod = new RegExp(
-                // |---------1----------|      |---2--||-----3------|
-                `(\{{2,3}[^{]*faker[^}]*)${key}([^})]*)([^}]*\}{2,3})`,
-                'g'
-              );
-              /* Above regex matches all faker methods in below formats
-              1. {{faker 'person.firstName'}}
-              2. {{faker 'int' min=10 max=100}}
-              3. {{faker 'person.prefix' sex='male'}}
-              4. {{{setVar 'x' (faker 'number.float' precision=0.01)}}}
-              Note: both single quotes & double quotes supported
-              */
-              const newMethod =
-                value instanceof Array
-                  ? `\$1${value[0]}\$2 ${value.slice(1).join(' ')}$3`
-                  : value === ''
-                  ? ''
-                  : `\$1${value}\$2$3`;
-              body = body.replace(oldMethod, newMethod);
-            }
-            if (routeResponse.bodyType === BodyTypes.INLINE) {
-              routeResponse.body = body;
-            } else if (routeResponse.bodyType === BodyTypes.DATABUCKET) {
-              if (valueIndex > -1) {
-                environment.data[valueIndex].value = body;
-              }
-            }
-          }
+          routeResponse.body = fakerV8Migration(routeResponse.body);
         });
       });
     }
