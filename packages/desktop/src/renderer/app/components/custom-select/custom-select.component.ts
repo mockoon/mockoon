@@ -55,8 +55,6 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   @Input()
   public validation: Validation = null;
   @Input()
-  public fixedWidth: string;
-  @Input()
   public dropdownId: string;
   @Input()
   public placeholder = '';
@@ -87,6 +85,8 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
 
   public onChange: (_: any) => void;
   public onTouched: (_: any) => void;
+
+  public window = window;
 
   constructor() {}
 

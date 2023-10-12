@@ -211,7 +211,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       label: 'Data'
     }
   ];
-
+  public window = window;
   public rulesDisablingResponseModes: ResponseMode[] =
     RulesDisablingResponseModes;
   public rulesNotUsingDefaultResponse: ResponseMode[] =

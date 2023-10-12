@@ -31,8 +31,12 @@
       id="{{ dropdownId }}-dropdown-menu"
       class="dropdown-menu"
       [ngStyle]="{
-        'min-width': dropdownElement.offsetWidth + 'px',
-        'max-width': dropdownElement.offsetWidth + 'px'
+        'min-width': dropdownElement.getBoundingClientRect().width + 'px',
+        'max-width':
+          window.innerWidth -
+          dropdownElement.getBoundingClientRect().left -
+          10 +
+          'px'
       }"
       ngbDropdownMenu
     >

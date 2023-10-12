@@ -142,8 +142,14 @@
               <div
                 class="dropdown-menu route-responses-dropdown-menu"
                 [ngStyle]="{
-                  'min-width': routeResponsesDropdownElement.offsetWidth + 'px',
-                  'max-width': routeResponsesDropdownElement.offsetWidth + 'px'
+                  'min-width':
+                    routeResponsesDropdownElement.getBoundingClientRect()
+                      .width + 'px',
+                  'max-width':
+                    window.innerWidth -
+                    routeResponsesDropdownElement.getBoundingClientRect().left -
+                    10 +
+                    'px'
                 }"
                 aria-labelledby="route-responses-dropdown"
                 ngbDropdownMenu
@@ -425,7 +431,6 @@
                 [isNumber]="true"
                 [items]="statusCodes"
                 [validation]="statusCodeValidation"
-                fixedWidth="350px"
                 dropdownId="status-code"
               >
               </app-custom-select>
@@ -459,17 +464,6 @@
               placeholder="Add documentation for this response"
             />
           </div>
-          <!-- <div
-            *ngIf="activeRoute.type === 'crud' && activeRouteResponse.default"
-            class="input-group pt-2 px-2"
-          >
-            <input
-              type="text"
-              class="form-control col-6"
-              formControlName="crudKey"
-              placeholder="id property for crud operations ('id', 'uuid', etc.)"
-            />
-          </div> -->
 
           <ng-container
             *ngIf="
