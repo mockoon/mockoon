@@ -5,6 +5,21 @@
   grid-template-columns: min-content auto min-content;
 }
 
+.route-responses-http {
+  display: grid;
+  grid-template-columns: 9fr 3fr;
+}
+
+.route-responses-crud {
+  display: grid;
+  grid-template-columns: 6fr 3fr 3fr;
+}
+
+.route-responses-databucket {
+  display: grid;
+  grid-template-columns: 66%;
+}
+
 .environment-routes-footer {
   border-top: 1px solid lighten($gray-900, 6%);
   line-height: 1.3;

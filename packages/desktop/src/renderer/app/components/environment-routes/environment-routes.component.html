@@ -392,38 +392,42 @@
           [formGroup]="activeRouteResponseForm"
         >
           <!-- status code + latency -->
-          <div class="d-flex pt-3 px-2 justify-content-between">
-            <app-custom-select
-              *ngIf="activeRoute.type === 'crud' && activeRouteResponse.default"
-              class="col-6 pr-1"
-              formControlName="databucketID"
-              [enableCustomInput]="false"
-              [items]="databuckets$ | async"
-              dropdownId="databuckets"
-              emptyListMessage="No databucket defined"
-              placeholder="Select a databucket for CRUD operations"
-              placeholderClasses="text-warning"
-              [clearable]="false"
-              [defaultClearValue]="''"
-            ></app-custom-select>
-
-            <input
-              *ngIf="activeRoute.type === 'crud' && activeRouteResponse.default"
-              type="text"
-              class="form-control col-4"
-              formControlName="crudKey"
-              placeholder="id property for crud operations ('id', 'uuid', etc.)"
-            />
-
-            <div
-              *ngIf="
-                activeRoute.type === 'http' ||
-                (activeRoute.type === 'crud' && !activeRouteResponse.default)
-              "
-              class="input-group"
-            >
+          <div class="pt-3 px-2">
+            <div ngClass="route-responses-{{ activeRoute.type }}">
               <app-custom-select
-                class="col-12 col-xl-8"
+                *ngIf="
+                  activeRoute.type === 'crud' && activeRouteResponse.default
+                "
+                class="mw0 pr-1"
+                formControlName="databucketID"
+                [enableCustomInput]="false"
+                [items]="databuckets$ | async"
+                dropdownId="databuckets"
+                emptyListMessage="No databucket defined"
+                placeholder="Select a databucket for CRUD operations"
+                placeholderClasses="text-warning"
+                [clearable]="false"
+                [defaultClearValue]="''"
+              ></app-custom-select>
+
+              <div
+                *ngIf="
+                  activeRoute.type === 'crud' && activeRouteResponse.default
+                "
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="crudKey"
+                  placeholder="id property for crud operations ('id', 'uuid', etc.)"
+                />
+              </div>
+
+              <app-custom-select
+                *ngIf="
+                  activeRoute.type === 'http' ||
+                  (activeRoute.type === 'crud' && !activeRouteResponse.default)
+                "
                 formControlName="statusCode"
                 customInputPlaceholder="Custom status code (100-999)"
                 emptyListMessage="Press enter for custom status code"
@@ -434,26 +438,27 @@
                 dropdownId="status-code"
               >
               </app-custom-select>
-            </div>
-            <div class="input-group col-3 col-lg-2">
-              <div
-                class="input-group-prepend"
-                ngbTooltip="Response latency (ms)"
-              >
-                <span class="input-group-text">
-                  <app-svg icon="access_time"></app-svg>
-                </span>
+
+              <div class="input-group">
+                <div
+                  class="input-group-prepend"
+                  ngbTooltip="Response latency (ms)"
+                >
+                  <span class="input-group-text">
+                    <app-svg icon="access_time"></app-svg>
+                  </span>
+                </div>
+                <input
+                  type="number"
+                  class="form-control"
+                  [appInputNumber]="{
+                    min: 0,
+                    max: Infinity,
+                    canBeEmpty: false
+                  }"
+                  formControlName="latency"
+                />
               </div>
-              <input
-                type="number"
-                class="form-control"
-                [appInputNumber]="{
-                  min: 0,
-                  max: Infinity,
-                  canBeEmpty: false
-                }"
-                formControlName="latency"
-              />
             </div>
           </div>
           <div class="input-group pt-2 px-2">
@@ -577,9 +582,9 @@
 
             <!-- body: databucket -->
             <ng-container *ngIf="activeRouteResponse.bodyType === 'DATABUCKET'">
-              <div class="input-group px-2">
+              <div class="route-responses-databucket px-2">
                 <app-custom-select
-                  class="col-8"
+                  class="mw0"
                   formControlName="databucketID"
                   [enableCustomInput]="false"
                   [items]="databuckets$ | async"
