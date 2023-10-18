@@ -51,7 +51,9 @@ export class DropzoneDirective implements OnInit, OnDestroy {
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private dragService: DragService
-  ) {}
+  ) {
+    this.elementRef.nativeElement.classList.add('drag-item');
+  }
 
   @Input()
   public set dragEnabled(enabled: boolean) {

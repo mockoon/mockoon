@@ -806,7 +806,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
           body: 'body',
           headers: {
             'test-header':
-              '-- Parsing error. Check logs for more information --'
+              '-- Header parsing error, see logs for more details --'
           }
         }
       },
@@ -1022,7 +1022,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Hayley_Zieme0'
+          body: 'Hayley12'
         }
       },
       {
@@ -1032,7 +1032,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Hayley_Zieme0'
+          body: 'Hayley12'
         }
       }
     ]

@@ -22,8 +22,8 @@ export class EventsService {
     'INPROGRESS' | 'DONE' | 'NONE'
   >('NONE');
   public focusInput: Subject<FocusableInputs> = new Subject();
-  public updateAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(
-    false
+  public updateAvailable$: BehaviorSubject<string | null> = new BehaviorSubject(
+    null
   );
   // environment UUID -> boolean
   public logsRecording$: BehaviorSubject<{ [key in string]: boolean }> =

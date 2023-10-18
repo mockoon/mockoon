@@ -1,32 +1,36 @@
 import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
-import * as mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import { render as mustacheRender } from 'mustache';
 import { parse as pathParse, ParsedPath, resolve as pathResolve } from 'path';
-import { format } from 'util';
 import { Config } from '../config';
-import { commonFlags, startFlags } from '../constants/command.constants';
+import { CLIMessages } from '../constants/cli-messages.constants';
+import { commonFlags } from '../constants/command.constants';
 import { DOCKER_TEMPLATE } from '../constants/docker.constants';
-import { Messages } from '../constants/messages.constants';
-import { parseDataFiles, prepareEnvironment } from '../libs/data';
-import { portIsValid } from '../libs/utils';
 
 export default class Dockerize extends Command {
   public static description =
-    'Create a Dockerfile to build a self-contained image of one or more mock API';
+    'Copy (or download) all the provided data files locally and create a Dockerfile to build a self-contained image of one or more mock API';
 
   public static examples = [
-    '$ mockoon-cli dockerize --data ~/data.json --output ./Dockerfile',
-    '$ mockoon-cli dockerize --data ~/data1.json ~/data2.json --output ./Dockerfile',
-    '$ mockoon-cli dockerize --data https://file-server/data.json --output ./Dockerfile'
+    '$ mockoon-cli dockerize --data ~/data.json --output ./folder/Dockerfile',
+    '$ mockoon-cli dockerize --data ~/data1.json ~/data2.json --output ./folder/Dockerfile',
+    '$ mockoon-cli dockerize --data https://file-server/data.json --output ./folder/Dockerfile'
   ];
 
   public static flags = {
     ...commonFlags,
-    ...startFlags,
+    port: Flags.integer({
+      char: 'p',
+      description:
+        'Ports to expose in the Docker container. It should match the number of environment data files you provide with the --data flag.',
+      multiple: true,
+      required: true
+    }),
     output: Flags.string({
       char: 'o',
-      description: 'Generated Dockerfile path and name (e.g. `./Dockerfile`)',
+      description:
+        'Generated Dockerfile path and name (e.g. `./folder/Dockerfile`)',
       required: true
     })
   };
@@ -36,64 +40,68 @@ export default class Dockerize extends Command {
     const resolvedDockerfilePath = pathResolve(userFlags.output);
     const dockerfilePath: ParsedPath = pathParse(resolvedDockerfilePath);
 
-    const parsedEnvironments = await parseDataFiles(userFlags.data);
-    userFlags.data = parsedEnvironments.filePaths;
+    await mkdirp(dockerfilePath.dir);
 
-    const environmentsInfo: { name: any; port: any; dataFile: string }[] = [];
+    if (userFlags.data.length !== userFlags.port.length) {
+      this.error(CLIMessages.DOCKERIZE_PORT_DATA_MISMATCH);
+    }
 
     try {
-      for (
-        let envIndex = 0;
-        envIndex < parsedEnvironments.environments.length;
-        envIndex++
-      ) {
-        const environmentInfo = await prepareEnvironment({
-          environment: parsedEnvironments.environments[envIndex],
-          userOptions: {
-            port: userFlags.port[envIndex]
-          },
-          dockerfileDir: dockerfilePath.dir,
-          repair: userFlags.repair
-        });
+      const filePaths: string[] = [];
+      let entrypoint: string[] = [
+        'mockoon-cli',
+        'start',
+        '--disable-log-to-file',
+        '--data'
+      ];
 
-        environmentsInfo.push(environmentInfo);
+      // copy or download the data files next to the generated Dockerfile
+      for (const dataPath of userFlags.data) {
+        const parsedDataPath = pathParse(dataPath);
+        const fileName =
+          parsedDataPath.ext !== '.json'
+            ? `${parsedDataPath.name}.json`
+            : parsedDataPath.base;
 
-        if (!portIsValid(environmentInfo.port)) {
-          this.error(
-            format(Messages.CLI.PORT_IS_NOT_VALID, environmentInfo.port)
+        if (dataPath.startsWith('http')) {
+          const resdata = await (await fetch(dataPath)).text();
+
+          await fs.writeFile(
+            pathResolve(dockerfilePath.dir, fileName),
+            resdata
+          );
+        } else {
+          await fs.copyFile(
+            pathResolve(dataPath),
+            pathResolve(dockerfilePath.dir, fileName)
           );
         }
+        filePaths.push(`./${fileName}`);
+        entrypoint.push(`./${fileName}`);
+      }
+
+      entrypoint = [...entrypoint, '--port', ...userFlags.port.map(String)];
+
+      if (userFlags['log-transaction']) {
+        entrypoint.push('--log-transaction');
       }
 
       const dockerFile = mustacheRender(DOCKER_TEMPLATE, {
-        ports: environmentsInfo.map((environmentInfo) => environmentInfo.port),
-        filePaths: environmentsInfo.map(
-          (environmentInfo) => pathParse(environmentInfo.dataFile).base
-        ),
+        ports: userFlags.port.join(' '),
+        filePaths,
         version: Config.version,
-        // passing more args to the dockerfile template, only make sense for log transaction yet as other flags are immediately used during the file creation and data preparation
-        args: userFlags['log-transaction'] ? ', "--log-transaction"' : ''
+        entrypoint: JSON.stringify(entrypoint)
       });
-
-      await mkdirp(dockerfilePath.dir);
 
       await fs.writeFile(resolvedDockerfilePath, dockerFile);
 
-      this.log(Messages.CLI.DOCKERIZE_SUCCESS, resolvedDockerfilePath);
+      this.log(CLIMessages.DOCKERIZE_SUCCESS, resolvedDockerfilePath);
       this.log(
-        Messages.CLI.DOCKERIZE_BUILD_COMMAND,
+        CLIMessages.DOCKERIZE_BUILD_COMMAND,
         dockerfilePath.dir,
-        environmentsInfo.length > 1
-          ? 'mockoon-mocks'
-          : environmentsInfo[0].name,
-        environmentsInfo.reduce(
-          (portsString, environmentInfo) =>
-            `${portsString ? portsString + ' ' : portsString}-p ${
-              environmentInfo.port
-            }:${environmentInfo.port}`,
-          ''
-        ),
-        environmentsInfo.length > 1 ? 'mockoon-mocks' : environmentsInfo[0].name
+        'mockoon-image',
+        userFlags.port.map((port) => `-p ${port}:${port}`).join(' '),
+        'mockoon-image'
       );
     } catch (error: any) {
       this.error(error.message);

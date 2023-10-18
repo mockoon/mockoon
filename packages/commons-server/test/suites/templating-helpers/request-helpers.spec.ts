@@ -164,6 +164,34 @@ describe('Request helpers', () => {
       );
       expect(parseResult).to.be.equal('val1val2');
     });
+
+    it('should return the properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{body '$.[?(@property.match(/attribute\\.1.*/))]'}}{{body '$.attributes.sub_attributes.*'}}{{body '$.attributes.[attribute.with.dot].name'}}",
+        {} as any,
+        [],
+        {
+          body: {
+            'attribute.1.value.1': 'attribute-value-1',
+            'attribute.1.value.2': 'attribute-value-2',
+            attributes: {
+              sub_attributes: {
+                attribute_1_name: 'attribute-1-name',
+                attribute_2_name: 'attribute-2-name',
+                Attribute_3_Name: 'attribute-3-name'
+              },
+              'attribute.with.dot': {
+                name: 'value'
+              }
+            }
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal(
+        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]["value"]'
+      );
+    });
   });
 
   describe('Helper: bodyRaw', () => {
@@ -303,6 +331,34 @@ describe('Request helpers', () => {
       );
       expect(parseResult).to.be.equal('val1val2');
     });
+
+    it('should return the properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{bodyRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{bodyRaw '$.attributes.sub_attributes.*'}}{{bodyRaw '$.attributes.[attribute.with.dot].name'}}",
+        {} as any,
+        [],
+        {
+          body: {
+            'attribute.1.value.1': 'attribute-value-1',
+            'attribute.1.value.2': 'attribute-value-2',
+            attributes: {
+              sub_attributes: {
+                attribute_1_name: 'attribute-1-name',
+                attribute_2_name: 'attribute-2-name',
+                Attribute_3_Name: 'attribute-3-name'
+              },
+              'attribute.with.dot': {
+                name: 'value'
+              }
+            }
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal(
+        'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
+      );
+    });
   });
 
   describe('Helper: queryParam', () => {
@@ -404,6 +460,44 @@ describe('Request helpers', () => {
       );
       expect(parseResult).to.be.equal('"This is a \\"message\\" with quotes."');
     });
+
+    it('should return the value of parameter with dots in parameter name', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{queryParam 'param1\\.name' undefined true}}",
+        {} as any,
+        [],
+        { query: { 'param1.name': 'value' } } as any
+      );
+      expect(parseResult).to.be.equal('"value"');
+    });
+    it('should return the properties matching jsonpath rexpression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{queryParam '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParam '$.attributes.sub_attributes.*'}}{{queryParam '$.attributes.[attribute.with.dot].name'}}",
+        {} as any,
+        [],
+        {
+          query: {
+            'attribute.1.value.1': 'attribute-value-1',
+            'attribute.1.value.2': 'attribute-value-2',
+            attributes: {
+              sub_attributes: {
+                attribute_1_name: 'attribute-1-name',
+                attribute_2_name: 'attribute-2-name',
+                Attribute_3_Name: 'attribute-3-name'
+              },
+              'attribute.with.dot': {
+                name: 'value'
+              }
+            }
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal(
+        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]["value"]'
+      );
+    });
   });
 
   describe('Helper: queryParamRaw', () => {
@@ -500,12 +594,49 @@ describe('Request helpers', () => {
     it('should return the default value in a if clause when no request body', () => {
       const parseResult = TemplateParser(
         false,
-        "{{#if (queryParam 'dolphin' true)}}dolphin{{/if}}",
+        "{{#if (queryParamRaw 'dolphin' true)}}dolphin{{/if}}",
         {} as any,
         [],
         {} as any
       );
       expect(parseResult).to.be.equal('dolphin');
+    });
+    it('should return the value of parameter with dots in parameter name', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{queryParamRaw 'param1\\.name' undefined true}}",
+        {} as any,
+        [],
+        { query: { 'param1.name': 'value' } } as any
+      );
+      expect(parseResult).to.be.equal('value');
+    });
+    it('should return the properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{queryParamRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParamRaw '$.attributes.sub_attributes.*'}}{{queryParamRaw '$.attributes.[attribute.with.dot].name'}}",
+        {} as any,
+        [],
+        {
+          query: {
+            'attribute.1.value.1': 'attribute-value-1',
+            'attribute.1.value.2': 'attribute-value-2',
+            attributes: {
+              sub_attributes: {
+                attribute_1_name: 'attribute-1-name',
+                attribute_2_name: 'attribute-2-name',
+                Attribute_3_Name: 'attribute-3-name'
+              },
+              'attribute.with.dot': {
+                name: 'value'
+              }
+            }
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal(
+        'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
+      );
     });
   });
 

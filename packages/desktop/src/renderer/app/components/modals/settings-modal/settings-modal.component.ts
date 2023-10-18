@@ -93,7 +93,8 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
       fileWatcherEnabled: [SettingsDefault.fileWatcherEnabled],
       storagePrettyPrint: [SettingsDefault.storagePrettyPrint],
       enableTelemetry: [SettingsDefault.enableTelemetry],
-      startEnvironmentsOnLoad: [SettingsDefault.startEnvironmentsOnLoad]
+      startEnvironmentsOnLoad: [SettingsDefault.startEnvironmentsOnLoad],
+      logTransactions: [SettingsDefault.logTransactions]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -134,7 +135,8 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
               fileWatcherEnabled: settings.fileWatcherEnabled,
               storagePrettyPrint: settings.storagePrettyPrint,
               enableTelemetry: settings.enableTelemetry,
-              startEnvironmentsOnLoad: settings.startEnvironmentsOnLoad
+              startEnvironmentsOnLoad: settings.startEnvironmentsOnLoad,
+              logTransactions: settings.logTransactions
             },
             { emitEvent: false }
           );

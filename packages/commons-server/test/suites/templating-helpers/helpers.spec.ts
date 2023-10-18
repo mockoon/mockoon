@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
 import { expect } from 'chai';
 import { format as dateFormat } from 'date-fns';
+import { localFaker as faker } from '../../../src';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
 faker.seed(1);
@@ -2071,6 +2071,39 @@ describe('Template parser', () => {
       );
       expect(parseResult).to.be.equal('true');
     });
+
+    it('should return false if first number is number and second is string', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{eq 1 "1"}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('false');
+    });
+
+    it('should return true if first value is string equal to second string', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{eq "v1" "v1"}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('true');
+    });
+
+    it('should return false if first value is string and not equal to second string', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{eq "v1" "v11"}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('false');
+    });
   });
 
   describe('Helper: stringify', () => {
@@ -2208,6 +2241,152 @@ describe('Template parser', () => {
         } as any
       );
       expect(parseResult).to.be.equal('123*******');
+    });
+  });
+
+  describe('Helper: oneOf', () => {
+    it('should return empty string if no param provided', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{oneOf}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return empty string if first param is not an array', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{oneOf true}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return a stringified object if choses from array of object and stringify is true', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{oneOf (dataRaw "abc1") true}}',
+        {} as any,
+        [
+          {
+            id: 'abc1',
+            name: 'db1',
+            parsed: true,
+            value: [{ id: 1, value: 'value1' }]
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('{"id":1,"value":"value1"}');
+    });
+
+    it('should return an [object Object] string if choses from array of object and stringify is false', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{oneOf (dataRaw "abc1")}}',
+        {} as any,
+        [
+          {
+            id: 'abc1',
+            name: 'db1',
+            parsed: true,
+            value: [{ id: 1, value: 'value1' }]
+          }
+        ],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('[object Object]');
+    });
+  });
+
+  describe('Helper: object', () => {
+    it('should return an empty object if empty object passed', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{ stringify (object) }}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal('{}');
+    });
+
+    it('should return valid key=value object if key=value passed', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (object key="value") }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify({ key: 'value' }, null, 2)
+      );
+    });
+
+    it('should return valid multiple keys object if multiple keys passed', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (object key="value" secondKey="secondValue" numericKey=5) }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify(
+          {
+            numericKey: 5,
+            secondKey: 'secondValue',
+            key: 'value'
+          },
+          null,
+          2
+        )
+      );
+    });
+  });
+
+  describe('Helper: filter', () => {
+    it('should return correctly filtered array with primitives OR condition', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{ stringify (filter (array 1 2 3 4 true false) 3 1 true) }}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(JSON.stringify([1, 3, true], null, 2));
+    });
+
+    it('should return correctly filtered array with mixed data OR condition', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (filter (array (object key="value") 2 3) (object key="value") 3) }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify([{ key: 'value' }, 3], null, 2)
+      );
+    });
+
+    it('should return correctly filtered array with mixed AND condition', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{{ stringify (filter (array (object a="a1" b="b2") (object a="a1" b="b1") 2 3) (object a="a1" b="b1") 3) }}}',
+        {} as any,
+        [],
+        {} as any
+      );
+      expect(parseResult).to.be.equal(
+        JSON.stringify([{ b: 'b1', a: 'a1' }, 3], null, 2)
+      );
     });
   });
 });

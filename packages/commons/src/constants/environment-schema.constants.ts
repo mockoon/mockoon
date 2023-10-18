@@ -89,7 +89,8 @@ export const RouteResponseDefault: RouteResponse = {
   rulesOperator: 'OR',
   disableTemplating: false,
   fallbackTo404: false,
-  default: false
+  default: false,
+  crudKey: 'id'
 };
 
 export const ResponseRuleDefault: ResponseRule = {
@@ -237,7 +238,8 @@ const RouteResponseSchema = Joi.object<RouteResponse, true>({
   fallbackTo404: Joi.boolean()
     .failover(RouteResponseDefault.fallbackTo404)
     .required(),
-  default: Joi.boolean().failover(RouteResponseDefault.default).required()
+  default: Joi.boolean().failover(RouteResponseDefault.default).required(),
+  crudKey: Joi.string().failover(RouteResponseDefault.crudKey).required()
 });
 
 export const FolderChildSchema = Joi.object<FolderChild, true>({
@@ -271,6 +273,7 @@ export const RouteSchema = Joi.object<Route, true>({
   method: Joi.string()
     .allow('')
     .valid(
+      Methods.all,
       Methods.get,
       Methods.post,
       Methods.put,
@@ -299,7 +302,8 @@ export const RouteSchema = Joi.object<Route, true>({
     .valid(
       ResponseMode.RANDOM,
       ResponseMode.SEQUENTIAL,
-      ResponseMode.DISABLE_RULES
+      ResponseMode.DISABLE_RULES,
+      ResponseMode.FALLBACK
     )
     .failover(RouteDefault.responseMode)
     .required()

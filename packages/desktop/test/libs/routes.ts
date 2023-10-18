@@ -22,6 +22,13 @@ class Routes {
     params: 5,
     request_number: 6
   };
+  private rulesOperatorsIndexes = {
+    equals: 1,
+    regex: 2,
+    regex_i: 3,
+    null: 4,
+    empty_array: 5
+  };
   private activeMenuEntrySelector = '.routes-menu .nav-item .nav-link.active';
 
   public get bodyTypeToggle(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -75,6 +82,18 @@ class Routes {
     return $('#response-modes-DISABLE_RULES');
   }
 
+  public get fallbackResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#response-modes-FALLBACK');
+  }
+
+  public get rulesWarningMessage(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#disabled-rules-warning-message');
+  }
+
+  public get rulesWarningIcon(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#disabled-rules-warning-icon');
+  }
+
   public get contentTypeElement(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.environment-routes-footer div');
   }
@@ -95,6 +114,10 @@ class Routes {
     return $('#route-responses-menu #route-response-duplication-button');
   }
 
+  public get routeResponseStatusDropdown(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#status-code-dropdown');
+  }
+
   public get routeResponseDropdownlabel(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-dropdown .dropdown-toggle-label');
   }
@@ -109,6 +132,10 @@ class Routes {
 
   public get bodyDataBucketSelect(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('app-custom-select[formcontrolname="databucketID"]');
+  }
+
+  public get idPropertyDataBucketSelect(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.form-control[formcontrolname="crudKey"]');
   }
 
   public get addMenu(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -321,6 +348,10 @@ class Routes {
     await utils.assertDropdownValue('method', expected);
   }
 
+  public async setMethod(index: number) {
+    await utils.setDropdownValue('methods', index);
+  }
+
   public async assertPath(expected: string) {
     expect(await this.pathInput.getValue()).toEqual(expected);
   }
@@ -352,6 +383,10 @@ class Routes {
 
   public async assertRouteResponseStatusCode(expected: string) {
     await utils.assertDropdownValue('statusCode', expected);
+  }
+
+  public async setRouteResponseStatusCode(statusIndex: number) {
+    await utils.setDropdownValue('status-code', statusIndex);
   }
 
   public async setFile(value: string): Promise<void> {
@@ -481,12 +516,19 @@ class Routes {
       ),
       rule.modifier
     );
-    await utils.setElementValue(
-      $(
-        'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="value"]'
-      ),
-      rule.value
+    await utils.setDropdownValue(
+      `rules${lastRuleIndex}operator`,
+      this.rulesOperatorsIndexes[rule.operator]
     );
+
+    if (rule.operator !== 'null') {
+      await utils.setElementValue(
+        $(
+          'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="value"]'
+        ),
+        rule.value
+      );
+    }
   }
 
   public async removeResponseRule(index: number) {
@@ -532,6 +574,10 @@ class Routes {
 
   public async toggleRouteResponseSequential() {
     await $('#response-modes-SEQUENTIAL').click();
+  }
+
+  public async toggleRouteResponseFallback() {
+    await $('#response-modes-FALLBACK').click();
   }
 
   public async toggleRouteResponseDisableRules() {

@@ -12,7 +12,7 @@ describe('First load', () => {
   });
 
   it('Open window with Mockoon title', async () => {
-    expect(await browser.getTitle()).toEqual('Mockoon');
+    expect(await browser.getTitle()).toContain('Mockoon');
   });
 
   it('Show welcome modal', async () => {

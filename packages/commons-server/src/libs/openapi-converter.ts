@@ -1,5 +1,6 @@
 import openAPI from '@apidevtools/swagger-parser';
 import {
+  BodyTypes,
   BuildEnvironment,
   BuildHeader,
   BuildHTTPRoute,
@@ -11,7 +12,8 @@ import {
   Methods,
   RemoveLeadingSlash,
   Route,
-  RouteResponse
+  RouteResponse,
+  RouteType
 } from '@mockoon/commons';
 import { OpenAPI, OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 import { routesFromFolder } from './utils';
@@ -77,6 +79,10 @@ export class OpenAPIConverter {
         }
       ],
       paths: routes.reduce<OpenAPIV3.PathsObject>((paths, route) => {
+        if (route.type !== RouteType.HTTP) {
+          return paths;
+        }
+
         const pathParameters = route.endpoint.match(/:[a-zA-Z0-9_]+/g);
         let endpoint = '/' + route.endpoint;
 
@@ -97,11 +103,24 @@ export class OpenAPIConverter {
                 routeResponse
               );
 
+              let responseBody = {};
+
+              // use inline body as an example if it parses correctly (valid JSON no containing templating)
+              if (
+                routeResponse.bodyType === BodyTypes.INLINE &&
+                routeResponse.body
+              ) {
+                try {
+                  JSON.parse(routeResponse.body);
+                  responseBody = routeResponse.body;
+                } catch (error) {}
+              }
+
               responses[routeResponse.statusCode.toString()] = {
                 description: routeResponse.label,
                 content: responseContentType
-                  ? { [responseContentType]: {} }
-                  : {},
+                  ? { [responseContentType]: { example: responseBody } }
+                  : { '*/*': { example: responseBody } },
                 headers: [
                   ...environment.headers,
                   ...routeResponse.headers
@@ -492,15 +511,15 @@ export class OpenAPIConverter {
     schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject
   ) {
     const typeFactories = {
-      integer: () => "{{faker 'datatype.number'}}",
-      number: () => "{{faker 'datatype.number'}}",
-      number_float: () => "{{faker 'datatype.float'}}",
-      number_double: () => "{{faker 'datatype.float'}}",
+      integer: () => "{{faker 'number.int'}}",
+      number: () => "{{faker 'number.int'}}",
+      number_float: () => "{{faker 'number.float'}}",
+      number_double: () => "{{faker 'number.float'}}",
       string: () => '',
       string_date: () => "{{date '2019' (now) 'yyyy-MM-dd'}}",
       'string_date-time': () => "{{faker 'date.recent' 365}}",
       string_email: () => "{{faker 'internet.email'}}",
-      string_uuid: () => "{{faker 'datatype.uuid'}}",
+      string_uuid: () => "{{faker 'string.uuid'}}",
       boolean: () => "{{faker 'datatype.boolean'}}",
       array: (arraySchema) => {
         const newObject = this.generateSchema(arraySchema.items);
@@ -585,7 +604,7 @@ export class OpenAPIConverter {
    */
   private convertJSONSchemaPrimitives(jsonSchema: string) {
     return jsonSchema.replace(
-      /\"({{faker 'datatype\.(number|boolean|float)'}})\"/g,
+      /\"({{faker '(?:number\.int|number\.float|datatype\.boolean)'}})\"/g,
       '$1'
     );
   }

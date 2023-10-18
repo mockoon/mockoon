@@ -73,8 +73,8 @@ const highlight = async (
       element.style.top=(targetPosition.top - ${highlightGaps.top}) + "px";
       element.style.left=(targetPosition.left - ${highlightGaps.left}) + "px";
       element.style.width=(targetPosition.width + ${highlightGaps.left} + ${
-      highlightGaps.right
-    }) + "px";
+        highlightGaps.right
+      }) + "px";
       element.style.height=(${height}) + "px";
       element.style.border="3px solid red";
       element.style.zIndex='10000';
@@ -149,7 +149,9 @@ const documentationTopics: {
   folder: string;
   screenshots: {
     // tasks to be performed before taking the screenshot
-    tasks?: () => void;
+    tasks?: () => Promise<void>;
+    // tasks to be performed after taking the screenshot
+    postTasks?: () => Promise<void>;
     // provide screenshot target if different from highlighted element (has priority over highlighted element when taking the screenshot)
     screenshotTarget?: ChainablePromiseElement<WebdriverIO.Element>;
     highlightedTarget: ChainablePromiseElement<WebdriverIO.Element>;
@@ -222,7 +224,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'response-headers',
+    folder: 'response-configuration/response-headers',
     screenshots: [
       {
         tasks: async () => {
@@ -284,7 +286,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'proxy-mode',
+    folder: 'server-configuration/proxy-mode',
     screenshots: [
       {
         tasks: async () => {
@@ -506,7 +508,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'serving-over-tls',
+    folder: 'server-configuration/serving-over-tls',
     screenshots: [
       {
         tasks: async () => {
@@ -554,7 +556,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'cors',
+    folder: 'server-configuration/cors',
     screenshots: [
       {
         tasks: async () => {
@@ -625,7 +627,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'listening-hostname',
+    folder: 'server-configuration/listening-hostname',
     screenshots: [
       {
         tasks: async () => {
@@ -658,7 +660,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'response-body/overview',
+    folder: 'response-configuration/response-body',
     screenshots: [
       {
         tasks: async () => {
@@ -720,7 +722,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'response-body/file-serving',
+    folder: 'response-configuration/file-serving',
     screenshots: [
       {
         tasks: async () => {
@@ -862,6 +864,19 @@ const documentationTopics: {
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { top: 20, bottom: 120, left: 920 },
         fileName: 'sequential-route-responses.png'
+      },
+      {
+        tasks: async () => {
+          await routes.toggleRouteResponseFallback();
+        },
+        get highlightedTarget() {
+          return routes.fallbackResponseBtn;
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 960 },
+        fileName: 'fallback-mode-responses.png'
       }
     ]
   },
@@ -1146,6 +1161,29 @@ const documentationTopics: {
         screenshotPosition: { right: 0 },
         screeenshotGaps: { top: 20, left: 40, bottom: 120 },
         fileName: 'headers-templating.png'
+      },
+      {
+        tasks: async () => {
+          await routes.switchTab('RULES');
+          await routes.addResponseRule({
+            target: 'header',
+            value: "{{data 'token'}}",
+            invert: false,
+            modifier: 'Authorization',
+            operator: 'equals'
+          });
+        },
+        get screenshotTarget() {
+          return routes.getResponseRule(1);
+        },
+        get highlightedTarget() {
+          return routes.getResponseRulevalue(1);
+        },
+        highlight: false,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0 },
+        screeenshotGaps: { top: 50, left: 40, bottom: 80 },
+        fileName: 'template-helper-response-rule-value.png'
       }
     ]
   },
@@ -1158,7 +1196,7 @@ const documentationTopics: {
           await settings.open();
         },
         get highlightedTarget() {
-          return $('app-title-separator:nth-of-type(3)');
+          return $('app-title-separator[heading="Faker.js"]');
         },
         get screenshotTarget() {
           return modals.content;
@@ -1201,6 +1239,9 @@ const documentationTopics: {
           await navigation.switchView('ENV_ROUTES');
           await contextMenu.open('environments', 1);
         },
+        postTasks: async () => {
+          await contextMenu.close();
+        },
         get highlightedTarget() {
           return contextMenu.getItem(3);
         },
@@ -1209,6 +1250,42 @@ const documentationTopics: {
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-show-in-folder.png'
+      },
+      {
+        tasks: async () => {
+          await contextMenu.open('environments', 1);
+        },
+        postTasks: async () => {
+          await contextMenu.close();
+        },
+        get highlightedTarget() {
+          return contextMenu.getItem(4);
+        },
+        highlight: true,
+        screenshotPosition: { top: 0, left: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { right: 150, bottom: 150 },
+        fileName: 'environment-move-to-folder.png'
+      },
+      {
+        tasks: async () => {
+          await settings.open();
+          await browser.pause(500);
+        },
+        postTasks: async () => {
+          await modals.close();
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        get highlightedTarget() {
+          return settings.fileWatchingInputGroup;
+        },
+        highlight: true,
+        highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'enable-file-watching.png'
       }
     ]
   },
@@ -1235,6 +1312,9 @@ const documentationTopics: {
           await settings.open();
           await browser.pause(500);
         },
+        postTasks: async () => {
+          await modals.close();
+        },
         get screenshotTarget() {
           return modals.content;
         },
@@ -1255,10 +1335,12 @@ const documentationTopics: {
     screenshots: [
       {
         tasks: async () => {
-          await modals.close();
           await navigation.switchView('ENV_ROUTES');
           await routes.select(1);
           await contextMenu.open('environments', 1);
+        },
+        postTasks: async () => {
+          await contextMenu.close();
         },
         get highlightedTarget() {
           return contextMenu.getItem(2);
@@ -1273,36 +1355,11 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'mockoon-data-files/import-export-mockoon-format',
-    screenshots: [
-      {
-        tasks: async () => {
-          await contextMenu.close();
-          await fs.copyFile(
-            './test/data/res/legacy-export/environment-legacy-export.json',
-            './tmp/storage/environment-legacy-export.json'
-          );
-          await environments.open('environment-legacy-export', false);
-        },
-        get highlightedTarget() {
-          return modals.content;
-        },
-        highlight: false,
-        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
-        fileName: 'legacy-export-file-open-prompt.png'
-      }
-    ]
-  },
-  {
-    enabled: true,
     folder: 'api-endpoints/folders',
     screenshots: [
       {
         tasks: async () => {
-          await modals.close();
-          await environments.close(1);
+          await contextMenu.open('environments', 1);
           await environments.close(1);
           await environments.open('empty');
           await navigation.switchView('ENV_SETTINGS');
@@ -1404,6 +1461,9 @@ const documentationTopics: {
 
           await routes.openAddMenu();
         },
+        postTasks: async () => {
+          await contextMenu.close();
+        },
         get screenshotTarget() {
           return routes.addMenu;
         },
@@ -1418,7 +1478,6 @@ const documentationTopics: {
       },
       {
         tasks: async () => {
-          await contextMenu.close();
           await routes.addCRUDRoute();
           await routes.setPath('users');
         },
@@ -1444,9 +1503,23 @@ const documentationTopics: {
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: { right: 0 },
-        screeenshotGaps: { left: 50, top: 200, bottom: 100 },
+        screenshotPosition: { right: 0, left: 0 },
+        screeenshotGaps: { top: 200, bottom: 100 },
         fileName: 'link-data-bucket-crud-route.png'
+      },
+      {
+        tasks: async () => {},
+        get screenshotTarget() {
+          return routes.idPropertyDataBucketSelect;
+        },
+        get highlightedTarget() {
+          return routes.idPropertyDataBucketSelect;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0, left: 0 },
+        screeenshotGaps: { top: 200, bottom: 100 },
+        fileName: 'customize-crud-id-property-key.png'
       }
     ]
   },
@@ -1542,6 +1615,9 @@ const documentationTopics: {
           // account for openai api call
           await browser.pause(20000);
         },
+        postTasks: async () => {
+          await modals.close();
+        },
         get highlightedTarget() {
           return $('.modal-footer .ml-auto button:last-of-type');
         },
@@ -1553,6 +1629,82 @@ const documentationTopics: {
         screenshotPosition: {},
         screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'templates-generate-get-route.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'route-responses/global-routes-with-rules',
+    screenshots: [
+      {
+        tasks: async () => {
+          await routes.addHTTPRoute();
+          await routes.setPath('*');
+          await routes.setMethod(1);
+
+          await routes.addHTTPRoute();
+          await routes.setPath('users');
+
+          await routes.select(1);
+        },
+        get highlightedTarget() {
+          return routes.getMenuItem(1);
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 300, bottom: 200 },
+        fileName: 'create-wildcard-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.toggleRouteResponseFallback();
+        },
+        get highlightedTarget() {
+          return routes.fallbackResponseBtn;
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 960 },
+        fileName: 'activate-fallback-mode.png'
+      },
+      {
+        tasks: async () => {
+          // 401
+          await routes.setRouteResponseStatusCode(30);
+        },
+        get highlightedTarget() {
+          return routes.routeResponseStatusDropdown;
+        },
+        get screenshotTarget() {
+          return routes.routeResponseDropdownlabel;
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { top: 40, bottom: 200, left: 100 },
+        fileName: 'response-status-code-401.png'
+      },
+      {
+        tasks: async () => {
+          await routes.switchTab('RULES');
+          await routes.addResponseRule({
+            target: 'header',
+            invert: false,
+            modifier: 'Authorization',
+            operator: 'null',
+            value: ''
+          });
+        },
+        get highlightedTarget() {
+          return routes.getResponseRule(1);
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 10, right: 5, bottom: 40, left: 10 },
+        screeenshotGaps: { top: 200, bottom: 20, left: 20 },
+        fileName: 'response-rule-header-null.png'
       }
     ]
   }
@@ -1590,8 +1742,6 @@ describe('Documentation screenshots', () => {
 
       for (const screenshot of documentationTopic.screenshots) {
         it(screenshot.fileName, async () => {
-          await clearElements();
-
           if (screenshot.tasks) {
             await screenshot.tasks();
           }
@@ -1612,6 +1762,12 @@ describe('Documentation screenshots', () => {
             documentationTopic.folder,
             screenshot.fileName
           );
+
+          await clearElements();
+
+          if (screenshot.postTasks) {
+            await screenshot.postTasks();
+          }
         });
       }
     });

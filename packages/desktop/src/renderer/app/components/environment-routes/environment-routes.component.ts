@@ -7,6 +7,7 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   Environment,
+  FileExtensionsWithTemplating,
   GetContentType,
   GetRouteResponseContentType,
   Header,
@@ -17,13 +18,14 @@ import {
   Route,
   RouteDefault,
   RouteResponse,
-  RouteResponseDefault
+  RouteResponseDefault,
+  RulesDisablingResponseModes,
+  RulesNotUsingDefaultResponse
 } from '@mockoon/commons';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest, from, merge, Observable, Subject } from 'rxjs';
+import { Observable, Subject, combineLatest, from, merge } from 'rxjs';
 import {
   distinctUntilChanged,
-  distinctUntilKeyChanged,
   filter,
   map,
   mergeMap,
@@ -35,8 +37,8 @@ import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { StatusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
-  defaultContentType,
-  StatusCodes
+  StatusCodes,
+  defaultContentType
 } from 'src/renderer/app/constants/routes.constants';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -87,6 +89,11 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public scrollToBottom = this.uiService.scrollToBottom;
   public databuckets$: Observable<DropdownItems>;
   public methods: DropdownItems = [
+    {
+      value: Methods.all,
+      label: 'All methods',
+      classes: 'route-badge-all-text'
+    },
     {
       label: 'HTTP',
       category: true
@@ -182,6 +189,12 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       icon: 'rule',
       tooltip: 'Disabled rules mode (default response only)',
       activeClass: 'text-warning'
+    },
+    {
+      value: ResponseMode.FALLBACK,
+      icon: 'low_priority',
+      tooltip:
+        'Fallback response mode (does not return the default response if none of the rules match, will jump to the next route or use the proxy if configured)'
     }
   ];
   public bodyType: ToggleItems = [
@@ -198,6 +211,11 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       label: 'Data'
     }
   ];
+  public window = window;
+  public rulesDisablingResponseModes: ResponseMode[] =
+    RulesDisablingResponseModes;
+  public rulesNotUsingDefaultResponse: ResponseMode[] =
+    RulesNotUsingDefaultResponse;
 
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;
@@ -215,7 +233,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.activeEnvironment$ = this.store.selectActiveEnvironment();
+    this.activeEnvironment$ = this.store
+      .selectActiveEnvironment()
+      .pipe(distinctUntilChanged());
     this.activeRoute$ = this.store.selectActiveRoute();
     this.activeRouteResponse$ = this.store.selectActiveRouteResponse();
     this.activeRouteResponseIndex$ =
@@ -228,11 +248,20 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       filter((filePath) => !!filePath),
       distinctUntilChanged(),
       mergeMap((filePath) =>
-        from(MainAPI.invoke('APP_GET_MIME_TYPE', filePath))
+        from(MainAPI.invoke('APP_GET_MIME_TYPE', filePath)).pipe(
+          map((mimeType) => ({
+            mimeType,
+            filePath
+          }))
+        )
       ),
-      map((mimeType) => ({
+      map(({ mimeType, filePath }) => ({
         mimeType,
-        supportsTemplating: MimeTypesWithTemplating.indexOf(mimeType) > -1
+        supportsTemplating:
+          MimeTypesWithTemplating.indexOf(mimeType) > -1 ||
+          FileExtensionsWithTemplating.indexOf(
+            `.${filePath.split('.').pop()}`
+          ) > -1
       }))
     );
     this.databuckets$ = this.activeEnvironment$.pipe(
@@ -525,7 +554,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       body: [RouteResponseDefault.body],
       rules: this.formBuilder.array([]),
       disableTemplating: [RouteResponseDefault.disableTemplating],
-      fallbackTo404: [RouteResponseDefault.fallbackTo404]
+      fallbackTo404: [RouteResponseDefault.fallbackTo404],
+      crudKey: [RouteResponseDefault.crudKey]
     });
 
     // send new activeRouteResponseForm values to the store, one by one
@@ -546,14 +576,15 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listen to stores to init form values
+   * Listen to store to init form values
+   * Init only when the UUID changes or when the action is forcing an update
    */
   private initFormValues() {
     // subscribe to active route changes to reset the form
     this.activeRoute$
       .pipe(
         filter((route) => !!route),
-        distinctUntilKeyChanged('uuid'),
+        this.store.distinctUUIDOrForce(),
         takeUntil(this.destroy$)
       )
       .subscribe((activeRoute) => {
@@ -567,16 +598,11 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
           { emitEvent: false }
         );
       });
-
     // subscribe to active route response changes to reset the form
     this.activeRouteResponse$
       .pipe(
         filter((routeResponse) => !!routeResponse),
-        // monitor changes in uuid and body (for body formatter method)
-        distinctUntilChanged(
-          (previous, next) =>
-            previous.uuid === next.uuid && previous.body === next.body
-        ),
+        this.store.distinctUUIDOrForce(),
         takeUntil(this.destroy$)
       )
       .subscribe((activeRouteResponse) => {
@@ -592,7 +618,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             body: activeRouteResponse.body,
             rules: activeRouteResponse.rules,
             disableTemplating: activeRouteResponse.disableTemplating,
-            fallbackTo404: activeRouteResponse.fallbackTo404
+            fallbackTo404: activeRouteResponse.fallbackTo404,
+            crudKey: activeRouteResponse.crudKey
           },
           { emitEvent: false }
         );

@@ -1,6 +1,6 @@
 {
   "uuid": "83e373f4-63db-4d2b-8d84-f9fc8679c400",
-  "lastMigration": 27,
+  "lastMigration": 29,
   "name": "Slack",
   "endpointPrefix": "api",
   "latency": 0,
@@ -27,7 +27,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "886bc8fe-5f1a-492e-a718-ffaedf62375d",
@@ -44,7 +45,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -72,7 +74,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "04ba5fd3-718a-42a9-b19b-d921fb162182",
@@ -89,7 +92,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -122,7 +126,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "6526f55c-4ed2-493b-8d08-9e233f167e87",
@@ -144,7 +149,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -177,7 +183,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "bc01f053-165d-4473-83d9-c81b315fb65d",
@@ -199,7 +206,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -232,7 +240,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "7a97d771-2b6a-4dde-bf4b-c4988c412c33",
@@ -254,7 +263,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -287,7 +297,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "152f9a63-56d5-4bf5-a18b-773de5a6d59d",
@@ -309,7 +320,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -342,7 +354,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "ddb0b500-655f-45ba-83c0-a305a3ec7413",
@@ -364,7 +377,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -397,7 +411,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "f8d8b71a-ccbf-4e06-99bd-3f9a695565e8",
@@ -419,7 +434,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -452,7 +468,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "34315019-decd-4c0d-b1a3-f7b830d1139a",
@@ -474,7 +491,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -507,7 +525,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "9f9e74e6-2d2b-46ec-908b-7a41933c1fa0",
@@ -529,7 +548,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -557,7 +577,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "1a93a612-68e4-4bfb-8238-81cc25eb1cdc",
@@ -574,7 +595,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -607,7 +629,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "90d71706-f080-4ed9-8b3e-67ac2aaa3b70",
@@ -629,7 +652,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -657,7 +681,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "e8162768-e86b-4ef9-b2d5-5b4a0769dc9c",
@@ -674,7 +699,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -689,7 +715,7 @@
       "responses": [
         {
           "uuid": "67955371-296b-4743-af31-68e4bdc3221c",
-          "body": "{\n  \"channel\": {\n    \"accepted_user\": \"\",\n    \"created\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_channel\": {{faker 'datatype.boolean'}},\n    \"is_general\": {{faker 'datatype.boolean'}},\n    \"is_member\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'datatype.number'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_org_shared\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"is_private\": {{faker 'datatype.boolean'}},\n    \"is_read_only\": {{faker 'datatype.boolean'}},\n    \"is_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'datatype.number'}},\n    \"pending_shared\": [\n      \"\"\n    ],\n    \"previous_names\": [\n      \"\"\n    ],\n    \"priority\": {{faker 'datatype.number'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"unlinked\": {{faker 'datatype.number'}},\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"channel\": {\n    \"accepted_user\": \"\",\n    \"created\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_channel\": {{faker 'datatype.boolean'}},\n    \"is_general\": {{faker 'datatype.boolean'}},\n    \"is_member\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'number.int'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_org_shared\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"is_private\": {{faker 'datatype.boolean'}},\n    \"is_read_only\": {{faker 'datatype.boolean'}},\n    \"is_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'number.int'}},\n    \"pending_shared\": [\n      \"\"\n    ],\n    \"previous_names\": [\n      \"\"\n    ],\n    \"priority\": {{faker 'number.int'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"unlinked\": {{faker 'number.int'}},\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response resulting in a new channel",
@@ -702,7 +728,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "dce1e077-872b-4d2d-a090-f863c51d84db",
@@ -719,7 +746,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -752,7 +780,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "8d2c52f4-1bb7-4496-bc50-3f7c1fe6369d",
@@ -774,7 +803,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -807,7 +837,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "e05d3bf8-0521-472d-b11f-4dd2f09b8d7a",
@@ -829,7 +860,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -844,7 +876,7 @@
       "responses": [
         {
           "uuid": "286871d8-446b-4a07-b84b-5878f50ecb01",
-          "body": "{\n  \"channel\": {\n    \"accepted_user\": \"\",\n    \"created\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_channel\": {{faker 'datatype.boolean'}},\n    \"is_general\": {{faker 'datatype.boolean'}},\n    \"is_member\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'datatype.number'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_org_shared\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"is_private\": {{faker 'datatype.boolean'}},\n    \"is_read_only\": {{faker 'datatype.boolean'}},\n    \"is_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'datatype.number'}},\n    \"pending_shared\": [\n      \"\"\n    ],\n    \"previous_names\": [\n      \"\"\n    ],\n    \"priority\": {{faker 'datatype.number'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"unlinked\": {{faker 'datatype.number'}},\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"channel\": {\n    \"accepted_user\": \"\",\n    \"created\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_channel\": {{faker 'datatype.boolean'}},\n    \"is_general\": {{faker 'datatype.boolean'}},\n    \"is_member\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'number.int'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_org_shared\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"is_private\": {{faker 'datatype.boolean'}},\n    \"is_read_only\": {{faker 'datatype.boolean'}},\n    \"is_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'number.int'}},\n    \"pending_shared\": [\n      \"\"\n    ],\n    \"previous_names\": [\n      \"\"\n    ],\n    \"priority\": {{faker 'number.int'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"unlinked\": {{faker 'number.int'}},\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -857,7 +889,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "acc6acaa-a926-4d9d-baaf-a84e7ec600c3",
@@ -874,7 +907,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -889,7 +923,7 @@
       "responses": [
         {
           "uuid": "cd826178-bad2-4249-aebf-efdc558352c1",
-          "body": "{\n  \"already_in_channel\": {{faker 'datatype.boolean'}},\n  \"channel\": {\n    \"accepted_user\": \"\",\n    \"created\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_channel\": {{faker 'datatype.boolean'}},\n    \"is_general\": {{faker 'datatype.boolean'}},\n    \"is_member\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'datatype.number'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_org_shared\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"is_private\": {{faker 'datatype.boolean'}},\n    \"is_read_only\": {{faker 'datatype.boolean'}},\n    \"is_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'datatype.number'}},\n    \"pending_shared\": [\n      \"\"\n    ],\n    \"previous_names\": [\n      \"\"\n    ],\n    \"priority\": {{faker 'datatype.number'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"unlinked\": {{faker 'datatype.number'}},\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"already_in_channel\": {{faker 'datatype.boolean'}},\n  \"channel\": {\n    \"accepted_user\": \"\",\n    \"created\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_channel\": {{faker 'datatype.boolean'}},\n    \"is_general\": {{faker 'datatype.boolean'}},\n    \"is_member\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'number.int'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_org_shared\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"is_private\": {{faker 'datatype.boolean'}},\n    \"is_read_only\": {{faker 'datatype.boolean'}},\n    \"is_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'number.int'}},\n    \"pending_shared\": [\n      \"\"\n    ],\n    \"previous_names\": [\n      \"\"\n    ],\n    \"priority\": {{faker 'number.int'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"unlinked\": {{faker 'number.int'}},\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -902,7 +936,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "5137dc9b-8d23-4227-b3bc-240b3652e6c8",
@@ -919,7 +954,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -947,7 +983,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "6c0ba173-9878-44c7-b51f-ae101b8feac7",
@@ -964,7 +1001,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -992,7 +1030,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "1c2a6025-f646-4928-95f0-ce19c19b2f99",
@@ -1009,7 +1048,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1042,7 +1082,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "9e5a3fa3-e2cb-40e4-a066-33967870508e",
@@ -1064,7 +1105,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1092,7 +1134,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "71424df6-409c-46af-932a-14d4fdab9faa",
@@ -1109,7 +1152,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1124,7 +1168,7 @@
       "responses": [
         {
           "uuid": "cb91d7c7-50ac-4f74-8391-4d715e994424",
-          "body": "{\n  \"channel\": {\n    \"accepted_user\": \"\",\n    \"created\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_channel\": {{faker 'datatype.boolean'}},\n    \"is_general\": {{faker 'datatype.boolean'}},\n    \"is_member\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'datatype.number'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_org_shared\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"is_private\": {{faker 'datatype.boolean'}},\n    \"is_read_only\": {{faker 'datatype.boolean'}},\n    \"is_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'datatype.number'}},\n    \"pending_shared\": [\n      \"\"\n    ],\n    \"previous_names\": [\n      \"\"\n    ],\n    \"priority\": {{faker 'datatype.number'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"unlinked\": {{faker 'datatype.number'}},\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"channel\": {\n    \"accepted_user\": \"\",\n    \"created\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_channel\": {{faker 'datatype.boolean'}},\n    \"is_general\": {{faker 'datatype.boolean'}},\n    \"is_member\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'number.int'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_org_shared\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"is_private\": {{faker 'datatype.boolean'}},\n    \"is_read_only\": {{faker 'datatype.boolean'}},\n    \"is_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'number.int'}},\n    \"pending_shared\": [\n      \"\"\n    ],\n    \"previous_names\": [\n      \"\"\n    ],\n    \"priority\": {{faker 'number.int'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"unlinked\": {{faker 'number.int'}},\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -1137,7 +1181,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "47a472e7-9df3-4d2c-8193-e167863c8c1a",
@@ -1154,7 +1199,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1187,7 +1233,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "11855e08-c233-4ba3-bd25-6cd32c03f07f",
@@ -1209,7 +1256,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1237,7 +1285,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "df511786-2116-4155-ae99-df0fc89c121e",
@@ -1254,7 +1303,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1282,7 +1332,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "8fc64228-6b82-4de5-a733-a3b6659ebed4",
@@ -1299,7 +1350,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1327,7 +1379,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "27c9d0b2-e30d-4858-89d7-e2becfb4ff1f",
@@ -1344,7 +1397,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1372,7 +1426,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "86a2df66-18c1-4c15-b285-612736c743bf",
@@ -1389,7 +1444,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1417,7 +1473,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "634c0085-eadb-4c47-9805-5a71341c3554",
@@ -1434,7 +1491,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1467,7 +1525,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "7c952ece-97db-45e4-bcef-94bdc4ddd265",
@@ -1489,7 +1548,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1517,7 +1577,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "8cc68c2b-4536-4768-8939-cae36bae4027",
@@ -1534,7 +1595,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1562,7 +1624,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "10039a8e-64ed-4d01-8dc5-812ae9460e38",
@@ -1579,7 +1642,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1594,7 +1658,7 @@
       "responses": [
         {
           "uuid": "527d22d9-ddc6-41c4-acb3-bb85db53ee96",
-          "body": "{\n  \"channel\": \"\",\n  \"message\": {\n    \"attachments\": [\n      {\n        \"fallback\": \"\",\n        \"id\": {{faker 'datatype.number'}},\n        \"image_bytes\": {{faker 'datatype.number'}},\n        \"image_height\": {{faker 'datatype.number'}},\n        \"image_url\": \"\",\n        \"image_width\": {{faker 'datatype.number'}}\n      }\n    ],\n    \"blocks\": [\n      {\n        \"type\": \"\"\n      }\n    ],\n    \"bot_id\": \"\",\n    \"client_msg_id\": \"\",\n    \"comment\": {\n      \"comment\": \"\",\n      \"created\": {{faker 'datatype.number'}},\n      \"id\": \"\",\n      \"is_intro\": {{faker 'datatype.boolean'}},\n      \"is_starred\": {{faker 'datatype.boolean'}},\n      \"num_stars\": {{faker 'datatype.number'}},\n      \"pinned_info\": {},\n      \"pinned_to\": [\n        \"\"\n      ],\n      \"reactions\": [\n        {\n          \"count\": {{faker 'datatype.number'}},\n          \"name\": \"\",\n          \"users\": [\n            \"\"\n          ]\n        }\n      ],\n      \"timestamp\": {{faker 'datatype.number'}},\n      \"user\": \"\"\n    },\n    \"display_as_bot\": {{faker 'datatype.boolean'}},\n    \"file\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"comments_count\": {{faker 'datatype.number'}},\n      \"created\": {{faker 'datatype.number'}},\n      \"display_as_bot\": {{faker 'datatype.boolean'}},\n      \"editable\": {{faker 'datatype.boolean'}},\n      \"editor\": \"\",\n      \"external_id\": \"\",\n      \"external_type\": \"\",\n      \"external_url\": \"\",\n      \"filetype\": \"\",\n      \"groups\": [\n        \"\"\n      ],\n      \"has_rich_preview\": {{faker 'datatype.boolean'}},\n      \"id\": \"\",\n      \"image_exif_rotation\": {{faker 'datatype.number'}},\n      \"ims\": [\n        \"\"\n      ],\n      \"is_external\": {{faker 'datatype.boolean'}},\n      \"is_public\": {{faker 'datatype.boolean'}},\n      \"is_starred\": {{faker 'datatype.boolean'}},\n      \"is_tombstoned\": {{faker 'datatype.boolean'}},\n      \"last_editor\": \"\",\n      \"mimetype\": \"\",\n      \"mode\": \"\",\n      \"name\": \"\",\n      \"num_stars\": {{faker 'datatype.number'}},\n      \"original_h\": {{faker 'datatype.number'}},\n      \"original_w\": {{faker 'datatype.number'}},\n      \"permalink\": \"\",\n      \"permalink_public\": \"\",\n      \"pinned_info\": {},\n      \"pinned_to\": [\n        \"\"\n      ],\n      \"pretty_type\": \"\",\n      \"preview\": \"\",\n      \"public_url_shared\": {{faker 'datatype.boolean'}},\n      \"reactions\": [\n        {\n          \"count\": {{faker 'datatype.number'}},\n          \"name\": \"\",\n          \"users\": [\n            \"\"\n          ]\n        }\n      ],\n      \"shares\": {\n        \"private\": \"\",\n        \"public\": \"\"\n      },\n      \"size\": {{faker 'datatype.number'}},\n      \"source_team\": \"\",\n      \"state\": \"\",\n      \"thumb_1024\": \"\",\n      \"thumb_1024_h\": {{faker 'datatype.number'}},\n      \"thumb_1024_w\": {{faker 'datatype.number'}},\n      \"thumb_160\": \"\",\n      \"thumb_360\": \"\",\n      \"thumb_360_h\": {{faker 'datatype.number'}},\n      \"thumb_360_w\": {{faker 'datatype.number'}},\n      \"thumb_480\": \"\",\n      \"thumb_480_h\": {{faker 'datatype.number'}},\n      \"thumb_480_w\": {{faker 'datatype.number'}},\n      \"thumb_64\": \"\",\n      \"thumb_720\": \"\",\n      \"thumb_720_h\": {{faker 'datatype.number'}},\n      \"thumb_720_w\": {{faker 'datatype.number'}},\n      \"thumb_80\": \"\",\n      \"thumb_800\": \"\",\n      \"thumb_800_h\": {{faker 'datatype.number'}},\n      \"thumb_800_w\": {{faker 'datatype.number'}},\n      \"thumb_960\": \"\",\n      \"thumb_960_h\": {{faker 'datatype.number'}},\n      \"thumb_960_w\": {{faker 'datatype.number'}},\n      \"timestamp\": {{faker 'datatype.number'}},\n      \"title\": \"\",\n      \"updated\": {{faker 'datatype.number'}},\n      \"url_private\": \"\",\n      \"url_private_download\": \"\",\n      \"user\": \"\",\n      \"user_team\": \"\",\n      \"username\": \"\"\n    },\n    \"files\": [\n      {\n        \"channels\": [\n          \"\"\n        ],\n        \"comments_count\": {{faker 'datatype.number'}},\n        \"created\": {{faker 'datatype.number'}},\n        \"display_as_bot\": {{faker 'datatype.boolean'}},\n        \"editable\": {{faker 'datatype.boolean'}},\n        \"editor\": \"\",\n        \"external_id\": \"\",\n        \"external_type\": \"\",\n        \"external_url\": \"\",\n        \"filetype\": \"\",\n        \"groups\": [\n          \"\"\n        ],\n        \"has_rich_preview\": {{faker 'datatype.boolean'}},\n        \"id\": \"\",\n        \"image_exif_rotation\": {{faker 'datatype.number'}},\n        \"ims\": [\n          \"\"\n        ],\n        \"is_external\": {{faker 'datatype.boolean'}},\n        \"is_public\": {{faker 'datatype.boolean'}},\n        \"is_starred\": {{faker 'datatype.boolean'}},\n        \"is_tombstoned\": {{faker 'datatype.boolean'}},\n        \"last_editor\": \"\",\n        \"mimetype\": \"\",\n        \"mode\": \"\",\n        \"name\": \"\",\n        \"num_stars\": {{faker 'datatype.number'}},\n        \"original_h\": {{faker 'datatype.number'}},\n        \"original_w\": {{faker 'datatype.number'}},\n        \"permalink\": \"\",\n        \"permalink_public\": \"\",\n        \"pinned_info\": {},\n        \"pinned_to\": [\n          \"\"\n        ],\n        \"pretty_type\": \"\",\n        \"preview\": \"\",\n        \"public_url_shared\": {{faker 'datatype.boolean'}},\n        \"reactions\": [\n          {\n            \"count\": {{faker 'datatype.number'}},\n            \"name\": \"\",\n            \"users\": [\n              \"\"\n            ]\n          }\n        ],\n        \"shares\": {\n          \"private\": \"\",\n          \"public\": \"\"\n        },\n        \"size\": {{faker 'datatype.number'}},\n        \"source_team\": \"\",\n        \"state\": \"\",\n        \"thumb_1024\": \"\",\n        \"thumb_1024_h\": {{faker 'datatype.number'}},\n        \"thumb_1024_w\": {{faker 'datatype.number'}},\n        \"thumb_160\": \"\",\n        \"thumb_360\": \"\",\n        \"thumb_360_h\": {{faker 'datatype.number'}},\n        \"thumb_360_w\": {{faker 'datatype.number'}},\n        \"thumb_480\": \"\",\n        \"thumb_480_h\": {{faker 'datatype.number'}},\n        \"thumb_480_w\": {{faker 'datatype.number'}},\n        \"thumb_64\": \"\",\n        \"thumb_720\": \"\",\n        \"thumb_720_h\": {{faker 'datatype.number'}},\n        \"thumb_720_w\": {{faker 'datatype.number'}},\n        \"thumb_80\": \"\",\n        \"thumb_800\": \"\",\n        \"thumb_800_h\": {{faker 'datatype.number'}},\n        \"thumb_800_w\": {{faker 'datatype.number'}},\n        \"thumb_960\": \"\",\n        \"thumb_960_h\": {{faker 'datatype.number'}},\n        \"thumb_960_w\": {{faker 'datatype.number'}},\n        \"timestamp\": {{faker 'datatype.number'}},\n        \"title\": \"\",\n        \"updated\": {{faker 'datatype.number'}},\n        \"url_private\": \"\",\n        \"url_private_download\": \"\",\n        \"user\": \"\",\n        \"user_team\": \"\",\n        \"username\": \"\"\n      }\n    ],\n    \"icons\": {\n      \"emoji\": \"\"\n    },\n    \"inviter\": \"\",\n    \"is_delayed_message\": {{faker 'datatype.boolean'}},\n    \"is_intro\": {{faker 'datatype.boolean'}},\n    \"is_starred\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest_reply\": \"\",\n    \"name\": \"\",\n    \"old_name\": \"\",\n    \"parent_user_id\": \"\",\n    \"permalink\": \"\",\n    \"pinned_to\": [\n      \"\"\n    ],\n    \"purpose\": \"\",\n    \"reactions\": [\n      {\n        \"count\": {{faker 'datatype.number'}},\n        \"name\": \"\",\n        \"users\": [\n          \"\"\n        ]\n      }\n    ],\n    \"replies\": [\n      {\n        \"ts\": \"\",\n        \"user\": \"\"\n      }\n    ],\n    \"reply_count\": {{faker 'datatype.number'}},\n    \"reply_users\": [\n      \"\"\n    ],\n    \"reply_users_count\": {{faker 'datatype.number'}},\n    \"source_team\": \"\",\n    \"subscribed\": {{faker 'datatype.boolean'}},\n    \"subtype\": \"\",\n    \"team\": \"\",\n    \"text\": \"\",\n    \"thread_ts\": \"\",\n    \"topic\": \"\",\n    \"ts\": \"\",\n    \"type\": \"\",\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"upload\": {{faker 'datatype.boolean'}},\n    \"user\": \"\",\n    \"user_profile\": {\n      \"avatar_hash\": \"\",\n      \"display_name\": \"\",\n      \"first_name\": \"\",\n      \"image_72\": \"\",\n      \"is_restricted\": {{faker 'datatype.boolean'}},\n      \"is_ultra_restricted\": {{faker 'datatype.boolean'}},\n      \"name\": \"\",\n      \"real_name\": \"\",\n      \"team\": \"\"\n    },\n    \"user_team\": \"\",\n    \"username\": \"\"\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"ts\": \"\"\n}",
+          "body": "{\n  \"channel\": \"\",\n  \"message\": {\n    \"attachments\": [\n      {\n        \"fallback\": \"\",\n        \"id\": {{faker 'number.int'}},\n        \"image_bytes\": {{faker 'number.int'}},\n        \"image_height\": {{faker 'number.int'}},\n        \"image_url\": \"\",\n        \"image_width\": {{faker 'number.int'}}\n      }\n    ],\n    \"blocks\": [\n      {\n        \"type\": \"\"\n      }\n    ],\n    \"bot_id\": \"\",\n    \"client_msg_id\": \"\",\n    \"comment\": {\n      \"comment\": \"\",\n      \"created\": {{faker 'number.int'}},\n      \"id\": \"\",\n      \"is_intro\": {{faker 'datatype.boolean'}},\n      \"is_starred\": {{faker 'datatype.boolean'}},\n      \"num_stars\": {{faker 'number.int'}},\n      \"pinned_info\": {},\n      \"pinned_to\": [\n        \"\"\n      ],\n      \"reactions\": [\n        {\n          \"count\": {{faker 'number.int'}},\n          \"name\": \"\",\n          \"users\": [\n            \"\"\n          ]\n        }\n      ],\n      \"timestamp\": {{faker 'number.int'}},\n      \"user\": \"\"\n    },\n    \"display_as_bot\": {{faker 'datatype.boolean'}},\n    \"file\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"comments_count\": {{faker 'number.int'}},\n      \"created\": {{faker 'number.int'}},\n      \"display_as_bot\": {{faker 'datatype.boolean'}},\n      \"editable\": {{faker 'datatype.boolean'}},\n      \"editor\": \"\",\n      \"external_id\": \"\",\n      \"external_type\": \"\",\n      \"external_url\": \"\",\n      \"filetype\": \"\",\n      \"groups\": [\n        \"\"\n      ],\n      \"has_rich_preview\": {{faker 'datatype.boolean'}},\n      \"id\": \"\",\n      \"image_exif_rotation\": {{faker 'number.int'}},\n      \"ims\": [\n        \"\"\n      ],\n      \"is_external\": {{faker 'datatype.boolean'}},\n      \"is_public\": {{faker 'datatype.boolean'}},\n      \"is_starred\": {{faker 'datatype.boolean'}},\n      \"is_tombstoned\": {{faker 'datatype.boolean'}},\n      \"last_editor\": \"\",\n      \"mimetype\": \"\",\n      \"mode\": \"\",\n      \"name\": \"\",\n      \"num_stars\": {{faker 'number.int'}},\n      \"original_h\": {{faker 'number.int'}},\n      \"original_w\": {{faker 'number.int'}},\n      \"permalink\": \"\",\n      \"permalink_public\": \"\",\n      \"pinned_info\": {},\n      \"pinned_to\": [\n        \"\"\n      ],\n      \"pretty_type\": \"\",\n      \"preview\": \"\",\n      \"public_url_shared\": {{faker 'datatype.boolean'}},\n      \"reactions\": [\n        {\n          \"count\": {{faker 'number.int'}},\n          \"name\": \"\",\n          \"users\": [\n            \"\"\n          ]\n        }\n      ],\n      \"shares\": {\n        \"private\": \"\",\n        \"public\": \"\"\n      },\n      \"size\": {{faker 'number.int'}},\n      \"source_team\": \"\",\n      \"state\": \"\",\n      \"thumb_1024\": \"\",\n      \"thumb_1024_h\": {{faker 'number.int'}},\n      \"thumb_1024_w\": {{faker 'number.int'}},\n      \"thumb_160\": \"\",\n      \"thumb_360\": \"\",\n      \"thumb_360_h\": {{faker 'number.int'}},\n      \"thumb_360_w\": {{faker 'number.int'}},\n      \"thumb_480\": \"\",\n      \"thumb_480_h\": {{faker 'number.int'}},\n      \"thumb_480_w\": {{faker 'number.int'}},\n      \"thumb_64\": \"\",\n      \"thumb_720\": \"\",\n      \"thumb_720_h\": {{faker 'number.int'}},\n      \"thumb_720_w\": {{faker 'number.int'}},\n      \"thumb_80\": \"\",\n      \"thumb_800\": \"\",\n      \"thumb_800_h\": {{faker 'number.int'}},\n      \"thumb_800_w\": {{faker 'number.int'}},\n      \"thumb_960\": \"\",\n      \"thumb_960_h\": {{faker 'number.int'}},\n      \"thumb_960_w\": {{faker 'number.int'}},\n      \"timestamp\": {{faker 'number.int'}},\n      \"title\": \"\",\n      \"updated\": {{faker 'number.int'}},\n      \"url_private\": \"\",\n      \"url_private_download\": \"\",\n      \"user\": \"\",\n      \"user_team\": \"\",\n      \"username\": \"\"\n    },\n    \"files\": [\n      {\n        \"channels\": [\n          \"\"\n        ],\n        \"comments_count\": {{faker 'number.int'}},\n        \"created\": {{faker 'number.int'}},\n        \"display_as_bot\": {{faker 'datatype.boolean'}},\n        \"editable\": {{faker 'datatype.boolean'}},\n        \"editor\": \"\",\n        \"external_id\": \"\",\n        \"external_type\": \"\",\n        \"external_url\": \"\",\n        \"filetype\": \"\",\n        \"groups\": [\n          \"\"\n        ],\n        \"has_rich_preview\": {{faker 'datatype.boolean'}},\n        \"id\": \"\",\n        \"image_exif_rotation\": {{faker 'number.int'}},\n        \"ims\": [\n          \"\"\n        ],\n        \"is_external\": {{faker 'datatype.boolean'}},\n        \"is_public\": {{faker 'datatype.boolean'}},\n        \"is_starred\": {{faker 'datatype.boolean'}},\n        \"is_tombstoned\": {{faker 'datatype.boolean'}},\n        \"last_editor\": \"\",\n        \"mimetype\": \"\",\n        \"mode\": \"\",\n        \"name\": \"\",\n        \"num_stars\": {{faker 'number.int'}},\n        \"original_h\": {{faker 'number.int'}},\n        \"original_w\": {{faker 'number.int'}},\n        \"permalink\": \"\",\n        \"permalink_public\": \"\",\n        \"pinned_info\": {},\n        \"pinned_to\": [\n          \"\"\n        ],\n        \"pretty_type\": \"\",\n        \"preview\": \"\",\n        \"public_url_shared\": {{faker 'datatype.boolean'}},\n        \"reactions\": [\n          {\n            \"count\": {{faker 'number.int'}},\n            \"name\": \"\",\n            \"users\": [\n              \"\"\n            ]\n          }\n        ],\n        \"shares\": {\n          \"private\": \"\",\n          \"public\": \"\"\n        },\n        \"size\": {{faker 'number.int'}},\n        \"source_team\": \"\",\n        \"state\": \"\",\n        \"thumb_1024\": \"\",\n        \"thumb_1024_h\": {{faker 'number.int'}},\n        \"thumb_1024_w\": {{faker 'number.int'}},\n        \"thumb_160\": \"\",\n        \"thumb_360\": \"\",\n        \"thumb_360_h\": {{faker 'number.int'}},\n        \"thumb_360_w\": {{faker 'number.int'}},\n        \"thumb_480\": \"\",\n        \"thumb_480_h\": {{faker 'number.int'}},\n        \"thumb_480_w\": {{faker 'number.int'}},\n        \"thumb_64\": \"\",\n        \"thumb_720\": \"\",\n        \"thumb_720_h\": {{faker 'number.int'}},\n        \"thumb_720_w\": {{faker 'number.int'}},\n        \"thumb_80\": \"\",\n        \"thumb_800\": \"\",\n        \"thumb_800_h\": {{faker 'number.int'}},\n        \"thumb_800_w\": {{faker 'number.int'}},\n        \"thumb_960\": \"\",\n        \"thumb_960_h\": {{faker 'number.int'}},\n        \"thumb_960_w\": {{faker 'number.int'}},\n        \"timestamp\": {{faker 'number.int'}},\n        \"title\": \"\",\n        \"updated\": {{faker 'number.int'}},\n        \"url_private\": \"\",\n        \"url_private_download\": \"\",\n        \"user\": \"\",\n        \"user_team\": \"\",\n        \"username\": \"\"\n      }\n    ],\n    \"icons\": {\n      \"emoji\": \"\"\n    },\n    \"inviter\": \"\",\n    \"is_delayed_message\": {{faker 'datatype.boolean'}},\n    \"is_intro\": {{faker 'datatype.boolean'}},\n    \"is_starred\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest_reply\": \"\",\n    \"name\": \"\",\n    \"old_name\": \"\",\n    \"parent_user_id\": \"\",\n    \"permalink\": \"\",\n    \"pinned_to\": [\n      \"\"\n    ],\n    \"purpose\": \"\",\n    \"reactions\": [\n      {\n        \"count\": {{faker 'number.int'}},\n        \"name\": \"\",\n        \"users\": [\n          \"\"\n        ]\n      }\n    ],\n    \"replies\": [\n      {\n        \"ts\": \"\",\n        \"user\": \"\"\n      }\n    ],\n    \"reply_count\": {{faker 'number.int'}},\n    \"reply_users\": [\n      \"\"\n    ],\n    \"reply_users_count\": {{faker 'number.int'}},\n    \"source_team\": \"\",\n    \"subscribed\": {{faker 'datatype.boolean'}},\n    \"subtype\": \"\",\n    \"team\": \"\",\n    \"text\": \"\",\n    \"thread_ts\": \"\",\n    \"topic\": \"\",\n    \"ts\": \"\",\n    \"type\": \"\",\n    \"unread_count\": {{faker 'number.int'}},\n    \"upload\": {{faker 'datatype.boolean'}},\n    \"user\": \"\",\n    \"user_profile\": {\n      \"avatar_hash\": \"\",\n      \"display_name\": \"\",\n      \"first_name\": \"\",\n      \"image_72\": \"\",\n      \"is_restricted\": {{faker 'datatype.boolean'}},\n      \"is_ultra_restricted\": {{faker 'datatype.boolean'}},\n      \"name\": \"\",\n      \"real_name\": \"\",\n      \"team\": \"\"\n    },\n    \"user_team\": \"\",\n    \"username\": \"\"\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"ts\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -1607,7 +1671,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "7a7f49a4-1323-4f41-9bf9-8a5085c049b7",
@@ -1624,7 +1689,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1639,7 +1705,7 @@
       "responses": [
         {
           "uuid": "c718bbb2-b0a3-44e6-a7f9-06e0134927a8",
-          "body": "{\n  \"channel\": \"\",\n  \"message\": {\n    \"bot_id\": \"\",\n    \"text\": \"\",\n    \"type\": \"\",\n    \"user\": \"\",\n    \"username\": \"\"\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"post_at\": {{faker 'datatype.number'}},\n  \"scheduled_message_id\": \"\"\n}",
+          "body": "{\n  \"channel\": \"\",\n  \"message\": {\n    \"bot_id\": \"\",\n    \"text\": \"\",\n    \"type\": \"\",\n    \"user\": \"\",\n    \"username\": \"\"\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"post_at\": {{faker 'number.int'}},\n  \"scheduled_message_id\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -1652,7 +1718,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "99914924-c037-429a-b525-c211a2780cd2",
@@ -1669,7 +1736,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1684,7 +1752,7 @@
       "responses": [
         {
           "uuid": "82b0762e-ce69-4afe-9ce3-e33296546ead",
-          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"response_metadata\": {\n    \"next_cursor\": \"\"\n  },\n  \"scheduled_messages\": [\n    {\n      \"channel_id\": \"\",\n      \"date_created\": {{faker 'datatype.number'}},\n      \"id\": \"\",\n      \"post_at\": {{faker 'datatype.number'}}\n    }\n  ]\n}",
+          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"response_metadata\": {\n    \"next_cursor\": \"\"\n  },\n  \"scheduled_messages\": [\n    {\n      \"channel_id\": \"\",\n      \"date_created\": {{faker 'number.int'}},\n      \"id\": \"\",\n      \"post_at\": {{faker 'number.int'}}\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -1697,7 +1765,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "14bb867e-2a3f-4064-afd8-ae252e2556f6",
@@ -1714,7 +1783,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1742,7 +1812,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "04a5e41d-7783-4297-afa0-6629f50211ca",
@@ -1759,7 +1830,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1787,7 +1859,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "870b62aa-93f4-421f-9458-9b70a7c518d9",
@@ -1804,7 +1877,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1832,7 +1906,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "d88c58a5-c2fe-41a3-861d-5c1cc19fe136",
@@ -1849,7 +1924,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1877,7 +1953,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "62376156-d40a-43fd-9554-1abc8f47be4d",
@@ -1894,7 +1971,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1922,7 +2000,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "9bc2d066-1aa9-4dc6-af14-9deb55e799a3",
@@ -1939,7 +2018,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -1972,7 +2052,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "9d1901ae-e2e5-400c-a09c-92519e28303c",
@@ -1994,7 +2075,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2027,7 +2109,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "17df6b8b-652d-4109-ad7c-e11dbdceb4d3",
@@ -2049,7 +2132,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2077,7 +2161,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "679f2e8e-c26b-4668-8d35-5d4a9bd5fb29",
@@ -2094,7 +2179,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2122,7 +2208,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "f2d1bc24-a1e9-48ee-b39d-0fddab44694f",
@@ -2139,7 +2226,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2167,7 +2255,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "764c8db3-e178-464d-8141-98c6e12b70cd",
@@ -2184,7 +2273,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2212,7 +2302,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "05abe248-aba5-4955-a14b-639ec9533281",
@@ -2229,7 +2320,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2262,7 +2354,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "00ccf226-5ede-45ed-aa2e-42637b0ad674",
@@ -2284,7 +2377,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2317,7 +2411,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b6dc4011-d907-4997-9bcc-862a70626d4a",
@@ -2339,7 +2434,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2367,7 +2463,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "722708f6-bc44-4444-988a-8446c78330b9",
@@ -2384,7 +2481,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2412,7 +2510,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "4c7b3885-1bb9-4c71-8b36-5cddb609456a",
@@ -2429,7 +2528,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2462,7 +2562,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "89582f2b-d117-42ac-b8ae-cd5cdde1bbcf",
@@ -2484,7 +2585,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2512,7 +2614,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "3cf97082-3936-450b-a03a-845c2f10b74e",
@@ -2529,7 +2632,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2557,7 +2661,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "be9e19f3-9b28-4808-a8c4-5d737e839f0c",
@@ -2574,7 +2679,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2602,7 +2708,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "919442ef-4331-4a9d-bedf-96b2c9a0a0e4",
@@ -2619,7 +2726,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2647,7 +2755,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "d1fa894c-2724-4b8e-9bcc-69dc2cc28e55",
@@ -2664,7 +2773,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2692,7 +2802,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "0ebb4966-53bd-4a49-9af1-04c384959366",
@@ -2709,7 +2820,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2724,7 +2836,7 @@
       "responses": [
         {
           "uuid": "ca635ae9-0f8c-4797-b251-2504a5ea85ce",
-          "body": "{\n  \"dnd_enabled\": {{faker 'datatype.boolean'}},\n  \"next_dnd_end_ts\": {{faker 'datatype.number'}},\n  \"next_dnd_start_ts\": {{faker 'datatype.number'}},\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"snooze_enabled\": {{faker 'datatype.boolean'}}\n}",
+          "body": "{\n  \"dnd_enabled\": {{faker 'datatype.boolean'}},\n  \"next_dnd_end_ts\": {{faker 'number.int'}},\n  \"next_dnd_start_ts\": {{faker 'number.int'}},\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"snooze_enabled\": {{faker 'datatype.boolean'}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -2737,7 +2849,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "e3184a7d-2186-4479-b202-e891bc1bb7c4",
@@ -2754,7 +2867,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2787,7 +2901,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "457cbeb9-869d-4cb2-a3a0-ec92fafc710c",
@@ -2809,7 +2924,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2842,7 +2958,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "62233551-c09f-44e7-9812-d4066ce7510f",
@@ -2864,7 +2981,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2897,7 +3015,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "d0835af7-279f-4adf-a647-bac98c0ca35e",
@@ -2919,7 +3038,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -2952,7 +3072,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "79f97c64-5324-44c5-b662-354e458417a0",
@@ -2974,7 +3095,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3002,7 +3124,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "75b1cc1d-1e24-4fe2-8339-6a0395e64d1e",
@@ -3019,7 +3142,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3047,7 +3171,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "6e24b58e-5b9d-49c9-be24-ae99e4d0f1b3",
@@ -3064,7 +3189,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3097,7 +3223,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "c7cf51d0-eef3-448d-92ee-31fb88a14ead",
@@ -3119,7 +3246,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3152,7 +3280,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "11cd37ac-1eb5-465e-9a0e-04723c29b660",
@@ -3174,7 +3303,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3189,7 +3319,7 @@
       "responses": [
         {
           "uuid": "80a93757-cee8-49dd-9089-b718144a3265",
-          "body": "{\n  \"file\": {\n    \"channels\": [\n      \"\"\n    ],\n    \"comments_count\": {{faker 'datatype.number'}},\n    \"created\": {{faker 'datatype.number'}},\n    \"display_as_bot\": {{faker 'datatype.boolean'}},\n    \"editable\": {{faker 'datatype.boolean'}},\n    \"editor\": \"\",\n    \"external_id\": \"\",\n    \"external_type\": \"\",\n    \"external_url\": \"\",\n    \"filetype\": \"\",\n    \"groups\": [\n      \"\"\n    ],\n    \"has_rich_preview\": {{faker 'datatype.boolean'}},\n    \"id\": \"\",\n    \"image_exif_rotation\": {{faker 'datatype.number'}},\n    \"ims\": [\n      \"\"\n    ],\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_public\": {{faker 'datatype.boolean'}},\n    \"is_starred\": {{faker 'datatype.boolean'}},\n    \"is_tombstoned\": {{faker 'datatype.boolean'}},\n    \"last_editor\": \"\",\n    \"mimetype\": \"\",\n    \"mode\": \"\",\n    \"name\": \"\",\n    \"num_stars\": {{faker 'datatype.number'}},\n    \"original_h\": {{faker 'datatype.number'}},\n    \"original_w\": {{faker 'datatype.number'}},\n    \"permalink\": \"\",\n    \"permalink_public\": \"\",\n    \"pinned_info\": {},\n    \"pinned_to\": [\n      \"\"\n    ],\n    \"pretty_type\": \"\",\n    \"preview\": \"\",\n    \"public_url_shared\": {{faker 'datatype.boolean'}},\n    \"reactions\": [\n      {\n        \"count\": {{faker 'datatype.number'}},\n        \"name\": \"\",\n        \"users\": [\n          \"\"\n        ]\n      }\n    ],\n    \"shares\": {\n      \"private\": \"\",\n      \"public\": \"\"\n    },\n    \"size\": {{faker 'datatype.number'}},\n    \"source_team\": \"\",\n    \"state\": \"\",\n    \"thumb_1024\": \"\",\n    \"thumb_1024_h\": {{faker 'datatype.number'}},\n    \"thumb_1024_w\": {{faker 'datatype.number'}},\n    \"thumb_160\": \"\",\n    \"thumb_360\": \"\",\n    \"thumb_360_h\": {{faker 'datatype.number'}},\n    \"thumb_360_w\": {{faker 'datatype.number'}},\n    \"thumb_480\": \"\",\n    \"thumb_480_h\": {{faker 'datatype.number'}},\n    \"thumb_480_w\": {{faker 'datatype.number'}},\n    \"thumb_64\": \"\",\n    \"thumb_720\": \"\",\n    \"thumb_720_h\": {{faker 'datatype.number'}},\n    \"thumb_720_w\": {{faker 'datatype.number'}},\n    \"thumb_80\": \"\",\n    \"thumb_800\": \"\",\n    \"thumb_800_h\": {{faker 'datatype.number'}},\n    \"thumb_800_w\": {{faker 'datatype.number'}},\n    \"thumb_960\": \"\",\n    \"thumb_960_h\": {{faker 'datatype.number'}},\n    \"thumb_960_w\": {{faker 'datatype.number'}},\n    \"timestamp\": {{faker 'datatype.number'}},\n    \"title\": \"\",\n    \"updated\": {{faker 'datatype.number'}},\n    \"url_private\": \"\",\n    \"url_private_download\": \"\",\n    \"user\": \"\",\n    \"user_team\": \"\",\n    \"username\": \"\"\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"file\": {\n    \"channels\": [\n      \"\"\n    ],\n    \"comments_count\": {{faker 'number.int'}},\n    \"created\": {{faker 'number.int'}},\n    \"display_as_bot\": {{faker 'datatype.boolean'}},\n    \"editable\": {{faker 'datatype.boolean'}},\n    \"editor\": \"\",\n    \"external_id\": \"\",\n    \"external_type\": \"\",\n    \"external_url\": \"\",\n    \"filetype\": \"\",\n    \"groups\": [\n      \"\"\n    ],\n    \"has_rich_preview\": {{faker 'datatype.boolean'}},\n    \"id\": \"\",\n    \"image_exif_rotation\": {{faker 'number.int'}},\n    \"ims\": [\n      \"\"\n    ],\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_public\": {{faker 'datatype.boolean'}},\n    \"is_starred\": {{faker 'datatype.boolean'}},\n    \"is_tombstoned\": {{faker 'datatype.boolean'}},\n    \"last_editor\": \"\",\n    \"mimetype\": \"\",\n    \"mode\": \"\",\n    \"name\": \"\",\n    \"num_stars\": {{faker 'number.int'}},\n    \"original_h\": {{faker 'number.int'}},\n    \"original_w\": {{faker 'number.int'}},\n    \"permalink\": \"\",\n    \"permalink_public\": \"\",\n    \"pinned_info\": {},\n    \"pinned_to\": [\n      \"\"\n    ],\n    \"pretty_type\": \"\",\n    \"preview\": \"\",\n    \"public_url_shared\": {{faker 'datatype.boolean'}},\n    \"reactions\": [\n      {\n        \"count\": {{faker 'number.int'}},\n        \"name\": \"\",\n        \"users\": [\n          \"\"\n        ]\n      }\n    ],\n    \"shares\": {\n      \"private\": \"\",\n      \"public\": \"\"\n    },\n    \"size\": {{faker 'number.int'}},\n    \"source_team\": \"\",\n    \"state\": \"\",\n    \"thumb_1024\": \"\",\n    \"thumb_1024_h\": {{faker 'number.int'}},\n    \"thumb_1024_w\": {{faker 'number.int'}},\n    \"thumb_160\": \"\",\n    \"thumb_360\": \"\",\n    \"thumb_360_h\": {{faker 'number.int'}},\n    \"thumb_360_w\": {{faker 'number.int'}},\n    \"thumb_480\": \"\",\n    \"thumb_480_h\": {{faker 'number.int'}},\n    \"thumb_480_w\": {{faker 'number.int'}},\n    \"thumb_64\": \"\",\n    \"thumb_720\": \"\",\n    \"thumb_720_h\": {{faker 'number.int'}},\n    \"thumb_720_w\": {{faker 'number.int'}},\n    \"thumb_80\": \"\",\n    \"thumb_800\": \"\",\n    \"thumb_800_h\": {{faker 'number.int'}},\n    \"thumb_800_w\": {{faker 'number.int'}},\n    \"thumb_960\": \"\",\n    \"thumb_960_h\": {{faker 'number.int'}},\n    \"thumb_960_w\": {{faker 'number.int'}},\n    \"timestamp\": {{faker 'number.int'}},\n    \"title\": \"\",\n    \"updated\": {{faker 'number.int'}},\n    \"url_private\": \"\",\n    \"url_private_download\": \"\",\n    \"user\": \"\",\n    \"user_team\": \"\",\n    \"username\": \"\"\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -3202,7 +3332,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "c36bdd39-23d2-4763-9bc6-69e420206539",
@@ -3219,7 +3350,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3234,7 +3366,7 @@
       "responses": [
         {
           "uuid": "d876df9c-20b6-4892-bf84-b9c6e8fb0c9b",
-          "body": "{\n  \"file\": {\n    \"channels\": [\n      \"\"\n    ],\n    \"comments_count\": {{faker 'datatype.number'}},\n    \"created\": {{faker 'datatype.number'}},\n    \"display_as_bot\": {{faker 'datatype.boolean'}},\n    \"editable\": {{faker 'datatype.boolean'}},\n    \"editor\": \"\",\n    \"external_id\": \"\",\n    \"external_type\": \"\",\n    \"external_url\": \"\",\n    \"filetype\": \"\",\n    \"groups\": [\n      \"\"\n    ],\n    \"has_rich_preview\": {{faker 'datatype.boolean'}},\n    \"id\": \"\",\n    \"image_exif_rotation\": {{faker 'datatype.number'}},\n    \"ims\": [\n      \"\"\n    ],\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_public\": {{faker 'datatype.boolean'}},\n    \"is_starred\": {{faker 'datatype.boolean'}},\n    \"is_tombstoned\": {{faker 'datatype.boolean'}},\n    \"last_editor\": \"\",\n    \"mimetype\": \"\",\n    \"mode\": \"\",\n    \"name\": \"\",\n    \"num_stars\": {{faker 'datatype.number'}},\n    \"original_h\": {{faker 'datatype.number'}},\n    \"original_w\": {{faker 'datatype.number'}},\n    \"permalink\": \"\",\n    \"permalink_public\": \"\",\n    \"pinned_info\": {},\n    \"pinned_to\": [\n      \"\"\n    ],\n    \"pretty_type\": \"\",\n    \"preview\": \"\",\n    \"public_url_shared\": {{faker 'datatype.boolean'}},\n    \"reactions\": [\n      {\n        \"count\": {{faker 'datatype.number'}},\n        \"name\": \"\",\n        \"users\": [\n          \"\"\n        ]\n      }\n    ],\n    \"shares\": {\n      \"private\": \"\",\n      \"public\": \"\"\n    },\n    \"size\": {{faker 'datatype.number'}},\n    \"source_team\": \"\",\n    \"state\": \"\",\n    \"thumb_1024\": \"\",\n    \"thumb_1024_h\": {{faker 'datatype.number'}},\n    \"thumb_1024_w\": {{faker 'datatype.number'}},\n    \"thumb_160\": \"\",\n    \"thumb_360\": \"\",\n    \"thumb_360_h\": {{faker 'datatype.number'}},\n    \"thumb_360_w\": {{faker 'datatype.number'}},\n    \"thumb_480\": \"\",\n    \"thumb_480_h\": {{faker 'datatype.number'}},\n    \"thumb_480_w\": {{faker 'datatype.number'}},\n    \"thumb_64\": \"\",\n    \"thumb_720\": \"\",\n    \"thumb_720_h\": {{faker 'datatype.number'}},\n    \"thumb_720_w\": {{faker 'datatype.number'}},\n    \"thumb_80\": \"\",\n    \"thumb_800\": \"\",\n    \"thumb_800_h\": {{faker 'datatype.number'}},\n    \"thumb_800_w\": {{faker 'datatype.number'}},\n    \"thumb_960\": \"\",\n    \"thumb_960_h\": {{faker 'datatype.number'}},\n    \"thumb_960_w\": {{faker 'datatype.number'}},\n    \"timestamp\": {{faker 'datatype.number'}},\n    \"title\": \"\",\n    \"updated\": {{faker 'datatype.number'}},\n    \"url_private\": \"\",\n    \"url_private_download\": \"\",\n    \"user\": \"\",\n    \"user_team\": \"\",\n    \"username\": \"\"\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"file\": {\n    \"channels\": [\n      \"\"\n    ],\n    \"comments_count\": {{faker 'number.int'}},\n    \"created\": {{faker 'number.int'}},\n    \"display_as_bot\": {{faker 'datatype.boolean'}},\n    \"editable\": {{faker 'datatype.boolean'}},\n    \"editor\": \"\",\n    \"external_id\": \"\",\n    \"external_type\": \"\",\n    \"external_url\": \"\",\n    \"filetype\": \"\",\n    \"groups\": [\n      \"\"\n    ],\n    \"has_rich_preview\": {{faker 'datatype.boolean'}},\n    \"id\": \"\",\n    \"image_exif_rotation\": {{faker 'number.int'}},\n    \"ims\": [\n      \"\"\n    ],\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_public\": {{faker 'datatype.boolean'}},\n    \"is_starred\": {{faker 'datatype.boolean'}},\n    \"is_tombstoned\": {{faker 'datatype.boolean'}},\n    \"last_editor\": \"\",\n    \"mimetype\": \"\",\n    \"mode\": \"\",\n    \"name\": \"\",\n    \"num_stars\": {{faker 'number.int'}},\n    \"original_h\": {{faker 'number.int'}},\n    \"original_w\": {{faker 'number.int'}},\n    \"permalink\": \"\",\n    \"permalink_public\": \"\",\n    \"pinned_info\": {},\n    \"pinned_to\": [\n      \"\"\n    ],\n    \"pretty_type\": \"\",\n    \"preview\": \"\",\n    \"public_url_shared\": {{faker 'datatype.boolean'}},\n    \"reactions\": [\n      {\n        \"count\": {{faker 'number.int'}},\n        \"name\": \"\",\n        \"users\": [\n          \"\"\n        ]\n      }\n    ],\n    \"shares\": {\n      \"private\": \"\",\n      \"public\": \"\"\n    },\n    \"size\": {{faker 'number.int'}},\n    \"source_team\": \"\",\n    \"state\": \"\",\n    \"thumb_1024\": \"\",\n    \"thumb_1024_h\": {{faker 'number.int'}},\n    \"thumb_1024_w\": {{faker 'number.int'}},\n    \"thumb_160\": \"\",\n    \"thumb_360\": \"\",\n    \"thumb_360_h\": {{faker 'number.int'}},\n    \"thumb_360_w\": {{faker 'number.int'}},\n    \"thumb_480\": \"\",\n    \"thumb_480_h\": {{faker 'number.int'}},\n    \"thumb_480_w\": {{faker 'number.int'}},\n    \"thumb_64\": \"\",\n    \"thumb_720\": \"\",\n    \"thumb_720_h\": {{faker 'number.int'}},\n    \"thumb_720_w\": {{faker 'number.int'}},\n    \"thumb_80\": \"\",\n    \"thumb_800\": \"\",\n    \"thumb_800_h\": {{faker 'number.int'}},\n    \"thumb_800_w\": {{faker 'number.int'}},\n    \"thumb_960\": \"\",\n    \"thumb_960_h\": {{faker 'number.int'}},\n    \"thumb_960_w\": {{faker 'number.int'}},\n    \"timestamp\": {{faker 'number.int'}},\n    \"title\": \"\",\n    \"updated\": {{faker 'number.int'}},\n    \"url_private\": \"\",\n    \"url_private_download\": \"\",\n    \"user\": \"\",\n    \"user_team\": \"\",\n    \"username\": \"\"\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -3247,7 +3379,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "6ee839b9-e34e-42f0-99ec-82bd553715a8",
@@ -3264,7 +3397,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3297,7 +3431,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "406312f3-a984-4594-ad8e-b900fe63254e",
@@ -3319,7 +3454,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3347,7 +3483,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "cd6c5446-dcb0-4c37-9c8d-fbe39c329eb4",
@@ -3364,7 +3501,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3379,7 +3517,7 @@
       "responses": [
         {
           "uuid": "a919c9c9-8ef9-4918-b31f-f5335b613407",
-          "body": "{\n  \"group\": {\n    \"created\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_deleted\": {{faker 'datatype.boolean'}},\n    \"is_group\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'datatype.number'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'datatype.number'}},\n    \"priority\": {{faker 'datatype.number'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"group\": {\n    \"created\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_deleted\": {{faker 'datatype.boolean'}},\n    \"is_group\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'number.int'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'number.int'}},\n    \"priority\": {{faker 'number.int'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -3392,7 +3530,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "74f2989f-b8b9-4778-95c5-62b2def3df3b",
@@ -3409,7 +3548,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3442,7 +3582,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "d923c176-9e25-422e-95af-dfb58aa5eccf",
@@ -3464,7 +3605,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3497,7 +3639,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "d37c15c8-4946-41df-82e7-b53fd85bc3da",
@@ -3519,7 +3662,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3552,7 +3696,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "bd6d56d7-c0f4-4dde-b2a9-17f23dfc5cff",
@@ -3574,7 +3719,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3589,7 +3735,7 @@
       "responses": [
         {
           "uuid": "c8fcfd82-b20c-4dbd-a65c-240e4029bbdc",
-          "body": "{\n  \"group\": {\n    \"created\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_deleted\": {{faker 'datatype.boolean'}},\n    \"is_group\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'datatype.number'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'datatype.number'}},\n    \"priority\": {{faker 'datatype.number'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"group\": {\n    \"created\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_deleted\": {{faker 'datatype.boolean'}},\n    \"is_group\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'number.int'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'number.int'}},\n    \"priority\": {{faker 'number.int'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -3602,7 +3748,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "a3f8af1c-49a3-40ea-8196-8c6e1a1f2257",
@@ -3619,7 +3766,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3647,7 +3795,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "2699a919-1fde-4485-a0ea-6ed989d5e044",
@@ -3664,7 +3813,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3692,7 +3842,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "636d948f-99c8-42cd-a2b0-e4a73d4b62c2",
@@ -3709,7 +3860,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3742,7 +3894,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "448bde61-93c3-4c82-86b7-aac5fc9f3ac9",
@@ -3764,7 +3917,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3792,7 +3946,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "34dd4d21-5356-4cbd-91da-fd84f50c4e34",
@@ -3809,7 +3964,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3837,7 +3993,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "458354c5-3d52-43ba-a2be-1d91c52a227c",
@@ -3854,7 +4011,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3869,7 +4027,7 @@
       "responses": [
         {
           "uuid": "85dd3a90-02f9-4efa-832b-3ffdfdf7dd3b",
-          "body": "{\n  \"channel\": {\n    \"created\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_deleted\": {{faker 'datatype.boolean'}},\n    \"is_group\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'datatype.number'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'datatype.number'}},\n    \"priority\": {{faker 'datatype.number'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"channel\": {\n    \"created\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_deleted\": {{faker 'datatype.boolean'}},\n    \"is_group\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'number.int'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'number.int'}},\n    \"priority\": {{faker 'number.int'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -3882,7 +4040,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "1aab6358-d8ce-4674-9d52-18d94c1eb230",
@@ -3899,7 +4058,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3932,7 +4092,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "f64ecb3a-8494-4789-b4d2-203a40672bd6",
@@ -3954,7 +4115,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -3982,7 +4144,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "78f915e4-f8b0-4b93-93d6-ad51629d00f6",
@@ -3999,7 +4162,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4027,7 +4191,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "ccfe02c9-200f-4c28-af48-e069dea56f6c",
@@ -4044,7 +4209,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4072,7 +4238,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "13c09c27-7945-4478-aa9b-18d4a2afbefe",
@@ -4089,7 +4256,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4117,7 +4285,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "bfe980f0-9289-4211-8164-43ce52da7fa1",
@@ -4134,7 +4303,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4167,7 +4337,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "2eda6ebf-afed-4be7-9f8e-788bb97a32b4",
@@ -4189,7 +4360,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4222,7 +4394,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "f44fc0cb-ac66-4c83-b703-f9a62e498e03",
@@ -4244,7 +4417,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4272,7 +4446,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "29459a5b-50f2-45c4-9307-46f2da2ff92b",
@@ -4289,7 +4464,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4304,7 +4480,7 @@
       "responses": [
         {
           "uuid": "d04eb10b-33ac-47a1-8768-0513929f366f",
-          "body": "{\n  \"already_open\": {{faker 'datatype.boolean'}},\n  \"channel\": {\n    \"created\": \"\",\n    \"id\": \"\",\n    \"is_im\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": {\n      \"attachments\": [\n        {\n          \"fallback\": \"\",\n          \"id\": {{faker 'datatype.number'}},\n          \"image_bytes\": {{faker 'datatype.number'}},\n          \"image_height\": {{faker 'datatype.number'}},\n          \"image_url\": \"\",\n          \"image_width\": {{faker 'datatype.number'}}\n        }\n      ],\n      \"blocks\": [\n        {\n          \"type\": \"\"\n        }\n      ],\n      \"bot_id\": \"\",\n      \"client_msg_id\": \"\",\n      \"comment\": {\n        \"comment\": \"\",\n        \"created\": {{faker 'datatype.number'}},\n        \"id\": \"\",\n        \"is_intro\": {{faker 'datatype.boolean'}},\n        \"is_starred\": {{faker 'datatype.boolean'}},\n        \"num_stars\": {{faker 'datatype.number'}},\n        \"pinned_info\": {},\n        \"pinned_to\": [\n          \"\"\n        ],\n        \"reactions\": [\n          {\n            \"count\": {{faker 'datatype.number'}},\n            \"name\": \"\",\n            \"users\": [\n              \"\"\n            ]\n          }\n        ],\n        \"timestamp\": {{faker 'datatype.number'}},\n        \"user\": \"\"\n      },\n      \"display_as_bot\": {{faker 'datatype.boolean'}},\n      \"file\": {\n        \"channels\": [\n          \"\"\n        ],\n        \"comments_count\": {{faker 'datatype.number'}},\n        \"created\": {{faker 'datatype.number'}},\n        \"display_as_bot\": {{faker 'datatype.boolean'}},\n        \"editable\": {{faker 'datatype.boolean'}},\n        \"editor\": \"\",\n        \"external_id\": \"\",\n        \"external_type\": \"\",\n        \"external_url\": \"\",\n        \"filetype\": \"\",\n        \"groups\": [\n          \"\"\n        ],\n        \"has_rich_preview\": {{faker 'datatype.boolean'}},\n        \"id\": \"\",\n        \"image_exif_rotation\": {{faker 'datatype.number'}},\n        \"ims\": [\n          \"\"\n        ],\n        \"is_external\": {{faker 'datatype.boolean'}},\n        \"is_public\": {{faker 'datatype.boolean'}},\n        \"is_starred\": {{faker 'datatype.boolean'}},\n        \"is_tombstoned\": {{faker 'datatype.boolean'}},\n        \"last_editor\": \"\",\n        \"mimetype\": \"\",\n        \"mode\": \"\",\n        \"name\": \"\",\n        \"num_stars\": {{faker 'datatype.number'}},\n        \"original_h\": {{faker 'datatype.number'}},\n        \"original_w\": {{faker 'datatype.number'}},\n        \"permalink\": \"\",\n        \"permalink_public\": \"\",\n        \"pinned_info\": {},\n        \"pinned_to\": [\n          \"\"\n        ],\n        \"pretty_type\": \"\",\n        \"preview\": \"\",\n        \"public_url_shared\": {{faker 'datatype.boolean'}},\n        \"reactions\": [\n          {\n            \"count\": {{faker 'datatype.number'}},\n            \"name\": \"\",\n            \"users\": [\n              \"\"\n            ]\n          }\n        ],\n        \"shares\": {\n          \"private\": \"\",\n          \"public\": \"\"\n        },\n        \"size\": {{faker 'datatype.number'}},\n        \"source_team\": \"\",\n        \"state\": \"\",\n        \"thumb_1024\": \"\",\n        \"thumb_1024_h\": {{faker 'datatype.number'}},\n        \"thumb_1024_w\": {{faker 'datatype.number'}},\n        \"thumb_160\": \"\",\n        \"thumb_360\": \"\",\n        \"thumb_360_h\": {{faker 'datatype.number'}},\n        \"thumb_360_w\": {{faker 'datatype.number'}},\n        \"thumb_480\": \"\",\n        \"thumb_480_h\": {{faker 'datatype.number'}},\n        \"thumb_480_w\": {{faker 'datatype.number'}},\n        \"thumb_64\": \"\",\n        \"thumb_720\": \"\",\n        \"thumb_720_h\": {{faker 'datatype.number'}},\n        \"thumb_720_w\": {{faker 'datatype.number'}},\n        \"thumb_80\": \"\",\n        \"thumb_800\": \"\",\n        \"thumb_800_h\": {{faker 'datatype.number'}},\n        \"thumb_800_w\": {{faker 'datatype.number'}},\n        \"thumb_960\": \"\",\n        \"thumb_960_h\": {{faker 'datatype.number'}},\n        \"thumb_960_w\": {{faker 'datatype.number'}},\n        \"timestamp\": {{faker 'datatype.number'}},\n        \"title\": \"\",\n        \"updated\": {{faker 'datatype.number'}},\n        \"url_private\": \"\",\n        \"url_private_download\": \"\",\n        \"user\": \"\",\n        \"user_team\": \"\",\n        \"username\": \"\"\n      },\n      \"files\": [\n        {\n          \"channels\": [\n            \"\"\n          ],\n          \"comments_count\": {{faker 'datatype.number'}},\n          \"created\": {{faker 'datatype.number'}},\n          \"display_as_bot\": {{faker 'datatype.boolean'}},\n          \"editable\": {{faker 'datatype.boolean'}},\n          \"editor\": \"\",\n          \"external_id\": \"\",\n          \"external_type\": \"\",\n          \"external_url\": \"\",\n          \"filetype\": \"\",\n          \"groups\": [\n            \"\"\n          ],\n          \"has_rich_preview\": {{faker 'datatype.boolean'}},\n          \"id\": \"\",\n          \"image_exif_rotation\": {{faker 'datatype.number'}},\n          \"ims\": [\n            \"\"\n          ],\n          \"is_external\": {{faker 'datatype.boolean'}},\n          \"is_public\": {{faker 'datatype.boolean'}},\n          \"is_starred\": {{faker 'datatype.boolean'}},\n          \"is_tombstoned\": {{faker 'datatype.boolean'}},\n          \"last_editor\": \"\",\n          \"mimetype\": \"\",\n          \"mode\": \"\",\n          \"name\": \"\",\n          \"num_stars\": {{faker 'datatype.number'}},\n          \"original_h\": {{faker 'datatype.number'}},\n          \"original_w\": {{faker 'datatype.number'}},\n          \"permalink\": \"\",\n          \"permalink_public\": \"\",\n          \"pinned_info\": {},\n          \"pinned_to\": [\n            \"\"\n          ],\n          \"pretty_type\": \"\",\n          \"preview\": \"\",\n          \"public_url_shared\": {{faker 'datatype.boolean'}},\n          \"reactions\": [\n            {\n              \"count\": {{faker 'datatype.number'}},\n              \"name\": \"\",\n              \"users\": [\n                \"\"\n              ]\n            }\n          ],\n          \"shares\": {\n            \"private\": \"\",\n            \"public\": \"\"\n          },\n          \"size\": {{faker 'datatype.number'}},\n          \"source_team\": \"\",\n          \"state\": \"\",\n          \"thumb_1024\": \"\",\n          \"thumb_1024_h\": {{faker 'datatype.number'}},\n          \"thumb_1024_w\": {{faker 'datatype.number'}},\n          \"thumb_160\": \"\",\n          \"thumb_360\": \"\",\n          \"thumb_360_h\": {{faker 'datatype.number'}},\n          \"thumb_360_w\": {{faker 'datatype.number'}},\n          \"thumb_480\": \"\",\n          \"thumb_480_h\": {{faker 'datatype.number'}},\n          \"thumb_480_w\": {{faker 'datatype.number'}},\n          \"thumb_64\": \"\",\n          \"thumb_720\": \"\",\n          \"thumb_720_h\": {{faker 'datatype.number'}},\n          \"thumb_720_w\": {{faker 'datatype.number'}},\n          \"thumb_80\": \"\",\n          \"thumb_800\": \"\",\n          \"thumb_800_h\": {{faker 'datatype.number'}},\n          \"thumb_800_w\": {{faker 'datatype.number'}},\n          \"thumb_960\": \"\",\n          \"thumb_960_h\": {{faker 'datatype.number'}},\n          \"thumb_960_w\": {{faker 'datatype.number'}},\n          \"timestamp\": {{faker 'datatype.number'}},\n          \"title\": \"\",\n          \"updated\": {{faker 'datatype.number'}},\n          \"url_private\": \"\",\n          \"url_private_download\": \"\",\n          \"user\": \"\",\n          \"user_team\": \"\",\n          \"username\": \"\"\n        }\n      ],\n      \"icons\": {\n        \"emoji\": \"\"\n      },\n      \"inviter\": \"\",\n      \"is_delayed_message\": {{faker 'datatype.boolean'}},\n      \"is_intro\": {{faker 'datatype.boolean'}},\n      \"is_starred\": {{faker 'datatype.boolean'}},\n      \"last_read\": \"\",\n      \"latest_reply\": \"\",\n      \"name\": \"\",\n      \"old_name\": \"\",\n      \"parent_user_id\": \"\",\n      \"permalink\": \"\",\n      \"pinned_to\": [\n        \"\"\n      ],\n      \"purpose\": \"\",\n      \"reactions\": [\n        {\n          \"count\": {{faker 'datatype.number'}},\n          \"name\": \"\",\n          \"users\": [\n            \"\"\n          ]\n        }\n      ],\n      \"replies\": [\n        {\n          \"ts\": \"\",\n          \"user\": \"\"\n        }\n      ],\n      \"reply_count\": {{faker 'datatype.number'}},\n      \"reply_users\": [\n        \"\"\n      ],\n      \"reply_users_count\": {{faker 'datatype.number'}},\n      \"source_team\": \"\",\n      \"subscribed\": {{faker 'datatype.boolean'}},\n      \"subtype\": \"\",\n      \"team\": \"\",\n      \"text\": \"\",\n      \"thread_ts\": \"\",\n      \"topic\": \"\",\n      \"ts\": \"\",\n      \"type\": \"\",\n      \"unread_count\": {{faker 'datatype.number'}},\n      \"upload\": {{faker 'datatype.boolean'}},\n      \"user\": \"\",\n      \"user_profile\": {\n        \"avatar_hash\": \"\",\n        \"display_name\": \"\",\n        \"first_name\": \"\",\n        \"image_72\": \"\",\n        \"is_restricted\": {{faker 'datatype.boolean'}},\n        \"is_ultra_restricted\": {{faker 'datatype.boolean'}},\n        \"name\": \"\",\n        \"real_name\": \"\",\n        \"team\": \"\"\n      },\n      \"user_team\": \"\",\n      \"username\": \"\"\n    },\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}},\n    \"user\": \"\"\n  },\n  \"no_op\": {{faker 'datatype.boolean'}},\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"already_open\": {{faker 'datatype.boolean'}},\n  \"channel\": {\n    \"created\": \"\",\n    \"id\": \"\",\n    \"is_im\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": {\n      \"attachments\": [\n        {\n          \"fallback\": \"\",\n          \"id\": {{faker 'number.int'}},\n          \"image_bytes\": {{faker 'number.int'}},\n          \"image_height\": {{faker 'number.int'}},\n          \"image_url\": \"\",\n          \"image_width\": {{faker 'number.int'}}\n        }\n      ],\n      \"blocks\": [\n        {\n          \"type\": \"\"\n        }\n      ],\n      \"bot_id\": \"\",\n      \"client_msg_id\": \"\",\n      \"comment\": {\n        \"comment\": \"\",\n        \"created\": {{faker 'number.int'}},\n        \"id\": \"\",\n        \"is_intro\": {{faker 'datatype.boolean'}},\n        \"is_starred\": {{faker 'datatype.boolean'}},\n        \"num_stars\": {{faker 'number.int'}},\n        \"pinned_info\": {},\n        \"pinned_to\": [\n          \"\"\n        ],\n        \"reactions\": [\n          {\n            \"count\": {{faker 'number.int'}},\n            \"name\": \"\",\n            \"users\": [\n              \"\"\n            ]\n          }\n        ],\n        \"timestamp\": {{faker 'number.int'}},\n        \"user\": \"\"\n      },\n      \"display_as_bot\": {{faker 'datatype.boolean'}},\n      \"file\": {\n        \"channels\": [\n          \"\"\n        ],\n        \"comments_count\": {{faker 'number.int'}},\n        \"created\": {{faker 'number.int'}},\n        \"display_as_bot\": {{faker 'datatype.boolean'}},\n        \"editable\": {{faker 'datatype.boolean'}},\n        \"editor\": \"\",\n        \"external_id\": \"\",\n        \"external_type\": \"\",\n        \"external_url\": \"\",\n        \"filetype\": \"\",\n        \"groups\": [\n          \"\"\n        ],\n        \"has_rich_preview\": {{faker 'datatype.boolean'}},\n        \"id\": \"\",\n        \"image_exif_rotation\": {{faker 'number.int'}},\n        \"ims\": [\n          \"\"\n        ],\n        \"is_external\": {{faker 'datatype.boolean'}},\n        \"is_public\": {{faker 'datatype.boolean'}},\n        \"is_starred\": {{faker 'datatype.boolean'}},\n        \"is_tombstoned\": {{faker 'datatype.boolean'}},\n        \"last_editor\": \"\",\n        \"mimetype\": \"\",\n        \"mode\": \"\",\n        \"name\": \"\",\n        \"num_stars\": {{faker 'number.int'}},\n        \"original_h\": {{faker 'number.int'}},\n        \"original_w\": {{faker 'number.int'}},\n        \"permalink\": \"\",\n        \"permalink_public\": \"\",\n        \"pinned_info\": {},\n        \"pinned_to\": [\n          \"\"\n        ],\n        \"pretty_type\": \"\",\n        \"preview\": \"\",\n        \"public_url_shared\": {{faker 'datatype.boolean'}},\n        \"reactions\": [\n          {\n            \"count\": {{faker 'number.int'}},\n            \"name\": \"\",\n            \"users\": [\n              \"\"\n            ]\n          }\n        ],\n        \"shares\": {\n          \"private\": \"\",\n          \"public\": \"\"\n        },\n        \"size\": {{faker 'number.int'}},\n        \"source_team\": \"\",\n        \"state\": \"\",\n        \"thumb_1024\": \"\",\n        \"thumb_1024_h\": {{faker 'number.int'}},\n        \"thumb_1024_w\": {{faker 'number.int'}},\n        \"thumb_160\": \"\",\n        \"thumb_360\": \"\",\n        \"thumb_360_h\": {{faker 'number.int'}},\n        \"thumb_360_w\": {{faker 'number.int'}},\n        \"thumb_480\": \"\",\n        \"thumb_480_h\": {{faker 'number.int'}},\n        \"thumb_480_w\": {{faker 'number.int'}},\n        \"thumb_64\": \"\",\n        \"thumb_720\": \"\",\n        \"thumb_720_h\": {{faker 'number.int'}},\n        \"thumb_720_w\": {{faker 'number.int'}},\n        \"thumb_80\": \"\",\n        \"thumb_800\": \"\",\n        \"thumb_800_h\": {{faker 'number.int'}},\n        \"thumb_800_w\": {{faker 'number.int'}},\n        \"thumb_960\": \"\",\n        \"thumb_960_h\": {{faker 'number.int'}},\n        \"thumb_960_w\": {{faker 'number.int'}},\n        \"timestamp\": {{faker 'number.int'}},\n        \"title\": \"\",\n        \"updated\": {{faker 'number.int'}},\n        \"url_private\": \"\",\n        \"url_private_download\": \"\",\n        \"user\": \"\",\n        \"user_team\": \"\",\n        \"username\": \"\"\n      },\n      \"files\": [\n        {\n          \"channels\": [\n            \"\"\n          ],\n          \"comments_count\": {{faker 'number.int'}},\n          \"created\": {{faker 'number.int'}},\n          \"display_as_bot\": {{faker 'datatype.boolean'}},\n          \"editable\": {{faker 'datatype.boolean'}},\n          \"editor\": \"\",\n          \"external_id\": \"\",\n          \"external_type\": \"\",\n          \"external_url\": \"\",\n          \"filetype\": \"\",\n          \"groups\": [\n            \"\"\n          ],\n          \"has_rich_preview\": {{faker 'datatype.boolean'}},\n          \"id\": \"\",\n          \"image_exif_rotation\": {{faker 'number.int'}},\n          \"ims\": [\n            \"\"\n          ],\n          \"is_external\": {{faker 'datatype.boolean'}},\n          \"is_public\": {{faker 'datatype.boolean'}},\n          \"is_starred\": {{faker 'datatype.boolean'}},\n          \"is_tombstoned\": {{faker 'datatype.boolean'}},\n          \"last_editor\": \"\",\n          \"mimetype\": \"\",\n          \"mode\": \"\",\n          \"name\": \"\",\n          \"num_stars\": {{faker 'number.int'}},\n          \"original_h\": {{faker 'number.int'}},\n          \"original_w\": {{faker 'number.int'}},\n          \"permalink\": \"\",\n          \"permalink_public\": \"\",\n          \"pinned_info\": {},\n          \"pinned_to\": [\n            \"\"\n          ],\n          \"pretty_type\": \"\",\n          \"preview\": \"\",\n          \"public_url_shared\": {{faker 'datatype.boolean'}},\n          \"reactions\": [\n            {\n              \"count\": {{faker 'number.int'}},\n              \"name\": \"\",\n              \"users\": [\n                \"\"\n              ]\n            }\n          ],\n          \"shares\": {\n            \"private\": \"\",\n            \"public\": \"\"\n          },\n          \"size\": {{faker 'number.int'}},\n          \"source_team\": \"\",\n          \"state\": \"\",\n          \"thumb_1024\": \"\",\n          \"thumb_1024_h\": {{faker 'number.int'}},\n          \"thumb_1024_w\": {{faker 'number.int'}},\n          \"thumb_160\": \"\",\n          \"thumb_360\": \"\",\n          \"thumb_360_h\": {{faker 'number.int'}},\n          \"thumb_360_w\": {{faker 'number.int'}},\n          \"thumb_480\": \"\",\n          \"thumb_480_h\": {{faker 'number.int'}},\n          \"thumb_480_w\": {{faker 'number.int'}},\n          \"thumb_64\": \"\",\n          \"thumb_720\": \"\",\n          \"thumb_720_h\": {{faker 'number.int'}},\n          \"thumb_720_w\": {{faker 'number.int'}},\n          \"thumb_80\": \"\",\n          \"thumb_800\": \"\",\n          \"thumb_800_h\": {{faker 'number.int'}},\n          \"thumb_800_w\": {{faker 'number.int'}},\n          \"thumb_960\": \"\",\n          \"thumb_960_h\": {{faker 'number.int'}},\n          \"thumb_960_w\": {{faker 'number.int'}},\n          \"timestamp\": {{faker 'number.int'}},\n          \"title\": \"\",\n          \"updated\": {{faker 'number.int'}},\n          \"url_private\": \"\",\n          \"url_private_download\": \"\",\n          \"user\": \"\",\n          \"user_team\": \"\",\n          \"username\": \"\"\n        }\n      ],\n      \"icons\": {\n        \"emoji\": \"\"\n      },\n      \"inviter\": \"\",\n      \"is_delayed_message\": {{faker 'datatype.boolean'}},\n      \"is_intro\": {{faker 'datatype.boolean'}},\n      \"is_starred\": {{faker 'datatype.boolean'}},\n      \"last_read\": \"\",\n      \"latest_reply\": \"\",\n      \"name\": \"\",\n      \"old_name\": \"\",\n      \"parent_user_id\": \"\",\n      \"permalink\": \"\",\n      \"pinned_to\": [\n        \"\"\n      ],\n      \"purpose\": \"\",\n      \"reactions\": [\n        {\n          \"count\": {{faker 'number.int'}},\n          \"name\": \"\",\n          \"users\": [\n            \"\"\n          ]\n        }\n      ],\n      \"replies\": [\n        {\n          \"ts\": \"\",\n          \"user\": \"\"\n        }\n      ],\n      \"reply_count\": {{faker 'number.int'}},\n      \"reply_users\": [\n        \"\"\n      ],\n      \"reply_users_count\": {{faker 'number.int'}},\n      \"source_team\": \"\",\n      \"subscribed\": {{faker 'datatype.boolean'}},\n      \"subtype\": \"\",\n      \"team\": \"\",\n      \"text\": \"\",\n      \"thread_ts\": \"\",\n      \"topic\": \"\",\n      \"ts\": \"\",\n      \"type\": \"\",\n      \"unread_count\": {{faker 'number.int'}},\n      \"upload\": {{faker 'datatype.boolean'}},\n      \"user\": \"\",\n      \"user_profile\": {\n        \"avatar_hash\": \"\",\n        \"display_name\": \"\",\n        \"first_name\": \"\",\n        \"image_72\": \"\",\n        \"is_restricted\": {{faker 'datatype.boolean'}},\n        \"is_ultra_restricted\": {{faker 'datatype.boolean'}},\n        \"name\": \"\",\n        \"real_name\": \"\",\n        \"team\": \"\"\n      },\n      \"user_team\": \"\",\n      \"username\": \"\"\n    },\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}},\n    \"user\": \"\"\n  },\n  \"no_op\": {{faker 'datatype.boolean'}},\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -4317,7 +4493,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "c54e4228-2e96-4935-ba6a-0294b4b32f3e",
@@ -4334,7 +4511,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4367,7 +4545,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "e6a5bb5f-f5af-4c85-a085-f94f649994cf",
@@ -4389,7 +4568,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4422,7 +4602,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b59c80b1-6ea7-49cf-98b8-bb793a808950",
@@ -4444,7 +4625,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4472,7 +4654,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "0f85b85f-3c5b-42d4-bb9a-70df89641154",
@@ -4489,7 +4672,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4522,7 +4706,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "79c20dd1-c533-4663-bb62-5b53b9a2a25c",
@@ -4544,7 +4729,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4577,7 +4763,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "73de3c03-b322-48db-9ff4-3102db0acd7b",
@@ -4599,7 +4786,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4627,7 +4815,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "80f10cc1-8fe9-4d1d-8568-1edc1570dcca",
@@ -4644,7 +4833,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4659,7 +4849,7 @@
       "responses": [
         {
           "uuid": "e64e19ee-c486-42e4-9ba7-d6f694b86937",
-          "body": "{\n  \"group\": {\n    \"created\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_deleted\": {{faker 'datatype.boolean'}},\n    \"is_group\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'datatype.number'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'datatype.number'}},\n    \"priority\": {{faker 'datatype.number'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'datatype.number'}},\n      \"value\": \"\"\n    },\n    \"unread_count\": {{faker 'datatype.number'}},\n    \"unread_count_display\": {{faker 'datatype.number'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
+          "body": "{\n  \"group\": {\n    \"created\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"is_archived\": {{faker 'datatype.boolean'}},\n    \"is_deleted\": {{faker 'datatype.boolean'}},\n    \"is_group\": {{faker 'datatype.boolean'}},\n    \"is_moved\": {{faker 'number.int'}},\n    \"is_mpim\": {{faker 'datatype.boolean'}},\n    \"is_open\": {{faker 'datatype.boolean'}},\n    \"is_pending_ext_shared\": {{faker 'datatype.boolean'}},\n    \"last_read\": \"\",\n    \"latest\": \"\",\n    \"members\": [\n      \"\"\n    ],\n    \"name\": \"\",\n    \"name_normalized\": \"\",\n    \"num_members\": {{faker 'number.int'}},\n    \"priority\": {{faker 'number.int'}},\n    \"purpose\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"topic\": {\n      \"creator\": \"\",\n      \"last_set\": {{faker 'number.int'}},\n      \"value\": \"\"\n    },\n    \"unread_count\": {{faker 'number.int'}},\n    \"unread_count_display\": {{faker 'number.int'}}\n  },\n  \"ok\": \"{{oneOf (array 'true')}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -4672,7 +4862,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "5a761308-28e1-4fce-ac84-4fc7ae62d919",
@@ -4689,7 +4880,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4722,7 +4914,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "a6871f82-d0c4-42d9-a0d6-df57a9a0df03",
@@ -4744,7 +4937,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4777,7 +4971,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "82d6100a-a402-4cd8-8dd4-aa9c31ea25e4",
@@ -4799,7 +4994,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4832,7 +5028,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "ae8b0282-9a5f-4acb-8b79-b0ca6ba4057a",
@@ -4854,7 +5051,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4882,7 +5080,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "4df41574-5247-45fd-a26a-85a825faf054",
@@ -4899,7 +5098,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4932,7 +5132,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "98db7212-ee8c-4b62-bfd1-12500a08bd1d",
@@ -4954,7 +5155,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -4982,7 +5184,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "cabe8f59-bc8b-451c-909d-11e8c7e806ad",
@@ -4999,7 +5202,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5027,7 +5231,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "068a8f43-b4d6-46c6-b614-54006ed0ce2b",
@@ -5044,7 +5249,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5077,7 +5283,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "64c4ba34-1e4b-44a8-af0a-67b62a44b0ec",
@@ -5099,7 +5306,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5132,7 +5340,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "4f739749-33c8-46a4-b50f-cc6ac5445e66",
@@ -5154,7 +5363,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5182,7 +5392,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "ec314d66-65a4-4cc1-84db-5a742ed5d4da",
@@ -5199,7 +5410,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5214,7 +5426,7 @@
       "responses": [
         {
           "uuid": "4606fb14-6645-476c-b27d-de236cec216c",
-          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"reminder\": {\n    \"complete_ts\": {{faker 'datatype.number'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"recurring\": {{faker 'datatype.boolean'}},\n    \"text\": \"\",\n    \"time\": {{faker 'datatype.number'}},\n    \"user\": \"\"\n  }\n}",
+          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"reminder\": {\n    \"complete_ts\": {{faker 'number.int'}},\n    \"creator\": \"\",\n    \"id\": \"\",\n    \"recurring\": {{faker 'datatype.boolean'}},\n    \"text\": \"\",\n    \"time\": {{faker 'number.int'}},\n    \"user\": \"\"\n  }\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -5227,7 +5439,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "9bb18297-a92e-464a-a86d-30e9eb19d514",
@@ -5244,7 +5457,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5272,7 +5486,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "142a2ff5-f898-47e1-b2a4-759ce6c80ea0",
@@ -5289,7 +5504,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5317,7 +5533,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "083aea33-edcd-40aa-b76a-d3ed98cca4c6",
@@ -5334,7 +5551,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5367,7 +5585,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b3fa4d80-a919-4447-810c-bf69ef618807",
@@ -5389,7 +5608,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5422,7 +5642,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "c6ec88b2-f0e9-4fa0-bf7a-ef8be5307b52",
@@ -5444,7 +5665,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5477,7 +5699,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "619b92a8-4503-4e2e-b297-858a3f9f4b26",
@@ -5499,7 +5722,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5532,7 +5756,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "fc8e41d2-1aa5-426b-a20f-9228a86b0ce9",
@@ -5554,7 +5779,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5582,7 +5808,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b2890136-4eaf-46be-a190-04c3d91145e0",
@@ -5599,7 +5826,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5632,7 +5860,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "ec972d15-be41-4372-8917-52c00e332e70",
@@ -5654,7 +5883,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5682,7 +5912,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "915b34aa-b7bc-46f7-85fe-a4954029b950",
@@ -5699,7 +5930,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5732,7 +5964,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "cdb9e7a9-0652-4b1c-a099-74c2fde7fb67",
@@ -5754,7 +5987,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5787,7 +6021,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b3c38116-8530-4df4-b4c4-99b927c8393c",
@@ -5809,7 +6044,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5842,7 +6078,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "515ec362-bafd-4598-8598-68645c34ce69",
@@ -5864,7 +6101,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5897,7 +6135,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "56e1d9cf-04d7-4b42-838d-cbf3e41f6db9",
@@ -5919,7 +6158,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5952,7 +6192,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "56ef4d9e-2df2-4efd-946f-3289ebf83fb3",
@@ -5974,7 +6215,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -5989,7 +6231,7 @@
       "responses": [
         {
           "uuid": "1e28bb11-1592-486e-9f78-6375e365a35d",
-          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'datatype.number'}},\n    \"date_delete\": {{faker 'datatype.number'}},\n    \"date_update\": {{faker 'datatype.number'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'datatype.number'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
+          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'number.int'}},\n    \"date_delete\": {{faker 'number.int'}},\n    \"date_update\": {{faker 'number.int'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'number.int'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -6002,7 +6244,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "89478858-a2e4-45a0-af40-98714cc7d10c",
@@ -6019,7 +6262,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6034,7 +6278,7 @@
       "responses": [
         {
           "uuid": "e6326811-9ae4-4c52-988b-916201033d05",
-          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'datatype.number'}},\n    \"date_delete\": {{faker 'datatype.number'}},\n    \"date_update\": {{faker 'datatype.number'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'datatype.number'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
+          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'number.int'}},\n    \"date_delete\": {{faker 'number.int'}},\n    \"date_update\": {{faker 'number.int'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'number.int'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -6047,7 +6291,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "1d8ecd35-89a9-4708-a749-b09d2a28e206",
@@ -6064,7 +6309,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6079,7 +6325,7 @@
       "responses": [
         {
           "uuid": "93275876-709c-4a93-9cdd-9833ca692011",
-          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'datatype.number'}},\n    \"date_delete\": {{faker 'datatype.number'}},\n    \"date_update\": {{faker 'datatype.number'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'datatype.number'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
+          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'number.int'}},\n    \"date_delete\": {{faker 'number.int'}},\n    \"date_update\": {{faker 'number.int'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'number.int'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -6092,7 +6338,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "133aaa72-4029-4efb-a45f-d9de375d5b92",
@@ -6109,7 +6356,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6142,7 +6390,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "c664ef94-f460-4c59-96ac-8a356b3bf620",
@@ -6164,7 +6413,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6179,7 +6429,7 @@
       "responses": [
         {
           "uuid": "d37ecefd-a21d-4761-b70c-ffeec9b41c90",
-          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'datatype.number'}},\n    \"date_delete\": {{faker 'datatype.number'}},\n    \"date_update\": {{faker 'datatype.number'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'datatype.number'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
+          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'number.int'}},\n    \"date_delete\": {{faker 'number.int'}},\n    \"date_update\": {{faker 'number.int'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'number.int'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -6192,7 +6442,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "a3eb956c-3d67-4ce4-a3b7-cea8e28f6fa2",
@@ -6209,7 +6460,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6242,7 +6494,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "b4fd54be-3f92-4568-87e7-6f8987caa742",
@@ -6264,7 +6517,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6279,7 +6533,7 @@
       "responses": [
         {
           "uuid": "c2c001e6-2f38-46bc-bb7d-3baa290daa7a",
-          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'datatype.number'}},\n    \"date_delete\": {{faker 'datatype.number'}},\n    \"date_update\": {{faker 'datatype.number'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'datatype.number'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
+          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"usergroup\": {\n    \"auto_provision\": {{faker 'datatype.boolean'}},\n    \"auto_type\": \"\",\n    \"created_by\": \"\",\n    \"date_create\": {{faker 'number.int'}},\n    \"date_delete\": {{faker 'number.int'}},\n    \"date_update\": {{faker 'number.int'}},\n    \"deleted_by\": \"\",\n    \"description\": \"\",\n    \"enterprise_subteam_id\": \"\",\n    \"handle\": \"\",\n    \"id\": \"\",\n    \"is_external\": {{faker 'datatype.boolean'}},\n    \"is_subteam\": {{faker 'datatype.boolean'}},\n    \"is_usergroup\": {{faker 'datatype.boolean'}},\n    \"name\": \"\",\n    \"prefs\": {\n      \"channels\": [\n        \"\"\n      ],\n      \"groups\": [\n        \"\"\n      ]\n    },\n    \"team_id\": \"\",\n    \"updated_by\": \"\",\n    \"user_count\": {{faker 'number.int'}},\n    \"users\": [\n      \"\"\n    ]\n  }\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -6292,7 +6546,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "fae2297f-417c-45eb-83ef-61c6ddb845b2",
@@ -6309,7 +6564,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6342,7 +6598,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "998c0e53-7ea6-48d3-8a05-439c83360e19",
@@ -6364,7 +6621,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6397,7 +6655,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "102e7316-d61c-4792-a4a4-15b9d2e66960",
@@ -6419,7 +6678,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6452,7 +6712,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "becb3c8e-fe8f-49e6-b2e3-1fd00e4c1071",
@@ -6474,7 +6735,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6507,7 +6769,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "60ca9033-e094-46bc-b21e-ef7477834b4a",
@@ -6529,7 +6792,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6562,7 +6826,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "eadc6ee0-c685-4ee1-a217-b40143b97adb",
@@ -6584,7 +6849,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6617,7 +6883,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "0af496f2-8fcd-4469-9933-6b52bdf76a79",
@@ -6639,7 +6906,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6672,7 +6940,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "cfc64e09-f6c9-42f7-82a2-fd0083316e56",
@@ -6694,7 +6963,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6727,7 +6997,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "091a5047-32ff-4b33-9632-5a95e15c466e",
@@ -6749,7 +7020,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6764,7 +7036,7 @@
       "responses": [
         {
           "uuid": "ea89ad8a-4fac-40a1-a8d5-ecfeedc1a0bc",
-          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"profile\": {\n    \"always_active\": {{faker 'datatype.boolean'}},\n    \"api_app_id\": \"\",\n    \"avatar_hash\": \"\",\n    \"bot_id\": \"\",\n    \"display_name\": \"\",\n    \"display_name_normalized\": \"\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"fields\": {},\n    \"first_name\": \"\",\n    \"guest_channels\": \"\",\n    \"guest_expiration_ts\": {{faker 'datatype.number'}},\n    \"guest_invited_by\": \"\",\n    \"image_1024\": \"\",\n    \"image_192\": \"\",\n    \"image_24\": \"\",\n    \"image_32\": \"\",\n    \"image_48\": \"\",\n    \"image_512\": \"\",\n    \"image_72\": \"\",\n    \"image_original\": \"\",\n    \"is_custom_image\": {{faker 'datatype.boolean'}},\n    \"last_name\": \"\",\n    \"phone\": \"\",\n    \"real_name\": \"\",\n    \"real_name_normalized\": \"\",\n    \"skype\": \"\",\n    \"status_emoji\": \"\",\n    \"status_expiration\": {{faker 'datatype.number'}},\n    \"status_text\": \"\",\n    \"status_text_canonical\": \"\",\n    \"team\": \"\",\n    \"teams\": \"\",\n    \"title\": \"\"\n  },\n  \"username\": \"\"\n}",
+          "body": "{\n  \"ok\": \"{{oneOf (array 'true')}}\",\n  \"profile\": {\n    \"always_active\": {{faker 'datatype.boolean'}},\n    \"api_app_id\": \"\",\n    \"avatar_hash\": \"\",\n    \"bot_id\": \"\",\n    \"display_name\": \"\",\n    \"display_name_normalized\": \"\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"fields\": {},\n    \"first_name\": \"\",\n    \"guest_channels\": \"\",\n    \"guest_expiration_ts\": {{faker 'number.int'}},\n    \"guest_invited_by\": \"\",\n    \"image_1024\": \"\",\n    \"image_192\": \"\",\n    \"image_24\": \"\",\n    \"image_32\": \"\",\n    \"image_48\": \"\",\n    \"image_512\": \"\",\n    \"image_72\": \"\",\n    \"image_original\": \"\",\n    \"is_custom_image\": {{faker 'datatype.boolean'}},\n    \"last_name\": \"\",\n    \"phone\": \"\",\n    \"real_name\": \"\",\n    \"real_name_normalized\": \"\",\n    \"skype\": \"\",\n    \"status_emoji\": \"\",\n    \"status_expiration\": {{faker 'number.int'}},\n    \"status_text\": \"\",\n    \"status_text_canonical\": \"\",\n    \"team\": \"\",\n    \"teams\": \"\",\n    \"title\": \"\"\n  },\n  \"username\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Typical success response",
@@ -6777,7 +7049,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "8ef510ae-1496-4a36-86c4-fc735f7f6907",
@@ -6794,7 +7067,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6822,7 +7096,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "6b667834-543c-4866-8db6-b578424ecee4",
@@ -6839,7 +7114,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6872,7 +7148,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "1cc8f714-4e05-4dbf-a4f8-cf721edc67d7",
@@ -6894,7 +7171,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -6922,7 +7200,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         },
         {
           "uuid": "01217267-6973-429a-9db5-d5fc22318892",
@@ -6939,7 +7218,8 @@
           "fallbackTo404": false,
           "default": false,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "enabled": true,

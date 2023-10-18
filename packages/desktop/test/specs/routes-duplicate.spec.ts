@@ -18,7 +18,7 @@ describe('Duplicate a route', () => {
 
   it('should verify duplicated environment in second slot', async () => {
     await $(
-      '.routes-menu .menu-list .nav-item:nth-of-type(2) .text-warning'
+      '.routes-menu .menu-list .nav-item:nth-of-type(4) .text-warning[ngbTooltip="Route is duplicated (same endpoint and method)"]'
     ).waitForExist();
   });
 });

@@ -11,7 +11,11 @@
     <ng-container
       *ngIf="{
         isFree: !data.user || data.user.plan === 'FREE',
-        isPro: data.user && data.user.plan !== 'FREE'
+        isPro: data.user && data.user.plan !== 'FREE',
+        canGenerate:
+          prompt.value &&
+          (isLoading$ | async) === false &&
+          data.user?.templatesQuotaUsed < data.user?.templatesQuota
       } as flags"
     >
       <div class="modal-header border-0 pb-0">
@@ -159,18 +163,14 @@
               [maxlength]="maxTemplatePromptLength"
               [formControl]="prompt"
               placeholder='Prompt, e.g. "invoices", "customers", "HTML error page", etc.'
-              (keydown.enter)="generate()"
+              (keydown.enter)="flags.canGenerate && generate()"
             />
             <button
               id="templates-generate-button"
               type="button"
               class="btn btn-secondary"
               (click)="generate()"
-              [disabled]="
-                !prompt.value ||
-                (isLoading$ | async) ||
-                data.user?.templatesQuotaUsed >= data.user?.templatesQuota
-              "
+              [disabled]="!flags.canGenerate"
             >
               Generate
             </button>
@@ -299,7 +299,11 @@
         </div>
 
         <div class="ml-auto">
-          <button type="button" class="btn btn-secondary" (click)="close()">
+          <button
+            type="button"
+            class="btn btn-secondary modal-close"
+            (click)="close()"
+          >
             Close
           </button>
 

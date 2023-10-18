@@ -21,7 +21,7 @@
       </li>
     </ul>
   </div>
-  <ul class="nav flex-column flex-fill py-1 menu-list" #environmentsMenu>
+  <ul class="nav flex-column flex-fill menu-list" #environmentsMenu>
     <ng-container *ngIf="environments$ | async as environments">
       <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
         <ng-container *ngIf="environmentsStatus$ | async as environmentsStatus">

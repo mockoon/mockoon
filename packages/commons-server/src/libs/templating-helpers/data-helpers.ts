@@ -1,7 +1,8 @@
 import { ProcessedDatabucket } from '@mockoon/commons';
 import { SafeString } from 'handlebars';
+import { JSONPath } from 'jsonpath-plus';
 import { get as objectGet } from 'object-path';
-import { convertPathToArray } from '../utils';
+import { convertPathToArray, fromSafeString } from '../utils';
 
 export const DataHelpers = function (
   processedDatabuckets: ProcessedDatabucket[]
@@ -26,21 +27,27 @@ export const DataHelpers = function (
       }
 
       let value = targetDatabucket.value;
+      let path: string | string[] = fromSafeString(parameters[1]);
 
       if (
         (Array.isArray(targetDatabucket.value) ||
           typeof targetDatabucket.value === 'object') &&
         parameters.length > 1 &&
-        typeof parameters[1] === 'string' &&
-        parameters[1] !== ''
+        typeof path === 'string' &&
+        path !== ''
       ) {
         // path is provided and required
-        let path: string | string[] = parameters[1];
-        path = convertPathToArray(path);
+        if (path.startsWith('$')) {
+          const foundValue = JSONPath({ json: value, path: path });
+          value = foundValue !== undefined ? foundValue : '';
+        } else {
+          // let path: string | string[] = fromSafeString(parameters[1]);
+          path = convertPathToArray(path);
 
-        // ensure a value was found at path
-        const foundValue = objectGet(value, path);
-        value = foundValue !== undefined ? foundValue : '';
+          // ensure a value was found at path
+          const foundValue = objectGet(value, path);
+          value = foundValue !== undefined ? foundValue : '';
+        }
       }
 
       if (Array.isArray(value) || typeof value === 'object') {
@@ -68,21 +75,27 @@ export const DataHelpers = function (
       }
 
       let value = targetDatabucket.value;
+      let path: string | string[] = fromSafeString(parameters[1]);
 
       if (
         (Array.isArray(targetDatabucket.value) ||
           typeof targetDatabucket.value === 'object') &&
         parameters.length > 1 &&
-        typeof parameters[1] === 'string' &&
-        parameters[1] !== ''
+        typeof path === 'string' &&
+        path !== ''
       ) {
         // path is provided and required
-        let path: string | string[] = parameters[1];
-        path = convertPathToArray(path);
+        if (path.startsWith('$')) {
+          const foundValue = JSONPath({ json: value, path: path });
+          value = foundValue !== undefined ? foundValue : '';
+        } else {
+          // let path: string | string[] = fromSafeString(parameters[1]);
+          path = convertPathToArray(path);
 
-        // ensure a value was found at path
-        const foundValue = objectGet(value, path);
-        value = foundValue !== undefined ? foundValue : '';
+          // ensure a value was found at path
+          const foundValue = objectGet(value, path);
+          value = foundValue !== undefined ? foundValue : '';
+        }
 
         return value;
       }

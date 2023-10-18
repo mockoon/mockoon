@@ -1,6 +1,6 @@
 {
   "uuid": "5f5ec26d-9a10-4b34-95a8-a9e4dff5ca41",
-  "lastMigration": 27,
+  "lastMigration": 29,
   "name": "Environment logs 2",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -31,7 +31,8 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id"
         }
       ],
       "responseMode": null,

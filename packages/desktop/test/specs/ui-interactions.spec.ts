@@ -253,7 +253,7 @@ describe('UI interactions', () => {
     it('should be able to select a method by clicking', async () => {
       await routes.select(1);
       await utils.openDropdown(dropdownId);
-      await utils.selectDropdownItem(dropdownId, 3);
+      await utils.selectDropdownItem(dropdownId, 4);
 
       await utils.waitForAutosave();
       await file.verifyObjectPropertyInFile(

@@ -7,6 +7,7 @@ import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import settings from '../libs/settings';
+import utils from '../libs/utils';
 
 const endpointCall: HttpCall = {
   description: 'Call GET /prefix/endpoint/1',
@@ -242,14 +243,13 @@ describe('Environment logs', () => {
         await routes.assertCount(2);
         await navigation.switchView('ENV_LOGS');
         await environmentsLogs.clickMockButton(1);
-        // close tooltips
-        await $('body').click({ x: 0, y: 0 });
+        await utils.closeTooltip();
         await navigation.switchView('ENV_ROUTES');
         await routes.assertCount(3);
       });
 
       it('should removed the prefix after mocking', async () => {
-        await routes.assertActiveMenuEntryText('GET\n/test');
+        await routes.assertActiveMenuEntryText('/test\nGET');
       });
     });
 

@@ -77,7 +77,7 @@ describe('Clipboard copy', () => {
       await environments.assertCount(1);
       await environments.assertActiveMenuEntryText('Env clipboard copy');
       await routes.assertCount(2);
-      await routes.assertActiveMenuEntryText('GET\n/answer');
+      await routes.assertActiveMenuEntryText('/answer\nGET');
 
       await environments.close(1);
     });
@@ -96,7 +96,7 @@ describe('Clipboard copy', () => {
         'New environment route clipboard'
       );
       await routes.assertCount(1);
-      await routes.assertActiveMenuEntryText('GET\n/answer');
+      await routes.assertActiveMenuEntryText('/answer\nGET');
     });
 
     it('should copy the full route path to the clipboard', async () => {

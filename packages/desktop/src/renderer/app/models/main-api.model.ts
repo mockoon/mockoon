@@ -13,15 +13,9 @@ import {
   SaveDialogReturnValue
 } from 'electron';
 import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
-import {
-  EnvironmentDescriptor,
-  Settings
-} from 'src/shared/models/settings.model';
+import { Settings } from 'src/shared/models/settings.model';
 
 export interface MainAPIModel {
-  invoke<T>(
-    channel: 'APP_NEW_STORAGE_MIGRATION'
-  ): Promise<EnvironmentDescriptor[]>;
   invoke(
     channel: 'APP_READ_ENVIRONMENT_DATA',
     path: string
@@ -95,7 +89,7 @@ export interface MainAPIModel {
   ): void;
   send(
     channel: 'APP_LOGS',
-    data: { type: 'error' | 'info'; message: string }
+    data: { type: 'error' | 'info'; message: string; payload?: any }
   ): void;
   send(
     channel: 'APP_SET_FAKER_OPTIONS',
@@ -116,14 +110,14 @@ export interface MainAPIModel {
     ) => void
   ): void;
   receive(channel: 'APP_MENU', listener: (action: string) => void): void;
-  receive(channel: 'APP_UPDATE_AVAILABLE', listener: () => void): void;
+  receive(
+    channel: 'APP_UPDATE_AVAILABLE',
+    listener: (version: string) => void
+  ): void;
   receive(
     channel: 'APP_CUSTOM_PROTOCOL',
     listener:
-      | ((
-          action: 'load-environment' | 'load-export-data',
-          parameters: { url: string }
-        ) => void)
+      | ((action: 'load-environment', parameters: { url: string }) => void)
       | ((action: 'auth', parameters: { token: string }) => void)
   ): void;
 

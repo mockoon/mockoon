@@ -1,15 +1,6 @@
+import * as cliUX from '@oclif/core/lib/cli-ux';
 import { test } from '@oclif/test';
-import axios from 'axios';
 import { expect } from 'chai';
-import { stopProcesses } from '../libs/helpers';
-const inquirer = require('inquirer');
-
-const inquirerMock = (result) => {
-  inquirer.prompt = () =>
-    new Promise((resolve, reject) => {
-      resolve(result);
-    });
-};
 
 /**
  * Test file contains a broken export, with missing `lastMigration` and route methods
@@ -18,9 +9,7 @@ describe('Data validation', () => {
   describe('Repair not accepted', () => {
     test
       .stderr()
-      .do(() => {
-        inquirerMock({ repair: false });
-      })
+      .stub(cliUX, 'confirm', (stub) => stub.returns(false))
       .command(['start', '--data', './test/data/envs/repair.json'])
       .catch((context) => {
         expect(context.message).to.contain(
@@ -33,47 +22,43 @@ describe('Data validation', () => {
   describe('Repair accepted', () => {
     test
       .stdout()
-      .do(() => {
-        inquirerMock({ repair: true });
-      })
+      .stub(cliUX, 'confirm', (stub) => stub.returns(true))
       .command(['start', '--data', './test/data/envs/repair.json'])
+      .do(async () => {
+        const call1 = await (await fetch('http://localhost:3000/users')).text();
+
+        expect(call1).to.contain('ok');
+      })
+      .finally(() => {
+        process.emit('SIGINT');
+      })
       .it(
-        'should repair and start mock on port 3000 if repair is accepted',
+        'should repair and start mock on port 3000 if repair is accepted, and call GET /users endpoint and get a result',
         (context) => {
-          expect(context.stdout).to.contain(
-            'Mock started at http://localhost:3000 (pid: 0, name: mockoon-demo-api)'
-          );
+          expect(context.stdout).to.contain('Server started');
+          expect(context.stdout).to.contain('"environmentName":"Demo API"');
         }
       );
-
-    test.it('should call GET /users endpoint and get a result', async () => {
-      const call1 = await axios.get('http://localhost:3000/users');
-
-      expect(call1.data).to.contain('ok');
-    });
-
-    stopProcesses('all', ['mockoon-demo-api']);
   });
 
   describe('Repair forced with flag', () => {
     test
       .stdout()
       .command(['start', '--data', './test/data/envs/repair.json', '--repair'])
+      .do(async () => {
+        const call1 = await (await fetch('http://localhost:3000/users')).text();
+
+        expect(call1).to.contain('ok');
+      })
+      .finally(() => {
+        process.emit('SIGINT');
+      })
       .it(
         'should repair and start mock on port 3000 if repair was forced with the flag',
         (context) => {
-          expect(context.stdout).to.contain(
-            'Mock started at http://localhost:3000 (pid: 0, name: mockoon-demo-api)'
-          );
+          expect(context.stdout).to.contain('Server started');
+          expect(context.stdout).to.contain('"environmentName":"Demo API"');
         }
       );
-
-    test.it('should call GET /users endpoint and get a result', async () => {
-      const call1 = await axios.get('http://localhost:3000/users');
-
-      expect(call1.data).to.contain('ok');
-    });
-
-    stopProcesses('all', ['mockoon-demo-api']);
   });
 });

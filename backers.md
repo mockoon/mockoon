@@ -6,26 +6,40 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 <a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
 </div>
 
-# Platinum sponsors
+# Our sponsors
+
+### Platinum
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/">
-    <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/github.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
-    <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
-    </picture>
-</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://www.peakcrypto.com/">
-    <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
-    <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
-    </picture>
-</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://www.emqx.io/">  
-    <img src="https://mockoon.com/images/sponsors/emqx.png" alt="Peakcrypto logo" />
-</a>
+  <a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/github.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
+      <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
+      </picture>
+  </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://localazy.com/register?ref=a9CiDC61gOac-azO">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/localazy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/localazy.png">
+      <img src="https://mockoon.com/images/sponsors/light/localazy.png" alt="Localazy logo" />
+      </picture>
+  </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://www.peakcrypto.com/">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
+      <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
+      </picture>
+  </a>
+</div>
+
+### Silver
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">  
+  <a href="https://www.emqx.io/">  
+      <img src="https://mockoon.com/images/sponsors/emqx.png" alt="Peakcrypto logo" />
+  </a>
 </div>
 
 # One-time and past sponsors
@@ -59,6 +73,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [John Michael Luy](https://github.com/jmluy)
 - Jonatan Gonzalez
 - Kelly Farris
+- [Localazy](https://localazy.com/register?ref=a9CiDC61gOac-azO)
 - [mallowigi](https://github.com/mallowigi)
 - [Matus Benko](https://github.com/PrimaMateria)
 - Max Sommer

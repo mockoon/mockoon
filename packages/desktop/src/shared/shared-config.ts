@@ -26,12 +26,12 @@ export const SharedConfig = (options: {
     releasePublicURL: `${options.websiteURL}releases/`,
     docs: {
       templating: docsURL + 'templating/overview/',
-      proxy: docsURL + 'proxy-mode/',
-      cors: docsURL + 'cors/',
-      https: docsURL + 'serving-over-tls/',
-      headers: docsURL + 'response-headers/',
+      proxy: docsURL + 'server-configuration/proxy-mode/',
+      cors: docsURL + 'server-configuration/cors/',
+      https: docsURL + 'server-configuration/serving-over-tls/',
+      headers: docsURL + 'response-configuration/response-headers/',
       rules: docsURL + 'route-responses/multiple-responses/',
-      hostname: docsURL + 'listening-hostname/',
+      hostname: docsURL + 'server-configuration/listening-hostname/',
       faq: options.websiteURL + 'faq/'
     },
     loginURL: `${options.websiteURL}login/?inapp=true`,

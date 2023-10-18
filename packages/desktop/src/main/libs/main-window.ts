@@ -5,6 +5,7 @@ import { argv } from 'process';
 import { parseProtocolArgs } from 'src/main/libs/custom-protocol';
 import { createMenu } from 'src/main/libs/menu';
 import { createSplashScreen } from 'src/main/libs/splashscreen';
+import { checkForUpdate } from 'src/main/libs/update';
 
 declare const IS_TESTING: boolean;
 declare const IS_DEV: boolean;
@@ -65,6 +66,10 @@ export const initMainWindow = () => {
     }
   });
 
+  if (IS_DEV) {
+    mainWindow.webContents.openDevTools();
+  }
+
   // when main app finished loading, hide splashscreen and show the mainWindow
   mainWindow.webContents.on('dom-ready', () => {
     setTimeout(() => {
@@ -76,9 +81,7 @@ export const initMainWindow = () => {
       setTimeout(() => {
         showMainWindow(mainWindowState);
 
-        if (IS_DEV) {
-          mainWindow.webContents.openDevTools();
-        }
+        checkForUpdate(mainWindow);
       }, 100);
     }, 500);
   });

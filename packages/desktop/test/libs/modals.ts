@@ -19,7 +19,7 @@ class Modals {
   }
 
   private get closeBtn(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('.modal-dialog .modal-footer button');
+    return $('.modal-dialog .modal-footer button.modal-close');
   }
 
   private get title(): ChainablePromiseElement<WebdriverIO.Element> {

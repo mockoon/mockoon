@@ -1,5 +1,8 @@
-import { faker } from '@faker-js/faker';
+import { allFakers, FakerError } from '@faker-js/faker';
 import { FakerAvailableLocales } from '@mockoon/commons';
+
+// Set default localisation to "en"
+let localFaker = allFakers['en'];
 
 /**
  * Set the Faker locale
@@ -7,7 +10,7 @@ import { FakerAvailableLocales } from '@mockoon/commons';
  * @param locale
  */
 export const SetFakerLocale = (locale: FakerAvailableLocales) => {
-  faker.locale = locale;
+  localFaker = allFakers[locale];
 };
 
 /**
@@ -16,7 +19,33 @@ export const SetFakerLocale = (locale: FakerAvailableLocales) => {
  * @param seed
  */
 export const SetFakerSeed = (seed: number) => {
-  if (seed !== undefined && seed !== null) {
-    faker.seed(seed);
+  if (seed !== undefined && seed !== null && localFaker !== undefined) {
+    localFaker.seed(seed);
   }
 };
+
+/**
+ * Safely return faker value. Changed in v8.1.0 of fakerjs.
+ * https://fakerjs.dev/guide/upgrading.html
+ *
+ * @param fakerFunc
+ * @param defaultValue
+ *
+ */
+
+export const safeFakerReturn = function (
+  fakerFunc: Function,
+  defaultValue: any = ''
+) {
+  try {
+    return fakerFunc();
+  } catch (error) {
+    if (error instanceof FakerError) {
+      return defaultValue;
+    } else {
+      throw error;
+    }
+  }
+};
+
+export { localFaker };

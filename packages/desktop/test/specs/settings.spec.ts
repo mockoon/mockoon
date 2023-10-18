@@ -217,7 +217,7 @@ describe('Settings', () => {
     it('should change Faker.js settings and verify persistence', async () => {
       await settings.open();
       await settings.setSettingValue('settings-faker-seed', '1234');
-      await settings.setDropdownSettingValue('settings-faker-locale', 20);
+      await settings.setDropdownSettingValue('settings-faker-locale', 22);
 
       await modals.close();
 

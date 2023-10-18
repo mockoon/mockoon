@@ -1,4 +1,6 @@
 import {
+  Environment,
+  ProcessedDatabucket,
   ResponseMode,
   ResponseRule,
   ResponseRuleTargets,
@@ -6,9 +8,11 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { Request } from 'express';
+import { JSONPath } from 'jsonpath-plus';
 import { get as objectPathGet } from 'object-path';
 import { ParsedQs } from 'qs';
 import { ParsedBodyMimeTypes } from '../constants/common.constants';
+import { TemplateParser } from './template-parser';
 import { convertPathToArray, stringIncludesArrayItems } from './utils';
 
 /**
@@ -31,7 +35,9 @@ export class ResponseRulesInterpreter {
   constructor(
     private routeResponses: RouteResponse[],
     private request: Request,
-    private responseMode: Route['responseMode']
+    private responseMode: Route['responseMode'],
+    private environment: Environment,
+    private processedDatabuckets: ProcessedDatabucket[]
   ) {
     this.extractTargets();
   }
@@ -40,7 +46,7 @@ export class ResponseRulesInterpreter {
    * Choose the route response depending on the first fulfilled rule.
    * If no rule has been fulfilled get the first route response.
    */
-  public chooseResponse(requestNumber: number): RouteResponse {
+  public chooseResponse(requestNumber: number): RouteResponse | null {
     // if no rules were fulfilled find the default one, or first one if no default
     const defaultResponse =
       this.routeResponses.find((routeResponse) => routeResponse.default) ||
@@ -72,6 +78,13 @@ export class ResponseRulesInterpreter {
               this.isValid(rule, requestNumber)
             );
       });
+
+      if (
+        response === undefined &&
+        this.responseMode === ResponseMode.FALLBACK
+      ) {
+        return null;
+      }
 
       if (response === undefined) {
         response = defaultResponse;
@@ -127,10 +140,16 @@ export class ResponseRulesInterpreter {
         let path: string | string[] = rule.modifier;
 
         if (typeof path === 'string') {
-          path = convertPathToArray(path);
+          if (path.startsWith('$')) {
+            value = JSONPath({
+              json: this.targets[rule.target],
+              path: path
+            });
+          } else {
+            path = convertPathToArray(path);
+            value = objectPathGet(this.targets[rule.target], path);
+          }
         }
-
-        value = objectPathGet(this.targets[rule.target], path);
       } else if (!rule.modifier && rule.target === 'body') {
         value = this.targets.bodyRaw;
       }
@@ -158,11 +177,13 @@ export class ResponseRulesInterpreter {
       rule.value = '';
     }
 
+    const parsedRuleValue = this.parseValue(rule.value);
+
     let regex: RegExp;
 
     if (rule.operator.includes('regex')) {
       regex = new RegExp(
-        rule.value,
+        parsedRuleValue,
         rule.operator === 'regex_i' ? 'i' : undefined
       );
 
@@ -172,10 +193,10 @@ export class ResponseRulesInterpreter {
     }
 
     if (Array.isArray(value)) {
-      return value.includes(rule.value);
+      return value.includes(parsedRuleValue);
     }
 
-    return String(value) === String(rule.value);
+    return String(value) === String(parsedRuleValue);
   };
 
   /**
@@ -197,5 +218,28 @@ export class ResponseRulesInterpreter {
       params: this.request.params,
       bodyRaw: this.request.stringBody
     };
+  }
+
+  /**
+   * Parse the value using the template parser allowing data helpers.
+   *
+   * @param value the value to parse
+   * @returns the parsed value or the unparsed input value if parsing fails
+   */
+  private parseValue(value: string): string {
+    let parsedValue: string;
+    try {
+      parsedValue = TemplateParser(
+        false,
+        value,
+        this.environment,
+        this.processedDatabuckets,
+        this.request
+      );
+    } catch (error) {
+      return value;
+    }
+
+    return parsedValue;
   }
 }

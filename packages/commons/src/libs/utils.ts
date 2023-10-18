@@ -1,6 +1,5 @@
 import { randomUUID } from 'crypto';
-import { Environment, Environments } from '../models/environment.model';
-import { LegacyExport } from '../models/export.model';
+import { Environment } from '../models/environment.model';
 import { Header, RouteResponse } from '../models/route.model';
 
 /**
@@ -53,53 +52,10 @@ export const IsValidURL = (address: string): boolean => {
 };
 
 /**
- * Verify if the object is a Mockoon legacy export data object
- *
- * @param data
- * @returns
- */
-export const IsLegacyExportData = (
-  data: Environment | LegacyExport
-): data is LegacyExport =>
-  (data as LegacyExport).source !== undefined &&
-  (data as LegacyExport).source?.split(':')[0] === 'mockoon';
-
-/**
- * Import legacy export Mockoon's format.
- * Data was wrapped and could enclose multiple environments (and routes):
- *
- * ```
- * {
- *   "source": "mockoon:1.17.0",
- *   "data": [
- *     {
- *       "type": "environment",
- *       "item": {
- *         "uuid": "",
- *         "lastMigration": 13,
- *         "name": "Tutorial - Generate mock data"
- *         ...
- *       }
- *     }
- *   ]
- * }
- *
- * ```
- */
-export const UnwrapLegacyExport = (exportData: LegacyExport): Environments =>
-  exportData.data.reduce<Environments>((environments, dataItem) => {
-    if (dataItem.type === 'environment') {
-      environments.push(dataItem.item);
-    }
-
-    return environments;
-  }, []);
-
-/**
  * Clone an object using JSON.stringify
  * /!\ Suitable for Environment, Route, etc but not for complex objects containing Map, Set, etc
  */
-export const CloneObject = (objectToClone: any) =>
+export const CloneObject = <T>(objectToClone: T): T =>
   JSON.parse(JSON.stringify(objectToClone));
 
 /**

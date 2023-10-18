@@ -78,6 +78,7 @@ export class SvgComponent {
     | 'note_add'
     | 'folder'
     | 'folder_open'
+    | 'folder_move'
     | 'history'
     | 'https'
     | 'info'
@@ -87,6 +88,7 @@ export class SvgComponent {
     | 'open_in_new'
     | 'priority_high'
     | 'data'
+    | 'low_priority'
     | string;
 
   constructor() {}

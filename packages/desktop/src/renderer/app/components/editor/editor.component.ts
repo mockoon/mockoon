@@ -64,7 +64,10 @@ export class EditorComponent
   private _text = '';
   private emitChanges = true;
 
-  constructor(elementRef: ElementRef, private zone: NgZone) {
+  constructor(
+    elementRef: ElementRef,
+    private zone: NgZone
+  ) {
     const element = elementRef.nativeElement;
     this.zone.runOutsideAngular(() => {
       this._editor = ace['edit'](element);

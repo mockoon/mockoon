@@ -22,13 +22,28 @@ export type RouteResponse = {
   disableTemplating: boolean;
   fallbackTo404: boolean;
   default: boolean;
+  crudKey: string;
 };
 
 export enum ResponseMode {
   RANDOM = 'RANDOM',
   SEQUENTIAL = 'SEQUENTIAL',
-  DISABLE_RULES = 'DISABLE_RULES'
+  DISABLE_RULES = 'DISABLE_RULES',
+  FALLBACK = 'FALLBACK'
 }
+
+export const RulesDisablingResponseModes: ResponseMode[] = [
+  ResponseMode.RANDOM,
+  ResponseMode.SEQUENTIAL,
+  ResponseMode.DISABLE_RULES
+];
+
+export const RulesNotUsingDefaultResponse: ResponseMode[] = [
+  ResponseMode.RANDOM,
+  ResponseMode.SEQUENTIAL,
+  ResponseMode.DISABLE_RULES,
+  ResponseMode.FALLBACK
+];
 
 export type ResponseRuleOperators =
   | 'equals'
@@ -72,6 +87,7 @@ export type Route = {
 export type Header = { key: string; value: string };
 
 export enum Methods {
+  all = 'all',
   get = 'get',
   post = 'post',
   put = 'put',

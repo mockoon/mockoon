@@ -1,12 +1,12 @@
 import { Hook } from '@oclif/core';
-import * as mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import { Config } from '../config';
 
 /**
- * Check that data folder (`~/.mockoon-cli/data`) exists before running commands
+ * Check that logs folder (`~/.mockoon-cli/logs`) exists before running commands
  */
 export const hook: Hook<'init'> = async function (options) {
-  await mkdirp(Config.dataPath);
+  await mkdirp(Config.logsPath);
 };
 
 export default hook;

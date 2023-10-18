@@ -39,19 +39,25 @@
   }
   .nav-link.route-disabled.active,
   .nav-item.show .nav-link {
-    box-shadow: inset -2px 0 0 0 $red, inset 2px 0 0 0 $blue;
+    box-shadow:
+      inset -2px 0 0 0 $red,
+      inset 2px 0 0 0 $blue;
   }
   .nav-link.running {
     box-shadow: inset -3px 0 0 0 $green;
   }
   .nav-link.active.running {
-    box-shadow: inset 2px 0 0 0 $blue, inset -3px 0 0 0 $green;
+    box-shadow:
+      inset 2px 0 0 0 $blue,
+      inset -3px 0 0 0 $green;
   }
   .nav-link.need-restart {
     box-shadow: inset -3px 0 0 0 $orange;
   }
   .nav-link.active.need-restart {
-    box-shadow: inset 2px 0 0 0 $blue, inset -3px 0 0 0 $orange;
+    box-shadow:
+      inset 2px 0 0 0 $blue,
+      inset -3px 0 0 0 $orange;
   }
   // adjust nav badge position
   .nav-link .badge {

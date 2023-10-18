@@ -13,6 +13,7 @@ import {
   BodyTypes,
   Header,
   Methods,
+  ResponseMode,
   ResponseRule,
   Route,
   RouteResponse,
@@ -164,6 +165,7 @@ export const BuildEnvironment = (
 export const BuildDemoEnvironment = (): Environment => {
   const databucket = BuildDatabucket();
   const newRoutes = [
+    BuildHTTPRoute(),
     { ...BuildCRUDRoute() },
     BuildHTTPRoute(),
     BuildHTTPRoute(),
@@ -180,20 +182,44 @@ export const BuildDemoEnvironment = (): Environment => {
         ...databucket,
         name: 'Users',
         value:
-          '[\n  {{#repeat 50}}\n  {\n    "id": "{{faker \'datatype.uuid\'}}",\n    "username": "{{faker \'internet.userName\'}}"\n  }\n  {{/repeat}}\n]'
+          '[\n  {{#repeat 50}}\n  {\n    "id": "{{faker \'string.uuid\'}}",\n    "username": "{{faker \'internet.userName\'}}"\n  }\n  {{/repeat}}\n]'
       }
     ],
     routes: [
       {
         ...newRoutes[0],
-        endpoint: 'users',
-        documentation: 'Endpoint performing CRUD operations on a data bucket',
+        method: Methods.all,
+        endpoint: '*',
+        documentation: 'Global rules',
+        responseMode: ResponseMode.FALLBACK,
         responses: [
-          { ...newRoutes[0].responses[0], databucketID: databucket.id }
+          {
+            ...BuildRouteResponse(),
+            label: "Requires the presence of an 'Authorization' header",
+            body: '{\n  "error": "Unauthorized"\n}',
+            statusCode: 401,
+            rules: [
+              {
+                target: 'header',
+                modifier: 'Authorization',
+                operator: 'null',
+                invert: false,
+                value: ''
+              }
+            ]
+          }
         ]
       },
       {
         ...newRoutes[1],
+        endpoint: 'users',
+        documentation: 'Endpoint performing CRUD operations on a data bucket',
+        responses: [
+          { ...newRoutes[1].responses[0], databucketID: databucket.id }
+        ]
+      },
+      {
+        ...newRoutes[2],
         method: Methods.get,
         endpoint: 'template',
         documentation:
@@ -203,12 +229,12 @@ export const BuildDemoEnvironment = (): Environment => {
             ...BuildRouteResponse(),
             label:
               "Creates 10 random users, or the amount specified in the 'total' query param",
-            body: '{\n  "Templating example": "For more information about templating, click the blue \'i\' above this editor",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'datatype.number\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'name.firstName\' }}",\n        "lastname": "{{ faker \'name.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'datatype.number\' 5) }}\n            {\n              "id": "{{ faker \'datatype.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
+            body: '{\n  "Templating example": "For more information about templating, click the blue \'i\' above this editor",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'number.int\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'person.firstName\' }}",\n        "lastname": "{{ faker \'person.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'number.int\' 5) }}\n            {\n              "id": "{{ faker \'string.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
           }
         ]
       },
       {
-        ...newRoutes[2],
+        ...newRoutes[3],
         method: Methods.post,
         endpoint: 'content/:param1',
         documentation: 'Use multiple responses with rules',
@@ -250,7 +276,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[3],
+        ...newRoutes[4],
         method: Methods.get,
         endpoint: 'file/:pageName',
         documentation:
@@ -266,7 +292,7 @@ export const BuildDemoEnvironment = (): Environment => {
         ]
       },
       {
-        ...newRoutes[4],
+        ...newRoutes[5],
         method: Methods.put,
         endpoint: 'path/with/pattern(s)?/*',
         documentation: 'Path supports various patterns',
@@ -274,12 +300,12 @@ export const BuildDemoEnvironment = (): Environment => {
           {
             ...BuildRouteResponse(),
             headers: [{ key: 'Content-Type', value: 'text/plain' }],
-            body: "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/routing"
+            body: "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/api-endpoints/routing/"
           }
         ]
       },
       {
-        ...newRoutes[5],
+        ...newRoutes[6],
         method: Methods.get,
         endpoint: 'forward-and-record',
         documentation: 'Can Mockoon forward or record entering requests?',
@@ -287,7 +313,7 @@ export const BuildDemoEnvironment = (): Environment => {
           {
             ...BuildRouteResponse(),
             headers: [{ key: 'Content-Type', value: 'text/plain' }],
-            body: "Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings ('cog' icon in the upper right corner). \nTo learn more: https://mockoon.com/docs/latest/proxy-mode\n\nAs always, all entering requests, and responses from the proxied server will be recorded ('clock' icon in the upper right corner).\nTo learn more: https://mockoon.com/docs/latest/requests-logging"
+            body: "Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings ('cog' icon in the upper right corner). \nTo learn more: https://mockoon.com/docs/latest/server-configuration/proxy-mode/\n\nAs always, all entering requests, and responses from the proxied server will be recorded ('clock' icon in the upper right corner).\nTo learn more: https://mockoon.com/docs/latest/logging-and-recording/requests-logging/"
           }
         ]
       }

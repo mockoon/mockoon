@@ -43,7 +43,7 @@
     </div>
 
     <ng-container *ngIf="databucketList$ | async as databucketList">
-      <ul class="nav flex-column menu-list pt-1 pb-1 h-100" #databucketsMenu>
+      <ul class="nav flex-column menu-list h-100" #databucketsMenu>
         <li
           class="nav-item"
           *ngFor="let environmentDatabucket of databucketList"

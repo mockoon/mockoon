@@ -14,6 +14,9 @@ type SettingNames =
   | 'start-environments-on-load';
 
 class Settings {
+  public get fileWatchingInputGroup(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.modal-dialog .file-watcher-input-group');
+  }
   public get prettyPrint(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.modal-dialog label[for="settings-storage-pretty-print"]');
   }

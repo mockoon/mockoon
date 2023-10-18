@@ -92,6 +92,12 @@ describe('Default route response', () => {
     await routes.toggleRouteResponseRandom();
     await routes.openRouteResponseMenu();
     await routes.assertDefaultRouteResponseClass(1, 'text-primary');
+    await routes.toggleRouteResponseFallback();
+    await routes.openRouteResponseMenu();
+    await routes.assertDefaultRouteResponseClass(1, 'text-muted');
+    await routes.toggleRouteResponseFallback();
+    await routes.openRouteResponseMenu();
+    await routes.assertDefaultRouteResponseClass(1, 'text-primary');
   });
 
   it('should set first route response as default when adding a new route', async () => {

@@ -22,12 +22,14 @@ export class DialogsService {
    */
   public showSaveDialog(
     title: string,
-    saveWorkingDir = true
+    saveWorkingDir = true,
+    defaultPath?: string
   ): Observable<string | null> {
     return from(
       MainAPI.invoke('APP_SHOW_SAVE_DIALOG', {
         filters: this.filters.json,
-        title
+        title,
+        defaultPath
       })
     ).pipe(
       // Get the directory

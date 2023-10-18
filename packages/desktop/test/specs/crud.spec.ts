@@ -1112,7 +1112,7 @@ describe('CRUD endpoints', () => {
   it('should create a new CRUD endpoint and verify UI', async () => {
     await routes.addCRUDRoute();
     await routes.setPath('users');
-    await routes.assertMenuEntryText(4, 'CRUD\n/users');
+    await routes.assertMenuEntryText(4, '/users\nCRUD');
     await routes.assertSelectedRouteResponseLabel('CRUD operations');
   });
 
@@ -1127,7 +1127,9 @@ describe('CRUD endpoints', () => {
   it('should add a second response with rule', async () => {
     await routes.addRouteResponse();
     await (await routes.bodyEditor).click();
-    await (await routes.bodyEditor).keys(['Backspace', 'Backspace', 'a']);
+
+    await browser.keys(['Backspace', 'Backspace', 'a']);
+
     await routes.switchTab('RULES');
     await routes.addResponseRule({
       target: 'header',

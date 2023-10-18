@@ -32,16 +32,16 @@ export class ApiService extends Logger {
     private userService: UserService,
     protected toastsService: ToastsService
   ) {
-    super('[SERVICE][API]', toastsService);
+    super('[RENDERER][SERVICE][API] ', toastsService);
   }
 
   public init(
     changelogModal: ChangelogModalComponent,
     settingsModal: SettingsModalComponent
   ) {
-    MainAPI.receive('APP_UPDATE_AVAILABLE', () => {
+    MainAPI.receive('APP_UPDATE_AVAILABLE', (version) => {
       this.zone.run(() => {
-        this.eventsService.updateAvailable$.next(true);
+        this.eventsService.updateAvailable$.next(version);
       });
     });
 
@@ -126,7 +126,6 @@ export class ApiService extends Logger {
               .subscribe();
             break;
           case 'load-environment':
-          case 'load-export-data':
             this.environmentsService
               .newEnvironmentFromURL(parameters.url)
               .subscribe();
