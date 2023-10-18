@@ -44,6 +44,7 @@ import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/env
 import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-menu/routes-menu.component';
 import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-modal/auth-modal.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
+import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
@@ -84,6 +85,7 @@ import { AppComponent } from './app.component';
     DropzoneDirective,
     SearchFilterDirective,
     ContextMenuComponent,
+    CommandPaletteModalComponent,
     AuthModalComponent,
     WelcomeModalComponent,
     SettingsModalComponent,

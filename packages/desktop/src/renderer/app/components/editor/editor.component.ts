@@ -73,6 +73,29 @@ export class EditorComponent
       this._editor = ace['edit'](element);
     });
     this._editor.$blockScrolling = Infinity;
+
+    // Remove ctrl-p key binding to avoid conflict with command palette
+    (this._editor.commands as any).removeCommand({
+      name: 'jumptomatching',
+      bindKey: {
+        win: 'Ctrl-P',
+        mac: 'Command-P'
+      },
+      exec: () => {
+        // Do nothing to effectively disable the key binding
+      }
+    });
+    // Remove ctrl-, key binding to avoid conflict with settings modal
+    (this._editor.commands as any).removeCommand({
+      name: 'showSettingsMenu',
+      bindKey: {
+        win: 'Ctrl-,',
+        mac: 'Command-,'
+      },
+      exec: () => {
+        // Do nothing to effectively disable the key binding
+      }
+    });
   }
 
   public get text() {

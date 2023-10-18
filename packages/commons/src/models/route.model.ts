@@ -21,6 +21,7 @@ export type RouteResponse = {
   sendFileAsBody: boolean;
   disableTemplating: boolean;
   fallbackTo404: boolean;
+  // default is always true for CRUD routes first response
   default: boolean;
   crudKey: string;
 };

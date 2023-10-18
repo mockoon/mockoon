@@ -89,6 +89,7 @@ export class SvgComponent {
     | 'priority_high'
     | 'data'
     | 'low_priority'
+    | 'command_palette'
     | string;
 
   constructor() {}

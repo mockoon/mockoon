@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, shell } from 'electron';
 import { join as pathJoin, resolve as pathResolve } from 'path';
 
 declare const IS_TESTING: boolean;
@@ -38,4 +38,10 @@ export const setPaths = () => {
 
   // create default logs folder (https://www.electronjs.org/docs/latest/api/app#appsetapplogspathpath)
   app.setAppLogsPath();
+};
+
+export const showFolderInExplorer = (
+  name: Parameters<typeof app.getPath>[0]
+) => {
+  shell.showItemInFolder(app.getPath(name));
 };

@@ -1,4 +1,4 @@
-<ng-template #modal let-close="close">
+<ng-container *ngIf="changelog$ | async as changelog">
   <div class="modal-header">
     <h4 class="modal-title">
       Release notes v{{ appVersion }}
@@ -10,12 +10,18 @@
     </h4>
   </div>
   <div class="modal-body">
+    <p *ngIf="!changelog.loading && changelog.error" class="message">
+      Changelog could not be loaded
+    </p>
     <markdown
-      *ngIf="changelog$ | async as changelog; else noChangelog"
+      *ngIf="!changelog.loading && !changelog.error"
       ngPreserveWhitespaces
     >
-      {{ changelog }}
+      {{ changelog.data }}
     </markdown>
+    <p *ngIf="changelog.loading" class="message">
+      <app-svg icon="spinner" size="24"></app-svg>
+    </p>
   </div>
   <div class="modal-footer">
     <button
@@ -26,8 +32,4 @@
       Close
     </button>
   </div>
-</ng-template>
-
-<ng-template #noChangelog>
-  <p class="message">Changelog could not be loaded</p>
-</ng-template>
+</ng-container>

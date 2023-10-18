@@ -1,47 +1,41 @@
-<ng-template #modal>
-  <div class="modal-header">
-    <h3 class="modal-title">
-      Choose target environment
-      <br />
-      <small class="text-muted h6">
-        Copy the
-        <ng-container *ngIf="entityInformation.subject === 'route'">
-          route
-        </ng-container>
-        <ng-container *ngIf="entityInformation.subject === 'databucket'">
-          data bucket
-        </ng-container>
-        <code>{{ entityInformation.displayName }}</code>
-        to:</small
-      >
-    </h3>
-  </div>
-
-  <div class="modal-body p-0">
-    <div class="list-group list-group-flush">
-      <ng-container *ngFor="let environment of environments$ | async">
-        <button
-          class="list-group-item list-group-item-action"
-          type="button"
-          (click)="chooseTargetEnvironment(environment, entityInformation)"
-        >
-          <div class="ellipsis">{{ environment.name }}</div>
-          <div class="nav-link-subtitle ellipsis">
-            {{ environment.hostname || 'localhost' }}:{{ environment.port }}/{{
-              environment.endpointPrefix
-            }}
-          </div>
-        </button>
+<div class="modal-header">
+  <h3 class="modal-title">
+    Choose target environment
+    <br />
+    <small class="text-muted h6">
+      Copy the
+      <ng-container *ngIf="entityInformation.subject === 'route'">
+        route
       </ng-container>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-secondary modal-close"
-      (click)="closeModal()"
+      <ng-container *ngIf="entityInformation.subject === 'databucket'">
+        data bucket
+      </ng-container>
+      <code>{{ entityInformation.displayName }}</code>
+      to:</small
     >
-      Cancel
-    </button>
+  </h3>
+</div>
+
+<div class="modal-body p-0">
+  <div class="list-group list-group-flush">
+    <ng-container *ngFor="let environment of environments$ | async">
+      <button
+        class="list-group-item list-group-item-action"
+        type="button"
+        (click)="chooseTargetEnvironment(environment, entityInformation)"
+      >
+        <div class="ellipsis">{{ environment.name }}</div>
+        <div class="nav-link-subtitle ellipsis">
+          {{ environment.hostname || 'localhost' }}:{{ environment.port }}/{{
+            environment.endpointPrefix
+          }}
+        </div>
+      </button>
+    </ng-container>
   </div>
-</ng-template>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Cancel
+  </button>
+</div>

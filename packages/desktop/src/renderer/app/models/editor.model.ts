@@ -1,11 +1,9 @@
 export type EditorModes = 'json' | 'html' | 'xml' | 'css' | 'text';
-export type EditorModalEvent = {
+
+export type EditorModalPayload = {
   content: string;
   title: string;
-  mode: EditorModes;
-};
-export type EditorModalData = {
-  content: string;
-  title: string;
-  editorConfig: any;
+  editorConfig: {
+    mode: EditorModes;
+  } & any;
 };

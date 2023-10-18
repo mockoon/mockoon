@@ -7,14 +7,11 @@ import {
 } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   Inject,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { RandomInt } from '@mockoon/commons';
@@ -30,7 +27,6 @@ import {
   debounceTime,
   delay,
   filter,
-  finalize,
   from,
   map,
   merge,
@@ -53,8 +49,8 @@ import {
 } from 'src/renderer/app/models/template.model';
 import { User } from 'src/renderer/app/models/user.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { TemplatesService } from 'src/renderer/app/services/templates.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   setActiveTemplatesTabAction,
   updateFilterAction
@@ -81,13 +77,8 @@ import { Config } from 'src/renderer/config';
     ])
   ]
 })
-export class TemplatesModalComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
-  @ViewChild('modal')
-  public modal: ElementRef;
+export class TemplatesModalComponent implements OnInit, OnDestroy {
   public loginURL = Config.loginURL;
-  public isLoading$ = new BehaviorSubject<boolean>(false);
   public isDemoLoading$ = new BehaviorSubject<boolean>(false);
   public activeTemplateListItem$ = new BehaviorSubject<TemplateListItem>(null);
   public activeTemplate$: Observable<Template>;
@@ -97,6 +88,7 @@ export class TemplatesModalComponent
   public os$: Observable<string>;
   public demo$: Observable<any>;
   public user$: Observable<User>;
+  public generatingTemplate$ = this.templatesService.generatingTemplate$;
   public templatesFilter = new FormControl('');
   public prompt = new FormControl('');
   public demoPrompt = new FormControl('');
@@ -151,11 +143,11 @@ export class TemplatesModalComponent
 
   constructor(
     private modalService: NgbModal,
-    private eventsService: EventsService,
     private templatesService: TemplatesService,
     private environmentsService: EnvironmentsService,
     private store: Store,
     private formBuilder: FormBuilder,
+    private uiService: UIService,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -168,7 +160,7 @@ export class TemplatesModalComponent
         withLatestFrom(this.user$),
         switchMap(([tab, user]) => {
           if (tab === 'GENERATE' && (!user || user.plan === 'FREE')) {
-            return this.demo$;
+            return this.buildDemoAnimation();
           } else {
             return of(true).pipe(
               tap(() => {
@@ -180,6 +172,26 @@ export class TemplatesModalComponent
         takeUntil(this.destroy$)
       )
       .subscribe();
+
+    const modal = this.uiService.getModalInstance('templates');
+
+    merge(
+      modal.shown.pipe(
+        tap(() => {
+          if (this.templatesService.generatingTemplate$.value === 'DONE') {
+            this.templatesService.generatingTemplate$.next('NONE');
+          }
+        })
+      ),
+      modal.hidden.pipe(
+        tap(() => {
+          if (this.templatesService.generatingTemplate$.value === 'DONE') {
+            this.templatesService.generatingTemplate$.next('NONE');
+          }
+          this.resetAnimation();
+        })
+      )
+    ).subscribe();
 
     this.templates$ = this.templatesService.getTemplatesList().pipe(
       withLatestFrom(this.user$),
@@ -204,14 +216,22 @@ export class TemplatesModalComponent
       )
     );
 
-    // ensure that we load the templates before opening the modal
-    this.templates$.subscribe();
-
     this.templatesFilter$ = this.store.selectFilter('templates').pipe(
       tap((search) => {
         this.templatesFilter.patchValue(search, { emitEvent: false });
       })
     );
+
+    // set back the prompt/template if we open/close the modal during a generation
+    this.prompt.setValue(this.templatesService.lastPrompt$.value);
+    this.templatesService.lastGeneratedTemplate$
+      .pipe(
+        tap((template) => {
+          this.generatedTemplateBody.setValue(template);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
 
     this.templatesFilter.valueChanges
       .pipe(
@@ -222,38 +242,6 @@ export class TemplatesModalComponent
         takeUntil(this.destroy$)
       )
       .subscribe();
-
-    this.buildDemoAnimation();
-  }
-
-  ngAfterViewInit() {
-    this.eventsService.templatesModalEvents
-      .pipe(
-        tap(() => {
-          const modal = this.modalService.open(this.modal, {
-            size: 'lg'
-          });
-          modal.shown.subscribe(() => {
-            this.open = true;
-
-            if (!this.isLoading$.value) {
-              this.eventsService.generatingTemplate$.next('NONE');
-            }
-          });
-          merge(modal.dismissed, modal.closed).subscribe(() => {
-            this.open = false;
-
-            if (this.isLoading$.value) {
-              this.eventsService.generatingTemplate$.next('INPROGRESS');
-            } else {
-              this.resetAnimation();
-            }
-
-            this.resetAnimation();
-          });
-        })
-      )
-      .subscribe();
   }
 
   ngOnDestroy() {
@@ -262,11 +250,12 @@ export class TemplatesModalComponent
   }
 
   public generate() {
-    if (!this.prompt.value || this.isLoading$.value === true) {
+    if (
+      !this.prompt.value ||
+      this.templatesService.generatingTemplate$.value === 'INPROGRESS'
+    ) {
       return;
     }
-
-    this.isLoading$.next(true);
 
     this.templatesService
       .generateTemplate(
@@ -278,19 +267,6 @@ export class TemplatesModalComponent
 
           return options;
         }, [])
-      )
-      .pipe(
-        tap((templateContent) => {
-          this.generatedTemplateBody.setValue(templateContent);
-        }),
-        finalize(() => {
-          this.isLoading$.next(false);
-          if (!this.open) {
-            this.eventsService.generatingTemplate$.next('DONE');
-          } else {
-            this.eventsService.generatingTemplate$.next('NONE');
-          }
-        })
       )
       .subscribe();
   }
@@ -334,8 +310,8 @@ export class TemplatesModalComponent
       options = {
         endpoint: slugPrompt,
         dataBucket: {
-          name: this.prompt.value,
-          value: this.generatedTemplateBody.value
+          name: this.templatesService.lastPrompt$.value,
+          value: this.templatesService.lastGeneratedTemplate$.value
         }
       };
     }
@@ -358,7 +334,7 @@ export class TemplatesModalComponent
     } else if (activeTemplateTab === 'GENERATE') {
       options = {
         endpoint: this.prompt.value.replace(/\s/g, '-').toLowerCase(),
-        body: this.generatedTemplateBody.value
+        body: this.templatesService.lastGeneratedTemplate$.value
       };
     }
     this.environmentsService.addHTTPRoute('root', true, options);
@@ -370,6 +346,10 @@ export class TemplatesModalComponent
    */
   public clearFilter() {
     this.store.update(updateFilterAction('templates', ''));
+  }
+
+  public close() {
+    this.uiService.closeModal('templates');
   }
 
   private resetAnimationFields() {
@@ -434,7 +414,7 @@ export class TemplatesModalComponent
         )
       );
 
-    this.demo$ = of(true).pipe(
+    return of(true).pipe(
       mergeMap(() => createAnimation(demoTemplates)),
       repeat(),
       takeUntil(this.destroy$)

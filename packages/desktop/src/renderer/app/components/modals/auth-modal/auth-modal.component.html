@@ -1,53 +1,47 @@
-<ng-template #modal let-close="close" let-dismiss="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Log into your account</h4>
-  </div>
-  <div class="modal-body">
-    <p>
-      A new page should have opened in your default browser to log in on
-      Mockoon's website (click
-      <a href="{{ loginURL }}" target="_blank">here</a> if it did not open
-      automatically).
-    </p>
-    <p>
-      After logging in, the browser should display a prompt asking you to open
-      the application in order to finish the process. Alternatively, you can
-      manually enter the token displayed on the website below:
-    </p>
-    <div class="input-group">
-      <input
-        type="text"
-        class="form-control"
-        [formControl]="tokenControl"
-        placeholder="Manually enter the token"
-      />
-      <div
-        *ngIf="isLoading$ | async"
-        class="input-group-append ml-2 align-items-center"
-      >
-        <app-svg icon="spinner"></app-svg>
-      </div>
-    </div>
+<div class="modal-header">
+  <h4 class="modal-title">Log into your account</h4>
+</div>
+<div class="modal-body">
+  <p>
+    A new page should have opened in your default browser to log in on Mockoon's
+    website (click
+    <a href="{{ loginURL }}" target="_blank">here</a> if it did not open
+    automatically).
+  </p>
+  <p>
+    After logging in, the browser should display a prompt asking you to open the
+    application in order to finish the process. Alternatively, you can manually
+    enter the token displayed on the website below:
+  </p>
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      [formControl]="tokenControl"
+      placeholder="Manually enter the token"
+    />
     <div
-      *ngIf="tokenControl.hasError('invalid')"
-      class="error-message ml-auto text-center pr-2"
+      *ngIf="isLoading$ | async"
+      class="input-group-append ml-2 align-items-center"
     >
-      This token is invalid or cannot be used to log in
-    </div>
-    <div
-      *ngIf="isSuccess$ | async"
-      class="success-message ml-auto text-center pr-2"
-    >
-      You are now logged in
+      <app-svg icon="spinner"></app-svg>
     </div>
   </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-secondary modal-close"
-      (click)="closeModal()"
-    >
-      Close
-    </button>
+  <div
+    *ngIf="tokenControl.hasError('invalid')"
+    class="error-message ml-auto text-center pr-2"
+  >
+    This token is invalid or cannot be used to log in
   </div>
-</ng-template>
+  <div
+    *ngIf="isSuccess$ | async"
+    class="success-message ml-auto text-center pr-2"
+  >
+    You are now logged in
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Close
+  </button>
+</div>

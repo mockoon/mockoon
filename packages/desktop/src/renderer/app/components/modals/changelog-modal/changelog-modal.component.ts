@@ -1,26 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { EMPTY, Observable } from 'rxjs';
-import {
-  catchError,
-  filter,
-  first,
-  map,
-  shareReplay,
-  tap
-} from 'rxjs/operators';
-import { gt as semverGt } from 'semver';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { updateSettingsAction } from 'src/renderer/app/stores/actions';
-import { Store } from 'src/renderer/app/stores/store';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import { Config } from 'src/renderer/config';
 
 @Component({
@@ -28,19 +11,17 @@ import { Config } from 'src/renderer/config';
   templateUrl: './changelog-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChangelogModalComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal')
-  public modal: ElementRef;
+export class ChangelogModalComponent implements OnInit {
   public appVersion = Config.appVersion;
-  public changelog$: Observable<string>;
-  private modalOptions: NgbModalOptions = {
-    size: 'xl'
-  };
+  public changelog$: Observable<{
+    error?: string;
+    data?: string;
+    loading: boolean;
+  }>;
 
   constructor(
-    private modalService: NgbModal,
     private httpClient: HttpClient,
-    private store: Store
+    private uiService: UIService
   ) {}
 
   ngOnInit() {
@@ -55,30 +36,13 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
       .pipe(
         shareReplay(1),
         // strip front matter from the release markdown
-        map((content) => content.replace(/^---(.|\n|\r)*?---/, '')),
-        catchError(() => EMPTY)
+        map((content) => ({
+          data: content.replace(/^---(.|\n|\r)*?---/, ''),
+          loading: false
+        })),
+        catchError((error) => of({ error, loading: false })),
+        startWith({ error: null, loading: true })
       );
-
-    this.changelog$.subscribe();
-  }
-
-  ngAfterViewInit() {
-    // show the modal after an update or for the first time
-    this.store
-      .select('settings')
-      .pipe(
-        filter((settings) => !!settings),
-        first(),
-        tap((settings) => {
-          if (semverGt(Config.appVersion, settings.lastChangelog)) {
-            this.showModal();
-            this.store.update(
-              updateSettingsAction({ lastChangelog: Config.appVersion })
-            );
-          }
-        })
-      )
-      .subscribe();
   }
 
   public openReleaseLink() {
@@ -88,7 +52,7 @@ export class ChangelogModalComponent implements OnInit, AfterViewInit {
     );
   }
 
-  public showModal() {
-    this.modalService.open(this.modal, this.modalOptions);
+  public close() {
+    this.uiService.closeModal('changelog');
   }
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Environment } from '@mockoon/commons';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
@@ -11,6 +11,7 @@ import {
 import { User } from 'src/renderer/app/models/user.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -28,6 +29,7 @@ export class HeaderComponent implements OnInit {
   public activeView$: Observable<ViewsNameType>;
   public activeEnvironmentState$: Observable<EnvironmentStatus>;
   public environmentLogs$: Observable<EnvironmentLog[]>;
+  public os$: Observable<string>;
   public tabs: {
     id: ViewsNameType;
     title: string;
@@ -46,10 +48,12 @@ export class HeaderComponent implements OnInit {
     private store: Store,
     private environmentsService: EnvironmentsService,
     private userService: UserService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private uiService: UIService
   ) {}
 
   ngOnInit() {
+    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
     this.user$ = this.store.select('user');
     this.activeView$ = this.store.select('activeView');
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
@@ -121,7 +125,7 @@ export class HeaderComponent implements OnInit {
    */
   public login() {
     MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.loginURL);
-    this.eventsService.authModalEvents.next();
+    this.uiService.openModal('auth');
   }
 
   /**
@@ -153,5 +157,12 @@ export class HeaderComponent implements OnInit {
     this.userService.getUserInfo().subscribe(() => {
       this.refreshingAccount$.next(false);
     });
+  }
+
+  /**
+   * Open the command palette
+   */
+  public openCommandPalette() {
+    this.uiService.openModal('commandPalette');
   }
 }

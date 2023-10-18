@@ -1,19 +1,14 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   HostListener,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
-import { from, Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
-import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
-import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
-import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { BuildFullPath } from 'src/renderer/app/libs/utils.lib';
@@ -38,13 +33,7 @@ import { environment } from 'src/renderer/environments/environment';
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent extends Logger implements OnInit, AfterViewInit {
-  @ViewChild('changelogModal')
-  public changelogModal: ChangelogModalComponent;
-  @ViewChild('settingsModal')
-  public settingsModal: SettingsModalComponent;
-  @ViewChild('templatesModal')
-  public templatesModal: TemplatesModalComponent;
+export class AppComponent extends Logger implements OnInit {
   public activeEnvironment$: Observable<Environment>;
   public activeView$: Observable<ViewsNameType>;
   public scrollToBottom = this.uiService.scrollToBottom;
@@ -91,7 +80,7 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
       event.shiftKey &&
       event.key.toLowerCase() === 'f'
     ) {
-      if (this.templatesModal.open) {
+      if (this.uiService.getModalInstance('templates')) {
         this.eventsService.focusInput.next(FocusableInputs.TEMPLATES_FILTER);
       } else if (this.store.get('activeView') === 'ENV_ROUTES') {
         this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
@@ -99,11 +88,20 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
         this.eventsService.focusInput.next(FocusableInputs.DATABUCKET_FILTER);
       }
     }
+
+    if (
+      ((event.ctrlKey && this.os !== 'darwin') ||
+        (event.metaKey && this.os === 'darwin')) &&
+      event.key.toLowerCase() === 'p'
+    ) {
+      this.uiService.openModal('commandPalette');
+    }
   }
 
   ngOnInit() {
     this.appQuitService.init().subscribe();
     this.userService.init().subscribe();
+    this.apiService.init();
 
     this.logMessage('info', 'INITIALIZING_APP');
 
@@ -120,10 +118,6 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeView$ = this.store.select('activeView');
     this.toasts$ = this.store.select('toasts');
-  }
-
-  ngAfterViewInit() {
-    this.apiService.init(this.changelogModal, this.settingsModal);
   }
 
   /**
@@ -194,7 +188,7 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
         break;
       case 'toggle':
         if (payload.subject === 'route') {
-          this.toggleRoute(payload.subjectUUID);
+          this.environmentsService.toggleRoute(payload.subjectUUID);
         }
         break;
       case 'duplicateToEnv':
@@ -261,18 +255,11 @@ export class AppComponent extends Logger implements OnInit, AfterViewInit {
   }
 
   /**
-   * Enable/disable a route
-   */
-  private toggleRoute(routeUUID?: string) {
-    this.environmentsService.toggleRoute(routeUUID);
-  }
-
-  /**
    * Trigger entity movement flow
    */
   private startEntityDuplicationToAnotherEnvironment(
     subjectUUID: string,
-    subject: string
+    subject: DataSubject
   ) {
     this.environmentsService.startEntityDuplicationToAnotherEnvironment(
       subjectUUID,

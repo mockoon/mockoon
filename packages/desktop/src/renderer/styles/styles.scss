@@ -209,7 +209,7 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
 .message {
   text-align: center;
   font-size: $font-size-lg;
-  color: $gray-600;
+  color: $gray-500;
   font-weight: $font-weight-light;
 
   &-md {
@@ -361,4 +361,27 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
 
 .text-shadow {
   text-shadow: $box-shadow !important;
+}
+
+.modal-backdrop-transparent {
+  background-color: transparent;
+}
+
+.modal-dialog-max-height {
+  .modal-content {
+    max-height: 40vh;
+  }
+}
+
+.modal-dialog-transparent-backdrop {
+  .modal-content {
+    box-shadow: 0px 0px 8px 2px #111111;
+  }
+}
+
+.modal-dialog-rounded {
+  .modal-content {
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
 }

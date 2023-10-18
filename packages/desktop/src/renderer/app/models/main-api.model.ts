@@ -10,7 +10,8 @@ import {
   OpenDialogOptions,
   OpenDialogReturnValue,
   SaveDialogOptions,
-  SaveDialogReturnValue
+  SaveDialogReturnValue,
+  app
 } from 'electron';
 import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
 import { Settings } from 'src/shared/models/settings.model';
@@ -88,6 +89,10 @@ export interface MainAPIModel {
     urlOrPath: string
   ): void;
   send(
+    channel: 'APP_SHOW_FOLDER',
+    path: Parameters<typeof app.getPath>[0]
+  ): void;
+  send(
     channel: 'APP_LOGS',
     data: { type: 'error' | 'info'; message: string; payload?: any }
   ): void;
@@ -96,6 +101,7 @@ export interface MainAPIModel {
     data: { locale: FakerAvailableLocales; seed: number }
   ): void;
   send(channel: 'APP_UPDATE_ENVIRONMENT', environments: Environments): void;
+  send(channel: 'APP_ZOOM', action: 'IN' | 'OUT' | 'RESET'): void;
 
   receive(
     channel: 'APP_SERVER_EVENT',

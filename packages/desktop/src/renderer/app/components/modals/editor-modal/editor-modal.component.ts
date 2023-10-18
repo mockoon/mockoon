@@ -1,16 +1,9 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { EditorModalData } from 'src/renderer/app/models/editor.model';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { EditorModalPayload } from 'src/renderer/app/models/editor.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 
 @Component({
   selector: 'app-editor-modal',
@@ -18,10 +11,8 @@ import { EventsService } from 'src/renderer/app/services/events.service';
   styleUrls: ['editor-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditorModalComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal')
-  public modal: ElementRef;
-  public data$ = new BehaviorSubject<EditorModalData>(null);
+export class EditorModalComponent implements OnInit {
+  public editorModalPayload$: Observable<EditorModalPayload>;
   private defaultEditorConfig = {
     options: {
       fontSize: '1rem',
@@ -35,30 +26,23 @@ export class EditorModalComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private modalService: NgbModal,
+    private uiService: UIService,
     private eventsService: EventsService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.editorModalPayload$ = this.eventsService.editorModalPayload$.pipe(
+      map((editorModalPayload) => ({
+        ...editorModalPayload,
+        editorConfig: {
+          ...this.defaultEditorConfig,
+          mode: editorModalPayload.editorConfig.mode
+        }
+      }))
+    );
+  }
 
-  ngAfterViewInit() {
-    this.eventsService.editorModalEvents
-      .pipe(
-        tap((editorModalEvent) => {
-          this.modalService.open(this.modal, {
-            size: 'lg'
-          });
-
-          this.data$.next({
-            content: editorModalEvent.content,
-            title: editorModalEvent.title,
-            editorConfig: {
-              ...this.defaultEditorConfig,
-              mode: editorModalEvent.mode
-            }
-          });
-        })
-      )
-      .subscribe();
+  public close() {
+    this.uiService.closeModal('editor');
   }
 }

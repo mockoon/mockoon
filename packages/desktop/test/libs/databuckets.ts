@@ -1,33 +1,32 @@
-import { ChainablePromiseElement } from 'webdriverio';
 import contextMenu, {
   ContextMenuDatabucketActions
 } from '../libs/context-menu';
 import utils from '../libs/utils';
 
 class Databuckets {
-  public get nameInput(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get nameInput() {
     return $('app-environment-databuckets input[formcontrolname="name"]');
   }
 
-  public get documentationInput(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get documentationInput() {
     return $(
       'app-environment-databuckets input[formcontrolname="documentation"]'
     );
   }
 
-  public get valueInput(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get valueInput() {
     return $('app-environment-databuckets input[formcontrolname="value"]');
   }
 
-  public get filter(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get filter() {
     return $('input[id="databucket-filter"]');
   }
 
-  public get idElement(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get idElement() {
     return $('.environment-databuckets-footer div');
   }
 
-  public get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get addBtn() {
     return $('.databuckets-menu .nav:first-of-type .nav-item .nav-link');
   }
 

@@ -179,7 +179,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
    * Generate a new template
    */
   public addCRUDRouteTemplate() {
-    this.eventsService.templatesModalEvents.next();
+    this.uiService.openModal('templates');
   }
 
   /**
