@@ -728,46 +728,70 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         });
       } else {
         try {
-          const stat = statSync(filePath);
-          const fileSize = stat.size;
-          const range = request.headers.range;
+          const rangeHeader = request.headers.range;
+          const { size } = statSync(filePath);
+          response.body = BINARY_BODY;
+          let stream = createReadStream(filePath);
 
-          if (range) {
-            const parsedRange = rangeParser(fileSize, range)[0];
+          this.setHeaders(
+            [
+              {
+                key: 'Content-Length',
+                value: size.toString()
+              }
+            ],
+            response,
+            request
+          );
 
-            if (parsedRange) {
-              const start = parsedRange.start;
-              const end = parsedRange.end;
-              const chunksize = end - start + 1;
-              const file = createReadStream(filePath, { start, end });
-              const head = {
-                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-                'Accept-Ranges': 'bytes',
-                'Content-Length': chunksize,
-                'Content-Type': fileMimeType
-              };
+          if (rangeHeader) {
+            const parsedRange = rangeParser(size, rangeHeader);
 
-              response.writeHead(206, head);
-              file.pipe(response);
-            } else {
-              response.status(416).send('Requested range not satisfiable');
+            // unsatisfiable range
+            if (parsedRange === -1) {
+              this.sendError(response, 'Requested range not satisfiable', 416);
 
               return;
+            } else if (parsedRange === -2) {
+              // malformed header
+              this.sendError(response, 'Malformed range header', 400);
+
+              return;
+            } else if (parsedRange) {
+              const start = parsedRange[0].start;
+              const end = parsedRange[0].end;
+              const chunksize = end - start + 1;
+              stream = createReadStream(filePath, { start, end });
+
+              this.setHeaders(
+                [
+                  {
+                    key: 'Content-Range',
+                    value: `bytes ${start}-${end}/${size}`
+                  },
+                  {
+                    key: 'Accept-Ranges',
+                    value: 'bytes'
+                  },
+                  {
+                    key: 'Content-Length',
+                    value: chunksize.toString()
+                  },
+                  {
+                    key: 'Content-Type',
+                    value: fileMimeType
+                  }
+                ],
+                response,
+                request
+              );
+
+              response.status(206);
+              stream = createReadStream(filePath, { start, end });
             }
-          } else {
-            response.body = BINARY_BODY;
-            this.setHeaders(
-              [
-                {
-                  key: 'Content-Length',
-                  value: fileSize.toString()
-                }
-              ],
-              response,
-              request
-            );
-            createReadStream(filePath).pipe(response);
           }
+
+          stream.pipe(response);
         } catch (error: any) {
           errorThrowOrFallback(error);
         }

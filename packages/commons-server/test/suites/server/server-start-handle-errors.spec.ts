@@ -1,22 +1,13 @@
 import { Environment, ServerErrorCodes } from '@mockoon/commons';
 import { expect } from 'chai';
-import { promises as fs } from 'fs';
 import { MockoonServer } from '../../../src';
-
-async function getEnvironment(): Promise<Environment> {
-  const environmentJson = await fs.readFile(
-    './test/data/environments/test-env.json',
-    'utf-8'
-  );
-
-  return JSON.parse(environmentJson) as Environment;
-}
+import { getEnvironment } from '../../libs/environment';
 
 describe('Server should handle bad hostnames', () => {
   let environment: Environment;
 
   before(async () => {
-    environment = await getEnvironment();
+    environment = await getEnvironment('test');
   });
 
   it('Malformed IP address', (done) => {
@@ -49,7 +40,7 @@ describe('Server should handle port errors', () => {
   let environment: Environment;
 
   before(async () => {
-    environment = await getEnvironment();
+    environment = await getEnvironment('test');
   });
 
   it('Port in use', (done) => {
