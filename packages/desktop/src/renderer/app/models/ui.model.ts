@@ -25,7 +25,7 @@ export enum ScrollDirection {
   BOTTOM = 'BOTTOM'
 }
 
-export type ConfirmModalEvent = {
+export type ConfirmModalPayload = {
   title: string;
   text: string;
   confirmButtonText?: string;

@@ -1,4 +1,3 @@
-import { ChainablePromiseElement } from 'webdriverio';
 import { EnvironmentLogsTabsNameType } from '../../src/renderer/app/models/store.model';
 import navigation from '../libs/navigation';
 import utils from '../libs/utils';
@@ -7,29 +6,25 @@ import utils from '../libs/utils';
  * Requires a switch to the settings view
  */
 class EnvironmentsLogs {
-  public get container(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get container() {
     return $('.environment-logs');
   }
 
-  public get viewBodyEditor(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get viewBodyEditor() {
     return $('.environment-logs-open-request-body');
   }
 
-  public get startRecordingBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get startRecordingBtn() {
     return $('.environment-logs-header button#start-recording');
   }
 
-  public getMetadataIcon(
-    logIndex: number
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  public getMetadataIcon(logIndex: number) {
     return $(
       `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link div div:first-of-type div:nth-of-type(3) .logs-metadata`
     );
   }
 
-  public getMockBtn(
-    logIndex: number
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  public getMockBtn(logIndex: number) {
     return $(
       `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .btn-mock`
     );

@@ -9,6 +9,7 @@ import {
   pairwise,
   tap
 } from 'rxjs/operators';
+import { gt as semverGt } from 'semver';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { SettingsSchema } from 'src/renderer/app/constants/settings-schema.constants';
 import {
@@ -17,8 +18,10 @@ import {
 } from 'src/renderer/app/models/settings.model';
 import { StorageService } from 'src/renderer/app/services/storage.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/renderer/config';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
@@ -28,7 +31,8 @@ export class SettingsService {
   constructor(
     private store: Store,
     private storageService: StorageService,
-    private telemetryService: TelemetryService
+    private telemetryService: TelemetryService,
+    private uiService: UIService
   ) {}
 
   /**
@@ -79,6 +83,17 @@ export class SettingsService {
         const validatedSchema = SettingsSchema.validate(settings);
 
         this.updateSettings(validatedSchema.value);
+        settings = validatedSchema.value;
+
+        if (semverGt(Config.appVersion, settings.lastChangelog)) {
+          this.uiService.openModal('changelog');
+
+          this.updateSettings({ lastChangelog: Config.appVersion });
+        }
+
+        if (!settings.welcomeShown) {
+          this.uiService.openModal('welcome');
+        }
       })
     );
   }

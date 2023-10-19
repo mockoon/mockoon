@@ -1,359 +1,361 @@
-<ng-template #modal let-close="close" let-dismiss="dismiss">
+<ng-container
+  *ngIf="{
+    user: user$ | async,
+    templates: templates$ | async,
+    activeTemplate: activeTemplate$ | async,
+    activeTemplatesTab: activeTemplatesTab$ | async,
+    activeTemplateListItem: activeTemplateListItem$ | async,
+    generatingTemplate: generatingTemplate$ | async
+  } as data"
+>
   <ng-container
     *ngIf="{
-      user: user$ | async,
-      templates: templates$ | async,
-      activeTemplate: activeTemplate$ | async,
-      activeTemplatesTab: activeTemplatesTab$ | async,
-      activeTemplateListItem: activeTemplateListItem$ | async
-    } as data"
+      isFree: !data.user || data.user.plan === 'FREE',
+      isPro: data.user && data.user.plan !== 'FREE',
+      canGenerate:
+        prompt.value &&
+        (data.generatingTemplate === 'NONE' ||
+          data.generatingTemplate === 'DONE') &&
+        data.user?.templatesQuotaUsed < data.user?.templatesQuota
+    } as flags"
   >
-    <ng-container
-      *ngIf="{
-        isFree: !data.user || data.user.plan === 'FREE',
-        isPro: data.user && data.user.plan !== 'FREE',
-        canGenerate:
-          prompt.value &&
-          (isLoading$ | async) === false &&
-          data.user?.templatesQuotaUsed < data.user?.templatesQuota
-      } as flags"
-    >
-      <div class="modal-header border-0 pb-0">
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              [ngClass]="{ active: data.activeTemplatesTab === 'LIST' }"
-              (click)="setActiveTab('LIST')"
-              >Templates</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              [ngClass]="{
-                active: data.activeTemplatesTab === 'GENERATE'
-              }"
-              (click)="setActiveTab('GENERATE')"
-            >
-              <app-svg icon="magic" class="mr-2 text-warning"></app-svg>
-              Generate
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="modal-body">
-        <!-- List tab -->
-        <div
-          *ngIf="data.activeTemplatesTab === 'LIST'"
-          class="h-100"
-          [ngClass]="{ 'd-flex': data.templates }"
-        >
-          <ng-container *ngIf="data.templates; else noTemplates">
-            <div class="col-4 mr-2 h-100 d-flex flex-column">
-              <div class="mb-2">
-                <div class="input-group" *ngIf="os$ | async as os">
-                  <input
-                    ngbAutofocus
-                    type="text"
-                    class="form-control"
-                    id="templates-filter"
-                    placeholder="Filter"
-                    [formControl]="templatesFilter"
-                    [ngbTooltip]="
-                      'Filter templates (' +
-                      (os === 'darwin' ? 'Cmd' : 'Ctrl') +
-                      '+Shift+F)'
-                    "
-                    triggers="hover"
-                    [appFocusOnEvent]="focusableInputs.TEMPLATES_FILTER"
-                  />
-                  <button
-                    *ngIf="templatesFilter.value.length > 0"
-                    type="button"
-                    id="templates-filter-clear"
-                    (click)="clearFilter()"
-                    class="btn btn-custom"
-                    ngbTooltip="Clear filter"
-                  >
-                    <app-svg icon="clear"></app-svg>
-                  </button>
-                </div>
-              </div>
-              <div class="list-group list-group-flush h-100 overflow-auto">
+    <div class="modal-header border-0 pb-0">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [ngClass]="{ active: data.activeTemplatesTab === 'LIST' }"
+            (click)="setActiveTab('LIST')"
+            >Templates</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [ngClass]="{
+              active: data.activeTemplatesTab === 'GENERATE'
+            }"
+            (click)="setActiveTab('GENERATE')"
+          >
+            <app-svg icon="magic" class="mr-2 text-warning"></app-svg>
+            Generate
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="modal-body">
+      <!-- List tab -->
+      <div
+        *ngIf="data.activeTemplatesTab === 'LIST'"
+        class="h-100"
+        [ngClass]="{ 'd-flex': data.templates }"
+      >
+        <ng-container *ngIf="data.templates; else noTemplates">
+          <div class="col-4 mr-2 h-100 d-flex flex-column">
+            <div class="mb-2">
+              <div class="input-group" *ngIf="os$ | async as os">
+                <input
+                  ngbAutofocus
+                  type="text"
+                  class="form-control"
+                  id="templates-filter"
+                  placeholder="Filter"
+                  [formControl]="templatesFilter"
+                  [ngbTooltip]="
+                    'Filter templates (' +
+                    (os === 'darwin' ? 'Cmd' : 'Ctrl') +
+                    '+Shift+F)'
+                  "
+                  triggers="hover"
+                  [appFocusOnEvent]="focusableInputs.TEMPLATES_FILTER"
+                />
                 <button
-                  *ngFor="let template of data.templates"
-                  [appSearchFilter]="templatesFilter$"
-                  class="list-group-item list-group-item-action"
-                  [ngClass]="{
-                    active: template.id === data.activeTemplateListItem?.id,
-                    'pro-badge': flags.isFree && template.pro
-                  }"
+                  *ngIf="templatesFilter.value.length > 0"
                   type="button"
-                  (click)="setActiveTemplateListItem(template)"
+                  id="templates-filter-clear"
+                  (click)="clearFilter()"
+                  class="btn btn-custom"
+                  ngbTooltip="Clear filter"
                 >
-                  <div class="ellipsis">
-                    {{ template.name }}
-                  </div>
+                  <app-svg icon="clear"></app-svg>
                 </button>
               </div>
             </div>
+            <div class="list-group list-group-flush h-100 overflow-auto">
+              <button
+                *ngFor="let template of data.templates"
+                [appSearchFilter]="templatesFilter$"
+                class="list-group-item list-group-item-action"
+                [ngClass]="{
+                  active: template.id === data.activeTemplateListItem?.id,
+                  'pro-badge': flags.isFree && template.pro
+                }"
+                type="button"
+                (click)="setActiveTemplateListItem(template)"
+              >
+                <div class="ellipsis">
+                  {{ template.name }}
+                </div>
+              </button>
+            </div>
+          </div>
 
-            <div
-              class="col pl-4 d-flex flex-column"
+          <div
+            class="col pl-4 d-flex flex-column"
+            [ngClass]="
+              flags.isFree && data.activeTemplateListItem?.pro
+                ? 'h-75'
+                : 'h-100'
+            "
+          >
+            <h1
+              *ngIf="flags.isFree && data.activeTemplateListItem?.pro"
+              class="text-center mt-4 mb-5 text-shadow"
+            >
+              Pro templates
+            </h1>
+            <app-editor
               [ngClass]="
                 flags.isFree && data.activeTemplateListItem?.pro
-                  ? 'h-75'
-                  : 'h-100'
+                  ? 'no-interact editor-fade-out mb-5'
+                  : ''
               "
+              [readOnly]="true"
+              [hideCursor]="flags.isFree && data.activeTemplateListItem?.pro"
+              [text]="data.activeTemplate?.content"
+              [options]="defaultEditorOptions.options"
+              [mode]="data.activeTemplate?.type"
+              [theme]="defaultEditorOptions.theme"
+              uuid="templatePreview"
+            ></app-editor>
+            <p
+              *ngIf="data.activeTemplate?.source"
+              class="px-2 pt-2 mb-0 text-muted"
             >
-              <h1
-                *ngIf="flags.isFree && data.activeTemplateListItem?.pro"
-                class="text-center mt-4 mb-5 text-shadow"
-              >
-                Pro templates
-              </h1>
-              <app-editor
-                [ngClass]="
-                  flags.isFree && data.activeTemplateListItem?.pro
-                    ? 'no-interact editor-fade-out mb-5'
-                    : ''
-                "
-                [readOnly]="true"
-                [hideCursor]="flags.isFree && data.activeTemplateListItem?.pro"
-                [text]="data.activeTemplate?.content"
-                [options]="defaultEditorOptions.options"
-                [mode]="data.activeTemplate?.type"
-                [theme]="defaultEditorOptions.theme"
-                uuid="templatePreview"
-              ></app-editor>
-              <p
-                *ngIf="data.activeTemplate?.source"
-                class="px-2 pt-2 mb-0 text-muted"
-              >
-                Source:
-                <a href="{{ data.activeTemplate?.source }}" target="_blank">{{
-                  data.activeTemplate?.source
-                }}</a>
-              </p>
-              <div
-                *ngIf="flags.isFree && data.activeTemplateListItem?.pro"
-                class="d-flex mt-auto"
-              >
-                <h4 class="text-center my-4 pr-4 text-shadow w-50">
-                  Prototype in seconds using our pro templates
-                </h4>
-                <h4 class="text-center my-4 pl-4 text-shadow w-50">
-                  New templates will be published every week
-                </h4>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-
-        <!-- Generate tab when user is connected and PRO -->
-        <div
-          *ngIf="data.activeTemplatesTab === 'GENERATE' && flags.isPro"
-          class="d-flex flex-column h-100"
-        >
-          <div class="input-group mb-2">
-            <input
-              type="text"
-              class="form-control"
-              [maxlength]="maxTemplatePromptLength"
-              [formControl]="prompt"
-              placeholder='Prompt, e.g. "invoices", "customers", "HTML error page", etc.'
-              (keydown.enter)="flags.canGenerate && generate()"
-            />
-            <button
-              id="templates-generate-button"
-              type="button"
-              class="btn btn-secondary"
-              (click)="generate()"
-              [disabled]="!flags.canGenerate"
-            >
-              Generate
-            </button>
-            <div
-              *ngIf="isLoading$ | async"
-              class="input-group-append ml-2 align-items-center"
-            >
-              <app-svg icon="spinner"></app-svg>
-            </div>
-          </div>
-          <div
-            id="templates-generate-options"
-            class="mb-4 d-flex align-items-center"
-            [formGroup]="generateOptions"
-          >
-            <ng-container *ngFor="let toggle of toggles">
-              <app-toggle
-                class="mr-1"
-                prefix="generate-options-{{ toggle.name }}"
-                [formControlName]="toggle.name"
-                [items]="toggle.items"
-                [uncheckable]="true"
-              ></app-toggle>
-            </ng-container>
-            <p class="mb-0 ml-auto text-muted">
-              Best results with short prompts (less than 10 words)
+              Source:
+              <a href="{{ data.activeTemplate?.source }}" target="_blank">{{
+                data.activeTemplate?.source
+              }}</a>
             </p>
-          </div>
-          <app-editor
-            [formControl]="generatedTemplateBody"
-            [options]="defaultEditorOptions.options"
-            [mode]="defaultEditorOptions.mode"
-            [theme]="defaultEditorOptions.theme"
-            uuid="templateGenPreview"
-          ></app-editor>
-          <p class="px-2 pt-2 mb-0 text-muted text-center">
-            Depending on its length, template generation may take up to a
-            minute. You can safely close this modal and return later to view the
-            result.
-          </p>
-        </div>
-
-        <!-- Demo generate tab when no user or FREE plan -->
-        <div
-          *ngIf="data.activeTemplatesTab === 'GENERATE' && flags.isFree"
-          class="d-flex h-100 no-interact justify-content-center"
-        >
-          <div class="d-flex flex-column h-100">
-            <h1 class="text-center mt-4 mb-5 text-shadow">AI assistant</h1>
             <div
-              @fade-1
-              class="d-flex flex-column h-100 p-4 rounded bg-dark mb-5"
+              *ngIf="flags.isFree && data.activeTemplateListItem?.pro"
+              class="d-flex mt-auto"
             >
-              <div class="d-flex align-items-center mb-4">
-                <div class="input-group shadow border-radius">
-                  <input
-                    type="text"
-                    class="form-control"
-                    [formControl]="demoPrompt"
-                    tabindex="-1"
-                  />
-                  <button
-                    id="demoGenerateButton"
-                    type="button"
-                    class="btn btn-secondary"
-                    tabindex="-1"
-                  >
-                    Generate
-                  </button>
-                </div>
-                <div
-                  *ngIf="isDemoLoading$ | async"
-                  class="input-group-append ml-2 align-items-center"
-                >
-                  <app-svg icon="spinner"></app-svg>
-                </div>
-              </div>
-              <app-editor
-                class="shadow"
-                [readOnly]="true"
-                [hideCursor]="true"
-                tabindex="-1"
-                [formControl]="demoGeneratedTemplateBody"
-                [options]="defaultEditorOptions.options"
-                [mode]="defaultEditorOptions.mode"
-                [theme]="defaultEditorOptions.theme"
-                uuid="demoTemplateGenPreview"
-              ></app-editor>
-            </div>
-            <div [@fade-2]="demoRuns >= 2" class="d-flex mt-auto">
               <h4 class="text-center my-4 pr-4 text-shadow w-50">
-                Get access to dozens of Pro templates
+                Prototype in seconds using our pro templates
               </h4>
               <h4 class="text-center my-4 pl-4 text-shadow w-50">
-                Generate your own in seconds using AI
+                New templates will be published every week
               </h4>
             </div>
           </div>
-        </div>
+        </ng-container>
       </div>
 
-      <div class="modal-footer justify-content-space-between">
+      <!-- Generate tab when user is connected and PRO -->
+      <div
+        *ngIf="data.activeTemplatesTab === 'GENERATE' && flags.isPro"
+        class="d-flex flex-column h-100"
+      >
+        <div class="input-group mb-2">
+          <input
+            type="text"
+            class="form-control"
+            [maxlength]="maxTemplatePromptLength"
+            [formControl]="prompt"
+            placeholder='Prompt, e.g. "invoices", "customers", "HTML error page", etc.'
+            (keydown.enter)="flags.canGenerate && generate()"
+          />
+          <button
+            id="templates-generate-button"
+            type="button"
+            class="btn btn-secondary"
+            (click)="generate()"
+            [disabled]="!flags.canGenerate"
+          >
+            Generate
+          </button>
+          <div
+            *ngIf="data.generatingTemplate === 'INPROGRESS'"
+            class="input-group-append ml-2 align-items-center"
+          >
+            <app-svg icon="spinner"></app-svg>
+          </div>
+        </div>
         <div
-          *ngIf="flags.isPro && data.activeTemplatesTab === 'GENERATE'"
-          class="col-6 d-flex align-items-center"
+          id="templates-generate-options"
+          class="mb-4 d-flex align-items-center"
+          [formGroup]="generateOptions"
         >
-          <p
-            class="mb-0"
-            [ngClass]="{
-              'text-warning':
-                data.user?.templatesQuotaUsed >= data.user?.templatesQuota
-            }"
-          >
-            Quota used ({{ data.user?.templatesQuotaUsed }}/{{
-              data.user?.templatesQuota
-            }})
-          </p>
-          <button
-            type="button"
-            class="btn btn-link btn-icon text-primary pl-2"
-            (click)="account()"
-          >
-            My account
-            <app-svg icon="open_in_new" class="pl-1" size="12"></app-svg>
-          </button>
-        </div>
-
-        <div class="ml-auto">
-          <button
-            type="button"
-            class="btn btn-secondary modal-close"
-            (click)="close()"
-          >
-            Close
-          </button>
-
-          <!-- Display creation CTA only if paid user -->
-          <ng-container
-            *ngIf="
-              (data.activeTemplatesTab === 'LIST' &&
-                (flags.isPro || !data.activeTemplateListItem?.pro)) ||
-              (data.activeTemplatesTab === 'GENERATE' && flags.isPro)
-            "
-          >
-            <button
-              type="button"
-              class="btn btn-primary ml-2"
-              (click)="
-                createCRUDRoute(data.activeTemplatesTab, data.activeTemplate)
-              "
-              ngbTooltip="Automatically creates a CRUD route and a data bucket from the template"
-            >
-              <app-svg icon="endpoints" class="mr-1"></app-svg>CRUD + data
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary ml-2"
-              (click)="
-                createGetRoute(data.activeTemplatesTab, data.activeTemplate)
-              "
-              ngbTooltip="Automatically creates an HTTP GET route with the chosen template as the response body"
-            >
-              <app-svg icon="endpoint" class="mr-1"></app-svg>GET route
-            </button>
+          <ng-container *ngFor="let toggle of toggles">
+            <app-toggle
+              class="mr-1"
+              prefix="generate-options-{{ toggle.name }}"
+              [formControlName]="toggle.name"
+              [items]="toggle.items"
+              [uncheckable]="true"
+            ></app-toggle>
           </ng-container>
-          <a
-            *ngIf="
-              flags.isFree &&
-              ((data.activeTemplatesTab === 'LIST' &&
-                data.activeTemplateListItem?.pro) ||
-                data.activeTemplatesTab === 'GENERATE')
-            "
-            class="btn btn-warning ml-2"
-            href="{{ proPlansURL }}"
-            target="_blank"
+          <p class="mb-0 ml-auto text-muted">
+            Best results with short prompts (less than 10 words)
+          </p>
+        </div>
+        <app-editor
+          [formControl]="generatedTemplateBody"
+          [options]="defaultEditorOptions.options"
+          [mode]="defaultEditorOptions.mode"
+          [theme]="defaultEditorOptions.theme"
+          uuid="templateGenPreview"
+        ></app-editor>
+        <p class="px-2 pt-2 mb-0 text-muted text-center">
+          Depending on its length, template generation may take up to a minute.
+          You can safely close this modal and return later to view the result.
+        </p>
+      </div>
+
+      <!-- Demo generate tab when no user or FREE plan -->
+      <div
+        *ngIf="data.activeTemplatesTab === 'GENERATE' && flags.isFree"
+        class="d-flex h-100 no-interact justify-content-center"
+      >
+        <div class="d-flex flex-column h-100">
+          <h1 class="text-center mt-4 mb-5 text-shadow">AI assistant</h1>
+          <div
+            @fade-1
+            class="d-flex flex-column h-100 p-4 rounded bg-dark mb-5"
           >
-            Discover our PRO plans
-          </a>
+            <div class="d-flex align-items-center mb-4">
+              <div class="input-group shadow border-radius">
+                <input
+                  type="text"
+                  class="form-control"
+                  [formControl]="demoPrompt"
+                  tabindex="-1"
+                />
+                <button
+                  id="demoGenerateButton"
+                  type="button"
+                  class="btn btn-secondary"
+                  tabindex="-1"
+                >
+                  Generate
+                </button>
+              </div>
+              <div
+                *ngIf="isDemoLoading$ | async"
+                class="input-group-append ml-2 align-items-center"
+              >
+                <app-svg icon="spinner"></app-svg>
+              </div>
+            </div>
+            <app-editor
+              class="shadow"
+              [readOnly]="true"
+              [hideCursor]="true"
+              tabindex="-1"
+              [formControl]="demoGeneratedTemplateBody"
+              [options]="defaultEditorOptions.options"
+              [mode]="defaultEditorOptions.mode"
+              [theme]="defaultEditorOptions.theme"
+              uuid="demoTemplateGenPreview"
+            ></app-editor>
+          </div>
+          <div [@fade-2]="demoRuns >= 2" class="d-flex mt-auto">
+            <h4 class="text-center my-4 pr-4 text-shadow w-50">
+              Get access to dozens of Pro templates
+            </h4>
+            <h4 class="text-center my-4 pl-4 text-shadow w-50">
+              Generate your own in seconds using AI
+            </h4>
+          </div>
         </div>
       </div>
-    </ng-container>
+    </div>
+
+    <div class="modal-footer justify-content-space-between">
+      <div
+        *ngIf="flags.isPro && data.activeTemplatesTab === 'GENERATE'"
+        class="col-6 d-flex align-items-center"
+      >
+        <p
+          class="mb-0"
+          [ngClass]="{
+            'text-warning':
+              data.user?.templatesQuotaUsed >= data.user?.templatesQuota
+          }"
+        >
+          Quota used ({{ data.user?.templatesQuotaUsed }}/{{
+            data.user?.templatesQuota
+          }})
+        </p>
+        <button
+          type="button"
+          class="btn btn-link btn-icon text-primary pl-2"
+          (click)="account()"
+        >
+          My account
+          <app-svg icon="open_in_new" class="pl-1" size="12"></app-svg>
+        </button>
+      </div>
+
+      <div class="ml-auto">
+        <button
+          type="button"
+          class="btn btn-secondary modal-close"
+          (click)="close()"
+        >
+          Close
+        </button>
+
+        <!-- Display creation CTA only if paid user -->
+        <ng-container
+          *ngIf="
+            (data.activeTemplatesTab === 'LIST' &&
+              (flags.isPro || !data.activeTemplateListItem?.pro)) ||
+            (data.activeTemplatesTab === 'GENERATE' && flags.isPro)
+          "
+        >
+          <button
+            *ngIf="data.templates"
+            type="button"
+            class="btn btn-primary ml-2"
+            (click)="
+              createCRUDRoute(data.activeTemplatesTab, data.activeTemplate)
+            "
+            ngbTooltip="Automatically creates a CRUD route and a data bucket from the template"
+          >
+            <app-svg icon="endpoints" class="mr-1"></app-svg>CRUD + data
+          </button>
+          <button
+            *ngIf="data.templates"
+            type="button"
+            class="btn btn-primary ml-2"
+            (click)="
+              createGetRoute(data.activeTemplatesTab, data.activeTemplate)
+            "
+            ngbTooltip="Automatically creates an HTTP GET route with the chosen template as the response body"
+          >
+            <app-svg icon="endpoint" class="mr-1"></app-svg>GET route
+          </button>
+        </ng-container>
+        <a
+          *ngIf="
+            flags.isFree &&
+            ((data.activeTemplatesTab === 'LIST' &&
+              data.activeTemplateListItem?.pro) ||
+              data.activeTemplatesTab === 'GENERATE')
+          "
+          class="btn btn-warning ml-2"
+          href="{{ proPlansURL }}"
+          target="_blank"
+        >
+          Discover our PRO plans
+        </a>
+      </div>
+    </div>
   </ng-container>
-</ng-template>
+</ng-container>
+
 <ng-template #noTemplates>
   <p class="message">Templates could not be loaded</p>
 </ng-template>

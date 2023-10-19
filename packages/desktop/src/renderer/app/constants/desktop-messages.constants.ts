@@ -165,7 +165,6 @@ export const DesktopMessages: {
     logPayload: { environmentUUID: messageParams.environmentUUID },
     toastType: 'error'
   }),
-  // TODO ??
   COPY_ROUTE_CLIPBOARD: (messageParams) => ({
     message: `Copying route ${messageParams.routeUUID} to the clipboard`,
     log: true,

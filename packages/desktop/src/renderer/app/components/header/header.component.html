@@ -3,7 +3,8 @@
     user: user$ | async,
     activeEnvironment: activeEnvironment$ | async,
     activeEnvironmentState: activeEnvironmentState$ | async,
-    activeView: activeView$ | async
+    activeView: activeView$ | async,
+    os: os$ | async
   } as data"
 >
   <div class="header d-flex align-items-center">
@@ -65,7 +66,21 @@
         </li>
       </ul>
     </div>
-    <div ngbDropdown class="ml-auto" placement="bottom-right" #dropdownElement>
+
+    <div class="ml-auto">
+      <button
+        type="button"
+        class="btn btn-link btn-icon"
+        [ngbTooltip]="
+          'Command palette (' + (data.os === 'darwin' ? 'Cmd' : 'Ctrl') + '+P)'
+        "
+        (click)="openCommandPalette()"
+      >
+        <app-svg class="align-bottom" icon="command_palette"></app-svg>
+      </button>
+    </div>
+
+    <div ngbDropdown placement="bottom-right" #dropdownElement>
       <button
         class="btn dropdown-toggle dropdown-toggle-icon mr-1"
         type="button"

@@ -1,21 +1,15 @@
-<ng-template #modal let-close="close">
-  <div class="modal-header">
-    <h4 class="modal-title">Welcome new Mockoon user!</h4>
-  </div>
-  <div class="modal-body">
-    <p>
-      Thank you for installing Mockoon. We spent time crafting a great user
-      experience so mocking becomes efficient and fun. Do not hesitate to submit
-      your feedback or any bug you would encounter.<br />Happy mocking!
-    </p>
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-secondary modal-close"
-      (click)="closeModal()"
-    >
-      Start using Mockoon
-    </button>
-  </div>
-</ng-template>
+<div class="modal-header">
+  <h4 class="modal-title">Welcome new Mockoon user!</h4>
+</div>
+<div class="modal-body">
+  <p>
+    Thank you for installing Mockoon. We spent time crafting a great user
+    experience so mocking becomes efficient and fun. Do not hesitate to submit
+    your feedback or any bug you would encounter.<br />Happy mocking!
+  </p>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Start using Mockoon
+  </button>
+</div>

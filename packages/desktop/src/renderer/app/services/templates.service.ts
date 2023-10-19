@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  BehaviorSubject,
+  EMPTY,
+  Observable,
   catchError,
   distinctUntilChanged,
-  EMPTY,
   map,
-  Observable,
   of,
   shareReplay,
   switchMap,
@@ -25,6 +26,11 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class TemplatesService {
+  public generatingTemplate$ = new BehaviorSubject<
+    'NONE' | 'INPROGRESS' | 'DONE'
+  >('NONE');
+  public lastPrompt$ = new BehaviorSubject<string>('');
+  public lastGeneratedTemplate$ = new BehaviorSubject<string>('');
   private templateCache = new Map<string, Observable<Template>>();
 
   constructor(
@@ -87,6 +93,9 @@ export class TemplatesService {
     prompt: string,
     options: (keyof TemplateGenerateOptions)[]
   ): Observable<string> {
+    this.generatingTemplate$.next('INPROGRESS');
+    this.lastPrompt$.next(prompt);
+
     return this.userService.getIdToken().pipe(
       switchMap((idToken) =>
         this.httpClient
@@ -98,11 +107,11 @@ export class TemplatesService {
             headers: new HttpHeaders().set('Authorization', `Bearer ${idToken}`)
           })
           .pipe(
-            tap((r) => {
-              console.log(JSON.stringify(r));
-            }),
             map((response) => response.data),
-            tap(() => {
+            tap((template) => {
+              this.generatingTemplate$.next('DONE');
+              this.lastGeneratedTemplate$.next(template);
+
               this.store.update(
                 setUpdateUserAction({
                   templatesQuotaUsed:
@@ -111,6 +120,8 @@ export class TemplatesService {
               );
             }),
             catchError((error) => {
+              this.generatingTemplate$.next('NONE');
+
               this.toastsService.addToast(
                 'warning',
                 'Something went wrong. Please try again later or review your subscription status in your account page.'

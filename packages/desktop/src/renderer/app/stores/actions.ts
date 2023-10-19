@@ -5,6 +5,7 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
+import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
@@ -452,7 +453,7 @@ export const duplicateRouteToAnotherEnvironmentAction = (
  */
 export const startEntityDuplicationToAnotherEnvironmentAction = (
   subjectUUID: string,
-  subject: string
+  subject: DataSubject
 ) =>
   ({
     type: ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT,

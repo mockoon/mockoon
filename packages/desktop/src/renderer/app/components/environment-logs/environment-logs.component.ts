@@ -12,6 +12,7 @@ import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model
 import { DataService } from 'src/renderer/app/services/data.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   clearLogsAction,
   setActiveEnvironmentLogUUIDAction
@@ -62,7 +63,8 @@ export class EnvironmentLogsComponent implements OnInit {
     private store: Store,
     private environmentsService: EnvironmentsService,
     private dataService: DataService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private uiService: UIService
   ) {}
 
   ngOnInit() {
@@ -162,11 +164,15 @@ export class EnvironmentLogsComponent implements OnInit {
         ? GetEditorModeFromContentType(contentTypeHeader.value)
         : 'text';
 
-    this.eventsService.editorModalEvents.emit({
+    this.eventsService.editorModalPayload$.next({
+      title: `${location} body`,
       content: logResponseOrRequest.body,
-      mode: editorMode,
-      title: `${location} body`
+      editorConfig: {
+        mode: editorMode
+      }
     });
+
+    this.uiService.openModal('editor');
   }
 
   /**
@@ -183,27 +189,14 @@ export class EnvironmentLogsComponent implements OnInit {
   /**
    * Start recording entering requests/responses
    */
-  public startRecording(environmentUUID: string) {
-    this.eventsService.logsRecording$.next({
-      ...this.eventsService.logsRecording$.value,
-      [environmentUUID]: true
-    });
-
-    const environmentsStatus = this.store.get('environmentsStatus');
-    const activeEnvironmentStatus = environmentsStatus[environmentUUID];
-
-    if (!activeEnvironmentStatus.running) {
-      this.environmentsService.toggleEnvironment(environmentUUID);
-    }
+  public startRecording(environmentUuid: string) {
+    this.environmentsService.startRecording(environmentUuid);
   }
 
   /**
    * Stop recording entering requests/responses
    */
-  public stopRecording(environmentUUID: string) {
-    this.eventsService.logsRecording$.next({
-      ...this.eventsService.logsRecording$.value,
-      [environmentUUID]: false
-    });
+  public stopRecording(environmentUuid: string) {
+    this.environmentsService.stopRecording(environmentUuid);
   }
 }

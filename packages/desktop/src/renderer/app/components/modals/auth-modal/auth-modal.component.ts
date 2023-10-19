@@ -1,23 +1,22 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  OnInit,
-  ViewChild
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
+  EMPTY,
+  Subject,
   catchError,
   delay,
-  EMPTY,
   filter,
   mergeMap,
+  takeUntil,
   tap
 } from 'rxjs';
-import { EventsService } from 'src/renderer/app/services/events.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Config } from 'src/renderer/config';
 
@@ -26,18 +25,15 @@ import { Config } from 'src/renderer/config';
   templateUrl: './auth-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuthModalComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal')
-  public modal: ElementRef;
+export class AuthModalComponent implements OnInit, OnDestroy {
   public loginURL = Config.loginURL;
   public isLoading$ = new BehaviorSubject<boolean>(false);
   public isSuccess$ = new BehaviorSubject<boolean>(false);
   public tokenControl = new FormControl('');
-  private modalInstance: NgbModalRef;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    private modalService: NgbModal,
-    private eventsService: EventsService,
+    private uiService: UIService,
     private userService: UserService
   ) {}
 
@@ -65,31 +61,23 @@ export class AuthModalComponent implements OnInit, AfterViewInit {
         }),
         delay(2000),
         tap(() => {
-          this.closeModal();
-        })
+          this.close();
+        }),
+        takeUntil(this.destroy$)
       )
       .subscribe();
   }
 
-  ngAfterViewInit() {
-    this.eventsService.authModalEvents
-      .pipe(
-        tap(() => {
-          this.modalInstance = this.modalService.open(this.modal, {
-            size: 'md'
-          });
-        })
-      )
-      .subscribe();
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
   }
 
-  public closeModal() {
+  public close() {
     this.isLoading$.next(false);
     this.isSuccess$.next(false);
     this.tokenControl.reset();
 
-    if (this.modalInstance) {
-      this.modalInstance.close();
-    }
+    this.uiService.closeModal('auth');
   }
 }

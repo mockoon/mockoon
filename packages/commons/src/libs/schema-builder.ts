@@ -99,6 +99,7 @@ export const BuildCRUDRoute = (
     databucketID: RouteResponseDefault.databucketID
   }
 ): Route => {
+  // first CRUD route response is always the default one and cannot be deleted
   let defaultResponse = { ...BuildRouteResponse(), default: true };
 
   defaultResponse = {

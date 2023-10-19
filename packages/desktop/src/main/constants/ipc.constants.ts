@@ -11,7 +11,9 @@ export const IPCMainListenerChannels = [
   'APP_SET_FAKER_OPTIONS',
   'APP_UPDATE_ENVIRONMENT',
   'APP_WRITE_CLIPBOARD',
-  'APP_SHOW_FILE'
+  'APP_SHOW_FILE',
+  'APP_SHOW_FOLDER',
+  'APP_ZOOM'
 ];
 
 export const IPCMainHandlerChannels = [

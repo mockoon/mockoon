@@ -1,20 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { merge, Observable, Subject } from 'rxjs';
+import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
 import { SettingsDefault } from 'src/renderer/app/constants/settings-schema.constants';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
@@ -26,8 +24,6 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsModalComponent implements OnInit, OnDestroy {
-  @ViewChild('modal')
-  public modal: ElementRef;
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
   public fakerLocales: DropdownItems = FakerLocales;
@@ -40,10 +36,10 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private settingsService: SettingsService,
-    private store: Store
+    private store: Store,
+    private uiService: UIService
   ) {}
 
   ngOnInit() {
@@ -68,16 +64,14 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
     this.settingsService.updateSettings({ [settingName]: settingNewValue });
   }
 
-  public showModal() {
-    this.modalService.open(this.modal, {
-      size: 'lg'
-    });
-  }
-
   public openWikiLink(linkName: string, event: MouseEvent) {
     event.stopPropagation();
     event.stopImmediatePropagation();
     MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.docs[linkName]);
+  }
+
+  public close() {
+    this.uiService.closeModal('settings');
   }
 
   /**

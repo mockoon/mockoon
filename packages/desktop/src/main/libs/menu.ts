@@ -1,5 +1,11 @@
-import { app, BrowserWindow, Menu, shell } from 'electron';
+import { BrowserWindow, Menu, shell } from 'electron';
 import { Config } from 'src/main/config';
+import { showFolderInExplorer } from 'src/main/libs/paths';
+import {
+  handleZoomIn,
+  handleZoomOut,
+  handleZoomReset
+} from 'src/main/libs/zoom';
 
 export const createMenu = (mainWindow: BrowserWindow): Menu => {
   const menu: any = [
@@ -67,44 +73,6 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       ]
     }
   ];
-
-  const handleZoomIn = () => {
-    const menuInstance = Menu.getApplicationMenu();
-    menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = true;
-
-    if (mainWindow.webContents.zoomFactor >= 1.3) {
-      return;
-    }
-
-    mainWindow.webContents.zoomFactor += 0.1;
-
-    if (mainWindow.webContents.zoomFactor >= 1.3) {
-      menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = false;
-    }
-  };
-
-  const handleZoomOut = () => {
-    const menuInstance = Menu.getApplicationMenu();
-    menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = true;
-
-    if (mainWindow.webContents.zoomFactor <= 0.8) {
-      return;
-    }
-
-    mainWindow.webContents.zoomFactor -= 0.1;
-
-    if (mainWindow.webContents.zoomFactor <= 0.8) {
-      menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = false;
-    }
-  };
-
-  const handleZoomReset = () => {
-    const menuInstance = Menu.getApplicationMenu();
-    menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = true;
-    menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = true;
-
-    mainWindow.webContents.zoomFactor = 1;
-  };
 
   if (process.platform === 'darwin') {
     menu[0].submenu.push(
@@ -245,44 +213,58 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         id: 'MENU_ZOOM_OUT',
         label: 'Zoom out',
         accelerator: 'CmdOrCtrl+NumSub',
-        click: handleZoomOut
+        click: () => {
+          handleZoomOut(mainWindow);
+        }
       },
       // zoom out aliases
       {
         label: 'Zoom out',
         accelerator: 'CmdOrCtrl+-',
-        click: handleZoomOut,
+        click: () => {
+          handleZoomOut(mainWindow);
+        },
         visible: false
       },
       {
         label: 'Reset zoom',
         accelerator: 'CmdOrCtrl+Num0',
-        click: handleZoomReset
+        click: () => {
+          handleZoomReset(mainWindow);
+        }
       },
       // reset zoom aliases
       {
         label: 'Reset zoom',
         accelerator: 'CmdOrCtrl+0',
-        click: handleZoomReset,
+        click: () => {
+          handleZoomReset(mainWindow);
+        },
         visible: false
       },
       {
         id: 'MENU_ZOOM_IN',
         label: 'Zoom in',
         accelerator: 'CmdOrCtrl+Plus',
-        click: handleZoomIn
+        click: () => {
+          handleZoomIn(mainWindow);
+        }
       },
       // zoom in aliases
       {
         label: 'Zoom in',
         accelerator: 'CmdOrCtrl+NumAdd',
-        click: handleZoomIn,
+        click: () => {
+          handleZoomIn(mainWindow);
+        },
         visible: false
       },
       {
         label: 'Zoom in',
         accelerator: 'CmdOrCtrl+=',
-        click: handleZoomIn,
+        click: () => {
+          handleZoomIn(mainWindow);
+        },
         visible: false
       }
     ]
@@ -313,13 +295,13 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       {
         label: 'Show app data folder',
         click: () => {
-          shell.showItemInFolder(app.getPath('userData'));
+          showFolderInExplorer('userData');
         }
       },
       {
         label: 'Show logs folder',
         click: () => {
-          shell.showItemInFolder(app.getPath('logs'));
+          showFolderInExplorer('logs');
         }
       }
     ]

@@ -30,6 +30,7 @@ import {
   toggleEnvironmentMenuItems,
   toggleRouteMenuItems
 } from 'src/main/libs/menu';
+import { showFolderInExplorer } from 'src/main/libs/paths';
 import { ServerInstance } from 'src/main/libs/server-management';
 import {
   getSettings,
@@ -43,6 +44,11 @@ import {
   unwatchEnvironmentFile,
   watchEnvironmentFile
 } from 'src/main/libs/watch-file';
+import {
+  handleZoomIn,
+  handleZoomOut,
+  handleZoomReset
+} from 'src/main/libs/zoom';
 import { Settings } from 'src/shared/models/settings.model';
 
 declare const IS_TESTING: boolean;
@@ -103,6 +109,10 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     shell.showItemInFolder(path);
   });
 
+  ipcMain.on('APP_SHOW_FOLDER', (event, name) => {
+    showFolderInExplorer(name);
+  });
+
   ipcMain.on('APP_OPEN_EXTERNAL_LINK', (event, url) => {
     shell.openExternal(url);
   });
@@ -122,6 +132,16 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.on('APP_APPLY_UPDATE', () => {
     applyUpdate();
+  });
+
+  ipcMain.on('APP_ZOOM', (event, action: 'IN' | 'OUT' | 'RESET') => {
+    if (action === 'IN') {
+      handleZoomIn(mainWindow);
+    } else if (action === 'OUT') {
+      handleZoomOut(mainWindow);
+    } else if (action === 'RESET') {
+      handleZoomReset(mainWindow);
+    }
   });
 
   ipcMain.handle(

@@ -56,6 +56,7 @@ import {
   environmentHasRoute,
   HumanizeText
 } from 'src/renderer/app/libs/utils.lib';
+import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
 import { FolderProperties } from 'src/renderer/app/models/folder.model';
@@ -324,7 +325,7 @@ export class EnvironmentsService extends Logger {
 
       const confirmReload$ = new Subject<boolean>();
 
-      this.eventsService.confirmModalEvents.next({
+      this.eventsService.confirmModalPayload$.next({
         title: 'External changes detected',
         text: 'The following environments were modified outside Mockoon:',
         sub: 'You can disable file monitoring in the application settings (Ctrl + Comma)',
@@ -340,6 +341,7 @@ export class EnvironmentsService extends Logger {
         ),
         confirmed$: confirmReload$
       });
+      this.uiService.openModal('confirm');
 
       return confirmReload$.pipe(
         switchMap((confirmed) => {
@@ -970,6 +972,15 @@ export class EnvironmentsService extends Logger {
    * Set active tab
    */
   public setActiveTab(activeTab: TabsNameType) {
+    // in the first response of a crud route two tabs are disabled
+    if (
+      this.store.getActiveRoute().type === RouteType.CRUD &&
+      this.store.getActiveRouteResponse().default &&
+      (activeTab === 'SETTINGS' || activeTab === 'RULES')
+    ) {
+      return;
+    }
+
     this.store.update(setActiveTabAction(activeTab));
   }
 
@@ -1201,11 +1212,13 @@ export class EnvironmentsService extends Logger {
    */
   public startEntityDuplicationToAnotherEnvironment(
     subjectUUID: string,
-    subject: string
+    subject: DataSubject
   ) {
     this.store.update(
       startEntityDuplicationToAnotherEnvironmentAction(subjectUUID, subject)
     );
+
+    this.uiService.openModal('duplicate_to_environment');
   }
 
   /**
@@ -1349,6 +1362,31 @@ export class EnvironmentsService extends Logger {
     );
   }
 
+  public startRecording(environmentUuid: string) {
+    this.eventsService.logsRecording$.next({
+      ...this.eventsService.logsRecording$.value,
+      [environmentUuid]: true
+    });
+
+    const environmentsStatus = this.store.get('environmentsStatus');
+    const activeEnvironmentStatus = environmentsStatus[environmentUuid];
+
+    if (!activeEnvironmentStatus.running) {
+      this.toggleEnvironment(environmentUuid);
+    }
+  }
+
+  public stopRecording(environmentUuid: string) {
+    this.eventsService.logsRecording$.next({
+      ...this.eventsService.logsRecording$.value,
+      [environmentUuid]: false
+    });
+  }
+
+  public isRecording(environmentUuid: string) {
+    return this.eventsService.logsRecording$.value[environmentUuid];
+  }
+
   /**
    * Verify data is not too recent or is a mockoon file.
    * To be used in switchMap mostly.
@@ -1369,7 +1407,7 @@ export class EnvironmentsService extends Logger {
     if (environment.lastMigration === undefined) {
       const confirmed$ = new Subject<boolean>();
 
-      this.eventsService.confirmModalEvents.next({
+      this.eventsService.confirmModalPayload$.next({
         title: 'Confirm opening',
         text: 'This content does not seem to be a valid Mockoon environment. Open it anyway?',
         sub: 'Mockoon will attempt to migrate and repair the content, which may be altered and overwritten.',
@@ -1377,6 +1415,7 @@ export class EnvironmentsService extends Logger {
         subIconClass: 'text-warning',
         confirmed$
       });
+      this.uiService.openModal('confirm');
 
       return confirmed$.pipe(
         switchMap((confirmed) => (confirmed ? of(environment) : EMPTY))

@@ -8,6 +8,8 @@ import { BehaviorSubject, Observable, from } from 'rxjs';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { UIState } from 'src/renderer/app/models/store.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { TemplatesService } from 'src/renderer/app/services/templates.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -23,12 +25,14 @@ export class FooterComponent implements OnInit {
   public updateAvailable$: BehaviorSubject<string | null>;
   public platform$ = from(MainAPI.invoke('APP_GET_PLATFORM'));
   public uiState$: Observable<UIState>;
-  public generatingTemplate$ = this.eventsService.generatingTemplate$;
+  public generatingTemplate$ = this.templateService.generatingTemplate$;
   public releaseUrl = Config.releasePublicURL;
 
   constructor(
     private store: Store,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private uiService: UIService,
+    private templateService: TemplatesService
   ) {}
 
   ngOnInit() {
@@ -44,6 +48,6 @@ export class FooterComponent implements OnInit {
   }
 
   public openTemplateModal() {
-    this.eventsService.templatesModalEvents.next();
+    this.uiService.openModal('templates');
   }
 }
