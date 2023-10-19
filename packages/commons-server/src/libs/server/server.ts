@@ -33,6 +33,7 @@ import killable from 'killable';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { basename, extname } from 'path';
 import { parse as qsParse } from 'qs';
+import rangeParser from 'range-parser';
 import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
 import { format } from 'util';
@@ -727,8 +728,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         });
       } else {
         try {
-          response.body = BINARY_BODY;
+          const rangeHeader = request.headers.range;
           const { size } = statSync(filePath);
+          response.body = BINARY_BODY;
+          let stream = createReadStream(filePath);
+
           this.setHeaders(
             [
               {
@@ -739,8 +743,55 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             response,
             request
           );
-          // use read stream for better performance
-          createReadStream(filePath).pipe(response);
+
+          if (rangeHeader) {
+            const parsedRange = rangeParser(size, rangeHeader);
+
+            // unsatisfiable range
+            if (parsedRange === -1) {
+              this.sendError(response, 'Requested range not satisfiable', 416);
+
+              return;
+            } else if (parsedRange === -2) {
+              // malformed header
+              this.sendError(response, 'Malformed range header', 400);
+
+              return;
+            } else if (parsedRange) {
+              const start = parsedRange[0].start;
+              const end = parsedRange[0].end;
+              const chunksize = end - start + 1;
+              stream = createReadStream(filePath, { start, end });
+
+              this.setHeaders(
+                [
+                  {
+                    key: 'Content-Range',
+                    value: `bytes ${start}-${end}/${size}`
+                  },
+                  {
+                    key: 'Accept-Ranges',
+                    value: 'bytes'
+                  },
+                  {
+                    key: 'Content-Length',
+                    value: chunksize.toString()
+                  },
+                  {
+                    key: 'Content-Type',
+                    value: fileMimeType
+                  }
+                ],
+                response,
+                request
+              );
+
+              response.status(206);
+              stream = createReadStream(filePath, { start, end });
+            }
+          }
+
+          stream.pipe(response);
         } catch (error: any) {
           errorThrowOrFallback(error);
         }
