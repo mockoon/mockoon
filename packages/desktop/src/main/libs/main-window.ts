@@ -66,6 +66,11 @@ export const initMainWindow = () => {
     }
   });
 
+  // maximize before showing the window to avoid a resize event on start (this may break the menu size setting restore)
+  if (mainWindowState.isMaximized) {
+    mainWindow.maximize();
+  }
+
   if (IS_DEV) {
     mainWindow.webContents.openDevTools();
   }
