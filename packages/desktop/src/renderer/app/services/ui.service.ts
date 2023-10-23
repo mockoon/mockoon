@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
 import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-modal/auth-modal.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
@@ -12,7 +11,6 @@ import { TemplatesModalComponent } from 'src/renderer/app/components/modals/temp
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { UIStateProperties } from 'src/renderer/app/models/store.model';
-import { ScrollDirection } from 'src/renderer/app/models/ui.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -34,10 +32,6 @@ const commonConfigs = {
 
 @Injectable({ providedIn: 'root' })
 export class UIService {
-  public scrollEnvironmentsMenu: Subject<ScrollDirection> = new Subject();
-  public scrollRoutesMenu: Subject<ScrollDirection> = new Subject();
-  public scrollDatabucketsMenu: Subject<ScrollDirection> = new Subject();
-
   private modals = {
     commandPalette: {
       component: CommandPaletteModalComponent,
@@ -111,31 +105,6 @@ export class UIService {
     setTimeout(() => {
       element.scrollTop = element.scrollHeight;
     });
-  }
-
-  /**
-   * Scroll to top of an element
-   *
-   * @param element
-   */
-  public scrollToTop(element: Element) {
-    setTimeout(() => {
-      element.scrollTop = 0;
-    });
-  }
-
-  /**
-   * Scroll an element to a direction
-   *
-   * @param element
-   * @param direction
-   */
-  public scroll(element: Element, direction: ScrollDirection) {
-    if (direction === ScrollDirection.TOP) {
-      this.scrollToTop(element);
-    } else if (direction === ScrollDirection.BOTTOM) {
-      this.scrollToBottom(element);
-    }
   }
 
   /**

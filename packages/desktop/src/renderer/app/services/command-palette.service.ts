@@ -622,7 +622,7 @@ export class CommandPaletteService {
         shortcut$: this.ctrlOrCmd$(['Shift', 'R']),
         action: () => {
           this.environmentsService.setActiveView('ENV_ROUTES');
-          this.environmentsService.addHTTPRoute('root', true);
+          this.environmentsService.addHTTPRoute('root');
         },
         score: 1,
         enabled: hasActiveEnvironment
@@ -632,7 +632,7 @@ export class CommandPaletteService {
         label: 'Create a New CRUD Route',
         action: () => {
           this.environmentsService.setActiveView('ENV_ROUTES');
-          this.environmentsService.addCRUDRoute('root', true);
+          this.environmentsService.addCRUDRoute('root');
         },
         score: 1,
         enabled: hasActiveEnvironment
@@ -642,7 +642,7 @@ export class CommandPaletteService {
         label: 'Create a New Route Folder',
         action: () => {
           this.environmentsService.setActiveView('ENV_ROUTES');
-          this.environmentsService.addFolder('root', true);
+          this.environmentsService.addFolder('root');
         },
         score: 1,
         enabled: hasActiveEnvironment

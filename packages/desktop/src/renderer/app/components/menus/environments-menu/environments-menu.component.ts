@@ -1,15 +1,12 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Environment, Environments } from '@mockoon/commons';
-import { merge, Observable, Subject } from 'rxjs';
+import { Observable, Subject, merge } from 'rxjs';
 import {
   distinctUntilKeyChanged,
   filter,
@@ -18,16 +15,15 @@ import {
   tap
 } from 'rxjs/operators';
 import { EnvironmentsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
+import { trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import {
   DraggableContainers,
-  DropAction,
-  ScrollDirection
+  DropAction
 } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
@@ -38,11 +34,7 @@ import { Settings } from 'src/shared/models/settings.model';
   styleUrls: ['./environments-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EnvironmentsMenuComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
-  @ViewChild('environmentsMenu')
-  private environmentsMenu: ElementRef;
+export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public environments$: Observable<Environments>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
@@ -52,14 +44,14 @@ export class EnvironmentsMenuComponent
   public activeEnvironmentForm: FormGroup;
   public dragEnabled = true;
   public logsRecording$ = this.eventsService.logsRecording$;
+  public trackByUuid = trackByUuid;
   private destroy$ = new Subject<void>();
 
   constructor(
     private formBuilder: FormBuilder,
     private environmentsService: EnvironmentsService,
     private store: Store,
-    private eventsService: EventsService,
-    private uiService: UIService
+    private eventsService: EventsService
   ) {}
 
   ngOnInit() {
@@ -70,15 +62,6 @@ export class EnvironmentsMenuComponent
 
     this.initForms();
     this.initFormValues();
-  }
-
-  ngAfterViewInit() {
-    this.uiService.scrollEnvironmentsMenu.subscribe((scrollDirection) => {
-      this.uiService.scroll(
-        this.environmentsMenu.nativeElement,
-        scrollDirection
-      );
-    });
   }
 
   ngOnDestroy() {
@@ -106,28 +89,14 @@ export class EnvironmentsMenuComponent
    * Create a new environment. Append at the end of the list.
    */
   public addEnvironment() {
-    this.environmentsService
-      .addEnvironment()
-      .pipe(
-        tap(() => {
-          this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
-        })
-      )
-      .subscribe();
+    this.environmentsService.addEnvironment().subscribe();
   }
 
   /**
    * Open an environment. Append at the end of the list.
    */
   public openEnvironment() {
-    this.environmentsService
-      .openEnvironment()
-      .pipe(
-        tap(() => {
-          this.uiService.scrollToBottom(this.environmentsMenu.nativeElement);
-        })
-      )
-      .subscribe();
+    this.environmentsService.openEnvironment().subscribe();
   }
 
   /**
@@ -135,7 +104,6 @@ export class EnvironmentsMenuComponent
    */
   public selectEnvironment(environmentUUID: string) {
     this.environmentsService.setActiveEnvironment(environmentUUID);
-    this.uiService.scrollRoutesMenu.next(ScrollDirection.TOP);
   }
 
   /**

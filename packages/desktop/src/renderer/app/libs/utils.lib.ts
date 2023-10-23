@@ -137,3 +137,5 @@ export const environmentHasRoute = (
   route: Route | Pick<Route, 'type' | 'endpoint' | 'method'>
 ): boolean =>
   environment.routes.some((envRoute) => isRouteDuplicates(envRoute, route));
+
+export const trackByUuid = (item) => item.uuid;

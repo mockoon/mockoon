@@ -21,12 +21,12 @@
       </li>
     </ul>
   </div>
-  <ul class="nav flex-column flex-fill menu-list" #environmentsMenu>
+  <ul class="nav flex-column flex-fill menu-list">
     <ng-container *ngIf="environments$ | async as environments">
       <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
         <ng-container *ngIf="environmentsStatus$ | async as environmentsStatus">
           <li
-            *ngFor="let environment of environments"
+            *ngFor="let environment of environments; trackBy: trackByUuid"
             class="nav-item"
             appDraggable
             appDropzone
@@ -47,6 +47,7 @@
                 'need-restart':
                   environmentsStatus[environment.uuid]?.needRestart
               }"
+              appScrollWhenActive
               (click)="selectEnvironment(environment.uuid)"
               (contextmenu)="openContextMenu(environment.uuid, $event)"
             >

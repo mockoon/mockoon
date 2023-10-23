@@ -294,7 +294,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     activeTemplateTab: TemplatesTabsName,
     activeTemplate: Template
   ) {
-    let options: Parameters<EnvironmentsService['addCRUDRoute']>[2];
+    let options: Parameters<EnvironmentsService['addCRUDRoute']>[1];
 
     if (activeTemplateTab === 'LIST') {
       options = {
@@ -316,7 +316,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.environmentsService.addCRUDRoute('root', true, options);
+    this.environmentsService.addCRUDRoute('root', options);
     this.modalService.dismissAll();
   }
 
@@ -324,7 +324,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     activeTemplateTab: TemplatesTabsName,
     activeTemplate: Template
   ) {
-    let options: Parameters<EnvironmentsService['addHTTPRoute']>[2];
+    let options: Parameters<EnvironmentsService['addHTTPRoute']>[1];
 
     if (activeTemplateTab === 'LIST') {
       options = {
@@ -337,7 +337,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
         body: this.templatesService.lastGeneratedTemplate$.value
       };
     }
-    this.environmentsService.addHTTPRoute('root', true, options);
+    this.environmentsService.addHTTPRoute('root', options);
     this.modalService.dismissAll();
   }
 

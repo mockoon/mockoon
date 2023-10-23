@@ -43,10 +43,13 @@
     </div>
 
     <ng-container *ngIf="databucketList$ | async as databucketList">
-      <ul class="nav flex-column menu-list h-100" #databucketsMenu>
+      <ul class="nav flex-column menu-list h-100">
         <li
           class="nav-item"
-          *ngFor="let environmentDatabucket of databucketList"
+          *ngFor="
+            let environmentDatabucket of databucketList;
+            trackBy: trackByUuid
+          "
           [appSearchFilter]="databucketsFilter$"
           appDraggable
           appDropzone
@@ -63,6 +66,7 @@
               active:
                 (activeDatabucket$ | async)?.uuid === environmentDatabucket.uuid
             }"
+            appScrollWhenActive
             (click)="selectDatabucket(environmentDatabucket.uuid)"
             (contextmenu)="openContextMenu(environmentDatabucket.uuid, $event)"
           >

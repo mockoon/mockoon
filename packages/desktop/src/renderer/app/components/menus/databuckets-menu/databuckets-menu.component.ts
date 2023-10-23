@@ -1,15 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   HostListener,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { DataBucket, Environment } from '@mockoon/commons';
-import { from, Observable, Subject } from 'rxjs';
+import { Observable, Subject, from } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -21,6 +19,7 @@ import {
 import { DatabucketsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import {
   DraggableContainers,
@@ -28,7 +27,6 @@ import {
 } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateFilterAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -41,7 +39,6 @@ import { Settings } from 'src/shared/models/settings.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatabucketsMenuComponent implements OnInit, OnDestroy {
-  @ViewChild('databucketsMenu') private databucketsMenu: ElementRef;
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public databucketList$: Observable<DataBucket[]>;
@@ -51,13 +48,13 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
   public focusableInputs = FocusableInputs;
   public os$: Observable<string>;
   public menuSize = Config.defaultSecondaryMenuSize;
+  public trackByUuid = trackByUuid;
   private destroy$ = new Subject<void>();
 
   constructor(
     private environmentsService: EnvironmentsService,
     private store: Store,
     private eventsService: EventsService,
-    private uiService: UIService,
     private formBuilder: FormBuilder
   ) {}
 
@@ -86,15 +83,6 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       map((activeEnvironment) => activeEnvironment.data)
     );
-
-    this.uiService.scrollDatabucketsMenu
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((scrollDirection) => {
-        this.uiService.scroll(
-          this.databucketsMenu.nativeElement,
-          scrollDirection
-        );
-      });
 
     this.databucketsFilter.valueChanges
       .pipe(
