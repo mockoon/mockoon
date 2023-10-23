@@ -94,7 +94,7 @@
     let-parentChainId="parentChainId"
     let-level="level"
   >
-    <ng-container *ngFor="let child of folder.children">
+    <ng-container *ngFor="let child of folder.children; trackBy: trackByUuid">
       <ng-container
         *ngIf="child.type === 'folder'"
         [ngTemplateOutlet]="folderItemTemplate"
@@ -149,6 +149,7 @@
           'padding-left.rem':
             (routesFilter$ | async) || !level ? undefined : level * 2 + 0.5
         }"
+        appScrollWhenActive
         [formGroup]="folderForm"
         (click)="toggleCollapse(folder)"
       >
@@ -239,6 +240,7 @@
             active: (activeRoute$ | async)?.uuid === route.uuid,
             'route-disabled': !route.enabled
           }"
+          appScrollWhenActive
           (click)="selectRoute(route.uuid)"
           (contextmenu)="openContextMenu('route', route.uuid, $event, parentId)"
         >

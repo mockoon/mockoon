@@ -72,8 +72,7 @@ import {
 } from 'src/renderer/app/models/store.model';
 import {
   DraggableContainers,
-  DropAction,
-  ScrollDirection
+  DropAction
 } from 'src/renderer/app/models/ui.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
@@ -490,8 +489,6 @@ export class EnvironmentsService extends Logger {
             insertAfterIndex
           })
         );
-
-        this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
       })
     );
   }
@@ -649,13 +646,9 @@ export class EnvironmentsService extends Logger {
   /**
    * Add a new folder and save it in the store
    */
-  public addFolder(folderId: string | 'root', scroll = false) {
+  public addFolder(folderId: string | 'root') {
     if (this.store.getActiveEnvironment()) {
       this.store.update(addFolderAction(BuildFolder(), folderId));
-
-      if (scroll) {
-        this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
-      }
     }
   }
 
@@ -680,7 +673,6 @@ export class EnvironmentsService extends Logger {
    */
   public addHTTPRoute(
     folderId: string | 'root',
-    scroll = false,
     options: {
       endpoint: typeof RouteDefault.endpoint;
       body: typeof RouteResponseDefault.body;
@@ -694,10 +686,6 @@ export class EnvironmentsService extends Logger {
         addRouteAction(BuildHTTPRoute(true, options), folderId)
       );
 
-      if (scroll) {
-        this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
-      }
-
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
       }, 0);
@@ -709,7 +697,6 @@ export class EnvironmentsService extends Logger {
    */
   public addCRUDRoute(
     folderId: string | 'root',
-    scroll = false,
     options: {
       endpoint: typeof RouteDefault.endpoint;
       dataBucket: Partial<DataBucket>;
@@ -735,10 +722,6 @@ export class EnvironmentsService extends Logger {
 
       this.store.update(addRouteAction(newCRUDRoute, folderId));
 
-      if (scroll) {
-        this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
-      }
-
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
       }, 0);
@@ -754,7 +737,6 @@ export class EnvironmentsService extends Logger {
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
       this.store.update(addDatabucketAction(newDatabucket));
-      this.uiService.scrollDatabucketsMenu.next(ScrollDirection.BOTTOM);
 
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.DATABUCKET_NAME);
@@ -794,7 +776,6 @@ export class EnvironmentsService extends Logger {
         }
       }),
       tap(() => {
-        this.uiService.scrollRoutesMenu.next(ScrollDirection.BOTTOM);
         this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
       }),
       catchError((error) => {
@@ -1440,7 +1421,5 @@ export class EnvironmentsService extends Logger {
         filePath
       })
     );
-
-    this.uiService.scrollEnvironmentsMenu.next(ScrollDirection.BOTTOM);
   }
 }

@@ -66,7 +66,8 @@ type FullFolder = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoutesMenuComponent implements OnInit, OnDestroy {
-  @ViewChild('routesMenu') private routesMenu: ElementRef<HTMLUListElement>;
+  @ViewChild('routesMenu')
+  private routesMenu: ElementRef<HTMLUListElement>;
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public rootFolder$: Observable<FullFolder>;
@@ -132,12 +133,6 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.uiService.scrollRoutesMenu
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((scrollDirection) => {
-        this.uiService.scroll(this.routesMenu.nativeElement, scrollDirection);
-      });
-
     this.routesFilter.valueChanges
       .pipe(
         debounceTime(10),
@@ -172,7 +167,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
    * Create a new route in the current environment. Append at the end of the list
    */
   public addCRUDRoute() {
-    this.environmentsService.addCRUDRoute('root', true);
+    this.environmentsService.addCRUDRoute('root');
   }
 
   /**
@@ -186,14 +181,21 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
    * Create a new route in the current environment. Append at the end of the list
    */
   public addHTTPRoute() {
-    this.environmentsService.addHTTPRoute('root', true);
+    this.environmentsService.addHTTPRoute('root');
   }
 
   /**
    * Create a new folder in the current environment
    */
   public addFolder() {
-    this.environmentsService.addFolder('root', true);
+    this.environmentsService.addFolder('root');
+
+    // manually scroll to the bottom when adding a new folder as they cannot use the scrollWhenActive directive
+    this.uiService.scrollToBottom(this.routesMenu.nativeElement);
+  }
+
+  public trackByUuid(index: number, child: { data: { uuid: string } }) {
+    return child.data.uuid;
   }
 
   /**

@@ -20,11 +20,6 @@ export type DragState = {
   nativeElement: HTMLElement;
 };
 
-export enum ScrollDirection {
-  TOP = 'TOP',
-  BOTTOM = 'BOTTOM'
-}
-
 export type ConfirmModalPayload = {
   title: string;
   text: string;
