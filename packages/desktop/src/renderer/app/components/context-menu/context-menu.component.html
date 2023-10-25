@@ -13,11 +13,11 @@
       (click)="action(item, $event)"
     >
       <span *ngIf="!item.needConfirm">
-        <app-svg class="pr-2" [icon]="item.icon"></app-svg>
+        <app-svg class="pe-2" [icon]="item.icon"></app-svg>
         {{ item.label }}
       </span>
       <span *ngIf="item.needConfirm" [ngClass]="item.confirmColor">
-        <app-svg class="pr-2" [icon]="item.confirm.icon"></app-svg>
+        <app-svg class="pe-2" [icon]="item.confirm.icon"></app-svg>
         {{ item.confirm.label }}
       </span>
     </div>

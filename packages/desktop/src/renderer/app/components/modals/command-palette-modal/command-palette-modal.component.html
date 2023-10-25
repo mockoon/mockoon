@@ -32,7 +32,7 @@
           (click)="onCommandActivate($event, command.id)"
         >
           <span [innerHTML]="command.labelDelimited || command.label"></span
-          ><span class="ml-auto" [innerHTML]="command.shortcut$ | async"></span>
+          ><span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
         </button>
       </ng-container>
     </ng-container>

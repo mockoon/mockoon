@@ -112,7 +112,7 @@
                 ngbDropdownToggle
               >
                 <div class="dropdown-toggle-label">
-                  <span *ngIf="activeRoute.type === 'http'" class="pr-2"
+                  <span *ngIf="activeRoute.type === 'http'" class="pe-2"
                     >Response {{ (activeRouteResponseIndex$ | async) + 1 }} ({{
                       activeRouteResponse?.statusCode
                     }})
@@ -122,7 +122,7 @@
                       activeRoute.type === 'crud' &&
                       !activeRouteResponse?.default
                     "
-                    class="pr-2"
+                    class="pe-2"
                     >Response {{ activeRouteResponseIndex$ | async }} ({{
                       activeRouteResponse?.statusCode
                     }})
@@ -132,7 +132,7 @@
                       activeRoute.type === 'crud' &&
                       activeRouteResponse?.default
                     "
-                    class="pr-2"
+                    class="pe-2"
                     >CRUD operations
                   </span>
                   {{ activeRouteResponse?.label }}
@@ -179,7 +179,7 @@
                   (dropped)="reorganizeRouteResponses($event)"
                 >
                   <span
-                    class="flex-grow-1 mr-2 ellipsis"
+                    class="flex-grow-1 me-2 ellipsis"
                     (click)="
                       setActiveRouteResponse(
                         routeResponse.uuid,
@@ -187,7 +187,7 @@
                       )
                     "
                   >
-                    <span *ngIf="activeRoute.type === 'http'" class="pr-2"
+                    <span *ngIf="activeRoute.type === 'http'" class="pe-2"
                       >Response {{ routeResponseIndex + 1 }} ({{
                         routeResponse.statusCode
                       }})</span
@@ -196,7 +196,7 @@
                       *ngIf="
                         activeRoute.type === 'crud' && !routeResponse.default
                       "
-                      class="pr-2"
+                      class="pe-2"
                       >Response {{ routeResponseIndex }} ({{
                         routeResponse.statusCode
                       }})</span
@@ -205,7 +205,7 @@
                       *ngIf="
                         activeRoute.type === 'crud' && routeResponse.default
                       "
-                      class="pr-2"
+                      class="pe-2"
                       >CRUD operations</span
                     >
                     {{ routeResponse.label }}
@@ -256,7 +256,7 @@
 
             <app-toggle
               *ngIf="activeRouteResponse"
-              class="ml-2"
+              class="ms-2"
               prefix="response-modes"
               formControlName="responseMode"
               [items]="responseModes"
@@ -289,7 +289,7 @@
                   Headers
                   <span
                     *ngIf="activeRouteResponse?.headers.length"
-                    class="badge badge-hollow font-weight-bold ml-2"
+                    class="badge badge-hollow fw-bold ms-2"
                   >
                     {{ activeRouteResponse?.headers.length }}
                   </span>
@@ -315,12 +315,12 @@
                     class="text-warning"
                     [ngbTooltip]="texts.DISABLED_RULES_WARNING"
                     id="disabled-rules-warning-icon"
-                    ><app-svg icon="warning" class="pr-1"></app-svg>
+                    ><app-svg icon="warning" class="pe-1"></app-svg>
                   </span>
                   Rules
                   <span
                     *ngIf="activeRouteResponse?.rules.length"
-                    class="badge badge-hollow font-weight-bold ml-2"
+                    class="badge badge-hollow fw-bold ms-2"
                   >
                     {{ activeRouteResponse?.rules.length }}
                   </span>
@@ -398,7 +398,7 @@
                 *ngIf="
                   activeRoute.type === 'crud' && activeRouteResponse.default
                 "
-                class="mw0 pr-1"
+                class="mw0 pe-1"
                 formControlName="databucketID"
                 [enableCustomInput]="false"
                 [items]="databuckets$ | async"
@@ -507,7 +507,7 @@
                   <div>
                     <button
                       type="button"
-                      class="btn btn-link btn-xs btn-icon text-primary pl-0"
+                      class="btn btn-link btn-xs btn-icon text-primary ps-0"
                       (click)="formatBody()"
                     >
                       Beautify JSON
@@ -563,16 +563,16 @@
               <div class="input-group mt-2 px-2">
                 <div
                   *ngIf="activeRouteResponse.filePath"
-                  class="input-group-append align-items-center ml-2"
+                  class="input-group-append align-items-center ms-2"
                 >
-                  <div class="custom-control custom-checkbox">
+                  <div class="form-check">
                     <input
                       type="checkbox"
-                      class="custom-control-input"
+                      class="form-check-input"
                       id="sendFileAsBody"
                       formControlName="sendFileAsBody"
                     />
-                    <label class="custom-control-label" for="sendFileAsBody"
+                    <label class="form-check-label" for="sendFileAsBody"
                       >Send as body</label
                     >
                   </div>
@@ -637,50 +637,50 @@
             class="flex-fill mh0 pt-3 px-2 h-100"
             [formGroup]="activeRouteResponseForm"
           >
-            <div class="form-group">
+            <div class="mb-3">
               <div class="input-group">
-                <div class="custom-control custom-checkbox">
+                <div class="form-check">
                   <input
                     type="checkbox"
-                    class="custom-control-input"
+                    class="form-check-input"
                     id="route-settings-disable-templating"
                     formControlName="disableTemplating"
                   />
                   <label
-                    class="custom-control-label"
+                    class="form-check-label"
                     for="route-settings-disable-templating"
                     >Disable templating in body and file content
                   </label>
                 </div>
-                <div class="input-group-append ml-1">
+                <div class="input-group-append ms-1">
                   <app-svg
                     icon="info"
-                    class="ml-1"
+                    class="ms-1"
                     ngbTooltip="Helpers like {{ '{' + '{' }}body{{ '}' + '}' }}
         won't be interpreted and file content will be directly streamed (better performances)"
                   ></app-svg>
                 </div>
               </div>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
               <div class="input-group">
-                <div class="custom-control custom-checkbox">
+                <div class="form-check">
                   <input
                     type="checkbox"
-                    class="custom-control-input"
+                    class="form-check-input"
                     id="route-settings-fallback-to-404"
                     formControlName="fallbackTo404"
                   />
                   <label
-                    class="custom-control-label"
+                    class="form-check-label"
                     for="route-settings-fallback-to-404"
                     >Respond with 404 when the file path did not match any files
                   </label>
                 </div>
-                <div class="input-group-append ml-1">
+                <div class="input-group-append ms-1">
                   <app-svg
                     icon="info"
-                    class="ml-1"
+                    class="ms-1"
                     ngbTooltip="This will also fallback to use Body content that is present in the editor"
                   ></app-svg>
                 </div>
@@ -697,7 +697,7 @@
               class="py-2 d-inline-block"
               [ngbTooltip]="servedContentTypeTooltip"
             >
-              <small class="pl-0">
+              <small class="ps-0">
                 {{ this.effectiveContentType$ | async }}</small
               >
             </div>
@@ -712,7 +712,7 @@
             *ngIf="
               activeRouteResponseLastLog$ | async as activeRouteResponseLastLog
             "
-            class="pr-0 py-2"
+            class="pe-0 py-2"
           >
             <button
               class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link"

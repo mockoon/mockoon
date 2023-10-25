@@ -92,7 +92,7 @@
     "@wdio/local-runner": "8.16.16",
     "@wdio/mocha-framework": "8.16.15",
     "@wdio/spec-reporter": "8.16.12",
-    "bootstrap": "4.6.0",
+    "bootstrap": "5.3.2",
     "brace": "0.11.1",
     "chromedriver": "116.0.0",
     "date-fns": "2.30.0",

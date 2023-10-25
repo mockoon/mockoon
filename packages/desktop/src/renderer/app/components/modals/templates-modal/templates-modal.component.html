@@ -37,7 +37,7 @@
             }"
             (click)="setActiveTab('GENERATE')"
           >
-            <app-svg icon="magic" class="mr-2 text-warning"></app-svg>
+            <app-svg icon="magic" class="me-2 text-warning"></app-svg>
             Generate
           </a>
         </li>
@@ -51,7 +51,7 @@
         [ngClass]="{ 'd-flex': data.templates }"
       >
         <ng-container *ngIf="data.templates; else noTemplates">
-          <div class="col-4 mr-2 h-100 d-flex flex-column">
+          <div class="col-4 me-2 h-100 d-flex flex-column">
             <div class="mb-2">
               <div class="input-group" *ngIf="os$ | async as os">
                 <input
@@ -101,7 +101,7 @@
           </div>
 
           <div
-            class="col pl-4 d-flex flex-column"
+            class="col ps-4 d-flex flex-column"
             [ngClass]="
               flags.isFree && data.activeTemplateListItem?.pro
                 ? 'h-75'
@@ -141,10 +141,10 @@
               *ngIf="flags.isFree && data.activeTemplateListItem?.pro"
               class="d-flex mt-auto"
             >
-              <h4 class="text-center my-4 pr-4 text-shadow w-50">
+              <h4 class="text-center my-4 pe-4 text-shadow w-50">
                 Prototype in seconds using our pro templates
               </h4>
-              <h4 class="text-center my-4 pl-4 text-shadow w-50">
+              <h4 class="text-center my-4 ps-4 text-shadow w-50">
                 New templates will be published every week
               </h4>
             </div>
@@ -177,7 +177,7 @@
           </button>
           <div
             *ngIf="data.generatingTemplate === 'INPROGRESS'"
-            class="input-group-append ml-2 align-items-center"
+            class="input-group-append ms-2 align-items-center"
           >
             <app-svg icon="spinner"></app-svg>
           </div>
@@ -189,14 +189,14 @@
         >
           <ng-container *ngFor="let toggle of toggles">
             <app-toggle
-              class="mr-1"
+              class="me-1"
               prefix="generate-options-{{ toggle.name }}"
               [formControlName]="toggle.name"
               [items]="toggle.items"
               [uncheckable]="true"
             ></app-toggle>
           </ng-container>
-          <p class="mb-0 ml-auto text-muted">
+          <p class="mb-0 ms-auto text-muted">
             Best results with short prompts (less than 10 words)
           </p>
         </div>
@@ -243,7 +243,7 @@
               </div>
               <div
                 *ngIf="isDemoLoading$ | async"
-                class="input-group-append ml-2 align-items-center"
+                class="input-group-append ms-2 align-items-center"
               >
                 <app-svg icon="spinner"></app-svg>
               </div>
@@ -261,10 +261,10 @@
             ></app-editor>
           </div>
           <div [@fade-2]="demoRuns >= 2" class="d-flex mt-auto">
-            <h4 class="text-center my-4 pr-4 text-shadow w-50">
+            <h4 class="text-center my-4 pe-4 text-shadow w-50">
               Get access to dozens of Pro templates
             </h4>
-            <h4 class="text-center my-4 pl-4 text-shadow w-50">
+            <h4 class="text-center my-4 ps-4 text-shadow w-50">
               Generate your own in seconds using AI
             </h4>
           </div>
@@ -290,18 +290,18 @@
         </p>
         <button
           type="button"
-          class="btn btn-link btn-icon text-primary pl-2"
+          class="btn btn-link btn-icon text-primary ps-2"
           (click)="account()"
         >
           My account
-          <app-svg icon="open_in_new" class="pl-1" size="12"></app-svg>
+          <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
         </button>
       </div>
 
-      <div class="ml-auto">
+      <div class="ms-auto">
         <button
           type="button"
-          class="btn btn-secondary modal-close"
+          class="btn btn-secondary modal-btn-close"
           (click)="close()"
         >
           Close
@@ -318,24 +318,24 @@
           <button
             *ngIf="data.templates"
             type="button"
-            class="btn btn-primary ml-2"
+            class="btn btn-primary ms-2"
             (click)="
               createCRUDRoute(data.activeTemplatesTab, data.activeTemplate)
             "
             ngbTooltip="Automatically creates a CRUD route and a data bucket from the template"
           >
-            <app-svg icon="endpoints" class="mr-1"></app-svg>CRUD + data
+            <app-svg icon="endpoints" class="me-1"></app-svg>CRUD + data
           </button>
           <button
             *ngIf="data.templates"
             type="button"
-            class="btn btn-primary ml-2"
+            class="btn btn-primary ms-2"
             (click)="
               createGetRoute(data.activeTemplatesTab, data.activeTemplate)
             "
             ngbTooltip="Automatically creates an HTTP GET route with the chosen template as the response body"
           >
-            <app-svg icon="endpoint" class="mr-1"></app-svg>GET route
+            <app-svg icon="endpoint" class="me-1"></app-svg>GET route
           </button>
         </ng-container>
         <a
@@ -345,7 +345,7 @@
               data.activeTemplateListItem?.pro) ||
               data.activeTemplatesTab === 'GENERATE')
           "
-          class="btn btn-warning ml-2"
+          class="btn btn-warning ms-2"
           href="{{ proPlansURL }}"
           target="_blank"
         >
