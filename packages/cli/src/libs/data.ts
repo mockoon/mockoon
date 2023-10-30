@@ -21,6 +21,7 @@ export const parseDataFiles = async (
   const openAPIConverter = new OpenAPIConverter();
   const environments: { originalPath: string; environment: Environment }[] = [];
   let filePathIndex = 0;
+  let errorMessage = `${CLIMessages.DATA_INVALID}:`;
 
   for (const filePath of filePaths) {
     try {
@@ -30,6 +31,13 @@ export const parseDataFiles = async (
         environments.push({ environment, originalPath: filePath });
       }
     } catch (openAPIError: any) {
+      errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;
+
+      // immediately throw if the file is not a JSON file
+      if (filePath.includes('.yml') || filePath.includes('.yaml')) {
+        throw new Error(errorMessage);
+      }
+
       try {
         let data: any;
 
@@ -47,7 +55,8 @@ export const parseDataFiles = async (
           environments.push({ environment: data, originalPath: filePath });
         }
       } catch (JSONError: any) {
-        throw new Error(`${CLIMessages.DATA_INVALID}: ${JSONError.message}`);
+        errorMessage += `\nMockoon parser: ${JSONError.message}`;
+        throw new Error(errorMessage);
       }
     }
 
