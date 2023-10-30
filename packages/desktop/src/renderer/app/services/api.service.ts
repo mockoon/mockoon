@@ -108,6 +108,7 @@ export class ApiService extends Logger {
               .authWithToken(parameters.token)
               .pipe(
                 tap(() => {
+                  this.uiService.closeModal('auth');
                   this.logMessage('info', 'LOGIN_SUCCESS');
                 }),
                 catchError(() => {
