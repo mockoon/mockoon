@@ -1,4 +1,6 @@
 import {
+  Callback,
+  CallbackInvocation,
   DataBucket,
   Environment,
   Folder,
@@ -13,7 +15,7 @@ import {
   StoreType
 } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
+import { ActionTypes, Actions } from 'src/renderer/app/stores/actions';
 import {
   findRouteFolderHierarchy,
   getBodyEditorMode,
@@ -50,6 +52,17 @@ export const environmentReducer = (
       newState = {
         ...state,
         activeTab: action.activeTab
+      };
+      break;
+    }
+
+    case ActionTypes.SET_ACTIVE_TAB_IN_CALLBACK: {
+      newState = {
+        ...state,
+        callbackSettings: {
+          ...state.callbackSettings,
+          activeTab: action.activeTab
+        }
       };
       break;
     }
@@ -103,11 +116,15 @@ export const environmentReducer = (
           activeDatabucketUUID: activeEnvironment.data.length
             ? activeEnvironment.data[0].uuid
             : null,
+          activeCallbackUUID: activeEnvironment.callbacks.length
+            ? activeEnvironment.callbacks[0].uuid
+            : null,
           environments: state.environments,
           filters: {
             ...state.filters,
             routes: '',
-            databuckets: ''
+            databuckets: '',
+            callbacks: ''
           }
         };
         break;
@@ -154,12 +171,25 @@ export const environmentReducer = (
         activeDatabucketUUID: newEnvironment.data.length
           ? newEnvironment.data[0].uuid
           : null,
+        activeCallbackUUID: newEnvironment.callbacks.length
+          ? newEnvironment.callbacks[0].uuid
+          : null,
         environments: state.environments,
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: ''
         }
+      };
+      break;
+    }
+
+    case ActionTypes.NAVIGATE_TO_CALLBACK: {
+      newState = {
+        ...state,
+        activeCallbackUUID: action.callbackUUID,
+        activeView: 'ENV_CALLBACKS'
       };
       break;
     }
@@ -315,6 +345,30 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.REORGANIZE_ENV_CALLBACKS: {
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === state.activeEnvironmentUUID) {
+          return {
+            ...environment,
+            callbacks: moveItemAtTarget<Callback>(
+              environment.callbacks,
+              action.dropAction.dropActionType,
+              action.dropAction.sourceId,
+              action.dropAction.targetId
+            )
+          };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments
+      };
+      break;
+    }
+
     case ActionTypes.REORGANIZE_ROUTE_RESPONSES: {
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === state.activeEnvironmentUUID) {
@@ -388,6 +442,9 @@ export const environmentReducer = (
             return environment;
           });
         }
+        const activeRouteResponse = activeRoute.responses.length
+          ? activeRoute.responses[0]
+          : null;
 
         newState = {
           ...state,
@@ -395,6 +452,10 @@ export const environmentReducer = (
           activeRouteResponseUUID: activeRoute.responses.length
             ? activeRoute.responses[0].uuid
             : null,
+          activeRouteResponseCallbackUUID:
+            activeRouteResponse && activeRouteResponse.callbacks.length
+              ? activeRouteResponse.callbacks[0].uuid
+              : null,
           activeTab: 'RESPONSE',
           activeView: 'ENV_ROUTES',
           environments: newEnvironments
@@ -411,6 +472,19 @@ export const environmentReducer = (
         newState = {
           ...state,
           activeDatabucketUUID: action.databucketUUID
+        };
+        break;
+      }
+
+      newState = state;
+      break;
+    }
+
+    case ActionTypes.SET_ACTIVE_CALLBACK: {
+      if (action.callbackUUID !== state.activeCallbackUUID) {
+        newState = {
+          ...state,
+          activeCallbackUUID: action.callbackUUID
         };
         break;
       }
@@ -469,6 +543,9 @@ export const environmentReducer = (
         activeDatabucketUUID: activeEnvironment.data.length
           ? activeEnvironment.data[0].uuid
           : null,
+        activeCallbackUUID: activeEnvironment.callbacks.length
+          ? activeEnvironment.callbacks[0].uuid
+          : null,
         environments,
         environmentsStatus: {
           ...state.environmentsStatus,
@@ -488,7 +565,8 @@ export const environmentReducer = (
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: ''
         },
         settings: newSettings
       };
@@ -517,7 +595,8 @@ export const environmentReducer = (
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: ''
         },
         settings: {
           ...state.settings,
@@ -541,6 +620,9 @@ export const environmentReducer = (
             activeRouteResponseUUID,
             activeDatabucketUUID: newEnvironments[0].data.length
               ? newEnvironments[0].data[0].uuid
+              : null,
+            activeCallbackUUID: newEnvironments[0].callbacks.length
+              ? newEnvironments[0].callbacks[0].uuid
               : null
           };
         } else {
@@ -549,7 +631,8 @@ export const environmentReducer = (
             activeEnvironmentUUID: null,
             activeRouteUUID: null,
             activeRouteResponseUUID: null,
-            activeDatabucketUUID: null
+            activeDatabucketUUID: null,
+            activeCallbackUUID: null
           };
         }
       }
@@ -594,6 +677,7 @@ export const environmentReducer = (
       let activeRouteUUID = state.activeRouteUUID;
       let activeRouteResponseUUID = state.activeRouteResponseUUID;
       let activeDatabucketUUID = state.activeDatabucketUUID;
+      let activeCallbackUUID = state.activeCallbackUUID;
       let environmentsLogs = state.environmentsLogs;
       let activeEnvironmentLogsUUID = state.activeEnvironmentLogsUUID;
       let duplicatedRoutes = state.duplicatedRoutes;
@@ -619,6 +703,9 @@ export const environmentReducer = (
         activeRouteResponseUUID = newActiveRouteResponseUUID;
         activeDatabucketUUID = action.newEnvironment.data.length
           ? action.newEnvironment.data[0].uuid
+          : null;
+        activeCallbackUUID = action.newEnvironment.callbacks.length
+          ? action.newEnvironment.callbacks[0].uuid
           : null;
       }
 
@@ -683,6 +770,7 @@ export const environmentReducer = (
         activeRouteUUID,
         activeRouteResponseUUID,
         activeDatabucketUUID,
+        activeCallbackUUID,
         environmentsLogs,
         activeEnvironmentLogsUUID,
         duplicatedRoutes,
@@ -1131,6 +1219,165 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.ADD_CALLBACK: {
+      // only add a databucket if there is at least one environment
+      if (state.environments.length > 0) {
+        const newCallback = action.callback;
+        const afterUUID = action.afterUUID;
+
+        newState = {
+          ...state,
+          activeCallbackUUID: newCallback.uuid,
+          activeView: 'ENV_CALLBACKS',
+          environments: state.environments.map((environment) => {
+            if (environment.uuid === state.activeEnvironmentUUID) {
+              const callbacks = [...environment.callbacks];
+
+              let afterIndex = callbacks.length;
+              if (afterUUID) {
+                afterIndex = environment.callbacks.findIndex(
+                  (cb) => cb.uuid === afterUUID
+                );
+                if (afterIndex === -1) {
+                  afterIndex = callbacks.length;
+                }
+              }
+              callbacks.splice(afterIndex + 1, 0, newCallback);
+
+              return {
+                ...environment,
+                callbacks
+              };
+            }
+
+            return environment;
+          }),
+          filters: {
+            ...state.filters,
+            callbacks: ''
+          },
+          environmentsStatus: markEnvStatusRestart(state)
+        };
+        break;
+      }
+
+      newState = state;
+      break;
+    }
+
+    case ActionTypes.REMOVE_CALLBACK: {
+      const activeEnvironment = state.environments.find(
+        (environment) => environment.uuid === state.activeEnvironmentUUID
+      );
+      const deletedCallback = activeEnvironment.callbacks.find(
+        (cb) => cb.uuid === action.callbackUUID
+      );
+
+      const newCallbacks = activeEnvironment.callbacks.filter(
+        (cb) => cb.uuid !== action.callbackUUID
+      );
+
+      const newRoutes = activeEnvironment.routes.map((route) => {
+        let hasChanged = false;
+        const newReponses = route.responses.map((response) => {
+          if (response.callbacks) {
+            const filteredCallbacks = response.callbacks.filter(
+              (cb) => cb.uuid !== deletedCallback.uuid
+            );
+            hasChanged =
+              hasChanged ||
+              filteredCallbacks.length !== response.callbacks.length;
+
+            return { ...response, callbacks: filteredCallbacks };
+          }
+
+          return response;
+        });
+        if (hasChanged) {
+          return { ...route, responses: newReponses };
+        }
+
+        return route;
+      });
+
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === state.activeEnvironmentUUID) {
+          return {
+            ...environment,
+            callbacks: newCallbacks,
+            routes: newRoutes
+          };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments,
+        environmentsStatus: markEnvStatusRestart(state)
+      };
+
+      if (state.activeCallbackUUID === action.callbackUUID) {
+        if (newCallbacks.length) {
+          newState.activeCallbackUUID = newCallbacks[0].uuid;
+        } else {
+          newState.activeCallbackUUID = null;
+        }
+      }
+      break;
+    }
+
+    case ActionTypes.UPDATE_CALLBACK: {
+      const propertiesNeedingRestart: (keyof Callback)[] = [
+        'name',
+        'body',
+        'bodyType',
+        'databucketID',
+        'filePath',
+        'headers',
+        'method',
+        'sendFileAsBody',
+        'uri'
+      ];
+      const specifiedUUID = action.properties.uuid;
+
+      newState = {
+        ...state,
+        environments: state.environments.map((environment) => {
+          if (environment.uuid === state.activeEnvironmentUUID) {
+            return {
+              ...environment,
+              callbacks: environment.callbacks.map((cb) => {
+                if (specifiedUUID) {
+                  if (cb.uuid === specifiedUUID) {
+                    return {
+                      ...cb,
+                      ...action.properties
+                    };
+                  }
+                } else if (cb.uuid === state.activeCallbackUUID) {
+                  return {
+                    ...cb,
+                    ...action.properties
+                  };
+                }
+
+                return cb;
+              })
+            };
+          }
+
+          return environment;
+        }),
+        environmentsStatus: markEnvStatusRestart(
+          state,
+          ArrayContainsObjectKey(action.properties, propertiesNeedingRestart)
+        )
+      };
+      break;
+    }
+
     case ActionTypes.ADD_DATABUCKET: {
       // only add a databucket if there is at least one environment
       if (state.environments.length > 0) {
@@ -1277,14 +1524,74 @@ export const environmentReducer = (
 
     case ActionTypes.SET_ACTIVE_ROUTE_RESPONSE: {
       if (action.routeResponseUUID !== state.activeRouteResponseUUID) {
+        const activeEnvironment = state.environments.find(
+          (environment) => environment.uuid === state.activeEnvironmentUUID
+        );
+        const activeRoute = activeEnvironment.routes.find(
+          (route) => route.uuid === state.activeRouteUUID
+        );
+        const activeRouteResponse = activeRoute.responses.find(
+          (routeResponse) => routeResponse.uuid === action.routeResponseUUID
+        );
+
         newState = {
           ...state,
-          activeRouteResponseUUID: action.routeResponseUUID
+          activeRouteResponseUUID: action.routeResponseUUID,
+          activeRouteResponseCallbackUUID:
+            activeRouteResponse && activeRouteResponse.callbacks.length
+              ? activeRouteResponse.callbacks[0].uuid
+              : null
         };
         break;
       }
 
       newState = state;
+      break;
+    }
+
+    case ActionTypes.REORGANIZE_RESPONSE_CALLBACKS: {
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === state.activeEnvironmentUUID) {
+          const newRoutes = environment.routes.map((route) => {
+            if (route.uuid === state.activeRouteUUID) {
+              const newResponses = route.responses.map((response) => {
+                if (response.uuid === state.activeRouteResponseUUID) {
+                  return {
+                    ...response,
+                    callbacks: moveItemAtTarget<CallbackInvocation>(
+                      response.callbacks,
+                      action.dropAction.dropActionType,
+                      action.dropAction.sourceId,
+                      action.dropAction.targetId
+                    )
+                  };
+                }
+
+                return response;
+              });
+
+              return {
+                ...route,
+                responses: newResponses
+              };
+            }
+
+            return route;
+          });
+
+          return {
+            ...environment,
+            routes: newRoutes
+          };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments
+      };
       break;
     }
 
@@ -1588,6 +1895,38 @@ export const environmentReducer = (
           ...state.filters,
           routes: '',
           databuckets: ''
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT: {
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.targetEnvironmentUUID) {
+          return {
+            ...environment,
+            callbacks: [...environment.callbacks, action.callback]
+          };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments,
+        activeCallbackUUID: action.callback.uuid,
+        activeEnvironmentUUID: action.targetEnvironmentUUID,
+        activeView: 'ENV_CALLBACKS',
+
+        environmentsStatus: markEnvStatusRestart(
+          state,
+          true,
+          action.targetEnvironmentUUID
+        ),
+        filters: {
+          ...state.filters,
+          callbacks: ''
         }
       };
       break;

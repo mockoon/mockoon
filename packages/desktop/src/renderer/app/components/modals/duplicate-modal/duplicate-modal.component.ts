@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { DataBucket, Environment, Route } from '@mockoon/commons';
+import { Callback, DataBucket, Environment, Route } from '@mockoon/commons';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataSubject } from 'src/renderer/app/models/data.model';
@@ -93,6 +93,11 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
         this.entityInformation.uuid,
         targetEnvironment.uuid
       );
+    } else if (entityInformation.subject === 'callback') {
+      this.environmentsService.duplicateCallbackInAnotherEnvironment(
+        this.entityInformation.uuid,
+        targetEnvironment.uuid
+      );
     }
 
     this.store.update(cancelEntityDuplicationToAnotherEnvironmentAction());
@@ -114,6 +119,15 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
     } else if (state.subject === 'databucket') {
       const entityToDuplicate = this.activeEnvironment.data.find(
         (databucket: DataBucket) => databucket.uuid === state.subjectUUID
+      );
+      this.entityInformation = {
+        displayName: entityToDuplicate.name,
+        subject: state.subject,
+        uuid: entityToDuplicate.uuid
+      };
+    } else if (state.subject === 'callback') {
+      const entityToDuplicate = this.activeEnvironment.callbacks.find(
+        (cb: Callback) => cb.uuid === state.subjectUUID
       );
       this.entityInformation = {
         displayName: entityToDuplicate.name,

@@ -7,6 +7,12 @@ export type ProcessedDatabucket = {
   parsed: boolean;
 };
 
+export type CallbackStatus = {
+  uuid: string;
+  method: string;
+  uri: string;
+};
+
 /**
  * Transaction object containing req/res information after response is closed
  */
@@ -30,4 +36,5 @@ export type Transaction = {
   proxied: boolean;
   routeUUID: string;
   routeResponseUUID: string;
+  callbacks?: CallbackStatus[];
 };

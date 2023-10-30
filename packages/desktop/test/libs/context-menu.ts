@@ -1,7 +1,7 @@
 import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import utils from '../libs/utils';
 
-type Targets = 'environments' | 'routes' | 'databuckets';
+type Targets = 'environments' | 'routes' | 'databuckets' | 'callbacks';
 
 export enum ContextMenuEnvironmentActions {
   DUPLICATE = 1,
@@ -16,6 +16,12 @@ export enum ContextMenuDatabucketActions {
   DUPLICATE_TO_ENV = 2,
   COPY_ID = 3,
   DELETE = 4
+}
+
+export enum ContextMenuCallbackActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  DELETE = 3
 }
 
 export enum ContextMenuRouteActions {
@@ -38,7 +44,8 @@ class ContextMenu {
   private targetSelectors = {
     environments: '.environments-menu',
     routes: '.routes-menu',
-    databuckets: '.databuckets-menu'
+    databuckets: '.databuckets-menu',
+    callbacks: '.callbacks-menu'
   };
 
   public getItem(
@@ -71,6 +78,7 @@ class ContextMenu {
       | ContextMenuRouteActions
       | ContextMenuFolderActions
       | ContextMenuDatabucketActions
+      | ContextMenuCallbackActions
   ) {
     await this.open(targetMenu, menuItemIndex);
     await this.getItem(contextMenuItemIndex).click();

@@ -8,7 +8,7 @@ import {
   Output
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Environment, Header, RouteResponse } from '@mockoon/commons';
+import { Callback, Environment, Header, RouteResponse } from '@mockoon/commons';
 import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
@@ -34,7 +34,7 @@ import { Store } from 'src/renderer/app/stores/store';
 })
 export class HeadersListComponent implements OnInit, OnDestroy {
   @Input()
-  public activeDataSubject$: Observable<RouteResponse | Environment>;
+  public activeDataSubject$: Observable<RouteResponse | Environment | Callback>;
   @Input()
   public headersPropertyName: HeadersProperties;
   @Input()
@@ -47,7 +47,7 @@ export class HeadersListComponent implements OnInit, OnDestroy {
   public headersUpdated = new EventEmitter<Header[]>();
   @Output()
   public secondaryButtonClicked = new EventEmitter();
-  public dataSubject$: Observable<RouteResponse | Environment>;
+  public dataSubject$: Observable<RouteResponse | Environment | Callback>;
   public form: FormGroup;
   public headerNamesSearch = this.buildSearch(headerNames);
   public headerValuesSearch = this.buildSearch(headerValues);

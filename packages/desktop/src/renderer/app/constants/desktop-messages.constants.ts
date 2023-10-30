@@ -292,5 +292,10 @@ export const DesktopMessages: {
     logPayload: messageParams,
     toastType: 'success',
     showToast: true
+  }),
+  CALLBACK_ERROR: (messageParams) => ({
+    message: `Error while invoking callback ${messageParams.error}!`,
+    log: true,
+    showToast: false
   })
 };

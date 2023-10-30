@@ -30,6 +30,7 @@ import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/c
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
+import { EnvironmentCallbacksComponent } from 'src/renderer/app/components/environment-callbacks/environment-callbacks.component';
 import { EnvironmentDatabucketsComponent } from 'src/renderer/app/components/environment-databuckets/environment-databuckets.component';
 import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
 import { EnvironmentLogsComponent } from 'src/renderer/app/components/environment-logs/environment-logs.component';
@@ -39,6 +40,7 @@ import { EnvironmentSettingsComponent } from 'src/renderer/app/components/enviro
 import { FooterComponent } from 'src/renderer/app/components/footer/footer.component';
 import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
 import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
+import { CallbacksMenuComponent } from 'src/renderer/app/components/menus/callbacks-menu/callbacks-menu.component';
 import { DatabucketsMenuComponent } from 'src/renderer/app/components/menus/databuckets-menu/databuckets-menu.component';
 import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
 import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-menu/routes-menu.component';
@@ -51,6 +53,7 @@ import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
+import { RouteCallbacksComponent } from 'src/renderer/app/components/route-callbacks/route-callbacks.component';
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
@@ -101,12 +104,15 @@ import { AppComponent } from './app.component';
     EnvironmentSettingsComponent,
     EnvironmentRoutesComponent,
     EnvironmentDatabucketsComponent,
+    EnvironmentCallbacksComponent,
     HeadersListComponent,
     BannerComponent,
     RouteResponseRulesComponent,
+    RouteCallbacksComponent,
     EnvironmentsMenuComponent,
     RoutesMenuComponent,
     DatabucketsMenuComponent,
+    CallbacksMenuComponent,
     TitleSeparatorComponent,
     FooterComponent,
     DuplicateModalComponent,

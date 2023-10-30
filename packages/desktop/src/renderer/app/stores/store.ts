@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
+  Callback,
+  CallbackInvocation,
   DataBucket,
   Environment,
   Route,
@@ -32,7 +34,9 @@ export class Store {
     activeEnvironmentUUID: null,
     activeRouteUUID: null,
     activeDatabucketUUID: null,
+    activeCallbackUUID: null,
     activeRouteResponseUUID: null,
+    activeRouteResponseCallbackUUID: null,
     environments: [],
     environmentsStatus: {},
     bodyEditorConfig: defaultEditorOptions,
@@ -48,9 +52,13 @@ export class Store {
     filters: {
       routes: '',
       databuckets: '',
-      templates: ''
+      templates: '',
+      callbacks: ''
     },
-    user: null
+    user: null,
+    callbackSettings: {
+      activeTab: 'SPEC'
+    }
   });
   /**
    * Emits latest store action
@@ -241,6 +249,21 @@ export class Store {
   }
 
   /**
+   * Select active callback observable
+   */
+  public selectActiveCallback(): Observable<Callback> {
+    return this.selectActiveEnvironment().pipe(
+      map((environment) =>
+        environment
+          ? environment.callbacks.find(
+              (cb) => cb.uuid === this.store$.value.activeCallbackUUID
+            )
+          : null
+      )
+    );
+  }
+
+  /**
    * Get environment by uuid
    */
   public getEnvironmentByUUID(UUID: string): Environment {
@@ -301,6 +324,39 @@ export class Store {
   }
 
   /**
+   * Get active
+   */
+  public getActiveResponseCallback(): CallbackInvocation {
+    return this.store$.value.environments
+      .find(
+        (environment) =>
+          environment.uuid === this.store$.value.activeEnvironmentUUID
+      )
+      .routes.find((route) => route.uuid === this.store$.value.activeRouteUUID)
+      .responses.find(
+        (response) =>
+          response.uuid === this.store$.value.activeRouteResponseUUID
+      )
+      .callbacks.find(
+        (callback) =>
+          callback.uuid === this.store$.value.activeRouteResponseCallbackUUID
+      );
+  }
+
+  public selectActiveRouteResponseCallback(): Observable<CallbackInvocation> {
+    return this.selectActiveRouteResponse().pipe(
+      map((response) =>
+        response && response.callbacks
+          ? response.callbacks.find(
+              (rc) =>
+                rc.uuid === this.store$.value.activeRouteResponseCallbackUUID
+            )
+          : null
+      )
+    );
+  }
+
+  /**
    * Get active databucket value
    */
   public getActiveDatabucket(): DataBucket {
@@ -348,6 +404,22 @@ export class Store {
     });
 
     return foundDataBucket;
+  }
+
+  /**
+   * Get callback with the supplied UUID from any environment
+   */
+  public getCallbackByUUID(callbackUUID: string): Callback | undefined {
+    let foundCallback: Callback;
+    this.store$.value.environments.some((environment: Environment) => {
+      foundCallback = environment.callbacks.find(
+        (cb: Callback) => cb.uuid === callbackUUID
+      );
+
+      return !!foundCallback;
+    });
+
+    return foundCallback;
   }
 
   /**

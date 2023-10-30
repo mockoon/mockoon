@@ -1,6 +1,8 @@
 import {
   BINARY_BODY,
   BodyTypes,
+  Callback,
+  CallbackInvocation,
   CORSHeaders,
   Environment,
   FileExtensionsWithTemplating,
@@ -62,6 +64,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
+  private callbackDefinitions: Callback[] = [];
 
   constructor(
     private environment: Environment,
@@ -172,6 +175,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
+    this.retrieveCallbackDefinitions(this.environment);
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
@@ -572,6 +576,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             }
           }
 
+          this.makeCallbacks(route, enabledRouteResponse, request, response);
+
           this.serveBody(
             content || '',
             route,
@@ -583,6 +589,100 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
       }, enabledRouteResponse.latency);
     };
+  }
+
+  private makeCallbacks(
+    route: Route,
+    routeResponse: RouteResponse,
+    request: Request,
+    response: Response
+  ) {
+    if (routeResponse.callbacks && routeResponse.callbacks.length > 0) {
+      try {
+        for (const invocation of routeResponse.callbacks) {
+          const cb = this.environment.callbacks.find(
+            (ref) => ref.uuid === invocation.uuid
+          );
+
+          if (!cb) {
+            continue;
+          }
+
+          const url = TemplateParser(
+            false,
+            cb.uri,
+            this.environment,
+            this.processedDatabuckets,
+            request,
+            response
+          );
+
+          let content = cb.body;
+          if (cb.bodyType === BodyTypes.INLINE) {
+            content = TemplateParser(
+              false,
+              content || '',
+              this.environment,
+              this.processedDatabuckets,
+              request,
+              response
+            );
+          } else if (cb.bodyType === BodyTypes.DATABUCKET && cb.databucketID) {
+            const servedDatabucket = this.processedDatabuckets.find(
+              (processedDatabucket) =>
+                processedDatabucket.id === cb.databucketID
+            );
+
+            if (servedDatabucket) {
+              content = servedDatabucket.value;
+
+              // if returned content is an array or object we need to stringify it for some values (array, object, booleans and numbers (bool and nb because expressjs cannot serve this as is))
+              if (
+                Array.isArray(content) ||
+                typeof content === 'object' ||
+                typeof content === 'boolean' ||
+                typeof content === 'number'
+              ) {
+                content = JSON.stringify(content);
+              } else {
+                content = content;
+              }
+            }
+          } else if (cb.bodyType === BodyTypes.FILE && cb.filePath) {
+            this.sendFileWithCallback(
+              route,
+              routeResponse,
+              cb,
+              invocation,
+              request,
+              response
+            );
+
+            continue;
+          }
+
+          const sendingHeaders = {
+            headers: {}
+          };
+          this.setHeaders(cb.headers || [], sendingHeaders, request);
+
+          setTimeout(() => {
+            fetch(url, {
+              method: cb.method,
+              headers: sendingHeaders.headers,
+              body: content
+            });
+          }, invocation.latency);
+        }
+      } catch (error: any) {
+        this.emit('error', ServerErrorCodes.CALLBACK_ERROR, error);
+
+        this.sendError(
+          response,
+          format(ServerMessages.CALLBACK_ERROR, error.message)
+        );
+      }
+    }
   }
 
   /**
@@ -622,6 +722,116 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         routePath: route.endpoint,
         routeUUID: route.uuid
       });
+
+      this.sendError(
+        response,
+        format(ServerMessages.ROUTE_SERVING_ERROR, error.message)
+      );
+    }
+  }
+
+  private sendFileWithCallback(
+    route: Route,
+    routeResponse: RouteResponse,
+    callback: Callback,
+    invocation: CallbackInvocation,
+    request: Request,
+    response: Response
+  ) {
+    if (!callback.filePath) {
+      return;
+    }
+
+    const fileServingError = (error) => {
+      this.emit('error', ServerErrorCodes.ROUTE_FILE_SERVING_ERROR, error);
+    };
+
+    const errorThrowOrFallback = (error) => {
+      if (routeResponse.fallbackTo404) {
+        response.status(404);
+        const content = routeResponse.body ? routeResponse.body : '';
+        this.serveBody(content, route, routeResponse, request, response);
+      } else {
+        fileServingError(error);
+      }
+    };
+
+    try {
+      let filePath = TemplateParser(
+        false,
+        callback.filePath.replace(/\\/g, '/'),
+        this.environment,
+        this.processedDatabuckets,
+        request
+      );
+
+      filePath = resolvePathFromEnvironment(
+        filePath,
+        this.options.environmentDirectory
+      );
+
+      const fileMimeType = mimeTypeLookup(filePath) || '';
+
+      const sendingHeaders = {
+        headers: {}
+      };
+      this.setHeaders(callback.headers || [], sendingHeaders, request);
+
+      const definedContentType = sendingHeaders.headers['Content-Type'];
+
+      // parse templating for a limited list of mime types
+
+      try {
+        if (!callback.sendFileAsBody) {
+          const { size } = statSync(filePath);
+          const buffer = readFileSync(filePath);
+          const form = new FormData();
+          form.append('file', new Blob([buffer]));
+
+          setTimeout(() => {
+            fetch(callback.uri, {
+              method: callback.method,
+              body: form,
+              headers: sendingHeaders.headers
+            });
+          }, invocation.latency);
+        } else {
+          const data = readFileSync(filePath);
+          let fileContent;
+          if (
+            MimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
+            !routeResponse.disableTemplating
+          ) {
+            fileContent = TemplateParser(
+              false,
+              data.toString(),
+              this.environment,
+              this.processedDatabuckets,
+              request,
+              response
+            );
+          } else {
+            fileContent = data.toString();
+          }
+
+          // set content-type the detected mime type if any
+          if (!definedContentType && fileMimeType) {
+            sendingHeaders.headers['Content-Type'] = fileMimeType;
+          }
+
+          setTimeout(() => {
+            fetch(callback.uri, {
+              method: callback.method,
+              headers: sendingHeaders.headers,
+              body: fileContent
+            });
+          }, invocation.latency);
+        }
+      } catch (error: any) {
+        fileServingError(error);
+      }
+    } catch (error: any) {
+      this.emit('error', ServerErrorCodes.ROUTE_SERVING_ERROR, error);
 
       this.sendError(
         response,
@@ -1216,6 +1426,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
         this.processedDatabuckets.push(newProcessedDatabucket);
       });
+    }
+  }
+
+  private retrieveCallbackDefinitions(environment: Environment) {
+    if (environment.callbacks?.length > 0) {
+      this.callbackDefinitions = [...environment.callbacks];
     }
   }
 
