@@ -37,7 +37,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">  
-  <a href="www.devmark.ai/fern/?utm_source=mockoon&utm_loc=readme&utm_type=logo">  
+  <a href="https://www.devmark.ai/fern/?utm_source=mockoon&utm_loc=readme&utm_type=logo">  
       <img src="https://mockoon.com/images/sponsors/fern.png" alt="Fern logo" />
   </a>
 </div>
