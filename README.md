@@ -67,6 +67,14 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
   </a>
 </div>
 
+### Gold
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">  
+  <a href="www.devmark.ai/fern/?utm_source=mockoon&utm_loc=readme&utm_type=logo">  
+      <img src="https://mockoon.com/images/sponsors/fern.png" alt="Fern logo" />
+  </a>
+</div>
+
 ### Silver
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">  

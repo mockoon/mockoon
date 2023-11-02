@@ -34,6 +34,14 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
   </a>
 </div>
 
+### Gold
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">  
+  <a href="www.devmark.ai/fern/?utm_source=mockoon&utm_loc=readme&utm_type=logo">  
+      <img src="https://mockoon.com/images/sponsors/fern.png" alt="Fern logo" />
+  </a>
+</div>
+
 ### Silver
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">  
@@ -63,6 +71,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Emadashi
 - [EMQX](https://www.emqx.io/)
 - Everett
+- [Fern](www.devmark.ai/fern/?utm_source=mockoon&utm_loc=readme&utm_type=logo)
 - [fl0rian-p](https://github.com/fl0rian-p)
 - François Grémont
 - [GitHub](https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/)
