@@ -7,7 +7,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { Observable, from } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -54,10 +54,6 @@ export class AppComponent extends Logger implements OnInit {
     private title: Title
   ) {
     super('[RENDERER][COMPONENT][APP] ', toastService);
-
-    if (!environment.production) {
-      this.title.setTitle(`${this.title.getTitle()} [DEV]`);
-    }
 
     this.settingsService.monitorSettings().subscribe();
     this.settingsService.loadSettings().subscribe();
@@ -115,7 +111,16 @@ export class AppComponent extends Logger implements OnInit {
 
     this.telemetryService.init().subscribe();
 
-    this.activeEnvironment$ = this.store.selectActiveEnvironment();
+    this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
+      filter((activeEnvironment) => !!activeEnvironment),
+      tap((activeEnvironment) => {
+        this.title.setTitle(
+          `${environment.production ? '' : ' [DEV]'}Mockoon - ${
+            activeEnvironment.name
+          }`
+        );
+      })
+    );
     this.activeView$ = this.store.select('activeView');
     this.toasts$ = this.store.select('toasts');
   }

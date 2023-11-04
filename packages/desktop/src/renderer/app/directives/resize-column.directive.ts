@@ -148,7 +148,7 @@ export class ResizeColumnDirective implements AfterViewInit {
 
   private saveSettings() {
     if (
-      this.store.get('settings')[this.settingProperties[this.type]] ===
+      this.store.get('settings')?.[this.settingProperties[this.type]] ===
       this.currentWidth
     ) {
       return;
