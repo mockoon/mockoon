@@ -18,7 +18,7 @@ import {
   EnvironmentStatus,
   StoreType
 } from 'src/renderer/app/models/store.model';
-import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
+import { ActionTypes, Actions } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
 
 @Injectable({ providedIn: 'root' })

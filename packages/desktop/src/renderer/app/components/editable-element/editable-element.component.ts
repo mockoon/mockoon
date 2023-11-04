@@ -39,8 +39,6 @@ export class EditableElementComponent implements OnInit, ControlValueAccessor {
    */
   @Input()
   public editCondition = true;
-  @Input()
-  public text = '';
   @Output()
   public editChange = new EventEmitter<boolean>();
 
@@ -51,8 +49,15 @@ export class EditableElementComponent implements OnInit, ControlValueAccessor {
   public onTouched: () => void;
   public edit = false;
   public data = new FormControl('');
+  public _text: string;
 
   constructor() {}
+
+  @Input()
+  public set text(value: string) {
+    this._text = value;
+    this.data.setValue(value);
+  }
 
   @HostListener('click', ['$event'])
   public elementClick(event: MouseEvent) {

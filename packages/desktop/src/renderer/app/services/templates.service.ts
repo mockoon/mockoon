@@ -20,7 +20,7 @@ import {
 import { Plans, User } from 'src/renderer/app/models/user.model';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UserService } from 'src/renderer/app/services/user.service';
-import { setUpdateUserAction } from 'src/renderer/app/stores/actions';
+import { updateUserAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -113,7 +113,7 @@ export class TemplatesService {
               this.lastGeneratedTemplate$.next(template);
 
               this.store.update(
-                setUpdateUserAction({
+                updateUserAction({
                   templatesQuotaUsed:
                     this.store.get('user').templatesQuotaUsed + 1
                 })

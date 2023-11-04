@@ -116,16 +116,16 @@ label {
   &:visited {
     text-decoration: none;
   }
-  color: $gray-500;
+  color: $gray-300;
 
   &:hover,
   &:active {
-    color: $body-color;
+    color: $gray-100;
     text-decoration: none;
   }
 
   &.active {
-    color: $gray-200;
+    color: $gray-100;
     box-shadow: inset 0 -2px 0 0 $blue;
     border-radius: 0;
   }

@@ -8,7 +8,6 @@ import {
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
-import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
 import { FolderProperties } from 'src/renderer/app/models/folder.model';
 import {
   RouteProperties,
@@ -25,7 +24,7 @@ import {
 } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { DropAction } from 'src/renderer/app/models/ui.model';
-import { UserProperties } from 'src/renderer/app/models/user.model';
+import { User } from 'src/renderer/app/models/user.model';
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 
 export const enum ActionTypes {
@@ -82,7 +81,7 @@ export const enum ActionTypes {
  *
  * @param properties - user properties to update
  */
-export const setUpdateUserAction = (properties: UserProperties) =>
+export const updateUserAction = (properties: Partial<User>) =>
   ({
     type: ActionTypes.UPDATE_USER,
     properties
@@ -243,7 +242,7 @@ export const removeEnvironmentAction = (environmentUUID: string) =>
  *
  * @param properties - properties to update
  */
-export const updateEnvironmentAction = (properties: EnvironmentProperties) =>
+export const updateEnvironmentAction = (properties: Partial<Environment>) =>
   ({
     type: ActionTypes.UPDATE_ENVIRONMENT,
     properties
@@ -643,7 +642,7 @@ export const updateUIStateAction = (properties: UIStateProperties) =>
   }) as const;
 
 export type Actions =
-  | ReturnType<typeof setUpdateUserAction>
+  | ReturnType<typeof updateUserAction>
   | ReturnType<typeof setActiveTabAction>
   | ReturnType<typeof setActiveViewAction>
   | ReturnType<typeof setActiveEnvironmentLogTabAction>

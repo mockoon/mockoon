@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Auth, signInWithCustomToken, user } from '@angular/fire/auth';
 import { catchError, from, of, switchMap, tap, throwError } from 'rxjs';
 import { User } from 'src/renderer/app/models/user.model';
-import { setUpdateUserAction } from 'src/renderer/app/stores/actions';
+import { updateUserAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -58,7 +58,7 @@ export class UserService {
           })
           .pipe(
             tap((info: User) =>
-              this.store.update(setUpdateUserAction({ ...info }))
+              this.store.update(updateUserAction({ ...info }))
             )
           )
       )
@@ -71,7 +71,7 @@ export class UserService {
 
   public logout() {
     return from(this.auth.signOut()).pipe(
-      tap(() => this.store.update(setUpdateUserAction(null)))
+      tap(() => this.store.update(updateUserAction(null)))
     );
   }
 }

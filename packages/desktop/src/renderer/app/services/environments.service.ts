@@ -58,7 +58,6 @@ import {
 } from 'src/renderer/app/libs/utils.lib';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
-import { EnvironmentProperties } from 'src/renderer/app/models/environment.model';
 import { FolderProperties } from 'src/renderer/app/models/folder.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
@@ -1002,7 +1001,7 @@ export class EnvironmentsService extends Logger {
    * Update the active environment
    */
   public updateActiveEnvironment(
-    properties: EnvironmentProperties,
+    properties: Partial<Environment>,
     force = false
   ) {
     this.store.update(updateEnvironmentAction(properties), force);

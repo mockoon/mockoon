@@ -19,7 +19,3 @@ export type User = {
     frequency: string;
   };
 };
-
-export type UserProperties = {
-  [T in keyof User]?: User[T];
-};
