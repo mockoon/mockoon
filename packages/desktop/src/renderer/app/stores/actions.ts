@@ -9,10 +9,6 @@ import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { FolderProperties } from 'src/renderer/app/models/folder.model';
-import {
-  RouteProperties,
-  RouteResponseProperties
-} from 'src/renderer/app/models/route.model';
 import { SettingsProperties } from 'src/renderer/app/models/settings.model';
 import {
   EnvironmentLogsTabsNameType,
@@ -401,7 +397,7 @@ export const removeRouteResponseAction = () =>
  *
  * @param properties - properties to update
  */
-export const updateRouteAction = (properties: RouteProperties) =>
+export const updateRouteAction = (properties: Partial<Route>) =>
   ({
     type: ActionTypes.UPDATE_ROUTE,
     properties
@@ -486,9 +482,7 @@ export const duplicateDatabucketToAnotherEnvironmentAction = (
  *
  * @param properties - properties to update
  */
-export const updateRouteResponseAction = (
-  properties: RouteResponseProperties
-) =>
+export const updateRouteResponseAction = (properties: Partial<RouteResponse>) =>
   ({
     type: ActionTypes.UPDATE_ROUTE_RESPONSE,
     properties

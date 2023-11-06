@@ -25,7 +25,6 @@ import {
 } from 'src/renderer/app/constants/routes.constants';
 import { HeadersProperties } from 'src/renderer/app/models/common.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
@@ -58,7 +57,6 @@ export class HeadersListComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private eventsService: EventsService,
     private store: Store
   ) {}
 
@@ -79,19 +77,6 @@ export class HeadersListComponent implements OnInit, OnDestroy {
         this.replaceHeaders(dataSubject[this.headersPropertyName], false);
       })
     );
-
-    // subscribe to header injection observable
-    this.eventsService.injectHeaders$
-      .pipe(
-        filter(
-          (injectedPayload) => injectedPayload.dataSubject === this.dataSubject
-        ),
-        tap((injectedPayload) => {
-          this.injectHeaders(injectedPayload.headers);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
 
     // subscribe to changes and send new headers values to the store
     this.form.valueChanges
@@ -150,27 +135,6 @@ export class HeadersListComponent implements OnInit, OnDestroy {
     if (confirmValue.enabled && headerIndex === confirmValue.payload) {
       this.headers.removeAt(headerIndex);
     }
-  }
-
-  /**
-   * Replace existing header with injected header value, or append injected header
-   */
-  private injectHeaders(headers: Header[]) {
-    const newHeaders = [...this.headers.value];
-
-    headers.forEach((header) => {
-      const headerExistsIndex = newHeaders.findIndex(
-        (newHeader) => newHeader.key === header.key
-      );
-
-      if (headerExistsIndex > -1 && !newHeaders[headerExistsIndex].value) {
-        newHeaders[headerExistsIndex] = { ...header };
-      } else if (headerExistsIndex === -1) {
-        newHeaders.push({ ...header });
-      }
-    });
-
-    this.replaceHeaders(newHeaders);
   }
 
   /**

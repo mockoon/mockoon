@@ -61,10 +61,6 @@ import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { FolderProperties } from 'src/renderer/app/models/folder.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
-  RouteProperties,
-  RouteResponseProperties
-} from 'src/renderer/app/models/route.model';
-import {
   EnvironmentLogsTabsNameType,
   TabsNameType,
   ViewsNameType
@@ -1010,14 +1006,14 @@ export class EnvironmentsService extends Logger {
   /**
    * Update the active route
    */
-  public updateActiveRoute(properties: RouteProperties) {
+  public updateActiveRoute(properties: Partial<Route>) {
     this.store.update(updateRouteAction(properties));
   }
 
   /**
    * Update the active route response
    */
-  public updateActiveRouteResponse(properties: RouteResponseProperties) {
+  public updateActiveRouteResponse(properties: Partial<RouteResponse>) {
     this.store.update(updateRouteResponseAction(properties));
   }
 
@@ -1365,6 +1361,30 @@ export class EnvironmentsService extends Logger {
 
   public isRecording(environmentUuid: string) {
     return this.eventsService.logsRecording$.value[environmentUuid];
+  }
+
+  public addEnvironmentHeader() {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    this.store.update(
+      updateEnvironmentAction({
+        headers: [...activeEnvironment.headers, BuildHeader()]
+      }),
+      // force as it is not a UI update
+      true
+    );
+  }
+
+  public addRouteResponseHeader() {
+    const activeRouteResponse = this.store.getActiveRouteResponse();
+
+    this.store.update(
+      updateRouteResponseAction({
+        headers: [...activeRouteResponse.headers, BuildHeader()]
+      }),
+      // force as it is not a UI update
+      true
+    );
   }
 
   /**

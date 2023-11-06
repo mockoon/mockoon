@@ -738,13 +738,7 @@ export class CommandPaletteService {
         action: () => {
           this.environmentsService.setActiveView('ENV_ROUTES');
           this.environmentsService.setActiveTab('HEADERS');
-
-          setTimeout(() => {
-            this.eventsService.injectHeaders$.next({
-              dataSubject: 'route',
-              headers: [{ key: '', value: '' }]
-            });
-          }, 0);
+          this.environmentsService.addRouteResponseHeader();
         },
         score: 1,
         enabled: hasActiveEnvironment && hasActiveRoute
@@ -754,13 +748,7 @@ export class CommandPaletteService {
         label: 'Add Header for Current Environment',
         action: () => {
           this.environmentsService.setActiveView('ENV_HEADERS');
-
-          setTimeout(() => {
-            this.eventsService.injectHeaders$.next({
-              dataSubject: 'environment',
-              headers: [{ key: '', value: '' }]
-            });
-          }, 0);
+          this.environmentsService.addEnvironmentHeader();
         },
         score: 1,
         enabled: hasActiveEnvironment

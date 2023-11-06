@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CORSHeaders, Environment, Header } from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { updateEnvironmentAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
@@ -18,7 +18,6 @@ export class EnvironmentHeadersComponent implements OnInit {
   constructor(
     private uiService: UIService,
     private store: Store,
-    private eventsService: EventsService,
     private environmentsService: EnvironmentsService
   ) {}
 
@@ -39,9 +38,32 @@ export class EnvironmentHeadersComponent implements OnInit {
    * Inject the CORS headers in the environment headers list
    */
   public addCORSHeaders() {
-    this.eventsService.injectHeaders$.next({
-      dataSubject: 'environment',
-      headers: CORSHeaders
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const newHeaders = [...activeEnvironment.headers];
+    let headersChanged = false;
+
+    CORSHeaders.forEach((corsHeader) => {
+      const headerExistsIndex = newHeaders.findIndex(
+        (newHeader) => newHeader.key === corsHeader.key
+      );
+
+      if (headerExistsIndex > -1 && !newHeaders[headerExistsIndex].value) {
+        newHeaders[headerExistsIndex] = { ...corsHeader };
+        headersChanged = true;
+      } else if (headerExistsIndex === -1) {
+        newHeaders.push({ ...corsHeader });
+        headersChanged = true;
+      }
     });
+
+    if (headersChanged) {
+      this.store.update(
+        updateEnvironmentAction({
+          headers: newHeaders
+        }),
+        // force as it is a non-UI change
+        true
+      );
+    }
   }
 }
