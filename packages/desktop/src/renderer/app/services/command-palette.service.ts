@@ -272,7 +272,7 @@ export class CommandPaletteService {
 
       highlightedText +=
         splitAtPos.substring(0, splitAtPos.length - 1) +
-        '<span class="text-primary font-weight-bold">' +
+        '<span class="text-primary fw-bold">' +
         splitAtPos.charAt(splitAtPos.length - 1) +
         '</span>';
 

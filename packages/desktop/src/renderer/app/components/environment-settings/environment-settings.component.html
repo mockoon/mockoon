@@ -1,14 +1,14 @@
 <div
   *ngIf="activeEnvironment$ | async as activeEnvironment"
-  class="h-100 p-2"
+  class="d-flex flex-column h-100 p-2"
   [formGroup]="activeEnvironmentForm"
 >
-  <div class="mb-3">
-    <div class="input-group">
-      <label for="env-settings-name" class="col-form-label pe-2">Name</label
-      ><input
+  <div class="d-flex flex-row align-items-center">
+    <label for="env-settings-name" class="pe-2">Name</label>
+    <div class="col-4">
+      <input
         type="text"
-        class="form-control col-4"
+        class="form-control"
         formControlName="name"
         id="env-settings-name"
       />
@@ -23,21 +23,23 @@
     }}:{{ activeEnvironment?.port }}/{{ activeEnvironment?.endpointPrefix }}"
   ></app-title-separator>
 
-  <div class="mb-3">
-    <div class="input-group">
+  <div class="d-flex flex-row align-items-center">
+    <div class="col-1">
       <input
         type="text"
-        class="form-control col-1"
+        class="form-control"
         id="env-settings-hostname"
         placeholder="localhost"
         formControlName="hostname"
       />
-      <div class="input-group-prepend">
-        <span class="input-group-text font-bold">:</span>
-      </div>
+    </div>
+    <div class="p-2">
+      <span class="font-bold">:</span>
+    </div>
+    <div class="col-1">
       <input
         type="number"
-        class="form-control col-1"
+        class="form-control"
         id="env-settings-port"
         placeholder="port"
         formControlName="port"
@@ -47,23 +49,24 @@
           canBeEmpty: false
         }"
       />
-      <div class="input-group-prepend">
-        <span class="input-group-text font-bold">/</span>
-      </div>
+    </div>
+    <div class="p-2">
+      <span class="font-bold">/</span>
+    </div>
+    <div class="col-4">
       <input
         type="text"
-        class="form-control col-4"
+        class="form-control"
         placeholder="prefix"
         appValidPath
         formControlName="endpointPrefix"
       />
-      <div class="input-group-append align-items-center ms-1">
-        <app-svg
-          icon="info"
-          class="ms-1"
-          ngbTooltip="Default hostname is :: (IPv6) and 0.0.0.0 (IPv4)"
-        ></app-svg>
-      </div>
+    </div>
+    <div class="p-2 align-items-center">
+      <app-svg
+        icon="info"
+        ngbTooltip="Default hostname is :: (IPv6) and 0.0.0.0 (IPv4)"
+      ></app-svg>
     </div>
   </div>
 
@@ -74,7 +77,7 @@
   ></app-title-separator>
 
   <ng-container formGroupName="tlsOptions">
-    <div class="mb-3">
+    <div class="mb-3 d-flex flex-row">
       <div class="form-check">
         <input
           type="checkbox"
@@ -88,7 +91,7 @@
       </div>
     </div>
 
-    <div class="mb-3 d-flex" id="tls-cert-container">
+    <div class="mb-3 d-flex flex-row" id="tls-cert-container">
       <app-toggle
         prefix="cert-types"
         formControlName="type"
@@ -96,116 +99,104 @@
         [uncheckable]="false"
       ></app-toggle>
 
-      <div class="flex-fill d-flex ps-2">
-        <div
+      <div class="flex-fill d-flex ps-2 align-items-center">
+        <ng-container
           *ngIf="
             activeEnvironmentForm.get(['tlsOptions', 'type']).value === 'PFX'
           "
-          class="mb-3 flex-fill mb-0"
         >
-          <div class="input-group">
-            <label for="env-settings-tls-pfxPath" class="col-form-label pe-2"
-              >PFX or PKCS12 path</label
-            ><input
+          <label for="env-settings-tls-pfxPath" class="pe-2"
+            >PFX or PKCS12 path</label
+          >
+          <div class="col-4">
+            <input
               type="text"
-              class="form-control col-4"
+              class="form-control"
               formControlName="pfxPath"
               id="env-settings-tls-pfxPath"
             />
-            <div class="input-group-append">
-              <button
-                class="btn btn-link"
-                ngbTooltip="Browse files"
-                (click)="browseFiles('pfxPath')"
-              >
-                <app-svg icon="find_in_page"></app-svg>
-              </button>
-            </div>
           </div>
-        </div>
-        <div
+          <button
+            class="btn btn-link"
+            ngbTooltip="Browse files"
+            (click)="browseFiles('pfxPath')"
+          >
+            <app-svg icon="find_in_page"></app-svg>
+          </button>
+        </ng-container>
+        <ng-container
           *ngIf="
             activeEnvironmentForm.get(['tlsOptions', 'type']).value === 'CERT'
           "
-          class="mb-3 flex-fill mb-0 me-2"
         >
-          <div class="input-group">
-            <label for="env-settings-tls-certPath" class="col-form-label pe-2"
-              >Cert path</label
-            ><input
+          <label for="env-settings-tls-certPath" class="pe-2">Cert path</label>
+          <div class="col-4">
+            <input
               type="text"
               class="form-control"
               formControlName="certPath"
               id="env-settings-tls-certPath"
             />
-            <div class="input-group-append">
-              <button
-                class="btn btn-link"
-                ngbTooltip="Browse files"
-                (click)="browseFiles('certPath')"
-              >
-                <app-svg icon="find_in_page"></app-svg>
-              </button>
-            </div>
           </div>
-        </div>
-        <div
+          <button
+            class="btn btn-link"
+            ngbTooltip="Browse files"
+            (click)="browseFiles('certPath')"
+          >
+            <app-svg icon="find_in_page"></app-svg>
+          </button>
+        </ng-container>
+        <ng-container
           *ngIf="
             activeEnvironmentForm.get(['tlsOptions', 'type']).value === 'CERT'
           "
-          class="mb-3 flex-fill mb-0"
         >
-          <div class="input-group">
-            <label for="env-settings-tls-keyPath" class="col-form-label pe-2"
-              >Key path</label
-            ><input
+          <label for="env-settings-tls-keyPath" class="pe-2">Key path</label>
+          <div class="col-4">
+            <input
               type="text"
               class="form-control"
               formControlName="keyPath"
               id="env-settings-tls-keyPath"
             />
-            <div class="input-group-append">
-              <button
-                class="btn btn-link"
-                ngbTooltip="Browse files"
-                (click)="browseFiles('keyPath')"
-              >
-                <app-svg icon="find_in_page"></app-svg>
-              </button>
-            </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <div class="input-group">
-        <label for="env-settings-tls-caPath" class="col-form-label pe-2"
-          >CA cert path</label
-        ><input
-          type="text"
-          class="form-control col-4"
-          formControlName="caPath"
-          id="env-settings-tls-caPath"
-        />
-        <div class="input-group-append">
           <button
             class="btn btn-link"
             ngbTooltip="Browse files"
-            (click)="browseFiles('caPath')"
+            (click)="browseFiles('keyPath')"
           >
             <app-svg icon="find_in_page"></app-svg>
           </button>
-        </div>
+        </ng-container>
       </div>
     </div>
-    <div class="mb-3">
-      <div class="input-group">
-        <label for="env-settings-tls-passphrase" class="col-form-label pe-2"
-          >Cert passphrase</label
-        ><input
+
+    <div class="mb-3 d-inline-flex flex-row">
+      <label for="env-settings-tls-caPath" class="pe-2">CA cert path</label>
+      <div class="col-4">
+        <input
           type="text"
-          class="form-control col-4"
+          class="form-control"
+          formControlName="caPath"
+          id="env-settings-tls-caPath"
+        />
+      </div>
+      <button
+        class="btn btn-link"
+        ngbTooltip="Browse files"
+        (click)="browseFiles('caPath')"
+      >
+        <app-svg icon="find_in_page"></app-svg>
+      </button>
+    </div>
+    <div class="mb-3 d-flex flex-row align-items-center">
+      <label for="env-settings-tls-passphrase" class="pe-2"
+        >Cert passphrase</label
+      >
+      <div class="col-4">
+        <input
+          type="text"
+          class="form-control"
           formControlName="passphrase"
           id="env-settings-tls-passphrase"
         />
@@ -215,15 +206,15 @@
 
   <app-title-separator heading="Misc" icon="storage"></app-title-separator>
 
-  <div class="mb-3">
-    <div class="input-group">
-      <label for="env-settings-latency" class="col-form-label pe-2">
-        Latency (ms)
-      </label>
+  <div class="mb-3 d-flex flex-row align-items-center">
+    <label for="env-settings-latency" class="col-form-label pe-2">
+      Latency (ms)
+    </label>
+    <div class="col-1">
       <input
         type="number"
         id="env-settings-latency"
-        class="form-control col-1"
+        class="form-control"
         formControlName="latency"
         [appInputNumber]="{
           min: 0,
@@ -231,37 +222,35 @@
           canBeEmpty: false
         }"
       />
-      <div class="input-group-append align-items-center ms-1">
-        <app-svg
-          icon="info"
-          class="ms-1"
-          ngbTooltip="Global environment latency applied to all routes"
-        ></app-svg>
-      </div>
+    </div>
+    <div class="align-items-center ms-1">
+      <app-svg
+        icon="info"
+        class="ms-1"
+        ngbTooltip="Global environment latency applied to all routes"
+      ></app-svg>
     </div>
   </div>
 
-  <div class="mb-3">
-    <div class="input-group">
-      <div class="form-check">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          id="env-settings-cors"
-          formControlName="cors"
-        />
-        <label class="form-check-label" for="env-settings-cors"
-          >Automatically handle OPTIONS pre-flight requests
-        </label>
-      </div>
-      <div class="input-group-append ms-1">
-        <app-svg
-          icon="info"
-          class="ms-1"
-          ngbTooltip="Mockoon will now automatically answer with a 200 HTTP status code to
+  <div class="mb-3 d-flex flex-row align-items-center">
+    <div class="form-check">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="env-settings-cors"
+        formControlName="cors"
+      />
+      <label class="form-check-label" for="env-settings-cors"
+        >Automatically handle OPTIONS pre-flight requests
+      </label>
+    </div>
+    <div class="ms-1">
+      <app-svg
+        icon="info"
+        class="ms-1"
+        ngbTooltip="Mockoon will now automatically answer with a 200 HTTP status code to
       all preflight OPTIONS requests"
-        ></app-svg>
-      </div>
+      ></app-svg>
     </div>
   </div>
 </div>

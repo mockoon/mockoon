@@ -177,8 +177,8 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
   z-index: 5000;
   position: absolute;
   width: 250px;
-  top: ($spacer / 2) + 2rem;
-  right: $spacer / 2;
+  top: calc($spacer / 2) + 2rem;
+  right: calc($spacer / 2);
 
   .toast {
     word-break: break-word;
@@ -268,7 +268,7 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
     top left,
     bottom left;
   border-left: 3px solid $gray-500;
-  margin: $spacer / 2;
+  margin: calc($spacer / 2);
   width: 11px;
 }
 

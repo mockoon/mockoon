@@ -32,9 +32,9 @@
             [dragId]="ruleIndex"
             (dropped)="reorganizeRules($event)"
           >
-            <div class="form-inline">
+            <div class="d-flex align-items-center">
               <app-custom-select
-                class="col-3 mr-1"
+                class="col-3 me-1"
                 formControlName="target"
                 [enableCustomInput]="false"
                 [items]="responseRuleTargets"
@@ -43,7 +43,7 @@
 
               <input
                 type="text"
-                class="form-control col-3 mr-1"
+                class="form-control col-3 me-1"
                 [placeholder]="
                   modifierPlaceholders[
                     form.get(['rules', ruleIndex, 'target']).value
@@ -58,7 +58,7 @@
                 "
               />
               <app-toggle
-                class="mr-1"
+                class="me-1"
                 [uncheckable]="true"
                 formControlName="invert"
                 prefix="rule"
@@ -66,7 +66,7 @@
               ></app-toggle>
 
               <app-custom-select
-                class="col-2 mr-1"
+                class="col-2 me-1"
                 formControlName="operator"
                 [enableCustomInput]="false"
                 [items]="responseRuleOperators"
@@ -97,7 +97,7 @@
               />
 
               <div
-                class="input-group-prepend ml-auto"
+                class="input-group-prepend ms-auto"
                 *ngIf="deleteRuleRequested$ | async as deleteRuleRequested"
               >
                 <button
@@ -141,13 +141,13 @@
         class="btn btn-link btn-icon add-rule"
         (click)="addRule()"
       >
-        <app-svg icon="add_box" class="text-success pr-2"></app-svg>
+        <app-svg icon="add_box" class="text-success pe-2"></app-svg>
         Add rule
       </button>
       <ng-container *ngIf="activeRoute$ | async as activeRoute">
         <div
           *ngIf="rulesDisablingResponseModes.includes(activeRoute.responseMode)"
-          class="warning-message ml-auto text-center pr-2"
+          class="warning-message ms-auto text-center pe-2"
           id="disabled-rules-warning-message"
         >
           {{ texts.DISABLED_RULES_WARNING }}

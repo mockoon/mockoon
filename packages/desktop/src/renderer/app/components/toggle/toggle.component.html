@@ -1,7 +1,4 @@
-<div
-  class="btn-group btn-group-toggle btn-group-sm h-100"
-  data-toggle="buttons"
->
+<div class="btn-group btn-group-sm h-100" data-bs-toggle="buttons" role="group">
   <button *ngIf="label" class="btn btn-custom px-3" disabled>
     {{ label }}
   </button>
@@ -55,6 +52,7 @@
         (click)="itemClick(item, $event)"
       >
         <input
+          class="btn-check"
           type="radio"
           [formControl]="control"
           [value]="item.value"

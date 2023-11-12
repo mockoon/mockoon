@@ -3,7 +3,7 @@
   class="d-flex flex-column h-100 p-2"
   [formGroup]="environmentProxyForm"
 >
-  <div class="mb-3">
+  <div class="form-group">
     <div class="input-group">
       <div class="form-check">
         <input
@@ -13,21 +13,18 @@
           formControlName="proxyMode"
         />
         <label class="form-check-label" for="env-proxy-mode"
-          >Enable proxy mode
-        </label>
-      </div>
-      <div class="input-group-append ms-1">
+          >Enable proxy mode</label
+        >
         <app-svg
           icon="info"
           class="ms-1"
-          ngbTooltip="Calls to non-defined routes will be forwarded to the specified target
-    URL"
+          ngbTooltip="Calls to non-defined routes will be forwarded to the specified target URL"
         ></app-svg>
       </div>
     </div>
   </div>
 
-  <div class="mb-3">
+  <div class="form-group">
     <div class="input-group">
       <label for="env-proxy-host" class="col-form-label pe-2">Target URL</label>
       <input
@@ -36,21 +33,22 @@
         id="env-proxy-host"
         formControlName="proxyHost"
       />
-      <div class="input-group-append">
+      <div class="input-group-text">
         <span
-          class="input-group-text text-warning"
+          class="text-warning"
           *ngIf="
             activeEnvironment.proxyHost &&
             !isValidURL(activeEnvironment.proxyHost)
           "
           ngbTooltip="The address must be a valid URL"
-          ><app-svg icon="warning"></app-svg
-        ></span>
+        >
+          <app-svg icon="warning"></app-svg>
+        </span>
       </div>
     </div>
   </div>
 
-  <div class="mb-3">
+  <div class="form-group">
     <div class="input-group">
       <div class="form-check">
         <input
@@ -62,20 +60,17 @@
         <label class="form-check-label" for="env-proxy-remove-prefix">
           Remove Prefix
         </label>
-      </div>
-      <div class="input-group-append ms-1">
         <app-svg
           icon="info"
           class="ms-1"
-          ngbTooltip="When enabled, the environment's prefix will not be forwarded to the
-    remote proxied URL"
+          ngbTooltip="When enabled, the environment's prefix will not be forwarded to the remote proxied URL"
         ></app-svg>
       </div>
     </div>
   </div>
 
   <!-- custom proxy headers -->
-  <div class="d-flex flex-fill mh0 environment-proxy-headers">
+  <div class="d-flex flex-fill mh-0 environment-proxy-headers">
     <div class="d-flex flex-column w-50">
       <div class="mt-2 mb-2">
         Proxy request headers
