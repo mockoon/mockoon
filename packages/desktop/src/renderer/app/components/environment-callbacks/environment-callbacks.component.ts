@@ -32,6 +32,7 @@ import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
   CallbackResponseUsage,
+  CallbackSpecTabNameType,
   CallbackTabsNameType,
   CallbackUsage
 } from 'src/renderer/app/models/callback.model';
@@ -55,6 +56,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public activeCallback$: Observable<Callback>;
   public activeCallbackForm: FormGroup;
   public activeTab$: Observable<CallbackTabsNameType>;
+  public activeSpecTab$: Observable<CallbackSpecTabNameType>;
   public activeCallbackUsages$: Observable<CallbackUsage[]>;
   public activeCallbackFileMimeType$: Observable<{
     mimeType: string;
@@ -67,11 +69,8 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
 
   public databuckets$: Observable<DropdownItems>;
   public httpMethod = Methods;
+  public bodySupportingMethods = [Methods.post, Methods.put, Methods.patch];
   public callbackMethods: DropdownItems<Methods> = [
-    {
-      label: 'HTTP',
-      category: true
-    },
     { value: Methods.get, label: 'GET', classes: 'route-badge-get-text' },
     { value: Methods.post, label: 'POST', classes: 'route-badge-post-text' },
     { value: Methods.put, label: 'PUT', classes: 'route-badge-put-text' },
@@ -128,7 +127,10 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     this.initForms();
     this.initFormValues();
 
-    const activeCallbackId$ = this.activeCallback$.pipe(map((cb) => cb.uuid));
+    const activeCallbackId$ = this.activeCallback$.pipe(
+      filter((cb) => !!cb),
+      map((cb) => cb.uuid)
+    );
     this.activeCallbackFileMimeType$ = this.activeCallback$.pipe(
       filter((cb) => !!cb),
       map((cb) => cb?.filePath),
@@ -189,9 +191,11 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
         }))
       )
     );
-    this.activeTab$ = this.store
-      .select('callbackSettings')
-      .pipe(map((val) => val.activeTab));
+    const callbackSettingsObj = this.store.select('callbackSettings');
+    this.activeTab$ = callbackSettingsObj.pipe(map((val) => val.activeTab));
+    this.activeSpecTab$ = callbackSettingsObj.pipe(
+      map((val) => val.activeSpecTab)
+    );
   }
 
   ngOnDestroy() {
@@ -232,6 +236,13 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Set the application active tab
+   */
+  public setActiveSpecTab(tabName: CallbackSpecTabNameType) {
+    this.environmentsService.setActiveSpecTabInCallbackView(tabName);
+  }
+
+  /**
    * Navigate to route response where this callback has been defined.
    * @param route
    */
@@ -265,8 +276,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
           map((newValue) => {
             if (
               controlName === 'method' &&
-              (newValue === this.httpMethod.get ||
-                newValue === this.httpMethod.delete)
+              this.bodySupportingMethods.indexOf(newValue as Methods) < 0
             ) {
               return {
                 [controlName]: newValue,

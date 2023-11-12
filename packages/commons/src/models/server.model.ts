@@ -7,10 +7,16 @@ export type ProcessedDatabucket = {
   parsed: boolean;
 };
 
-export type CallbackStatus = {
-  uuid: string;
-  method: string;
-  uri: string;
+/**
+ * Object containing invoked callback details.
+ */
+export type InvokedCallback = {
+  name: string;
+  url: string;
+  headers: Header[];
+  body: any;
+  method: keyof typeof Methods;
+  status: number;
 };
 
 /**
@@ -36,5 +42,4 @@ export type Transaction = {
   proxied: boolean;
   routeUUID: string;
   routeResponseUUID: string;
-  callbacks?: CallbackStatus[];
 };

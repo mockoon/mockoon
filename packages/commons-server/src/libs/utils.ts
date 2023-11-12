@@ -91,6 +91,14 @@ export const DecompressBody = (response: Response) => {
 };
 
 /**
+ * Returns true if given HTTP method is a body supporting one. Otherwise false.
+ * @param method
+ */
+export function isBodySupportingMethod(method: Methods): boolean {
+  return [Methods.put, Methods.post, Methods.patch].indexOf(method) >= 0;
+}
+
+/**
  * Create a Transaction object from express req/res.
  * To be used after the response closes
  *

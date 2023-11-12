@@ -2,6 +2,8 @@ import { Callback } from '@mockoon/commons';
 
 export type CallbackTabsNameType = 'SPEC' | 'USAGE';
 
+export type CallbackSpecTabNameType = 'BODY' | 'HEADERS';
+
 export type CallbackResponseUsage = {
   responseUUID: string;
   label: string;

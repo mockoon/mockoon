@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   Callback,
-  CallbackInvocation,
   DataBucket,
   Environment,
   Route,
@@ -15,6 +14,10 @@ import {
 } from 'rxjs';
 import { distinctUntilChanged, map, withLatestFrom } from 'rxjs/operators';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
+import {
+  CallbackSpecTabNameType,
+  CallbackTabsNameType
+} from 'src/renderer/app/models/callback.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
@@ -36,7 +39,6 @@ export class Store {
     activeDatabucketUUID: null,
     activeCallbackUUID: null,
     activeRouteResponseUUID: null,
-    activeRouteResponseCallbackUUID: null,
     environments: [],
     environmentsStatus: {},
     bodyEditorConfig: defaultEditorOptions,
@@ -57,7 +59,8 @@ export class Store {
     },
     user: null,
     callbackSettings: {
-      activeTab: 'SPEC'
+      activeTab: 'SPEC',
+      activeSpecTab: 'BODY'
     }
   });
   /**
@@ -264,6 +267,20 @@ export class Store {
   }
 
   /**
+   * Get the active selected tab of callback view.
+   */
+  public getSelectedCallbackTab(): CallbackTabsNameType {
+    return this.store$.value.callbackSettings.activeTab;
+  }
+
+  /**
+   * Get the active selected spec tab of callback view.
+   */
+  public getSelectedSpecTabInCallbackView(): CallbackSpecTabNameType {
+    return this.store$.value.callbackSettings.activeSpecTab;
+  }
+
+  /**
    * Get environment by uuid
    */
   public getEnvironmentByUUID(UUID: string): Environment {
@@ -321,39 +338,6 @@ export class Store {
         (response) =>
           response.uuid === this.store$.value.activeRouteResponseUUID
       );
-  }
-
-  /**
-   * Get active
-   */
-  public getActiveResponseCallback(): CallbackInvocation {
-    return this.store$.value.environments
-      .find(
-        (environment) =>
-          environment.uuid === this.store$.value.activeEnvironmentUUID
-      )
-      .routes.find((route) => route.uuid === this.store$.value.activeRouteUUID)
-      .responses.find(
-        (response) =>
-          response.uuid === this.store$.value.activeRouteResponseUUID
-      )
-      .callbacks.find(
-        (callback) =>
-          callback.uuid === this.store$.value.activeRouteResponseCallbackUUID
-      );
-  }
-
-  public selectActiveRouteResponseCallback(): Observable<CallbackInvocation> {
-    return this.selectActiveRouteResponse().pipe(
-      map((response) =>
-        response && response.callbacks
-          ? response.callbacks.find(
-              (rc) =>
-                rc.uuid === this.store$.value.activeRouteResponseCallbackUUID
-            )
-          : null
-      )
-    );
   }
 
   /**

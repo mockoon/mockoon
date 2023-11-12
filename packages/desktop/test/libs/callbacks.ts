@@ -45,6 +45,14 @@ class Callbacks {
     return $('.callback-tabs ul.nav .nav-item:nth-child(1) .nav-link');
   }
 
+  public get bodyTabInDefinition(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.callback-spec-tabs ul.nav .nav-item:nth-child(1) .nav-link');
+  }
+
+  public get headersTabInDefinition(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('.callback-spec-tabs ul.nav .nav-item:nth-child(2) .nav-link');
+  }
+
   public get usageTab(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('.callback-tabs ul.nav .nav-item:nth-child(2) .nav-link');
   }
@@ -58,7 +66,7 @@ class Callbacks {
   }
 
   public async assertUsageCount(count: number): Promise<void> {
-    await utils.assertElementText(this.usageTab, `Usage ${count}`, false);
+    await utils.assertElementText(this.usageTab, `Usage ${count}`, true);
   }
 
   public async assertHasUsageItems(count: number) {
@@ -106,9 +114,25 @@ class Callbacks {
   }
 
   public async assertNoUsageLabelExists() {
-    expect(await $('.scroll-content div').getText()).toEqual(
-      'No usages for this callback.'
+    expect(await $('.scroll-content div p').getText()).toEqual(
+      'No usage found for this callback'
     );
+  }
+
+  public async assertNoBodySupportingLabelExists(toExist: boolean) {
+    if (toExist) {
+      expect(await $('.notsupporting-callback-body p').getText()).toEqual(
+        'Request body cannot be defined for this HTTP method'
+      );
+    } else {
+      expect(await $('.notsupporting-callback-body p').isExisting()).toEqual(
+        false
+      );
+    }
+  }
+
+  public async assertCallbackBodySpecExists(toExists: boolean) {
+    expect(await $('.callback-body-spec').isExisting()).toEqual(toExists);
   }
 
   public async assertActiveCallbackEntryText(

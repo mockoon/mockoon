@@ -2,6 +2,7 @@ import {
   CloneObject,
   Environment,
   Header,
+  InvokedCallback,
   Methods,
   Transaction
 } from '@mockoon/commons';
@@ -118,5 +119,13 @@ export const listenServerEvents = function (
     }
 
     logger.info('Transaction recorded', logMeta);
+  });
+
+  server.on('callback-invoked', (callback: InvokedCallback) => {
+    const clonedCallback = CloneObject(callback) as InvokedCallback;
+    logger.info('Callback invoked', {
+      ...defaultLogMeta,
+      callback: clonedCallback
+    });
   });
 };

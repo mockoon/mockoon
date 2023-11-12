@@ -337,12 +337,7 @@
                   class="nav-link"
                   [ngClass]="{ active: activeTab === 'CALLBACKS' }"
                   (click)="setActiveTab('CALLBACKS')"
-                  ><span
-                    *ngIf="activeRoute.responseMode !== null"
-                    class="text-warning"
-                    [ngbTooltip]="texts.DISABLED_RULES_WARNING"
-                    ><app-svg icon="warning" class="pr-1"></app-svg>
-                  </span>
+                >
                   Callbacks
                   <span
                     *ngIf="activeRouteResponse?.callbacks?.length"

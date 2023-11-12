@@ -61,7 +61,8 @@ export const environmentReducer = (
         ...state,
         callbackSettings: {
           ...state.callbackSettings,
-          activeTab: action.activeTab
+          activeTab: action.activeTab,
+          activeSpecTab: action.activeSpecTab
         }
       };
       break;
@@ -452,10 +453,6 @@ export const environmentReducer = (
           activeRouteResponseUUID: activeRoute.responses.length
             ? activeRoute.responses[0].uuid
             : null,
-          activeRouteResponseCallbackUUID:
-            activeRouteResponse && activeRouteResponse.callbacks.length
-              ? activeRouteResponse.callbacks[0].uuid
-              : null,
           activeTab: 'RESPONSE',
           activeView: 'ENV_ROUTES',
           environments: newEnvironments
@@ -1329,17 +1326,6 @@ export const environmentReducer = (
     }
 
     case ActionTypes.UPDATE_CALLBACK: {
-      const propertiesNeedingRestart: (keyof Callback)[] = [
-        'name',
-        'body',
-        'bodyType',
-        'databucketID',
-        'filePath',
-        'headers',
-        'method',
-        'sendFileAsBody',
-        'uri'
-      ];
       const specifiedUUID = action.properties.uuid;
 
       newState = {
@@ -1369,11 +1355,7 @@ export const environmentReducer = (
           }
 
           return environment;
-        }),
-        environmentsStatus: markEnvStatusRestart(
-          state,
-          ArrayContainsObjectKey(action.properties, propertiesNeedingRestart)
-        )
+        })
       };
       break;
     }
@@ -1536,11 +1518,7 @@ export const environmentReducer = (
 
         newState = {
           ...state,
-          activeRouteResponseUUID: action.routeResponseUUID,
-          activeRouteResponseCallbackUUID:
-            activeRouteResponse && activeRouteResponse.callbacks.length
-              ? activeRouteResponse.callbacks[0].uuid
-              : null
+          activeRouteResponseUUID: action.routeResponseUUID
         };
         break;
       }

@@ -4,6 +4,7 @@ import contextMenu, { ContextMenuCallbackActions } from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import file from '../libs/file';
+import headersUtils from '../libs/headers-utils';
 import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
@@ -47,6 +48,74 @@ describe('Callback addition', () => {
       'callbacks.2.id'
     );
     expect(await callbacks.idElement.getText()).toContain(`Unique ID: ${id}`);
+  });
+
+  it('should be able to add headers for the new callbacks', async () => {
+    await callbacks.headersTabInDefinition.click();
+    await headersUtils.add('response-callback-headers', {
+      key: 'X-Test-Header',
+      value: 'Test Value 123'
+    });
+    await headersUtils.assertCount('response-callback-headers', 1);
+
+    await headersUtils.add('response-callback-headers', {
+      key: 'X-Test-Header-2',
+      value: 'Test Value 456'
+    });
+    await headersUtils.assertCount('response-callback-headers', 2);
+    await utils.waitForAutosave();
+
+    const addedHeaders = await file.getObjectPropertyInFile(
+      env1FilePath,
+      'callbacks.2.headers'
+    );
+    expect(addedHeaders).toHaveLength(2);
+    expect(addedHeaders[0].key).toEqual('X-Test-Header');
+    expect(addedHeaders[0].value).toEqual('Test Value 123');
+    expect(addedHeaders[1].key).toEqual('X-Test-Header-2');
+    expect(addedHeaders[1].value).toEqual('Test Value 456');
+
+    await callbacks.bodyTabInDefinition.click();
+  });
+
+  it('should clear body for unsupporting http methods', async () => {
+    await callbacks.assertCount(3);
+    await callbacks.select(3);
+
+    // get
+    await callbacks.setMethod(1);
+    await callbacks.assertCallbackBodySpecExists(false);
+    await callbacks.assertNoBodySupportingLabelExists(true);
+
+    // post
+    await callbacks.setMethod(2);
+    await callbacks.assertCallbackBodySpecExists(true);
+    await callbacks.assertNoBodySupportingLabelExists(false);
+
+    // put
+    await callbacks.setMethod(3);
+    await callbacks.assertCallbackBodySpecExists(true);
+    await callbacks.assertNoBodySupportingLabelExists(false);
+
+    // patch
+    await callbacks.setMethod(4);
+    await callbacks.assertCallbackBodySpecExists(true);
+    await callbacks.assertNoBodySupportingLabelExists(false);
+
+    // delete
+    await callbacks.setMethod(5);
+    await callbacks.assertCallbackBodySpecExists(false);
+    await callbacks.assertNoBodySupportingLabelExists(true);
+
+    // head
+    await callbacks.setMethod(6);
+    await callbacks.assertCallbackBodySpecExists(false);
+    await callbacks.assertNoBodySupportingLabelExists(true);
+
+    // options
+    await callbacks.setMethod(7);
+    await callbacks.assertCallbackBodySpecExists(false);
+    await callbacks.assertNoBodySupportingLabelExists(true);
   });
 });
 
@@ -347,18 +416,12 @@ describe('Callback usages', () => {
     await callbacks.assertHasUsageItems(1);
   });
 
-  it('should navigate to route when clicked the usage route label', async () => {
-    await callbacks.getUsageItem(1).click();
-    await navigation.assertActiveTab('ENV_ROUTES');
-    await routes.assertActiveMenuEntryText('test/usages/1');
-  });
-
   it('should navigate to callback tab when clicked on a response label', async () => {
     await navigation.switchView('ENV_CALLBACKS');
     await callbacks.select(5);
     await callbacks.assertUsageCount(1);
     await callbacks.usageTab.click();
-    await callbacks.getUsageItem(1).click();
+    await callbacks.getUsageItem(1, 1).click();
     await navigation.assertActiveTab('ENV_ROUTES');
     await routes.assertActiveMenuEntryText('test/usages/1');
     expect(await callbacks.attachCallbackBtn.isExisting()).toEqual(true);

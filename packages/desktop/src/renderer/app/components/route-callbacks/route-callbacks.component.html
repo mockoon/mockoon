@@ -19,16 +19,16 @@
             [dragId]="callbackIndex"
             (dropped)="reorganizeCallbacks($event)"
           >
-            <div class="d-flex">
+            <div class="route-response-callback">
               <app-custom-select
-                class="flex-fill mr-1"
+                class="mw0 mr-1"
                 formControlName="uuid"
                 [enableCustomInput]="false"
                 [items]="callbacks$ | async"
                 placeholder="Select a callback"
                 [dropdownId]="'callback' + callbackIndex + 'target'"
               ></app-custom-select>
-              <div class="input-group col-2">
+              <div class="input-group">
                 <div
                   class="input-group-prepend ml-auto"
                   ngbTooltip="Callback latency (ms)"
@@ -49,60 +49,64 @@
                 />
               </div>
 
-              <div
-                class="input-group-prepend ml-auto"
-                *ngIf="
-                  deleteCallbackRequested$ | async as deleteCallbackRequested
-                "
-              >
-                <button
-                  [attr.data-testid]="'callback' + callbackIndex + 'delete'"
-                  type="button"
-                  class="btn btn-link btn-icon delete-callback"
-                  [ngClass]="{
-                    'text-danger':
+              <div class="d-flex justify-content-end">
+                <div class="input-group-prepend">
+                  <button
+                    *ngIf="
+                      form.get(['callbacks', callbackIndex, 'uuid']).value
+                        .length > 0
+                    "
+                    type="button"
+                    [attr.data-testid]="'callback' + callbackIndex + 'gotodef'"
+                    class="btn btn-link btn-icon goto-definition-callback"
+                    [ngbTooltip]="'Go to definition'"
+                    (click)="
+                      goToCallbackDefinition(
+                        form.get(['callbacks', callbackIndex, 'uuid']).value
+                      )
+                    "
+                  >
+                    <app-svg icon="goto"></app-svg>
+                  </button>
+                </div>
+
+                <div
+                  class="input-group-prepend"
+                  *ngIf="
+                    deleteCallbackRequested$ | async as deleteCallbackRequested
+                  "
+                >
+                  <button
+                    [attr.data-testid]="'callback' + callbackIndex + 'delete'"
+                    type="button"
+                    class="btn btn-link btn-icon delete-callback"
+                    [ngClass]="{
+                      'text-danger':
+                        deleteCallbackRequested.enabled === true &&
+                        deleteCallbackRequested.payload === callbackIndex
+                    }"
+                    [ngbTooltip]="
                       deleteCallbackRequested.enabled === true &&
                       deleteCallbackRequested.payload === callbackIndex
-                  }"
-                  [ngbTooltip]="
-                    deleteCallbackRequested.enabled === true &&
-                    deleteCallbackRequested.payload === callbackIndex
-                      ? 'Confirm'
-                      : 'Delete'
-                  "
-                  (click)="removeCallback(callbackIndex)"
+                        ? 'Confirm'
+                        : 'Delete'
+                    "
+                    (click)="removeCallback(callbackIndex)"
+                  >
+                    <app-svg icon="delete"></app-svg>
+                  </button>
+                </div>
+
+                <div
+                  *ngIf="form.get('callbacks').value.length > 1"
+                  #dragHandle
+                  class="input-group-prepend clickable"
+                  ngbTooltip="Reorder"
                 >
-                  <app-svg icon="delete"></app-svg>
-                </button>
-              </div>
-
-              <button
-                *ngIf="
-                  form.get(['callbacks', callbackIndex, 'uuid']).value.length >
-                  0
-                "
-                type="button"
-                [attr.data-testid]="'callback' + callbackIndex + 'gotodef'"
-                class="btn btn-link btn-icon goto-definition-callback"
-                [ngbTooltip]="'Go to definition'"
-                (click)="
-                  goToCallbackDefinition(
-                    form.get(['callbacks', callbackIndex, 'uuid']).value
-                  )
-                "
-              >
-                <app-svg icon="goto"></app-svg>
-              </button>
-
-              <div
-                *ngIf="form.get('callbacks').value.length > 1"
-                #dragHandle
-                class="input-group-prepend clickable"
-                ngbTooltip="Reorder"
-              >
-                <span class="input-group-text p-1 cursor-grab text-muted">
-                  <app-svg icon="drag_indicator"></app-svg>
-                </span>
+                  <span class="input-group-text p-1 cursor-grab text-muted">
+                    <app-svg icon="drag_indicator"></app-svg>
+                  </span>
+                </div>
               </div>
             </div>
           </div>

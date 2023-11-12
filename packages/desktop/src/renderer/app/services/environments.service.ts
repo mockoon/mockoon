@@ -61,6 +61,7 @@ import {
 import {
   CallbackProperties,
   CallbackResponseUsage,
+  CallbackSpecTabNameType,
   CallbackTabsNameType,
   CallbackUsage
 } from 'src/renderer/app/models/callback.model';
@@ -1062,7 +1063,10 @@ export class EnvironmentsService extends Logger {
     this.store.update(setActiveTabAction(activeTab));
     if (activeTab === 'CALLBACKS') {
       // active sub tab when callbacks is clicked is the definition tab.
-      this.store.update(setActiveTabInCallbackViewAction('SPEC'));
+      const activeSpecTab = this.store.getSelectedSpecTabInCallbackView();
+      this.store.update(
+        setActiveTabInCallbackViewAction('SPEC', activeSpecTab)
+      );
     }
   }
 
@@ -1070,7 +1074,24 @@ export class EnvironmentsService extends Logger {
    * Set active tab of callback view.
    */
   public setActiveTabInCallbackView(activeTab: CallbackTabsNameType) {
-    this.store.update(setActiveTabInCallbackViewAction(activeTab));
+    const activeSpecTab = this.store.getSelectedSpecTabInCallbackView();
+
+    this.store.update(
+      setActiveTabInCallbackViewAction(activeTab, activeSpecTab)
+    );
+  }
+
+  /**
+   * Set active spec tab of callback view.
+   */
+  public setActiveSpecTabInCallbackView(
+    activeSpecTab: CallbackSpecTabNameType
+  ) {
+    const activeTab = this.store.getSelectedCallbackTab();
+
+    this.store.update(
+      setActiveTabInCallbackViewAction(activeTab, activeSpecTab)
+    );
   }
 
   /**
@@ -1149,8 +1170,10 @@ export class EnvironmentsService extends Logger {
    * Navigates to the definition of the provided callback by id.
    */
   public navigateToCallbackDefinition(callbackUUID: string) {
+    const activeSpecTab = this.store.getSelectedSpecTabInCallbackView();
+
     this.store.update(navigateToCallbackAction(callbackUUID));
-    this.store.update(setActiveTabInCallbackViewAction('SPEC'));
+    this.store.update(setActiveTabInCallbackViewAction('SPEC', activeSpecTab));
   }
 
   /**

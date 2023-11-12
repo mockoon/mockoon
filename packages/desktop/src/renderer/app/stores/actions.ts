@@ -8,6 +8,7 @@ import {
 } from '@mockoon/commons';
 import {
   CallbackProperties,
+  CallbackSpecTabNameType,
   CallbackTabsNameType
 } from 'src/renderer/app/models/callback.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
@@ -45,9 +46,6 @@ export const enum ActionTypes {
   REFRESH_ENVIRONMENT = 'REFRESH_ENVIRONMENT',
   UPDATE_ENVIRONMENT_STATUS = 'UPDATE_ENVIRONMENT_STATUS',
   UPDATE_FILTER = 'UPDATE_FILTER',
-  UPDATE_ENVIRONMENT_ROUTE_FILTER = 'UPDATE_ENVIRONMENT_ROUTE_FILTER',
-  UPDATE_ENVIRONMENT_DATABUCKET_FILTER = 'UPDATE_ENVIRONMENT_DATABUCKET_FILTER',
-  UPDATE_ENVIRONMENT_CALLBACK_FILTER = 'UPDATE_ENVIRONMENT_CALLBACK_FILTER',
   SET_ACTIVE_ROUTE = 'SET_ACTIVE_ROUTE',
   REORGANIZE_ROUTES = 'REORGANIZE_ROUTES',
   REORGANIZE_DATABUCKETS = 'REORGANIZE_DATABUCKETS',
@@ -117,11 +115,13 @@ export const setActiveTabAction = (activeTab: TabsNameType) =>
  * @param activeTab - id of the tab to set as active
  */
 export const setActiveTabInCallbackViewAction = (
-  activeTab: CallbackTabsNameType
+  activeTab: CallbackTabsNameType,
+  activeSpecTab?: CallbackSpecTabNameType
 ) =>
   ({
     type: ActionTypes.SET_ACTIVE_TAB_IN_CALLBACK,
-    activeTab
+    activeTab,
+    activeSpecTab
   }) as const;
 
 /**

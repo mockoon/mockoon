@@ -9,6 +9,7 @@ import {
   GetContentType,
   GetRouteResponseContentType,
   Header,
+  InvokedCallback,
   IsValidURL,
   MimeTypesWithTemplating,
   ProcessedDatabucket,
@@ -49,6 +50,7 @@ import { requestHelperNames } from '../templating-helpers/request-helpers';
 import {
   CreateTransaction,
   dedupSlashes,
+  isBodySupportingMethod,
   resolvePathFromEnvironment,
   routesFromFolder,
   stringIncludesArrayItems
@@ -670,8 +672,21 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             fetch(url, {
               method: cb.method,
               headers: sendingHeaders.headers,
-              body: content
-            });
+              body: isBodySupportingMethod(cb.method) ? content : undefined
+            })
+              .then((res) => {
+                this.emit('callback-invoked', {
+                  name: cb.name,
+                  body: content,
+                  headers: sendingHeaders.headers,
+                  url,
+                  method: cb.method,
+                  status: res.status
+                } as InvokedCallback);
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e)
+              );
           }, invocation.latency);
         }
       } catch (error: any) {
@@ -757,6 +772,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     };
 
     try {
+      const url = TemplateParser(
+        false,
+        callback.uri,
+        this.environment,
+        this.processedDatabuckets,
+        request,
+        response
+      );
+
       let filePath = TemplateParser(
         false,
         callback.filePath.replace(/\\/g, '/'),
@@ -783,17 +807,29 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       try {
         if (!callback.sendFileAsBody) {
-          const { size } = statSync(filePath);
           const buffer = readFileSync(filePath);
           const form = new FormData();
           form.append('file', new Blob([buffer]));
 
           setTimeout(() => {
-            fetch(callback.uri, {
+            fetch(url, {
               method: callback.method,
               body: form,
               headers: sendingHeaders.headers
-            });
+            })
+              .then((res) => {
+                this.emit('callback-invoked', {
+                  name: callback.name,
+                  body: `<buffer of ${filePath}>`,
+                  headers: sendingHeaders.headers,
+                  url,
+                  method: callback.method,
+                  status: res.status
+                } as InvokedCallback);
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e)
+              );
           }, invocation.latency);
         } else {
           const data = readFileSync(filePath);
@@ -820,11 +856,24 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           }
 
           setTimeout(() => {
-            fetch(callback.uri, {
+            fetch(url, {
               method: callback.method,
               headers: sendingHeaders.headers,
               body: fileContent
-            });
+            })
+              .then((res) => {
+                this.emit('callback-invoked', {
+                  name: callback.name,
+                  body: fileContent,
+                  headers: sendingHeaders.headers,
+                  url,
+                  method: callback.method,
+                  status: res.status
+                } as InvokedCallback);
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e)
+              );
           }, invocation.latency);
         }
       } catch (error: any) {

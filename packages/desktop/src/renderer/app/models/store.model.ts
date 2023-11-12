@@ -1,5 +1,8 @@
 import { Environments } from '@mockoon/commons';
-import { CallbackTabsNameType } from 'src/renderer/app/models/callback.model';
+import {
+  CallbackSpecTabNameType,
+  CallbackTabsNameType
+} from 'src/renderer/app/models/callback.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import {
   ActiveEnvironmentsLogUUIDs,
@@ -16,7 +19,6 @@ export type ViewsNameType =
   | 'ENV_LOGS'
   | 'ENV_PROXY'
   | 'ENV_SETTINGS'
-  | 'ENV_RELOAD'
   | 'ENV_CALLBACKS';
 
 export type TabsNameType =
@@ -28,6 +30,7 @@ export type TabsNameType =
 
 export type CallbackSettings = {
   activeTab: CallbackTabsNameType;
+  activeSpecTab: CallbackSpecTabNameType;
 };
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
@@ -69,7 +72,6 @@ export type StoreType = {
   activeEnvironmentUUID: string;
   activeRouteUUID: string;
   activeRouteResponseUUID: string;
-  activeRouteResponseCallbackUUID: string;
   activeCallbackUUID: string;
   activeDatabucketUUID: string;
   environments: Environments;

@@ -4,6 +4,7 @@ import utils from '../libs/utils';
 
 type HeaderLocations =
   | 'route-response-headers'
+  | 'response-callback-headers'
   | 'environment-headers'
   | 'env-proxy-req-headers'
   | 'env-proxy-res-headers';

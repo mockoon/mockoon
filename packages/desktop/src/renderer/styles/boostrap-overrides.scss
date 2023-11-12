@@ -108,6 +108,10 @@ label {
   &-hollow {
     border: 1px solid $gray-300;
   }
+  &-custom {
+    color: $gray-100;
+    background-color: $component-active-bg;
+  }
 }
 
 .btn.btn-icon {

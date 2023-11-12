@@ -34,6 +34,7 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-route-callbacks',
   templateUrl: 'route-callbacks.component.html',
+  styleUrls: ['./route-callbacks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RouteCallbacksComponent implements OnInit, OnDestroy {
