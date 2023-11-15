@@ -511,8 +511,8 @@ export class OpenAPIConverter {
     schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject
   ) {
     const typeFactories = {
-      integer: () => "{{faker 'number.int'}}",
-      number: () => "{{faker 'number.int'}}",
+      integer: () => "{{faker 'number.int' max=99999}}",
+      number: () => "{{faker 'number.int' max=99999}}",
       number_float: () => "{{faker 'number.float'}}",
       number_double: () => "{{faker 'number.float'}}",
       string: () => '',

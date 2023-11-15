@@ -55,7 +55,7 @@ export const FAKER_V7_TO_V8_MAPPING = {
   'datatype.float': 'number.float',
   'datatype.hexadecimal': 'number.hex',
   'datatype.json': '',
-  'datatype.number': 'number.int',
+  'datatype.number': ['number.int', 'max=99999'],
   'datatype.string': 'string.sample',
   'datatype.uuid': 'string.uuid',
   fake: 'helper.fake',

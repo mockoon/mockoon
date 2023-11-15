@@ -36,7 +36,7 @@
         },
         {
           "uuid": "f04edb71-ef4d-48b9-819c-2b2c7012013b",
-          "body": "{\n  \"code\": {{faker 'number.int'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
@@ -83,7 +83,7 @@
         },
         {
           "uuid": "5e8b6981-cf59-49e6-91af-4bdae8a7c3c1",
-          "body": "{\n  \"code\": {{faker 'number.int'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
@@ -130,7 +130,7 @@
         },
         {
           "uuid": "212dc002-1793-4402-ac43-1d177ac2da16",
-          "body": "{\n  \"code\": {{faker 'number.int'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
@@ -177,7 +177,7 @@
         },
         {
           "uuid": "d51a51a3-41b7-478b-8063-99973b33f4f5",
-          "body": "{\n  \"code\": {{faker 'number.int'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",

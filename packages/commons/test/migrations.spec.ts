@@ -387,6 +387,7 @@ describe('Migrations', () => {
       expect(environment.routes[0].responses[1].crudKey).to.deep.equal('uuid');
     });
   });
+
   describe('migration n. 29', () => {
     it('Update faker functions in inline body to version 8', () => {
       const environment: any = {
@@ -395,7 +396,7 @@ describe('Migrations', () => {
             responses: [
               {
                 bodyType: 'INLINE',
-                body: '{\n  "name": "{{{faker \'name.firstName\'}}}"\n    "title": "{{{setVar \'x\' (faker \'name.prefix\' sex=\'male\')}}}"\n}'
+                body: '{\n  "name": "{{{faker \'datatype.number\'}}}",\n  "name": "{{{faker \'name.firstName\'}}}"\n    "title": "{{{setVar \'x\' (faker \'name.prefix\' sex=\'male\')}}}"\n}'
               }
             ]
           }
@@ -404,7 +405,7 @@ describe('Migrations', () => {
       applyMigration(29, environment);
 
       expect(environment.routes[0].responses[0].body).to.equal(
-        '{\n  "name": "{{{faker \'person.firstName\'}}}"\n    "title": "{{{setVar \'x\' (faker \'person.prefix\' sex=\'male\')}}}"\n}'
+        '{\n  "name": "{{{faker \'number.int\' max=99999}}}",\n  "name": "{{{faker \'person.firstName\'}}}"\n    "title": "{{{setVar \'x\' (faker \'person.prefix\' sex=\'male\')}}}"\n}'
       );
     });
 
