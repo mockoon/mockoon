@@ -1,6 +1,6 @@
 import { BodyTypes } from '@mockoon/commons';
+import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import { promises as fs } from 'fs';
-import { ChainablePromiseElement } from 'webdriverio';
 import contextMenu, {
   ContextMenuFolderActions,
   ContextMenuRouteActions

@@ -1,5 +1,5 @@
 import { Header } from '@mockoon/commons';
-import { ChainablePromiseElement } from 'webdriverio';
+import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import utils from '../libs/utils';
 
 type HeaderLocations =

@@ -1,5 +1,5 @@
+import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import { resolve } from 'path';
-import { ChainablePromiseElement } from 'webdriverio';
 import contextMenu, {
   ContextMenuEnvironmentActions
 } from '../libs/context-menu';

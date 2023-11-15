@@ -1,4 +1,4 @@
-import { ChainablePromiseElement } from 'webdriverio';
+import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import { ViewsNameType } from '../../src/renderer/app/models/store.model';
 import utils from '../libs/utils';
 

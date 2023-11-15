@@ -604,7 +604,7 @@ export class OpenAPIConverter {
    */
   private convertJSONSchemaPrimitives(jsonSchema: string) {
     return jsonSchema.replace(
-      /\"({{faker '(?:number\.int|number\.float|datatype\.boolean)'}})\"/g,
+      /\"({{faker '(?:number\.int|number\.float|datatype\.boolean)'(?: max=99999)?}})\"/g,
       '$1'
     );
   }

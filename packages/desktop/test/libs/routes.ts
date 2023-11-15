@@ -1,5 +1,5 @@
 import { BodyTypes, LogicalOperators, ResponseRule } from '@mockoon/commons';
-import { ChainablePromiseElement } from 'webdriverio';
+import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import { TabsNameType } from '../../src/renderer/app/models/store.model';
 import contextMenu, {
   ContextMenuFolderActions,

@@ -1,8 +1,7 @@
 import {
   ChainablePromiseArray,
-  ChainablePromiseElement,
-  ElementArray
-} from 'webdriverio';
+  ChainablePromiseElement
+} from '@wdio/globals/node_modules/webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { SharedConfig } from '../../src/shared/shared-config';
 
@@ -100,7 +99,7 @@ class Utils {
   }
 
   public async countElements(
-    elements: ChainablePromiseArray<ElementArray>,
+    elements: ChainablePromiseArray<WebdriverIO.ElementArray>,
     expected: number
   ) {
     expect((await elements).length).toEqual(expected);
