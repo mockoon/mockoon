@@ -151,7 +151,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.handle(
     'APP_UNWATCH_ALL_FILE',
-    async (event) => await unwatchAllEnvironmentFiles()
+    async () => await unwatchAllEnvironmentFiles()
   );
 
   ipcMain.handle('APP_GET_OS', () => process.platform);
@@ -172,10 +172,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     }
   );
 
-  ipcMain.handle(
-    'APP_READ_SETTINGS_DATA',
-    async (event) => await loadSettings()
-  );
+  ipcMain.handle('APP_READ_SETTINGS_DATA', async () => await loadSettings());
 
   ipcMain.handle(
     'APP_WRITE_SETTINGS_DATA',
@@ -194,7 +191,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
       await fsPromises.writeFile(filePath, data, 'utf-8')
   );
 
-  ipcMain.handle('APP_READ_CLIPBOARD', async (event) =>
+  ipcMain.handle('APP_READ_CLIPBOARD', async () =>
     clipboard.readText('clipboard')
   );
 
@@ -226,7 +223,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     }
   });
 
-  ipcMain.handle('APP_GET_PLATFORM', (event) => process.platform);
+  ipcMain.handle('APP_GET_PLATFORM', () => process.platform);
 
   ipcMain.handle('APP_BUILD_STORAGE_FILEPATH', (event, name: string) =>
     pathJoin(getDataPath(), `${name}.json`)

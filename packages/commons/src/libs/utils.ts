@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { Environment } from '../models/environment.model';
 import { Header, RouteResponse } from '../models/route.model';
 
@@ -148,8 +147,16 @@ export const repairRefs = (environment: Environment) => {
   return environment;
 };
 
+/**
+ * browser randomUUID will be used when in a browser context (desktop app)
+ * node randomUUID will be used when in a node context (CLI, serverless lib)
+ *
+ * @returns
+ */
 export const generateUUID = () =>
-  typeof window !== 'undefined' ? window.crypto.randomUUID() : randomUUID();
+  typeof window !== 'undefined'
+    ? window.crypto.randomUUID()
+    : require('crypto').randomUUID();
 
 /**
  * Return a random integer

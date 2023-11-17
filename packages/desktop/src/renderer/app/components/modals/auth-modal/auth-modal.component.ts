@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import {
   BehaviorSubject,
   EMPTY,
@@ -29,7 +29,7 @@ export class AuthModalComponent implements OnInit, OnDestroy {
   public loginURL = Config.loginURL;
   public isLoading$ = new BehaviorSubject<boolean>(false);
   public isSuccess$ = new BehaviorSubject<boolean>(false);
-  public tokenControl = new FormControl('');
+  public tokenControl = new UntypedFormControl('');
   private destroy$ = new Subject<void>();
 
   constructor(

@@ -139,7 +139,6 @@ class Http {
       );
 
       request.on('error', (err) => {
-        console.log(err);
         reject(err);
       });
       request.write(data);

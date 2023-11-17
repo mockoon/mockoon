@@ -72,7 +72,7 @@ export const DesktopMessages: {
     log: false,
     toastType: 'error'
   }),
-  HOSTNAME_UNAVAILABLE: (messageParams) => ({
+  HOSTNAME_UNAVAILABLE: () => ({
     message: 'Provided hostname/address is not available',
     showToast: true,
     log: false,

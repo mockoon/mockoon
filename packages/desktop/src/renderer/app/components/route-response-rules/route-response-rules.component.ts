@@ -7,7 +7,11 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   BuildResponseRule,
   ResponseRule,
@@ -47,7 +51,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Output()
   public ruleAdded: EventEmitter<any> = new EventEmitter();
   public routeResponse$: Observable<RouteResponse>;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;
   public responseRuleTargets: DropdownItems<ResponseRuleTargets> = [
     { value: 'body', label: 'Body' },
@@ -103,11 +107,11 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {}
 
   public get rules() {
-    return this.form.get('rules') as FormArray;
+    return this.form.get('rules') as UntypedFormArray;
   }
 
   ngOnInit() {

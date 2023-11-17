@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormControl,
+  UntypedFormControl,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -47,13 +47,13 @@ export class ToggleComponent
   public onChange: (_: any) => void;
   public onTouched: () => void;
 
-  public control: FormControl;
+  public control: UntypedFormControl;
   private controlChanges: Subscription;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.control = new FormControl();
+    this.control = new UntypedFormControl();
 
     this.controlChanges = this.control.valueChanges.subscribe(() => {
       this.onTouched();

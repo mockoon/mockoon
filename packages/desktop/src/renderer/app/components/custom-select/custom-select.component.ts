@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormControl,
+  UntypedFormControl,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
@@ -80,7 +80,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public items$ = new BehaviorSubject<DropdownItems>(null);
   public selectedItem$ = new BehaviorSubject<DropdownItem>(null);
   public filteredItems$: Observable<DropdownItems>;
-  public customValue = new FormControl('');
+  public customValue = new UntypedFormControl('');
   public focusedItemIndex$ = new BehaviorSubject<number>(-1);
 
   public onChange: (_: any) => void;

@@ -4,7 +4,11 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import { DataBucket, DataBucketDefault } from '@mockoon/commons';
 import { filter, map, merge, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -20,8 +24,8 @@ import { Store } from 'src/renderer/app/stores/store';
 })
 export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   public activeDatabucket$: Observable<DataBucket>;
-  public activeDatabucketForm: FormGroup;
-  public form: FormGroup;
+  public activeDatabucketForm: UntypedFormGroup;
+  public form: UntypedFormGroup;
   public focusableInputs = FocusableInputs;
   public bodyEditorConfig$: Observable<any>;
   public scrollToBottom = this.uiService.scrollToBottom;
@@ -31,11 +35,11 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
     private uiService: UIService,
     private store: Store,
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {}
 
   public get databuckets() {
-    return this.form.get('databuckets') as FormArray;
+    return this.form.get('databuckets') as UntypedFormArray;
   }
 
   ngOnInit() {

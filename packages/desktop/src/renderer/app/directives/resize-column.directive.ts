@@ -60,7 +60,7 @@ export class ResizeColumnDirective implements AfterViewInit {
 
   // Listen on widow size changes and apply max width
   @HostListener('window:resize', ['$event'])
-  public onWindowResize(event) {
+  public onWindowResize() {
     this.resize();
     this.saveSettings();
   }

@@ -7,7 +7,11 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   Environment,
   Folder,
@@ -75,10 +79,10 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
   public routesFilter$: Observable<string>;
-  public routesFilter: FormControl;
+  public routesFilter: UntypedFormControl;
   public dragEnabled = true;
   public focusableInputs = FocusableInputs;
-  public folderForm: FormGroup;
+  public folderForm: UntypedFormGroup;
   public os$: Observable<string>;
   public menuSize = Config.defaultSecondaryMenuSize;
   public draggedFolderCollapsed: boolean;
@@ -90,7 +94,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     private store: Store,
     private eventsService: EventsService,
     private uiService: UIService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {}
 
   @HostListener('keydown', ['$event'])

@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -32,11 +32,11 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
     { value: FileWatcherOptions.PROMPT, label: 'Prompt' },
     { value: FileWatcherOptions.AUTO, label: 'Auto' }
   ];
-  public settingsForm: FormGroup;
+  public settingsForm: UntypedFormGroup;
   private destroy$ = new Subject<void>();
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private settingsService: SettingsService,
     private store: Store,
     private uiService: UIService

@@ -62,7 +62,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9\-]{36}"\}\]/,
+        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
         headers: { 'content-type': 'application/json' }
       }
     }
@@ -87,7 +87,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9\-]{36}"\}\]/,
+        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
         headers: { 'content-type': 'application/json' }
       }
     }
@@ -112,7 +112,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9\-]{36}","test":"hello"\}\]/,
+        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}","test":"hello"\}\]/,
         headers: { 'content-type': 'application/json' }
       }
     }
