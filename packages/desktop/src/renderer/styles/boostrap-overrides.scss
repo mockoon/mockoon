@@ -186,10 +186,6 @@ label {
   -webkit-appearance: none;
 }
 
-.disabled-color {
-  color: $gray-500;
-}
-
 // fix bootstrap flexfill which is incompatible with ace editor
 .flex-fill {
   flex: 1 !important;
