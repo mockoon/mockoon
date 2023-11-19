@@ -8,7 +8,7 @@
     <ng-container *ngIf="items.length === 1">
       <label
         id="{{ prefix }}-{{ item.label | uppercase }}"
-        class="btn btn-custom"
+        class="btn btn-custom px-2 d-flex align-items-center"
         [ngClass]="{
           'btn-primary': control.value === true,
           active: control.value === true
@@ -23,6 +23,7 @@
         "
       >
         <input
+          class="btn-check"
           type="checkbox"
           [formControl]="control"
           autocomplete="off"

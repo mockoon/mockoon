@@ -869,10 +869,10 @@ $input-font-size-lg: $input-btn-font-size-lg !default;
 $input-bg: $custom-gray;
 $input-disabled-color: null !default;
 $input-disabled-bg: lighten($gray-900, 3%);
-$input-disabled-border-color: null !default;
+$input-disabled-border-color: lighten($gray-900, 3%);
 
 $input-color: $gray-200;
-$input-border-color: transparent;
+$input-border-color: $custom-gray;
 $input-border-width: $input-btn-border-width !default;
 $input-box-shadow: none;
 
@@ -982,7 +982,7 @@ $input-group-addon-padding-x: $input-padding-x !default;
 $input-group-addon-font-weight: $input-font-weight !default;
 $input-group-addon-color: $input-color !default;
 $input-group-addon-bg: transparent;
-$input-group-addon-border-color: $input-border-color !default;
+$input-group-addon-border-color: transparent;
 // scss-docs-end input-group-variables
 
 // scss-docs-start form-select-variables

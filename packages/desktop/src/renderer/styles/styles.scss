@@ -110,15 +110,15 @@ input,
 }
 
 .cursor-pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .cursor-grab {
-  cursor: grab;
+  cursor: grab !important;
 }
 
 .cursor-text {
-  cursor: text;
+  cursor: text !important;
 }
 
 // route badges (methods)

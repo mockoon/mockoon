@@ -1,7 +1,7 @@
 <div class="title-separator has-icon" [ngClass]="{ 'is-first': isFirst }">
   <div
     class="title-separator-icon"
-    [ngClass]="(iconClasses || '') + (iconClickable ? ' clickable' : '')"
+    [ngClass]="(iconClasses || '') + (iconClickable ? ' cursor-pointer' : '')"
     [ngbTooltip]="iconTooltip"
     (click)="iconClick()"
   >

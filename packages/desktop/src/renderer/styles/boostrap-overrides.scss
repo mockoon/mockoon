@@ -70,10 +70,6 @@
   cursor: pointer;
 }
 
-.clickable {
-  cursor: pointer;
-}
-
 .modal-body {
   overflow-y: auto;
   overflow-x: hidden;
@@ -130,7 +126,7 @@ label {
     // bg color
     $custom-gray,
     // border color
-    transparent,
+    $custom-gray,
     // color
     $gray-200,
     // hover-background
@@ -148,7 +144,7 @@ label {
     // disabled-background
     $custom-gray,
     // disabled-border
-    transparent,
+    $custom-gray,
     // disabled-color
     $gray-500
   );
@@ -187,9 +183,9 @@ label {
 }
 
 // fix bootstrap flexfill which is incompatible with ace editor
-.flex-fill {
+/* .flex-fill {
   flex: 1 !important;
-}
+} */
 
 .mh0 {
   min-height: 0;

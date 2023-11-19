@@ -32,7 +32,7 @@
             [dragId]="ruleIndex"
             (dropped)="reorganizeRules($event)"
           >
-            <div class="d-flex align-items-center">
+            <div class="input-group">
               <app-custom-select
                 class="col-3 me-1"
                 formControlName="target"
@@ -43,7 +43,7 @@
 
               <input
                 type="text"
-                class="form-control col-3 me-1"
+                class="form-control col-3"
                 [placeholder]="
                   modifierPlaceholders[
                     form.get(['rules', ruleIndex, 'target']).value
@@ -58,7 +58,7 @@
                 "
               />
               <app-toggle
-                class="me-1"
+                class="mx-2"
                 [uncheckable]="true"
                 formControlName="invert"
                 prefix="rule"
@@ -96,40 +96,35 @@
                 "
               />
 
-              <div
-                class="input-group-prepend ms-auto"
+              <button
                 *ngIf="deleteRuleRequested$ | async as deleteRuleRequested"
-              >
-                <button
-                  type="button"
-                  class="btn btn-link btn-icon delete-rule"
-                  [ngClass]="{
-                    'text-danger':
-                      deleteRuleRequested.enabled === true &&
-                      deleteRuleRequested.payload === ruleIndex
-                  }"
-                  [ngbTooltip]="
+                type="button"
+                class="btn btn-link btn-icon delete-rule"
+                [ngClass]="{
+                  'text-danger':
                     deleteRuleRequested.enabled === true &&
                     deleteRuleRequested.payload === ruleIndex
-                      ? 'Confirm'
-                      : 'Delete'
-                  "
-                  (click)="removeRule(ruleIndex)"
-                >
-                  <app-svg icon="delete"></app-svg>
-                </button>
-              </div>
+                }"
+                [ngbTooltip]="
+                  deleteRuleRequested.enabled === true &&
+                  deleteRuleRequested.payload === ruleIndex
+                    ? 'Confirm'
+                    : 'Delete'
+                "
+                (click)="removeRule(ruleIndex)"
+              >
+                <app-svg icon="delete"></app-svg>
+              </button>
 
-              <div
+              <button
                 *ngIf="form.get('rules').value.length > 1"
                 #dragHandle
-                class="input-group-prepend clickable"
                 ngbTooltip="Reorder"
+                type="button"
+                class="btn btn-link btn-icon cursor-grab text-muted"
               >
-                <span class="input-group-text p-1 cursor-grab text-muted">
-                  <app-svg icon="drag_indicator"></app-svg>
-                </span>
-              </div>
+                <app-svg icon="drag_indicator"></app-svg>
+              </button>
             </div>
           </div>
         </ng-container>
