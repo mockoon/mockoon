@@ -1219,8 +1219,8 @@ $dropdown-divider-margin-y: $spacer * 0.5 !default;
 $dropdown-box-shadow: none;
 
 $dropdown-link-color: $gray-300;
-$dropdown-link-hover-color: lighten($component-active-bg, 2%);
-$dropdown-link-hover-bg: $gray-200 !default;
+$dropdown-link-hover-color: $component-active-color;
+$dropdown-link-hover-bg: lighten($component-active-bg, 2%);
 
 $dropdown-link-active-color: $component-active-color;
 $dropdown-link-active-bg: lighten($component-active-bg, 2%);

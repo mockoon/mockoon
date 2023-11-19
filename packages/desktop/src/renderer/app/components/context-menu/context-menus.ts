@@ -22,7 +22,6 @@ export const EnvironmentsContextMenu = (
     },
     label: 'Copy configuration to clipboard (JSON)',
     icon: 'assignment',
-    separator: false,
     disabled: false
   },
   {
@@ -43,7 +42,6 @@ export const EnvironmentsContextMenu = (
     },
     label: 'Move data file to folder',
     icon: 'folder_move',
-    separator: false,
     disabled: false
   },
   {
