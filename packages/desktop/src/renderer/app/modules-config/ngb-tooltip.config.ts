@@ -6,6 +6,7 @@ export const NgbTooltipConfigFactory = (
   const ngbTooltipConfig = new NgbTooltipConfig(ngbConfig);
 
   ngbTooltipConfig.container = 'body';
+  ngbTooltipConfig.triggers = 'hover';
 
   return ngbTooltipConfig;
 };

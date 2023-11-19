@@ -142,6 +142,8 @@ label {
   &:hover,
   &.dropdown-toggle {
     color: $gray-100;
+    background-color: $custom-gray;
+    border-color: $gray-800;
   }
 
   &:focus,
