@@ -176,7 +176,7 @@
           </button>
           <div
             *ngIf="data.generatingTemplate === 'INPROGRESS'"
-            class="input-group-append ms-2 align-items-center"
+            class="input-group-text"
           >
             <app-svg icon="spinner"></app-svg>
           </div>
@@ -240,10 +240,7 @@
                   Generate
                 </button>
               </div>
-              <div
-                *ngIf="isDemoLoading$ | async"
-                class="input-group-append ms-2 align-items-center"
-              >
+              <div *ngIf="isDemoLoading$ | async" class="input-group-text">
                 <app-svg icon="spinner"></app-svg>
               </div>
             </div>

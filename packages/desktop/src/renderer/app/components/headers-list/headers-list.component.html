@@ -27,29 +27,26 @@
               formControlName="value"
               [ngbTypeahead]="headerValuesSearch"
             />
-            <div
-              class="input-group-prepend"
+
+            <button
               *ngIf="deleteHeaderRequested$ | async as deleteHeaderRequested"
-            >
-              <button
-                type="button"
-                class="btn btn-link btn-icon"
-                [ngClass]="{
-                  'text-danger':
-                    deleteHeaderRequested.enabled === true &&
-                    deleteHeaderRequested.payload === headerIndex
-                }"
-                [ngbTooltip]="
+              type="button"
+              class="btn btn-link btn-icon"
+              [ngClass]="{
+                'text-danger':
                   deleteHeaderRequested.enabled === true &&
                   deleteHeaderRequested.payload === headerIndex
-                    ? 'Confirm'
-                    : 'Delete'
-                "
-                (click)="removeHeader(headerIndex)"
-              >
-                <app-svg icon="delete"></app-svg>
-              </button>
-            </div>
+              }"
+              [ngbTooltip]="
+                deleteHeaderRequested.enabled === true &&
+                deleteHeaderRequested.payload === headerIndex
+                  ? 'Confirm'
+                  : 'Delete'
+              "
+              (click)="removeHeader(headerIndex)"
+            >
+              <app-svg icon="delete"></app-svg>
+            </button>
           </div>
         </div>
       </div>

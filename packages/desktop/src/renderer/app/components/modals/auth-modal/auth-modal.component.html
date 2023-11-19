@@ -20,10 +20,7 @@
       [formControl]="tokenControl"
       placeholder="Manually enter the token"
     />
-    <div
-      *ngIf="isLoading$ | async"
-      class="input-group-append ms-2 align-items-center"
-    >
+    <div *ngIf="isLoading$ | async" class="input-group-text">
       <app-svg icon="spinner"></app-svg>
     </div>
   </div>

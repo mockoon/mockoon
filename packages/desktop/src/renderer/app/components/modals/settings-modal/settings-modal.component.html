@@ -37,8 +37,8 @@
 
       <div class="ps-4">
         <div class="mb-3">
-          <div class="input-group">
-            <div class="form-check">
+          <div class="input-group align-items-center">
+            <div class="form-check mb-0">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -49,7 +49,7 @@
                 >Log the full transactions</label
               >
             </div>
-            <div class="input-group-append ms-1">
+            <div class="input-group-text">
               <app-svg
                 icon="info"
                 ngbTooltip="Logs the full transaction (request and response) in the application log files. Greatly increases the volume of logs. Requires a server restart to take effect."
@@ -72,7 +72,7 @@
           </div>
         </div>
         <div class="mb-3">
-          <div class="input-group">
+          <div class="input-group align-items-center">
             <label for="settings-log-body-size" class="col-form-label pe-2">
               Log's body maximum characters size
             </label>
@@ -84,7 +84,7 @@
               placeholder="10000 (default)"
               formControlName="logSizeLimit"
             />
-            <div class="input-group-append ms-1 align-items-center">
+            <div class="input-group-text">
               <app-svg
                 icon="info"
                 class="ms-1"
@@ -117,7 +117,7 @@
               [items]="fakerLocales"
               dropdownId="settings-faker-locale"
             ></app-custom-select>
-            <div class="input-group-append ms-1 align-items-center">
+            <div class="input-group-text">
               <app-svg
                 icon="info"
                 class="ms-1"
@@ -140,7 +140,7 @@
               [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
               formControlName="fakerSeed"
             />
-            <div class="input-group-append ms-1 align-items-center">
+            <div class="input-group-text">
               <app-svg
                 icon="info"
                 class="ms-1"
@@ -168,7 +168,7 @@
               [items]="fileWatcherOptions"
               dropdownId="settings-storage-file-watcher"
             ></app-custom-select>
-            <div class="input-group-append ms-1 align-items-center">
+            <div class="input-group-text">
               <app-svg
                 icon="info"
                 class="ms-1"
@@ -205,8 +205,8 @@
 
       <div class="ps-4">
         <div class="mb-3">
-          <div class="input-group">
-            <div class="form-check">
+          <div class="input-group align-items-center">
+            <div class="form-check mb-0">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -217,7 +217,7 @@
                 >Enable telemetry
               </label>
             </div>
-            <div class="input-group-append ms-1">
+            <div class="input-group-text">
               <app-svg
                 icon="info"
                 class="text-primary cursor-pointer"
