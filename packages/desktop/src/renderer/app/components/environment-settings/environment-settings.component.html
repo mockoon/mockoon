@@ -3,7 +3,7 @@
   class="d-flex flex-column h-100 p-2"
   [formGroup]="activeEnvironmentForm"
 >
-  <div class="d-flex flex-row align-items-center">
+<div class="input-group mb-3 align-items-center">
     <label for="env-settings-name" class="pe-2">Name</label>
     <div class="col-4">
       <input
@@ -23,7 +23,7 @@
     }}:{{ activeEnvironment?.port }}/{{ activeEnvironment?.endpointPrefix }}"
   ></app-title-separator>
 
-  <div class="d-flex flex-row align-items-center">
+  <div class="input-group mb-3 align-items-center">
     <div class="col-1">
       <input
         type="text"
@@ -77,7 +77,7 @@
   ></app-title-separator>
 
   <ng-container formGroupName="tlsOptions">
-    <div class="mb-3 d-flex flex-row">
+    <div class="input-group mb-3 align-items-center">
       <div class="form-check">
         <input
           type="checkbox"
@@ -171,7 +171,7 @@
       </div>
     </div>
 
-    <div class="mb-3 d-inline-flex flex-row">
+    <div class="input-group mb-3 align-items-center">
       <label for="env-settings-tls-caPath" class="pe-2">CA cert path</label>
       <div class="col-4">
         <input
@@ -189,7 +189,7 @@
         <app-svg icon="find_in_page"></app-svg>
       </button>
     </div>
-    <div class="mb-3 d-flex flex-row align-items-center">
+    <div class="input-group mb-3 align-items-center">
       <label for="env-settings-tls-passphrase" class="pe-2"
         >Cert passphrase</label
       >
@@ -206,7 +206,7 @@
 
   <app-title-separator heading="Misc" icon="storage"></app-title-separator>
 
-  <div class="mb-3 d-flex flex-row align-items-center">
+  <div class="input-group mb-3 align-items-center">
     <label for="env-settings-latency" class="col-form-label pe-2">
       Latency (ms)
     </label>
@@ -232,7 +232,7 @@
     </div>
   </div>
 
-  <div class="mb-3 d-flex flex-row align-items-center">
+  <div class="input-group mb-3 align-items-center">
     <div class="form-check">
       <input
         type="checkbox"
