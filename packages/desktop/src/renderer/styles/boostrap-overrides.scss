@@ -88,9 +88,7 @@
     color: $text-muted;
   }
 }
-.form-group {
-  margin-bottom: 1rem;
-}
+
 .input-group-text {
   color: $gray-400;
 }
@@ -129,31 +127,31 @@ label {
 
 .btn-custom {
   @include button-variant(
+    // bg color
     $custom-gray,
+    // border color
     transparent,
+    // color
+    $gray-200,
+    // hover-background
     $custom-gray,
+    // hover border
     $gray-800,
+    // hover-color
+    $gray-100,
+    // active-background
     $custom-gray,
-    $gray-800
+    // active-border
+    $gray-800,
+    // active-color
+    $gray-100,
+    // disabled-background
+    $custom-gray,
+    // disabled-border
+    transparent,
+    // disabled-color
+    $gray-500
   );
-  color: $gray-500;
-  border-width: $btn-border-width;
-
-  &:hover,
-  &.dropdown-toggle {
-    color: $gray-100;
-    background-color: $custom-gray;
-    border-color: $gray-800;
-  }
-
-  &:focus,
-  &.focus,
-  &:not(:disabled):not(.disabled):active:focus,
-  &:not(:disabled):not(.disabled).active:focus,
-  .show > &.dropdown-toggle:focus {
-    color: $gray-500;
-    box-shadow: none;
-  }
 }
 
 .btn-xs {
@@ -252,11 +250,6 @@ small,
 .small {
   padding: 0.2rem 0.4rem;
   font-size: 0.8rem;
-}
-
-.text-break {
-  word-break: break-all !important;
-  word-wrap: break-word !important;
 }
 
 // inline code
