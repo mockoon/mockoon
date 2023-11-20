@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Global route and rules",
   "endpointPrefix": "",
   "latency": 0,
@@ -37,7 +37,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": "FALLBACK",
@@ -66,7 +67,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -95,7 +97,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -125,5 +128,6 @@
     { "type": "route", "uuid": "9745a08e-94c2-451e-bccc-b31dc608bb6d" },
     { "type": "route", "uuid": "a80d01ac-a3ac-4551-9332-5d3aa1099569" },
     { "type": "route", "uuid": "9e531525-6937-4e35-b6b7-0018c33a73bc" }
-  ]
+  ],
+  "callbacks": []
 }

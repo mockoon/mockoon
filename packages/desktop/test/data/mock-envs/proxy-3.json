@@ -1,6 +1,6 @@
 {
   "uuid": "53bce436-ee1d-461f-baf8-a837612faf38",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Proxy disabled",
   "endpointPrefix": "",
   "latency": 0,
@@ -29,7 +29,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -59,5 +60,6 @@
   "folders": [],
   "rootChildren": [
     { "type": "route", "uuid": "f8f77188-32d4-4c0a-bd0a-38898b560f40" }
-  ]
+  ],
+  "callbacks": []
 }

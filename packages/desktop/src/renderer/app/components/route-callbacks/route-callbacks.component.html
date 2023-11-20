@@ -1,0 +1,130 @@
+<ng-container *ngIf="routeResponse$ | async">
+  <ng-container [formGroup]="form">
+    <div class="callback-list" formArrayName="callbacks">
+      <div
+        class="callback-item py-1"
+        *ngFor="
+          let callback of form.get('callbacks')['controls'];
+          index as callbackIndex
+        "
+        [formGroupName]="callbackIndex"
+        appDraggable
+        appDropzone
+        dragContainer="route-callbacks"
+        [dragEnabled]="form.get('callbacks')['controls'].length > 1"
+        dragParentId="root"
+        [dragIsContainer]="false"
+        [dragId]="callbackIndex"
+        (dropped)="reorganizeCallbacks($event)"
+      >
+        <div class="route-response-callback">
+          <app-custom-select
+            class="mw0 mr-1"
+            formControlName="uuid"
+            [enableCustomInput]="false"
+            [items]="callbacks$ | async"
+            placeholder="Select a callback"
+            [dropdownId]="'callback' + callbackIndex + 'target'"
+          ></app-custom-select>
+          <div class="input-group">
+            <div
+              class="input-group-prepend ml-auto"
+              ngbTooltip="Callback latency (ms)"
+            >
+              <span class="input-group-text">
+                <app-svg icon="access_time"></app-svg>
+              </span>
+            </div>
+            <input
+              type="number"
+              class="form-control"
+              [appInputNumber]="{
+                min: 0,
+                max: Infinity,
+                canBeEmpty: false
+              }"
+              formControlName="latency"
+            />
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <div class="input-group-prepend">
+              <button
+                [disabled]="
+                  form.get(['callbacks', callbackIndex, 'uuid']).value
+                    .length === 0
+                "
+                type="button"
+                [attr.data-testid]="'callback' + callbackIndex + 'gotodef'"
+                class="btn btn-link btn-icon goto-definition-callback"
+                [ngbTooltip]="'Go to definition'"
+                (click)="
+                  goToCallbackDefinition(
+                    form.get(['callbacks', callbackIndex, 'uuid']).value
+                  )
+                "
+              >
+                <app-svg icon="goto"></app-svg>
+              </button>
+            </div>
+
+            <div
+              class="input-group-prepend"
+              *ngIf="
+                deleteCallbackRequested$ | async as deleteCallbackRequested
+              "
+            >
+              <button
+                [attr.data-testid]="'callback' + callbackIndex + 'delete'"
+                type="button"
+                class="btn btn-link btn-icon delete-callback"
+                [ngClass]="{
+                  'text-danger':
+                    deleteCallbackRequested.enabled === true &&
+                    deleteCallbackRequested.payload === callbackIndex
+                }"
+                [ngbTooltip]="
+                  deleteCallbackRequested.enabled === true &&
+                  deleteCallbackRequested.payload === callbackIndex
+                    ? 'Confirm'
+                    : 'Delete'
+                "
+                (click)="removeCallback(callbackIndex)"
+              >
+                <app-svg icon="delete"></app-svg>
+              </button>
+            </div>
+
+            <div
+              *ngIf="form.get('callbacks').value.length > 1"
+              #dragHandle
+              class="input-group-prepend clickable"
+              ngbTooltip="Reorder"
+            >
+              <span class="input-group-text p-1 cursor-grab text-muted">
+                <app-svg icon="drag_indicator"></app-svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-flex align-items-center mt-2"
+      *ngIf="allCallbacks$ | async as allCallbacks"
+    >
+      <button
+        *ngIf="allCallbacks.length > 0"
+        type="button"
+        class="btn btn-link btn-icon add-callback"
+        (click)="addCallback(allCallbacks)"
+      >
+        <app-svg icon="add_box" class="text-success pr-2"></app-svg>
+        Add callback
+      </button>
+      <p *ngIf="allCallbacks.length === 0" class="message w-100 text-center">
+        No callbacks defined
+      </p>
+    </div>
+  </ng-container>
+</ng-container>

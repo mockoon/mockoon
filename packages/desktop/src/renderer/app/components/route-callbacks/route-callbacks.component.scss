@@ -1,0 +1,6 @@
+@import 'src/renderer/styles/bootstrap-variables.scss';
+
+.route-response-callback {
+  display: grid;
+  grid-template-columns: 9fr 2fr 1fr;
+}

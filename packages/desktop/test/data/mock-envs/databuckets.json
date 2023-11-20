@@ -1,6 +1,6 @@
 {
   "uuid": "5dd5c15a-d860-40da-83f4-7606e2c0ee22",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "databuckets",
   "endpointPrefix": "",
   "latency": 0,
@@ -28,7 +28,8 @@
           "default": true,
           "databucketID": "abc1",
           "bodyType": "DATABUCKET",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -57,7 +58,8 @@
           "default": true,
           "databucketID": "abc2",
           "bodyType": "DATABUCKET",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -86,7 +88,8 @@
           "default": true,
           "databucketID": "abc3",
           "bodyType": "DATABUCKET",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -141,5 +144,6 @@
   "rootChildren": [
     { "type": "route", "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c" },
     { "type": "route", "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511" }
-  ]
+  ],
+  "callbacks": []
 }

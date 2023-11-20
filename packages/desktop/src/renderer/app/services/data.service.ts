@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
   BINARY_BODY,
+  Callback,
   DataBucket,
   Environment,
   EnvironmentSchema,
+  GenerateCallbackID,
   GenerateDatabucketID,
   generateUUID,
   HighestMigrationId,
@@ -152,6 +154,38 @@ export class DataService extends Logger {
     } while (foundID);
 
     return databucket;
+  }
+
+  /**
+   * Sets a new id to the given callback.
+   *
+   * @param callback callback reference
+   * @returns modified callback reference
+   */
+  public renewCallbackID(callback: Callback) {
+    callback.id = GenerateCallbackID();
+
+    return callback;
+  }
+
+  /**
+   * Assigns a unique id for the callback.
+   *
+   * @param callback callback reference
+   * @returns callback which has a unique id
+   */
+  public deduplicateCallbackID(callback: Callback) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    let foundID: Callback;
+
+    do {
+      callback = this.renewCallbackID(callback);
+      foundID = activeEnvironment.callbacks.find(
+        (cb) => callback.id === cb.id && callback.uuid !== cb.uuid
+      );
+    } while (foundID);
+
+    return callback;
   }
 
   /**

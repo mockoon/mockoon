@@ -1,6 +1,6 @@
 {
   "uuid": "a7186111-8f6f-45f0-aeb0-75fe40892d31",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Demo API",
   "endpointPrefix": "",
   "latency": 0,
@@ -37,7 +37,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "abb165b9-ae4a-4b27-b758-8ebe0c27c752",
@@ -55,7 +56,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -84,7 +86,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -113,7 +116,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -142,7 +146,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -171,7 +176,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -203,5 +209,6 @@
     { "type": "route", "uuid": "2e102f5b-451b-4a6f-b908-48313918a414" },
     { "type": "route", "uuid": "11d2325b-ef62-4c56-a66d-887f75538abd" },
     { "type": "route", "uuid": "a19d8512-b4db-4d28-8dba-ef52327da26c" }
-  ]
+  ],
+  "callbacks": []
 }

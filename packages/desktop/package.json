@@ -104,7 +104,7 @@
     "eslint-plugin-jsdoc": "46.9.0",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "firebase": "9.12.1",
-    "glob": "8.1.0",
+    "glob": "10.3.10",
     "joi": "17.11.0",
     "ngx-markdown": "16.0.0",
     "ngx-mask": "16.4.1",

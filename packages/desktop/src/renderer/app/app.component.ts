@@ -82,6 +82,8 @@ export class AppComponent extends Logger implements OnInit {
         this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
       } else if (this.store.get('activeView') === 'ENV_DATABUCKETS') {
         this.eventsService.focusInput.next(FocusableInputs.DATABUCKET_FILTER);
+      } else if (this.store.get('activeView') === 'ENV_CALLBACKS') {
+        this.eventsService.focusInput.next(FocusableInputs.CALLBACK_FILTER);
       }
     }
 
@@ -112,11 +114,10 @@ export class AppComponent extends Logger implements OnInit {
     this.telemetryService.init().subscribe();
 
     this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
-      filter((activeEnvironment) => !!activeEnvironment),
       tap((activeEnvironment) => {
         this.title.setTitle(
-          `${environment.production ? '' : ' [DEV]'}Mockoon - ${
-            activeEnvironment.name
+          `${environment.production ? '' : ' [DEV]'}Mockoon${
+            activeEnvironment ? ' - ' + activeEnvironment.name : ''
           }`
         );
       })
@@ -151,6 +152,8 @@ export class AppComponent extends Logger implements OnInit {
             .subscribe();
         } else if (payload.subject === 'databucket') {
           this.environmentsService.duplicateDatabucket(payload.subjectUUID);
+        } else if (payload.subject === 'callback') {
+          this.environmentsService.duplicateCallback(payload.subjectUUID);
         }
         break;
       case 'copyJSON':
@@ -169,6 +172,8 @@ export class AppComponent extends Logger implements OnInit {
           this.environmentsService.removeDatabucket(payload.subjectUUID);
         } else if (payload.subject === 'folder') {
           this.environmentsService.removeFolder(payload.subjectUUID);
+        } else if (payload.subject === 'callback') {
+          this.environmentsService.removeCallback(payload.subjectUUID);
         }
         break;
       case 'add_crud_route':

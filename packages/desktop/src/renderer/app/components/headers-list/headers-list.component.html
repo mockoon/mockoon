@@ -3,13 +3,8 @@
     <ng-container formArrayName="headers">
       <div class="headers-list">
         <div
-          class="header-item"
-          *ngFor="
-            let header of headers.controls;
-            index as headerIndex;
-            first as headerFirst
-          "
-          [ngClass]="{ 'mt-1': !headerFirst }"
+          class="header-item py-1"
+          *ngFor="let header of headers.controls; index as headerIndex"
           [formGroupName]="headerIndex"
         >
           <div class="input-group" style="position: relative">

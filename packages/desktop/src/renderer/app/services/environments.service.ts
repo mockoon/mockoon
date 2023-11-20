@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  BuildCallback,
   BuildCRUDRoute,
   BuildDatabucket,
   BuildDemoEnvironment,
@@ -9,6 +10,7 @@ import {
   BuildHeader,
   BuildHTTPRoute,
   BuildRouteResponse,
+  Callback,
   CloneObject,
   CloneRouteResponse,
   DataBucket,
@@ -56,6 +58,13 @@ import {
   environmentHasRoute,
   HumanizeText
 } from 'src/renderer/app/libs/utils.lib';
+import {
+  CallbackProperties,
+  CallbackResponseUsage,
+  CallbackSpecTabNameType,
+  CallbackTabsNameType,
+  CallbackUsage
+} from 'src/renderer/app/models/callback.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { FolderProperties } from 'src/renderer/app/models/folder.model';
@@ -77,26 +86,33 @@ import { StorageService } from 'src/renderer/app/services/storage.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
+  addCallbackAction,
   addDatabucketAction,
   addEnvironmentAction,
   addFolderAction,
   addRouteAction,
   addRouteResponseAction,
+  duplicateCallbackToAnotherEnvironmentAction,
   duplicateDatabucketToAnotherEnvironmentAction,
   duplicateRouteToAnotherEnvironmentAction,
   logRequestAction,
   navigateEnvironmentsAction,
+  navigateToCallbackAction,
   refreshEnvironmentAction,
   reloadEnvironmentAction,
+  removeCallbackAction,
   removeDatabucketAction,
   removeEnvironmentAction,
   removeFolderAction,
   removeRouteAction,
   removeRouteResponseAction,
+  reorganizeCallbacksAction,
   reorganizeDatabucketsAction,
   reorganizeEnvironmentsAction,
+  reorganizeResponseCallbacksAction,
   reorganizeRouteResponsesAction,
   reorganizeRoutesAction,
+  setActiveCallbackAction,
   setActiveDatabucketAction,
   setActiveEnvironmentAction,
   setActiveEnvironmentLogTabAction,
@@ -104,8 +120,10 @@ import {
   setActiveRouteAction,
   setActiveRouteResponseAction,
   setActiveTabAction,
+  setActiveTabInCallbackViewAction,
   setActiveViewAction,
   startEntityDuplicationToAnotherEnvironmentAction,
+  updateCallbackAction,
   updateDatabucketAction,
   updateEnvironmentAction,
   updateFolderAction,
@@ -744,6 +762,22 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Add a new callback and save it in the store.
+   */
+  public addCallback() {
+    if (this.store.getActiveEnvironment()) {
+      let newCallback = BuildCallback();
+      newCallback = this.dataService.deduplicateCallbackID(newCallback);
+
+      this.store.update(addCallbackAction(newCallback));
+
+      setTimeout(() => {
+        this.uiService.focusInput(FocusableInputs.CALLBACK_NAME);
+      }, 0);
+    }
+  }
+
+  /**
    * Add a new route and save it in the store
    */
   public addRouteFromClipboard() {
@@ -800,6 +834,18 @@ export class EnvironmentsService extends Logger {
       this.store.update(setActiveDatabucketAction(databucketUUID));
     }
   }
+
+  /**
+   * Set active callback by UUID
+   */
+  public setActiveCallback(callbackUUID: string) {
+    const activeCallbackUUID = this.store.get('activeCallbackUUID');
+
+    if (activeCallbackUUID !== callbackUUID) {
+      this.store.update(setActiveCallbackAction(callbackUUID));
+    }
+  }
+
   /**
    * Duplicate the given route response and save it in the store
    */
@@ -875,6 +921,27 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Duplicate a callback, or the current active callback and append it at the end
+   */
+  public duplicateCallback(callbackUUID: string) {
+    const callbackToDuplicate = this.store
+      .getActiveEnvironment()
+      .callbacks.find((cb) => cb.uuid === callbackUUID);
+
+    if (callbackToDuplicate) {
+      let newCallback: Callback = CloneObject(callbackToDuplicate);
+
+      newCallback.name = `${callbackToDuplicate.name} (copy)`;
+      newCallback.uuid = generateUUID();
+      newCallback = this.dataService.deduplicateCallbackID(newCallback);
+
+      this.store.update(
+        addCallbackAction(newCallback, callbackToDuplicate.uuid)
+      );
+    }
+  }
+
+  /**
    * Duplicate a databucket to another environment
    */
   public duplicateDatabucketInAnotherEnvironment(
@@ -894,6 +961,31 @@ export class EnvironmentsService extends Logger {
       this.store.update(
         duplicateDatabucketToAnotherEnvironmentAction(
           newDatabucket,
+          targetEnvironmentUUID
+        )
+      );
+    }
+  }
+
+  /**
+   * Duplicate a callback to another environment
+   */
+  public duplicateCallbackInAnotherEnvironment(
+    callbackUUID: string,
+    targetEnvironmentUUID: string
+  ) {
+    const callbackToDuplicate = this.store.getCallbackByUUID(callbackUUID);
+
+    if (callbackToDuplicate) {
+      let newCallback: Callback = {
+        ...CloneObject(callbackToDuplicate),
+        uuid: generateUUID()
+      };
+      newCallback = this.dataService.deduplicateCallbackID(newCallback);
+
+      this.store.update(
+        duplicateCallbackToAnotherEnvironmentAction(
+          newCallback,
           targetEnvironmentUUID
         )
       );
@@ -928,6 +1020,17 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Remove a callback and save
+   */
+  public removeCallback(
+    callbackUUID: string = this.store.get('activeCallbackUUID')
+  ) {
+    if (callbackUUID) {
+      this.store.update(removeCallbackAction(callbackUUID));
+    }
+  }
+
+  /**
    * Enable and disable a route
    */
   public toggleRoute(routeUUID?: string) {
@@ -958,6 +1061,52 @@ export class EnvironmentsService extends Logger {
     }
 
     this.store.update(setActiveTabAction(activeTab));
+    if (activeTab === 'CALLBACKS') {
+      // active sub tab when callbacks is clicked is the definition tab.
+      const activeSpecTab = this.store.getSelectedSpecTabInCallbackView();
+      this.store.update(
+        setActiveTabInCallbackViewAction('SPEC', activeSpecTab)
+      );
+    }
+  }
+
+  /**
+   * Set active tab of callback view.
+   */
+  public setActiveTabInCallbackView(activeTab: CallbackTabsNameType) {
+    const activeSpecTab = this.store.getSelectedSpecTabInCallbackView();
+
+    this.store.update(
+      setActiveTabInCallbackViewAction(activeTab, activeSpecTab)
+    );
+  }
+
+  /**
+   * Set active spec tab of callback view.
+   */
+  public setActiveSpecTabInCallbackView(
+    activeSpecTab: CallbackSpecTabNameType
+  ) {
+    const activeTab = this.store.getSelectedCallbackTab();
+
+    this.store.update(
+      setActiveTabInCallbackViewAction(activeTab, activeSpecTab)
+    );
+  }
+
+  /**
+   * Navigate to callback usage.
+   */
+  public navigateToCallbackUsageInRoute(
+    callbackUsage: CallbackUsage,
+    callbackResponse: CallbackResponseUsage
+  ) {
+    this.setActiveView('ENV_ROUTES');
+    this.setActiveRoute(callbackUsage.routeUUID);
+    if (callbackResponse) {
+      this.setActiveRouteResponse(callbackResponse.responseUUID);
+    }
+    this.setActiveTab('CALLBACKS');
   }
 
   /**
@@ -1018,10 +1167,27 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Navigates to the definition of the provided callback by id.
+   */
+  public navigateToCallbackDefinition(callbackUUID: string) {
+    const activeSpecTab = this.store.getSelectedSpecTabInCallbackView();
+
+    this.store.update(navigateToCallbackAction(callbackUUID));
+    this.store.update(setActiveTabInCallbackViewAction('SPEC', activeSpecTab));
+  }
+
+  /**
    * Update the active databucket
    */
   public updateActiveDatabucket(properties: DatabucketProperties) {
     this.store.update(updateDatabucketAction(properties));
+  }
+
+  /**
+   * Update the active databucket
+   */
+  public updateActiveCallback(properties: CallbackProperties) {
+    this.store.update(updateCallbackAction(properties));
   }
 
   /**
@@ -1098,7 +1264,9 @@ export class EnvironmentsService extends Logger {
       ENVIRONMENTS: reorganizeEnvironmentsAction,
       ROUTES: reorganizeRoutesAction,
       ROUTE_RESPONSES: reorganizeRouteResponsesAction,
-      DATABUCKETS: reorganizeDatabucketsAction
+      DATABUCKETS: reorganizeDatabucketsAction,
+      ENVIRONMENT_CALLBACKS: reorganizeCallbacksAction,
+      RESPONSE_CALLBACKS: reorganizeResponseCallbacksAction
     };
 
     this.store.update(storeActions[type](dropAction));

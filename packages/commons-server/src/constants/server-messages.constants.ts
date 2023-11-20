@@ -18,5 +18,7 @@ export const ServerMessages = {
     '-- Header parsing error, see logs for more details --',
   SERVER_STARTED: 'Server started on port %d',
   SERVER_STOPPED: 'Server stopped',
-  SERVER_CREATING_PROXY: 'Creating proxy to %s'
+  SERVER_CREATING_PROXY: 'Creating proxy to %s',
+  CALLBACK_FILE_ERROR: 'Error while attaching file to callback request: %s',
+  CALLBACK_ERROR: 'Error while executing callback: %s'
 };

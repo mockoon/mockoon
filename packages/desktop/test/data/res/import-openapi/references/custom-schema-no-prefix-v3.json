@@ -1,6 +1,6 @@
 {
   "uuid": "a0d62338-24ce-4ced-bc97-59bf933d1ce9",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Sample v3 schema",
   "endpointPrefix": "",
   "latency": 0,
@@ -28,7 +28,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -57,7 +58,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -91,7 +93,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -122,5 +125,6 @@
     { "type": "route", "uuid": "a024635f-b489-475a-a4ae-0d879c8ec6b4" },
     { "type": "route", "uuid": "9863a3ce-ec67-4658-8172-8605936cc8f9" },
     { "type": "route", "uuid": "63662377-902f-4a71-8797-a3d12cdefc4a" }
-  ]
+  ],
+  "callbacks": []
 }

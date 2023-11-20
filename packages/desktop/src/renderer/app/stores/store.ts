@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  Callback,
   DataBucket,
   Environment,
   Route,
@@ -13,6 +14,10 @@ import {
 } from 'rxjs';
 import { distinctUntilChanged, map, withLatestFrom } from 'rxjs/operators';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
+import {
+  CallbackSpecTabNameType,
+  CallbackTabsNameType
+} from 'src/renderer/app/models/callback.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
@@ -32,6 +37,7 @@ export class Store {
     activeEnvironmentUUID: null,
     activeRouteUUID: null,
     activeDatabucketUUID: null,
+    activeCallbackUUID: null,
     activeRouteResponseUUID: null,
     environments: [],
     environmentsStatus: {},
@@ -48,9 +54,14 @@ export class Store {
     filters: {
       routes: '',
       databuckets: '',
-      templates: ''
+      templates: '',
+      callbacks: ''
     },
-    user: null
+    user: null,
+    callbackSettings: {
+      activeTab: 'SPEC',
+      activeSpecTab: 'BODY'
+    }
   });
   /**
    * Emits latest store action
@@ -241,6 +252,35 @@ export class Store {
   }
 
   /**
+   * Select active callback observable
+   */
+  public selectActiveCallback(): Observable<Callback> {
+    return this.selectActiveEnvironment().pipe(
+      map((environment) =>
+        environment
+          ? environment.callbacks.find(
+              (cb) => cb.uuid === this.store$.value.activeCallbackUUID
+            )
+          : null
+      )
+    );
+  }
+
+  /**
+   * Get the active selected tab of callback view.
+   */
+  public getSelectedCallbackTab(): CallbackTabsNameType {
+    return this.store$.value.callbackSettings.activeTab;
+  }
+
+  /**
+   * Get the active selected spec tab of callback view.
+   */
+  public getSelectedSpecTabInCallbackView(): CallbackSpecTabNameType {
+    return this.store$.value.callbackSettings.activeSpecTab;
+  }
+
+  /**
    * Get environment by uuid
    */
   public getEnvironmentByUUID(UUID: string): Environment {
@@ -348,6 +388,22 @@ export class Store {
     });
 
     return foundDataBucket;
+  }
+
+  /**
+   * Get callback with the supplied UUID from any environment
+   */
+  public getCallbackByUUID(callbackUUID: string): Callback | undefined {
+    let foundCallback: Callback;
+    this.store$.value.environments.some((environment: Environment) => {
+      foundCallback = environment.callbacks.find(
+        (cb: Callback) => cb.uuid === callbackUUID
+      );
+
+      return !!foundCallback;
+    });
+
+    return foundCallback;
   }
 
   /**

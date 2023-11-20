@@ -105,6 +105,8 @@ Mockoon's CLI has been tested on Node.js versions 18 and 20.
 
 - [Start command](#start-command)
 - [Dockerize command](#dockerize-command)
+- [Import command](#import-command)
+- [Export command](#export-command)
 - [Help command](#help-command)
 
 ### Start command
@@ -161,6 +163,51 @@ EXAMPLES
   $ mockoon-cli dockerize --data ~/data.json --output ./Dockerfile
   $ mockoon-cli dockerize --data ~/data1.json ~/data2.json --output ./Dockerfile
   $ mockoon-cli dockerize --data https://file-server/data.json --output ./Dockerfile
+```
+
+### Import command
+
+Import a Swagger v2/OpenAPI v3 specification file (YAML or JSON).
+
+The output file will not be prettified by default. You can prettify it using the `--prettify` flag described below.
+
+Note: This command is similar to the app's import feature, but it will not import directly to your desktop app. If you need to import and open in your desktop app, use the app's import feature instead.
+
+```
+USAGE
+  $ mockoon-cli import
+
+OPTIONS
+  -i, --input                 [required] Path or URL to your Swagger v2/OpenAPI v3 file
+  -o, --output                [required] Generated Mockoon path and name (e.g. `./environment.json`)
+  -p, --prettify              Prettify output
+  -h, --help                  Show CLI help
+
+EXAMPLES
+  $ mockoon-cli import --input ~/input.json --output ./output.json
+  $ mockoon-cli import --input ~/input.yaml --output ./output.json
+  $ mockoon-cli import --input ~/input.json --output ./output.json --prettify
+```
+
+### Export command
+
+Export a mock API to an OpenAPI v3 specification file (JSON).
+
+The output file will not be prettified by default. You can prettify it using the `--prettify` flag described below.
+
+```
+USAGE
+  $ mockoon-cli export
+
+OPTIONS
+  -i, --input                 [required] Path or URL to your Mockoon data file
+  -o, --output                [required] Generated OpenApi v3 path and name (e.g. `./output.json`)
+  -p, --prettify              Prettify output
+  -h, --help                  Show CLI help
+
+EXAMPLES
+  $ mockoon-cli export --input ~/input.json --output ./output.json
+  $ mockoon-cli export --input ~/input.json --output ./output.json --prettify
 ```
 
 ### Help command

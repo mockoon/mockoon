@@ -1,6 +1,8 @@
 import {
   BINARY_BODY,
   BodyTypes,
+  Callback,
+  CallbackInvocation,
   CORSHeaders,
   Environment,
   FileExtensionsWithTemplating,
@@ -45,8 +47,10 @@ import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
 import { requestHelperNames } from '../templating-helpers/request-helpers';
 import {
+  CreateCallbackInvocation,
   CreateTransaction,
   dedupSlashes,
+  isBodySupportingMethod,
   resolvePathFromEnvironment,
   routesFromFolder,
   stringIncludesArrayItems
@@ -62,6 +66,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
+  private callbackDefinitions: Callback[] = [];
 
   constructor(
     private environment: Environment,
@@ -172,6 +177,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
+    this.retrieveCallbackDefinitions(this.environment);
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
@@ -572,6 +578,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             }
           }
 
+          this.makeCallbacks(enabledRouteResponse, request, response);
+
           this.serveBody(
             content || '',
             route,
@@ -583,6 +591,109 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
       }, enabledRouteResponse.latency);
     };
+  }
+
+  private makeCallbacks(
+    routeResponse: RouteResponse,
+    request: Request,
+    response: Response
+  ) {
+    if (routeResponse.callbacks && routeResponse.callbacks.length > 0) {
+      for (const invocation of routeResponse.callbacks) {
+        const cb = this.environment.callbacks.find(
+          (ref) => ref.uuid === invocation.uuid
+        );
+
+        if (!cb) {
+          continue;
+        }
+
+        try {
+          const url = TemplateParser(
+            false,
+            cb.uri,
+            this.environment,
+            this.processedDatabuckets,
+            request,
+            response
+          );
+
+          let content = cb.body;
+          if (cb.bodyType === BodyTypes.INLINE) {
+            content = TemplateParser(
+              false,
+              content || '',
+              this.environment,
+              this.processedDatabuckets,
+              request,
+              response
+            );
+          } else if (cb.bodyType === BodyTypes.DATABUCKET && cb.databucketID) {
+            const servedDatabucket = this.processedDatabuckets.find(
+              (processedDatabucket) =>
+                processedDatabucket.id === cb.databucketID
+            );
+
+            if (servedDatabucket) {
+              content = servedDatabucket.value;
+
+              // if returned content is an array or object we need to stringify it for some values (array, object, booleans and numbers (bool and nb because expressjs cannot serve this as is))
+              if (
+                Array.isArray(content) ||
+                typeof content === 'object' ||
+                typeof content === 'boolean' ||
+                typeof content === 'number'
+              ) {
+                content = JSON.stringify(content);
+              } else {
+                content = content;
+              }
+            }
+          } else if (cb.bodyType === BodyTypes.FILE && cb.filePath) {
+            this.sendFileWithCallback(
+              routeResponse,
+              cb,
+              invocation,
+              request,
+              response
+            );
+
+            continue;
+          }
+
+          const sendingHeaders = {
+            headers: {}
+          };
+          this.setHeaders(cb.headers || [], sendingHeaders, request);
+
+          setTimeout(() => {
+            fetch(url, {
+              method: cb.method,
+              headers: sendingHeaders.headers,
+              body: isBodySupportingMethod(cb.method) ? content : undefined
+            })
+              .then((res) => {
+                this.emitCallbackInvoked(
+                  res,
+                  cb,
+                  url,
+                  content,
+                  sendingHeaders.headers
+                );
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: cb.name
+                })
+              );
+          }, invocation.latency);
+        } catch (error: any) {
+          this.emit('error', ServerErrorCodes.CALLBACK_ERROR, error, {
+            callbackName: cb.name
+          });
+        }
+      }
+    }
   }
 
   /**
@@ -627,6 +738,138 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         response,
         format(ServerMessages.ROUTE_SERVING_ERROR, error.message)
       );
+    }
+  }
+
+  private sendFileWithCallback(
+    routeResponse: RouteResponse,
+    callback: Callback,
+    invocation: CallbackInvocation,
+    request: Request,
+    response: Response
+  ) {
+    if (!callback.filePath) {
+      return;
+    }
+
+    const fileServingError = (error) => {
+      this.emit('error', ServerErrorCodes.CALLBACK_FILE_ERROR, error, {
+        callbackName: callback.name
+      });
+    };
+
+    try {
+      const url = TemplateParser(
+        false,
+        callback.uri,
+        this.environment,
+        this.processedDatabuckets,
+        request,
+        response
+      );
+
+      let filePath = TemplateParser(
+        false,
+        callback.filePath.replace(/\\/g, '/'),
+        this.environment,
+        this.processedDatabuckets,
+        request
+      );
+
+      filePath = resolvePathFromEnvironment(
+        filePath,
+        this.options.environmentDirectory
+      );
+
+      const fileMimeType = mimeTypeLookup(filePath) || '';
+
+      const sendingHeaders = {
+        headers: {}
+      };
+      this.setHeaders(callback.headers || [], sendingHeaders, request);
+
+      const definedContentType = sendingHeaders.headers['Content-Type'];
+
+      // parse templating for a limited list of mime types
+
+      try {
+        if (!callback.sendFileAsBody) {
+          const buffer = readFileSync(filePath);
+          const form = new FormData();
+          form.append('file', new Blob([buffer]));
+
+          setTimeout(() => {
+            fetch(url, {
+              method: callback.method,
+              body: form,
+              headers: sendingHeaders.headers
+            })
+              .then((res) => {
+                this.emitCallbackInvoked(
+                  res,
+                  callback,
+                  url,
+                  `<buffer of ${filePath}`,
+                  sendingHeaders.headers
+                );
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: callback.name
+                })
+              );
+          }, invocation.latency);
+        } else {
+          const data = readFileSync(filePath);
+          let fileContent;
+          if (
+            MimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
+            !routeResponse.disableTemplating
+          ) {
+            fileContent = TemplateParser(
+              false,
+              data.toString(),
+              this.environment,
+              this.processedDatabuckets,
+              request,
+              response
+            );
+          } else {
+            fileContent = data.toString();
+          }
+
+          // set content-type the detected mime type if any
+          if (!definedContentType && fileMimeType) {
+            sendingHeaders.headers['Content-Type'] = fileMimeType;
+          }
+
+          setTimeout(() => {
+            fetch(url, {
+              method: callback.method,
+              headers: sendingHeaders.headers,
+              body: fileContent
+            })
+              .then((res) => {
+                this.emitCallbackInvoked(
+                  res,
+                  callback,
+                  url,
+                  fileContent,
+                  sendingHeaders.headers
+                );
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: callback.name
+                })
+              );
+          }, invocation.latency);
+        }
+      } catch (error: any) {
+        fileServingError(error);
+      }
+    } catch (error: any) {
+      fileServingError(error);
     }
   }
 
@@ -1063,6 +1306,40 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
+   * Emit callback invoked event.
+   *
+   * @param res
+   * @param callback
+   * @param url
+   * @param requestBody
+   * @param requestHeaders
+   */
+  private emitCallbackInvoked(
+    res: globalThis.Response,
+    callback: Callback,
+    url: string,
+    requestBody: string | null | undefined,
+    requestHeaders: { [key: string]: any }
+  ) {
+    res.text().then((respText) => {
+      const reqHeaders = Object.keys(requestHeaders).map(
+        (k) => ({ key: k, value: reqHeaders[k] }) as Header
+      );
+      this.emit(
+        'callback-invoked',
+        CreateCallbackInvocation(
+          callback,
+          url,
+          requestBody,
+          reqHeaders,
+          res,
+          respText
+        )
+      );
+    });
+  }
+
+  /**
    * Request an updated environment to allow
    * modification of some parameters without a restart (latency, headers, etc)
    */
@@ -1216,6 +1493,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
         this.processedDatabuckets.push(newProcessedDatabucket);
       });
+    }
+  }
+
+  private retrieveCallbackDefinitions(environment: Environment) {
+    if (environment.callbacks?.length > 0) {
+      this.callbackDefinitions = [...environment.callbacks];
     }
   }
 

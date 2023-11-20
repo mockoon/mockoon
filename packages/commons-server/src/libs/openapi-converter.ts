@@ -61,7 +61,10 @@ export class OpenAPIConverter {
    *
    * @param environment
    */
-  public async convertToOpenAPIV3(environment: Environment) {
+  public async convertToOpenAPIV3(
+    environment: Environment,
+    prettify: boolean = false
+  ) {
     const routes = routesFromFolder(
       environment.rootChildren,
       environment.folders,
@@ -171,7 +174,7 @@ export class OpenAPIConverter {
     try {
       await openAPI.validate(openAPIEnvironment);
 
-      return JSON.stringify(openAPIEnvironment);
+      return JSON.stringify(openAPIEnvironment, null, prettify ? 2 : 0);
     } catch (error) {
       throw error;
     }

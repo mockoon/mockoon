@@ -67,8 +67,12 @@ class Routes {
     return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2)');
   }
 
-  public get settingsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get callbacksTab(): ChainablePromiseElement<WebdriverIO.Element> {
     return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(4)');
+  }
+
+  public get settingsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+    return $('#route-responses-menu .nav.nav-tabs .nav-item:nth-child(5)');
   }
 
   public get randomResponseBtn(): ChainablePromiseElement<WebdriverIO.Element> {
@@ -592,8 +596,10 @@ class Routes {
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(2) .nav-link',
       RULES:
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(3) .nav-link',
+      CALLBACKS:
+        '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(4) .nav-link',
       SETTINGS:
-        '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(4) .nav-link'
+        '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(5) .nav-link'
     };
 
     await $(selectors[tabName]).click();

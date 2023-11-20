@@ -2,6 +2,7 @@ import {
   CloneObject,
   Environment,
   Header,
+  InvokedCallback,
   Methods,
   Transaction
 } from '@mockoon/commons';
@@ -71,6 +72,8 @@ export const listenServerEvents = function (
       case 'ROUTE_FILE_SERVING_ERROR':
       case 'UNKNOWN_SERVER_ERROR':
       case 'HEADER_PARSING_ERROR':
+      case 'CALLBACK_ERROR':
+      case 'CALLBACK_FILE_ERROR':
         message = format(ServerMessages[errorCode], error?.message || '');
         break;
       case 'CERT_FILE_NOT_FOUND':
@@ -118,5 +121,27 @@ export const listenServerEvents = function (
     }
 
     logger.info('Transaction recorded', logMeta);
+  });
+
+  server.on('callback-invoked', (callback: InvokedCallback) => {
+    const logMeta: { callback: InvokedCallback } = {
+      ...defaultLogMeta,
+      callbackName: callback.name,
+      callbackMethod: callback.method,
+      callbackUrl: callback.url,
+      callbackStatus: callback.status
+    };
+
+    if (logTransaction) {
+      const clonedCallback = CloneObject(callback) as InvokedCallback;
+      logMeta.callback = clonedCallback;
+      logMeta.callback.requestHeaders = logMeta.callback.requestHeaders.map(
+        filterAuthorizationHeaders
+      );
+      logMeta.callback.responseHeaders = logMeta.callback.responseHeaders.map(
+        filterAuthorizationHeaders
+      );
+    }
+    logger.info('Callback invoked', logMeta);
   });
 };

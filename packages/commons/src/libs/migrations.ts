@@ -574,6 +574,27 @@ export const Migrations: {
         });
       });
     }
+  },
+  /**
+   * Callbacks.
+   */
+  {
+    id: 30,
+    migrationFunction: (environment: Environment) => {
+      if (!environment.callbacks) {
+        environment.callbacks = EnvironmentDefault.callbacks;
+      }
+
+      if (environment.routes) {
+        environment.routes.forEach((route: Route) => {
+          if (route.responses) {
+            route.responses.forEach((res: RouteResponse) => {
+              res.callbacks = RouteResponseDefault.callbacks;
+            });
+          }
+        });
+      }
+    }
   }
 ];
 

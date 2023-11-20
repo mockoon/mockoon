@@ -1,6 +1,6 @@
 {
   "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Demo users API V2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -31,7 +31,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -68,7 +69,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "e84c9929-6047-11ea-b4a3-058bbf68d234",
@@ -94,7 +96,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -131,7 +134,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "e84c992d-6047-11ea-b4a3-058bbf68d234",
@@ -157,7 +161,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -194,7 +199,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -223,7 +229,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -259,5 +266,6 @@
     { "type": "route", "uuid": "e84c992a-6047-11ea-b4a3-058bbf68d234" },
     { "type": "route", "uuid": "e84c992e-6047-11ea-b4a3-058bbf68d234" },
     { "type": "route", "uuid": "27dbe8b0-60b2-11ea-9b62-4340c341e0a1" }
-  ]
+  ],
+  "callbacks": []
 }

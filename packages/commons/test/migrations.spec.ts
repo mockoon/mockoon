@@ -439,4 +439,20 @@ describe('Migrations', () => {
       );
     });
   });
+
+  describe('migration n. 30', () => {
+    it('should have empty callbacks array by default', () => {
+      const environment1: any = { routes: [{ responses: [{}] }] };
+      const environment2: any = { callbacks: [] };
+
+      applyMigration(30, environment1);
+      applyMigration(30, environment2);
+
+      expect(environment1.callbacks).to.be.not.undefined;
+      expect(environment1.callbacks).to.have.length(0);
+      expect(environment1.routes[0].responses[0].callbacks).to.be.not.undefined;
+      expect(environment1.routes[0].responses[0].callbacks).to.have.length(0);
+      expect(environment2.callbacks).to.have.length(0);
+    });
+  });
 });

@@ -1,10 +1,16 @@
 import {
+  Callback,
   DataBucket,
   Environment,
   Folder,
   Route,
   RouteResponse
 } from '@mockoon/commons';
+import {
+  CallbackProperties,
+  CallbackSpecTabNameType,
+  CallbackTabsNameType
+} from 'src/renderer/app/models/callback.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
@@ -26,6 +32,7 @@ import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 export const enum ActionTypes {
   UPDATE_USER = 'UPDATE_USER',
   SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
+  SET_ACTIVE_TAB_IN_CALLBACK = 'SET_ACTIVE_TAB_IN_CALLBACK',
   SET_ACTIVE_VIEW = 'SET_ACTIVE_VIEW',
   SET_ACTIVE_ENVIRONMENT_LOG_TAB = 'SET_ACTIVE_ENVIRONMENT_LOG_TAB',
   SET_ACTIVE_TEMPLATES_TAB = 'SET_ACTIVE_TEMPLATES_TAB',
@@ -42,6 +49,7 @@ export const enum ActionTypes {
   SET_ACTIVE_ROUTE = 'SET_ACTIVE_ROUTE',
   REORGANIZE_ROUTES = 'REORGANIZE_ROUTES',
   REORGANIZE_DATABUCKETS = 'REORGANIZE_DATABUCKETS',
+  REORGANIZE_ENV_CALLBACKS = 'REORGANIZE_ENV_CALLBACKS',
   REORGANIZE_ROUTE_RESPONSES = 'REORGANIZE_ROUTE_RESPONSES',
   ADD_FOLDER = 'ADD_FOLDER',
   REMOVE_FOLDER = 'REMOVE_FOLDER',
@@ -54,10 +62,16 @@ export const enum ActionTypes {
   ADD_ROUTE_RESPONSE = 'ADD_ROUTE_RESPONSE',
   UPDATE_ROUTE_RESPONSE = 'UPDATE_ROUTE_RESPONSE',
   SET_DEFAULT_ROUTE_RESPONSE = 'SET_DEFAULT_ROUTE_RESPONSE',
+  REORGANIZE_RESPONSE_CALLBACKS = 'REORGANIZE_RESPONSE_CALLBACKS',
   SET_ACTIVE_DATABUCKET = 'SET_ACTIVE_DATABUCKET',
+  SET_ACTIVE_CALLBACK = 'SET_ACTIVE_CALLBACK',
+  NAVIGATE_TO_CALLBACK = 'NAVIGATE_TO_CALLBACK',
   ADD_DATABUCKET = 'ADD_DATABUCKET',
   REMOVE_DATABUCKET = 'REMOVE_DATABUCKET',
   UPDATE_DATABUCKET = 'UPDATE_DATABUCKET',
+  ADD_CALLBACK = 'ADD_CALLBACK',
+  REMOVE_CALLBACK = 'REMOVE_CALLBACK',
+  UPDATE_CALLBACK = 'UPDATE_CALLBACK',
   LOG_REQUEST = 'LOG_REQUEST',
   CLEAR_LOGS = 'CLEAR_LOGS',
   SET_ACTIVE_ENVIRONMENT_LOG = 'SET_ACTIVE_ENVIRONMENT_LOG',
@@ -69,7 +83,8 @@ export const enum ActionTypes {
   START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT'
+  DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT',
+  DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT'
 }
 
 /**
@@ -92,6 +107,21 @@ export const setActiveTabAction = (activeTab: TabsNameType) =>
   ({
     type: ActionTypes.SET_ACTIVE_TAB,
     activeTab
+  }) as const;
+
+/**
+ * Change the active tab in callback view.
+ *
+ * @param activeTab - id of the tab to set as active
+ */
+export const setActiveTabInCallbackViewAction = (
+  activeTab: CallbackTabsNameType,
+  activeSpecTab?: CallbackSpecTabNameType
+) =>
+  ({
+    type: ActionTypes.SET_ACTIVE_TAB_IN_CALLBACK,
+    activeTab,
+    activeSpecTab
   }) as const;
 
 /**
@@ -189,6 +219,14 @@ export const reorganizeRouteResponsesAction = (
     dropAction
   }) as const;
 
+export const reorganizeResponseCallbacksAction = (
+  dropAction: DropAction<string>
+) =>
+  ({
+    type: ActionTypes.REORGANIZE_RESPONSE_CALLBACKS,
+    dropAction
+  }) as const;
+
 /**
  * Reorder databuckets
  *
@@ -198,6 +236,18 @@ export const reorganizeDatabucketsAction = (dropAction: DropAction<string>) =>
   ({
     type: ActionTypes.REORGANIZE_DATABUCKETS,
     dropAction
+  }) as const;
+
+export const reorganizeCallbacksAction = (dropAction: DropAction<string>) =>
+  ({
+    type: ActionTypes.REORGANIZE_ENV_CALLBACKS,
+    dropAction
+  }) as const;
+
+export const navigateToCallbackAction = (callbackUUID: string) =>
+  ({
+    type: ActionTypes.NAVIGATE_TO_CALLBACK,
+    callbackUUID
   }) as const;
 
 /**
@@ -291,7 +341,7 @@ export const updateEnvironmentStatusAction = (
  * @param filterValue
  */
 export const updateFilterAction = (
-  filter: 'routes' | 'databuckets' | 'templates',
+  filter: 'routes' | 'databuckets' | 'templates' | 'callbacks',
   filterValue: string
 ) =>
   ({
@@ -478,6 +528,19 @@ export const duplicateDatabucketToAnotherEnvironmentAction = (
   }) as const;
 
 /**
+ * Finalizes databucket movement to another environment
+ */
+export const duplicateCallbackToAnotherEnvironmentAction = (
+  callback: Callback,
+  targetEnvironmentUUID: string
+) =>
+  ({
+    type: ActionTypes.DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT,
+    callback,
+    targetEnvironmentUUID
+  }) as const;
+
+/**
  * Update the active route response
  *
  * @param properties - properties to update
@@ -511,6 +574,17 @@ export const setActiveDatabucketAction = (databucketUUID: string) =>
   }) as const;
 
 /**
+ * Set the active callback (currently displayed)
+ *
+ * @param callbackUUID - callback UUID to set as active
+ */
+export const setActiveCallbackAction = (callbackUUID: string) =>
+  ({
+    type: ActionTypes.SET_ACTIVE_CALLBACK,
+    callbackUUID
+  }) as const;
+
+/**
  * Add a databucket
  *
  * @param databucket - databucket to add
@@ -525,6 +599,13 @@ export const addDatabucketAction = (
     afterUUID
   }) as const;
 
+export const addCallbackAction = (callback: Callback, afterUUID?: string) =>
+  ({
+    type: ActionTypes.ADD_CALLBACK,
+    callback,
+    afterUUID
+  }) as const;
+
 /**
  * Remove a databucket
  *
@@ -536,6 +617,12 @@ export const removeDatabucketAction = (databucketUUID: string) =>
     databucketUUID
   }) as const;
 
+export const removeCallbackAction = (callbackUUID: string) =>
+  ({
+    type: ActionTypes.REMOVE_CALLBACK,
+    callbackUUID
+  }) as const;
+
 /**
  * Update a databucket
  *
@@ -544,6 +631,17 @@ export const removeDatabucketAction = (databucketUUID: string) =>
 export const updateDatabucketAction = (properties: DatabucketProperties) =>
   ({
     type: ActionTypes.UPDATE_DATABUCKET,
+    properties
+  }) as const;
+
+/**
+ * Update a callback
+ *
+ * @param properties - properties to update
+ */
+export const updateCallbackAction = (properties: CallbackProperties) =>
+  ({
+    type: ActionTypes.UPDATE_CALLBACK,
     properties
   }) as const;
 
@@ -638,15 +736,18 @@ export const updateUIStateAction = (properties: UIStateProperties) =>
 export type Actions =
   | ReturnType<typeof updateUserAction>
   | ReturnType<typeof setActiveTabAction>
+  | ReturnType<typeof setActiveTabInCallbackViewAction>
   | ReturnType<typeof setActiveViewAction>
   | ReturnType<typeof setActiveEnvironmentLogTabAction>
   | ReturnType<typeof setActiveTemplatesTabAction>
   | ReturnType<typeof setActiveEnvironmentAction>
   | ReturnType<typeof navigateEnvironmentsAction>
+  | ReturnType<typeof navigateToCallbackAction>
   | ReturnType<typeof reorganizeEnvironmentsAction>
   | ReturnType<typeof reorganizeRoutesAction>
   | ReturnType<typeof reorganizeRouteResponsesAction>
   | ReturnType<typeof reorganizeDatabucketsAction>
+  | ReturnType<typeof reorganizeCallbacksAction>
   | ReturnType<typeof addEnvironmentAction>
   | ReturnType<typeof removeEnvironmentAction>
   | ReturnType<typeof updateEnvironmentAction>
@@ -665,11 +766,16 @@ export type Actions =
   | ReturnType<typeof setActiveRouteResponseAction>
   | ReturnType<typeof addRouteResponseAction>
   | ReturnType<typeof updateRouteResponseAction>
+  | ReturnType<typeof reorganizeResponseCallbacksAction>
   | ReturnType<typeof setDefaultRouteResponseAction>
   | ReturnType<typeof setActiveDatabucketAction>
+  | ReturnType<typeof setActiveCallbackAction>
   | ReturnType<typeof addDatabucketAction>
   | ReturnType<typeof removeDatabucketAction>
   | ReturnType<typeof updateDatabucketAction>
+  | ReturnType<typeof addCallbackAction>
+  | ReturnType<typeof removeCallbackAction>
+  | ReturnType<typeof updateCallbackAction>
   | ReturnType<typeof logRequestAction>
   | ReturnType<typeof clearLogsAction>
   | ReturnType<typeof setActiveEnvironmentLogUUIDAction>
@@ -680,4 +786,5 @@ export type Actions =
   | ReturnType<typeof startEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof cancelEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>;
+  | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>
+  | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>;

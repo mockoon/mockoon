@@ -1,6 +1,6 @@
 {
   "uuid": "530c5c03-82c7-461d-a794-43a67bc5af0b",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Swagger Petstore v3",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -32,7 +32,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "f04edb71-ef4d-48b9-819c-2b2c7012013b",
@@ -50,7 +51,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -79,7 +81,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "5e8b6981-cf59-49e6-91af-4bdae8a7c3c1",
@@ -97,7 +100,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -126,7 +130,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "212dc002-1793-4402-ac43-1d177ac2da16",
@@ -144,7 +149,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -173,7 +179,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d51a51a3-41b7-478b-8063-99973b33f4f5",
@@ -191,7 +198,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -223,5 +231,6 @@
     { "type": "route", "uuid": "af56eacf-945b-4897-91aa-5b308954fe4e" },
     { "type": "route", "uuid": "caf4ce47-1de2-4ff5-a677-cfea6a10d80f" },
     { "type": "route", "uuid": "0af86bac-4c6e-4591-b52e-ef9dd11248a2" }
-  ]
+  ],
+  "callbacks": []
 }

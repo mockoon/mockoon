@@ -328,6 +328,27 @@
               >
                 <a
                   class="nav-link"
+                  [ngClass]="{ active: activeTab === 'CALLBACKS' }"
+                  (click)="setActiveTab('CALLBACKS')"
+                >
+                  Callbacks
+                  <span
+                    *ngIf="activeRouteResponse?.callbacks?.length"
+                    class="badge badge-hollow font-weight-bold ml-2"
+                  >
+                    {{ activeRouteResponse?.callbacks?.length }}
+                  </span>
+                </a>
+              </li>
+              <li
+                class="nav-item"
+                *ngIf="
+                  activeRoute.type === 'http' ||
+                  (activeRoute.type === 'crud' && !activeRouteResponse.default)
+                "
+              >
+                <a
+                  class="nav-link"
                   [ngClass]="{ active: activeTab === 'SETTINGS' }"
                   (click)="setActiveTab('SETTINGS')"
                   >Settings</a
@@ -612,6 +633,21 @@
               (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"
             >
             </app-route-response-rules>
+          </div>
+        </ng-container>
+
+        <!-- CALLBACKS tab -->
+        <ng-container *ngIf="(activeTab$ | async) === 'CALLBACKS'">
+          <div
+            class="flex-fill mh0 scroll-content h-100 pt-3 px-2"
+            #routeCallbacksContainer
+          >
+            <app-route-callbacks
+              [activeRouteResponse$]="activeRouteResponse$"
+              [activeRoute$]="activeRoute$"
+              (callbackAdded)="scrollToBottom(routeCallbacksContainer)"
+            >
+            </app-route-callbacks>
           </div>
         </ng-container>
 
