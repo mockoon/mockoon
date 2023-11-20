@@ -13,10 +13,12 @@ export type ProcessedDatabucket = {
 export type InvokedCallback = {
   name: string;
   url: string;
-  headers: Header[];
-  body: any;
   method: keyof typeof Methods;
+  requestHeaders: Header[];
+  requestBody: any;
   status: number;
+  responseBody: any;
+  responseHeaders: Header[];
 };
 
 /**

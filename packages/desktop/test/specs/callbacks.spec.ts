@@ -41,15 +41,6 @@ describe('Callback addition', () => {
     await callbacks.assertName('Callback');
   });
 
-  it('should create a new random ID when adding a new callback', async () => {
-    await utils.waitForAutosave();
-    const id = await file.getObjectPropertyInFile(
-      env1FilePath,
-      'callbacks.2.id'
-    );
-    expect(await callbacks.idElement.getText()).toContain(`Unique ID: ${id}`);
-  });
-
   it('should be able to add headers for the new callbacks', async () => {
     await callbacks.headersTabInDefinition.click();
     await headersUtils.add('response-callback-headers', {
@@ -330,8 +321,8 @@ describe('Callback selection under a response', () => {
     await routes.callbacksTab.click();
     await callbacks.assertNumberofAttachedCallbacks(0);
     await callbacks.attachCallback();
-    // go to definition should be hidden for just added callback entries.
-    await callbacks.assertGotoDefinitionExists(0, false);
+    // by default, go to definition should be visible with first item selected
+    await callbacks.assertGotoDefinitionExists(0, true);
 
     await callbacks.assertNumberofAttachedCallbacks(1);
     await callbacks.assertRouteCallbackHasEntries(0, 4);

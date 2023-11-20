@@ -1,7 +1,9 @@
 import {
+  Callback,
   Folder,
   FolderChild,
   Header,
+  InvokedCallback,
   Methods,
   Route,
   Transaction
@@ -96,6 +98,40 @@ export const DecompressBody = (response: Response) => {
  */
 export function isBodySupportingMethod(method: Methods): boolean {
   return [Methods.put, Methods.post, Methods.patch].indexOf(method) >= 0;
+}
+
+/**
+ * Creates a callback invocation record which has information
+ * about the invoked details.
+ * @param callback
+ * @param url
+ * @param requestBody
+ * @param requestHeaders
+ * @param fetchResponse
+ * @param responseBody
+ */
+export function CreateCallbackInvocation(
+  callback: Callback,
+  url: string,
+  requestBody: string | null | undefined,
+  requestHeaders: Header[],
+  fetchResponse: globalThis.Response,
+  responseBody: any
+): InvokedCallback {
+  const resHeadersObj = Object.fromEntries(fetchResponse.headers.entries());
+
+  return {
+    name: callback.name,
+    url,
+    method: callback.method,
+    requestBody,
+    requestHeaders,
+    status: fetchResponse.status,
+    responseBody,
+    responseHeaders: Object.keys(resHeadersObj).map(
+      (k) => ({ key: k, value: resHeadersObj[k] }) as Header
+    )
+  };
 }
 
 /**

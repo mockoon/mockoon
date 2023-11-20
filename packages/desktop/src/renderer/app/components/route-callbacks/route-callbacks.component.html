@@ -52,9 +52,9 @@
               <div class="d-flex justify-content-end">
                 <div class="input-group-prepend">
                   <button
-                    *ngIf="
+                    [disabled]="
                       form.get(['callbacks', callbackIndex, 'uuid']).value
-                        .length > 0
+                        .length === 0
                     "
                     type="button"
                     [attr.data-testid]="'callback' + callbackIndex + 'gotodef'"
@@ -113,15 +113,22 @@
         </ng-container>
       </div>
     </div>
-    <div class="d-flex align-items-center mt-2">
+    <div
+      class="d-flex align-items-center mt-2"
+      *ngIf="allCallbacks$ | async as allCallbacks"
+    >
       <button
+        *ngIf="allCallbacks.length > 0"
         type="button"
         class="btn btn-link btn-icon add-callback"
-        (click)="addCallback()"
+        (click)="addCallback(allCallbacks)"
       >
         <app-svg icon="add_box" class="text-success pr-2"></app-svg>
         Add callback
       </button>
+      <p *ngIf="allCallbacks.length === 0" class="message mt-2 mx-2">
+        No callbacks defined
+      </p>
     </div>
   </ng-container>
 </ng-container>

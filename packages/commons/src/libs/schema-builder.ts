@@ -45,8 +45,11 @@ export const BuildResponseRule = (): ResponseRule => ({
 /**
  * Build a new callback request.
  */
-export const BuildResponseCallback = (): CallbackInvocation => ({
-  ...ResponseCallbackDefault
+export const BuildResponseCallback = (
+  defaultCallbackUuid?: string
+): CallbackInvocation => ({
+  ...ResponseCallbackDefault,
+  uuid: defaultCallbackUuid || ''
 });
 
 /**

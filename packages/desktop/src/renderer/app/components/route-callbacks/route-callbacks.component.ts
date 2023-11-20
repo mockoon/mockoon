@@ -10,6 +10,7 @@ import {
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import {
   BuildResponseCallback,
+  Callback,
   CallbackInvocation,
   Environment,
   Route,
@@ -51,6 +52,7 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
   public texts = Texts;
   public callbacks$: Observable<DropdownItems>;
   public Infinity = Infinity;
+  public allCallbacks$: Observable<Callback[]>;
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
@@ -77,6 +79,11 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
       tap((routeResponse) => {
         this.replaceCallbacks(routeResponse.callbacks, false);
       })
+    );
+
+    this.allCallbacks$ = this.activeEnvironment$.pipe(
+      filter((activeEnvironment) => !!activeEnvironment),
+      map((activeEnvironment) => activeEnvironment.callbacks)
     );
 
     // read defined callbacks in the active environment.
@@ -110,8 +117,14 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
   /**
    * Add a new callback to the list if possible
    */
-  public addCallback() {
-    this.callbacks.push(this.formBuilder.group(BuildResponseCallback()));
+  public addCallback(callbacks: Callback[]) {
+    if (callbacks.length > 0) {
+      this.callbacks.push(
+        this.formBuilder.group(BuildResponseCallback(callbacks[0].uuid))
+      );
+    } else {
+      this.callbacks.push(this.formBuilder.group(BuildResponseCallback()));
+    }
 
     this.callbackAdded.emit();
   }

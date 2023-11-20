@@ -239,14 +239,6 @@
             </ng-container>
           </div>
         </ng-container>
-
-        <div
-          class="d-flex justify-content-between align-items-center environment-callbacks-footer px-2"
-        >
-          <div class="py-2 d-inline-block" ngbTooltip="Callback ID">
-            <small class="pl-0"> Unique ID: {{ activeCallback.id }}</small>
-          </div>
-        </div>
       </ng-container>
       <ng-container *ngIf="(activeTab$ | async) === 'USAGE'">
         <div

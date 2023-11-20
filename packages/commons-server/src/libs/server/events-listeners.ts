@@ -84,6 +84,10 @@ export const listenServerEvents = function (
           error?.message
         );
         break;
+      case 'CALLBACK_ERROR':
+      case 'CALLBACK_FILE_ERROR':
+        message = format(ServerMessages[errorCode], payload?.callbackName);
+        break;
       case 'ROUTE_NO_LONGER_EXISTS':
         message = ServerMessages[errorCode];
         break;
@@ -122,10 +126,24 @@ export const listenServerEvents = function (
   });
 
   server.on('callback-invoked', (callback: InvokedCallback) => {
-    const clonedCallback = CloneObject(callback) as InvokedCallback;
-    logger.info('Callback invoked', {
+    const logMeta: { callback: InvokedCallback } = {
       ...defaultLogMeta,
-      callback: clonedCallback
-    });
+      callbackName: callback.name,
+      callbackMethod: callback.method,
+      callbackUrl: callback.url,
+      callbackStatus: callback.status
+    };
+
+    if (logTransaction) {
+      const clonedCallback = CloneObject(callback) as InvokedCallback;
+      logMeta.callback = clonedCallback;
+      logMeta.callback.requestHeaders = logMeta.callback.requestHeaders.map(
+        filterAuthorizationHeaders
+      );
+      logMeta.callback.responseHeaders = logMeta.callback.responseHeaders.map(
+        filterAuthorizationHeaders
+      );
+    }
+    logger.info('Callback invoked', logMeta);
   });
 };

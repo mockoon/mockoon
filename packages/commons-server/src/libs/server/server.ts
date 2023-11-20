@@ -9,7 +9,6 @@ import {
   GetContentType,
   GetRouteResponseContentType,
   Header,
-  InvokedCallback,
   IsValidURL,
   MimeTypesWithTemplating,
   ProcessedDatabucket,
@@ -48,6 +47,7 @@ import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
 import { requestHelperNames } from '../templating-helpers/request-helpers';
 import {
+  CreateCallbackInvocation,
   CreateTransaction,
   dedupSlashes,
   isBodySupportingMethod,
@@ -578,7 +578,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             }
           }
 
-          this.makeCallbacks(route, enabledRouteResponse, request, response);
+          this.makeCallbacks(enabledRouteResponse, request, response);
 
           this.serveBody(
             content || '',
@@ -594,22 +594,21 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   private makeCallbacks(
-    route: Route,
     routeResponse: RouteResponse,
     request: Request,
     response: Response
   ) {
     if (routeResponse.callbacks && routeResponse.callbacks.length > 0) {
-      try {
-        for (const invocation of routeResponse.callbacks) {
-          const cb = this.environment.callbacks.find(
-            (ref) => ref.uuid === invocation.uuid
-          );
+      for (const invocation of routeResponse.callbacks) {
+        const cb = this.environment.callbacks.find(
+          (ref) => ref.uuid === invocation.uuid
+        );
 
-          if (!cb) {
-            continue;
-          }
+        if (!cb) {
+          continue;
+        }
 
+        try {
           const url = TemplateParser(
             false,
             cb.uri,
@@ -652,7 +651,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             }
           } else if (cb.bodyType === BodyTypes.FILE && cb.filePath) {
             this.sendFileWithCallback(
-              route,
               routeResponse,
               cb,
               invocation,
@@ -675,27 +673,25 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               body: isBodySupportingMethod(cb.method) ? content : undefined
             })
               .then((res) => {
-                this.emit('callback-invoked', {
-                  name: cb.name,
-                  body: content,
-                  headers: sendingHeaders.headers,
+                this.emitCallbackInvoked(
+                  res,
+                  cb,
                   url,
-                  method: cb.method,
-                  status: res.status
-                } as InvokedCallback);
+                  content,
+                  sendingHeaders.headers
+                );
               })
               .catch((e) =>
-                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e)
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: cb.name
+                })
               );
           }, invocation.latency);
+        } catch (error: any) {
+          this.emit('error', ServerErrorCodes.CALLBACK_ERROR, error, {
+            callbackName: cb.name
+          });
         }
-      } catch (error: any) {
-        this.emit('error', ServerErrorCodes.CALLBACK_ERROR, error);
-
-        this.sendError(
-          response,
-          format(ServerMessages.CALLBACK_ERROR, error.message)
-        );
       }
     }
   }
@@ -746,7 +742,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   private sendFileWithCallback(
-    route: Route,
     routeResponse: RouteResponse,
     callback: Callback,
     invocation: CallbackInvocation,
@@ -758,17 +753,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     const fileServingError = (error) => {
-      this.emit('error', ServerErrorCodes.ROUTE_FILE_SERVING_ERROR, error);
-    };
-
-    const errorThrowOrFallback = (error) => {
-      if (routeResponse.fallbackTo404) {
-        response.status(404);
-        const content = routeResponse.body ? routeResponse.body : '';
-        this.serveBody(content, route, routeResponse, request, response);
-      } else {
-        fileServingError(error);
-      }
+      this.emit('error', ServerErrorCodes.CALLBACK_FILE_ERROR, error, {
+        callbackName: callback.name
+      });
     };
 
     try {
@@ -818,17 +805,18 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               headers: sendingHeaders.headers
             })
               .then((res) => {
-                this.emit('callback-invoked', {
-                  name: callback.name,
-                  body: `<buffer of ${filePath}>`,
-                  headers: sendingHeaders.headers,
+                this.emitCallbackInvoked(
+                  res,
+                  callback,
                   url,
-                  method: callback.method,
-                  status: res.status
-                } as InvokedCallback);
+                  `<buffer of ${filePath}`,
+                  sendingHeaders.headers
+                );
               })
               .catch((e) =>
-                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e)
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: callback.name
+                })
               );
           }, invocation.latency);
         } else {
@@ -862,17 +850,18 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               body: fileContent
             })
               .then((res) => {
-                this.emit('callback-invoked', {
-                  name: callback.name,
-                  body: fileContent,
-                  headers: sendingHeaders.headers,
+                this.emitCallbackInvoked(
+                  res,
+                  callback,
                   url,
-                  method: callback.method,
-                  status: res.status
-                } as InvokedCallback);
+                  fileContent,
+                  sendingHeaders.headers
+                );
               })
               .catch((e) =>
-                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e)
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: callback.name
+                })
               );
           }, invocation.latency);
         }
@@ -880,12 +869,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         fileServingError(error);
       }
     } catch (error: any) {
-      this.emit('error', ServerErrorCodes.ROUTE_SERVING_ERROR, error);
-
-      this.sendError(
-        response,
-        format(ServerMessages.ROUTE_SERVING_ERROR, error.message)
-      );
+      this.emit('error', ServerErrorCodes.CALLBACK_FILE_ERROR, error, {
+        callbackName: callback.name
+      });
     }
   }
 
@@ -1319,6 +1305,40 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     response.send(errorMessage);
+  }
+
+  /**
+   * Emit callback invoked event.
+   *
+   * @param res
+   * @param callback
+   * @param url
+   * @param requestBody
+   * @param requestHeaders
+   */
+  private emitCallbackInvoked(
+    res: globalThis.Response,
+    callback: Callback,
+    url: string,
+    requestBody: string | null | undefined,
+    requestHeaders: { [key: string]: any }
+  ) {
+    res.text().then((respText) => {
+      const reqHeaders = Object.keys(requestHeaders).map(
+        (k) => ({ key: k, value: reqHeaders[k] }) as Header
+      );
+      this.emit(
+        'callback-invoked',
+        CreateCallbackInvocation(
+          callback,
+          url,
+          requestBody,
+          reqHeaders,
+          res,
+          respText
+        )
+      );
+    });
   }
 
   /**
