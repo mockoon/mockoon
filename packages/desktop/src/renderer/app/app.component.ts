@@ -114,11 +114,10 @@ export class AppComponent extends Logger implements OnInit {
     this.telemetryService.init().subscribe();
 
     this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
-      filter((activeEnvironment) => !!activeEnvironment),
       tap((activeEnvironment) => {
         this.title.setTitle(
-          `${environment.production ? '' : ' [DEV]'}Mockoon - ${
-            activeEnvironment.name
+          `${environment.production ? '' : ' [DEV]'}Mockoon${
+            activeEnvironment ? ' - ' + activeEnvironment.name : ''
           }`
         );
       })
