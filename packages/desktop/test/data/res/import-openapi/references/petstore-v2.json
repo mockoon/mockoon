@@ -18,12 +18,7 @@
           "latency": 0,
           "statusCode": 405,
           "label": "Invalid input",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -53,12 +48,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid ID supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -77,12 +67,7 @@
           "latency": 0,
           "statusCode": 404,
           "label": "Pet not found",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -101,12 +86,7 @@
           "latency": 0,
           "statusCode": 405,
           "label": "Validation exception",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -136,12 +116,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -160,12 +135,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid status value",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -195,12 +165,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -219,12 +184,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid tag value",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -254,12 +214,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -278,12 +233,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid ID supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -302,12 +252,7 @@
           "latency": 0,
           "statusCode": 404,
           "label": "Pet not found",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -337,12 +282,7 @@
           "latency": 0,
           "statusCode": 405,
           "label": "Invalid input",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -372,12 +312,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid ID supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -396,12 +331,7 @@
           "latency": 0,
           "statusCode": 404,
           "label": "Pet not found",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -431,12 +361,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -466,12 +391,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -501,12 +421,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -525,12 +440,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid Order",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -560,12 +470,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -584,12 +489,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid ID supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -608,12 +508,7 @@
           "latency": 0,
           "statusCode": 404,
           "label": "Order not found",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -643,12 +538,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid ID supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -667,12 +557,7 @@
           "latency": 0,
           "statusCode": 404,
           "label": "Order not found",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -702,12 +587,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -737,12 +617,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -772,12 +647,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -808,18 +678,9 @@
           "statusCode": 200,
           "label": "successful operation",
           "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "X-Rate-Limit",
-              "value": ""
-            },
-            {
-              "key": "X-Expires-After",
-              "value": ""
-            }
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "X-Rate-Limit", "value": "" },
+            { "key": "X-Expires-After", "value": "" }
           ],
           "filePath": "",
           "sendFileAsBody": false,
@@ -839,12 +700,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid username/password supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -874,12 +730,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -909,12 +760,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -933,12 +779,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid username supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -957,12 +798,7 @@
           "latency": 0,
           "statusCode": 404,
           "label": "User not found",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -992,12 +828,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid user supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -1016,12 +847,7 @@
           "latency": 0,
           "statusCode": 404,
           "label": "User not found",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -1051,12 +877,7 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Invalid username supplied",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -1075,12 +896,7 @@
           "latency": 0,
           "statusCode": 404,
           "label": "User not found",
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -1104,18 +920,8 @@
   "proxyHost": "",
   "cors": true,
   "headers": [],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
   "hostname": "",
   "tlsOptions": {
@@ -1130,85 +936,25 @@
   "data": [],
   "folders": [],
   "rootChildren": [
-    {
-      "type": "route",
-      "uuid": "21a86fac-c2f5-4998-8267-b8245b7f0ddb"
-    },
-    {
-      "type": "route",
-      "uuid": "a80e0202-5ceb-49d3-97df-b0d996d5fba2"
-    },
-    {
-      "type": "route",
-      "uuid": "01f3fe0f-e800-487f-aba4-4b6e3f379e2f"
-    },
-    {
-      "type": "route",
-      "uuid": "e3285a96-7c3a-40fa-920c-5430e82ef037"
-    },
-    {
-      "type": "route",
-      "uuid": "bbbeb56e-d48b-4255-a8ab-53b24198b971"
-    },
-    {
-      "type": "route",
-      "uuid": "85fe17f3-b1e7-410d-81a2-3bada714da3c"
-    },
-    {
-      "type": "route",
-      "uuid": "493e735d-5e5d-4583-82fc-4efb53ed5831"
-    },
-    {
-      "type": "route",
-      "uuid": "7adc8cfd-8a5e-434a-91c8-f4b0e6443d9c"
-    },
-    {
-      "type": "route",
-      "uuid": "3373a660-a352-4960-9f0c-d03efe671071"
-    },
-    {
-      "type": "route",
-      "uuid": "52217d90-1728-4fb2-9e29-a1c4bf414c23"
-    },
-    {
-      "type": "route",
-      "uuid": "025fe90c-7b81-408a-a853-fbc05eb3ce49"
-    },
-    {
-      "type": "route",
-      "uuid": "b005a90c-b513-491b-aa8e-1b6ccb0e0c0c"
-    },
-    {
-      "type": "route",
-      "uuid": "161bfdad-a1cd-47c0-8b71-60b4fabc3beb"
-    },
-    {
-      "type": "route",
-      "uuid": "b37de1be-ee83-460f-a1d1-c3e530c6e6c3"
-    },
-    {
-      "type": "route",
-      "uuid": "78de75f8-3380-4348-a932-e741f7d7ebd9"
-    },
-    {
-      "type": "route",
-      "uuid": "b3fdfe58-6be9-4338-848e-26eab762d940"
-    },
-    {
-      "type": "route",
-      "uuid": "dd6ad6cf-8a5d-44ba-9904-b2c91203828c"
-    },
-    {
-      "type": "route",
-      "uuid": "bbe3288f-c167-4bdf-b7dc-f2b3975c101a"
-    },
-    {
-      "type": "route",
-      "uuid": "89976e94-37ad-4451-aba9-b51b7d427a5e"
-    },
-    {
-      "type": "route",
-      "uuid": "84b8d890-b7ca-49ae-ae0f-c880405283f0"
-    }
+    { "type": "route", "uuid": "21a86fac-c2f5-4998-8267-b8245b7f0ddb" },
+    { "type": "route", "uuid": "a80e0202-5ceb-49d3-97df-b0d996d5fba2" },
+    { "type": "route", "uuid": "01f3fe0f-e800-487f-aba4-4b6e3f379e2f" },
+    { "type": "route", "uuid": "e3285a96-7c3a-40fa-920c-5430e82ef037" },
+    { "type": "route", "uuid": "bbbeb56e-d48b-4255-a8ab-53b24198b971" },
+    { "type": "route", "uuid": "85fe17f3-b1e7-410d-81a2-3bada714da3c" },
+    { "type": "route", "uuid": "493e735d-5e5d-4583-82fc-4efb53ed5831" },
+    { "type": "route", "uuid": "7adc8cfd-8a5e-434a-91c8-f4b0e6443d9c" },
+    { "type": "route", "uuid": "3373a660-a352-4960-9f0c-d03efe671071" },
+    { "type": "route", "uuid": "52217d90-1728-4fb2-9e29-a1c4bf414c23" },
+    { "type": "route", "uuid": "025fe90c-7b81-408a-a853-fbc05eb3ce49" },
+    { "type": "route", "uuid": "b005a90c-b513-491b-aa8e-1b6ccb0e0c0c" },
+    { "type": "route", "uuid": "161bfdad-a1cd-47c0-8b71-60b4fabc3beb" },
+    { "type": "route", "uuid": "b37de1be-ee83-460f-a1d1-c3e530c6e6c3" },
+    { "type": "route", "uuid": "78de75f8-3380-4348-a932-e741f7d7ebd9" },
+    { "type": "route", "uuid": "b3fdfe58-6be9-4338-848e-26eab762d940" },
+    { "type": "route", "uuid": "dd6ad6cf-8a5d-44ba-9904-b2c91203828c" },
+    { "type": "route", "uuid": "bbe3288f-c167-4bdf-b7dc-f2b3975c101a" },
+    { "type": "route", "uuid": "89976e94-37ad-4451-aba9-b51b7d427a5e" },
+    { "type": "route", "uuid": "84b8d890-b7ca-49ae-ae0f-c880405283f0" }
   ]
 }

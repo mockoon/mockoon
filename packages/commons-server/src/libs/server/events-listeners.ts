@@ -72,6 +72,8 @@ export const listenServerEvents = function (
       case 'ROUTE_FILE_SERVING_ERROR':
       case 'UNKNOWN_SERVER_ERROR':
       case 'HEADER_PARSING_ERROR':
+      case 'CALLBACK_ERROR':
+      case 'CALLBACK_FILE_ERROR':
         message = format(ServerMessages[errorCode], error?.message || '');
         break;
       case 'CERT_FILE_NOT_FOUND':
@@ -83,10 +85,6 @@ export const listenServerEvents = function (
           environment.proxyHost,
           error?.message
         );
-        break;
-      case 'CALLBACK_ERROR':
-      case 'CALLBACK_FILE_ERROR':
-        message = format(ServerMessages[errorCode], payload?.callbackName);
         break;
       case 'ROUTE_NO_LONGER_EXISTS':
         message = ServerMessages[errorCode];

@@ -1,6 +1,6 @@
 {
   "uuid": "d1fec840-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Giphy",
   "endpointPrefix": "v1",
   "latency": 0,
@@ -28,7 +28,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef50-e7d4-11ea-a5ec-979674ac1a4b",
@@ -46,7 +47,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef51-e7d4-11ea-a5ec-979674ac1a4b",
@@ -64,7 +66,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef52-e7d4-11ea-a5ec-979674ac1a4b",
@@ -82,7 +85,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef53-e7d4-11ea-a5ec-979674ac1a4b",
@@ -100,7 +104,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -129,7 +134,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef56-e7d4-11ea-a5ec-979674ac1a4b",
@@ -147,7 +153,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef57-e7d4-11ea-a5ec-979674ac1a4b",
@@ -165,7 +172,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef58-e7d4-11ea-a5ec-979674ac1a4b",
@@ -183,7 +191,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef59-e7d4-11ea-a5ec-979674ac1a4b",
@@ -201,7 +210,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -230,7 +240,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef5c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -248,7 +259,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef5d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -266,7 +278,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef5e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -284,7 +297,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1feef5f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -302,7 +316,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -331,7 +346,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff1660-e7d4-11ea-a5ec-979674ac1a4b",
@@ -349,7 +365,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff1661-e7d4-11ea-a5ec-979674ac1a4b",
@@ -367,7 +384,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff1662-e7d4-11ea-a5ec-979674ac1a4b",
@@ -385,7 +403,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff1663-e7d4-11ea-a5ec-979674ac1a4b",
@@ -403,7 +422,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -432,7 +452,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff1666-e7d4-11ea-a5ec-979674ac1a4b",
@@ -450,7 +471,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff1667-e7d4-11ea-a5ec-979674ac1a4b",
@@ -468,7 +490,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff1668-e7d4-11ea-a5ec-979674ac1a4b",
@@ -486,7 +509,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff1669-e7d4-11ea-a5ec-979674ac1a4b",
@@ -504,7 +528,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -533,7 +558,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d70-e7d4-11ea-a5ec-979674ac1a4b",
@@ -551,7 +577,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d71-e7d4-11ea-a5ec-979674ac1a4b",
@@ -569,7 +596,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d72-e7d4-11ea-a5ec-979674ac1a4b",
@@ -587,7 +615,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d73-e7d4-11ea-a5ec-979674ac1a4b",
@@ -605,7 +634,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -634,7 +664,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d76-e7d4-11ea-a5ec-979674ac1a4b",
@@ -652,7 +683,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d77-e7d4-11ea-a5ec-979674ac1a4b",
@@ -670,7 +702,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d78-e7d4-11ea-a5ec-979674ac1a4b",
@@ -688,7 +721,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d79-e7d4-11ea-a5ec-979674ac1a4b",
@@ -706,7 +740,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -735,7 +770,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d7c-e7d4-11ea-a5ec-979674ac1a4b",
@@ -753,7 +789,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d7d-e7d4-11ea-a5ec-979674ac1a4b",
@@ -771,7 +808,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d7e-e7d4-11ea-a5ec-979674ac1a4b",
@@ -789,7 +827,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d1ff3d7f-e7d4-11ea-a5ec-979674ac1a4b",
@@ -807,7 +846,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -836,7 +876,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d20000c0-e7d4-11ea-a5ec-979674ac1a4b",
@@ -854,7 +895,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d20000c1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -872,7 +914,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d20000c2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -890,7 +933,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d20000c3-e7d4-11ea-a5ec-979674ac1a4b",
@@ -908,7 +952,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -937,7 +982,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d20027d0-e7d4-11ea-a5ec-979674ac1a4b",
@@ -955,7 +1001,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d20027d1-e7d4-11ea-a5ec-979674ac1a4b",
@@ -973,7 +1020,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d20027d2-e7d4-11ea-a5ec-979674ac1a4b",
@@ -991,7 +1039,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "d20027d3-e7d4-11ea-a5ec-979674ac1a4b",
@@ -1009,7 +1058,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -1047,5 +1097,6 @@
     { "type": "route", "uuid": "d1ff3d80-e7d4-11ea-a5ec-979674ac1a4b" },
     { "type": "route", "uuid": "d20000c4-e7d4-11ea-a5ec-979674ac1a4b" },
     { "type": "route", "uuid": "d20027d4-e7d4-11ea-a5ec-979674ac1a4b" }
-  ]
+  ],
+  "callbacks": []
 }

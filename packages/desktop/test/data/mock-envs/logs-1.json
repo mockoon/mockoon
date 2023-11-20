@@ -1,6 +1,6 @@
 {
   "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Environment logs 1",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -32,7 +32,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "10e32786-2fc9-4490-9f85-b4fe1763717a",
@@ -58,7 +59,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "31f4e399-4878-4bbe-bf86-6fcaf29e5bba",
@@ -76,7 +78,8 @@
           "default": false,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -105,7 +108,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -134,5 +138,6 @@
   "rootChildren": [
     { "type": "route", "uuid": "b5d03082-1a6d-4b16-9cf7-52181be9e753" },
     { "type": "route", "uuid": "08f2985c-26d7-477d-bd71-f4c47e203e14" }
-  ]
+  ],
+  "callbacks": []
 }

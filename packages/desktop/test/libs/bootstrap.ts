@@ -1,8 +1,7 @@
 import { promises as fs } from 'fs';
-import * as glob from 'glob';
+import { glob } from 'glob';
 import { mkdirp } from 'mkdirp';
 import { basename } from 'path';
-import { promisify } from 'util';
 
 class Bootstrap {
   public async init(): Promise<void> {
@@ -28,7 +27,7 @@ class Bootstrap {
    */
   private async copyAllDataFiles() {
     // list all environment file including from old storage (for migration tests)
-    const envFiles = await promisify(glob)('./test/data/mock-envs/*.json');
+    const envFiles = await glob('./test/data/mock-envs/*.json');
 
     try {
       if (envFiles) {

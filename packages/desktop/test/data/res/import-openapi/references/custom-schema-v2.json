@@ -1,6 +1,6 @@
 {
   "uuid": "a03a4dc0-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Sample v2 schema",
   "endpointPrefix": "api",
   "latency": 0,
@@ -28,7 +28,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -57,5 +58,6 @@
   "folders": [],
   "rootChildren": [
     { "type": "route", "uuid": "a03a74d1-e7d4-11ea-a5ec-979674ac1a4b" }
-  ]
+  ],
+  "callbacks": []
 }

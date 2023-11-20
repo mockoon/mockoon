@@ -1,6 +1,6 @@
 {
   "uuid": "2721eb99-7031-40ae-8725-0c37edc3976a",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Swagger Petstore",
   "endpointPrefix": "v1",
   "latency": 0,
@@ -34,7 +34,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "02027f69-e78e-4a92-938c-058bbaed76d0",
@@ -52,7 +53,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -81,7 +83,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "fc1bce62-8926-456d-916c-e8cf6601bf14",
@@ -99,7 +102,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -128,7 +132,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
           "uuid": "34b404ae-2a7c-4d74-9647-1f62d380f699",
@@ -146,7 +151,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -174,5 +180,6 @@
   "headers": [],
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
-  "data": []
+  "data": [],
+  "callbacks": []
 }

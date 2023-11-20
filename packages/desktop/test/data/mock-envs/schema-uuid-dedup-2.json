@@ -1,6 +1,6 @@
 {
   "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "uuid dedup 2",
   "endpointPrefix": "",
   "latency": 0,
@@ -29,7 +29,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -64,5 +65,6 @@
   "folders": [],
   "rootChildren": [
     { "type": "route", "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a" }
-  ]
+  ],
+  "callbacks": []
 }

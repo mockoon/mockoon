@@ -1,6 +1,6 @@
 {
   "uuid": "8a3cc37b-0993-463b-9f30-b306a13e50de",
-  "lastMigration": 27,
+  "lastMigration": 30,
   "name": "callbacks",
   "endpointPrefix": "",
   "latency": 0,
@@ -28,7 +28,8 @@
           "default": true,
           "databucketID": "abc1",
           "bodyType": "DATABUCKET",
-          "callbacks": []
+          "callbacks": [],
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -57,7 +58,8 @@
           "default": true,
           "databucketID": "abc2",
           "bodyType": "DATABUCKET",
-          "callbacks": []
+          "callbacks": [],
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -86,7 +88,8 @@
           "default": true,
           "databucketID": "abc3",
           "bodyType": "DATABUCKET",
-          "callbacks": []
+          "callbacks": [],
+          "crudKey": "id"
         }
       ],
       "enabled": true,
@@ -97,24 +100,9 @@
   "proxyMode": false,
   "proxyHost": "",
   "cors": true,
-  "headers": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "headers": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
   "hostname": "",
   "tlsOptions": {
@@ -131,7 +119,7 @@
       "uuid": "cad3eee3-259f-4e28-b2ec-e7ff5e4879cf",
       "id": "abc1",
       "name": "Databucket",
-      "value": "{\"response\":\"{{faker 'name.firstName'}}\"}"
+      "value": "{\"response\":\"{{faker 'person.firstName'}}\"}"
     },
     {
       "uuid": "4bedba2f-df2f-4092-b32c-5984c52a1b98",
@@ -170,14 +158,8 @@
       "bodyType": "INLINE",
       "sendFileAsBody": false,
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/json"
-        },
-        {
-          "key": "X-Test-header",
-          "value": "test-value"
-        }
+        { "key": "Content-Type", "value": "application/json" },
+        { "key": "X-Test-header", "value": "test-value" }
       ],
       "databucketID": "",
       "filePath": ""
@@ -198,13 +180,7 @@
   ],
   "folders": [],
   "rootChildren": [
-    {
-      "type": "route",
-      "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c"
-    },
-    {
-      "type": "route",
-      "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511"
-    }
+    { "type": "route", "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c" },
+    { "type": "route", "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511" }
   ]
 }

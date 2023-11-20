@@ -1,59 +1,58 @@
-import { ChainablePromiseElement } from 'webdriverio';
 import contextMenu, { ContextMenuCallbackActions } from '../libs/context-menu';
 import utils from '../libs/utils';
 
 class Callbacks {
-  public get nameInput(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get nameInput() {
     return $('app-environment-callbacks input[formcontrolname="name"]');
   }
 
-  public get documentationInput(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get documentationInput() {
     return $(
       'app-environment-callbacks input[formcontrolname="documentation"]'
     );
   }
 
-  public get methodInput(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get methodInput() {
     return $('app-environment-callbacks input[formcontrolname="method"]');
   }
 
-  public get uriInput(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get uriInput() {
     return $('app-environment-callbacks input[formcontrolname="uri"]');
   }
 
-  public get valueInput(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get valueInput() {
     return $('app-environment-callbacks input[formcontrolname="value"]');
   }
 
-  public get filter(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get filter() {
     return $('input[id="callback-filter"]');
   }
 
-  public get idElement(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get idElement() {
     return $('.environment-callbacks-footer div');
   }
 
-  public get addBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get addBtn() {
     return $('.callbacks-menu .nav:first-of-type .nav-item .nav-link');
   }
 
-  public get attachCallbackBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get attachCallbackBtn() {
     return $('.add-callback');
   }
 
-  public get definitionTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get definitionTab() {
     return $('.callback-tabs ul.nav .nav-item:nth-child(1) .nav-link');
   }
 
-  public get bodyTabInDefinition(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get bodyTabInDefinition() {
     return $('.callback-spec-tabs ul.nav .nav-item:nth-child(1) .nav-link');
   }
 
-  public get headersTabInDefinition(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get headersTabInDefinition() {
     return $('.callback-spec-tabs ul.nav .nav-item:nth-child(2) .nav-link');
   }
 
-  public get usageTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get usageTab() {
     return $('.callback-tabs ul.nav .nav-item:nth-child(2) .nav-link');
   }
 
@@ -88,18 +87,13 @@ class Callbacks {
     );
   }
 
-  public getGoToDefinitionBtn(
-    index: number
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  public getGoToDefinitionBtn(index: number) {
     return $(
       `.callback-list .callback-item:nth-child(${index}) .goto-definition-callback`
     );
   }
 
-  public getUsageItem(
-    routeIndex: number,
-    responseIndex?: number
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  public getUsageItem(routeIndex: number, responseIndex?: number) {
     if (responseIndex > 0) {
       return $(
         `.callback-usage-item:nth-child(${routeIndex}) > a:nth-child(${

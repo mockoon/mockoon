@@ -869,9 +869,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         fileServingError(error);
       }
     } catch (error: any) {
-      this.emit('error', ServerErrorCodes.CALLBACK_FILE_ERROR, error, {
-        callbackName: callback.name
-      });
+      fileServingError(error);
     }
   }
 

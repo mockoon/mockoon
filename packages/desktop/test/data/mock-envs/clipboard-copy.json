@@ -1,6 +1,6 @@
 {
   "uuid": "64fcbac0-1ac7-11ea-b8fd-577fb167a4ce",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "Env clipboard copy",
   "endpointPrefix": "",
   "latency": 0,
@@ -29,7 +29,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -57,5 +58,6 @@
   "folders": [],
   "rootChildren": [
     { "type": "route", "uuid": "64fcbac1-1ac7-11ea-b8fd-577fb167a4ce" }
-  ]
+  ],
+  "callbacks": []
 }

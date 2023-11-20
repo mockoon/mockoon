@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -35,7 +35,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -63,5 +64,6 @@
   "folders": [],
   "rootChildren": [
     { "type": "route", "uuid": "9745a08e-94c2-451e-bccc-b31dc608bb6d" }
-  ]
+  ],
+  "callbacks": []
 }

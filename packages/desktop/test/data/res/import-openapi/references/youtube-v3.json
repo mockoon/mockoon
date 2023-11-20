@@ -1,6 +1,6 @@
 {
   "uuid": "0c9cbbb0-e7d5-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 29,
+  "lastMigration": 30,
   "name": "YouTube Analytics",
   "endpointPrefix": "",
   "latency": 0,
@@ -28,7 +28,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -57,7 +58,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -86,7 +88,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -115,7 +118,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -144,7 +148,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -173,7 +178,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -202,7 +208,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -231,7 +238,8 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "enabled": true,
@@ -267,5 +275,6 @@
     { "type": "route", "uuid": "0c9cbbbc-e7d5-11ea-a5ec-979674ac1a4b" },
     { "type": "route", "uuid": "0c9cbbbe-e7d5-11ea-a5ec-979674ac1a4b" },
     { "type": "route", "uuid": "0c9cbbc0-e7d5-11ea-a5ec-979674ac1a4b" }
-  ]
+  ],
+  "callbacks": []
 }
