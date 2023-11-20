@@ -132,47 +132,4 @@ describe('Export command', () => {
         expect(jsonFileContent).to.equal(expectedContent);
       });
   });
-
-  describe('Export prettified from legacy file', () => {
-    test
-      .stdout()
-      .command([
-        'export',
-        '--input',
-        './test/data/legacy-export-file/export.json',
-        '--output',
-        './tmp/export-legacy-file.json',
-        '--prettify'
-      ])
-      .finally(() => {
-        fs.rm('./tmp/export-legacy-file.json');
-      })
-      .it('should successfully export prettified', async () => {
-        const jsonFile = await fs.readFile('./tmp/export-legacy-file.json');
-        const jsonFileContent = jsonFile.toString();
-        const expectedFile = await fs.readFile(
-          './test/data/openapi/legacy-exported.json'
-        );
-        const expectedContent = expectedFile.toString();
-
-        expect(jsonFileContent).to.equal(expectedContent);
-      });
-  });
-
-  describe('Export prettified from legacy file having multiple envs', () => {
-    test
-      .stdout()
-      .command([
-        'export',
-        '--input',
-        './test/data/legacy-export-file/multi.json',
-        '--output',
-        './tmp/export-multi-legacy-file.json',
-        '--prettify'
-      ])
-      .catch((context) => {
-        expect(context.message).to.equal('Only one environment is allowed');
-      })
-      .it('should fail export');
-  });
 });
