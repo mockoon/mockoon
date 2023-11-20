@@ -1,6 +1,6 @@
 {
   "uuid": "2721eb99-7031-40ae-8725-0c37edc3976a",
-  "lastMigration": 28,
+  "lastMigration": 29,
   "name": "Swagger Petstore",
   "endpointPrefix": "v1",
   "latency": 0,
@@ -17,7 +17,7 @@
       "responses": [
         {
           "uuid": "a1224237-384c-43cb-b345-177ace428faa",
-          "body": "[\n  {\n    \"id\": {{faker 'datatype.number'}},\n    \"name\": \"\",\n    \"tag\": \"\"\n  }\n]",
+          "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"name\": \"\",\n    \"tag\": \"\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "A paged array of pets",
@@ -38,7 +38,7 @@
         },
         {
           "uuid": "02027f69-e78e-4a92-938c-058bbaed76d0",
-          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
@@ -85,7 +85,7 @@
         },
         {
           "uuid": "fc1bce62-8926-456d-916c-e8cf6601bf14",
-          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
@@ -114,7 +114,7 @@
       "responses": [
         {
           "uuid": "73ec0850-ca23-4488-ac97-18a39257e0b5",
-          "body": "{\n  \"id\": {{faker 'datatype.number'}},\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
+          "body": "{\n  \"id\": {{faker 'number.int' max=99999}},\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "Expected response to a valid request",
@@ -132,7 +132,7 @@
         },
         {
           "uuid": "34b404ae-2a7c-4d74-9647-1f62d380f699",
-          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
