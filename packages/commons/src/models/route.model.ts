@@ -6,6 +6,11 @@ export enum BodyTypes {
   DATABUCKET = 'DATABUCKET'
 }
 
+export type CallbackInvocation = {
+  uuid: string;
+  latency: number;
+};
+
 export type RouteResponse = {
   uuid: string;
   rules: ResponseRule[];
@@ -24,6 +29,7 @@ export type RouteResponse = {
   // default is always true for CRUD routes first response
   default: boolean;
   crudKey: string;
+  callbacks?: CallbackInvocation[];
 };
 
 export enum ResponseMode {

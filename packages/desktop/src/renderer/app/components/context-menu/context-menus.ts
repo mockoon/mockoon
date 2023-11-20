@@ -229,3 +229,44 @@ export const DatabucketsContextMenu = (
     disabled: false
   }
 ];
+
+export const CallbacksContextMenu = (
+  callbackUUID: string,
+  environments: Environments
+): ContextMenuItem[] => [
+  {
+    payload: {
+      subject: 'callback',
+      action: 'duplicate',
+      subjectUUID: callbackUUID
+    },
+    label: 'Duplicate',
+    icon: 'content_copy',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'callback',
+      action: 'duplicateToEnv',
+      subjectUUID: callbackUUID
+    },
+    label: 'Duplicate to environment',
+    icon: 'input',
+    disabled: environments.length <= 1
+  },
+  {
+    payload: {
+      subject: 'callback',
+      action: 'delete',
+      subjectUUID: callbackUUID
+    },
+    label: 'Delete',
+    icon: 'delete',
+    confirm: {
+      icon: 'error',
+      label: 'Confirm deletion'
+    },
+    confirmColor: 'text-danger',
+    disabled: false
+  }
+];

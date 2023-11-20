@@ -1,16 +1,19 @@
 import {
+  CallbackDefault,
   DataBucketDefault,
   EnvironmentDefault,
   FolderDefault,
+  ResponseCallbackDefault,
   ResponseRuleDefault,
   RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
-import { CloneObject, generateUUID } from '../libs/utils';
-import { DataBucket, Environment } from '../models/environment.model';
+import { CloneObject, GenerateCallbackID, generateUUID } from '../libs/utils';
+import { Callback, DataBucket, Environment } from '../models/environment.model';
 import { Folder } from '../models/folder.model';
 import {
   BodyTypes,
+  CallbackInvocation,
   Header,
   Methods,
   ResponseMode,
@@ -40,6 +43,16 @@ export const BuildResponseRule = (): ResponseRule => ({
 });
 
 /**
+ * Build a new callback request.
+ */
+export const BuildResponseCallback = (
+  defaultCallbackUuid?: string
+): CallbackInvocation => ({
+  ...ResponseCallbackDefault,
+  uuid: defaultCallbackUuid || ''
+});
+
+/**
  * Clone a new route response with a fresh UUID
  */
 export const CloneRouteResponse = (
@@ -49,6 +62,19 @@ export const CloneRouteResponse = (
   uuid: generateUUID(),
   label: `${routeResponse.label} (copy)`,
   default: false
+});
+
+/**
+ * Clones a callback. We use the same strategy for id generation similar to data buckets.
+ *
+ * @param callback callback to clone
+ * @returns cloned callback.
+ */
+export const CloneCallback = (callback: Callback) => ({
+  ...CloneObject(callback),
+  uuid: generateUUID(),
+  id: GenerateCallbackID(),
+  name: `${callback.name} (copy)`
 });
 
 /**
@@ -129,6 +155,11 @@ export const BuildDatabucket = (
   ...DataBucketDefault,
   ...dataBucket
 });
+
+/**
+ * Build a new callback.
+ */
+export const BuildCallback = (): Callback => ({ ...CallbackDefault });
 
 /**
  * Build a new environment

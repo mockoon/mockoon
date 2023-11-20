@@ -108,6 +108,10 @@ label {
   &-hollow {
     border: 1px solid $gray-300;
   }
+  &-custom {
+    color: $gray-100;
+    background-color: $component-active-bg;
+  }
 }
 
 .btn.btn-icon {
@@ -128,6 +132,11 @@ label {
     color: $gray-100;
     box-shadow: inset 0 -2px 0 0 $blue;
     border-radius: 0;
+  }
+  &:disabled,
+  &.disabled {
+    color: $gray-600;
+    pointer-events: none;
   }
 }
 

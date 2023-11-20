@@ -1,5 +1,5 @@
 import { ServerErrorCodes } from '../enums/errors.enum';
-import { Transaction } from './server.model';
+import { InvokedCallback, Transaction } from './server.model';
 
 export type ServerEvents = {
   error: (
@@ -14,5 +14,6 @@ export type ServerEvents = {
   'creating-proxy': () => void;
   started: () => void;
   'entering-request': () => void;
+  'callback-invoked': (callback: InvokedCallback) => void;
   'transaction-complete': (transaction: Transaction) => void;
 };

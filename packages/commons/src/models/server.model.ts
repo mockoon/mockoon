@@ -8,6 +8,20 @@ export type ProcessedDatabucket = {
 };
 
 /**
+ * Object containing invoked callback details.
+ */
+export type InvokedCallback = {
+  name: string;
+  url: string;
+  method: keyof typeof Methods;
+  requestHeaders: Header[];
+  requestBody: any;
+  status: number;
+  responseBody: any;
+  responseHeaders: Header[];
+};
+
+/**
  * Transaction object containing req/res information after response is closed
  */
 export type Transaction = {

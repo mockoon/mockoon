@@ -44,6 +44,12 @@
             class="h-100"
           ></app-environment-databuckets>
 
+          <app-environment-callbacks
+            *ngSwitchCase="'ENV_CALLBACKS'"
+            class="h-100"
+          >
+          </app-environment-callbacks>
+
           <app-environment-headers
             *ngSwitchCase="'ENV_HEADERS'"
             class="h-100"

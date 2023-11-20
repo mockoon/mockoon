@@ -89,6 +89,15 @@ export class HeaderComponent implements OnInit {
         )
       },
       {
+        id: 'ENV_CALLBACKS',
+        title: 'Callbacks',
+        icon: 'call_made',
+        count$: this.activeEnvironment$.pipe(
+          filter((environment) => !!environment),
+          map((environment) => environment.callbacks.length)
+        )
+      },
+      {
         id: 'ENV_LOGS',
         title: 'Logs',
         icon: 'history',
