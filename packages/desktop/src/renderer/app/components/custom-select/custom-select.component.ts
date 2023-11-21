@@ -91,14 +91,14 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
 
   constructor() {}
 
-  @Input()
-  public set items(items: DropdownItems) {
-    this.items$.next(items);
-  }
-
   @HostBinding('class')
   public get hostClasses() {
     return 'overflow-hidden';
+  }
+
+  @Input()
+  public set items(items: DropdownItems) {
+    this.items$.next(items);
   }
 
   /**
