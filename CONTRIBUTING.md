@@ -103,7 +103,7 @@ After the packages are build, you can run the tests necessary to your changes:
 - `npm run test:libs`
 - `npm run test:serverless`
 - `npm run test:cli`
-- `npm run test:desktop`
+- `npm run test:desktop` or `npm run test:desktop -- -- --spec "filename.spec.ts"` from the monorepo root level to run one test file.
 - `npm run test:desktop:packaged:win`
 - `npm run test:desktop:packaged:mac`
 - `npm run test:desktop:packaged:linux`
