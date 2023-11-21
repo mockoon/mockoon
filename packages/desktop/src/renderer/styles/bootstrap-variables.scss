@@ -1207,8 +1207,8 @@ $dropdown-padding-y: 0;
 $dropdown-spacer: 0.125rem !default;
 $dropdown-font-size: $font-size-base !default;
 $dropdown-color: $gray-300;
-$dropdown-bg: $input-bg;
-$dropdown-border-color: $gray-800;
+$dropdown-bg: lighten($gray-900, 2%);
+$dropdown-border-color: lighten($gray-900, 4%);
 $dropdown-border-radius: 0;
 $dropdown-border-width: $border-width !default;
 $dropdown-inner-border-radius: subtract(
@@ -1562,19 +1562,19 @@ $list-group-item-padding-x: 1.25rem;
 $list-group-item-bg-scale: -80% !default;
 $list-group-item-color-scale: 40% !default;
 
-$list-group-hover-bg: $gray-900;
-$list-group-active-color: $gray-300;
-$list-group-active-bg: transparent;
+$list-group-hover-bg: lighten($component-active-bg, 2%);
+$list-group-active-color: $component-active-color;
+$list-group-active-bg: lighten($component-active-bg, 2%);
 $list-group-active-border-color: $list-group-active-bg !default;
 
 $list-group-disabled-color: $gray-600 !default;
 $list-group-disabled-bg: $list-group-bg !default;
 
 $list-group-action-color: $gray-300;
-$list-group-action-hover-color: $list-group-action-color !default;
+$list-group-action-hover-color: $component-active-color;
 
-$list-group-action-active-color: $gray-300;
-$list-group-action-active-bg: $gray-900;
+$list-group-action-active-color: $component-active-color;
+$list-group-action-active-bg: lighten($component-active-bg, 2%);
 // scss-docs-end list-group-variables
 
 // Image thumbnails

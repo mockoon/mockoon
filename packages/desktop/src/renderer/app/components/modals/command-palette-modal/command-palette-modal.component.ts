@@ -33,7 +33,6 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 @Component({
   selector: 'app-command-palette-modal',
   templateUrl: './command-palette-modal.component.html',
-  styleUrls: ['command-palette-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommandPaletteModalComponent implements OnInit, OnDestroy {
