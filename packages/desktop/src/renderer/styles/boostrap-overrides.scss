@@ -159,10 +159,6 @@ label {
   );
 }
 
-.btn-primary, .btn-secondary {
-  color: $white !important;
-}
-
 .btn-xs {
   // line-height: ensure proper height of button next to small input
   @include button-size(

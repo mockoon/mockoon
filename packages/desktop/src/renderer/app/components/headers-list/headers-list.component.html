@@ -3,14 +3,17 @@
     <ng-container formArrayName="headers">
       <div class="headers-list">
         <div
-          class="header-item py-1"
+          class="header-item"
           *ngFor="let header of headers.controls; index as headerIndex"
           [formGroupName]="headerIndex"
+          [ngClass]="{
+            'mb-2': headerIndex !== headers.controls.length - 1
+          }"
         >
           <div class="input-group" style="position: relative">
             <input
               type="text"
-              class="form-control me-1"
+              class="form-control me-2"
               placeholder="name"
               formControlName="key"
               [ngbTypeahead]="headerNamesSearch"

@@ -130,8 +130,8 @@ class Http {
               statusMessage: response.statusMessage,
               headers: response.headers,
               body,
-              cert: (response?.connection as any).getPeerCertificate
-                ? (response?.connection as any).getPeerCertificate()
+              cert: (response.socket as any).getPeerCertificate
+                ? (response.socket as any).getPeerCertificate()
                 : null
             })
           );

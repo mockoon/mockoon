@@ -3,7 +3,7 @@
   class="d-flex flex-column h-100 p-2"
   [formGroup]="activeEnvironmentForm"
 >
-  <div class="input-group mb-3 align-items-center">
+  <div class="input-group align-items-center">
     <label for="env-settings-name" class="pe-2">Name</label>
     <div class="col-4">
       <input
@@ -23,7 +23,7 @@
     }}:{{ activeEnvironment?.port }}/{{ activeEnvironment?.endpointPrefix }}"
   ></app-title-separator>
 
-  <div class="input-group mb-3 align-items-center">
+  <div class="input-group align-items-center">
     <div class="col-1">
       <input
         type="text"
@@ -77,7 +77,7 @@
   ></app-title-separator>
 
   <ng-container formGroupName="tlsOptions">
-    <div class="input-group mb-3 align-items-center">
+    <div class="input-group align-items-center">
       <div class="form-check">
         <input
           type="checkbox"
@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div class="pb-4 d-flex justify-content-center">
+    <div class="mb-2 d-flex justify-content-center">
       <app-toggle
         class="me-3"
         prefix="cert-types"
@@ -101,7 +101,7 @@
       ></app-toggle>
     </div>
 
-    <div class="input-group align-items-center mb-3" id="tls-cert-container">
+    <div class="input-group align-items-center mb-2" id="tls-cert-container">
       <ng-container
         *ngIf="
           activeEnvironmentForm.get(['tlsOptions', 'type']).value === 'PFX'
@@ -164,7 +164,7 @@
       </ng-container>
     </div>
 
-    <div class="input-group mb-3 align-items-center">
+    <div class="input-group align-items-center">
       <label for="env-settings-tls-caPath" class="pe-2 col-1"
         >CA cert path</label
       >
@@ -220,7 +220,7 @@
     </div>
   </div>
 
-  <div class="input-group mb-3 align-items-center">
+  <div class="input-group align-items-center">
     <div class="form-check">
       <input
         type="checkbox"

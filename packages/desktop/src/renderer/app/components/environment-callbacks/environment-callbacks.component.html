@@ -6,7 +6,7 @@
       *ngIf="activeCallback$ | async as activeCallback; else noActiveCallback"
     >
       <ng-container *ngIf="activeTab$ | async as activeTab">
-        <div class="callback-tabs d-flex mt-2 ml-2">
+        <div class="callback-tabs d-flex mt-2 ms-2">
           <ul class="nav nav-tabs flex-fill">
             <li class="nav-item">
               <a
@@ -25,7 +25,7 @@
                 Usage
                 <span
                   *ngIf="activeCallbackUsages$ | async as activeCallbackUsages"
-                  class="badge badge-hollow font-weight-bold ml-2"
+                  class="badge badge-hollow font-weight-bold ms-2"
                 >
                   {{ activeCallbackUsages?.length }}
                 </span>
@@ -68,7 +68,7 @@
             dropdownId="cbmethods"
           ></app-custom-select>
 
-          <div class="col-10 pl-2">
+          <div class="col-10 ps-2">
             <input
               type="text"
               class="form-control"
@@ -79,7 +79,7 @@
         </div>
 
         <ng-container *ngIf="activeSpecTab$ | async as activeSpecTab">
-          <div class="callback-spec-tabs d-flex mt-2 ml-2">
+          <div class="callback-spec-tabs d-flex mt-2 ms-2">
             <ul class="nav nav-tabs flex-fill">
               <li class="nav-item">
                 <a
@@ -104,7 +104,7 @@
         <ng-container *ngIf="(activeSpecTab$ | async) === 'HEADERS'">
           <!-- Headers -->
           <div
-            class="flex-fill scroll-content py-4 px-2"
+            class="flex-fill scroll-content mt-3 mx-2"
             #responseCallbackHeadersContainer
           >
             <app-headers-list
@@ -205,7 +205,7 @@
               <div class="input-group mt-2 px-2">
                 <div
                   *ngIf="activeCallback.filePath"
-                  class="input-group-append align-items-center ml-2"
+                  class="input-group-append align-items-center ms-2"
                 >
                   <div class="custom-control custom-checkbox">
                     <input

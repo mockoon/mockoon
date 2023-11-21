@@ -41,6 +41,7 @@ import { moveItemToTargetIndex } from 'src/renderer/app/stores/reducer-utils';
 @Component({
   selector: 'app-route-response-rules',
   templateUrl: 'route-response-rules.component.html',
+  styleUrls: ['./route-response-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {

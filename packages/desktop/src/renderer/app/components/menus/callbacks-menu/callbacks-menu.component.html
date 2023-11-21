@@ -1,7 +1,7 @@
 <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
   <div class="callbacks-menu d-flex flex-column h-100">
     <div class="d-flex">
-      <ul class="nav d-flex w-100 pt-2 pb-2 align-items-center">
+      <ul class="nav d-flex w-100 py-2 align-items-center">
         <li class="nav-item">
           <a
             class="nav-link text-primary"
@@ -43,7 +43,7 @@
     </div>
 
     <ng-container *ngIf="callbackList$ | async as callbackList">
-      <ul class="nav flex-column menu-list pt-1 pb-1 h-100">
+      <ul class="nav flex-column menu-list h-100">
         <li
           class="nav-item"
           *ngFor="let environmentCallback of callbackList; trackBy: trackByUuid"

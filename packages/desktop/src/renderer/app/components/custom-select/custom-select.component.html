@@ -1,4 +1,4 @@
-<div class="input-group">
+<div class="d-flex">
   <div
     id="{{ dropdownId }}-dropdown"
     class="flex-fill mw0"
@@ -9,7 +9,7 @@
   >
     <button
       type="button"
-      class="btn btn-custom dropdown-toggle me-1"
+      class="btn btn-custom dropdown-toggle"
       role="button"
       ngbDropdownToggle
     >
@@ -72,7 +72,7 @@
                   (keydown)="itemKeydown(item, $event)"
                   [disabled]="disabledList?.includes(item.value)"
                 >
-                  <span class="me-2 ellipsis" [ngClass]="item.classes">{{
+                  <span class="ellipsis" [ngClass]="item.classes">{{
                     item.label
                   }}</span>
                 </button>

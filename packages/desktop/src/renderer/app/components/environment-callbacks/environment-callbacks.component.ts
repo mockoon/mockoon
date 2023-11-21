@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import {
   BodyTypes,
   Callback,
@@ -54,7 +54,7 @@ import { Store } from 'src/renderer/app/stores/store';
 export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public activeCallback$: Observable<Callback>;
-  public activeCallbackForm: FormGroup;
+  public activeCallbackForm: UntypedFormGroup;
   public activeTab$: Observable<CallbackTabsNameType>;
   public activeSpecTab$: Observable<CallbackSpecTabNameType>;
   public activeCallbackUsages$: Observable<CallbackUsage[]>;
@@ -62,7 +62,6 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     mimeType: string;
     supportsTemplating: boolean;
   }>;
-  public form: FormGroup;
   public focusableInputs = FocusableInputs;
   public bodyEditorConfig$: Observable<any>;
   public scrollToBottom = this.uiService.scrollToBottom;
@@ -116,7 +115,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     private uiService: UIService,
     private store: Store,
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialogsService: DialogsService
   ) {}
 

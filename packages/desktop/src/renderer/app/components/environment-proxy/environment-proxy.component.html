@@ -3,7 +3,7 @@
   class="d-flex flex-column h-100 p-2"
   [formGroup]="environmentProxyForm"
 >
-  <div class="input-group mb-3">
+  <div class="input-group align-items-center mb-3">
     <div class="form-check">
       <input
         type="checkbox"
@@ -14,9 +14,10 @@
       <label class="form-check-label" for="env-proxy-mode"
         >Enable proxy mode</label
       >
+    </div>
+    <div class="input-group-text">
       <app-svg
         icon="info"
-        class="ms-1"
         ngbTooltip="Calls to non-defined routes will be forwarded to the specified target URL"
       ></app-svg>
     </div>
@@ -44,8 +45,8 @@
     </div>
   </div>
 
-  <div class="input-group mb-3">
-    <div class="form-check">
+  <div class="input-group align-items-center mb-3">
+    <div class="form-check mb-0">
       <input
         type="checkbox"
         class="form-check-input"
@@ -55,16 +56,17 @@
       <label class="form-check-label" for="env-proxy-remove-prefix">
         Remove Prefix
       </label>
+    </div>
+    <div class="input-group-text">
       <app-svg
         icon="info"
-        class="ms-1"
         ngbTooltip="When enabled, the environment's prefix will not be forwarded to the remote proxied URL"
       ></app-svg>
     </div>
   </div>
 
   <!-- custom proxy headers -->
-  <div class="d-flex flex-fill mh-0 environment-proxy-headers">
+  <div class="d-flex flex-fill mh0 environment-proxy-headers">
     <div class="d-flex flex-column w-50">
       <div class="mt-2 mb-2">
         Proxy request headers

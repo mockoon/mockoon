@@ -17,11 +17,15 @@
       <div class="rules-list flex-grow-1">
         <ng-container formArrayName="rules">
           <div
-            class="rule-item py-1"
             *ngFor="
               let rule of form.get('rules')['controls'];
               index as ruleIndex
             "
+            class="rule-item"
+            [ngClass]="{
+              'pt-1': ruleIndex !== 0,
+              'pb-1': ruleIndex !== form.get('rules')['controls'].length - 1
+            }"
             [formGroupName]="ruleIndex"
             appDraggable
             appDropzone
@@ -32,18 +36,18 @@
             [dragId]="ruleIndex"
             (dropped)="reorganizeRules($event)"
           >
-            <div class="input-group">
-              <app-custom-select
-                class="col-3 me-1"
-                formControlName="target"
-                [enableCustomInput]="false"
-                [items]="responseRuleTargets"
-                [dropdownId]="'rules' + ruleIndex + 'target'"
-              ></app-custom-select>
+            <app-custom-select
+              class="overflow-hidden me-2"
+              formControlName="target"
+              [enableCustomInput]="false"
+              [items]="responseRuleTargets"
+              [dropdownId]="'rules' + ruleIndex + 'target'"
+            ></app-custom-select>
 
+            <div class="me-2">
               <input
                 type="text"
-                class="form-control col-3"
+                class="form-control"
                 [placeholder]="
                   modifierPlaceholders[
                     form.get(['rules', ruleIndex, 'target']).value
@@ -57,75 +61,75 @@
                     : null
                 "
               />
-              <app-toggle
-                class="mx-2"
-                [uncheckable]="true"
-                formControlName="invert"
-                prefix="rule"
-                [items]="rulesInvert"
-              ></app-toggle>
+            </div>
+            <app-toggle
+              class="me-2"
+              [uncheckable]="true"
+              formControlName="invert"
+              prefix="rule"
+              [items]="rulesInvert"
+            ></app-toggle>
 
-              <app-custom-select
-                class="col-2 me-1"
-                formControlName="operator"
-                [enableCustomInput]="false"
-                [items]="responseRuleOperators"
-                [dropdownId]="'rules' + ruleIndex + 'operator'"
-                [disabledList]="
-                  operatorDisablingForTargets[
-                    form.get(['rules', ruleIndex, 'target']).value
-                  ]
-                "
-              ></app-custom-select>
+            <app-custom-select
+              class="me-2"
+              formControlName="operator"
+              [enableCustomInput]="false"
+              [items]="responseRuleOperators"
+              [dropdownId]="'rules' + ruleIndex + 'operator'"
+              [disabledList]="
+                operatorDisablingForTargets[
+                  form.get(['rules', ruleIndex, 'target']).value
+                ]
+              "
+            ></app-custom-select>
 
-              <input
-                type="text"
-                class="form-control col-2"
-                [placeholder]="
-                  valuePlaceholders[
-                    form.get(['rules', ruleIndex, 'operator']).value
-                  ] || ''
-                "
-                formControlName="value"
-                [attr.disabled]="
-                  form.get(['rules', ruleIndex, 'operator']).value === 'null' ||
-                  form.get(['rules', ruleIndex, 'operator']).value ===
-                    'empty_array'
-                    ? true
-                    : null
-                "
-              />
+            <input
+              type="text"
+              class="form-control"
+              [placeholder]="
+                valuePlaceholders[
+                  form.get(['rules', ruleIndex, 'operator']).value
+                ] || ''
+              "
+              formControlName="value"
+              [attr.disabled]="
+                form.get(['rules', ruleIndex, 'operator']).value === 'null' ||
+                form.get(['rules', ruleIndex, 'operator']).value ===
+                  'empty_array'
+                  ? true
+                  : null
+              "
+            />
 
-              <button
-                *ngIf="deleteRuleRequested$ | async as deleteRuleRequested"
-                type="button"
-                class="btn btn-link btn-icon delete-rule"
-                [ngClass]="{
-                  'text-danger':
-                    deleteRuleRequested.enabled === true &&
-                    deleteRuleRequested.payload === ruleIndex
-                }"
-                [ngbTooltip]="
+            <button
+              *ngIf="deleteRuleRequested$ | async as deleteRuleRequested"
+              type="button"
+              class="btn btn-link btn-icon delete-rule"
+              [ngClass]="{
+                'text-danger':
                   deleteRuleRequested.enabled === true &&
                   deleteRuleRequested.payload === ruleIndex
-                    ? 'Confirm'
-                    : 'Delete'
-                "
-                (click)="removeRule(ruleIndex)"
-              >
-                <app-svg icon="delete"></app-svg>
-              </button>
+              }"
+              [ngbTooltip]="
+                deleteRuleRequested.enabled === true &&
+                deleteRuleRequested.payload === ruleIndex
+                  ? 'Confirm'
+                  : 'Delete'
+              "
+              (click)="removeRule(ruleIndex)"
+            >
+              <app-svg icon="delete"></app-svg>
+            </button>
 
-              <button
-                *ngIf="form.get('rules').value.length > 1"
-                #dragHandle
-                ngbTooltip="Reorder"
-                type="button"
-                class="btn btn-link btn-icon cursor-grab text-muted"
-              >
-                <app-svg icon="drag_indicator"></app-svg>
-              </button>
-            </div>
+            <button
+              *ngIf="form.get('rules').value.length > 1"
+              #dragHandle
+              ngbTooltip="Reorder"
+              type="button"
+              class="btn btn-link btn-icon cursor-grab text-muted"
+            >
+              <app-svg icon="drag_indicator"></app-svg>
+            </button>
           </div>
         </ng-container>
       </div>
