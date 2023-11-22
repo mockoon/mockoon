@@ -16,7 +16,10 @@
       (keydown.enter)="onCommandActivate($event)"
     />
   </div>
-  <div class="list-group list-group-flush overflow-y-scroll" role="listbox">
+  <div
+    class="list-group list-group-flush overflow-y-scroll command-list"
+    role="listbox"
+  >
     <ng-container *ngIf="data.commands?.length !== 0; else noResult">
       <ng-container
         *ngFor="let command of data.commands; index as commandIndex"
