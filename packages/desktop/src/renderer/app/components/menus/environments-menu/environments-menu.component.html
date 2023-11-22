@@ -61,7 +61,7 @@
                     [text]="environment.name"
                     formControlName="name"
                     [ngClass]="{
-                      ellipsis: settings.truncateRouteName,
+                      'text-truncate': settings.truncateRouteName,
                       'text-break': !settings.truncateRouteName
                     }"
                     [editCondition]="
@@ -74,7 +74,7 @@
                 <div
                   class="nav-link-subtitle pt-2"
                   [ngClass]="{
-                    ellipsis: settings.truncateRouteName,
+                    'text-truncate': settings.truncateRouteName,
                     'text-break': !settings.truncateRouteName
                   }"
                 >

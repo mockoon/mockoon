@@ -73,13 +73,13 @@
               *ngIf="settings$ | async as settings"
               class="databucket-path"
               [ngClass]="{
-                ellipsis: settings.truncateRouteName,
+                'text-truncate': settings.truncateRouteName,
                 'text-break': !settings.truncateRouteName
               }"
             >
               {{ environmentDatabucket.name }}
             </div>
-            <div class="nav-link-subtitle ellipsis">
+            <div class="nav-link-subtitle text-truncate">
               {{ environmentDatabucket.documentation }}
             </div>
           </a>

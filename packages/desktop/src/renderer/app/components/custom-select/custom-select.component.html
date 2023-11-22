@@ -72,7 +72,7 @@
                   (keydown)="itemKeydown(item, $event)"
                   [disabled]="disabledList?.includes(item.value)"
                 >
-                  <span class="ellipsis" [ngClass]="item.classes">{{
+                  <span class="text-truncate" [ngClass]="item.classes">{{
                     item.label
                   }}</span>
                 </button>

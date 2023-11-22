@@ -1563,6 +1563,12 @@ export class EnvironmentsService extends Logger {
    * @returns
    */
   private verifyData(environment: Environment): Observable<Environment> {
+    if (!environment || typeof environment !== 'object') {
+      this.logMessage('error', 'ENVIRONMENT_INVALID');
+
+      return EMPTY;
+    }
+
     if (environment.lastMigration > HighestMigrationId) {
       this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
         environmentName: environment.name,

@@ -93,7 +93,7 @@
 
             <!-- Route responses dropdown -->
             <div
-              class="z-index-1 ellipsis"
+              class="text-truncate"
               ngbDropdown
               [autoClose]="'outside'"
               #routeResponsesDropdown="ngbDropdown"
@@ -178,7 +178,7 @@
                   (dropped)="reorganizeRouteResponses($event)"
                 >
                   <span
-                    class="flex-grow-1 me-2 ellipsis"
+                    class="flex-grow-1 me-2 text-truncate"
                     (click)="
                       setActiveRouteResponse(
                         routeResponse.uuid,

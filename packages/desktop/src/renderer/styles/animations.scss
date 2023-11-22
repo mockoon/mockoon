@@ -8,3 +8,12 @@
     opacity: 0.3;
   }
 }
+
+@keyframes fadeIn {
+  from {
+    box-shadow: inset -4px 0 0 0 rgba($blue, 0);
+  }
+  to {
+    box-shadow: inset -4px 0 0 0 rgba($blue, 0.8);
+  }
+}

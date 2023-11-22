@@ -359,6 +359,24 @@ export class Store {
   }
 
   /**
+   * Get active callback value
+   */
+  public getActiveCallback(): Callback {
+    const activeEnvironment = this.store$.value.environments.find(
+      (environment) =>
+        environment.uuid === this.store$.value.activeEnvironmentUUID
+    );
+
+    if (!activeEnvironment) {
+      return null;
+    }
+
+    return activeEnvironment.callbacks.find(
+      (callback) => callback.uuid === this.store$.value.activeCallbackUUID
+    );
+  }
+
+  /**
    * Get route with the supplied UUID from any environment
    */
   public getRouteByUUID(routeUUID: string): Route | undefined {

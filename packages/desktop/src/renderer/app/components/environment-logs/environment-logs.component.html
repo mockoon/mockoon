@@ -76,7 +76,7 @@
                   <div
                     class="route"
                     [ngClass]="{
-                      ellipsis: data.settings.truncateRouteName,
+                      'text-truncate': data.settings.truncateRouteName,
                       'text-break': !data.settings.truncateRouteName
                     }"
                   >
@@ -125,7 +125,7 @@
                   </div>
                 </div>
                 <div class="d-flex align-items-center">
-                  <div class="nav-link-subtitle ellipsis">
+                  <div class="nav-link-subtitle text-truncate">
                     {{ log.timestamp | date: 'yyyy-MM-dd HH:mm:ss:SSS' }}
                   </div>
                   <div class="d-flex ms-auto nav-link-subtitle">

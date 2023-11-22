@@ -217,6 +217,14 @@ export const DesktopMessages: {
     log: true,
     showToast: false
   }),
+  ENVIRONMENT_INVALID: () => ({
+    message: 'This content does not seem to be a valid Mockoon environment',
+    log: true,
+    loggerMessage:
+      'This content does not seem to be a valid Mockoon environment',
+    showToast: true,
+    toastType: 'warning'
+  }),
   ENVIRONMENT_MORE_RECENT_VERSION: (messageParams) => ({
     message: `Environment "${
       messageParams.environmentName || messageParams.environmentUUID

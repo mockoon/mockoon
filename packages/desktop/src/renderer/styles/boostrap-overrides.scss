@@ -130,6 +130,14 @@ label {
   }
 }
 
+.btn.btn-link,
+.btn.btn-icon {
+  &:focus-visible {
+    outline: 0;
+    box-shadow: none;
+  }
+}
+
 .btn-custom {
   @include button-variant(
     // bg color
@@ -169,32 +177,9 @@ label {
   );
 }
 
-.btn-xxs {
-  // line-height: ensure proper height of button next to small input
-  @include button-size(
-    $input-btn-padding-y-xxs,
-    $input-btn-padding-x-xxs,
-    $font-size-xxs,
-    $btn-border-radius-xxs
-  );
-}
-
 .p-btn {
   padding: $input-btn-padding-y $input-btn-padding-x;
 }
-
-.form-select {
-  &:focus {
-    color: $gray-200;
-  }
-
-  -webkit-appearance: none;
-}
-
-// fix bootstrap flexfill which is incompatible with ace editor
-/* .flex-fill {
-  flex: 1 !important;
-} */
 
 .mh0 {
   min-height: 0;

@@ -133,7 +133,7 @@
             class="d-flex flex-fill flex-column h-100 callback-body-spec"
             *ngIf="bodySupportingMethods.indexOf(activeCallback.method) >= 0"
           >
-            <div class="pt-4 pb-2 px-2 d-flex justify-content-center">
+            <div class="pt-5 pb-4 d-flex justify-content-center">
               <app-toggle
                 prefix="body-type"
                 formControlName="bodyType"
@@ -177,18 +177,30 @@
                 >
                   <app-svg icon="clear"></app-svg>
                 </button>
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-link"
-                    (click)="browseFiles()"
-                    ngbTooltip="Browse"
-                  >
-                    <app-svg icon="find_in_page"></app-svg>
-                  </button>
-                </div>
+                <button
+                  class="btn btn-link"
+                  (click)="browseFiles()"
+                  ngbTooltip="Browse"
+                >
+                  <app-svg icon="find_in_page"></app-svg>
+                </button>
               </div>
 
-              <div *ngIf="activeCallback.filePath" class="px-2">
+              <div
+                *ngIf="activeCallback.filePath"
+                class="d-flex justify-content-between mt-2 px-2"
+              >
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="sendFileAsBody"
+                    formControlName="sendFileAsBody"
+                  />
+                  <label class="form-check-label" for="sendFileAsBody"
+                    >Send as body</label
+                  >
+                </div>
                 <small>
                   Detected MIME type:
                   {{
@@ -201,31 +213,11 @@
                   }}
                 </small>
               </div>
-
-              <div class="input-group mt-2 px-2">
-                <div
-                  *ngIf="activeCallback.filePath"
-                  class="input-group-append align-items-center ms-2"
-                >
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="sendFileAsBody"
-                      formControlName="sendFileAsBody"
-                    />
-                    <label class="custom-control-label" for="sendFileAsBody"
-                      >Send as body</label
-                    >
-                  </div>
-                </div>
-              </div>
             </ng-container>
 
             <ng-container *ngIf="activeCallback.bodyType === 'DATABUCKET'">
-              <div class="input-group px-2">
+              <div class="environment-callbacks-databucket px-2">
                 <app-custom-select
-                  class="col-8"
                   formControlName="databucketID"
                   [enableCustomInput]="false"
                   [items]="databuckets$ | async"

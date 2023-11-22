@@ -162,7 +162,7 @@
           <app-editable-element
             *ngIf="settings$ | async as settings"
             [ngClass]="{
-              ellipsis: settings.truncateRouteName,
+              'text-truncate': settings.truncateRouteName,
               'text-break': !settings.truncateRouteName
             }"
             [text]="folder.name"
@@ -264,13 +264,13 @@
               *ngIf="settings$ | async as settings"
               class="nav-link-label"
               [ngClass]="{
-                ellipsis: settings.truncateRouteName,
+                'text-truncate': settings.truncateRouteName,
                 'text-break': !settings.truncateRouteName
               }"
             >
               <div
                 [ngClass]="{
-                  ellipsis: settings.truncateRouteName,
+                  'text-truncate': settings.truncateRouteName,
                   'text-break': !settings.truncateRouteName
                 }"
               >
@@ -289,7 +289,7 @@
             </div>
           </div>
           <div>
-            <div class="nav-link-subtitle ellipsis pt-2">
+            <div class="nav-link-subtitle text-truncate pt-2">
               {{ route.documentation }}
             </div>
           </div>
