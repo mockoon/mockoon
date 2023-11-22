@@ -24,7 +24,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { browserLocalPersistence, connectAuthEmulator } from 'firebase/auth';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { BannerComponent } from 'src/renderer/app/components/banner/banner.component';
 import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/context-menu.component';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
@@ -167,7 +167,7 @@ import { AppComponent } from './app.component';
       return functions;
     }),
     ReactiveFormsModule,
-    NgxMaskModule.forRoot()
+    NgxMaskDirective
   ],
   providers: [
     {
@@ -194,7 +194,8 @@ import { AppComponent } from './app.component';
     {
       provide: NgbModalConfig,
       useFactory: NgbModalConfigFactory
-    }
+    },
+    provideNgxMask()
   ],
   bootstrap: [AppComponent]
 })

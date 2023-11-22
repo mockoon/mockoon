@@ -184,7 +184,7 @@ class Routes {
     index: number
   ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline [formcontrolname="target"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index})  [formcontrolname="target"]`
     );
   }
 
@@ -192,7 +192,7 @@ class Routes {
     index: number
   ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline input[formcontrolname="modifier"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index})  input[formcontrolname="modifier"]`
     );
   }
 
@@ -200,7 +200,7 @@ class Routes {
     index: number
   ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline app-toggle[formcontrolname="invert"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index})  app-toggle[formcontrolname="invert"]`
     );
   }
 
@@ -208,7 +208,7 @@ class Routes {
     index: number
   ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline [formcontrolname="operator"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index}) [formcontrolname="operator"]`
     );
   }
 
@@ -216,7 +216,7 @@ class Routes {
     index: number
   ): ChainablePromiseElement<WebdriverIO.Element> {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index}) .form-inline input[formcontrolname="value"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index}) input[formcontrolname="value"]`
     );
   }
 
@@ -516,7 +516,7 @@ class Routes {
     );
     await utils.setElementValue(
       $(
-        'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="modifier"]'
+        'app-route-response-rules .rule-item:last-of-type input[formcontrolname="modifier"]'
       ),
       rule.modifier
     );
@@ -528,7 +528,7 @@ class Routes {
     if (rule.operator !== 'null') {
       await utils.setElementValue(
         $(
-          'app-route-response-rules .rule-item:last-of-type .form-inline input[formcontrolname="value"]'
+          'app-route-response-rules .rule-item:last-of-type input[formcontrolname="value"]'
         ),
         rule.value
       );

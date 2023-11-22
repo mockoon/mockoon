@@ -12,7 +12,7 @@
         *ngIf="!data.logsRecording?.[data.activeEnvironmentUUID]"
         type="button"
         id="start-recording"
-        class="btn btn-link btn-icon pl-2"
+        class="btn btn-link btn-icon ps-2"
         ngbTooltip="Record"
         (click)="startRecording(data.activeEnvironmentUUID)"
       >
@@ -22,7 +22,7 @@
         *ngIf="data.logsRecording?.[data.activeEnvironmentUUID] === true"
         type="button"
         id="stop-recording"
-        class="btn btn-link btn-icon pl-2 text-danger"
+        class="btn btn-link btn-icon ps-2 text-danger"
         ngbTooltip="Stop recording"
         (click)="stopRecording(data.activeEnvironmentUUID)"
       >
@@ -34,7 +34,7 @@
         *ngIf="data.environmentLogs?.length"
         type="button"
         id="clear-logs"
-        class="btn btn-link btn-icon pl-2 {{
+        class="btn btn-link btn-icon ps-2 {{
           (clearEnvironmentLogsRequested$ | async).enabled ? 'text-danger' : ''
         }}"
         [ngbTooltip]="
@@ -67,7 +67,7 @@
                 <div class="d-flex">
                   <div>
                     <span
-                      class="badge badge-default ml-0 mr-3 route-badge-{{
+                      class="badge badge-default ms-0 me-3 route-badge-{{
                         log.method | lowercase
                       }} route-method"
                       >{{ log.method | uppercase }}</span
@@ -76,13 +76,13 @@
                   <div
                     class="route"
                     [ngClass]="{
-                      ellipsis: data.settings.truncateRouteName,
+                      'text-truncate': data.settings.truncateRouteName,
                       'text-break': !data.settings.truncateRouteName
                     }"
                   >
                     {{ log.url }}
                   </div>
-                  <div class="ml-auto pl-1 d-flex">
+                  <div class="ms-auto ps-1 d-flex">
                     <div>
                       <button
                         type="button"
@@ -103,7 +103,7 @@
                     <div>
                       <span
                         *ngIf="log.route"
-                        class="float-right text-success logs-metadata"
+                        class="float-end text-success logs-metadata"
                       >
                         <app-svg
                           icon="check"
@@ -114,7 +114,7 @@
                     <div>
                       <span
                         *ngIf="!log.route && log.proxied"
-                        class="float-right text-primary logs-metadata"
+                        class="float-end text-primary logs-metadata"
                       >
                         <app-svg
                           icon="security"
@@ -125,10 +125,10 @@
                   </div>
                 </div>
                 <div class="d-flex align-items-center">
-                  <div class="nav-link-subtitle ellipsis">
+                  <div class="nav-link-subtitle text-truncate">
                     {{ log.timestamp | date: 'yyyy-MM-dd HH:mm:ss:SSS' }}
                   </div>
-                  <div class="d-flex ml-auto nav-link-subtitle">
+                  <div class="d-flex ms-auto nav-link-subtitle">
                     <span
                       class="mt-0 badge badge-default response-badge-{{
                         log.response.status.toString().slice(0, 1).concat('xx')
@@ -336,7 +336,7 @@
 
                     Body ({{ !selectedLog?.request?.body ? 'none' : 'raw' }})
                   </div>
-                  <div class="ml-auto">
+                  <div class="ms-auto">
                     <span
                       *ngIf="selectedLog?.request?.truncatedBody"
                       class="btn btn-link btn-icon text-primary p-0 environment-logs-open-request-body"
@@ -442,7 +442,7 @@
                         : selectedLog.response?.bodyState
                     }})
                   </div>
-                  <div *ngIf="!selectedLog.response.binaryBody" class="ml-auto">
+                  <div *ngIf="!selectedLog.response.binaryBody" class="ms-auto">
                     <span
                       *ngIf="selectedLog?.response?.truncatedBody"
                       class="btn btn-link btn-icon text-primary p-0 environment-logs-open-response-body"

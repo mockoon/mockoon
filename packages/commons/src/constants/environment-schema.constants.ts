@@ -229,7 +229,7 @@ const CallbackSchema = Joi.object<Callback, true>({
   id: Joi.string().allow('').failover(CallbackDefault.id).required(),
   name: Joi.string().default('').failover(CallbackDefault.name).required(),
   documentation: Joi.string()
-    .default('')
+    .allow('')
     .failover(CallbackDefault.documentation)
     .required(),
   method: Joi.string()
@@ -250,7 +250,7 @@ const CallbackSchema = Joi.object<Callback, true>({
       Methods.unlock
     )
     .required(),
-  uri: Joi.string().required(),
+  uri: Joi.string().allow('').failover(CallbackDefault.uri).required(),
   headers: Joi.array()
     .items(HeaderSchema, Joi.any().strip())
     .failover(CallbackDefault.headers)
@@ -271,7 +271,10 @@ const CallbackSchema = Joi.object<Callback, true>({
     .allow('')
     .failover(CallbackDefault.databucketID)
     .required()
-}).options({ stripUnknown: true });
+})
+  .failover(EnvironmentDefault.callbacks)
+  .default(EnvironmentDefault.callbacks)
+  .options({ stripUnknown: true });
 
 const CallbackInvocationSchema = Joi.object<CallbackInvocation, true>({
   uuid: UUIDSchema,

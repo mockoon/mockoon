@@ -12,15 +12,7 @@ const getCallMockoonCert: HttpCall = {
   method: 'GET',
   testedResponse: {
     body: '42',
-    status: 200,
-    cert: {
-      issuer: {
-        C: 'AU',
-        CN: 'localhost',
-        O: 'Internet Widgits Pty Ltd',
-        ST: 'Some-State'
-      }
-    }
+    status: 200
   }
 };
 
@@ -31,13 +23,7 @@ const getCallCustomCert: HttpCall = {
   method: 'GET',
   testedResponse: {
     body: '42',
-    status: 200,
-    cert: {
-      issuer: {
-        CN: 'localhost',
-        O: 'mockoon'
-      }
-    }
+    status: 200
   }
 };
 

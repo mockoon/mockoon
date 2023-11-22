@@ -272,7 +272,7 @@ export class CommandPaletteService {
 
       highlightedText +=
         splitAtPos.substring(0, splitAtPos.length - 1) +
-        '<span class="text-primary font-weight-bold">' +
+        '<span class="text-primary fw-bold">' +
         splitAtPos.charAt(splitAtPos.length - 1) +
         '</span>';
 
@@ -291,13 +291,16 @@ export class CommandPaletteService {
     const hasMoreThanOneEnvironment = this.store.get('environments').length > 1;
     const hasActiveEnvironment = !!this.store.getActiveEnvironment();
     const hasActiveRoute = !!this.store.getActiveRoute();
-    const hasActiveDatabucket = !!this.store.getActiveDatabucket();
     const activeEnvironment = this.store.getActiveEnvironment();
     const activeEnvironmentUuid = activeEnvironment?.uuid;
     const activeRoute = this.store.getActiveRoute();
     const activeRouteUuid = activeRoute?.uuid;
     const activeDatabucket = this.store.getActiveDatabucket();
+    const hasActiveDatabucket = !!activeDatabucket;
     const activeDatabucketUuid = activeDatabucket?.uuid;
+    const activeCallback = this.store.getActiveCallback();
+    const hasActiveCallback = !!activeCallback;
+    const activeCallbackUuid = activeCallback?.uuid;
 
     const commonCommands: Commands = [
       {
@@ -343,6 +346,15 @@ export class CommandPaletteService {
         label: 'Navigate to the Environment Headers',
         action: () => {
           this.environmentsService.setActiveView('ENV_HEADERS');
+        },
+        score: 1,
+        enabled: hasActiveEnvironment
+      },
+      {
+        id: 'VIEW_NAVIGATE_ENVIRONMENT_CALLBACKS',
+        label: 'Navigate to the Environment Callbacks',
+        action: () => {
+          this.environmentsService.setActiveView('ENV_CALLBACKS');
         },
         score: 1,
         enabled: hasActiveEnvironment
@@ -615,6 +627,38 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled: hasActiveEnvironment && hasActiveDatabucket
+      },
+      {
+        id: 'CREATE_CALLBACK',
+        label: 'Create a New Callback',
+        action: () => {
+          this.environmentsService.setActiveView('ENV_CALLBACKS');
+          this.environmentsService.addCallback();
+        },
+        score: 1,
+        enabled: hasActiveEnvironment
+      },
+      {
+        id: 'DUPLICATE_CALLBACK',
+        label: 'Duplicate Current Callback',
+        action: () => {
+          this.environmentsService.duplicateCallback(activeCallbackUuid);
+        },
+        score: 1,
+        enabled: hasActiveEnvironment && hasActiveCallback
+      },
+      {
+        id: 'DUPLICATE_CALLBACK_TO_ENVIRONMENT',
+        label: 'Duplicate Current Callback to Another Environment',
+        action: () => {
+          this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+            activeCallbackUuid,
+            'callback'
+          );
+        },
+        score: 1,
+        enabled:
+          hasActiveEnvironment && hasActiveCallback && hasMoreThanOneEnvironment
       },
       {
         id: 'CREATE_HTTP_ROUTE',

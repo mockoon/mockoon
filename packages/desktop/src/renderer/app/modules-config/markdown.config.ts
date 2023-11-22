@@ -36,7 +36,7 @@ export const MarkedOptionsFactory = (): MarkedOptions => {
     }
 
     return `<h${level} class="mt-5 mb-4">${
-      hasVertBar ? '<span class="text-primary pr-2">|</span>' : ''
+      hasVertBar ? '<span class="text-primary pe-2">|</span>' : ''
     }${text}</h${level}>`;
   };
 

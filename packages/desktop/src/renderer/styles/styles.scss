@@ -31,16 +31,10 @@ input[type='number']::-webkit-outer-spin-button {
   background: rgba($blue, 0.5);
 }
 
-html {
-  // reduce page size reduce everything in bootstrap
-  font-size: 14px;
-}
-
 body {
   user-select: none;
   cursor: default;
   overflow: hidden;
-  letter-spacing: 0.02rem;
 }
 
 html,
@@ -58,6 +52,7 @@ input,
 .dropdown-menu {
   max-height: 300px;
   overflow-y: auto;
+  box-shadow: $box-shadow;
 
   &::-webkit-scrollbar-track,
   *::-webkit-scrollbar-track {
@@ -70,23 +65,8 @@ input,
   }
 }
 
-.h-35 {
-  max-height: 35%;
-}
-
 .main-content {
   background-color: darken($gray-900, 2%);
-}
-
-.ellipsis {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.column-width {
-  min-width: 25%;
-  max-width: 25%;
 }
 
 .menu-list {
@@ -110,15 +90,15 @@ input,
 }
 
 .cursor-pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .cursor-grab {
-  cursor: grab;
+  cursor: grab !important;
 }
 
 .cursor-text {
-  cursor: text;
+  cursor: text !important;
 }
 
 // route badges (methods)
@@ -156,29 +136,12 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
   }
 }
 
-.flex-fill {
-  flex: 1;
-}
-
-.flex-none {
-  flex: none !important;
-}
-
-.z-index-1 {
-  z-index: 1;
-}
-
-.form-right {
-  position: absolute;
-  right: 0;
-}
-
 .toasts-container {
   z-index: 5000;
   position: absolute;
   width: 250px;
-  top: ($spacer / 2) + 2rem;
-  right: $spacer / 2;
+  top: calc($spacer / 2) + 2rem;
+  right: calc($spacer / 2);
 
   .toast {
     word-break: break-word;
@@ -243,19 +206,10 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
   cursor: col-resize;
 
   &:hover {
-    animation-name: resizerFadeIn;
+    animation-name: fadeIn;
     animation-duration: 0.75s;
     animation-delay: 0.25s;
     animation-fill-mode: forwards;
-  }
-}
-
-@keyframes resizerFadeIn {
-  from {
-    box-shadow: inset -4px 0 0 0 rgba($blue, 0);
-  }
-  to {
-    box-shadow: inset -4px 0 0 0 rgba($blue, 0.8);
   }
 }
 
@@ -268,7 +222,7 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
     top left,
     bottom left;
   border-left: 3px solid $gray-500;
-  margin: $spacer / 2;
+  margin: calc($spacer / 2);
   width: 11px;
 }
 

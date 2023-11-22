@@ -10,18 +10,16 @@
         icon="web_asset"
       ></app-title-separator>
 
-      <div class="pl-4">
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
+      <div class="ps-4">
+        <div class="mb-3">
+          <div class="form-check">
             <input
               type="checkbox"
-              class="custom-control-input"
+              class="form-check-input"
               id="settings-truncate-route-name"
               formControlName="truncateRouteName"
             />
-            <label
-              class="custom-control-label"
-              for="settings-truncate-route-name"
+            <label class="form-check-label" for="settings-truncate-route-name"
               >Truncate long paths in lists (environments, routes, logs,
               etc.)</label
             >
@@ -30,241 +28,216 @@
       </div>
     </div>
 
-    <div class="mt-5">
-      <app-title-separator
-        heading="Environment logs"
-        [isFirst]="true"
-        icon="history"
-      ></app-title-separator>
+    <app-title-separator
+      heading="Environment logs"
+      icon="history"
+    ></app-title-separator>
 
-      <div class="pl-4">
-        <div class="form-group">
-          <div class="input-group">
-            <div class="custom-control custom-checkbox">
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="settings-log-transactions"
-                formControlName="logTransactions"
-              />
-              <label
-                class="custom-control-label"
-                for="settings-log-transactions"
-                >Log the full transactions</label
-              >
-            </div>
-            <div class="input-group-append ml-1">
-              <app-svg
-                icon="info"
-                ngbTooltip="Logs the full transaction (for requests, responses and callbacks) in the application log files. Greatly increases the volume of logs. Requires a server restart to take effect."
-              ></app-svg>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <label for="settings-log-max-count" class="col-form-label pr-2">
-              Maximum log entries displayed in the "Logs" tab (per environment)
-            </label>
-            <input
-              type="number"
-              class="form-control col-1"
-              id="settings-log-max-count"
-              [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
-              formControlName="maxLogsPerEnvironment"
-            />
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <label for="settings-log-body-size" class="col-form-label pr-2">
-              Log's body maximum characters size
-            </label>
-            <input
-              type="number"
-              class="form-control col-1"
-              id="settings-log-body-size"
-              [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
-              placeholder="10000 (default)"
-              formControlName="logSizeLimit"
-            />
-            <div class="input-group-append ml-1 align-items-center">
-              <app-svg
-                icon="info"
-                class="ml-1"
-                ngbTooltip="Truncate the entering requests and exiting responses bodies if bigger than {{
-                  settings.logSizeLimit
-                }} characters"
-              ></app-svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt-5">
-      <app-title-separator
-        heading="Faker.js"
-        subheading="Templating system supports Faker.js"
-        icon="code"
-        docLink="templating"
-      ></app-title-separator>
-
-      <div class="pl-4">
-        <div class="form-group">
-          <div class="input-group">
-            <label class="col-form-label pr-2"> Locale </label>
-            <app-custom-select
-              class="col-2"
-              formControlName="fakerLocale"
-              [enableCustomInput]="false"
-              [items]="fakerLocales"
-              dropdownId="settings-faker-locale"
-            ></app-custom-select>
-            <div class="input-group-append ml-1 align-items-center">
-              <app-svg
-                icon="info"
-                class="ml-1"
-                ngbTooltip="Set Faker.js's primary locale. Faker.js will fallback to English for helpers not covered by this locale"
-              ></app-svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="input-group">
-            <label for="settings-faker-seed" class="col-form-label pr-2">
-              Seed
-            </label>
-            <input
-              type="number"
-              class="form-control col-4"
-              id="settings-faker-seed"
-              placeholder="Number or empty for no seed"
-              [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
-              formControlName="fakerSeed"
-            />
-            <div class="input-group-append ml-1 align-items-center">
-              <app-svg
-                icon="info"
-                class="ml-1"
-                ngbTooltip="By setting a seed, Faker.js will always generate the same data. Application must be restarted after removing the seed"
-              ></app-svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt-5">
-      <app-title-separator heading="Storage" icon="save"></app-title-separator>
-
-      <div class="pl-4">
-        <div class="form-group">
-          <div class="input-group file-watcher-input-group">
-            <label class="col-form-label pr-2">
-              Environment files watcher
-            </label>
-            <app-custom-select
-              class="col-2"
-              formControlName="fileWatcherEnabled"
-              [enableCustomInput]="false"
-              [items]="fileWatcherOptions"
-              dropdownId="settings-storage-file-watcher"
-            ></app-custom-select>
-            <div class="input-group-append ml-1 align-items-center">
-              <app-svg
-                icon="info"
-                class="ml-1"
-                ngbTooltip="Mockoon will watch environment files for external changes and prompt (or not) for reload"
-              ></app-svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pl-4">
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group align-items-center">
+          <div class="form-check mb-0">
             <input
               type="checkbox"
-              class="custom-control-input"
-              id="settings-storage-pretty-print"
-              formControlName="storagePrettyPrint"
+              class="form-check-input"
+              id="settings-log-transactions"
+              formControlName="logTransactions"
             />
-            <label
-              class="custom-control-label"
-              for="settings-storage-pretty-print"
-              >Pretty print JSON storage files (settings and
-              environments)</label
+            <label class="form-check-label" for="settings-log-transactions"
+              >Log the full transactions</label
             >
           </div>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="Logs the full transaction (for requests, responses and callbacks) in the application log files. Greatly increases the volume of logs. Requires a server restart to take effect."
+            ></app-svg>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="mt-5">
-      <app-title-separator
-        heading="Telemetry"
-        icon="show_chart"
-      ></app-title-separator>
-
-      <div class="pl-4">
-        <div class="form-group">
-          <div class="input-group">
-            <div class="custom-control custom-checkbox">
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="settings-enable-telemetry"
-                formControlName="enableTelemetry"
-              />
-              <label
-                class="custom-control-label"
-                for="settings-enable-telemetry"
-                >Enable telemetry
-              </label>
-            </div>
-            <div class="input-group-append ml-1">
-              <app-svg
-                icon="info"
-                class="text-primary cursor-pointer"
-                ngbTooltip="Our custom telemetry system is collecting a minimal amount of information and no personal data. Requires application restart to take effect."
-                (click)="openWikiLink('faq', $event)"
-              ></app-svg>
-            </div>
+      <div class="mb-3">
+        <div class="input-group">
+          <label for="settings-log-max-count" class="col-form-label pe-2">
+            Maximum log entries displayed in the "Logs" tab (per environment)
+          </label>
+          <input
+            type="number"
+            class="form-control col-1"
+            id="settings-log-max-count"
+            [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
+            formControlName="maxLogsPerEnvironment"
+          />
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="input-group align-items-center">
+          <label for="settings-log-body-size" class="col-form-label pe-2">
+            Log's body maximum characters size
+          </label>
+          <input
+            type="number"
+            class="form-control col-1"
+            id="settings-log-body-size"
+            [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
+            placeholder="10000 (default)"
+            formControlName="logSizeLimit"
+          />
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="Truncate the entering requests and exiting responses bodies if bigger than {{
+                settings.logSizeLimit
+              }} characters"
+            ></app-svg>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="mt-5">
-      <app-title-separator
-        heading="Environments auto start"
-        icon="play_arrow"
-      ></app-title-separator>
+    <app-title-separator
+      heading="Faker.js"
+      subheading="Templating system supports Faker.js"
+      icon="code"
+      docLink="templating"
+    ></app-title-separator>
 
-      <div class="pl-4">
-        <div class="form-group">
-          <div class="input-group">
-            <div class="custom-control custom-checkbox">
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="start-environments-on-load"
-                formControlName="startEnvironmentsOnLoad"
-              />
-              <label
-                class="custom-control-label"
-                for="start-environments-on-load"
-                >Start all environments on application startup
-              </label>
-            </div>
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <label class="col-form-label pe-2"> Locale </label>
+          <app-custom-select
+            class="col-2"
+            formControlName="fakerLocale"
+            [enableCustomInput]="false"
+            [items]="fakerLocales"
+            dropdownId="settings-faker-locale"
+          ></app-custom-select>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="Set Faker.js's primary locale. Faker.js will fallback to English for helpers not covered by this locale"
+            ></app-svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="input-group">
+          <label for="settings-faker-seed" class="col-form-label pe-2">
+            Seed
+          </label>
+          <input
+            type="number"
+            class="form-control col-4"
+            id="settings-faker-seed"
+            placeholder="Number or empty for no seed"
+            [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
+            formControlName="fakerSeed"
+          />
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="By setting a seed, Faker.js will always generate the same data. Application must be restarted after removing the seed"
+            ></app-svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-title-separator heading="Storage" icon="save"></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group file-watcher-input-group">
+          <label class="col-form-label pe-2"> Environment files watcher </label>
+          <app-custom-select
+            class="col-2"
+            formControlName="fileWatcherEnabled"
+            [enableCustomInput]="false"
+            [items]="fileWatcherOptions"
+            dropdownId="settings-storage-file-watcher"
+          ></app-custom-select>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="Mockoon will watch environment files for external changes and prompt (or not) for reload"
+            ></app-svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="settings-storage-pretty-print"
+            formControlName="storagePrettyPrint"
+          />
+          <label class="form-check-label" for="settings-storage-pretty-print"
+            >Pretty print JSON storage files (settings and environments)</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <app-title-separator
+      heading="Telemetry"
+      icon="show_chart"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group align-items-center">
+          <div class="form-check mb-0">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="settings-enable-telemetry"
+              formControlName="enableTelemetry"
+            />
+            <label class="form-check-label" for="settings-enable-telemetry"
+              >Enable telemetry
+            </label>
+          </div>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              class="text-primary cursor-pointer"
+              ngbTooltip="Our custom telemetry system is collecting a minimal amount of information and no personal data. Requires application restart to take effect."
+              (click)="openWikiLink('faq', $event)"
+            ></app-svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-title-separator
+      heading="Environments auto start"
+      icon="play_arrow"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="start-environments-on-load"
+              formControlName="startEnvironmentsOnLoad"
+            />
+            <label class="form-check-label" for="start-environments-on-load"
+              >Start all environments on application startup
+            </label>
           </div>
         </div>
       </div>
     </div>
   </div>
+
   <div class="modal-footer">
     <button
       type="button"

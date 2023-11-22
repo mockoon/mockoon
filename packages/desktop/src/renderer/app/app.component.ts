@@ -7,7 +7,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { Observable, from } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';

@@ -7,7 +7,11 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import { Callback, Environment, Header, RouteResponse } from '@mockoon/commons';
 import { Observable, Subject } from 'rxjs';
 import {
@@ -48,7 +52,7 @@ export class HeadersListComponent implements OnInit, OnDestroy {
   @Output()
   public secondaryButtonClicked = new EventEmitter();
   public dataSubject$: Observable<RouteResponse | Environment | Callback>;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public headerNamesSearch = this.buildSearch(headerNames);
   public headerValuesSearch = this.buildSearch(headerValues);
   public deleteHeaderRequested$ = new TimedBoolean();
@@ -56,12 +60,12 @@ export class HeadersListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private store: Store
   ) {}
 
   public get headers() {
-    return this.form.get('headers') as FormArray;
+    return this.form.get('headers') as UntypedFormArray;
   }
 
   ngOnInit() {

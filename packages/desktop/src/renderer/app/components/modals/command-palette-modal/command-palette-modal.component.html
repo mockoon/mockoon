@@ -5,11 +5,9 @@
   } as data"
 >
   <div class="input-group p-2">
-    <div class="input-group-prepend">
-      <span class="input-group-text">
-        <app-svg icon="command_palette"></app-svg>
-      </span>
-    </div>
+    <span class="input-group-text">
+      <app-svg icon="command_palette"></app-svg>
+    </span>
     <input
       type="text"
       class="form-control"
@@ -18,7 +16,10 @@
       (keydown.enter)="onCommandActivate($event)"
     />
   </div>
-  <div class="list-group list-group-flush command-list" role="listbox">
+  <div
+    class="list-group list-group-flush overflow-y-scroll command-list"
+    role="listbox"
+  >
     <ng-container *ngIf="data.commands?.length !== 0; else noResult">
       <ng-container
         *ngFor="let command of data.commands; index as commandIndex"
@@ -32,7 +33,7 @@
           (click)="onCommandActivate($event, command.id)"
         >
           <span [innerHTML]="command.labelDelimited || command.label"></span
-          ><span class="ml-auto" [innerHTML]="command.shortcut$ | async"></span>
+          ><span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
         </button>
       </ng-container>
     </ng-container>

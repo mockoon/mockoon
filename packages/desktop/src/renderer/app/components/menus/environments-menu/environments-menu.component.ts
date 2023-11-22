@@ -4,7 +4,11 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup
+} from '@angular/forms';
 import { Environment, Environments } from '@mockoon/commons';
 import { Observable, Subject, merge } from 'rxjs';
 import {
@@ -41,14 +45,14 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public settings$: Observable<Settings>;
   public menuSize = Config.defaultMainMenuSize;
   public editingName = false;
-  public activeEnvironmentForm: FormGroup;
+  public activeEnvironmentForm: UntypedFormGroup;
   public dragEnabled = true;
   public logsRecording$ = this.eventsService.logsRecording$;
   public trackByUuid = trackByUuid;
   private destroy$ = new Subject<void>();
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private environmentsService: EnvironmentsService,
     private store: Store,
     private eventsService: EventsService
@@ -128,7 +132,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
    */
   private initForms() {
     this.activeEnvironmentForm = this.formBuilder.group({
-      name: new FormControl('')
+      name: new UntypedFormControl('')
     });
 
     // send new activeEnvironmentForm values to the store, one by one

@@ -9,14 +9,26 @@
         "createDefaultProgram": true
       },
       "extends": [
-        "plugin:@angular-eslint/ng-cli-compat",
-        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
         "prettier"
       ],
       "rules": {
         "no-console": "error",
         "no-shadow": "off",
+        "no-control-regex": 0,
+        "no-useless-escape": 0,
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/adjacent-overload-signatures": "off",
         "@typescript-eslint/semi": ["error", "always"],
         "@typescript-eslint/no-shadow": ["error"],
@@ -81,7 +93,9 @@
     {
       "files": "./test/**/*.ts",
       "rules": {
-        "@typescript-eslint/no-unused-expressions": "off"
+        "@typescript-eslint/no-unused-expressions": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-empty": "off"
       }
     },
     {

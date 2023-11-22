@@ -131,8 +131,8 @@ describe('Headers', () => {
 
       await routes.switchTab('HEADERS');
 
-      await navigation.assertHeaderValue('ENV_HEADERS', 'Headers 1');
-      await utils.assertElementText(routes.headersTab, 'Headers 1');
+      await navigation.assertHeaderValue('ENV_HEADERS', 'Headers\n1');
+      await utils.assertElementText(routes.headersTab, 'Headers\n1');
 
       await headersUtils.add('route-response-headers', {
         key: 'route-header',
@@ -143,7 +143,7 @@ describe('Headers', () => {
         key: 'custom-header',
         value: 'routevalue'
       });
-      await utils.assertElementText(routes.headersTab, 'Headers 3');
+      await utils.assertElementText(routes.headersTab, 'Headers\n3');
     });
 
     it('should add headers on environment', async () => {

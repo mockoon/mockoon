@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   forwardRef,
+  HostBinding,
   HostListener,
   Input,
   OnInit,
@@ -12,8 +13,8 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormControl,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl
 } from '@angular/forms';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
@@ -80,7 +81,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public items$ = new BehaviorSubject<DropdownItems>(null);
   public selectedItem$ = new BehaviorSubject<DropdownItem>(null);
   public filteredItems$: Observable<DropdownItems>;
-  public customValue = new FormControl('');
+  public customValue = new UntypedFormControl('');
   public focusedItemIndex$ = new BehaviorSubject<number>(-1);
 
   public onChange: (_: any) => void;
@@ -89,6 +90,11 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public window = window;
 
   constructor() {}
+
+  @HostBinding('class')
+  public get hostClasses() {
+    return 'overflow-hidden';
+  }
 
   @Input()
   public set items(items: DropdownItems) {

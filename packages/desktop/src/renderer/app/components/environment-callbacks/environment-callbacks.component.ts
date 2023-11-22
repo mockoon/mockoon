@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import {
   BodyTypes,
   Callback,
@@ -18,7 +18,6 @@ import {
   Observable,
   Subject,
   distinctUntilChanged,
-  distinctUntilKeyChanged,
   filter,
   from,
   map,
@@ -54,7 +53,7 @@ import { Store } from 'src/renderer/app/stores/store';
 export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public activeCallback$: Observable<Callback>;
-  public activeCallbackForm: FormGroup;
+  public activeCallbackForm: UntypedFormGroup;
   public activeTab$: Observable<CallbackTabsNameType>;
   public activeSpecTab$: Observable<CallbackSpecTabNameType>;
   public activeCallbackUsages$: Observable<CallbackUsage[]>;
@@ -62,7 +61,6 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     mimeType: string;
     supportsTemplating: boolean;
   }>;
-  public form: FormGroup;
   public focusableInputs = FocusableInputs;
   public bodyEditorConfig$: Observable<any>;
   public scrollToBottom = this.uiService.scrollToBottom;
@@ -116,7 +114,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     private uiService: UIService,
     private store: Store,
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialogsService: DialogsService
   ) {}
 
@@ -278,6 +276,19 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
               controlName === 'method' &&
               this.bodySupportingMethods.indexOf(newValue as Methods) < 0
             ) {
+              this.activeCallbackForm
+                .get('bodyType')
+                .setValue(BodyTypes.INLINE, { emitEvent: false });
+              this.activeCallbackForm
+                .get('body')
+                .setValue('', { emitEvent: false });
+              this.activeCallbackForm
+                .get('filePath')
+                .setValue('', { emitEvent: false });
+              this.activeCallbackForm
+                .get('databucketID')
+                .setValue('', { emitEvent: false });
+
               return {
                 [controlName]: newValue,
                 body: '',
@@ -309,7 +320,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     this.activeCallback$
       .pipe(
         filter((cb) => !!cb),
-        distinctUntilKeyChanged('uuid'),
+        this.store.distinctUUIDOrForce(),
         takeUntil(this.destroy$)
       )
       .subscribe((activeCallback) => {
@@ -321,12 +332,10 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
             documentation: activeCallback.documentation,
             filePath: activeCallback.filePath,
             headers: activeCallback.headers,
-            id: activeCallback.id,
             method: activeCallback.method,
             name: activeCallback.name,
             sendFileAsBody: activeCallback.sendFileAsBody,
-            uri: activeCallback.uri,
-            uuid: activeCallback.uuid
+            uri: activeCallback.uri
           },
           { emitEvent: false }
         );

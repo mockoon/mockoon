@@ -5,7 +5,7 @@
 >
   <div class="routes-menu d-flex flex-column h-100">
     <div class="d-flex">
-      <div class="d-flex w-100 pt-2 pb-2 align-items-center">
+      <div class="d-flex w-100 py-2 align-items-center">
         <div ngbDropdown id="routes-add-dropdown">
           <button
             class="btn btn-link dropdown-toggle dropdown-toggle-icon"
@@ -20,16 +20,16 @@
             ngbDropdownMenu
           >
             <button class="btn dropdown-item" (click)="addCRUDRouteTemplate()">
-              <app-svg icon="magic" class="mr-1"></app-svg> From template
+              <app-svg icon="magic" class="me-1"></app-svg> From template
             </button>
             <button class="btn dropdown-item" (click)="addCRUDRoute()">
-              <app-svg icon="endpoints" class="mr-1"></app-svg> CRUD route
+              <app-svg icon="endpoints" class="me-1"></app-svg> CRUD route
             </button>
             <button class="btn dropdown-item" (click)="addHTTPRoute()">
-              <app-svg icon="endpoint" class="mr-1"></app-svg> HTTP route
+              <app-svg icon="endpoint" class="me-1"></app-svg> HTTP route
             </button>
             <button class="btn dropdown-item" (click)="addFolder()">
-              <app-svg icon="folder" class="mr-1"></app-svg> Folder
+              <app-svg icon="folder" class="me-1"></app-svg> Folder
             </button>
           </div>
         </div>
@@ -47,7 +47,6 @@
                 (os === 'darwin' ? 'Cmd' : 'Ctrl') +
                 '+Shift+F)'
               "
-              triggers="hover"
               [appFocusOnEvent]="focusableInputs.ROUTE_FILTER"
             />
             <button
@@ -157,13 +156,13 @@
           <div>
             <app-svg
               [icon]="folder.collapsed ? 'folder' : 'folder_open'"
-              class="pr-2"
+              class="pe-2"
             ></app-svg>
           </div>
           <app-editable-element
             *ngIf="settings$ | async as settings"
             [ngClass]="{
-              ellipsis: settings.truncateRouteName,
+              'text-truncate': settings.truncateRouteName,
               'text-break': !settings.truncateRouteName
             }"
             [text]="folder.name"
@@ -249,14 +248,14 @@
               *ngIf="
                 data.duplicatedRoutes[activeEnvironment.uuid]?.has(route.uuid)
               "
-              class="text-warning pr-2 d-flex align-items-center"
+              class="text-warning pe-2 d-flex align-items-center"
               ngbTooltip="Route is duplicated (same endpoint and method)"
             >
               <app-svg icon="warning"></app-svg>
             </div>
             <div
               *ngIf="route.responseMode === ResponseMode.FALLBACK"
-              class="text-primary pr-2 d-flex align-items-center"
+              class="text-primary pe-2 d-flex align-items-center"
               ngbTooltip="Fallback mode activated"
             >
               <app-svg icon="low_priority"></app-svg>
@@ -265,20 +264,20 @@
               *ngIf="settings$ | async as settings"
               class="nav-link-label"
               [ngClass]="{
-                ellipsis: settings.truncateRouteName,
+                'text-truncate': settings.truncateRouteName,
                 'text-break': !settings.truncateRouteName
               }"
             >
               <div
                 [ngClass]="{
-                  ellipsis: settings.truncateRouteName,
+                  'text-truncate': settings.truncateRouteName,
                   'text-break': !settings.truncateRouteName
                 }"
               >
                 /{{ route.endpoint }}
               </div>
             </div>
-            <div class="ml-auto pl-2 d-flex align-items-center">
+            <div class="ms-auto ps-2 d-flex align-items-center">
               <span
                 class="badge badge-default route-badge-{{
                   route.type === 'crud' ? 'crud' : route.method
@@ -290,7 +289,7 @@
             </div>
           </div>
           <div>
-            <div class="nav-link-subtitle ellipsis pt-2">
+            <div class="nav-link-subtitle text-truncate pt-2">
               {{ route.documentation }}
             </div>
           </div>

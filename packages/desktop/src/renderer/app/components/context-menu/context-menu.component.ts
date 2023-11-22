@@ -18,7 +18,6 @@ import { EventsService } from 'src/renderer/app/services/events.service';
 @Component({
   selector: 'app-context-menu',
   templateUrl: './context-menu.component.html',
-  styleUrls: ['./context-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContextMenuComponent implements OnInit {

@@ -13,7 +13,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { RandomInt } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -89,11 +89,11 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   public demo$: Observable<any>;
   public user$: Observable<User>;
   public generatingTemplate$ = this.templatesService.generatingTemplate$;
-  public templatesFilter = new FormControl('');
-  public prompt = new FormControl('');
-  public demoPrompt = new FormControl('');
-  public generatedTemplateBody = new FormControl('');
-  public demoGeneratedTemplateBody = new FormControl('');
+  public templatesFilter = new UntypedFormControl('');
+  public prompt = new UntypedFormControl('');
+  public demoPrompt = new UntypedFormControl('');
+  public generatedTemplateBody = new UntypedFormControl('');
+  public demoGeneratedTemplateBody = new UntypedFormControl('');
   public generateOptions = this.formBuilder.group({
     json: true,
     list: true,
@@ -146,7 +146,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     private templatesService: TemplatesService,
     private environmentsService: EnvironmentsService,
     private store: Store,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private uiService: UIService,
     @Inject(DOCUMENT) private document: Document
   ) {}

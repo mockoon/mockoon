@@ -4,12 +4,12 @@ import { generateUUID } from '@mockoon/commons';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
 import {
   BehaviorSubject,
+  Observable,
+  Subject,
   combineLatest,
   from,
-  Observable,
   of,
   race,
-  Subject,
   timer
 } from 'rxjs';
 import {
@@ -108,7 +108,7 @@ export class TelemetryService {
           );
         }
       ),
-      switchMap((v) => {
+      switchMap(() => {
         const environments = this.store.get('environments');
 
         return this.httpClient

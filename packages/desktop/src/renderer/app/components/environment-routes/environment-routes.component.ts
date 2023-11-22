@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import {
   Environment,
   FileExtensionsWithTemplating,
@@ -84,8 +84,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeTab$: Observable<TabsNameType>;
   public deleteCurrentRouteResponseRequested$ = new TimedBoolean();
   public bodyEditorConfig$: Observable<any>;
-  public activeRouteForm: FormGroup;
-  public activeRouteResponseForm: FormGroup;
+  public activeRouteForm: UntypedFormGroup;
+  public activeRouteResponseForm: UntypedFormGroup;
   public scrollToBottom = this.uiService.scrollToBottom;
   public databuckets$: Observable<DropdownItems>;
   public methods: DropdownItems = [
@@ -227,7 +227,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   constructor(
     private uiService: UIService,
     private store: Store,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialogsService: DialogsService,
     private environmentsService: EnvironmentsService
   ) {}
