@@ -75,7 +75,7 @@ class HeadersUtils {
     }
 
     for (const key in values) {
-      expect(headers[key.toLowerCase()]).toEqual(values[key]);
+      expect(headers[key.toLowerCase()]).toEqual(values[key].toLowerCase());
     }
   }
 
