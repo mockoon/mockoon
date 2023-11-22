@@ -1,6 +1,6 @@
 <ng-container *ngIf="menuState$ | async as menuState">
   <div
-    class="dropdown-menu show"
+    class="context-menu dropdown-menu show"
     *ngIf="menuState.show"
     [ngStyle]="menuState.position"
     (mouseleave)="mouseLeave()"
@@ -8,7 +8,7 @@
   >
     <div
       *ngFor="let item of menuState.items; let itemIndex = index"
-      class="dropdown-item"
+      class="context-menu-item dropdown-item"
       [ngClass]="{ 'is-separator': item.separator, disabled: item.disabled }"
       (click)="action(item, $event)"
     >
