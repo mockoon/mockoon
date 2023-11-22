@@ -63,11 +63,6 @@ class Http {
           expect(response.body).toContain(
             (httpCall.testedResponse.body as { contains: string }).contains
           );
-        } else if (
-          propertyName === 'cert' &&
-          typeof httpCall.testedResponse.cert === 'object'
-        ) {
-          expect(response.cert).toMatchObject(httpCall.testedResponse.cert);
         } else {
           expect(response[propertyName]).toEqual(
             httpCall.testedResponse[propertyName]
@@ -129,10 +124,7 @@ class Http {
               status: response.statusCode,
               statusMessage: response.statusMessage,
               headers: response.headers,
-              body,
-              cert: (response.socket as any).getPeerCertificate
-                ? (response.socket as any).getPeerCertificate()
-                : null
+              body
             })
           );
         }
