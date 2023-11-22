@@ -6,14 +6,13 @@ import {
   forwardRef,
   HostListener,
   Input,
-  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormControl,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl
 } from '@angular/forms';
 
 /**
@@ -33,7 +32,7 @@ import {
     }
   ]
 })
-export class EditableElementComponent implements OnInit, ControlValueAccessor {
+export class EditableElementComponent implements ControlValueAccessor {
   /**
    * Provide a complementary condition used to allow edition
    */
@@ -48,10 +47,8 @@ export class EditableElementComponent implements OnInit, ControlValueAccessor {
   public onChange: (_: any) => void;
   public onTouched: () => void;
   public edit = false;
-  public data = new FormControl('');
+  public data = new UntypedFormControl('');
   public _text: string;
-
-  constructor() {}
 
   @Input()
   public set text(value: string) {
@@ -66,8 +63,6 @@ export class EditableElementComponent implements OnInit, ControlValueAccessor {
       this.toggleEdit(event);
     }
   }
-
-  ngOnInit() {}
 
   /**
    * Handle reactive form writing a value to the model

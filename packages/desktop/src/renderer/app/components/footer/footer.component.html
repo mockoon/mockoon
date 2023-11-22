@@ -1,7 +1,7 @@
 <div class="footer d-flex">
-  <div class="d-flex mr-auto">
+  <div class="d-flex me-auto">
     <div
-      class="footer-item with-border-right d-flex align-items-center px-2"
+      class="footer-item with-border-end d-flex align-items-center px-2"
       *ngIf="updateAvailable$ | async as updateVersion"
     >
       <p class="mb-0">
@@ -11,7 +11,7 @@
         >
       </p>
       <button
-        class="btn btn-custom btn-xs ml-2 text-success"
+        class="btn btn-custom btn-xs ms-2 text-success"
         (click)="applyUpdate()"
       >
         {{ (platform$ | async) === 'win32' ? 'Install' : 'Download' }}
@@ -26,10 +26,10 @@
   <ng-container *ngIf="uiState$ | async as uiState">
     <div
       *ngIf="uiState.closing || uiState.saving"
-      class="footer-item with-border-left d-flex align-items-center px-2"
+      class="footer-item with-border-start d-flex align-items-center px-2"
     >
       <div class="footer-save animation-flash">
-        <app-svg icon="save" class="mr-1"></app-svg>
+        <app-svg icon="save" class="me-1"></app-svg>
         <ng-container *ngIf="uiState.closing">Shutting down...</ng-container>
         <ng-container *ngIf="uiState.saving">Saving...</ng-container>
       </div>
@@ -39,14 +39,14 @@
   <ng-container *ngIf="generatingTemplate$ | async as generatingTemplate">
     <div
       *ngIf="generatingTemplate !== 'NONE'"
-      class="footer-item with-border-left d-flex align-items-center px-2"
+      class="footer-item with-border-start d-flex align-items-center px-2"
     >
       <button
         *ngIf="generatingTemplate === 'DONE'"
         class="btn btn-custom btn-xs text-success"
         (click)="openTemplateModal()"
       >
-        <app-svg icon="magic" size="12" class="mr-1"></app-svg>
+        <app-svg icon="magic" size="12" class="me-1"></app-svg>
         Template generated
       </button>
       <button
@@ -54,7 +54,7 @@
         class="btn btn-custom btn-xs text-warning"
         (click)="openTemplateModal()"
       >
-        <app-svg icon="spinner" size="12" class="mr-1"></app-svg>
+        <app-svg icon="spinner" size="12" class="me-1"></app-svg>
         Generating template
       </button>
     </div>

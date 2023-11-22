@@ -618,7 +618,7 @@ describe('Rules tabs', () => {
 
     // this is needed for the tab re-render to complete
     await browser.pause(100);
-    await utils.assertElementText(routes.rulesTab, 'Rules 1');
+    await utils.assertElementText(routes.rulesTab, 'Rules\n1');
 
     await routes.addResponseRule({
       modifier: 'test',
@@ -630,7 +630,7 @@ describe('Rules tabs', () => {
 
     // this is needed for the tab re-render to complete
     await browser.pause(100);
-    await utils.assertElementText(routes.rulesTab, 'Rules 2');
+    await utils.assertElementText(routes.rulesTab, 'Rules\n2');
 
     await routes.addRouteResponse();
     await routes.assertCountRouteResponses(4);
@@ -650,7 +650,7 @@ describe('Rules tabs', () => {
 
     // this is needed for the tab re-render to complete
     await browser.pause(100);
-    await utils.assertElementText(routes.rulesTab, 'Rules 1');
+    await utils.assertElementText(routes.rulesTab, 'Rules\n1');
   });
 });
 

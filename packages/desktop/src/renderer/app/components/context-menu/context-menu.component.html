@@ -1,6 +1,6 @@
 <ng-container *ngIf="menuState$ | async as menuState">
   <div
-    class="context-menu"
+    class="context-menu dropdown-menu show"
     *ngIf="menuState.show"
     [ngStyle]="menuState.position"
     (mouseleave)="mouseLeave()"
@@ -8,16 +8,16 @@
   >
     <div
       *ngFor="let item of menuState.items; let itemIndex = index"
-      class="context-menu-item"
+      class="context-menu-item dropdown-item"
       [ngClass]="{ 'is-separator': item.separator, disabled: item.disabled }"
       (click)="action(item, $event)"
     >
       <span *ngIf="!item.needConfirm">
-        <app-svg class="pr-2" [icon]="item.icon"></app-svg>
+        <app-svg class="pe-2" [icon]="item.icon"></app-svg>
         {{ item.label }}
       </span>
       <span *ngIf="item.needConfirm" [ngClass]="item.confirmColor">
-        <app-svg class="pr-2" [icon]="item.confirm.icon"></app-svg>
+        <app-svg class="pe-2" [icon]="item.confirm.icon"></app-svg>
         {{ item.confirm.label }}
       </span>
     </div>

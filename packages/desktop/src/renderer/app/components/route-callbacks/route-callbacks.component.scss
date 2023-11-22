@@ -1,6 +1,6 @@
 @import 'src/renderer/styles/bootstrap-variables.scss';
 
-.route-response-callback {
+.callback-item {
   display: grid;
-  grid-template-columns: 9fr 2fr 1fr;
+  grid-template-columns: 10fr min-content 2fr min-content min-content min-content;
 }

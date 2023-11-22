@@ -54,11 +54,11 @@
             [ngClass]="{ active: data.activeView === tab.id }"
             (click)="setActiveView(tab.id)"
           >
-            <app-svg [icon]="tab.icon" class="pr-2"></app-svg>
+            <app-svg [icon]="tab.icon" class="pe-2"></app-svg>
             {{ tab.title }}
             <span
               *ngIf="tab.count$ | async as tabCount"
-              class="badge badge-hollow font-weight-bold ml-2"
+              class="badge badge-hollow fw-bold ms-2"
             >
               {{ tabCount }}
             </span>
@@ -67,7 +67,7 @@
       </ul>
     </div>
 
-    <div class="ml-auto">
+    <div class="ms-auto">
       <button
         type="button"
         class="btn btn-link btn-icon"
@@ -82,7 +82,7 @@
 
     <div ngbDropdown placement="bottom-right" #dropdownElement>
       <button
-        class="btn dropdown-toggle dropdown-toggle-icon mr-1"
+        class="btn dropdown-toggle dropdown-toggle-icon me-1"
         type="button"
         ngbDropdownToggle
       >
@@ -98,7 +98,7 @@
                 {{ data?.user?.email }}
               </p>
               <div class="d-flex align-items-center">
-                <div class="badge badge-warning">
+                <div class="badge text-bg-warning">
                   {{ planLabels[data.user?.plan] }} plan
                 </div>
                 <button
@@ -120,18 +120,18 @@
           </div>
           <button class="btn dropdown-item" (click)="account()">
             My account
-            <app-svg icon="open_in_new" class="pl-2"></app-svg>
+            <app-svg icon="open_in_new" class="ps-2"></app-svg>
           </button>
           <button class="btn dropdown-item" (click)="logout()">Log out</button>
         </ng-container>
         <ng-container *ngIf="!data.user">
           <button class="btn dropdown-item" (click)="login()">
             Log in
-            <app-svg icon="open_in_new" class="pl-2"></app-svg>
+            <app-svg icon="open_in_new" class="ps-2"></app-svg>
           </button>
           <button class="btn dropdown-item" (click)="signup()">
             Sign up
-            <app-svg icon="open_in_new" class="pl-2"></app-svg>
+            <app-svg icon="open_in_new" class="ps-2"></app-svg>
           </button>
         </ng-container>
       </div>

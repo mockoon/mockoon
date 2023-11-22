@@ -119,7 +119,7 @@ export class TemplatesService {
                 })
               );
             }),
-            catchError((error) => {
+            catchError(() => {
               this.generatingTemplate$.next('NONE');
 
               this.toastsService.addToast(

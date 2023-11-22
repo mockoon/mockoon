@@ -72,7 +72,7 @@ export const DesktopMessages: {
     log: false,
     toastType: 'error'
   }),
-  HOSTNAME_UNAVAILABLE: (messageParams) => ({
+  HOSTNAME_UNAVAILABLE: () => ({
     message: 'Provided hostname/address is not available',
     showToast: true,
     log: false,
@@ -216,6 +216,14 @@ export const DesktopMessages: {
     message: 'First load, creating demo environment',
     log: true,
     showToast: false
+  }),
+  ENVIRONMENT_INVALID: () => ({
+    message: 'This content does not seem to be a valid Mockoon environment',
+    log: true,
+    loggerMessage:
+      'This content does not seem to be a valid Mockoon environment',
+    showToast: true,
+    toastType: 'warning'
   }),
   ENVIRONMENT_MORE_RECENT_VERSION: (messageParams) => ({
     message: `Environment "${

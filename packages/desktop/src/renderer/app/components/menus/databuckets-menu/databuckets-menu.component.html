@@ -1,7 +1,7 @@
 <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
   <div class="databuckets-menu d-flex flex-column h-100">
     <div class="d-flex">
-      <ul class="nav d-flex w-100 pt-2 pb-2 align-items-center">
+      <ul class="nav d-flex w-100 py-2 align-items-center">
         <li class="nav-item">
           <a
             class="nav-link text-primary"
@@ -24,7 +24,6 @@
                 (os === 'darwin' ? 'Cmd' : 'Ctrl') +
                 '+Shift+F)'
               "
-              triggers="hover"
               [appFocusOnEvent]="focusableInputs.DATABUCKET_FILTER"
             />
             <button
@@ -74,13 +73,13 @@
               *ngIf="settings$ | async as settings"
               class="databucket-path"
               [ngClass]="{
-                ellipsis: settings.truncateRouteName,
+                'text-truncate': settings.truncateRouteName,
                 'text-break': !settings.truncateRouteName
               }"
             >
               {{ environmentDatabucket.name }}
             </div>
-            <div class="nav-link-subtitle ellipsis">
+            <div class="nav-link-subtitle text-truncate">
               {{ environmentDatabucket.documentation }}
             </div>
           </a>

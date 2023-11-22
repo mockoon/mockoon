@@ -1,7 +1,4 @@
-<div
-  class="btn-group btn-group-toggle btn-group-sm h-100"
-  data-toggle="buttons"
->
+<div class="btn-group btn-group-sm h-100" data-bs-toggle="buttons" role="group">
   <button *ngIf="label" class="btn btn-custom px-3" disabled>
     {{ label }}
   </button>
@@ -11,7 +8,7 @@
     <ng-container *ngIf="items.length === 1">
       <label
         id="{{ prefix }}-{{ item.label | uppercase }}"
-        class="btn btn-custom"
+        class="btn btn-custom px-2 d-flex align-items-center"
         [ngClass]="{
           'btn-primary': control.value === true,
           active: control.value === true
@@ -26,6 +23,7 @@
         "
       >
         <input
+          class="btn-check"
           type="checkbox"
           [formControl]="control"
           autocomplete="off"
@@ -55,6 +53,7 @@
         (click)="itemClick(item, $event)"
       >
         <input
+          class="btn-check"
           type="radio"
           [formControl]="control"
           [value]="item.value"

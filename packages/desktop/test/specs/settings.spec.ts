@@ -58,10 +58,10 @@ describe('Settings', () => {
       await navigation.switchView('ENV_ROUTES');
 
       await $(
-        '.routes-menu .nav.menu-list .nav-item:nth-child(2) .nav-link-label.ellipsis'
+        '.routes-menu .nav.menu-list .nav-item:nth-child(2) .nav-link-label.text-truncate'
       ).waitForExist();
       await $(
-        '.environments-menu .nav.menu-list .nav-item:nth-child(1) .nav-link-subtitle.ellipsis'
+        '.environments-menu .nav.menu-list .nav-item:nth-child(1) .nav-link-subtitle.text-truncate'
       ).waitForExist();
     });
 

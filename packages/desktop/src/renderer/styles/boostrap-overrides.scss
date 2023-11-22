@@ -1,6 +1,6 @@
 /* Bootstrap imports */
 @import './bootstrap-variables.scss';
-@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap';
 
 /* Bootstrap customizations */
 .nav {
@@ -66,11 +66,7 @@
   }
 }
 
-.custom-control-label::after {
-  cursor: pointer;
-}
-
-.clickable {
+.form-label::after {
   cursor: pointer;
 }
 
@@ -88,18 +84,12 @@
     color: $text-muted;
   }
 }
+
 .input-group-text {
   color: $gray-400;
 }
 label {
   color: $gray-400;
-}
-.input-group-prepend,
-.input-group-append {
-  .btn {
-    // remove input group btn big padding 8/16px (do not know where it comes from)
-    padding: 1px 6px;
-  }
 }
 
 .badge {
@@ -140,31 +130,41 @@ label {
   }
 }
 
-.btn-custom {
-  @include button-variant(
-    $custom-gray,
-    transparent,
-    $custom-gray,
-    $gray-800,
-    $custom-gray,
-    $gray-800
-  );
-  color: $gray-500;
-  border-width: $btn-border-width;
-
-  &:hover,
-  &.dropdown-toggle {
-    color: $gray-100;
-  }
-
-  &:focus,
-  &.focus,
-  &:not(:disabled):not(.disabled):active:focus,
-  &:not(:disabled):not(.disabled).active:focus,
-  .show > &.dropdown-toggle:focus {
-    color: $gray-500;
+.btn.btn-link,
+.btn.btn-icon {
+  &:focus-visible {
+    outline: 0;
     box-shadow: none;
   }
+}
+
+.btn-custom {
+  @include button-variant(
+    // bg color
+    $custom-gray,
+    // border color
+    $custom-gray,
+    // color
+    $gray-200,
+    // hover-background
+    $custom-gray,
+    // hover border
+    $gray-800,
+    // hover-color
+    $gray-100,
+    // active-background
+    $custom-gray,
+    // active-border
+    $gray-800,
+    // active-color
+    $gray-100,
+    // disabled-background
+    $custom-gray,
+    // disabled-border
+    $custom-gray,
+    // disabled-color
+    $gray-500
+  );
 }
 
 .btn-xs {
@@ -173,41 +173,12 @@ label {
     $input-btn-padding-y-xs,
     $input-btn-padding-x-xs,
     $font-size-xs,
-    $input-btn-line-height-xs,
     $btn-border-radius-xs
-  );
-}
-
-.btn-xxs {
-  // line-height: ensure proper height of button next to small input
-  @include button-size(
-    $input-btn-padding-y-xxs,
-    $input-btn-padding-x-xxs,
-    $font-size-xxs,
-    $input-btn-line-height-xxs,
-    $btn-border-radius-xxs
   );
 }
 
 .p-btn {
   padding: $input-btn-padding-y $input-btn-padding-x;
-}
-
-.custom-select {
-  &:focus {
-    color: $gray-200;
-  }
-
-  -webkit-appearance: none;
-}
-
-.disabled-color {
-  color: $gray-500;
-}
-
-// fix bootstrap flexfill which is incompatible with ace editor
-.flex-fill {
-  flex: 1 !important;
 }
 
 .mh0 {
@@ -269,11 +240,6 @@ small,
 .small {
   padding: 0.2rem 0.4rem;
   font-size: 0.8rem;
-}
-
-.text-break {
-  word-break: break-all !important;
-  word-wrap: break-word !important;
 }
 
 // inline code

@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { DataBucket, Environment } from '@mockoon/commons';
 import { Observable, Subject, from } from 'rxjs';
 import {
@@ -44,7 +44,7 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
   public databucketList$: Observable<DataBucket[]>;
   public activeDatabucket$: Observable<DataBucket>;
   public databucketsFilter$: Observable<string>;
-  public databucketsFilter: FormControl;
+  public databucketsFilter: UntypedFormControl;
   public focusableInputs = FocusableInputs;
   public os$: Observable<string>;
   public menuSize = Config.defaultSecondaryMenuSize;
@@ -55,7 +55,7 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
     private environmentsService: EnvironmentsService,
     private store: Store,
     private eventsService: EventsService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {}
 
   @HostListener('keydown', ['$event'])

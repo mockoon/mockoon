@@ -73,7 +73,7 @@ class Settings {
   }
 
   private getSettingCheckbox(settingName: SettingNames) {
-    return $(`.modal-dialog input#${settingName} ~ .custom-control-label`);
+    return $(`.modal-dialog input#${settingName} ~ .form-check-label`);
   }
 }
 

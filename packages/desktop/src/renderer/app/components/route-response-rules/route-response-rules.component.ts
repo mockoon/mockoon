@@ -7,7 +7,11 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   BuildResponseRule,
   ResponseRule,
@@ -37,6 +41,7 @@ import { moveItemToTargetIndex } from 'src/renderer/app/stores/reducer-utils';
 @Component({
   selector: 'app-route-response-rules',
   templateUrl: 'route-response-rules.component.html',
+  styleUrls: ['./route-response-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {
@@ -47,7 +52,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Output()
   public ruleAdded: EventEmitter<any> = new EventEmitter();
   public routeResponse$: Observable<RouteResponse>;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;
   public responseRuleTargets: DropdownItems<ResponseRuleTargets> = [
     { value: 'body', label: 'Body' },
@@ -103,11 +108,11 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {}
 
   public get rules() {
-    return this.form.get('rules') as FormArray;
+    return this.form.get('rules') as UntypedFormArray;
   }
 
   ngOnInit() {

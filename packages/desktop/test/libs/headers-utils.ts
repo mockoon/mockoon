@@ -75,9 +75,9 @@ class HeadersUtils {
     }
 
     for (const key in values) {
-      if (Object.prototype.hasOwnProperty(key)) {
-        expect(headers[key.toLowerCase()]).toEqual(values[key]);
-      }
+      expect(headers[key.toLowerCase()]).toEqual(
+        values[key] ? values[key].toLowerCase() : undefined
+      );
     }
   }
 

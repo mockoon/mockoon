@@ -1,7 +1,7 @@
+import * as express from 'express';
 import { Server } from 'http';
 import { brotliCompress, deflate, gzip } from 'zlib';
 
-const express = require('express');
 const compressionLibs = { gzip, deflate, br: brotliCompress };
 
 class FakeServer {

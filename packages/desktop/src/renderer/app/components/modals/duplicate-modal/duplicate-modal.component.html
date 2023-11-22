@@ -27,8 +27,8 @@
         type="button"
         (click)="chooseTargetEnvironment(environment, entityInformation)"
       >
-        <div class="ellipsis">{{ environment.name }}</div>
-        <div class="nav-link-subtitle ellipsis">
+        <div class="text-truncate">{{ environment.name }}</div>
+        <div class="nav-link-subtitle text-truncate">
           {{ environment.hostname || 'localhost' }}:{{ environment.port }}/{{
             environment.endpointPrefix
           }}

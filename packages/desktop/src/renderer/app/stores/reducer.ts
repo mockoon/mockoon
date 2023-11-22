@@ -443,9 +443,6 @@ export const environmentReducer = (
             return environment;
           });
         }
-        const activeRouteResponse = activeRoute.responses.length
-          ? activeRoute.responses[0]
-          : null;
 
         newState = {
           ...state,
@@ -1506,16 +1503,6 @@ export const environmentReducer = (
 
     case ActionTypes.SET_ACTIVE_ROUTE_RESPONSE: {
       if (action.routeResponseUUID !== state.activeRouteResponseUUID) {
-        const activeEnvironment = state.environments.find(
-          (environment) => environment.uuid === state.activeEnvironmentUUID
-        );
-        const activeRoute = activeEnvironment.routes.find(
-          (route) => route.uuid === state.activeRouteUUID
-        );
-        const activeRouteResponse = activeRoute.responses.find(
-          (routeResponse) => routeResponse.uuid === action.routeResponseUUID
-        );
-
         newState = {
           ...state,
           activeRouteResponseUUID: action.routeResponseUUID

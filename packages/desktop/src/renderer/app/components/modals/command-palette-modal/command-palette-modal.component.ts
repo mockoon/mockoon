@@ -9,7 +9,7 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import {
   BehaviorSubject,
   Observable,
@@ -33,7 +33,6 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 @Component({
   selector: 'app-command-palette-modal',
   templateUrl: './command-palette-modal.component.html',
-  styleUrls: ['command-palette-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommandPaletteModalComponent implements OnInit, OnDestroy {
@@ -41,7 +40,7 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
   public commandElements: QueryList<ElementRef<HTMLButtonElement>>;
   public focusableInputs = FocusableInputs;
   public commands$: Observable<Commands>;
-  public searchControl = new FormControl('');
+  public searchControl = new UntypedFormControl('');
   public focusedItemIndex$ = new BehaviorSubject<number>(0);
   private destroy$ = new Subject<void>();
   private commands: Commands = [];
