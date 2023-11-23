@@ -1,7 +1,8 @@
 <ng-container
   *ngIf="{
     duplicatedRoutes: duplicatedRoutes$ | async,
-    disabledRoutes: disabledRoutes$ | async
+    disabledRoutes: disabledRoutes$ | async,
+    collapsedFolders: collapsedFolders$ | async
   } as data"
 >
   <div class="routes-menu d-flex flex-column h-100">
@@ -156,7 +157,11 @@
         <div class="d-flex">
           <div>
             <app-svg
-              [icon]="folder.collapsed ? 'folder' : 'folder_open'"
+              [icon]="
+                data.collapsedFolders.includes(folder.uuid)
+                  ? 'folder'
+                  : 'folder_open'
+              "
               class="pe-2"
             ></app-svg>
           </div>
@@ -175,7 +180,11 @@
     </li>
 
     <!-- Display sub items if folder is not collapsed or if a search is in progress -->
-    <ng-container *ngIf="!folder.collapsed || (routesFilter$ | async)">
+    <ng-container
+      *ngIf="
+        !data.collapsedFolders.includes(folder.uuid) || (routesFilter$ | async)
+      "
+    >
       <li
         *ngIf="folder.children.length === 0"
         class="nav-item"

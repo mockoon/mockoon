@@ -1,6 +1,6 @@
 {
   "uuid": "5f5ec26d-9a10-4b34-95a8-a9e4dff5ca41",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "Environment logs 2",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "get",
       "endpoint": "endpoint/:param1",
       "documentation": "Test endpoint",
-      "enabled": true,
       "responses": [
         {
           "uuid": "399508f1-304d-4dab-a140-5d9a04695509",

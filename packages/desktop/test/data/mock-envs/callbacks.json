@@ -1,6 +1,6 @@
 {
   "uuid": "8a3cc37b-0993-463b-9f30-b306a13e50de",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "callbacks",
   "endpointPrefix": "",
   "latency": 0,
@@ -32,7 +32,6 @@
           "crudKey": "id"
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -62,7 +61,6 @@
           "crudKey": "id"
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -92,7 +90,6 @@
           "crudKey": "id"
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     }

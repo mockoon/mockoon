@@ -14,8 +14,6 @@ import {
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
-import { FolderProperties } from 'src/renderer/app/models/folder.model';
-import { SettingsProperties } from 'src/renderer/app/models/settings.model';
 import {
   EnvironmentLogsTabsNameType,
   EnvironmentStatusProperties,
@@ -28,6 +26,7 @@ import { Toast } from 'src/renderer/app/models/toasts.model';
 import { DropAction } from 'src/renderer/app/models/ui.model';
 import { User } from 'src/renderer/app/models/user.model';
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
+import { Settings } from 'src/shared/models/settings.model';
 
 export const enum ActionTypes {
   UPDATE_USER = 'UPDATE_USER',
@@ -393,7 +392,7 @@ export const removeFolderAction = (folderUUID: string) =>
  */
 export const updateFolderAction = (
   folderUUID: string,
-  properties: FolderProperties
+  properties: Partial<Folder>
 ) =>
   ({
     type: ActionTypes.UPDATE_FOLDER,
@@ -716,7 +715,7 @@ export const removeToastAction = (toastUUID: string) =>
  *
  * @param properties - properties to update
  */
-export const updateSettingsAction = (properties: SettingsProperties) =>
+export const updateSettingsAction = (properties: Partial<Settings>) =>
   ({
     type: ActionTypes.UPDATE_SETTINGS,
     properties

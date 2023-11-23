@@ -21,6 +21,7 @@ export type Settings = {
   lastChangelog: string;
   environments: EnvironmentDescriptor[];
   disabledRoutes: { [environmentUuid in string]: string[] };
+  collapsedFolders: { [environmentUuid in string]: string[] };
   enableTelemetry: boolean;
   storagePrettyPrint: boolean;
   fileWatcherEnabled: FileWatcherOptions;

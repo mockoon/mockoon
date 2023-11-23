@@ -61,6 +61,7 @@ class Environments {
   ): Promise<void> {
     await dialogs.open(resolve(`./tmp/storage/${environmentName}.json`));
     await this.openBtn.click();
+    await utils.closeTooltip();
 
     if (assertActive) {
       const activeEnvironment = await this.activeEnvironmentMenuEntry;
@@ -93,6 +94,7 @@ class Environments {
 
   public async start(): Promise<void> {
     await this.startBtn.click();
+    await utils.closeTooltip();
     await this.runningEnvironmentMenuEntry.waitForExist();
   }
 

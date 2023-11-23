@@ -413,35 +413,19 @@ export const environmentReducer = (
         const activeRoute = activeEnvironment.routes.find(
           (route) => route.uuid === action.routeUUID
         );
-        const foldersUUIDHierarchy = findRouteFolderHierarchy(
+        const foldersUuidHierarchy = findRouteFolderHierarchy(
           action.routeUUID,
           activeEnvironment
         );
-        let newEnvironments = state.environments;
+        let newCollapsedFolders = state.settings.collapsedFolders;
 
         // uncollapse folders in hierarchy if some are collapsed (selecting a route in a collapsed folder is only possible after a search)
-        if (foldersUUIDHierarchy.length > 0) {
-          newEnvironments = state.environments.map((environment) => {
-            if (environment.uuid === state.activeEnvironmentUUID) {
-              const newFolders = environment.folders.map((folder) => {
-                if (foldersUUIDHierarchy.includes(folder.uuid)) {
-                  return {
-                    ...folder,
-                    collapsed: false
-                  };
-                }
+        if (foldersUuidHierarchy.length > 0) {
+          newCollapsedFolders = { ...state.settings.collapsedFolders };
 
-                return folder;
-              });
-
-              return {
-                ...environment,
-                folders: newFolders
-              };
-            }
-
-            return environment;
-          });
+          newCollapsedFolders[activeEnvironment.uuid] = newCollapsedFolders[
+            activeEnvironment.uuid
+          ].filter((folderUuid) => !foldersUuidHierarchy.includes(folderUuid));
         }
 
         newState = {
@@ -452,7 +436,10 @@ export const environmentReducer = (
             : null,
           activeTab: 'RESPONSE',
           activeView: 'ENV_ROUTES',
-          environments: newEnvironments
+          settings: {
+            ...state.settings,
+            collapsedFolders: newCollapsedFolders
+          }
         };
         break;
       }

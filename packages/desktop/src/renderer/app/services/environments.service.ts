@@ -16,6 +16,7 @@ import {
   DataBucket,
   Environment,
   EnvironmentDefault,
+  Folder,
   generateUUID,
   Header,
   HighestMigrationId,
@@ -67,7 +68,6 @@ import {
 } from 'src/renderer/app/models/callback.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
-import { FolderProperties } from 'src/renderer/app/models/folder.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
   EnvironmentLogsTabsNameType,
@@ -669,16 +669,53 @@ export class EnvironmentsService extends Logger {
   /**
    * Update a folder and save it in the store
    */
-  public updateFolder(folderUUID: string, folderProperties: FolderProperties) {
-    this.store.update(updateFolderAction(folderUUID, folderProperties));
+  public updateFolder(folderUuid: string, folderProperties: Partial<Folder>) {
+    this.store.update(updateFolderAction(folderUuid, folderProperties));
+  }
+
+  /**
+   * Toogle a folder collapse state and save it in the store
+   */
+  public toggleFolderCollapse(folderUuid: string) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const selectedFolder = activeEnvironment.folders.find(
+      (folder) => folder.uuid === folderUuid
+    );
+
+    if (selectedFolder) {
+      const collapsedFolders = {
+        ...this.store.get('settings').collapsedFolders
+      };
+
+      if (!collapsedFolders[activeEnvironment.uuid]) {
+        collapsedFolders[activeEnvironment.uuid] = [];
+      }
+
+      if (
+        collapsedFolders[activeEnvironment.uuid].includes(selectedFolder.uuid)
+      ) {
+        collapsedFolders[activeEnvironment.uuid] = collapsedFolders[
+          activeEnvironment.uuid
+        ].filter(
+          (collapsedFolderUuid) => collapsedFolderUuid !== selectedFolder.uuid
+        );
+      } else {
+        collapsedFolders[activeEnvironment.uuid] = [
+          ...collapsedFolders[activeEnvironment.uuid],
+          selectedFolder.uuid
+        ];
+      }
+
+      this.store.update(updateSettingsAction({ collapsedFolders }));
+    }
   }
 
   /**
    * Remove a folder and save
    */
-  public removeFolder(folderUUID: string) {
-    if (folderUUID) {
-      this.store.update(removeFolderAction(folderUUID));
+  public removeFolder(folderUuid: string) {
+    if (folderUuid) {
+      this.store.update(removeFolderAction(folderUuid));
     }
   }
 

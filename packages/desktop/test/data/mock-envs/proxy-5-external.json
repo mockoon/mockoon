@@ -1,6 +1,6 @@
 {
   "uuid": "2fdc0fe1-66ed-44af-a268-eb73a72f5910",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "Proxy external",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "get",
       "endpoint": "health",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "f3d117cf-288d-4de9-8509-d297aca9da67",

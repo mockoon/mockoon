@@ -1,6 +1,6 @@
 {
   "uuid": "29d99394-91e4-4fbb-86c2-26b5f54abff7",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "Environment logs 1",
   "endpointPrefix": "prefix",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "get",
       "endpoint": "endpoint/:param1",
       "documentation": "Test endpoint",
-      "enabled": true,
       "responses": [
         {
           "uuid": "4bddd419-fbd4-44b7-9564-fb5cd234a2eb",
@@ -90,7 +89,6 @@
       "method": "get",
       "endpoint": "file",
       "documentation": "Binary test endpoint",
-      "enabled": true,
       "responses": [
         {
           "uuid": "c0ed8945-8b57-4144-818a-e581c3cc3414",

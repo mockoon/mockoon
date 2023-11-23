@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "Basic data",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "get",
       "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
       "documentation": "Test documentation",
-      "enabled": true,
       "responses": [
         {
           "uuid": "505a77b1-34c7-4af8-adde-ed00b8dd29bf",
@@ -41,7 +40,6 @@
       "method": "get",
       "endpoint": "answer",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "057ec98a-dd5d-4dd8-9af9-a99dd7a5c3f5",
@@ -71,7 +69,6 @@
       "method": "post",
       "endpoint": "dolphins",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",

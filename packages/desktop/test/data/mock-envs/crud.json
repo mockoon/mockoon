@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "CRUD",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "get",
       "endpoint": "testboolean",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "ee94fb98-b90f-45f9-a6c3-519c8895bc7c",
@@ -41,7 +40,6 @@
       "method": "get",
       "endpoint": "testnumber",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "1a130dea-1e99-4c47-a1d4-3e6892f67025",
@@ -71,7 +69,6 @@
       "method": "get",
       "endpoint": "teststring",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "5bca0542-0c74-4253-a69a-29f4136d198c",

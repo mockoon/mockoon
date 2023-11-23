@@ -1,5 +1,6 @@
 export enum PostMigrationActions {
-  DISABLED_ROUTES_MIGRATION = 'DISABLED_ROUTES_MIGRATION'
+  DISABLED_ROUTES_MIGRATION = 'DISABLED_ROUTES_MIGRATION',
+  COLLAPSED_FOLDERS_MIGRATION = 'COLLAPSED_FOLDERS_MIGRATION'
 }
 
 export const PostMigrationActionDisabledRoutes = (
@@ -10,6 +11,14 @@ export const PostMigrationActionDisabledRoutes = (
     disabledRoutesUuids
   }) as const;
 
-export type PostMigrationAction = ReturnType<
-  typeof PostMigrationActionDisabledRoutes
->;
+export const PostMigrationActionCollapsedFolders = (
+  collapsedFoldersUuids: string[]
+) =>
+  ({
+    type: PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION,
+    collapsedFoldersUuids
+  }) as const;
+
+export type PostMigrationAction =
+  | ReturnType<typeof PostMigrationActionDisabledRoutes>
+  | ReturnType<typeof PostMigrationActionCollapsedFolders>;

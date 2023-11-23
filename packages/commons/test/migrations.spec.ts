@@ -506,4 +506,54 @@ describe('Migrations', () => {
       });
     });
   });
+
+  describe('migration n. 32', () => {
+    it('should remove folder collapse and return the list of collapsed folders uuids', () => {
+      const environment1: any = {
+        uuid: 'a',
+        folders: [
+          { uuid: 'a1', collapsed: false },
+          { uuid: 'a2', collapsed: false }
+        ]
+      };
+      const environment2: any = {
+        uuid: 'b',
+        folders: [
+          { uuid: 'b1', collapsed: false },
+          { uuid: 'b2', collapsed: true }
+        ]
+      };
+      const environment3: any = {
+        uuid: 'c',
+        folders: [
+          { uuid: 'c1', collapsed: true },
+          { uuid: 'c2', collapsed: true }
+        ]
+      };
+
+      const postMigrationAction1 = applyMigration(32, environment1);
+      const postMigrationAction2 = applyMigration(32, environment2);
+      const postMigrationAction3 = applyMigration(32, environment3);
+
+      expect(environment1.folders[0].collapsed).to.be.undefined;
+      expect(environment1.folders[1].collapsed).to.be.undefined;
+      expect(environment2.folders[0].collapsed).to.be.undefined;
+      expect(environment2.folders[1].collapsed).to.be.undefined;
+      expect(environment3.folders[0].collapsed).to.be.undefined;
+      expect(environment3.folders[1].collapsed).to.be.undefined;
+
+      expect(postMigrationAction1).to.deep.equal({
+        type: PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION,
+        collapsedFoldersUuids: []
+      });
+      expect(postMigrationAction2).to.deep.equal({
+        type: PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION,
+        collapsedFoldersUuids: ['b2']
+      });
+      expect(postMigrationAction3).to.deep.equal({
+        type: PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION,
+        collapsedFoldersUuids: ['c1', 'c2']
+      });
+    });
+  });
 });

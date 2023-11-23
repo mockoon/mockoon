@@ -61,6 +61,7 @@ export class DataService extends Logger {
     validatedEnvironment = repairRefs(validatedEnvironment);
 
     this.settingsService.cleanDisabledRoutes(validatedEnvironment);
+    this.settingsService.cleanCollapsedFolders(validatedEnvironment);
 
     return validatedEnvironment;
   }

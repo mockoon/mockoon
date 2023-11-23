@@ -3,7 +3,9 @@ import contextMenu, {
   ContextMenuRouteActions
 } from '../libs/context-menu';
 import environments from '../libs/environments';
+import file from '../libs/file';
 import routes from '../libs/routes';
+import utils from '../libs/utils';
 
 describe('Folders', () => {
   it('should open the environment', async () => {
@@ -23,6 +25,25 @@ describe('Folders', () => {
     await routes.assertMenuItemEditable(1);
     await routes.setMenuItemEditableText(1, 'new name');
     await routes.assertMenuEntryText(1, 'new name');
+  });
+
+  it('should collapse the folder and verify the settings', async () => {
+    await routes.collapse(1);
+    await utils.waitForAutosave();
+    const envUuid = await file.getObjectPropertyInFile(
+      './tmp/storage/empty.json',
+      'uuid'
+    );
+    const folderUuid = await file.getObjectPropertyInFile(
+      './tmp/storage/empty.json',
+      'folders.0.uuid'
+    );
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      [`collapsedFolders.${envUuid}.0`],
+      [folderUuid]
+    );
+    await utils.waitForAutosave();
   });
 
   it('should delete folder', async () => {

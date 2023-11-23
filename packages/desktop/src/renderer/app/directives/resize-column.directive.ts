@@ -7,9 +7,9 @@ import {
   Renderer2
 } from '@angular/core';
 import { filter, first } from 'rxjs/operators';
-import { SettingsProperties } from 'src/renderer/app/models/settings.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Settings } from 'src/shared/models/settings.model';
 
 export type ColumnType = 'main' | 'secondary';
 
@@ -154,7 +154,7 @@ export class ResizeColumnDirective implements AfterViewInit {
       return;
     }
 
-    const newSettings: SettingsProperties = {};
+    const newSettings: Partial<Settings> = {};
     newSettings[this.settingProperties[this.type]] = this.currentWidth;
 
     this.settingsService.updateSettings(newSettings);

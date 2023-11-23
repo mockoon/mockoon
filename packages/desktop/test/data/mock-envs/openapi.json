@@ -1,6 +1,6 @@
 {
   "uuid": "e84c9920-6047-11ea-b4a3-058bbf68d234",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "Demo users API V2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -35,7 +35,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -100,7 +99,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -165,7 +163,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -203,7 +200,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -233,7 +229,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     }

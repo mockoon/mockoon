@@ -1,6 +1,6 @@
 {
   "uuid": "3e16e1a0-a802-11eb-9a34-f1c6ade0819b",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "Amazon CloudFront",
   "endpointPrefix": "",
   "latency": 0,
@@ -127,7 +127,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -176,7 +175,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -966,7 +964,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -1015,7 +1012,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -1824,7 +1820,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -1987,7 +1982,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -2074,7 +2068,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -2332,7 +2325,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -2381,7 +2373,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -2658,7 +2649,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -2783,7 +2773,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -2851,7 +2840,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -2976,7 +2964,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -3044,7 +3031,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -3150,7 +3136,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -3275,7 +3260,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -3343,7 +3327,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -3411,7 +3394,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -3593,7 +3575,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -3661,7 +3642,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -4451,7 +4431,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -4538,7 +4517,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -4606,7 +4584,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -4883,7 +4860,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -4951,7 +4927,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -5057,7 +5032,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -5163,7 +5137,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -5269,7 +5242,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     }
