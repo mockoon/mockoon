@@ -6,6 +6,10 @@ import {
 } from '../constants/environment-schema.constants';
 import { DataBucket, Environment } from '../models/environment.model';
 import {
+  PostMigrationAction,
+  PostMigrationActionDisabledRoutes
+} from '../models/migrations.model';
+import {
   BodyTypes,
   Header,
   ResponseMode,
@@ -22,6 +26,7 @@ import { generateUUID } from './utils';
 
 // old routes with file
 type RouteWithFile = Route & { file: any };
+type RouteWithEnabled = Route & { enabled: any };
 
 // old route when route responses didn't exists
 type RouteAsResponse = Route & {
@@ -54,7 +59,7 @@ type RouteWithResponseModes = Route & {
  */
 export const Migrations: {
   id: number;
-  migrationFunction: (environment: Environment) => void;
+  migrationFunction: (environment: Environment) => PostMigrationAction | void;
 }[] = [
   // v0.4.0beta
   {
@@ -222,7 +227,7 @@ export const Migrations: {
     id: 8,
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
-        route.enabled = true;
+        (route as any).enabled = true;
       });
     }
   },
@@ -594,6 +599,27 @@ export const Migrations: {
           }
         });
       }
+    }
+  },
+  /**
+   * Move route toggling to application settings
+   */
+  {
+    id: 31,
+    migrationFunction: (environment: Environment) => {
+      const disabledRoutesUuids = (
+        environment.routes as RouteWithEnabled[]
+      ).reduce<string[]>((disabledRoutes, route) => {
+        if (!route.enabled) {
+          disabledRoutes.push(route.uuid);
+        }
+
+        delete route.enabled;
+
+        return disabledRoutes;
+      }, []);
+
+      return PostMigrationActionDisabledRoutes(disabledRoutesUuids);
     }
   }
 ];

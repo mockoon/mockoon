@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import {
   BodyTypes,
   Migrations,
+  PostMigrationActions,
   ResponseMode,
   RouteDefault,
   RouteResponseDefault
@@ -16,7 +17,7 @@ const applyMigration = (migrationId: number, environment: any) => {
     throw new Error('Cannot find migration function');
   }
 
-  migrationFunction(environment);
+  return migrationFunction(environment);
 };
 
 describe('Migrations', () => {
@@ -453,6 +454,56 @@ describe('Migrations', () => {
       expect(environment1.routes[0].responses[0].callbacks).to.be.not.undefined;
       expect(environment1.routes[0].responses[0].callbacks).to.have.length(0);
       expect(environment2.callbacks).to.have.length(0);
+    });
+  });
+
+  describe('migration n. 31', () => {
+    it('should remove route toggling and return the list of disabled route uuids', () => {
+      const environment1: any = {
+        uuid: 'a',
+        routes: [
+          { uuid: 'a1', enabled: true },
+          { uuid: 'a2', enabled: true }
+        ]
+      };
+      const environment2: any = {
+        uuid: 'b',
+        routes: [
+          { uuid: 'b1', enabled: true },
+          { uuid: 'b2', enabled: false }
+        ]
+      };
+      const environment3: any = {
+        uuid: 'c',
+        routes: [
+          { uuid: 'c1', enabled: false },
+          { uuid: 'c2', enabled: false }
+        ]
+      };
+
+      const postMigrationAction1 = applyMigration(31, environment1);
+      const postMigrationAction2 = applyMigration(31, environment2);
+      const postMigrationAction3 = applyMigration(31, environment3);
+
+      expect(environment1.routes[0].enabled).to.be.undefined;
+      expect(environment1.routes[1].enabled).to.be.undefined;
+      expect(environment2.routes[0].enabled).to.be.undefined;
+      expect(environment2.routes[1].enabled).to.be.undefined;
+      expect(environment3.routes[0].enabled).to.be.undefined;
+      expect(environment3.routes[1].enabled).to.be.undefined;
+
+      expect(postMigrationAction1).to.deep.equal({
+        type: PostMigrationActions.DISABLED_ROUTES_MIGRATION,
+        disabledRoutesUuids: []
+      });
+      expect(postMigrationAction2).to.deep.equal({
+        type: PostMigrationActions.DISABLED_ROUTES_MIGRATION,
+        disabledRoutesUuids: ['b2']
+      });
+      expect(postMigrationAction3).to.deep.equal({
+        type: PostMigrationActions.DISABLED_ROUTES_MIGRATION,
+        disabledRoutesUuids: ['c1', 'c2']
+      });
     });
   });
 });

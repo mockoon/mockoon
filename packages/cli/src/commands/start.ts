@@ -1,9 +1,9 @@
 import { Environment, ServerErrorCodes } from '@mockoon/commons';
 import {
-  createLoggerInstance,
-  listenServerEvents,
   MockoonServer,
-  ServerMessages
+  ServerMessages,
+  createLoggerInstance,
+  listenServerEvents
 } from '@mockoon/commons-server';
 import { Command, Flags } from '@oclif/core';
 import { red as chalkRed } from 'chalk';
@@ -21,7 +21,8 @@ export default class Start extends Command {
     '$ mockoon-cli start --data ~/data.json',
     '$ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1',
     '$ mockoon-cli start --data https://file-server/data.json',
-    '$ mockoon-cli start --data ~/data.json --log-transaction'
+    '$ mockoon-cli start --data ~/data.json --log-transaction',
+    '$ mockoon-cli start --data ~/data.json --disable-routes route1 route2'
   ];
 
   public static flags = {
@@ -48,6 +49,13 @@ export default class Start extends Command {
       char: 'X',
       description: 'Only log to stdout and stderr',
       default: false
+    }),
+    'disable-routes': Flags.string({
+      char: 'e',
+      description:
+        "Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash)",
+      multiple: true,
+      default: []
     }),
     ...deprecatedFlags
   };
@@ -87,7 +95,8 @@ export default class Start extends Command {
                     environmentInfo.environment.name
                   )}.log`
                 )
-              }
+              },
+          disabledRoutes: userFlags['disable-routes']
         });
       }
     } catch (error: any) {
@@ -98,12 +107,14 @@ export default class Start extends Command {
   private createServer = (parameters: {
     environment: Environment;
     environmentDir: string;
+    disabledRoutes?: string[];
     logTransaction?: boolean;
     fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
   }) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
     const server = new MockoonServer(parameters.environment, {
-      environmentDirectory: parameters.environmentDir
+      environmentDirectory: parameters.environmentDir,
+      disabledRoutes: parameters.disabledRoutes
     });
 
     listenServerEvents(

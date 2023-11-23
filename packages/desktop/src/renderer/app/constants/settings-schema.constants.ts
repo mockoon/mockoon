@@ -19,6 +19,7 @@ export const SettingsDefault: Settings = {
   fakerSeed: null,
   lastChangelog: Config.appVersion,
   environments: [],
+  disabledRoutes: {},
   enableTelemetry: true,
   storagePrettyPrint: true,
   fileWatcherEnabled: FileWatcherOptions.DISABLED,
@@ -73,6 +74,10 @@ export const SettingsSchema = Joi.object<Settings & PreMigrationSettings, true>(
       )
       .failover(SettingsDefault.environments)
       .required(),
+    disabledRoutes: Joi.object<Settings['disabledRoutes']>().pattern(
+      Joi.string(),
+      Joi.array().items(Joi.string(), Joi.any().strip()).failover([])
+    ),
     lastMigration: Joi.number().strip(),
     enableTelemetry: Joi.boolean()
       .failover(SettingsDefault.enableTelemetry)

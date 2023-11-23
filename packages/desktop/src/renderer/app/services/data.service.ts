@@ -16,6 +16,7 @@ import {
 import { Logger } from 'src/renderer/app/classes/logger';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { MigrationService } from 'src/renderer/app/services/migration.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -24,7 +25,8 @@ export class DataService extends Logger {
   constructor(
     protected toastsService: ToastsService,
     private store: Store,
-    private migrationService: MigrationService
+    private migrationService: MigrationService,
+    private settingsService: SettingsService
   ) {
     super('[RENDERER][SERVICE][DATA] ', toastsService);
   }
@@ -57,6 +59,8 @@ export class DataService extends Logger {
 
     validatedEnvironment = this.deduplicateUUIDs(validatedEnvironment);
     validatedEnvironment = repairRefs(validatedEnvironment);
+
+    this.settingsService.cleanDisabledRoutes(validatedEnvironment);
 
     return validatedEnvironment;
   }

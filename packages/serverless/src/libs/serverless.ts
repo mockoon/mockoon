@@ -10,7 +10,17 @@ import ServerlessHttp from 'serverless-http';
 export class MockoonServerless {
   constructor(
     private environment: Environment,
-    private options: { logTransaction: boolean } = { logTransaction: false }
+    private options: {
+      logTransaction: boolean;
+      /**
+       * List of routes uuids to disable.
+       * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
+       */
+      disabledRoutes: string[];
+    } = {
+      logTransaction: false,
+      disabledRoutes: []
+    }
   ) {
     if (!environment) {
       throw new Error('No environment data provided');
@@ -25,7 +35,9 @@ export class MockoonServerless {
    */
   public requestListener(): RequestListener {
     const logger = createLoggerInstance();
-    const server = new MockoonServer(this.environment);
+    const server = new MockoonServer(this.environment, {
+      disabledRoutes: this.options.disabledRoutes
+    });
     listenServerEvents(
       server,
       this.environment,

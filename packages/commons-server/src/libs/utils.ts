@@ -320,3 +320,13 @@ export const routesFromFolder = (
  * @returns
  */
 export const dedupSlashes = (str: string) => str.replace(/\/{2,}/g, '/');
+
+/**
+ * Prepare a path for express: add a leading slash, deduplicate slashes and replace spaces with %20
+ *
+ * @param endpointPrefix
+ * @param endpoint
+ * @returns
+ */
+export const preparePath = (endpointPrefix: string, endpoint: string) =>
+  dedupSlashes(`/${endpointPrefix}/${endpoint.replace(/ /g, '%20')}`);

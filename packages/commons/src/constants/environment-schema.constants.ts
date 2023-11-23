@@ -75,7 +75,6 @@ export const RouteDefault: Route = {
   method: Methods.get,
   endpoint: '',
   responses: [],
-  enabled: true,
   responseMode: null
 };
 
@@ -389,7 +388,6 @@ export const RouteSchema = Joi.object<Route, true>({
     .items(RouteResponseSchema, Joi.any().strip())
     .failover(RouteDefault.responses)
     .required(),
-  enabled: Joi.boolean().failover(RouteDefault.enabled).required(),
   responseMode: Joi.string()
     .allow(null)
     .valid(

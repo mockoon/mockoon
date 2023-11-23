@@ -26,7 +26,8 @@ import {
   filter,
   map,
   takeUntil,
-  tap
+  tap,
+  withLatestFrom
 } from 'rxjs/operators';
 import {
   FoldersContextMenu,
@@ -78,6 +79,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public activeRoute$: Observable<Route>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
+  public disabledRoutes$: Observable<string[]>;
   public routesFilter$: Observable<string>;
   public routesFilter: UntypedFormControl;
   public dragEnabled = true;
@@ -116,6 +118,15 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     this.routesFilter$ = this.store.selectFilter('routes').pipe(
       tap((search) => {
         this.routesFilter.patchValue(search, { emitEvent: false });
+      })
+    );
+    this.disabledRoutes$ = this.store.selectActiveEnvironment().pipe(
+      withLatestFrom(this.store.select('settings')),
+      filter(
+        ([activeEnvironment, settings]) => !!activeEnvironment && !!settings
+      ),
+      map(([activeEnvironment, settings]) => {
+        return settings.disabledRoutes[activeEnvironment.uuid] || [];
       })
     );
 

@@ -93,7 +93,6 @@ describe('Schema validation', () => {
 
       expect(fileContent.name).toEqual(undefined);
       expect(fileContent.routes[0].responses[0].rulesOperator).toEqual('DUMMY');
-      expect(fileContent.routes[0].enabled).toEqual(null);
       expect(fileContent.routes[0].responses[0].statusCode).toEqual(99);
 
       // allow empty body
@@ -125,7 +124,6 @@ describe('Schema validation', () => {
 
       expect(fileContent.name).toEqual('New environment');
       expect(fileContent.routes[0].responses[0].rulesOperator).toEqual('OR');
-      expect(fileContent.routes[0].enabled).toEqual(true);
       expect(fileContent.routes[0].responses[0].statusCode).toEqual(200);
 
       // allow empty body
@@ -259,7 +257,6 @@ describe('Schema validation', () => {
       // verify that properties exists
       expect(validateUUID(envFileContent.uuid)).toEqual(true);
       expect(validateUUID(envFileContent.routes[0].uuid)).toEqual(true);
-      expect(envFileContent.routes[0].enabled).toEqual(true);
       expect(envFileContent.routes[0].responses[0].statusCode).toEqual(200);
     });
   });

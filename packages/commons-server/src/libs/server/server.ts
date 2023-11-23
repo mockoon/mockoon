@@ -51,6 +51,7 @@ import {
   CreateTransaction,
   dedupSlashes,
   isBodySupportingMethod,
+  preparePath,
   resolvePathFromEnvironment,
   routesFromFolder,
   stringIncludesArrayItems
@@ -66,7 +67,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
-  private callbackDefinitions: Callback[] = [];
 
   constructor(
     private environment: Environment,
@@ -76,6 +76,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
        *
        */
       environmentDirectory?: string;
+
+      /**
+       * List of routes uuids to disable.
+       * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
+       */
+      disabledRoutes?: string[];
 
       /**
        * Method used by the library to refresh the environment information
@@ -177,7 +183,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
-    this.retrieveCallbackDefinitions(this.environment);
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
@@ -392,15 +397,19 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     );
 
     routes.forEach((declaredRoute: Route) => {
-      // only launch non duplicated routes, or ignore if none.
-      if (declaredRoute.enabled) {
+      const routePath = preparePath(
+        this.environment.endpointPrefix,
+        declaredRoute.endpoint
+      );
+
+      if (
+        !this.options.disabledRoutes?.some(
+          (disabledRoute) =>
+            declaredRoute.uuid === disabledRoute ||
+            routePath.includes(disabledRoute)
+        )
+      ) {
         try {
-          let routePath = `/${
-            this.environment.endpointPrefix
-          }/${declaredRoute.endpoint.replace(/ /g, '%20')}`;
-
-          routePath = dedupSlashes(routePath);
-
           if (declaredRoute.type === RouteType.CRUD) {
             this.createCRUDRoute(server, declaredRoute, routePath);
           } else {
@@ -1493,12 +1502,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
         this.processedDatabuckets.push(newProcessedDatabucket);
       });
-    }
-  }
-
-  private retrieveCallbackDefinitions(environment: Environment) {
-    if (environment.callbacks?.length > 0) {
-      this.callbackDefinitions = [...environment.callbacks];
     }
   }
 

@@ -123,19 +123,21 @@ USAGE
   $ mockoon-cli start
 
 OPTIONS
-  -d, --data                 [required] Path(s) or URL(s) to your Mockoon file(s)
-  -p, --port                 Override environment(s) port(s)
-  -l, --hostname             Override default listening hostname(s)
-  -t, --log-transaction      Log the full HTTP transaction (request and response)
-  -X, --disable-log-to-file  Disable logging to file
-  -r, --repair               If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
-  -h, --help                 Show CLI help
+  -d, --data                  [required] Path(s) or URL(s) to your Mockoon file(s)
+  -p, --port                  Override environment(s) port(s)
+  -l, --hostname              Override default listening hostname(s)
+  -t, --log-transaction       Log the full HTTP transaction (request and response)
+  -X, --disable-log-to-file   Disable logging to file
+  -e, --disable-routes        Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash)
+  -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
+  -h, --help                  Show CLI help
 
 EXAMPLES
   $ mockoon-cli start --data ~/data.json
   $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1
   $ mockoon-cli start --data https://file-server/data.json
   $ mockoon-cli start --data ~/data.json --log-transaction
+  $ mockoon-cli start --data ~/data.json --disable-routes route1 route2
 ```
 
 ### Dockerize command

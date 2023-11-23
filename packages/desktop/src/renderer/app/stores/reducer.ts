@@ -1170,11 +1170,7 @@ export const environmentReducer = (
     }
 
     case ActionTypes.UPDATE_ROUTE: {
-      const propertiesNeedingRestart: (keyof Route)[] = [
-        'endpoint',
-        'method',
-        'enabled'
-      ];
+      const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method'];
       const specifiedUUID = action.properties.uuid;
 
       newState = {

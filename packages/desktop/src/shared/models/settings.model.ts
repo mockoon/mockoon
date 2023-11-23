@@ -20,6 +20,7 @@ export type Settings = {
   fakerSeed: number;
   lastChangelog: string;
   environments: EnvironmentDescriptor[];
+  disabledRoutes: { [environmentUuid in string]: string[] };
   enableTelemetry: boolean;
   storagePrettyPrint: boolean;
   fileWatcherEnabled: FileWatcherOptions;

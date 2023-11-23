@@ -126,6 +126,7 @@ import {
   updateCallbackAction,
   updateDatabucketAction,
   updateEnvironmentAction,
+  updateEnvironmentStatusAction,
   updateFolderAction,
   updateRouteAction,
   updateRouteResponseAction,
@@ -1033,17 +1034,48 @@ export class EnvironmentsService extends Logger {
   /**
    * Enable and disable a route
    */
-  public toggleRoute(routeUUID?: string) {
-    const selectedRoute = this.store
-      .getActiveEnvironment()
-      .routes.find((route) => route.uuid === routeUUID);
+  public toggleRoute(routeUuid?: string) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const selectedRoute = activeEnvironment.routes.find(
+      (route) => route.uuid === routeUuid
+    );
+
     if (selectedRoute) {
-      this.store.update(
-        updateRouteAction({
-          uuid: selectedRoute.uuid,
-          enabled: !selectedRoute.enabled
-        })
-      );
+      const disabledRoutes = { ...this.store.get('settings').disabledRoutes };
+
+      if (!disabledRoutes[activeEnvironment.uuid]) {
+        disabledRoutes[activeEnvironment.uuid] = [];
+      }
+
+      if (disabledRoutes[activeEnvironment.uuid].includes(selectedRoute.uuid)) {
+        disabledRoutes[activeEnvironment.uuid] = disabledRoutes[
+          activeEnvironment.uuid
+        ].filter(
+          (disabledRouteUuid) => disabledRouteUuid !== selectedRoute.uuid
+        );
+      } else {
+        disabledRoutes[activeEnvironment.uuid] = [
+          ...disabledRoutes[activeEnvironment.uuid],
+          selectedRoute.uuid
+        ];
+      }
+
+      this.store.update(updateSettingsAction({ disabledRoutes }));
+
+      const environmentsStatus = this.store.get('environmentsStatus');
+      const activeEnvironmentStatus =
+        environmentsStatus[activeEnvironment.uuid];
+
+      if (activeEnvironmentStatus.running) {
+        this.store.update(
+          updateEnvironmentStatusAction(
+            {
+              needRestart: true
+            },
+            activeEnvironment.uuid
+          )
+        );
+      }
     }
   }
 
