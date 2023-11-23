@@ -98,7 +98,8 @@ export const BuildFullPath = (environment: Environment, route: Route) => {
     routeUrl += environment.endpointPrefix + '/';
   }
 
-  routeUrl += route.endpoint;
+  // undo the regex escaping done in the route editor
+  routeUrl += route.endpoint.replace(/\\\(/g, '(').replace(/\\\)/g, ')');
 
   return routeUrl;
 };
