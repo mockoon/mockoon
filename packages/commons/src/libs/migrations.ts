@@ -5,8 +5,10 @@ import {
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
 import { DataBucket, Environment } from '../models/environment.model';
+import { Folder } from '../models/folder.model';
 import {
   PostMigrationAction,
+  PostMigrationActionCollapsedFolders,
   PostMigrationActionDisabledRoutes
 } from '../models/migrations.model';
 import {
@@ -26,7 +28,8 @@ import { generateUUID } from './utils';
 
 // old routes with file
 type RouteWithFile = Route & { file: any };
-type RouteWithEnabled = Route & { enabled: any };
+type RouteWithEnabled = Route & { enabled?: boolean };
+type FolderWithCollapsed = Folder & { collapsed?: boolean };
 
 // old route when route responses didn't exists
 type RouteAsResponse = Route & {
@@ -620,6 +623,27 @@ export const Migrations: {
       }, []);
 
       return PostMigrationActionDisabledRoutes(disabledRoutesUuids);
+    }
+  },
+  /**
+   * Move folder collapsing to application settings
+   */
+  {
+    id: 32,
+    migrationFunction: (environment: Environment) => {
+      const collapsedFoldersUuids = (
+        environment.folders as FolderWithCollapsed[]
+      ).reduce<string[]>((disabledFolders, folder) => {
+        if (folder.collapsed) {
+          disabledFolders.push(folder.uuid);
+        }
+
+        delete folder.collapsed;
+
+        return disabledFolders;
+      }, []);
+
+      return PostMigrationActionCollapsedFolders(collapsedFoldersUuids);
     }
   }
 ];

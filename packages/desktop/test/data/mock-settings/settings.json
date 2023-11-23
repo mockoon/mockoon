@@ -13,5 +13,7 @@
   "enableTelemetry": true,
   "storagePrettyPrint": true,
   "startEnvironmentsOnLoad": false,
-  "logTransactions": false
+  "logTransactions": false,
+  "disabledRoutes": {},
+  "collapsedFolders": {}
 }

@@ -65,6 +65,16 @@ export class MigrationService extends Logger {
           });
         }
         break;
+      case PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION:
+        if (postMigrationAction.collapsedFoldersUuids.length > 0) {
+          this.settingsService.updateSettings({
+            collapsedFolders: {
+              ...this.settingsService.getSettings().collapsedFolders,
+              [environment.uuid]: postMigrationAction.collapsedFoldersUuids
+            }
+          });
+        }
+        break;
     }
   }
 

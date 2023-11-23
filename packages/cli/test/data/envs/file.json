@@ -1,7 +1,7 @@
 {
   "uuid": "6cca9fb6-3585-4c0f-8cac-1150ce24452b",
   "name": "Environment file",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "port": 3000,
   "endpointPrefix": "",
   "latency": 0,
@@ -33,7 +33,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     }

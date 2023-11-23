@@ -37,7 +37,6 @@ import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
-import { FolderProperties } from 'src/renderer/app/models/folder.model';
 import {
   DuplicatedRoutesTypes,
   EnvironmentsStatuses
@@ -57,7 +56,6 @@ import { Settings } from 'src/shared/models/settings.model';
 type FullFolder = {
   uuid: string;
   name: string;
-  collapsed: boolean;
   children: (
     | { type: 'folder'; data: Folder }
     | { type: 'route'; data: Route }
@@ -80,6 +78,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
   public disabledRoutes$: Observable<string[]>;
+  public collapsedFolders$: Observable<string[]>;
   public routesFilter$: Observable<string>;
   public routesFilter: UntypedFormControl;
   public dragEnabled = true;
@@ -126,7 +125,16 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         ([activeEnvironment, settings]) => !!activeEnvironment && !!settings
       ),
       map(([activeEnvironment, settings]) => {
-        return settings.disabledRoutes[activeEnvironment.uuid] || [];
+        return settings.disabledRoutes?.[activeEnvironment.uuid] || [];
+      })
+    );
+    this.collapsedFolders$ = this.store.selectActiveEnvironment().pipe(
+      withLatestFrom(this.store.select('settings')),
+      filter(
+        ([activeEnvironment, settings]) => !!activeEnvironment && !!settings
+      ),
+      map(([activeEnvironment, settings]) => {
+        return settings.collapsedFolders?.[activeEnvironment.uuid] || [];
       })
     );
 
@@ -142,7 +150,6 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         return {
           uuid: 'root',
           name: 'root',
-          collapsed: false,
           children: rootFolder.children
         };
       })
@@ -256,9 +263,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   }
 
   public toggleCollapse(folder: Folder) {
-    this.environmentsService.updateFolder(folder.uuid, {
-      collapsed: !folder.collapsed
-    });
+    this.environmentsService.toggleFolderCollapse(folder.uuid);
   }
 
   public editFolder(folder: Folder, editing: boolean) {
@@ -342,7 +347,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       )
     )
       .pipe(
-        tap((newFolderProperties: FolderProperties) => {
+        tap((newFolderProperties: Partial<Folder>) => {
           this.environmentsService.updateFolder(
             this.folderForm.get('uuid').value,
             newFolderProperties

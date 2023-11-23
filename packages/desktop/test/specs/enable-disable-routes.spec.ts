@@ -1,4 +1,5 @@
 import environments from '../libs/environments';
+import file from '../libs/file';
 import http from '../libs/http';
 import { HttpCall } from '../libs/models';
 import routes from '../libs/routes';
@@ -31,7 +32,7 @@ describe('Enable/disable routes', () => {
     await environments.start();
   });
 
-  it('Call untouched route', async () => {
+  it('should call untouched route', async () => {
     await routes.select(2);
     await $(
       '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled'
@@ -39,29 +40,39 @@ describe('Enable/disable routes', () => {
     await http.assertCallWithPort(getAnswerCall[0], 3000);
   });
 
-  it('Disabling route /answer', async () => {
+  it('should disable route /answer and verify the settings', async () => {
     await routes.toggleDisable(2);
     await $(
       '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled'
     ).waitForExist();
-    await environments.restart();
+    await utils.waitForAutosave();
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      ['disabledRoutes.323a25c6-b196-4d27-baf8-8aeb83d87c76.0'],
+      ['9745a08e-94c2-451e-bccc-b31dc608bb6d']
+    );
   });
 
-  it('Call disabled route', async () => {
-    await utils.waitForAutosave();
+  it('should call disabled route', async () => {
+    await environments.restart();
     await http.assertCallWithPort(getAnswerCall[1], 3000);
   });
 
-  it('Re-enable route', async () => {
+  it('should re-enable route and verify the settings', async () => {
     await routes.toggleDisable(2);
     await $(
       '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled'
     ).waitForExist({ reverse: true });
-    await environments.restart();
+    await utils.waitForAutosave();
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      ['disabledRoutes.323a25c6-b196-4d27-baf8-8aeb83d87c76.0'],
+      [undefined]
+    );
   });
 
-  it('Call reenabled route', async () => {
-    await utils.waitForAutosave();
+  it('should call reenabled route', async () => {
+    await environments.restart();
     await http.assertCallWithPort(getAnswerCall[0], 3000);
   });
 });

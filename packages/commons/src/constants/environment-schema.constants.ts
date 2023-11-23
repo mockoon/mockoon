@@ -62,7 +62,6 @@ export const FolderDefault: Folder = {
     return generateUUID();
   },
   name: 'New folder',
-  collapsed: false,
   children: []
 };
 
@@ -345,7 +344,6 @@ export const FolderChildSchema = Joi.object<FolderChild, true>({
 export const FolderSchema = Joi.object<Folder, true>({
   uuid: UUIDSchema,
   name: Joi.string().allow('').failover(FolderDefault.name).required(),
-  collapsed: Joi.boolean().failover(FolderDefault.collapsed).required(),
   children: Joi.array()
     .items(FolderChildSchema, Joi.any().strip())
     .failover(FolderDefault.children)

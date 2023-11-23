@@ -29,7 +29,8 @@ const mockEnvironment: Environment = {
   },
   data: [],
   folders: [],
-  rootChildren: []
+  rootChildren: [],
+  callbacks: []
 };
 
 describe('Serverless', () => {

@@ -1,6 +1,6 @@
 {
   "uuid": "5d004e2c-6055-41bc-b0ac-4d0c064dddd1",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "mockhttps",
   "endpointPrefix": "api",
   "latency": 0,

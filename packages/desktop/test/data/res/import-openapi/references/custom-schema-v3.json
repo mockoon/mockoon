@@ -1,6 +1,6 @@
 {
   "uuid": "61d19605-d609-4497-a951-0a2739409f88",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "Sample v3 schema",
   "endpointPrefix": "api",
   "latency": 0,
@@ -32,7 +32,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -62,7 +61,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     },
@@ -97,7 +95,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     }

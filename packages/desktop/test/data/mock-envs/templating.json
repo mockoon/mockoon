@@ -1,6 +1,6 @@
 {
   "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "post",
       "endpoint": "bodyjson-rootlvl",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "f71dbb19-562f-4dee-8ee7-023038a45002",
@@ -41,7 +40,6 @@
       "method": "post",
       "endpoint": "bodyjson-rootlvl-nodefault",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "d8b99c2a-e589-43e4-adda-6b7406d00e88",
@@ -71,7 +69,6 @@
       "method": "post",
       "endpoint": "bodyjson-full-noparam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "fbc6c819-8040-4bfb-9f7c-b768b143f13f",
@@ -101,7 +98,6 @@
       "method": "post",
       "endpoint": "bodyjson-full-emptyparam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "aa802b24-43f0-497c-9faa-5d9c56333eca",
@@ -131,7 +127,6 @@
       "method": "post",
       "endpoint": "bodyjson",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "dc345573-e68c-4527-b077-595518ed31f9",
@@ -161,7 +156,6 @@
       "method": "post",
       "endpoint": "bodyjson-path",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6b21bf09-23de-4d69-98a5-2947f3614873",
@@ -191,7 +185,6 @@
       "method": "post",
       "endpoint": "bodyform-rootlvl",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "889f0790-fd6f-484c-ad78-46be97df6f73",
@@ -221,7 +214,6 @@
       "method": "post",
       "endpoint": "bodyform-rootlvl-nodefault",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "e73a6950-6ba2-4530-bf3c-bf0936634d0a",
@@ -251,7 +243,6 @@
       "method": "post",
       "endpoint": "bodyform-full-noparam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "1381d775-087c-46b5-9889-ba4d8869c67d",
@@ -281,7 +272,6 @@
       "method": "post",
       "endpoint": "bodyform-full-emptyparam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "da5c9637-be67-4ab9-9f42-16b803c7222b",
@@ -311,7 +301,6 @@
       "method": "post",
       "endpoint": "bodyform",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "541beb00-e336-41da-8fae-bb23b0e4fcfd",
@@ -341,7 +330,6 @@
       "method": "post",
       "endpoint": "bodyform-path",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "964fe42b-d88c-489e-8a48-f2c38e8e625f",
@@ -371,7 +359,6 @@
       "method": "get",
       "endpoint": "bad-helper",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "0b89ebfd-5ea9-4b2b-a739-5fc37d7bb9b5",
@@ -401,7 +388,6 @@
       "method": "get",
       "endpoint": "templating-syntax-error-body",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "f5774351-e283-47db-9095-b107ebeba897",
@@ -431,7 +417,6 @@
       "method": "get",
       "endpoint": "templating-syntax-error-header",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "0d027239-14fb-4f52-84c3-bd2f2adb25ce",
@@ -464,7 +449,6 @@
       "method": "get",
       "endpoint": "templating-syntax-error-filepath",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "ca0b0463-144d-47e7-95b1-4dba404315af",
@@ -494,7 +478,6 @@
       "method": "get",
       "endpoint": "templating-syntax-error-file",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6dcbd142-9042-474a-85e7-fe3867804953",
@@ -524,7 +507,6 @@
       "method": "get",
       "endpoint": "filepath",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "8d7df75e-68f0-4d64-bd4c-af3ad1827236",
@@ -554,7 +536,6 @@
       "method": "get",
       "endpoint": "filepath-windows",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "d34f47ae-1343-4e9c-884e-59db780fb0fe",
@@ -584,7 +565,6 @@
       "method": "get",
       "endpoint": "file-templating",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6dd9dc02-c6d1-4cb3-baf4-491289004eff",
@@ -614,7 +594,6 @@
       "method": "get",
       "endpoint": "urlparam/:urlparam1",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "965142a3-1bb0-4fa9-a285-f6b15ec97fb6",
@@ -644,7 +623,6 @@
       "method": "get",
       "endpoint": "queryparam-rootlvl-nodefault",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "8a703d55-19c9-4466-a639-4224dd2dd62e",
@@ -674,7 +652,6 @@
       "method": "get",
       "endpoint": "queryparam-rootlvl",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "b9c1ec69-8733-4d87-b202-7cb3cdf963a5",
@@ -704,7 +681,6 @@
       "method": "get",
       "endpoint": "queryparam-rootlvl-arrayitem",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "7fade511-9126-4683-bebc-40eddc35225f",
@@ -734,7 +710,6 @@
       "method": "get",
       "endpoint": "queryparam-rootlvl-objectproperty",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "958d4d63-dd50-4d0a-86e2-02240aa93baf",
@@ -764,7 +739,6 @@
       "method": "get",
       "endpoint": "queryparam-rootlvl-array",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "35a46749-1de6-4113-b4d8-7e4e3d883cb4",
@@ -794,7 +768,6 @@
       "method": "get",
       "endpoint": "queryparam-rootlvl-object",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "633de1f1-2f4a-443e-b7bb-9035a894241a",
@@ -824,7 +797,6 @@
       "method": "get",
       "endpoint": "queryparam-multiple",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "9fcc2a9e-ec23-42e7-9ec6-44198a6837d4",
@@ -854,7 +826,6 @@
       "method": "get",
       "endpoint": "queryparam-full-emptypath",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "f5b48e6a-6c11-49a4-981f-9c4115535b03",
@@ -884,7 +855,6 @@
       "method": "get",
       "endpoint": "queryparam-full-nopath",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "319a6738-86f1-47ac-b7b1-37ed832cee8a",
@@ -914,7 +884,6 @@
       "method": "post",
       "endpoint": "formdata",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "333eeac3-d2a8-4b43-b350-bcaea7d55f18",
@@ -944,7 +913,6 @@
       "method": "get",
       "endpoint": "header",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "42a30ea7-2a9e-43d9-973b-fcbd63fb8f88",
@@ -974,7 +942,6 @@
       "method": "get",
       "endpoint": "cookie",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "a7c54952-0aa7-4d07-82fa-ae451502767d",
@@ -1004,7 +971,6 @@
       "method": "get",
       "endpoint": "hostname",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "a5b1f4b2-46df-48df-ba28-e91862959012",
@@ -1034,7 +1000,6 @@
       "method": "get",
       "endpoint": "ip",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "df5409e7-84cc-4606-8d8b-cbd330c153de",
@@ -1064,7 +1029,6 @@
       "method": "get",
       "endpoint": "method",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "07d06f07-a469-409b-84e0-0a8e5ede04ab",
@@ -1094,7 +1058,6 @@
       "method": "get",
       "endpoint": "oneof",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6666f159-74d7-4d1d-9f43-c70327e45990",
@@ -1124,7 +1087,6 @@
       "method": "get",
       "endpoint": "someof",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "317ab0f2-5cbf-41cb-8735-db474814823b",
@@ -1154,7 +1116,6 @@
       "method": "get",
       "endpoint": "someofarray",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6037b85b-606b-4368-9659-11527c922bac",
@@ -1184,7 +1145,6 @@
       "method": "get",
       "endpoint": "now",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "2db126ab-7d19-4129-83fb-6e1be24cd0a0",
@@ -1214,7 +1174,6 @@
       "method": "get",
       "endpoint": "newline",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "30042a63-f29e-4e1e-b50e-9d157c447b7c",
@@ -1244,7 +1203,6 @@
       "method": "get",
       "endpoint": "objectid",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "67d9190b-7312-4ad4-b8d4-c1cc7d66807c",
@@ -1274,7 +1232,6 @@
       "method": "get",
       "endpoint": "base64",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "66435b82-6bd0-401f-b973-7d4e056ac632",
@@ -1304,7 +1261,6 @@
       "method": "get",
       "endpoint": "old.repeat",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "3c917484-bdd1-40c1-81a8-b36a314faf70",
@@ -1334,7 +1290,6 @@
       "method": "get",
       "endpoint": "old.repeat.invalid",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "05929ae4-c74f-4023-bf38-18ad54804a68",
@@ -1364,7 +1319,6 @@
       "method": "get",
       "endpoint": "old.switch.urlParam/:param",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "fce44ac2-cfca-4722-930b-5cb0c85250b1",
@@ -1394,7 +1348,6 @@
       "method": "get",
       "endpoint": "old.switch.urlParam.helper/:param",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "2dfefe9e-9ac7-44c0-b29a-41ce5af7d6b3",
@@ -1424,7 +1377,6 @@
       "method": "get",
       "endpoint": "old.switch.urlParam.multi/:param1/:param2",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "ec0f78e0-63e7-4efd-8a60-8ba69bff3d01",
@@ -1454,7 +1406,6 @@
       "method": "get",
       "endpoint": "old.switch.queryParam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "07db1e8c-01c9-4caf-afc2-ca4a52b41667",
@@ -1484,7 +1435,6 @@
       "method": "get",
       "endpoint": "old.switch.body",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "31aecc90-b083-48fb-a3c3-281dd767b70d",
@@ -1514,7 +1464,6 @@
       "method": "get",
       "endpoint": "nameDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "b55224cb-d1e9-4836-ae34-04af05b697f5",
@@ -1544,7 +1493,6 @@
       "method": "get",
       "endpoint": "emptyDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1574,7 +1522,6 @@
       "method": "get",
       "endpoint": "stringDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1604,7 +1551,6 @@
       "method": "get",
       "endpoint": "stringDatabucket2",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1634,7 +1580,6 @@
       "method": "get",
       "endpoint": "numberDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1664,7 +1609,6 @@
       "method": "get",
       "endpoint": "booleanDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1694,7 +1638,6 @@
       "method": "get",
       "endpoint": "rqHelpersDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "e36c8eb6-8cdf-4c22-89ae-f3c292aeb953",
@@ -1724,7 +1667,6 @@
       "method": "get",
       "endpoint": "pathDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "802ddec6-8437-45e0-9084-37d405b37cab",

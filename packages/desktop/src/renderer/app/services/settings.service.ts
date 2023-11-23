@@ -12,17 +12,14 @@ import {
 import { gt as semverGt } from 'semver';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { SettingsSchema } from 'src/renderer/app/constants/settings-schema.constants';
-import {
-  PreMigrationSettings,
-  SettingsProperties
-} from 'src/renderer/app/models/settings.model';
+import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
 import { StorageService } from 'src/renderer/app/services/storage.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { FileWatcherOptions } from 'src/shared/models/settings.model';
+import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -130,7 +127,7 @@ export class SettingsService {
    *
    * @param newProperties
    */
-  public updateSettings(newProperties: SettingsProperties) {
+  public updateSettings(newProperties: Partial<Settings>) {
     this.store.update(updateSettingsAction(newProperties));
   }
 
@@ -151,6 +148,25 @@ export class SettingsService {
     }
 
     this.updateSettings({ disabledRoutes });
+  }
+
+  /**
+   * Remove collapsed folders from settings when they are not existing anymore
+   *
+   * @param environment
+   */
+  public cleanCollapsedFolders(environment: Environment) {
+    const environmentUuid = environment.uuid;
+    const foldersUuids = environment.folders.map((folder) => folder.uuid);
+    const collapsedFolders = { ...this.store.get('settings').collapsedFolders };
+
+    if (collapsedFolders[environmentUuid]) {
+      collapsedFolders[environmentUuid] = collapsedFolders[
+        environmentUuid
+      ].filter((folderUuid) => foldersUuids.includes(folderUuid));
+    }
+
+    this.updateSettings({ collapsedFolders });
   }
 
   /**

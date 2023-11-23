@@ -1,6 +1,6 @@
 {
   "uuid": "06d4e2f2-b7a1-4717-a61d-94666816c30f",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "test",
   "endpointPrefix": "",
   "latency": 0,

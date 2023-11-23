@@ -1,6 +1,6 @@
 {
   "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "uuid dedup load",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "get",
       "endpoint": "test",
       "documentation": "Test documentation",
-      "enabled": true,
       "responses": [
         {
           "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
@@ -41,7 +40,6 @@
       "method": "get",
       "endpoint": "test2",
       "documentation": "Test documentation 2",
-      "enabled": true,
       "responses": [
         {
           "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
@@ -96,7 +94,6 @@
     {
       "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
       "name": "New folder",
-      "collapsed": false,
       "children": [
         { "type": "route", "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a" }
       ]

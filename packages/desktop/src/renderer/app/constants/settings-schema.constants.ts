@@ -20,6 +20,7 @@ export const SettingsDefault: Settings = {
   lastChangelog: Config.appVersion,
   environments: [],
   disabledRoutes: {},
+  collapsedFolders: {},
   enableTelemetry: true,
   storagePrettyPrint: true,
   fileWatcherEnabled: FileWatcherOptions.DISABLED,
@@ -75,6 +76,10 @@ export const SettingsSchema = Joi.object<Settings & PreMigrationSettings, true>(
       .failover(SettingsDefault.environments)
       .required(),
     disabledRoutes: Joi.object<Settings['disabledRoutes']>().pattern(
+      Joi.string(),
+      Joi.array().items(Joi.string(), Joi.any().strip()).failover([])
+    ),
+    collapsedFolders: Joi.object<Settings['collapsedFolders']>().pattern(
       Joi.string(),
       Joi.array().items(Joi.string(), Joi.any().strip()).failover([])
     ),

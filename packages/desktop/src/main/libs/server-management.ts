@@ -41,7 +41,8 @@ export class ServerInstance {
     const environmentDirectory = dirname(this.environmentPath);
     const server = new MockoonServer(this.environment, {
       environmentDirectory,
-      disabledRoutes: getSettings().disabledRoutes[this.environment.uuid],
+      disabledRoutes:
+        getSettings().disabledRoutes?.[this.environment.uuid] || [],
       refreshEnvironmentFunction: () => this.environment
     });
 

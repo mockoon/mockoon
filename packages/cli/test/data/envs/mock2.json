@@ -1,6 +1,6 @@
 {
   "uuid": "66f5a033-0d8b-4bc6-b5f9-a949d8fd0ec2",
-  "lastMigration": 30,
+  "lastMigration": 32,
   "name": "mock2",
   "endpointPrefix": "api",
   "latency": 0,
@@ -32,7 +32,6 @@
           "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
       "type": "http"
     }

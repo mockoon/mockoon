@@ -47,7 +47,7 @@ class File {
 
   public async verifyObjectPropertyInFile(
     filePath: string,
-    objectPaths: string | string[],
+    objectPaths: string | string[] | string[][],
     values: any | any[],
     exists = false
   ) {
@@ -59,7 +59,7 @@ class File {
 
   public verifyObjectProperty(
     object: any,
-    objectPaths: string | string[],
+    objectPaths: string | string[] | string[][],
     values: any | any[],
     exists = false
   ) {

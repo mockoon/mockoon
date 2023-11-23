@@ -276,6 +276,10 @@ class Routes {
     await (await this.getMenuItem(routeIndex)).click();
   }
 
+  public async collapse(routeIndex: number): Promise<void> {
+    await (await this.getMenuItem(routeIndex)).$('app-svg').click();
+  }
+
   public async selectBodyType(type: BodyTypes) {
     await $(`#body-type-${BodyTypes[type]}`).click();
   }
