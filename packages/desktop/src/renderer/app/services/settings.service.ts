@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IsEqual } from '@mockoon/commons';
+import { Environment, IsEqual } from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import {
   debounceTime,
@@ -81,7 +81,6 @@ export class SettingsService {
         }
 
         const validatedSchema = SettingsSchema.validate(settings);
-
         this.updateSettings(validatedSchema.value);
         settings = validatedSchema.value;
 
@@ -118,12 +117,40 @@ export class SettingsService {
   }
 
   /**
+   * Get the current settings
+   *
+   * @returns
+   */
+  public getSettings() {
+    return this.store.get('settings');
+  }
+
+  /**
    * Update the settings with new properties
    *
    * @param newProperties
    */
   public updateSettings(newProperties: SettingsProperties) {
     this.store.update(updateSettingsAction(newProperties));
+  }
+
+  /**
+   * Remove disabled routes from settings when they are not existing anymore
+   *
+   * @param environment
+   */
+  public cleanDisabledRoutes(environment: Environment) {
+    const environmentUuid = environment.uuid;
+    const routesUuids = environment.routes.map((route) => route.uuid);
+    const disabledRoutes = { ...this.store.get('settings').disabledRoutes };
+
+    if (disabledRoutes[environmentUuid]) {
+      disabledRoutes[environmentUuid] = disabledRoutes[environmentUuid].filter(
+        (routeUuid) => routesUuids.includes(routeUuid)
+      );
+    }
+
+    this.updateSettings({ disabledRoutes });
   }
 
   /**

@@ -1,6 +1,7 @@
 <ng-container
   *ngIf="{
-    duplicatedRoutes: duplicatedRoutes$ | async
+    duplicatedRoutes: duplicatedRoutes$ | async,
+    disabledRoutes: disabledRoutes$ | async
   } as data"
 >
   <div class="routes-menu d-flex flex-column h-100">
@@ -237,7 +238,7 @@
           }"
           [ngClass]="{
             active: (activeRoute$ | async)?.uuid === route.uuid,
-            'route-disabled': !route.enabled
+            'route-disabled': data.disabledRoutes.includes(route.uuid)
           }"
           appScrollWhenActive
           (click)="selectRoute(route.uuid)"

@@ -87,7 +87,6 @@ export type Route = {
   method: keyof typeof Methods | '';
   endpoint: string;
   responses: RouteResponse[];
-  enabled: boolean;
   responseMode: ResponseMode | null;
 };
 

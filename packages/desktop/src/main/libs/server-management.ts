@@ -1,5 +1,5 @@
 import { Environment, Environments, Transaction } from '@mockoon/commons';
-import { listenServerEvents, MockoonServer } from '@mockoon/commons-server';
+import { MockoonServer, listenServerEvents } from '@mockoon/commons-server';
 import { dirname } from 'path';
 import { mainLogger } from 'src/main/libs/logs';
 import { getMainWindow } from 'src/main/libs/main-window';
@@ -41,6 +41,7 @@ export class ServerInstance {
     const environmentDirectory = dirname(this.environmentPath);
     const server = new MockoonServer(this.environment, {
       environmentDirectory,
+      disabledRoutes: getSettings().disabledRoutes[this.environment.uuid],
       refreshEnvironmentFunction: () => this.environment
     });
 

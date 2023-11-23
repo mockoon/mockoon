@@ -123,6 +123,25 @@ or
 
 After deploying to Netlify, any request starting with `/api/*` (e.g. `https://APP_NAME.netlify.app/api/endpoint`) would match the corresponding route (e.g. `/api/endpoint`) in your Mockoon config. You can also test locally using the Netlify CLI.
 
+## Options
+
+The `MockoonServerless` class accepts an optional `options` object as a second parameter. The following options are available:
+
+| Option name      | Type       | Default value | Description                                                          |
+| ---------------- | ---------- | ------------- | -------------------------------------------------------------------- |
+| `logTransaction` | `boolean`  | `false`       | [Enable full transaction logging](#transaction-logging) (see below). |
+| `disabledRoutes` | `string[]` | `[]`          | Disable route(s) by UUID(s) or keyword(s) in route path (see below). |
+
+Example:
+
+```javascript
+const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
+  logTransaction: true,
+  // disable all routes containing 'users' in their path, and the route with UUID '0999df54-7d57-407e-9325-c18d97fea729'
+  disabledRoutes: ['users', '0999df54-7d57-407e-9325-c18d97fea729']
+});
+```
+
 ## Logging
 
 Mockoon's Serverless package logs all server events (start, stop, proxy creation, transactions, etc.) to the console. You can also enable full transaction logging to log all requests and responses (see below).
@@ -180,6 +199,10 @@ const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
 ```
 
 The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L33-L53).
+
+## Disabling routes
+
+When using the `disabledRoutes` option, you can disable routes by UUID(s) or keyword(s) in route path. This is the counterpart of the "Toggle route" feature in the desktop application (right-click on a route -> "Toggle route").
 
 ## Serverless package limitations
 
