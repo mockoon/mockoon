@@ -79,8 +79,7 @@ export class MigrationService extends Logger {
   }
 
   /**
-   * Check if an environment needs to be migrated depending on its own lastMigration,
-   * and settings' old lastMigration param.
+   * Check if an environment needs to be migrated depending on its own lastMigration property
    * Returns at which migration id to start, or -1 if no migration is needed
    */
   private getMigrationStartId(environment: Environment): number {
@@ -89,11 +88,6 @@ export class MigrationService extends Logger {
       environment.lastMigration < HighestMigrationId
     ) {
       return environment.lastMigration;
-    } else if (
-      environment.lastMigration === undefined &&
-      HighestMigrationId > this.settingsService.oldLastMigration
-    ) {
-      return this.settingsService.oldLastMigration;
     }
 
     return -1;

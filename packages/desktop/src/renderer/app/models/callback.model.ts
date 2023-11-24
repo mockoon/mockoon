@@ -1,5 +1,3 @@
-import { Callback } from '@mockoon/commons';
-
 export type CallbackTabsNameType = 'SPEC' | 'USAGE';
 
 export type CallbackSpecTabNameType = 'BODY' | 'HEADERS';
@@ -14,5 +12,3 @@ export type CallbackUsage = {
   label: string;
   responses: CallbackResponseUsage[];
 };
-
-export type CallbackProperties = { [T in keyof Callback]?: Callback[T] };

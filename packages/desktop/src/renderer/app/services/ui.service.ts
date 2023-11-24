@@ -10,7 +10,7 @@ import { SettingsModalComponent } from 'src/renderer/app/components/modals/setti
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { UIStateProperties } from 'src/renderer/app/models/store.model';
+import { UIState } from 'src/renderer/app/models/store.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -112,7 +112,7 @@ export class UIService {
    *
    * @param newProperties
    */
-  public updateUIState(newProperties: UIStateProperties) {
+  public updateUIState(newProperties: Partial<UIState>) {
     this.store.update(updateUIStateAction(newProperties));
   }
 

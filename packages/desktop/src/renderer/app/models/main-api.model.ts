@@ -13,7 +13,6 @@ import {
   SaveDialogReturnValue,
   app
 } from 'electron';
-import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
 import { Settings } from 'src/shared/models/settings.model';
 
 export interface MainAPIModel {
@@ -21,7 +20,7 @@ export interface MainAPIModel {
     channel: 'APP_READ_ENVIRONMENT_DATA',
     path: string
   ): Promise<Environment>;
-  invoke(channel: 'APP_READ_SETTINGS_DATA'): Promise<PreMigrationSettings>;
+  invoke(channel: 'APP_READ_SETTINGS_DATA'): Promise<Settings>;
   invoke(
     channel: 'APP_WRITE_ENVIRONMENT_DATA',
     data: Environment,

@@ -60,14 +60,12 @@ import {
   HumanizeText
 } from 'src/renderer/app/libs/utils.lib';
 import {
-  CallbackProperties,
   CallbackResponseUsage,
   CallbackSpecTabNameType,
   CallbackTabsNameType,
   CallbackUsage
 } from 'src/renderer/app/models/callback.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
-import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
   EnvironmentLogsTabsNameType,
@@ -209,13 +207,12 @@ export class EnvironmentsService extends Logger {
           )
         );
       }),
-      // filter empty environments (file not found) and environments migrated with more recent app version (or lastMigration do not exists < v1.7.0)
+      // filter empty environments (file not found) and environments migrated with more recent app version
       map((environmentsData) =>
         environmentsData.filter(
           (environmentData) =>
             !!environmentData &&
-            (environmentData.environment.lastMigration === undefined ||
-              environmentData.environment.lastMigration <= HighestMigrationId)
+            environmentData.environment.lastMigration <= HighestMigrationId
         )
       ),
       tap((environmentsData) => {
@@ -242,8 +239,7 @@ export class EnvironmentsService extends Logger {
             }))
           })
         );
-      }),
-      tap(() => {
+
         const settings = this.store.get('settings');
 
         if (settings.startEnvironmentsOnLoad) {
@@ -1248,14 +1244,14 @@ export class EnvironmentsService extends Logger {
   /**
    * Update the active databucket
    */
-  public updateActiveDatabucket(properties: DatabucketProperties) {
+  public updateActiveDatabucket(properties: Partial<DataBucket>) {
     this.store.update(updateDatabucketAction(properties));
   }
 
   /**
    * Update the active databucket
    */
-  public updateActiveCallback(properties: CallbackProperties) {
+  public updateActiveCallback(properties: Partial<Callback>) {
     this.store.update(updateCallbackAction(properties));
   }
 

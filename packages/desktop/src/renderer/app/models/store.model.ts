@@ -42,10 +42,6 @@ export type EnvironmentStatus = {
   needRestart: boolean;
 };
 
-export type EnvironmentStatusProperties = {
-  [T in keyof EnvironmentStatus]?: EnvironmentStatus[T];
-};
-
 export type EnvironmentsStatuses = { [key: string]: EnvironmentStatus };
 
 export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
@@ -54,8 +50,6 @@ export type UIState = {
   closing: boolean;
   saving: boolean;
 };
-
-export type UIStateProperties = { [T in keyof UIState]?: UIState[T] };
 
 export type DuplicateEntityToAnotherEnvironment = {
   moving: boolean;

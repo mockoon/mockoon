@@ -9,7 +9,6 @@ import {
 } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { Settings } from 'src/shared/models/settings.model';
 
@@ -93,7 +92,7 @@ export class StorageService extends Logger {
    * Handles storage failure.
    *
    */
-  public loadSettings(): Observable<PreMigrationSettings> {
+  public loadSettings(): Observable<Settings> {
     return from(MainAPI.invoke('APP_READ_SETTINGS_DATA')).pipe(
       catchError((error) => {
         this.logMessage('error', 'STORAGE_LOAD_ERROR', {

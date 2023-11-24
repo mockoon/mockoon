@@ -12,7 +12,6 @@ import {
 import { gt as semverGt } from 'semver';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { SettingsSchema } from 'src/renderer/app/constants/settings-schema.constants';
-import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
 import { StorageService } from 'src/renderer/app/services/storage.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -23,8 +22,6 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
-  public oldLastMigration: number;
-
   constructor(
     private store: Store,
     private storageService: StorageService,
@@ -70,9 +67,7 @@ export class SettingsService {
    */
   public loadSettings(): Observable<any> {
     return this.storageService.loadSettings().pipe(
-      tap((settings: PreMigrationSettings) => {
-        this.getOldSettings(settings);
-
+      tap((settings: Settings) => {
         if (!settings) {
           this.telemetryService.setFirstSession();
         }
@@ -167,16 +162,5 @@ export class SettingsService {
     }
 
     this.updateSettings({ collapsedFolders });
-  }
-
-  /**
-   * Retrieve old settings and store them temporarily
-   *
-   * @param settings
-   */
-  private getOldSettings(settings: PreMigrationSettings) {
-    if (settings?.lastMigration) {
-      this.oldLastMigration = settings.lastMigration;
-    }
   }
 }

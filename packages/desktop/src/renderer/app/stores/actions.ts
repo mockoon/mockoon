@@ -7,19 +7,17 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import {
-  CallbackProperties,
   CallbackSpecTabNameType,
   CallbackTabsNameType
 } from 'src/renderer/app/models/callback.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
-import { DatabucketProperties } from 'src/renderer/app/models/databucket.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentLogsTabsNameType,
-  EnvironmentStatusProperties,
+  EnvironmentStatus,
   TabsNameType,
   TemplatesTabsName,
-  UIStateProperties,
+  UIState,
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
@@ -325,8 +323,8 @@ export const refreshEnvironmentAction = (environmentUUID: string) =>
  * @param properties - properties to update
  */
 export const updateEnvironmentStatusAction = (
-  properties: EnvironmentStatusProperties,
-  environmentUUID
+  properties: Partial<EnvironmentStatus>,
+  environmentUUID: string
 ) =>
   ({
     type: ActionTypes.UPDATE_ENVIRONMENT_STATUS,
@@ -627,7 +625,7 @@ export const removeCallbackAction = (callbackUUID: string) =>
  *
  * @param properties - properties to update
  */
-export const updateDatabucketAction = (properties: DatabucketProperties) =>
+export const updateDatabucketAction = (properties: Partial<DataBucket>) =>
   ({
     type: ActionTypes.UPDATE_DATABUCKET,
     properties
@@ -638,7 +636,7 @@ export const updateDatabucketAction = (properties: DatabucketProperties) =>
  *
  * @param properties - properties to update
  */
-export const updateCallbackAction = (properties: CallbackProperties) =>
+export const updateCallbackAction = (properties: Partial<Callback>) =>
   ({
     type: ActionTypes.UPDATE_CALLBACK,
     properties
@@ -726,7 +724,7 @@ export const updateSettingsAction = (properties: Partial<Settings>) =>
  *
  * @param properties - properties to update
  */
-export const updateUIStateAction = (properties: UIStateProperties) =>
+export const updateUIStateAction = (properties: Partial<UIState>) =>
   ({
     type: ActionTypes.UPDATE_UI_STATE,
     properties
