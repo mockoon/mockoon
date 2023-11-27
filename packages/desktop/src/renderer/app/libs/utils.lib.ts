@@ -88,11 +88,9 @@ export const HumanizeText = (text: string): string => {
  * @returns
  */
 export const BuildFullPath = (environment: Environment, route: Route) => {
-  let routeUrl =
-    (environment.tlsOptions.enabled ? 'https://' : 'http://') +
-    'localhost:' +
-    environment.port +
-    '/';
+  let routeUrl = `${environment.tlsOptions.enabled ? 'https://' : 'http://'}${
+    environment.hostname || 'localhost'
+  }:${environment.port}/`;
 
   if (environment.endpointPrefix) {
     routeUrl += environment.endpointPrefix + '/';
