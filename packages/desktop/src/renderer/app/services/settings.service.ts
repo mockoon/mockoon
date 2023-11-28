@@ -137,12 +137,15 @@ export class SettingsService {
     const disabledRoutes = { ...this.store.get('settings').disabledRoutes };
 
     if (disabledRoutes[environmentUuid]) {
-      disabledRoutes[environmentUuid] = disabledRoutes[environmentUuid].filter(
+      const newDisabledRoutes = disabledRoutes[environmentUuid].filter(
         (routeUuid) => routesUuids.includes(routeUuid)
       );
-    }
 
-    this.updateSettings({ disabledRoutes });
+      if (disabledRoutes[environmentUuid].length !== newDisabledRoutes.length) {
+        disabledRoutes[environmentUuid] = newDisabledRoutes;
+        this.updateSettings({ disabledRoutes });
+      }
+    }
   }
 
   /**
@@ -156,11 +159,16 @@ export class SettingsService {
     const collapsedFolders = { ...this.store.get('settings').collapsedFolders };
 
     if (collapsedFolders[environmentUuid]) {
-      collapsedFolders[environmentUuid] = collapsedFolders[
-        environmentUuid
-      ].filter((folderUuid) => foldersUuids.includes(folderUuid));
-    }
+      const newCollapsedFolders = collapsedFolders[environmentUuid].filter(
+        (folderUuid) => foldersUuids.includes(folderUuid)
+      );
 
-    this.updateSettings({ collapsedFolders });
+      if (
+        collapsedFolders[environmentUuid].length !== newCollapsedFolders.length
+      ) {
+        collapsedFolders[environmentUuid] = newCollapsedFolders;
+        this.updateSettings({ collapsedFolders });
+      }
+    }
   }
 }

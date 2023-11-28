@@ -11,6 +11,8 @@ import {
   BuildHTTPRoute,
   BuildRouteResponse,
   Callback,
+  CloneCallback,
+  CloneDataBucket,
   CloneObject,
   CloneRouteResponse,
   DataBucket,
@@ -20,6 +22,8 @@ import {
   generateUUID,
   Header,
   HighestMigrationId,
+  ReorderableContainers,
+  ReorderAction,
   Route,
   RouteDefault,
   RouteResponse,
@@ -72,10 +76,6 @@ import {
   TabsNameType,
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
-import {
-  DraggableContainers,
-  DropAction
-} from 'src/renderer/app/models/ui.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -84,6 +84,7 @@ import { StorageService } from 'src/renderer/app/services/storage.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
+  Actions,
   addCallbackAction,
   addDatabucketAction,
   addEnvironmentAction,
@@ -95,7 +96,6 @@ import {
   duplicateRouteToAnotherEnvironmentAction,
   logRequestAction,
   navigateEnvironmentsAction,
-  navigateToCallbackAction,
   refreshEnvironmentAction,
   reloadEnvironmentAction,
   removeCallbackAction,
@@ -104,12 +104,11 @@ import {
   removeFolderAction,
   removeRouteAction,
   removeRouteResponseAction,
-  reorganizeCallbacksAction,
-  reorganizeDatabucketsAction,
-  reorganizeEnvironmentsAction,
-  reorganizeResponseCallbacksAction,
-  reorganizeRouteResponsesAction,
-  reorganizeRoutesAction,
+  reorderCallbacksAction,
+  reorderDatabucketsAction,
+  reorderEnvironmentsAction,
+  reorderRouteResponsesAction,
+  reorderRoutesAction,
   setActiveCallbackAction,
   setActiveDatabucketAction,
   setActiveEnvironmentAction,
@@ -657,8 +656,12 @@ export class EnvironmentsService extends Logger {
    * Add a new folder and save it in the store
    */
   public addFolder(folderId: string | 'root') {
-    if (this.store.getActiveEnvironment()) {
-      this.store.update(addFolderAction(BuildFolder(), folderId));
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (activeEnvironment) {
+      this.store.update(
+        addFolderAction(activeEnvironment.uuid, BuildFolder(), folderId, true)
+      );
     }
   }
 
@@ -666,7 +669,13 @@ export class EnvironmentsService extends Logger {
    * Update a folder and save it in the store
    */
   public updateFolder(folderUuid: string, folderProperties: Partial<Folder>) {
-    this.store.update(updateFolderAction(folderUuid, folderProperties));
+    this.store.update(
+      updateFolderAction(
+        this.store.getActiveEnvironment().uuid,
+        folderUuid,
+        folderProperties
+      )
+    );
   }
 
   /**
@@ -711,7 +720,9 @@ export class EnvironmentsService extends Logger {
    */
   public removeFolder(folderUuid: string) {
     if (folderUuid) {
-      this.store.update(removeFolderAction(folderUuid));
+      this.store.update(
+        removeFolderAction(this.store.getActiveEnvironment().uuid, folderUuid)
+      );
     }
   }
 
@@ -728,9 +739,16 @@ export class EnvironmentsService extends Logger {
       body: RouteResponseDefault.body
     }
   ) {
-    if (this.store.getActiveEnvironment()) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (activeEnvironment) {
       this.store.update(
-        addRouteAction(BuildHTTPRoute(true, options), folderId)
+        addRouteAction(
+          activeEnvironment.uuid,
+          BuildHTTPRoute(true, options),
+          folderId,
+          true
+        )
       );
 
       setTimeout(() => {
@@ -752,7 +770,9 @@ export class EnvironmentsService extends Logger {
       dataBucket: null
     }
   ) {
-    if (this.store.getActiveEnvironment()) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (activeEnvironment) {
       let newCRUDRoute = BuildCRUDRoute(true, {
         endpoint: options.endpoint,
         databucketID: RouteResponseDefault.databucketID
@@ -767,7 +787,9 @@ export class EnvironmentsService extends Logger {
         });
       }
 
-      this.store.update(addRouteAction(newCRUDRoute, folderId));
+      this.store.update(
+        addRouteAction(activeEnvironment.uuid, newCRUDRoute, folderId, true)
+      );
 
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
@@ -779,11 +801,14 @@ export class EnvironmentsService extends Logger {
    * Add a new databucket and save it in the store
    */
   public addDatabucket(dataBucket: Partial<DataBucket> = null) {
-    if (this.store.getActiveEnvironment()) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    if (activeEnvironment) {
       let newDatabucket = BuildDatabucket(dataBucket);
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
-      this.store.update(addDatabucketAction(newDatabucket));
+      this.store.update(
+        addDatabucketAction(activeEnvironment.uuid, newDatabucket, true)
+      );
 
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.DATABUCKET_NAME);
@@ -799,11 +824,15 @@ export class EnvironmentsService extends Logger {
    * Add a new callback and save it in the store.
    */
   public addCallback() {
-    if (this.store.getActiveEnvironment()) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (activeEnvironment) {
       let newCallback = BuildCallback();
       newCallback = this.dataService.deduplicateCallbackID(newCallback);
 
-      this.store.update(addCallbackAction(newCallback));
+      this.store.update(
+        addCallbackAction(activeEnvironment.uuid, newCallback, true)
+      );
 
       setTimeout(() => {
         this.uiService.focusInput(FocusableInputs.CALLBACK_NAME);
@@ -823,7 +852,14 @@ export class EnvironmentsService extends Logger {
 
         // if has a current environment append imported route
         if (this.store.get('activeEnvironmentUUID')) {
-          this.store.update(addRouteAction(route, 'root'));
+          this.store.update(
+            addRouteAction(
+              this.store.get('activeEnvironmentUUID'),
+              route,
+              'root',
+              true
+            )
+          );
 
           return EMPTY;
         } else {
@@ -855,7 +891,17 @@ export class EnvironmentsService extends Logger {
    * Add a new route response and save it in the store
    */
   public addRouteResponse() {
-    this.store.update(addRouteResponseAction(BuildRouteResponse()));
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const activeRoute = this.store.getActiveRoute();
+
+    this.store.update(
+      addRouteResponseAction(
+        activeEnvironment.uuid,
+        activeRoute.uuid,
+        BuildRouteResponse(),
+        true
+      )
+    );
   }
 
   /**
@@ -884,9 +930,18 @@ export class EnvironmentsService extends Logger {
    * Duplicate the given route response and save it in the store
    */
   public duplicateRouteResponse() {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const activeRoute = this.store.getActiveRoute();
     const activeRouteResponse = this.store.getActiveRouteResponse();
+
     this.store.update(
-      addRouteResponseAction(CloneRouteResponse(activeRouteResponse), true)
+      addRouteResponseAction(
+        activeEnvironment.uuid,
+        activeRoute.uuid,
+        CloneRouteResponse(activeRouteResponse),
+        true,
+        activeRouteResponse.uuid
+      )
     );
   }
 
@@ -907,7 +962,9 @@ export class EnvironmentsService extends Logger {
       let newRoute: Route = CloneObject(routeToDuplicate);
       newRoute = this.dataService.renewRouteUUIDs(newRoute);
 
-      this.store.update(addRouteAction(newRoute, parentId));
+      this.store.update(
+        addRouteAction(activeEnvironment.uuid, newRoute, parentId, true)
+      );
     }
   }
 
@@ -937,19 +994,21 @@ export class EnvironmentsService extends Logger {
    * Duplicate a databucket, or the current active databucket and append it at the end
    */
   public duplicateDatabucket(databucketUUID: string) {
-    const databucketToDuplicate = this.store
-      .getActiveEnvironment()
-      .data.find((data) => data.uuid === databucketUUID);
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const databucketToDuplicate = activeEnvironment.data.find(
+      (data) => data.uuid === databucketUUID
+    );
 
     if (databucketToDuplicate) {
-      let newDatabucket: DataBucket = CloneObject(databucketToDuplicate);
-
-      newDatabucket.name = `${databucketToDuplicate.name} (copy)`;
-      newDatabucket.uuid = generateUUID();
-      newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
+      const newDatabucket: DataBucket = CloneDataBucket(databucketToDuplicate);
 
       this.store.update(
-        addDatabucketAction(newDatabucket, databucketToDuplicate.uuid)
+        addDatabucketAction(
+          activeEnvironment.uuid,
+          newDatabucket,
+          true,
+          databucketToDuplicate.uuid
+        )
       );
     }
   }
@@ -957,20 +1016,22 @@ export class EnvironmentsService extends Logger {
   /**
    * Duplicate a callback, or the current active callback and append it at the end
    */
-  public duplicateCallback(callbackUUID: string) {
-    const callbackToDuplicate = this.store
-      .getActiveEnvironment()
-      .callbacks.find((cb) => cb.uuid === callbackUUID);
+  public duplicateCallback(callbackUuid: string) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const callbackToDuplicate = activeEnvironment.callbacks.find(
+      (callback) => callback.uuid === callbackUuid
+    );
 
     if (callbackToDuplicate) {
-      let newCallback: Callback = CloneObject(callbackToDuplicate);
-
-      newCallback.name = `${callbackToDuplicate.name} (copy)`;
-      newCallback.uuid = generateUUID();
-      newCallback = this.dataService.deduplicateCallbackID(newCallback);
+      const newCallback: Callback = CloneCallback(callbackToDuplicate);
 
       this.store.update(
-        addCallbackAction(newCallback, callbackToDuplicate.uuid)
+        addCallbackAction(
+          activeEnvironment.uuid,
+          newCallback,
+          true,
+          callbackToDuplicate.uuid
+        )
       );
     }
   }
@@ -1029,9 +1090,11 @@ export class EnvironmentsService extends Logger {
   /**
    * Remove a route and save
    */
-  public removeRoute(routeUUID: string = this.store.get('activeRouteUUID')) {
-    if (routeUUID) {
-      this.store.update(removeRouteAction(routeUUID));
+  public removeRoute(routeUuid: string = this.store.get('activeRouteUUID')) {
+    if (routeUuid) {
+      this.store.update(
+        removeRouteAction(this.store.getActiveEnvironment().uuid, routeUuid)
+      );
     }
   }
 
@@ -1039,28 +1102,53 @@ export class EnvironmentsService extends Logger {
    * Remove current route response and save
    */
   public removeRouteResponse() {
-    this.store.update(removeRouteResponseAction());
-  }
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const activeRoute = this.store.getActiveRoute();
+    const activeRouteResponse = this.store.getActiveRouteResponse();
 
-  /**
-   * Remove a databucket and save
-   */
-  public removeDatabucket(
-    databucketUUID: string = this.store.get('activeDatabucketUUID')
-  ) {
-    if (databucketUUID) {
-      this.store.update(removeDatabucketAction(databucketUUID));
+    // we shouldn't be able to remove the last route response
+    if (
+      (activeRoute.type === RouteType.HTTP &&
+        activeRoute.responses.length > 1) ||
+      (activeRoute.type === RouteType.CRUD &&
+        !activeRouteResponse.default &&
+        activeRoute.responses.length > 1)
+    ) {
+      this.store.update(
+        removeRouteResponseAction(
+          activeEnvironment.uuid,
+          activeRoute.uuid,
+          activeRouteResponse.uuid
+        )
+      );
     }
   }
 
   /**
-   * Remove a callback and save
+   * Remove a databucket
    */
-  public removeCallback(
-    callbackUUID: string = this.store.get('activeCallbackUUID')
+  public removeDatabucket(
+    databucketUuid: string = this.store.get('activeDatabucketUUID')
   ) {
-    if (callbackUUID) {
-      this.store.update(removeCallbackAction(callbackUUID));
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (databucketUuid) {
+      this.store.update(
+        removeDatabucketAction(activeEnvironment.uuid, databucketUuid)
+      );
+    }
+  }
+
+  /**
+   * Remove a callback
+   */
+  public removeCallback(callbackUuid: string) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (callbackUuid) {
+      this.store.update(
+        removeCallbackAction(activeEnvironment.uuid, callbackUuid)
+      );
     }
   }
 
@@ -1126,13 +1214,6 @@ export class EnvironmentsService extends Logger {
     }
 
     this.store.update(setActiveTabAction(activeTab));
-    if (activeTab === 'CALLBACKS') {
-      // active sub tab when callbacks is clicked is the definition tab.
-      const activeSpecTab = this.store.getSelectedSpecTabInCallbackView();
-      this.store.update(
-        setActiveTabInCallbackViewAction('SPEC', activeSpecTab)
-      );
-    }
   }
 
   /**
@@ -1214,21 +1295,65 @@ export class EnvironmentsService extends Logger {
     properties: Partial<Environment>,
     force = false
   ) {
-    this.store.update(updateEnvironmentAction(properties), force);
+    this.store.update(
+      updateEnvironmentAction(
+        this.store.get('activeEnvironmentUUID'),
+        properties
+      ),
+      force
+    );
   }
 
   /**
    * Update the active route
    */
   public updateActiveRoute(properties: Partial<Route>) {
-    this.store.update(updateRouteAction(properties));
+    this.store.update(
+      updateRouteAction(
+        this.store.getActiveEnvironment().uuid,
+        this.store.getActiveRoute().uuid,
+        properties
+      )
+    );
   }
 
   /**
    * Update the active route response
    */
-  public updateActiveRouteResponse(properties: Partial<RouteResponse>) {
-    this.store.update(updateRouteResponseAction(properties));
+  public updateActiveRouteResponse(
+    properties: Partial<RouteResponse>,
+    forceUpdate = false
+  ) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const activeRoute = this.store.getActiveRoute();
+    const activeRouteResponse = this.store.getActiveRouteResponse();
+
+    this.store.update(
+      updateRouteResponseAction(
+        activeEnvironment.uuid,
+        activeRoute.uuid,
+        activeRouteResponse.uuid,
+        properties
+      ),
+      forceUpdate
+    );
+  }
+
+  /**
+   * Set the route response as default
+   */
+  public setDefaultRouteResponse(routeResponseUuid: string) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const activeRoute = this.store.getActiveRoute();
+
+    this.store.update(
+      updateRouteResponseAction(
+        activeEnvironment.uuid,
+        activeRoute.uuid,
+        routeResponseUuid,
+        { default: true }
+      )
+    );
   }
 
   /**
@@ -1237,7 +1362,8 @@ export class EnvironmentsService extends Logger {
   public navigateToCallbackDefinition(callbackUUID: string) {
     const activeSpecTab = this.store.getSelectedSpecTabInCallbackView();
 
-    this.store.update(navigateToCallbackAction(callbackUUID));
+    this.store.update(setActiveViewAction('ENV_CALLBACKS'));
+    this.store.update(setActiveCallbackAction(callbackUUID));
     this.store.update(setActiveTabInCallbackViewAction('SPEC', activeSpecTab));
   }
 
@@ -1245,14 +1371,32 @@ export class EnvironmentsService extends Logger {
    * Update the active databucket
    */
   public updateActiveDatabucket(properties: Partial<DataBucket>) {
-    this.store.update(updateDatabucketAction(properties));
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const activeDatabucket = this.store.getActiveDatabucket();
+
+    this.store.update(
+      updateDatabucketAction(
+        activeEnvironment.uuid,
+        activeDatabucket.uuid,
+        properties
+      )
+    );
   }
 
   /**
    * Update the active databucket
    */
   public updateActiveCallback(properties: Partial<Callback>) {
-    this.store.update(updateCallbackAction(properties));
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const activeCallback = this.store.getActiveCallback();
+
+    this.store.update(
+      updateCallbackAction(
+        activeEnvironment.uuid,
+        activeCallback.uuid,
+        properties
+      )
+    );
   }
 
   /**
@@ -1322,32 +1466,65 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Reorganize an items list
+   * Reorder an items list
    */
-  public reorganizeItems(dropAction: DropAction, type: DraggableContainers) {
-    const storeActions: { [key in DraggableContainers] } = {
-      ENVIRONMENTS: reorganizeEnvironmentsAction,
-      ROUTES: reorganizeRoutesAction,
-      ROUTE_RESPONSES: reorganizeRouteResponsesAction,
-      DATABUCKETS: reorganizeDatabucketsAction,
-      ENVIRONMENT_CALLBACKS: reorganizeCallbacksAction,
-      RESPONSE_CALLBACKS: reorganizeResponseCallbacksAction
-    };
+  public reorderItems(
+    reorderAction: ReorderAction<string>,
+    type: ReorderableContainers
+  ) {
+    const activeEnvironmentUuid = this.store.getActiveEnvironment().uuid;
+    const activeRouteUuid = this.store.getActiveRoute().uuid;
 
-    this.store.update(storeActions[type](dropAction));
+    let storeAction: Actions;
+
+    switch (type) {
+      case ReorderableContainers.ENVIRONMENTS:
+        storeAction = reorderEnvironmentsAction(reorderAction);
+        break;
+
+      case ReorderableContainers.ROUTES:
+        storeAction = reorderRoutesAction(activeEnvironmentUuid, reorderAction);
+        break;
+
+      case ReorderableContainers.ROUTE_RESPONSES:
+        storeAction = reorderRouteResponsesAction(
+          activeEnvironmentUuid,
+          activeRouteUuid,
+          reorderAction
+        );
+        break;
+
+      case ReorderableContainers.DATABUCKETS:
+        storeAction = reorderDatabucketsAction(
+          activeEnvironmentUuid,
+          reorderAction
+        );
+        break;
+
+      case ReorderableContainers.CALLBACKS:
+        storeAction = reorderCallbacksAction(
+          activeEnvironmentUuid,
+          reorderAction
+        );
+        break;
+      default:
+        break;
+    }
+
+    this.store.update(storeAction);
   }
 
   /**
    * Create a route based on a environment log entry
    */
   public createRouteFromLog(
-    environmentUUID: string,
+    environmentUuid: string,
     logUUID: string,
     force = false
   ) {
     const environmentsLogs = this.store.get('environmentsLogs');
-    const targetEnvironment = this.store.getEnvironmentByUUID(environmentUUID);
-    const log = environmentsLogs[environmentUUID].find(
+    const targetEnvironment = this.store.getEnvironmentByUUID(environmentUuid);
+    const log = environmentsLogs[environmentUuid].find(
       (environmentLog) => environmentLog.UUID === logUUID
     );
 
@@ -1415,7 +1592,7 @@ export class EnvironmentsService extends Logger {
       };
 
       this.store.update(
-        addRouteAction(newRoute, 'root', force, environmentUUID)
+        addRouteAction(environmentUuid, newRoute, 'root', force)
       );
     }
   }
@@ -1604,7 +1781,7 @@ export class EnvironmentsService extends Logger {
     const activeEnvironment = this.store.getActiveEnvironment();
 
     this.store.update(
-      updateEnvironmentAction({
+      updateEnvironmentAction(activeEnvironment.uuid, {
         headers: [...activeEnvironment.headers, BuildHeader()]
       }),
       // force as it is not a UI update
@@ -1612,13 +1789,24 @@ export class EnvironmentsService extends Logger {
     );
   }
 
+  /**
+   * Add a new route response header and save it in the store
+   * Currently used by the command palette, otherwise a header update is UI driven
+   */
   public addRouteResponseHeader() {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const activeRoute = this.store.getActiveRoute();
     const activeRouteResponse = this.store.getActiveRouteResponse();
 
     this.store.update(
-      updateRouteResponseAction({
-        headers: [...activeRouteResponse.headers, BuildHeader()]
-      }),
+      updateRouteResponseAction(
+        activeEnvironment.uuid,
+        activeRoute.uuid,
+        activeRouteResponse.uuid,
+        {
+          headers: [...activeRouteResponse.headers, BuildHeader()]
+        }
+      ),
       // force as it is not a UI update
       true
     );

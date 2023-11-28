@@ -9,7 +9,12 @@ import {
   UntypedFormControl,
   UntypedFormGroup
 } from '@angular/forms';
-import { Environment, Environments } from '@mockoon/commons';
+import {
+  Environment,
+  Environments,
+  ReorderAction,
+  ReorderableContainers
+} from '@mockoon/commons';
 import { Observable, Subject, merge } from 'rxjs';
 import {
   distinctUntilKeyChanged,
@@ -22,10 +27,6 @@ import { EnvironmentsContextMenu } from 'src/renderer/app/components/context-men
 import { trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
-import {
-  DraggableContainers,
-  DropAction
-} from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -80,12 +81,12 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   /**
    * Callback called when reordering environments
    *
-   * @param dropAction
+   * @param reorderAction
    */
-  public reorganizeEnvironments(dropAction: DropAction) {
-    this.environmentsService.reorganizeItems(
-      dropAction,
-      DraggableContainers.ENVIRONMENTS
+  public reorganizeEnvironments(reorderAction: ReorderAction) {
+    this.environmentsService.reorderItems(
+      reorderAction as ReorderAction<string>,
+      ReorderableContainers.ENVIRONMENTS
     );
   }
 

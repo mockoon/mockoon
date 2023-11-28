@@ -42,6 +42,7 @@ export class ResizeColumnDirective implements AfterViewInit {
     secondary: 'secondaryMenuSize'
   };
   private currentWidth: number;
+  private canSaveSettings = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -77,6 +78,7 @@ export class ResizeColumnDirective implements AfterViewInit {
         this.currentWidth = settings[this.settingProperties[this.type]];
 
         this.resize();
+        this.canSaveSettings = true;
       });
   }
 
@@ -148,8 +150,9 @@ export class ResizeColumnDirective implements AfterViewInit {
 
   private saveSettings() {
     if (
+      !this.canSaveSettings ||
       this.store.get('settings')?.[this.settingProperties[this.type]] ===
-      this.currentWidth
+        this.currentWidth
     ) {
       return;
     }

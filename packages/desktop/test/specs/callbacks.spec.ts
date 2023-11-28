@@ -370,6 +370,7 @@ describe('Callback selection under a response', () => {
 describe('Callback usages', () => {
   it('should have no usages for new callbacks', async () => {
     await navigation.switchView('ENV_CALLBACKS');
+    await callbacks.definitionTab.click();
     await callbacks.add();
     await utils.waitForAutosave();
     await callbacks.assertCount(5);

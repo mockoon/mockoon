@@ -29,7 +29,7 @@ export type RouteResponse = {
   // default is always true for CRUD routes first response
   default: boolean;
   crudKey: string;
-  callbacks?: CallbackInvocation[];
+  callbacks: CallbackInvocation[];
 };
 
 export enum ResponseMode {

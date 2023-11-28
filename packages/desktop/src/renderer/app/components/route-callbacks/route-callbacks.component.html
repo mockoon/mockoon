@@ -12,14 +12,6 @@
           'pb-1': callbackIndex !== form.get('callbacks')['controls'].length - 1
         }"
         [formGroupName]="callbackIndex"
-        appDraggable
-        appDropzone
-        dragContainer="route-callbacks"
-        [dragEnabled]="form.get('callbacks')['controls'].length > 1"
-        dragParentId="root"
-        [dragIsContainer]="false"
-        [dragId]="callbackIndex"
-        (dropped)="reorganizeCallbacks($event)"
       >
         <app-custom-select
           class="me-1"
@@ -81,16 +73,6 @@
           (click)="removeCallback(callbackIndex)"
         >
           <app-svg icon="delete"></app-svg>
-        </button>
-
-        <button
-          *ngIf="form.get('callbacks').value.length > 1"
-          #dragHandle
-          type="button"
-          class="btn btn-link btn-icon cursor-grab text-muted"
-          ngbTooltip="Reorder"
-        >
-          <app-svg icon="drag_indicator"></app-svg>
         </button>
       </div>
     </div>

@@ -18,7 +18,12 @@ createMainLogger();
 let mainWindow: BrowserWindow;
 
 // try getting a lock to ensure only one instance of the application is launched
-const appLock = app.requestSingleInstanceLock();
+let appLock = app.requestSingleInstanceLock();
+
+if (IS_DEV) {
+  // when serving (dev mode) disable the lock to enable launching multiple instances
+  appLock = true;
+}
 
 const initApp = () => {
   mainWindow = initMainWindow();

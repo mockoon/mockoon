@@ -1,11 +1,6 @@
 import * as Joi from 'joi';
 import { HighestMigrationId } from '../libs/migrations';
 import {
-  GenerateCallbackID,
-  GenerateDatabucketID,
-  generateUUID
-} from '../libs/utils';
-import {
   Callback,
   DataBucket,
   Environment,
@@ -23,6 +18,7 @@ import {
   RouteResponse,
   RouteType
 } from '../models/route.model';
+import { GenerateUniqueID, generateUUID } from '../utils/utils';
 
 export const EnvironmentDefault: Environment = {
   get uuid() {
@@ -104,7 +100,7 @@ export const CallbackDefault: Callback = {
     return generateUUID();
   },
   get id() {
-    return GenerateCallbackID();
+    return GenerateUniqueID();
   },
   uri: '',
   name: 'Callback',
@@ -141,7 +137,7 @@ export const DataBucketDefault: DataBucket = {
     return generateUUID();
   },
   get id() {
-    return GenerateDatabucketID();
+    return GenerateUniqueID();
   },
   name: 'New data',
   documentation: '',

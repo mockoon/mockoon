@@ -6,7 +6,12 @@ import {
   OnInit
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { Callback, Environment } from '@mockoon/commons';
+import {
+  Callback,
+  Environment,
+  ReorderAction,
+  ReorderableContainers
+} from '@mockoon/commons';
 import { Observable, Subject, from } from 'rxjs';
 import {
   debounceTime,
@@ -21,10 +26,6 @@ import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
-import {
-  DraggableContainers,
-  DropAction
-} from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { updateFilterAction } from 'src/renderer/app/stores/actions';
@@ -103,12 +104,12 @@ export class CallbacksMenuComponent implements OnInit, OnDestroy {
   /**
    * Callback called when reordering callbacks.
    *
-   * @param dropAction
+   * @param reorderAction
    */
-  public reorganizeCallbacks(dropAction: DropAction) {
-    this.environmentsService.reorganizeItems(
-      dropAction,
-      DraggableContainers.ENVIRONMENT_CALLBACKS
+  public reorderCallbacks(reorderAction: ReorderAction) {
+    this.environmentsService.reorderItems(
+      reorderAction as ReorderAction<string>,
+      ReorderableContainers.CALLBACKS
     );
   }
 

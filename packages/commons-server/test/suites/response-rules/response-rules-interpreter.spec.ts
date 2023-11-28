@@ -1,7 +1,7 @@
 import {
   BodyTypes,
   EnvironmentDefault,
-  GenerateDatabucketID,
+  GenerateUniqueID,
   ResponseMode,
   ResponseRuleTargets,
   RouteResponse
@@ -33,7 +33,8 @@ const routeResponse403: RouteResponse = {
   default: false,
   bodyType: BodyTypes.INLINE,
   databucketID: '',
-  crudKey: ''
+  crudKey: '',
+  callbacks: []
 };
 
 const routeResponseTemplate: RouteResponse = {
@@ -57,7 +58,8 @@ const routeResponseTemplate: RouteResponse = {
   default: false,
   bodyType: BodyTypes.INLINE,
   databucketID: '',
-  crudKey: ''
+  crudKey: '',
+  callbacks: []
 };
 
 describe('Response rules interpreter', () => {
@@ -598,7 +600,7 @@ describe('Response rules interpreter', () => {
         EnvironmentDefault,
         [
           {
-            id: GenerateDatabucketID(),
+            id: GenerateUniqueID(),
             name: 'RuleBucket',
             value: { prop: 'value' },
             parsed: true
@@ -642,7 +644,7 @@ describe('Response rules interpreter', () => {
         EnvironmentDefault,
         [
           {
-            id: GenerateDatabucketID(),
+            id: GenerateUniqueID(),
             name: 'RuleBucket',
             value: { prop: 'value' },
             parsed: false

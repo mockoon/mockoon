@@ -7,7 +7,15 @@ declare const IS_DEV: boolean;
 export const setPaths = () => {
   // set local data folder when in dev mode or running tests
   if (IS_TESTING || IS_DEV) {
-    const tmpFolder = pathResolve('./tmp');
+    // read last argument to get the data folder path
+    let dataFolder = './tmp';
+    const lastArg = process.argv[process.argv.length - 1].split('=');
+
+    if (lastArg[0] === '--data-folder' && lastArg[1]) {
+      dataFolder = lastArg[1];
+    }
+
+    const tmpFolder = pathResolve(dataFolder);
 
     app.setPath('userData', tmpFolder);
     app.setAppLogsPath(pathJoin(tmpFolder, '/logs'));

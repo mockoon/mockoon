@@ -14,6 +14,8 @@ import {
   INDENT_SIZE,
   Methods,
   MimeTypesWithTemplating,
+  ReorderAction,
+  ReorderableContainers,
   ResponseMode,
   Route,
   RouteDefault,
@@ -52,14 +54,9 @@ import {
   EnvironmentsStatuses,
   TabsNameType
 } from 'src/renderer/app/models/store.model';
-import {
-  DraggableContainers,
-  DropAction
-} from 'src/renderer/app/models/ui.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { setDefaultRouteResponseAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
@@ -343,12 +340,12 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   /**
    * Callback called when reordering route responses
    *
-   * @param dropAction
+   * @param reorderAction
    */
-  public reorganizeRouteResponses(dropAction: DropAction) {
-    this.environmentsService.reorganizeItems(
-      dropAction,
-      DraggableContainers.ROUTE_RESPONSES
+  public reorderRouteResponses(reorderAction: ReorderAction) {
+    this.environmentsService.reorderItems(
+      reorderAction as ReorderAction<string>,
+      ReorderableContainers.ROUTE_RESPONSES
     );
   }
 
@@ -487,14 +484,14 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
    * @param event
    */
   public setDefaultRouteResponse(
-    routeResponseIndex: number | null,
+    routeResponseUuid: string | null,
     event: MouseEvent
   ) {
     // prevent dropdown item selection
     event.stopPropagation();
 
-    if (routeResponseIndex != null) {
-      this.store.update(setDefaultRouteResponseAction(routeResponseIndex));
+    if (routeResponseUuid != null) {
+      this.environmentsService.setDefaultRouteResponse(routeResponseUuid);
     }
   }
 
