@@ -5,8 +5,7 @@ import {
   DataBucket,
   Environment,
   EnvironmentSchema,
-  GenerateCallbackID,
-  GenerateDatabucketID,
+  GenerateUniqueID,
   generateUUID,
   HighestMigrationId,
   repairRefs,
@@ -136,7 +135,7 @@ export class DataService extends Logger {
    * @param databucket
    */
   public renewDatabucketID(databucket: DataBucket) {
-    databucket.id = GenerateDatabucketID();
+    databucket.id = GenerateUniqueID();
 
     return databucket;
   }
@@ -168,7 +167,7 @@ export class DataService extends Logger {
    * @returns modified callback reference
    */
   public renewCallbackID(callback: Callback) {
-    callback.id = GenerateCallbackID();
+    callback.id = GenerateUniqueID();
 
     return callback;
   }

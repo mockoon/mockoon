@@ -8,9 +8,3 @@ export enum FocusableInputs {
   CALLBACK_NAME = 'CALLBACK_NAME',
   CALLBACK_FILTER = 'CALLBACK_FILTER'
 }
-
-export enum DropActionType {
-  BEFORE = 'BEFORE',
-  INSIDE = 'INSIDE',
-  AFTER = 'AFTER'
-}

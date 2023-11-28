@@ -34,7 +34,7 @@
             dragParentId="root"
             [dragIsContainer]="false"
             [dragId]="ruleIndex"
-            (dropped)="reorganizeRules($event)"
+            (dropped)="reorderRules($event)"
           >
             <app-custom-select
               class="overflow-hidden me-2"

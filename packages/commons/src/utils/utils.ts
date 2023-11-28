@@ -75,15 +75,7 @@ export const IsEqual = (firstObject: any, secondObject: any) =>
 
 export const RemoveLeadingSlash = (str: string) => str.replace(/^\//g, '');
 
-export const GenerateDatabucketID = () =>
-  (Math.random() + 1).toString(36).substring(2, 6);
-
-/**
- * Although this looks similar to above GenerateDatabucketID function, we
- * will keep separate function in case if we want to change the strategy in future.
- * @returns randomly generated id
- */
-export const GenerateCallbackID = () =>
+export const GenerateUniqueID = () =>
   (Math.random() + 1).toString(36).substring(2, 6);
 
 /**

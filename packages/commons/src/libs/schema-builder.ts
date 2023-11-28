@@ -8,7 +8,6 @@ import {
   RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
-import { CloneObject, GenerateCallbackID, generateUUID } from '../libs/utils';
 import { Callback, DataBucket, Environment } from '../models/environment.model';
 import { Folder } from '../models/folder.model';
 import {
@@ -22,6 +21,7 @@ import {
   RouteResponse,
   RouteType
 } from '../models/route.model';
+import { CloneObject, GenerateUniqueID, generateUUID } from '../utils/utils';
 
 /**
  * Build a new environment or route response header
@@ -53,7 +53,8 @@ export const BuildResponseCallback = (
 });
 
 /**
- * Clone a new route response with a fresh UUID
+ * Clone a new route response with a fresh UUID.
+ * Make sure to reset default to false, as we can never have two default responses (also for CRUD the default is the one doing the CRUD operations).
  */
 export const CloneRouteResponse = (
   routeResponse: RouteResponse
@@ -65,6 +66,19 @@ export const CloneRouteResponse = (
 });
 
 /**
+ * Clone a databucket with a renewd ids
+ *
+ * @param dataBucket
+ * @returns
+ */
+export const CloneDataBucket = (dataBucket: DataBucket): DataBucket => ({
+  ...CloneObject(dataBucket),
+  uuid: generateUUID(),
+  id: GenerateUniqueID(),
+  name: `${dataBucket.name} (copy)`
+});
+
+/**
  * Clones a callback. We use the same strategy for id generation similar to data buckets.
  *
  * @param callback callback to clone
@@ -73,7 +87,7 @@ export const CloneRouteResponse = (
 export const CloneCallback = (callback: Callback) => ({
   ...CloneObject(callback),
   uuid: generateUUID(),
-  id: GenerateCallbackID(),
+  id: GenerateUniqueID(),
   name: `${callback.name} (copy)`
 });
 

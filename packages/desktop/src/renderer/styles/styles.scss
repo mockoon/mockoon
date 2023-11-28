@@ -300,7 +300,7 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
     position: absolute;
     bottom: -2px;
     right: -2px;
-    background-color: #39c939;
+    background-color: $green;
     display: block;
     width: 6px;
     height: 6px;

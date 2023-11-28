@@ -55,7 +55,7 @@
           dragParentId="root"
           [dragIsContainer]="false"
           [dragId]="environmentCallback.uuid"
-          (dropped)="reorganizeCallbacks($event)"
+          (dropped)="reorderCallbacks($event)"
         >
           <a
             class="nav-link"

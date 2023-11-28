@@ -259,12 +259,10 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
       documentation: [CallbackDefault.documentation],
       filePath: [CallbackDefault.filePath],
       headers: [CallbackDefault.headers],
-      id: [CallbackDefault.id],
       method: [CallbackDefault.method],
       name: [CallbackDefault.name],
       sendFileAsBody: [CallbackDefault.sendFileAsBody],
-      uri: [CallbackDefault.uri],
-      uuid: [CallbackDefault.uuid]
+      uri: [CallbackDefault.uri]
     });
 
     // send new activeDatabucketForm values to the store, one by one

@@ -16,6 +16,8 @@ import {
   Environment,
   Folder,
   FolderChild,
+  ReorderAction,
+  ReorderableContainers,
   ResponseMode,
   Route
 } from '@mockoon/commons';
@@ -41,10 +43,6 @@ import {
   DuplicatedRoutesTypes,
   EnvironmentsStatuses
 } from 'src/renderer/app/models/store.model';
-import {
-  DraggableContainers,
-  DropAction
-} from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -176,12 +174,12 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   /**
    * Callback called when reordering routes and folders
    *
-   * @param dropAction
+   * @param reorderAction
    */
-  public reorganizeRoutes(dropAction: DropAction) {
-    this.environmentsService.reorganizeItems(
-      dropAction,
-      DraggableContainers.ROUTES
+  public reorderRoutes(reorderAction: ReorderAction) {
+    this.environmentsService.reorderItems(
+      reorderAction as ReorderAction<string>,
+      ReorderableContainers.ROUTES
     );
   }
 

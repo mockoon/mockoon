@@ -27,9 +27,7 @@ import {
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
-import { DropAction } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { moveItemToTargetIndex } from 'src/renderer/app/stores/reducer-utils';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
@@ -127,18 +125,6 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
     }
 
     this.callbackAdded.emit();
-  }
-
-  public reorganizeCallbacks(dropAction: DropAction) {
-    this.replaceCallbacks(
-      moveItemToTargetIndex(
-        this.callbacks.value,
-        dropAction.dropActionType,
-        dropAction.sourceId as number,
-        dropAction.targetId as number
-      ),
-      true
-    );
   }
 
   /**

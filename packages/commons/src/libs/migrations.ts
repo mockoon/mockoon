@@ -19,8 +19,8 @@ import {
   Route,
   RouteResponse
 } from '../models/route.model';
+import { generateUUID } from '../utils/utils';
 import { fakerV8Migration } from './fakerv8-migration';
-import { generateUUID } from './utils';
 
 /**
  * Old types use for compatibility purposes

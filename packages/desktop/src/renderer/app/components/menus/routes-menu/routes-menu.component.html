@@ -140,7 +140,7 @@
       [dragParentChainId]="parentChainId"
       [dragIsContainer]="true"
       [dragId]="folder.uuid"
-      (dropped)="reorganizeRoutes($event)"
+      (dropped)="reorderRoutes($event)"
       (contextmenu)="openContextMenu('folder', folder.uuid, $event)"
     >
       <!-- Calculate padding of 2 rem + 0.5 (gap between the folder icon and folder name) -->
@@ -236,7 +236,7 @@
         [dragParentChainId]="parentChainId"
         [dragIsContainer]="false"
         [dragId]="route.uuid"
-        (dropped)="reorganizeRoutes($event)"
+        (dropped)="reorderRoutes($event)"
       >
         <!-- Calculate padding of 2 rem + 0.5 (gap between the folder icon and folder name) -->
         <a

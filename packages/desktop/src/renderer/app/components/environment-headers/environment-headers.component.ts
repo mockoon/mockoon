@@ -58,7 +58,7 @@ export class EnvironmentHeadersComponent implements OnInit {
 
     if (headersChanged) {
       this.store.update(
-        updateEnvironmentAction({
+        updateEnvironmentAction(activeEnvironment.uuid, {
           headers: newHeaders
         }),
         // force as it is a non-UI change

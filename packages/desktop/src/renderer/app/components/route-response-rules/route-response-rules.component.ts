@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import {
   BuildResponseRule,
+  ReorderAction,
   ResponseRule,
   ResponseRuleOperators,
   ResponseRuleTargets,
@@ -22,21 +23,16 @@ import {
   RulesDisablingResponseModes
 } from '@mockoon/commons';
 import { Observable, Subject } from 'rxjs';
-import {
-  distinctUntilKeyChanged,
-  filter,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
+import { filter, takeUntil, tap } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import {
   DropdownItems,
   ToggleItems
 } from 'src/renderer/app/models/common.model';
-import { DropAction } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { moveItemToTargetIndex } from 'src/renderer/app/stores/reducer-utils';
+import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
   selector: 'app-route-response-rules',
@@ -108,7 +104,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private formBuilder: UntypedFormBuilder
+    private formBuilder: UntypedFormBuilder,
+    private store: Store
   ) {}
 
   public get rules() {
@@ -124,10 +121,12 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     // subscribe to active route response to reset the form
     this.routeResponse$ = this.activeRouteResponse$.pipe(
       filter((activeRouteResponse) => !!activeRouteResponse),
-      distinctUntilKeyChanged('uuid'),
+      this.store.distinctUUIDOrForce(),
       tap((routeResponse) => {
         this.replaceRules(routeResponse.rules, false);
-        this.form.get('rulesOperator').setValue(routeResponse.rulesOperator);
+        this.form.get('rulesOperator').setValue(routeResponse.rulesOperator, {
+          emitEvent: false
+        });
       })
     );
 
@@ -157,14 +156,18 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     this.ruleAdded.emit();
   }
 
-  public reorganizeRules(dropAction: DropAction) {
-    this.replaceRules(
-      moveItemToTargetIndex(
-        this.rules.value,
-        dropAction.dropActionType,
-        dropAction.sourceId as number,
-        dropAction.targetId as number
-      ),
+  public reorderRules(reorderAction: ReorderAction) {
+    // store is driving the reordering
+    this.environmentsService.updateActiveRouteResponse(
+      {
+        rules: moveItemToTargetIndex(
+          this.rules.value,
+          reorderAction.reorderActionType,
+          reorderAction.sourceId as number,
+          reorderAction.targetId as number
+        )
+      },
+      // it's a store forced event, triggering a form update here
       true
     );
   }
