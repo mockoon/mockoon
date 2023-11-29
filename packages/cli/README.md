@@ -30,6 +30,8 @@ The CLI supports the same features as the main application: [templating system](
 - [Commands](#commands)
   - [Start command](#start-command)
   - [Dockerize command](#dockerize-command)
+  - [Import command](#import-command)
+  - [Export command](#export-command)
   - [Help command](#help-command)
 - [Use the GitHub Action](#use-the-github-action)
 - [Docker image](#docker-image)
