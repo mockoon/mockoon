@@ -744,10 +744,7 @@ export const environmentReducer = (
       newState = {
         ...state,
         activeRouteResponseUUID:
-          state.activeRouteResponseUUID === action.routeResponseUuid &&
-          newRouteResponses.length > 0
-            ? newRouteResponses[0].uuid
-            : null,
+          newRouteResponses.length > 0 ? newRouteResponses[0].uuid : null,
         environments: newEnvironments
       };
       break;
@@ -931,13 +928,16 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: newEnvironments,
-        activeCallbackUUID:
-          state.activeCallbackUUID === action.callbackUuid &&
-          newEnvironment.callbacks.length > 0
-            ? newEnvironment.callbacks[0].uuid
-            : null,
         environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
       };
+
+      if (state.activeCallbackUUID === action.callbackUuid) {
+        if (newEnvironment.callbacks.length > 0) {
+          newState.activeCallbackUUID = newEnvironment.callbacks[0].uuid;
+        } else {
+          newState.activeCallbackUUID = null;
+        }
+      }
 
       break;
     }
@@ -1016,13 +1016,16 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: newEnvironments,
-        activeDatabucketUUID:
-          state.activeDatabucketUUID === action.databucketUuid &&
-          newEnvironment.data.length > 0
-            ? newEnvironment.data[0].uuid
-            : null,
         environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
       };
+
+      if (state.activeDatabucketUUID === action.databucketUuid) {
+        if (newEnvironment.data.length > 0) {
+          newState.activeDatabucketUUID = newEnvironment.data[0].uuid;
+        } else {
+          newState.activeDatabucketUUID = null;
+        }
+      }
 
       break;
     }
