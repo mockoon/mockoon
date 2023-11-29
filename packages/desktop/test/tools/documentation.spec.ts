@@ -18,6 +18,7 @@ import navigation from '../libs/navigation';
 import routes, { RoutesMenuActions } from '../libs/routes';
 import settings from '../libs/settings';
 import utils from '../libs/utils';
+import callbacks from '../libs/callbacks';
 
 /**
  * Spec file used to generate documentation screenshots
@@ -204,7 +205,7 @@ const documentationTopics: {
         },
         highlight: false,
         screenshotPosition: {},
-        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 200 },
+        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 330 },
         fileName: 'route-patterns.png'
       },
       {
@@ -217,7 +218,7 @@ const documentationTopics: {
         },
         highlight: false,
         screenshotPosition: {},
-        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 200 },
+        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 330 },
         fileName: 'route-params.png'
       }
     ]
@@ -687,7 +688,7 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 450 },
+        screeenshotGaps: { top: 200, left: 600 },
         fileName: 'inline-body-editor.png'
       },
       {
@@ -701,7 +702,7 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 450 },
+        screeenshotGaps: { top: 200, left: 600 },
         fileName: 'body-file-serving.png'
       },
       {
@@ -715,7 +716,7 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 450 },
+        screeenshotGaps: { top: 200, left: 600 },
         fileName: 'body-data-bucket.png'
       }
     ]
@@ -734,7 +735,7 @@ const documentationTopics: {
         },
         highlight: true,
         screenshotPosition: { right: 0 },
-        highlightGaps: { top: 10, right: 70, bottom: 60, left: 10 },
+        highlightGaps: { top: 10, right: 80, bottom: 60, left: 10 },
         screeenshotGaps: { top: 200, bottom: 50, left: 20 },
         fileName: 'file-path.png'
       },
@@ -812,7 +813,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 60, bottom: 100, left: 900 },
+        screeenshotGaps: { top: 60, bottom: 100, left: 1100 },
         fileName: 'duplicate-route-response.png'
       },
       {
@@ -836,7 +837,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 5, right: 10, bottom: 40, left: 10 },
-        screeenshotGaps: { top: 50, bottom: 100, left: 850 },
+        screeenshotGaps: { top: 50, bottom: 100, left: 1000 },
         fileName: 'change-route-responses-default.png'
       },
       {
@@ -849,7 +850,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 900 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 1100 },
         fileName: 'random-route-responses.png'
       },
       {
@@ -862,7 +863,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 920 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 1120 },
         fileName: 'sequential-route-responses.png'
       },
       {
@@ -875,7 +876,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 960 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 1160 },
         fileName: 'fallback-mode-responses.png'
       }
     ]
@@ -915,7 +916,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 5, right: 5, bottom: 50, left: 5 },
-        screeenshotGaps: { top: 200, bottom: 50, left: 940 },
+        screeenshotGaps: { top: 200, bottom: 50, left: 1150 },
         fileName: 'route-response-rule-reorder.png'
       },
       {
@@ -928,7 +929,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 10, bottom: 200, left: 940 },
+        screeenshotGaps: { top: 10, bottom: 200, left: 1150 },
         fileName: 'disable-rules.png'
       },
       {
@@ -1038,6 +1039,7 @@ const documentationTopics: {
       {
         tasks: async () => {
           await navigation.switchView('ENV_DATABUCKETS');
+          await databuckets.add();
         },
         get highlightedTarget() {
           return databuckets.addBtn;
@@ -1619,7 +1621,7 @@ const documentationTopics: {
           await modals.close();
         },
         get highlightedTarget() {
-          return $('.modal-footer .ml-auto button:last-of-type');
+          return $('.modal-footer .ms-auto button:last-of-type');
         },
         get screenshotTarget() {
           return modals.content;
@@ -1666,7 +1668,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 960 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 1250 },
         fileName: 'activate-fallback-mode.png'
       },
       {
@@ -1705,6 +1707,76 @@ const documentationTopics: {
         highlightGaps: { top: 10, right: 5, bottom: 40, left: 10 },
         screeenshotGaps: { top: 200, bottom: 20, left: 20 },
         fileName: 'response-rule-header-null.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'callbacks/overview',
+    screenshots: [
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_ROUTES');
+        },
+        get highlightedTarget() {
+          return navigation.callbacksTab;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { top: 0, left: 0 },
+        screeenshotGaps: { right: 400, bottom: 125 },
+        fileName: 'open-callbacks-view.png'
+      },
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_CALLBACKS');
+          await callbacks.add();
+        },
+        get highlightedTarget() {
+          return callbacks.addBtn;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0, right: 0 },
+        screeenshotGaps: { bottom: 500 },
+        fileName: 'add-callback.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'callbacks/using-callbacks',
+    screenshots: [
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_ROUTES');
+          await routes.switchTab('RESPONSE');
+        },
+        get screenshotTarget() {
+          return routes.routeResponseMenu;
+        },
+        get highlightedTarget() {
+          return routes.callbacksTab;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0 },
+        screeenshotGaps: { top: 20, left: 40, bottom: 50 },
+        fileName: 'open-route-response-callbacks.png'
+      },
+      {
+        tasks: async () => {
+          await routes.switchTab('CALLBACKS');
+          await callbacks.attachCallback();
+        },
+        get highlightedTarget() {
+          return callbacks.attachCallbackBtn;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0 },
+        screeenshotGaps: { top: 150, bottom: 50, left: 20 },
+        fileName: 'link-callback-response.png'
       }
     ]
   }
@@ -1773,7 +1845,7 @@ describe('Documentation screenshots', () => {
     });
   }
 
-  describe('Cheat sheet', () => {
+  xdescribe('Cheat sheet', () => {
     it('should take screenshots for cheat sheet', async () => {
       await fs.mkdir('./tmp/docs-cheat-sheet', {
         recursive: true
