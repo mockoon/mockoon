@@ -826,9 +826,8 @@ export class CommandPaletteService {
         enabled: hasActiveEnvironment
       }));
 
-    const selectRouteCommands: Commands = this.store
-      .getActiveEnvironment()
-      .routes.map((route) => ({
+    const selectRouteCommands: Commands =
+      this.store.getActiveEnvironment()?.routes.map((route) => ({
         id: `SELECT_ROUTE_${route.uuid}`,
         label: `Select ${route.type === 'http' ? 'HTTP' : 'CRUD'} Route ${
           route.method === 'all' ? '' : route.method.toUpperCase()
@@ -839,11 +838,10 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled: hasActiveEnvironment
-      }));
+      })) || [];
 
-    const selectDatabucketCommands: Commands = this.store
-      .getActiveEnvironment()
-      .data.map((databucket) => ({
+    const selectDatabucketCommands: Commands =
+      this.store.getActiveEnvironment()?.data.map((databucket) => ({
         id: `SELECT_DATA_BUCKET_${databucket.uuid}`,
         label: `Select Data Bucket ${databucket.name} (Id: ${databucket.id})`,
         action: () => {
@@ -852,7 +850,7 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled: hasActiveEnvironment
-      }));
+      })) || [];
 
     return [
       ...commonCommands,
