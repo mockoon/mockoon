@@ -109,6 +109,11 @@ export class EditableElementComponent implements ControlValueAccessor {
   }
 
   public save() {
+    // Do not save if the text is the same
+    if (this._text === this.data.value) {
+      return;
+    }
+
     this.text = this.data.value;
     this.onChange(this.data.value);
     this.edit = false;
