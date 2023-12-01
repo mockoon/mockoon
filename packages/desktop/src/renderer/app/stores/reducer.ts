@@ -306,7 +306,11 @@ export const environmentReducer = (
         let newCollapsedFolders = state.settings.collapsedFolders;
 
         // uncollapse folders in hierarchy if some are collapsed (selecting a route in a collapsed folder is only possible after a search)
-        if (foldersUuidHierarchy.length > 0) {
+        if (
+          foldersUuidHierarchy.length > 0 &&
+          newCollapsedFolders[activeEnvironment.uuid] &&
+          newCollapsedFolders[activeEnvironment.uuid].length > 0
+        ) {
           newCollapsedFolders = { ...state.settings.collapsedFolders };
 
           newCollapsedFolders[activeEnvironment.uuid] = newCollapsedFolders[
