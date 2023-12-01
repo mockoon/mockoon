@@ -79,7 +79,10 @@
             >
               {{ environmentDatabucket.name }}
             </div>
-            <div class="nav-link-subtitle text-truncate">
+            <div
+              *ngIf="environmentDatabucket.documentation"
+              class="nav-link-subtitle text-truncate"
+            >
               {{ environmentDatabucket.documentation }}
             </div>
           </a>

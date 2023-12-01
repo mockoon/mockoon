@@ -298,10 +298,11 @@
               </span>
             </div>
           </div>
-          <div>
-            <div class="nav-link-subtitle text-truncate pt-2">
-              {{ route.documentation }}
-            </div>
+          <div
+            *ngIf="route.documentation"
+            class="nav-link-subtitle text-truncate"
+          >
+            {{ route.documentation }}
           </div>
         </a>
       </li>

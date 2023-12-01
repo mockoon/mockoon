@@ -77,7 +77,10 @@
             >
               {{ environmentCallback.name }}
             </div>
-            <div class="nav-link-subtitle text-truncate">
+            <div
+              *ngIf="environmentCallback.documentation"
+              class="nav-link-subtitle text-truncate"
+            >
               {{ environmentCallback.documentation }}
             </div>
           </a>
