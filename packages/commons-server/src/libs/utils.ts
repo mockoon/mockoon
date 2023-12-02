@@ -330,3 +330,20 @@ export const dedupSlashes = (str: string) => str.replace(/\/{2,}/g, '/');
  */
 export const preparePath = (endpointPrefix: string, endpoint: string) =>
   dedupSlashes(`/${endpointPrefix}/${endpoint.replace(/ /g, '%20')}`);
+
+/**
+ * Perform a full text search on an object. The object can be any valid JSON type
+ *
+ * @param object
+ * @param query
+ * @returns
+ */
+export const fullTextSearch = (object: unknown, query: string): boolean => {
+  if (typeof object === 'object' || typeof object === 'boolean') {
+    return Object.values(object ?? []).some((value) =>
+      fullTextSearch(value, query)
+    );
+  }
+
+  return new RegExp(query, 'i').test(String(object));
+};
