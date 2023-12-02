@@ -4,7 +4,7 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { Request, Response } from 'express';
-import { dedupSlashes } from '../utils';
+import { dedupSlashes, fullTextSearch } from '../utils';
 
 export type CrudRouteIds =
   | 'get'
@@ -130,6 +130,10 @@ export const databucketActions = (
     case 'get': {
       responseBody = databucket.value;
 
+      const search =
+        typeof request.query.search === 'string' && request.query.search
+          ? request.query.search
+          : null;
       const limit =
         typeof request.query.limit === 'string'
           ? parseInt(request.query.limit, 10) || 10
@@ -148,6 +152,11 @@ export const databucketActions = (
           : 'asc';
 
       if (Array.isArray(responseBody)) {
+        if (search != null) {
+          response.set('X-Total-Count', responseBody.length.toString());
+          responseBody = responseBody.filter((r) => fullTextSearch(r, search));
+        }
+
         if (sort != null) {
           responseBody = responseBody.slice().sort((a, b) => {
             let aProp = typeof a === 'object' && a !== null ? a[sort] : a;
@@ -172,7 +181,10 @@ export const databucketActions = (
           request.query.limit !== undefined ||
           request.query.page !== undefined
         ) {
-          response.set('X-Total-Count', responseBody.length.toString());
+          response.set(
+            search != null ? 'X-Filtered-Count' : 'X-Total-Count',
+            responseBody.length.toString()
+          );
           responseBody = responseBody.slice((page - 1) * limit, page * limit);
         }
       }

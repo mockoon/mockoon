@@ -1101,6 +1101,188 @@ const jsonArrayTestGroups: HttpCall[][] = [
         body: ''
       }
     }
+  ],
+  [
+    {
+      description: 'Search - get all with search query "peter"',
+      path: '/search?search=peter',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description:
+        'Search - get all with search query "paul" and order by "username" descending',
+      path: '/search?search=paul&sort=username&order=desc',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description:
+        'Search - get all with search query "New York" in nested object',
+      path: '/search?search=New%20York',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":9,"username":"theresa","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - get all with search query "swimming" in array',
+      path: '/search?search=swimming',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":9,"username":"theresa","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description:
+        'Search - get all with search query "dancing" in array and paginate',
+      path: '/search?search=dancing&page=1&limit=2',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":3,"username":"marta","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-filtered-count': '6',
+          'x-total-count': '11'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - no match',
+      path: '/search?search=nonexistent',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - partial match',
+      path: '/search?search=pet',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - matches multiple records for different reasons',
+      path: '/search?search=ra',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - matches multiple records with pagination',
+      path: '/search?search=ra&page=1&limit=1',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-filtered-count': '3',
+          'x-total-count': '11'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - case insensitive',
+      path: '/search?search=PETER',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - empty string',
+      path: '/search?search=&limit=1',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - filter on numbers',
+      path: '/search?search=8',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - filter on partial numbers',
+      path: '/search?search=2',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":3,"username":"marta","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - filter on primitive array',
+      path: '/primitivearray?search=a',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '["aaa"]',
+        headers: { 'content-type': 'application/json', 'x-total-count': '3' }
+      }
+    }
   ]
 ];
 
@@ -1155,6 +1337,11 @@ describe('CRUD endpoints', () => {
     await routes.setPath('primitivearray');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(4);
+
+    await routes.addCRUDRoute();
+    await routes.setPath('search');
+    await routes.openDataBucketMenu();
+    await routes.selectDataBucket(5);
   });
 
   it('should start the environment', async () => {
