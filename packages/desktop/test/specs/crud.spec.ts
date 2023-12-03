@@ -13,7 +13,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -63,7 +67,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -88,7 +96,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -113,7 +125,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}","test":"hello"\}\]/,
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -138,7 +154,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john"},{"id":"idtest","test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -163,7 +183,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john"},"teststring"]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -188,7 +212,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john"},"test,string"]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -225,7 +253,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -250,7 +282,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -275,7 +311,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -300,7 +340,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":"123","test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -325,7 +369,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -350,7 +398,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -375,7 +427,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":"123","test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -413,7 +469,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -438,7 +498,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john","test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -463,7 +527,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -488,7 +556,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -513,7 +585,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"name":"john"},{"id":2,"test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -550,7 +626,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '0',
+          'x-filtered-count': '0'
+        }
       }
     }
   ],
@@ -586,7 +666,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter"},{"id":2,"username":"alberto"},{"id":3,"username":"marta"},{"id":4,"username":"mary"},{"id":5,"username":"john"},{"id":6,"username":"douglas"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":9,"username":"theresa"},{"id":10,"username":"cinderella"},{"id":11,"username":"laura"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -596,7 +680,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter"},{"id":2,"username":"alberto"},{"id":3,"username":"marta"},{"id":4,"username":"mary"},{"id":5,"username":"john"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -606,7 +694,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter"},{"id":2,"username":"alberto"},{"id":3,"username":"marta"},{"id":4,"username":"mary"},{"id":5,"username":"john"},{"id":6,"username":"douglas"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":9,"username":"theresa"},{"id":10,"username":"cinderella"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -616,7 +708,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":6,"username":"douglas"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":9,"username":"theresa"},{"id":10,"username":"cinderella"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -627,7 +723,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":3,"username":"marta"},{"id":4,"username":"mary"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":1,"username":"peter"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -638,7 +738,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":3,"username":"marta"},{"id":11,"username":"laura"},{"id":5,"username":"john"},{"id":6,"username":"douglas"},{"id":10,"username":"cinderella"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -649,7 +753,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":6,"username":"douglas"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":9,"username":"theresa"},{"id":10,"username":"cinderella"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -659,7 +767,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":6,"username":"douglas"},{"id":5,"username":"john"},{"id":4,"username":"mary"},{"id":3,"username":"marta"},{"id":2,"username":"alberto"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     }
   ],
@@ -1110,7 +1222,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -1123,7 +1239,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -1136,7 +1256,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":9,"username":"theresa","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
       }
     }
   ],
@@ -1148,7 +1272,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":9,"username":"theresa","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '5'
+        }
       }
     }
   ],
@@ -1163,8 +1291,8 @@ const jsonArrayTestGroups: HttpCall[][] = [
         body: '[{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":3,"username":"marta","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
         headers: {
           'content-type': 'application/json',
-          'x-filtered-count': '6',
-          'x-total-count': '11'
+          'x-total-count': '11',
+          'x-filtered-count': '6'
         }
       }
     }
@@ -1177,7 +1305,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '0'
+        }
       }
     }
   ],
@@ -1189,7 +1321,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -1201,7 +1337,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
       }
     }
   ],
@@ -1215,8 +1355,8 @@ const jsonArrayTestGroups: HttpCall[][] = [
         body: '[{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
         headers: {
           'content-type': 'application/json',
-          'x-filtered-count': '3',
-          'x-total-count': '11'
+          'x-total-count': '11',
+          'x-filtered-count': '3'
         }
       }
     }
@@ -1229,7 +1369,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -1243,7 +1387,8 @@ const jsonArrayTestGroups: HttpCall[][] = [
         body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
         headers: {
           'content-type': 'application/json',
-          'x-total-count': '11'
+          'x-total-count': '11',
+          'x-filtered-count': '11'
         }
       }
     }
@@ -1256,7 +1401,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -1268,7 +1417,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":3,"username":"marta","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '4'
+        }
       }
     }
   ],
@@ -1280,7 +1433,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '["aaa"]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '3' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '3',
+          'x-filtered-count': '1'
+        }
       }
     }
   ]

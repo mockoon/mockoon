@@ -152,10 +152,13 @@ export const databucketActions = (
           : 'asc';
 
       if (Array.isArray(responseBody)) {
+        response.set('X-Total-Count', responseBody.length.toString());
+
         if (search != null) {
-          response.set('X-Total-Count', responseBody.length.toString());
           responseBody = responseBody.filter((r) => fullTextSearch(r, search));
         }
+
+        response.set('X-Filtered-Count', responseBody.length.toString());
 
         if (sort != null) {
           responseBody = responseBody.slice().sort((a, b) => {
@@ -181,10 +184,6 @@ export const databucketActions = (
           request.query.limit !== undefined ||
           request.query.page !== undefined
         ) {
-          response.set(
-            search != null ? 'X-Filtered-Count' : 'X-Total-Count',
-            responseBody.length.toString()
-          );
           responseBody = responseBody.slice((page - 1) * limit, page * limit);
         }
       }
