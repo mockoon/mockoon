@@ -265,5 +265,9 @@
 </div>
 
 <ng-template #noActiveCallback>
-  <p class="message mt-4">No callbacks defined</p>
+  <p class="message mt-4">
+    {{
+      (hasCallbacks$ | async) ? 'No callback selected' : 'No callbacks defined'
+    }}
+  </p>
 </ng-template>

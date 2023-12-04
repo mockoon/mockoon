@@ -62,5 +62,11 @@
 </div>
 
 <ng-template #noActiveDatabucket>
-  <p class="message mt-4">No databucket defined</p>
+  <p class="message mt-4">
+    {{
+      (hasDatabuckets$ | async)
+        ? 'No databucket selected'
+        : 'No databucket defined'
+    }}
+  </p>
 </ng-template>

@@ -52,6 +52,7 @@ import { Store } from 'src/renderer/app/stores/store';
 })
 export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
+  public hasCallbacks$: Observable<boolean>;
   public activeCallback$: Observable<Callback>;
   public activeCallbackForm: UntypedFormGroup;
   public activeTab$: Observable<CallbackTabsNameType>;
@@ -120,6 +121,10 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
+    this.hasCallbacks$ = this.store.selectActiveEnvironment().pipe(
+      filter((activeEnvironment) => !!activeEnvironment),
+      map((activeEnvironment) => activeEnvironment.callbacks.length > 0)
+    );
     this.activeCallback$ = this.store.selectActiveCallback();
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
     this.initForms();

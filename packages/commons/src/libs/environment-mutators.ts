@@ -740,12 +740,13 @@ export const removeCallbackMutator = (
     let needsUpdate = false;
 
     const newReponses = route.responses.map((response) => {
-      if (response.callbacks) {
+      if (response.callbacks.length > 0) {
         const filteredCallbacks = response.callbacks.filter(
           (callback) => callback.uuid !== callbackUuid
         );
 
-        needsUpdate = filteredCallbacks.length !== response.callbacks.length;
+        needsUpdate =
+          needsUpdate || filteredCallbacks.length !== response.callbacks.length;
 
         return { ...response, callbacks: filteredCallbacks };
       }

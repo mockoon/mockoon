@@ -910,7 +910,7 @@ export class EnvironmentsService extends Logger {
   public setActiveDatabucket(databucketUUID: string) {
     const activeDatabucketUUID = this.store.get('activeDatabucketUUID');
 
-    if (activeDatabucketUUID && activeDatabucketUUID !== databucketUUID) {
+    if (activeDatabucketUUID !== databucketUUID) {
       this.store.update(setActiveDatabucketAction(databucketUUID));
     }
   }

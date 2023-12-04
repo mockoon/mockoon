@@ -19,6 +19,7 @@ import { Store } from 'src/renderer/app/stores/store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
+  public hasDatabuckets$: Observable<boolean>;
   public activeDatabucket$: Observable<DataBucket>;
   public activeDatabucketForm: UntypedFormGroup;
   public focusableInputs = FocusableInputs;
@@ -34,6 +35,10 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.hasDatabuckets$ = this.store.selectActiveEnvironment().pipe(
+      filter((environment) => !!environment),
+      map((environment) => environment.data.length > 0)
+    );
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
     this.initForms();
