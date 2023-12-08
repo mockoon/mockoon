@@ -111,7 +111,11 @@
                     *ngIf="!data.activeRouteResponse"
                     class="dropdown-toggle-label"
                   >
-                    <span class="text-muted">No response defined</span>
+                    <span class="text-muted">{{
+                      activeRoute.responses.length > 0
+                        ? 'No response selected'
+                        : 'No response defined'
+                    }}</span>
                   </div>
 
                   <div

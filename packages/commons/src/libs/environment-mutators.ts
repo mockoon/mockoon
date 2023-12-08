@@ -644,7 +644,7 @@ export const removeRouteResponseMutator = (
         (routeResponse) => routeResponse.uuid !== routeResponseUuid
       );
 
-      if (deletedRouteResponse?.default) {
+      if (newResponses.length > 0 && deletedRouteResponse?.default) {
         newResponses[0] = {
           ...newResponses[0],
           default: true

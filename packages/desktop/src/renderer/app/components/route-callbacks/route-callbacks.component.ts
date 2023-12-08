@@ -17,13 +17,7 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { Observable, Subject } from 'rxjs';
-import {
-  distinctUntilKeyChanged,
-  filter,
-  map,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
+import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
@@ -73,7 +67,7 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
     // subscribe to active route response to reset the form
     this.routeResponse$ = this.activeRouteResponse$.pipe(
       filter((activeRouteResponse) => !!activeRouteResponse),
-      distinctUntilKeyChanged('uuid'),
+      this.store.distinctUUIDOrForce(),
       tap((routeResponse) => {
         this.replaceCallbacks(routeResponse.callbacks, false);
       })
