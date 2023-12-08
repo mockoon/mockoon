@@ -106,7 +106,7 @@
         <div class="input-group">
           <label class="col-form-label pe-2"> Locale </label>
           <app-custom-select
-            class="col-2"
+            class="col-3"
             formControlName="fakerLocale"
             [enableCustomInput]="false"
             [items]="fakerLocales"
@@ -126,6 +126,7 @@
           <label for="settings-faker-seed" class="col-form-label pe-2">
             Seed
           </label>
+          <!-- input number is important for the seed -->
           <input
             type="number"
             class="form-control col-4"

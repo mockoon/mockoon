@@ -43,7 +43,8 @@ export class ServerInstance {
       environmentDirectory,
       disabledRoutes:
         getSettings().disabledRoutes?.[this.environment.uuid] || [],
-      refreshEnvironmentFunction: () => this.environment
+      refreshEnvironmentFunction: () => this.environment,
+      fakerOptions: { seed: getSettings().fakerSeed }
     });
 
     listenServerEvents(

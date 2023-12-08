@@ -5,6 +5,7 @@ import {
   CallbackInvocation,
   CORSHeaders,
   Environment,
+  FakerAvailableLocales,
   FileExtensionsWithTemplating,
   GetContentType,
   GetRouteResponseContentType,
@@ -43,6 +44,7 @@ import { xml2js } from 'xml-js';
 import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
 import { ServerMessages } from '../../constants/server-messages.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
+import { SetFakerSeed } from '../faker';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
 import { requestHelperNames } from '../templating-helpers/request-helpers';
@@ -72,8 +74,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     private environment: Environment,
     private options: {
       /**
-       *    Directory where to find the environment file.
-       *
+       * Directory where to find the environment file.
        */
       environmentDirectory?: string;
 
@@ -89,6 +90,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       refreshEnvironmentFunction?: (
         environmentUUID: string
       ) => Environment | null;
+
+      /**
+       * Faker options
+       */
+      fakerOptions?: { locale?: FakerAvailableLocales; seed?: number };
     } = {}
   ) {
     super();
@@ -98,6 +104,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * Start a server
    */
   public start() {
+    SetFakerSeed(this.options.fakerOptions?.seed ?? undefined);
+
     const requestListener = this.createRequestListener();
 
     // create https or http server instance
