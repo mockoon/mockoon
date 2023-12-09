@@ -1039,6 +1039,16 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
   }
 ];
 
+const fakerSeedingTest: HttpCall = {
+  path: '/fakerseed',
+  method: 'GET',
+  headers: { 'Content-Type': 'text/plain' },
+  testedResponse: {
+    status: 200,
+    body: 'IR3 9OW'
+  }
+};
+
 describe('Templating', () => {
   describe('Helpers', () => {
     before(async () => {
@@ -1058,6 +1068,7 @@ describe('Templating', () => {
       await settings.open();
       await settings.setSettingValue('settings-faker-seed', '1');
       await modals.close();
+      await utils.waitForAutosave();
       await environments.start();
     });
 
@@ -1104,6 +1115,29 @@ describe('Templating', () => {
           body: "start{{body 'test'}}end"
         }
       });
+    });
+  });
+
+  describe('Server restart should reset the Faker seeding', () => {
+    it('should open and start the environment', async () => {
+      await environments.close(1);
+      await environments.open('templating');
+      await settings.open();
+      await settings.setSettingValue('settings-faker-seed', '1');
+      await settings.setDropdownSettingValue('settings-faker-locale', 17);
+      await modals.close();
+      await utils.waitForAutosave();
+      await environments.start();
+    });
+
+    it('should receive seeded and localized content', async () => {
+      await http.assertCall(fakerSeedingTest);
+    });
+
+    it('should receive same seeded and localized content after a restart', async () => {
+      await environments.stop();
+      await environments.start();
+      await http.assertCall(fakerSeedingTest);
     });
   });
 });

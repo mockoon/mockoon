@@ -1690,6 +1690,35 @@
       ],
       "responseMode": null,
       "type": "http"
+    },
+    {
+      "uuid": "5033832a-06cd-4936-969a-e6e634feddfc",
+      "method": "get",
+      "endpoint": "fakerseed",
+      "documentation": "",
+      "responses": [
+        {
+          "uuid": "d7626c42-5210-4116-b22c-74446fcc7d42",
+          "body": "{{faker 'location.zipCode'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -1812,7 +1841,8 @@
     { "type": "route", "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b" },
     { "type": "route", "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b" },
     { "type": "route", "uuid": "7a748b48-0ebb-4557-88f0-c44d50ae238c" },
-    { "type": "route", "uuid": "0687ac28-bdd1-43f1-8dfe-0fd523a8c276" }
+    { "type": "route", "uuid": "0687ac28-bdd1-43f1-8dfe-0fd523a8c276" },
+    { "type": "route", "uuid": "5033832a-06cd-4936-969a-e6e634feddfc" }
   ],
   "callbacks": []
 }

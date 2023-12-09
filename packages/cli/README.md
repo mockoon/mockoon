@@ -128,6 +128,8 @@ OPTIONS
   -d, --data                  [required] Path(s) or URL(s) to your Mockoon file(s)
   -p, --port                  Override environment(s) port(s)
   -l, --hostname              Override default listening hostname(s)
+  -c, --faker-locale          Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)
+  -s, --faker-seed            Number for the Faker.js seed (e.g. 1234)
   -t, --log-transaction       Log the full HTTP transaction (request and response)
   -X, --disable-log-to-file   Disable logging to file
   -e, --disable-routes        Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash)
@@ -141,6 +143,11 @@ EXAMPLES
   $ mockoon-cli start --data ~/data.json --log-transaction
   $ mockoon-cli start --data ~/data.json --disable-routes route1 route2
 ```
+
+#### Faker.js options
+
+- **Locale**: You can set up Faker.js locale with the `--faker-locale` flag. If not provided, Faker.js will use the default locale: `en`. For a list of currently supported locales, you can check the [supported locales list](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/faker.model.ts#L1) in Mockoon's commons library. You can also check [Faker.js locales list](https://fakerjs.dev/guide/localization.html#available-locales) for more information (⚠️ Some locales may not yet be implemented in Mockoon).
+- **Seed**: You can set up Faker.js seed with the `--faker-seed` flag. If not provided, Faker.js will not use a seed. By providing a seed value, you can generate repeatable sequences of fake data. Using seeding will not always generate the same value but rather a predictable sequence.
 
 ### Dockerize command
 

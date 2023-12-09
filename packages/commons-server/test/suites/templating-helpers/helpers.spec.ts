@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 import { format as dateFormat } from 'date-fns';
-import { localFaker as faker } from '../../../src';
+import { SetFakerSeed } from '../../../src';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
-faker.seed(1);
-
 describe('Template parser', () => {
+  before(() => {
+    SetFakerSeed(1);
+  });
+
   describe('Helper: switch', () => {
     it('should return different values depending on the string value', () => {
       const parseResult = TemplateParser(

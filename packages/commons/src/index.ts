@@ -1,5 +1,6 @@
 export * from './constants/common.constants';
 export * from './constants/environment-schema.constants';
+export * from './constants/faker.constants';
 export * from './enums/errors.enum';
 export * from './libs/environment-mutators';
 export * from './libs/migrations';

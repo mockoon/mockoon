@@ -8,7 +8,7 @@ const spies = require('chai-spies');
 
 chai.use(spies);
 
-describe('aaRange headers', () => {
+describe('Range headers', () => {
   let environment: Environment;
   let server: MockoonServer;
 

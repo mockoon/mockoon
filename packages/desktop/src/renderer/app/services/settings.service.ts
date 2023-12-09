@@ -40,17 +40,6 @@ export class SettingsService {
       tap(([previousSettings, currentSettings]) => {
         if (
           (!previousSettings && currentSettings) ||
-          previousSettings.fakerLocale !== currentSettings.fakerLocale ||
-          previousSettings.fakerSeed !== currentSettings.fakerSeed
-        ) {
-          MainAPI.send('APP_SET_FAKER_OPTIONS', {
-            locale: currentSettings.fakerLocale,
-            seed: currentSettings.fakerSeed
-          });
-        }
-
-        if (
-          (!previousSettings && currentSettings) ||
           (previousSettings.fileWatcherEnabled !==
             currentSettings.fileWatcherEnabled &&
             currentSettings.fileWatcherEnabled === FileWatcherOptions.DISABLED)

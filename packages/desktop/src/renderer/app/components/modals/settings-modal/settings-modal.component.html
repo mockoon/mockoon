@@ -50,8 +50,18 @@
           <div class="input-group-text">
             <app-svg
               icon="info"
-              ngbTooltip="Logs the full transaction (for requests, responses and callbacks) in the application log files. Greatly increases the volume of logs. Requires a server restart to take effect."
+              [ngbTooltip]="logTransactionsTooltip"
             ></app-svg>
+            <ng-template #logTransactionsTooltip>
+              <div>
+                Logs the full transaction (for requests, responses and
+                callbacks) in the application log files. Greatly increases the
+                volume of logs.
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires a server restart to take effect
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>
@@ -113,10 +123,16 @@
             dropdownId="settings-faker-locale"
           ></app-custom-select>
           <div class="input-group-text">
-            <app-svg
-              icon="info"
-              ngbTooltip="Set Faker.js's primary locale. Faker.js will fallback to English for helpers not covered by this locale"
-            ></app-svg>
+            <app-svg icon="info" [ngbTooltip]="fakerLocaleTooltip"></app-svg>
+            <ng-template #fakerLocaleTooltip>
+              <div>
+                Set Faker.js's primary locale. Faker.js will fallback to English
+                for helpers not covered by this locale
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires a server restart to take effect
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>
@@ -136,10 +152,16 @@
             formControlName="fakerSeed"
           />
           <div class="input-group-text">
-            <app-svg
-              icon="info"
-              ngbTooltip="By setting a seed, Faker.js will always generate the same data. Application must be restarted after removing the seed"
-            ></app-svg>
+            <app-svg icon="info" [ngbTooltip]="fakerSeedTooltip"></app-svg>
+            <ng-template #fakerSeedTooltip>
+              <div>
+                By setting a seed, Faker.js will always generate the same data
+                sequence
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires a server restart to take effect
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>
@@ -207,9 +229,18 @@
             <app-svg
               icon="info"
               class="text-primary cursor-pointer"
-              ngbTooltip="Our custom telemetry system is collecting a minimal amount of information and no personal data. Requires application restart to take effect."
+              [ngbTooltip]="telemetryTooltip"
               (click)="openWikiLink('faq', $event)"
             ></app-svg>
+            <ng-template #telemetryTooltip>
+              <div>
+                Our custom telemetry system is collecting a minimal amount of
+                information and no personal data
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires application restart to take effect
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>

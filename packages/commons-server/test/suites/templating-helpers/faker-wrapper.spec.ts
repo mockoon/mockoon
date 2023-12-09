@@ -1,15 +1,17 @@
 import { expect } from 'chai';
-import { localFaker as faker } from '../../../src/libs/faker';
+import { SetFakerSeed } from '../../../src/libs/faker';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
-faker.seed(1);
-
 describe('Template parser: Faker wrapper', () => {
+  before(() => {
+    SetFakerSeed(1);
+  });
+
   it('should throw if helper name is missing', () => {
     expect(() => {
       TemplateParser(false, '{{faker}}', {} as any, [], {} as any);
     }).to.throw(
-      'Faker method name is missing (valid: "address.zipCode", "date.past", etc) line 1'
+      'Faker method name is missing (valid: "location.zipCode", "date.past", etc) line 1'
     );
   });
 
@@ -17,7 +19,7 @@ describe('Template parser: Faker wrapper', () => {
     expect(() => {
       TemplateParser(false, "{{faker 'random'}}", {} as any, [], {} as any);
     }).to.throw(
-      'random is not a valid Faker method (valid: "address.zipCode", "date.past", etc) line 1'
+      'random is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
     );
   });
 
@@ -25,7 +27,7 @@ describe('Template parser: Faker wrapper', () => {
     expect(() => {
       TemplateParser(false, "{{faker 'random.'}}", {} as any, [], {} as any);
     }).to.throw(
-      'random. is not a valid Faker method (valid: "address.zipCode", "date.past", etc) line 1'
+      'random. is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
     );
   });
 
@@ -39,7 +41,7 @@ describe('Template parser: Faker wrapper', () => {
         {} as any
       );
     }).to.throw(
-      'donotexists.donotexists is not a valid Faker method (valid: "address.zipCode", "date.past", etc) line 1'
+      'donotexists.donotexists is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
     );
   });
 

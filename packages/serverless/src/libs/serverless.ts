@@ -1,8 +1,8 @@
-import { Environment } from '@mockoon/commons';
+import { Environment, FakerAvailableLocales } from '@mockoon/commons';
 import {
+  MockoonServer,
   createLoggerInstance,
-  listenServerEvents,
-  MockoonServer
+  listenServerEvents
 } from '@mockoon/commons-server';
 import { RequestListener } from 'http';
 import ServerlessHttp from 'serverless-http';
@@ -11,15 +11,25 @@ export class MockoonServerless {
   constructor(
     private environment: Environment,
     private options: {
-      logTransaction: boolean;
+      logTransaction?: boolean;
       /**
        * List of routes uuids to disable.
        * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
        */
-      disabledRoutes: string[];
+      disabledRoutes?: string[];
+      /**
+       * Faker options: seed and locale
+       */
+      fakerOptions?: {
+        // Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation.)
+        locale?: FakerAvailableLocales;
+        // Number for the Faker.js seed (e.g. 1234)
+        seed?: number;
+      };
     } = {
       logTransaction: false,
-      disabledRoutes: []
+      disabledRoutes: [],
+      fakerOptions: {}
     }
   ) {
     if (!environment) {
@@ -36,7 +46,8 @@ export class MockoonServerless {
   public requestListener(): RequestListener {
     const logger = createLoggerInstance();
     const server = new MockoonServer(this.environment, {
-      disabledRoutes: this.options.disabledRoutes
+      disabledRoutes: this.options.disabledRoutes,
+      fakerOptions: this.options.fakerOptions
     });
     listenServerEvents(
       server,

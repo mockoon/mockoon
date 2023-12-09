@@ -16,7 +16,7 @@ export const FakerWrapper = {
 
     if (typeof fakerName !== 'string') {
       throw new Error(
-        `Faker method name must be a string (valid: "address.zipCode", "date.past", etc) line ${
+        `Faker method name must be a string (valid: "location.zipCode", "date.past", etc) line ${
           hbsOptions.loc && hbsOptions.loc.start && hbsOptions.loc.start.line
         }`
       );
@@ -38,7 +38,7 @@ export const FakerWrapper = {
       }
 
       throw new Error(
-        `${errorMessage} (valid: "address.zipCode", "date.past", etc) line ${
+        `${errorMessage} (valid: "location.zipCode", "date.past", etc) line ${
           hbsOptions.loc &&
           hbsOptions.loc &&
           hbsOptions.loc.start &&

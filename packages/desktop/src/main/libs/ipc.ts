@@ -1,9 +1,5 @@
 import { Environment, Environments } from '@mockoon/commons';
-import {
-  OpenAPIConverter,
-  SetFakerLocale,
-  SetFakerSeed
-} from '@mockoon/commons-server';
+import { OpenAPIConverter } from '@mockoon/commons-server';
 import {
   BrowserWindow,
   Menu,
@@ -115,11 +111,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.on('APP_OPEN_EXTERNAL_LINK', (event, url) => {
     shell.openExternal(url);
-  });
-
-  ipcMain.on('APP_SET_FAKER_OPTIONS', (event, data) => {
-    SetFakerLocale(data.locale);
-    SetFakerSeed(data.seed);
   });
 
   ipcMain.on('APP_WRITE_CLIPBOARD', async (event, data) => {
