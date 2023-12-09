@@ -1,6 +1,7 @@
 import { BodyTypes } from '@mockoon/commons';
-import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import { promises as fs } from 'fs';
+import { ChainablePromiseElement } from 'webdriverio';
+import callbacks from '../libs/callbacks';
 import contextMenu, {
   ContextMenuFolderActions,
   ContextMenuRouteActions
@@ -18,7 +19,6 @@ import navigation from '../libs/navigation';
 import routes, { RoutesMenuActions } from '../libs/routes';
 import settings from '../libs/settings';
 import utils from '../libs/utils';
-import callbacks from '../libs/callbacks';
 
 /**
  * Spec file used to generate documentation screenshots

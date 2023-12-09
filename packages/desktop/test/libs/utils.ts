@@ -1,7 +1,4 @@
-import {
-  ChainablePromiseArray,
-  ChainablePromiseElement
-} from '@wdio/globals/node_modules/webdriverio';
+import { ChainablePromiseArray, ChainablePromiseElement } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { SharedConfig } from '../../src/shared/shared-config';
 

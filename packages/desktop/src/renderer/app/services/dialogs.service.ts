@@ -11,7 +11,7 @@ import { Store } from 'src/renderer/app/stores/store';
 })
 export class DialogsService {
   private filters = {
-    openapi: [{ name: 'OpenAPI v2/v3', extensions: ['yaml', 'json'] }],
+    openapi: [{ name: 'OpenAPI v2/v3', extensions: ['yml', 'yaml', 'json'] }],
     json: [{ name: 'JSON', extensions: ['json'] }]
   };
 
