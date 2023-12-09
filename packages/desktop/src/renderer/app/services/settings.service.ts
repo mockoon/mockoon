@@ -30,28 +30,19 @@ export class SettingsService {
   ) {}
 
   /**
-   * Monitor some settings to trigger behaviors in the main process
+   * Monitor some settings to trigger behaviors in the main process.
+   * Store will emit null first, then the saved settings.
    */
   public monitorSettings() {
     // switch Faker locale
     return this.store.select('settings').pipe(
-      filter((settings) => !!settings),
       pairwise(),
       tap(([previousSettings, currentSettings]) => {
         if (
-          previousSettings.fakerLocale !== currentSettings.fakerLocale ||
-          previousSettings.fakerSeed !== currentSettings.fakerSeed
-        ) {
-          MainAPI.send('APP_SET_FAKER_OPTIONS', {
-            locale: currentSettings.fakerLocale,
-            seed: currentSettings.fakerSeed
-          });
-        }
-
-        if (
-          previousSettings.fileWatcherEnabled !==
+          (!previousSettings && currentSettings) ||
+          (previousSettings.fileWatcherEnabled !==
             currentSettings.fileWatcherEnabled &&
-          currentSettings.fileWatcherEnabled === FileWatcherOptions.DISABLED
+            currentSettings.fileWatcherEnabled === FileWatcherOptions.DISABLED)
         ) {
           MainAPI.invoke('APP_UNWATCH_ALL_FILE');
         }

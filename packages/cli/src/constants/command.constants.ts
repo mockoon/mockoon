@@ -1,22 +1,5 @@
 import { Flags } from '@oclif/core';
 
-// Keep deprecated flags for backward compatibility
-export const deprecatedFlags = {
-  pname: Flags.string({
-    char: 'N',
-    required: false,
-    default: [],
-    multiple: true,
-    hidden: true
-  }),
-  'daemon-off': Flags.boolean({
-    char: 'D',
-    required: false,
-    default: false,
-    hidden: true
-  })
-};
-
 export const commonFlags = {
   help: Flags.help({ char: 'h' }),
   'log-transaction': Flags.boolean({

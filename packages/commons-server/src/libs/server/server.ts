@@ -5,6 +5,7 @@ import {
   CallbackInvocation,
   CORSHeaders,
   Environment,
+  FakerAvailableLocales,
   FileExtensionsWithTemplating,
   GetContentType,
   GetRouteResponseContentType,
@@ -43,6 +44,7 @@ import { xml2js } from 'xml-js';
 import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
 import { ServerMessages } from '../../constants/server-messages.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
+import { SetFakerLocale, SetFakerSeed } from '../faker';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
 import { requestHelperNames } from '../templating-helpers/request-helpers';
@@ -72,8 +74,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     private environment: Environment,
     private options: {
       /**
-       *    Directory where to find the environment file.
-       *
+       * Directory where to find the environment file.
        */
       environmentDirectory?: string;
 
@@ -89,6 +90,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       refreshEnvironmentFunction?: (
         environmentUUID: string
       ) => Environment | null;
+
+      /**
+       * Faker options: seed and locale
+       */
+      fakerOptions?: {
+        // Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation.)
+        locale?: FakerAvailableLocales;
+        // Number for the Faker.js seed (e.g. 1234)
+        seed?: number;
+      };
     } = {}
   ) {
     super();
@@ -178,6 +189,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * Create a request listener
    */
   public createRequestListener(): RequestListener {
+    /**
+     * Apply faker.js settings at each server start.
+     * Locale must be set before seed.
+     * We do this in the request listener to allow changing the locale and seed from the serverless package too, which is not using the start/stop methods.
+     */
+    SetFakerLocale(this.options.fakerOptions?.locale ?? 'en');
+    SetFakerSeed(this.options.fakerOptions?.seed ?? undefined);
+
     const app = express();
     app.disable('x-powered-by');
     app.disable('etag');

@@ -130,7 +130,9 @@ The `MockoonServerless` class accepts an optional `options` object as a second p
 | Option name      | Type       | Default value | Description                                                          |
 | ---------------- | ---------- | ------------- | -------------------------------------------------------------------- |
 | `logTransaction` | `boolean`  | `false`       | [Enable full transaction logging](#transaction-logging) (see below). |
-| `disabledRoutes` | `string[]` | `[]`          | Disable route(s) by UUID(s) or keyword(s) in route path (see below). |
+| `disabledRoutes` | `string[]` | `[]`          | Disable route(s) by UUID(s) or keyword(s) in route path (see [below](#fakerjs-options)). |
+| `fakerOptions.locale` | `string` | `[]`          | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.) |
+| `fakerOptions.seed` | `number` | `[]`          | Number for the Faker.js seed (e.g. 1234) |
 
 Example:
 
@@ -138,9 +140,18 @@ Example:
 const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
   logTransaction: true,
   // disable all routes containing 'users' in their path, and the route with UUID '0999df54-7d57-407e-9325-c18d97fea729'
-  disabledRoutes: ['users', '0999df54-7d57-407e-9325-c18d97fea729']
+  disabledRoutes: ['users', '0999df54-7d57-407e-9325-c18d97fea729'],
+  fakerOptions: {
+    locale: 'en_GB',
+    seed: 1234
+  }
 });
 ```
+
+#### Faker.js options
+
+- **Locale**: If not provided, Faker.js will use the default locale: `en`. For a list of currently supported locales, you can check the [supported locales list](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/faker.model.ts#L1) in Mockoon's commons library. You can also check [Faker.js locales list](https://fakerjs.dev/guide/localization.html#available-locales) for more information (⚠️ Some locales may not yet be implemented in Mockoon).
+- **Seed**: If not provided, Faker.js will not use a seed. By providing a seed value, you can generate repeatable sequences of fake data. Using seeding will not always generate the same value but rather a predictable sequence.
 
 ## Logging
 

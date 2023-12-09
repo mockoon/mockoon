@@ -1,7 +1,6 @@
 import {
   Environment,
   Environments,
-  FakerAvailableLocales,
   ServerErrorCodes,
   ServerEvents,
   Transaction
@@ -94,10 +93,6 @@ export interface MainAPIModel {
   send(
     channel: 'APP_LOGS',
     data: { type: 'error' | 'info'; message: string; payload?: any }
-  ): void;
-  send(
-    channel: 'APP_SET_FAKER_OPTIONS',
-    data: { locale: FakerAvailableLocales; seed: number }
   ): void;
   send(channel: 'APP_UPDATE_ENVIRONMENT', environments: Environments): void;
   send(channel: 'APP_ZOOM', action: 'IN' | 'OUT' | 'RESET'): void;

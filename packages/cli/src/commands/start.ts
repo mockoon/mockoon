@@ -1,4 +1,9 @@
-import { Environment, ServerErrorCodes } from '@mockoon/commons';
+import {
+  Environment,
+  FakerAvailableLocales,
+  FakerAvailableLocalesList,
+  ServerErrorCodes
+} from '@mockoon/commons';
 import {
   MockoonServer,
   ServerMessages,
@@ -10,7 +15,7 @@ import { red as chalkRed } from 'chalk';
 import { join } from 'path';
 import { format } from 'util';
 import { Config } from '../config';
-import { commonFlags, deprecatedFlags } from '../constants/command.constants';
+import { commonFlags } from '../constants/command.constants';
 import { parseDataFiles, prepareEnvironment } from '../libs/data';
 import { getDirname, transformEnvironmentName } from '../libs/utils';
 
@@ -57,11 +62,32 @@ export default class Start extends Command {
       multiple: true,
       default: []
     }),
-    ...deprecatedFlags
+    'faker-locale': Flags.string({
+      char: 'c',
+      description:
+        "Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation: https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md#fakerjs-options)",
+      default: 'en'
+    }),
+    'faker-seed': Flags.integer({
+      char: 's',
+      description: 'Number for the Faker.js seed (e.g. 1234)',
+      default: undefined
+    })
   };
 
   public async run(): Promise<void> {
     const { flags: userFlags } = await this.parse(Start);
+
+    // validate flags
+    if (
+      !FakerAvailableLocalesList.includes(
+        userFlags['faker-locale'] as FakerAvailableLocales
+      )
+    ) {
+      this.error(
+        'Invalid Faker.js locale. See documentation for supported locales (https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md#fakerjs-options).'
+      );
+    }
 
     try {
       const parsedEnvironments = await parseDataFiles(userFlags.data);
@@ -96,7 +122,11 @@ export default class Start extends Command {
                   )}.log`
                 )
               },
-          disabledRoutes: userFlags['disable-routes']
+          disabledRoutes: userFlags['disable-routes'],
+          fakerOptions: {
+            locale: userFlags['faker-locale'] as FakerAvailableLocales,
+            seed: userFlags['faker-seed']
+          }
         });
       }
     } catch (error: any) {
@@ -110,11 +140,16 @@ export default class Start extends Command {
     disabledRoutes?: string[];
     logTransaction?: boolean;
     fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
+    fakerOptions?: {
+      locale?: FakerAvailableLocales;
+      seed?: number | undefined;
+    };
   }) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
     const server = new MockoonServer(parameters.environment, {
       environmentDirectory: parameters.environmentDir,
-      disabledRoutes: parameters.disabledRoutes
+      disabledRoutes: parameters.disabledRoutes,
+      fakerOptions: parameters.fakerOptions
     });
 
     listenServerEvents(

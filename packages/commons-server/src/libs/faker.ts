@@ -18,8 +18,8 @@ export const SetFakerLocale = (locale: FakerAvailableLocales) => {
  *
  * @param seed
  */
-export const SetFakerSeed = (seed: number) => {
-  if (seed !== undefined && seed !== null && localFaker !== undefined) {
+export const SetFakerSeed = (seed: number | undefined) => {
+  if (localFaker !== undefined) {
     localFaker.seed(seed);
   }
 };

@@ -95,6 +95,34 @@
       ],
       "enabled": true,
       "responseMode": null
+    },
+    {
+      "uuid": "bd03d74d-ba12-47b2-acf2-1cd8093e7e66",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "faker",
+      "responses": [
+        {
+          "uuid": "d9f65c32-b1cd-41d3-ad04-7f89009df5a3",
+          "body": "{{faker 'location.zipCode'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": true,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
     }
   ],
   "proxyMode": false,
@@ -132,6 +160,10 @@
     {
       "type": "route",
       "uuid": "a8a4e784-4fdf-497f-8915-774c4aa70205"
+    },
+    {
+      "type": "route",
+      "uuid": "bd03d74d-ba12-47b2-acf2-1cd8093e7e66"
     }
   ]
 }
