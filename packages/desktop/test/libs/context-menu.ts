@@ -1,4 +1,4 @@
-import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
+import { ChainablePromiseElement } from 'webdriverio';
 import utils from '../libs/utils';
 
 type Targets = 'environments' | 'routes' | 'databuckets' | 'callbacks';
@@ -48,9 +48,7 @@ class ContextMenu {
     callbacks: '.callbacks-menu'
   };
 
-  public getItem(
-    contextMenuItemIndex: number
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  public getItem(contextMenuItemIndex: number) {
     return $(
       `.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`
     );

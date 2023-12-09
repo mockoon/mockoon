@@ -1,4 +1,3 @@
-import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import { resolve } from 'path';
 import contextMenu, {
   ContextMenuEnvironmentActions
@@ -10,39 +9,39 @@ class Environments {
   private activeMenuEntrySelector =
     '.environments-menu .nav-item .nav-link.active';
 
-  public get openBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get openBtn() {
     return $(
       '.environments-menu .nav:first-of-type .nav-item .nav-link.open-environment'
     );
   }
 
-  public get recordingIndicator(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get recordingIndicator() {
     return $(`${this.activeMenuEntrySelector} app-svg[icon="record"]`);
   }
 
-  private get startBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get startBtn() {
     return $('.btn[ngbtooltip="Start server"]');
   }
 
-  private get stopBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get stopBtn() {
     return $('.btn[ngbtooltip="Stop server"]');
   }
 
-  private get restartBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get restartBtn() {
     return $('.btn[ngbtooltip="Server needs restart"]');
   }
 
-  private get runningEnvironmentMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get runningEnvironmentMenuEntry() {
     return $(
       '.environments-menu .menu-list .nav-item .nav-link.active.running'
     );
   }
 
-  private get environmentMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get environmentMenuEntry() {
     return $(this.activeMenuEntrySelector);
   }
 
-  private get activeEnvironmentMenuEntry(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get activeEnvironmentMenuEntry() {
     return $(this.activeMenuEntrySelector);
   }
 

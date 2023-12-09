@@ -1,4 +1,3 @@
-import { ChainablePromiseElement } from '@wdio/globals/node_modules/webdriverio';
 import { ViewsNameType } from '../../src/renderer/app/models/store.model';
 import utils from '../libs/utils';
 
@@ -21,43 +20,43 @@ class Navigation {
     ENV_SETTINGS: 7
   };
 
-  public get routesTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get routesTab() {
     return $(
       `app-header .header .nav .nav-item:nth-child(${this.tabIndexes['ENV_ROUTES']}) .nav-link`
     );
   }
 
-  public get databucketsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get databucketsTab() {
     return $(
       `app-header .header .nav .nav-item:nth-child(${this.tabIndexes['ENV_DATABUCKETS']}) .nav-link`
     );
   }
 
-  public get callbacksTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get callbacksTab() {
     return $(
       `app-header .header .nav .nav-item:nth-child(${this.tabIndexes['ENV_CALLBACKS']}) .nav-link`
     );
   }
 
-  public get logsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get logsTab() {
     return $(
       `app-header .header .nav .nav-item:nth-child(${this.tabIndexes['ENV_LOGS']}) .nav-link`
     );
   }
 
-  public get headersTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get headersTab() {
     return $(
       `app-header .header .nav .nav-item:nth-child(${this.tabIndexes['ENV_HEADERS']}) .nav-link`
     );
   }
 
-  public get proxyTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get proxyTab() {
     return $(
       `app-header .header .nav .nav-item:nth-child(${this.tabIndexes['ENV_PROXY']}) .nav-link`
     );
   }
 
-  public get settingsTab(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get settingsTab() {
     return $(
       `app-header .header .nav .nav-item:nth-child(${this.tabIndexes['ENV_SETTINGS']}) .nav-link`
     );
