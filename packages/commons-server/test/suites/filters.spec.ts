@@ -129,6 +129,15 @@ describe('Filters', () => {
       expect(parseFilters(queryParams)).to.deep.equal(expected);
     });
 
+    it('should accept nested paths (array)', () => {
+      const queryParams = { 'users.0.name_eq': 'peter' };
+      const expected: FilterData[] = [
+        { path: 'users.0.name', filter: 'eq', value: 'peter' }
+      ];
+
+      expect(parseFilters(queryParams)).to.deep.equal(expected);
+    });
+
     it('should accept paths with underscores', () => {
       const queryParams = { user_name_eq: 'peter' };
       const expected: FilterData[] = [
@@ -252,6 +261,28 @@ describe('Filters', () => {
         path: 'name',
         filter: 'end',
         value: 'r'
+      };
+
+      expect(applyFilter(data, filterData)).to.be.true;
+    });
+
+    it('should accept nested paths', () => {
+      const data = { user: { name: 'peter' } };
+      const filterData: FilterData = {
+        path: 'user.name',
+        filter: 'eq',
+        value: 'peter'
+      };
+
+      expect(applyFilter(data, filterData)).to.be.true;
+    });
+
+    it('should accept nested paths (array)', () => {
+      const data = { users: [{ name: 'peter' }] };
+      const filterData: FilterData = {
+        path: 'users.0.name',
+        filter: 'eq',
+        value: 'peter'
       };
 
       expect(applyFilter(data, filterData)).to.be.true;
