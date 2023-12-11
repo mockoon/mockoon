@@ -1440,6 +1440,182 @@ const jsonArrayTestGroups: HttpCall[][] = [
         }
       }
     }
+  ],
+  [
+    {
+      description: 'Filter - equal operator',
+      path: '/search?username_eq=peter',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - not equal operator',
+      path: '/search?age_ne=25&limit=2',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '8'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - greater than operator',
+      path: '/search?age_gt=35',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '2'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - greater than or equal operator',
+      path: '/search?age_gte=35',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":6,"username":"douglas","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":10,"username":"cinderella","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '5'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - less than operator',
+      path: '/search?age_lt=5',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '0'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - less than or equal operator',
+      path: '/search?age_lte=25',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":3,"username":"marta","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - like operator',
+      path: '/search?username_like=la',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":6,"username":"douglas","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":10,"username":"cinderella","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '4'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - start operator',
+      path: '/search?username_start=p',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - start operator',
+      path: '/search?username_end=la',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":10,"username":"cinderella","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '2'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - nested properties access',
+      path: '/search?address.city_eq=New%20York',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":9,"username":"theresa","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter + Search + Sort + Pagination',
+      path: '/search?search=york&age_gt=25&sort=username&limit=1',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
   ]
 ];
 

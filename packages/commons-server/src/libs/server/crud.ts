@@ -4,6 +4,7 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { Request, Response } from 'express';
+import { applyFilter, parseFilters } from '../filters';
 import { dedupSlashes, fullTextSearch } from '../utils';
 
 export type CrudRouteIds =
@@ -150,6 +151,7 @@ export const databucketActions = (
             ? request.query.order
             : 'asc'
           : 'asc';
+      const filters = parseFilters(request.query);
 
       if (Array.isArray(responseBody)) {
         response.set('X-Total-Count', responseBody.length.toString());
@@ -158,6 +160,9 @@ export const databucketActions = (
           responseBody = responseBody.filter((r) => fullTextSearch(r, search));
         }
 
+        responseBody = responseBody.filter((r) =>
+          filters.every((f) => applyFilter(r, f))
+        );
         response.set('X-Filtered-Count', responseBody.length.toString());
 
         if (sort != null) {
