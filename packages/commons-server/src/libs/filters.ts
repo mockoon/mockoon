@@ -5,9 +5,11 @@ const isNum = (value: string) => !isNaN(parseFloat(value));
 
 export const FILTERS = {
   eq: (data, query) =>
-    String(data) === query || (isNum(data) && isNum(query) && data == query),
+    String(data) === query ||
+    (isNum(data) && isNum(query) && Number(data) === Number(query)),
   ne: (data, query) =>
-    String(data) !== query && (!isNum(data) || !isNum(query) || data != query),
+    String(data) !== query &&
+    (!isNum(data) || !isNum(query) || Number(data) !== Number(query)),
   gt: (data, query) => data > query,
   gte: (data, query) => data >= query,
   lt: (data, query) => data < query,
@@ -23,6 +25,10 @@ export function parseFilters(queryParams: Request['query']): FilterData[] {
   const result: FilterData[] = [];
 
   for (const key in queryParams) {
+    if (!queryParams.hasOwnProperty(key)) {
+      continue;
+    }
+
     const value = queryParams[key] as string;
     const match = key.match(FILTERS_REGEX);
 
