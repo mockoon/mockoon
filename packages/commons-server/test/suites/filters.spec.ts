@@ -164,6 +164,15 @@ describe('Filters', () => {
 
       expect(parseFilters(queryParams)).to.deep.equal(expected);
     });
+
+    it('should accept filters with empty path', () => {
+      const queryParams = { _eq: 'peter' };
+      const expected: FilterData[] = [
+        { path: '', filter: 'eq', value: 'peter' }
+      ];
+
+      expect(parseFilters(queryParams)).to.deep.equal(expected);
+    });
   });
 
   describe('applyFilter', () => {
@@ -286,6 +295,28 @@ describe('Filters', () => {
       };
 
       expect(applyFilter(data, filterData)).to.be.true;
+    });
+
+    it('should filter non-object values', () => {
+      const data = 'peter';
+      const filterData: FilterData = {
+        path: '',
+        filter: 'eq',
+        value: 'peter'
+      };
+
+      expect(applyFilter(data, filterData)).to.be.true;
+    });
+
+    it('should not filter object values if path is empty', () => {
+      const data = { name: 'peter' };
+      const filterData: FilterData = {
+        path: '',
+        filter: 'eq',
+        value: 'peter'
+      };
+
+      expect(applyFilter(data, filterData)).to.be.false;
     });
   });
 

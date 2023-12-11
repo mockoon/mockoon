@@ -1603,6 +1603,22 @@ const jsonArrayTestGroups: HttpCall[][] = [
   ],
   [
     {
+      description: 'Filter - filter on primitive array',
+      path: '/primitivearray?_gte=b',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '["bbb","ccc"]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '3',
+          'x-filtered-count': '2'
+        }
+      }
+    }
+  ],
+  [
+    {
       description: 'Filter + Search + Sort + Pagination',
       path: '/search?search=york&age_gt=25&sort=username&limit=1',
       method: 'GET',
