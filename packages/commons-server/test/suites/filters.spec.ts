@@ -525,6 +525,11 @@ describe('Filters', () => {
       it('should return false if the data does not match the query', () => {
         expect(FILTERS.like('peter', 'o')).to.be.false;
       });
+
+      it('should match a regex', () => {
+        expect(FILTERS.like('peter', 'p.*r')).to.be.true;
+        expect(FILTERS.like('1', '^(1|2|3)$')).to.be.true;
+      });
     });
 
     describe('start', () => {
@@ -543,6 +548,11 @@ describe('Filters', () => {
       it('should return false if the data does not start with the query', () => {
         expect(FILTERS.start('peter', 'e')).to.be.false;
       });
+
+      it('should match a regex', () => {
+        expect(FILTERS.like('peter', 'p.*r')).to.be.true;
+        expect(FILTERS.like('1', '(1|2|3)$')).to.be.true;
+      });
     });
 
     describe('end', () => {
@@ -560,6 +570,11 @@ describe('Filters', () => {
 
       it('should return false if the data does not end with the query', () => {
         expect(FILTERS.end('peter', 'e')).to.be.false;
+      });
+
+      it('should match a regex', () => {
+        expect(FILTERS.like('peter', 'p.*r')).to.be.true;
+        expect(FILTERS.like('1', '^(1|2|3)')).to.be.true;
       });
     });
   });

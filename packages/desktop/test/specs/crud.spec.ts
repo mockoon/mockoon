@@ -1587,6 +1587,22 @@ const jsonArrayTestGroups: HttpCall[][] = [
   ],
   [
     {
+      description: 'Filter - like operator (regex)',
+      path: '/search?id_like=^(1|4|7)$',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
       description: 'Filter - nested properties access',
       path: '/search?address.city_eq=New%20York',
       method: 'GET',
