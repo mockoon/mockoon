@@ -1473,8 +1473,7 @@ export class EnvironmentsService extends Logger {
     type: ReorderableContainers
   ) {
     const activeEnvironmentUuid = this.store.getActiveEnvironment().uuid;
-    const activeRouteUuid = this.store.getActiveRoute().uuid;
-
+    let activeRouteUuid: string;
     let storeAction: Actions;
 
     switch (type) {
@@ -1487,6 +1486,7 @@ export class EnvironmentsService extends Logger {
         break;
 
       case ReorderableContainers.ROUTE_RESPONSES:
+        activeRouteUuid = this.store.getActiveRoute().uuid;
         storeAction = reorderRouteResponsesAction(
           activeEnvironmentUuid,
           activeRouteUuid,
