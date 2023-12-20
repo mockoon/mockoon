@@ -2,6 +2,15 @@ import { expect } from 'chai';
 import { OpenAPIConverter } from '../../../src';
 
 describe('OpenAPI converter', () => {
+  it('should use server url as prefix', async () => {
+    const openAPIConverter = new OpenAPIConverter();
+    const environment = await openAPIConverter.convertFromOpenAPI(
+      './test/data/openapi/openapi-v3.yaml'
+    );
+
+    expect(environment?.endpointPrefix).to.be.equal('prefix');
+  });
+
   it('should return default response if route has no examples (no response added)', async () => {
     const openAPIConverter = new OpenAPIConverter();
     const environment = await openAPIConverter.convertFromOpenAPI(

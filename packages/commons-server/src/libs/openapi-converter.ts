@@ -234,10 +234,20 @@ export class OpenAPIConverter {
     const server: OpenAPIV3.ServerObject[] | undefined = parsedAPI.servers;
 
     if (server?.[0]?.url) {
-      newEnvironment.endpointPrefix = RemoveLeadingSlash(
-        new URL(this.v3ParametersReplace(server[0].url, server[0].variables))
-          .pathname
-      );
+      const url = this.v3ParametersReplace(server[0].url, server[0].variables);
+
+      if (url.startsWith('/')) {
+        newEnvironment.endpointPrefix = RemoveLeadingSlash(url);
+      } else {
+        try {
+          const parsedUrl = new URL(url);
+          newEnvironment.endpointPrefix = RemoveLeadingSlash(
+            parsedUrl.pathname
+          );
+        } catch (error) {
+          // fail silently
+        }
+      }
     }
 
     newEnvironment.name = parsedAPI.info.title || 'OpenAPI import';
