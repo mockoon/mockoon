@@ -1,7 +1,5 @@
-import { Environment } from '@mockoon/commons';
 import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
-import { CLIMessages } from '../constants/cli-messages.constants';
 import { parseDataFiles } from '../libs/data';
 
 export default class Import extends Command {
@@ -38,13 +36,8 @@ export default class Import extends Command {
     try {
       const parsedEnvironments = await parseDataFiles([userFlags.input]);
 
-      if (parsedEnvironments.length !== 1) {
-        this.error(CLIMessages.ONLY_ONE_ENVIRONMENT_ALLOWED);
-      }
-
-      const environment: Environment = parsedEnvironments[0].environment;
       const data: string = JSON.stringify(
-        environment,
+        parsedEnvironments[0].environment,
         null,
         userFlags.prettify ? 2 : 0
       );

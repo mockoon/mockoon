@@ -61,4 +61,38 @@ describe('Data validation', () => {
         }
       );
   });
+
+  describe('Broken OpenAPI JSON', () => {
+    test
+      .stderr()
+      .stub(cliUX, 'confirm', (stub) => stub.returns(false))
+      .command(['start', '--data', './test/data/openapi/petstore-broken.json'])
+      .catch((context) => {
+        expect(context.message).to.contain(
+          "These environment's data are too old or not a valid Mockoon environment."
+        );
+        expect(context.message).to.contain(
+          'is not a valid Openapi API definition'
+        );
+      })
+      .it('should show all the error messages (OpenAPI and Mockoon parsers');
+  });
+
+  describe('Broken OpenAPI YAML', () => {
+    test
+      .stderr()
+      .stub(cliUX, 'confirm', (stub) => stub.returns(false))
+      .command(['start', '--data', './test/data/openapi/petstore-broken.yaml'])
+      .catch((context) => {
+        expect(context.message).to.not.contain(
+          "These environment's data are too old or not a valid Mockoon environment."
+        );
+        expect(context.message).to.contain(
+          'is not a valid Openapi API definition'
+        );
+      })
+      .it(
+        'should only show OpenAPI parser error messages (early fail as Mockoon does not support YAML)'
+      );
+  });
 });

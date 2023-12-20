@@ -16,7 +16,7 @@ import { join } from 'path';
 import { format } from 'util';
 import { Config } from '../config';
 import { commonFlags } from '../constants/command.constants';
-import { parseDataFiles, prepareEnvironment } from '../libs/data';
+import { parseDataFiles } from '../libs/data';
 import { getDirname, transformEnvironmentName } from '../libs/utils';
 
 export default class Start extends Command {
@@ -90,22 +90,14 @@ export default class Start extends Command {
     }
 
     try {
-      const parsedEnvironments = await parseDataFiles(userFlags.data);
-
-      for (let envIndex = 0; envIndex < parsedEnvironments.length; envIndex++) {
-        try {
-          parsedEnvironments[envIndex].environment = await prepareEnvironment({
-            environment: parsedEnvironments[envIndex].environment,
-            userOptions: {
-              hostname: userFlags.hostname[envIndex],
-              port: userFlags.port[envIndex]
-            },
-            repair: userFlags.repair
-          });
-        } catch (error: any) {
-          this.error(error.message);
-        }
-      }
+      const parsedEnvironments = await parseDataFiles(
+        userFlags.data,
+        {
+          ports: userFlags.port,
+          hostnames: userFlags.hostname
+        },
+        userFlags.repair
+      );
 
       for (const environmentInfo of parsedEnvironments) {
         this.createServer({
