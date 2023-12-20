@@ -79,7 +79,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public customValueInput: ElementRef;
 
   public items$ = new BehaviorSubject<DropdownItems>(null);
-  public selectedItem$ = new BehaviorSubject<DropdownItem>(null);
+  public selectedItem$: Observable<DropdownItem>;
   public filteredItems$: Observable<DropdownItems>;
   public customValue = new UntypedFormControl('');
   public focusedItemIndex$ = new BehaviorSubject<number>(-1);
@@ -88,6 +88,8 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public onTouched: (_: any) => void;
 
   public window = window;
+
+  private value$ = new BehaviorSubject<number | string>(null);
 
   constructor() {}
 
@@ -161,6 +163,16 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
         );
       })
     );
+
+    /**
+     * Set the selected item from the value.
+     * Also react to items update which can happen after the value has been set.
+     */
+    this.selectedItem$ = combineLatest([this.value$, this.items$]).pipe(
+      map(([value]) => {
+        return this.findItem(value);
+      })
+    );
   }
 
   /**
@@ -169,7 +181,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
    * @param value
    */
   public writeValue(value: number | string): void {
-    this.selectedItem$.next(this.findItem(value));
+    this.value$.next(value);
   }
 
   public registerOnChange(fn: any): void {
@@ -210,7 +222,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
    * @param value
    */
   public setValue(item: DropdownItem) {
-    this.selectedItem$.next(item);
+    this.value$.next(item.value);
     this.onChange(item.value);
     this.customValue.reset();
     this.focusedItemIndex$.next(-1);
@@ -218,10 +230,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   public clearValue() {
-    this.selectedItem$.next({
-      value: this.defaultClearValue,
-      label: ''
-    });
+    this.value$.next(this.defaultClearValue);
     this.onChange(this.defaultClearValue);
     this.focusedItemIndex$.next(-1);
   }
