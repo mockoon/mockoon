@@ -9,7 +9,7 @@ describe('Template parser: Faker wrapper', () => {
 
   it('should throw if helper name is missing', () => {
     expect(() => {
-      TemplateParser(false, '{{faker}}', {} as any, [], {} as any);
+      TemplateParser(false, '{{faker}}', {} as any, [], {}, {} as any);
     }).to.throw(
       'Faker method name is missing (valid: "location.zipCode", "date.past", etc) line 1'
     );
@@ -17,7 +17,7 @@ describe('Template parser: Faker wrapper', () => {
 
   it('should throw if helper name is malformed', () => {
     expect(() => {
-      TemplateParser(false, "{{faker 'random'}}", {} as any, [], {} as any);
+      TemplateParser(false, "{{faker 'random'}}", {} as any, [], {}, {} as any);
     }).to.throw(
       'random is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
     );
@@ -25,7 +25,14 @@ describe('Template parser: Faker wrapper', () => {
 
   it('should throw if helper name is malformed', () => {
     expect(() => {
-      TemplateParser(false, "{{faker 'random.'}}", {} as any, [], {} as any);
+      TemplateParser(
+        false,
+        "{{faker 'random.'}}",
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
     }).to.throw(
       'random. is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
     );
@@ -38,6 +45,7 @@ describe('Template parser: Faker wrapper', () => {
         "{{faker 'donotexists.donotexists'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
     }).to.throw(
@@ -51,6 +59,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{faker 'person.firstName'}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('Hayley');
@@ -62,6 +71,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{faker 'number.int' min=10 max=20}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('20');
@@ -73,6 +83,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{faker 'string.alphanumeric' 1}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('I');
@@ -84,6 +95,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{#switch (faker 'person.firstName')}}{{#case 'Torey'}}Torey{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('Torey');
@@ -95,6 +107,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{#repeat (faker 'number.int' min=5 max=10) comma=false}}test{{/repeat}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('testtesttesttesttest');
@@ -106,6 +119,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{setVar 'nb' (faker 'number.int' min=5 max=10)}}{{@nb}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('5');
@@ -117,6 +131,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{setVar 'nb' (faker 'number.int' min=50 max=100)}}{{@nb}}{{int 10 @nb}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('6565');
@@ -128,6 +143,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{#if (faker 'datatype.boolean')}}activated{{else}}deactivated{{/if}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('activated');
@@ -139,6 +155,7 @@ describe('Template parser: Faker wrapper', () => {
       "{{len (faker 'location.nearbyGPSCoordinate')}}",
       {} as any,
       [],
+      {},
       {} as any
     );
     expect(parseResult).to.be.equal('2');

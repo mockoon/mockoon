@@ -13,7 +13,7 @@ beforeEach(function () {
 describe('Response helpers', () => {
   describe('Helper: status', () => {
     it('should not set the statusCode if helper not used', () => {
-      TemplateParser(false, '', {} as any, [], undefined, responseMock);
+      TemplateParser(false, '', {} as any, [], {}, undefined, responseMock);
       expect(responseMock.locals.statusCode).to.be.undefined;
     });
 
@@ -23,6 +23,7 @@ describe('Response helpers', () => {
         '{{status}}',
         {} as any,
         [],
+        {},
         undefined,
         responseMock
       );
@@ -35,6 +36,7 @@ describe('Response helpers', () => {
         '{{status abc}}',
         {} as any,
         [],
+        {},
         undefined,
         responseMock
       );
@@ -47,6 +49,7 @@ describe('Response helpers', () => {
         '{{status "404"}}',
         {} as any,
         [],
+        {},
         undefined,
         responseMock
       );
@@ -59,6 +62,7 @@ describe('Response helpers', () => {
         '{{status 404}}',
         {} as any,
         [],
+        {},
         undefined,
         responseMock
       );
@@ -71,6 +75,7 @@ describe('Response helpers', () => {
         '{{#if (eq 1 0)}}{{status 404}}{{/if}}',
         {} as any,
         [],
+        {},
         undefined,
         responseMock
       );

@@ -50,7 +50,18 @@ export const helpersAutocompletions = [
   { caption: 'base64', value: '{{base64 value}}', meta: '' },
   { caption: 'base64Decode', value: '{{base64Decode string}}', meta: '' },
   { caption: 'objectId', value: '{{objectId}}', meta: '' },
+  { caption: 'getVar', value: "{{getVar 'varname'}}", meta: '' },
   { caption: 'setVar', value: "{{setVar 'varname' 'value'}}", meta: '' },
+  {
+    caption: 'getGlobalVar',
+    value: "{{getGlobalVar 'varname'}}",
+    meta: ''
+  },
+  {
+    caption: 'setGlobalVar',
+    value: "{{setGlobalVar 'varname' 'value'}}",
+    meta: ''
+  },
   { caption: 'includes', value: '{{includes string search}}', meta: '' },
   { caption: 'substr', value: '{{substr string startIndex length}}', meta: '' },
   { caption: 'lowercase', value: '{{lowercase string}}', meta: '' },

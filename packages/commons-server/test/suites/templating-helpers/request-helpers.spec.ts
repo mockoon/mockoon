@@ -20,6 +20,7 @@ describe('Request helpers', () => {
         "{{body 'prop1' undefined true}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 1 } } as any
       );
       expect(parseResult).to.be.equal('1');
@@ -31,6 +32,7 @@ describe('Request helpers', () => {
         "{{body 'prop1' undefined true}}",
         {} as any,
         [],
+        {},
         { body: { prop1: true } } as any
       );
       expect(parseResult).to.be.equal('true');
@@ -42,6 +44,7 @@ describe('Request helpers', () => {
         "{{body 'prop1' undefined true}}",
         {} as any,
         [],
+        {},
         { body: { prop1: null } } as any
       );
       expect(parseResult).to.be.equal('null');
@@ -53,6 +56,7 @@ describe('Request helpers', () => {
         "{{body 'prop1' undefined false}}",
         {} as any,
         [],
+        {},
         { body: { prop1: ['first', 'second'] } } as any
       );
       expect(parseResult).to.be.equal('["first","second"]');
@@ -64,6 +68,7 @@ describe('Request helpers', () => {
         "{{body 'prop1' undefined false}}",
         {} as any,
         [],
+        {},
         { body: { prop1: { key: 'value' } } } as any
       );
       expect(parseResult).to.be.equal('{"key":"value"}');
@@ -75,6 +80,7 @@ describe('Request helpers', () => {
         "{{body 'prop2' 'default' true}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 'test' } } as any
       );
       expect(parseResult).to.be.equal('"default"');
@@ -86,6 +92,7 @@ describe('Request helpers', () => {
         "{{body 'prop1' undefined true}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 'test' } } as any
       );
       expect(parseResult).to.be.equal('"test"');
@@ -97,6 +104,7 @@ describe('Request helpers', () => {
         "{{body 'prop1'}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 'test' } } as any
       );
       expect(parseResult).to.be.equal('test');
@@ -108,6 +116,7 @@ describe('Request helpers', () => {
         "{{body 'prop1' undefined true}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 'This \n is a "message" with quotes.' } } as any
       );
       expect(parseResult).to.be.equal(
@@ -121,6 +130,7 @@ describe('Request helpers', () => {
         '{{#repeat 2}}{{body @index}}{{/repeat}}',
         {} as any,
         [],
+        {},
         {
           body: [
             {
@@ -145,6 +155,7 @@ describe('Request helpers', () => {
         "{{body '0.deep.property\\.with\\.dots'}}{{body '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots'}}",
         {} as any,
         [],
+        {},
         {
           body: [
             {
@@ -171,6 +182,7 @@ describe('Request helpers', () => {
         "{{body '$.[?(@property.match(/attribute\\.1.*/))]'}}{{body '$.attributes.sub_attributes.*'}}{{body '$.attributes.[attribute.with.dot].name'}}",
         {} as any,
         [],
+        {},
         {
           body: {
             'attribute.1.value.1': 'attribute-value-1',
@@ -201,6 +213,7 @@ describe('Request helpers', () => {
         "{{bodyRaw 'prop'}}",
         {} as any,
         [],
+        {},
         { body: { prop: 1 } } as any
       );
       expect(parseResult).to.be.equal('1');
@@ -212,6 +225,7 @@ describe('Request helpers', () => {
         "{{bodyRaw 'prop'}}",
         {} as any,
         [],
+        {},
         { body: { prop: [1, 2, 3] } } as any
       );
       expect(parseResult).to.be.equal('1,2,3');
@@ -223,6 +237,7 @@ describe('Request helpers', () => {
         "{{bodyRaw 'prop'}}",
         {} as any,
         [],
+        {},
         { body: { prop: true } } as any
       );
       expect(parseResult).to.be.equal('true');
@@ -234,6 +249,7 @@ describe('Request helpers', () => {
         "{{#each (bodyRaw 'myList')}}dolphin{{/each}}",
         {} as any,
         [],
+        {},
         {
           body: {
             prop: '1',
@@ -251,6 +267,7 @@ describe('Request helpers', () => {
         "{{#if (bodyRaw 'boolean')}}dolphin{{/if}}",
         {} as any,
         [],
+        {},
         {
           body: {
             prop: '1',
@@ -268,6 +285,7 @@ describe('Request helpers', () => {
         "{{#each (bodyRaw 'dolphin' (array 1 2 3))}}dolphin{{/each}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('dolphindolphindolphin');
@@ -279,6 +297,7 @@ describe('Request helpers', () => {
         "{{#if (bodyRaw 'dolphin' true)}}dolphin{{/if}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('dolphin');
@@ -290,6 +309,7 @@ describe('Request helpers', () => {
         '{{#each (bodyRaw)}}{{this}}{{/each}}',
         {} as any,
         [],
+        {},
         { body: ['string1', 'string2'] } as any
       );
       expect(parseResult).to.be.equal('string1string2');
@@ -301,6 +321,7 @@ describe('Request helpers', () => {
         '{{#repeat 2}}{{bodyRaw @index}}{{/repeat}}',
         {} as any,
         [],
+        {},
         { body: ['string1', 'string2'] } as any
       );
       expect(parseResult).to.be.equal(`string1,${EOL}string2${EOL}`);
@@ -312,6 +333,7 @@ describe('Request helpers', () => {
         "{{bodyRaw '0.deep.property\\.with\\.dots'}}{{bodyRaw '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots'}}",
         {} as any,
         [],
+        {},
         {
           body: [
             {
@@ -338,6 +360,7 @@ describe('Request helpers', () => {
         "{{bodyRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{bodyRaw '$.attributes.sub_attributes.*'}}{{bodyRaw '$.attributes.[attribute.with.dot].name'}}",
         {} as any,
         [],
+        {},
         {
           body: {
             'attribute.1.value.1': 'attribute-value-1',
@@ -368,6 +391,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' undefined true}}",
         {} as any,
         [],
+        {},
         { query: { param1: 1 } } as any
       );
       expect(parseResult).to.be.equal('1');
@@ -379,6 +403,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' undefined true}}",
         {} as any,
         [],
+        {},
         { query: { param1: true } } as any
       );
       expect(parseResult).to.be.equal('true');
@@ -390,6 +415,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' undefined true}}",
         {} as any,
         [],
+        {},
         { query: { param1: null } } as any
       );
       expect(parseResult).to.be.equal('null');
@@ -401,6 +427,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' undefined false}}",
         {} as any,
         [],
+        {},
         { query: { param1: ['first', 'second'] } } as any
       );
       expect(parseResult).to.be.equal('["first","second"]');
@@ -412,6 +439,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' undefined false}}",
         {} as any,
         [],
+        {},
         { query: { param1: { key: 'value' } } } as any
       );
       expect(parseResult).to.be.equal('{"key":"value"}');
@@ -423,6 +451,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' 'default'}}",
         {} as any,
         [],
+        {},
         { query: { param1: 'test' } } as any
       );
       expect(parseResult).to.be.equal('test');
@@ -434,6 +463,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' undefined true}}",
         {} as any,
         [],
+        {},
         { query: { param1: 'test' } } as any
       );
       expect(parseResult).to.be.equal('"test"');
@@ -445,6 +475,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' 'default' true}}",
         {} as any,
         [],
+        {},
         { query: { param2: 'test' } } as any
       );
       expect(parseResult).to.be.equal('"default"');
@@ -456,6 +487,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1' undefined true}}",
         {} as any,
         [],
+        {},
         { query: { param1: 'This is a "message" with quotes.' } } as any
       );
       expect(parseResult).to.be.equal('"This is a \\"message\\" with quotes."');
@@ -467,6 +499,7 @@ describe('Request helpers', () => {
         "{{queryParam 'param1\\.name' undefined true}}",
         {} as any,
         [],
+        {},
         { query: { 'param1.name': 'value' } } as any
       );
       expect(parseResult).to.be.equal('"value"');
@@ -477,6 +510,7 @@ describe('Request helpers', () => {
         "{{queryParam '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParam '$.attributes.sub_attributes.*'}}{{queryParam '$.attributes.[attribute.with.dot].name'}}",
         {} as any,
         [],
+        {},
         {
           query: {
             'attribute.1.value.1': 'attribute-value-1',
@@ -507,6 +541,7 @@ describe('Request helpers', () => {
         "{{queryParamRaw 'param1'}}",
         {} as any,
         [],
+        {},
         {
           query: {
             param1: '1',
@@ -523,6 +558,7 @@ describe('Request helpers', () => {
         "{{queryParamRaw 'param2'}}",
         {} as any,
         [],
+        {},
         {
           query: {
             param1: '1',
@@ -539,6 +575,7 @@ describe('Request helpers', () => {
         "{{queryParamRaw 'param3'}}",
         {} as any,
         [],
+        {},
         {
           query: {
             param1: '1',
@@ -555,6 +592,7 @@ describe('Request helpers', () => {
         "{{#each (queryParamRaw 'param2')}}dolphin{{/each}}",
         {} as any,
         [],
+        {},
         {
           query: {
             param1: '1',
@@ -571,6 +609,7 @@ describe('Request helpers', () => {
         "{{#if (queryParamRaw 'param3')}}dolphin{{/if}}",
         {} as any,
         [],
+        {},
         {
           query: {
             param1: '1',
@@ -587,6 +626,7 @@ describe('Request helpers', () => {
         "{{#each (queryParamRaw 'dolphin' (array 1 2 3))}}dolphin{{/each}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('dolphindolphindolphin');
@@ -597,6 +637,7 @@ describe('Request helpers', () => {
         "{{#if (queryParamRaw 'dolphin' true)}}dolphin{{/if}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('dolphin');
@@ -617,6 +658,7 @@ describe('Request helpers', () => {
         "{{queryParamRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParamRaw '$.attributes.sub_attributes.*'}}{{queryParamRaw '$.attributes.[attribute.with.dot].name'}}",
         {} as any,
         [],
+        {},
         {
           query: {
             'attribute.1.value.1': 'attribute-value-1',
@@ -659,6 +701,7 @@ describe('Request helpers', () => {
           endpointPrefix: 'api'
         } as any,
         [],
+        {},
         {
           hostname: 'localhost'
         } as any
@@ -683,6 +726,7 @@ describe('Request helpers', () => {
           endpointPrefix: 'api'
         } as any,
         [],
+        {},
         {
           hostname: 'localhost'
         } as any
@@ -708,6 +752,7 @@ describe('Request helpers', () => {
           endpointPrefix: 'api'
         } as any,
         [],
+        {},
         {
           hostname: 'localhost'
         } as any
@@ -733,6 +778,7 @@ describe('Request helpers', () => {
           endpointPrefix: 'api'
         } as any,
         [],
+        {},
         {
           hostname: 'domain.tld'
         } as any
@@ -758,6 +804,7 @@ describe('Request helpers', () => {
           endpointPrefix: 'v1'
         } as any,
         [],
+        {},
         {
           hostname: 'localhost'
         } as any
@@ -782,6 +829,7 @@ describe('Request helpers', () => {
           port: 3001
         } as any,
         [],
+        {},
         {
           hostname: 'localhost'
         } as any
@@ -807,6 +855,7 @@ describe('Request helpers', () => {
           endpointPrefix: ''
         } as any,
         [],
+        {},
         {
           hostname: 'localhost'
         } as any
@@ -822,6 +871,7 @@ describe('Request helpers', () => {
         "{{header 'Test-Header'}}",
         {} as any,
         [],
+        {},
         requestMock
       );
       expect(parseResult).to.be.equal('headervalue');
@@ -833,6 +883,7 @@ describe('Request helpers', () => {
         '{{header}}',
         {} as any,
         [],
+        {},
         requestMock
       );
       expect(parseResult).to.be.equal('');
@@ -844,6 +895,7 @@ describe('Request helpers', () => {
         "{{header 'notfound'}}",
         {} as any,
         [],
+        {},
         requestMock
       );
       expect(parseResult).to.be.equal('');
@@ -855,6 +907,7 @@ describe('Request helpers', () => {
         "{{header 'notfound' 'defaultvalue'}}",
         {} as any,
         [],
+        {},
         requestMock
       );
       expect(parseResult).to.be.equal('defaultvalue');
