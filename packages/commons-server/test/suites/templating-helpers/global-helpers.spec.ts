@@ -43,7 +43,7 @@ describe('Global helpers', () => {
       );
       expect(emptyGlobalVariables['data1']).to.be.equal(1);
       expect(emptyGlobalVariables['data2']).to.be.equal(false);
-      expect(emptyGlobalVariables['test']).to.be.equal('test');
+      expect(emptyGlobalVariables['test']).to.be.equal('hello');
     });
 
     it('should set and get variable', () => {
