@@ -1,3 +1,5 @@
+import { fromSafeString, getValueFromPath } from '../utils';
+
 /**
  * Global helpers depending on environment scoped global variables
  *
@@ -8,25 +10,32 @@
 export const GlobalHelpers = function (globalVariables: Record<string, any>) {
   return {
     setGlobalVar: function (...args: any[]) {
-      // we need at least the name, the value and the Handlebars options
-      if (arguments.length < 3) {
+      const parameters = args.slice(0, -1);
+
+      // we need at least the name and the value
+      if (parameters.length < 2) {
         return;
       }
 
-      const name = args[0];
-      const value = args[1];
+      const name = fromSafeString(parameters[0]);
+      const value = fromSafeString(parameters[1]);
 
       globalVariables[name] = value;
     },
     getGlobalVar: function (...args: any[]) {
-      // we need at least the name and the Handlebars options
-      if (arguments.length < 2) {
+      const parameters = args.slice(0, -1);
+
+      // we need at least the name
+      if (parameters.length < 1) {
         return;
       }
 
-      const name = args[0];
+      const name = fromSafeString(parameters[0]);
 
-      return globalVariables[name];
+      return getValueFromPath(
+        globalVariables[name],
+        fromSafeString(parameters[1])
+      );
     }
   };
 };

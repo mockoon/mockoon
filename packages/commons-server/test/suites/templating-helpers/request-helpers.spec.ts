@@ -648,6 +648,7 @@ describe('Request helpers', () => {
         "{{queryParamRaw 'param1\\.name' undefined true}}",
         {} as any,
         [],
+        {},
         { query: { 'param1.name': 'value' } } as any
       );
       expect(parseResult).to.be.equal('value');
