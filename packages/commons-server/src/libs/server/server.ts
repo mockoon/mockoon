@@ -69,6 +69,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
+  // templating global variables
+  private globalVariables: Record<string, any> = {};
 
   constructor(
     private environment: Environment,
@@ -516,7 +518,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         request,
         currentRoute.responseMode,
         this.environment,
-        this.processedDatabuckets
+        this.processedDatabuckets,
+        this.globalVariables
       ).chooseResponse(requestNumber);
 
       if (!enabledRouteResponse) {
@@ -642,6 +645,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             cb.uri,
             this.environment,
             this.processedDatabuckets,
+            this.globalVariables,
             request,
             response
           );
@@ -653,6 +657,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               content || '',
               this.environment,
               this.processedDatabuckets,
+              this.globalVariables,
               request,
               response
             );
@@ -746,6 +751,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           content || '',
           this.environment,
           this.processedDatabuckets,
+          this.globalVariables,
           request,
           response
         );
@@ -792,6 +798,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         callback.uri,
         this.environment,
         this.processedDatabuckets,
+        this.globalVariables,
         request,
         response
       );
@@ -801,6 +808,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         callback.filePath.replace(/\\/g, '/'),
         this.environment,
         this.processedDatabuckets,
+        this.globalVariables,
         request
       );
 
@@ -859,6 +867,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               data.toString(),
               this.environment,
               this.processedDatabuckets,
+              this.globalVariables,
               request,
               response
             );
@@ -944,6 +953,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         routeResponse.filePath.replace(/\\/g, '/'),
         this.environment,
         this.processedDatabuckets,
+        this.globalVariables,
         request
       );
 
@@ -985,6 +995,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               data.toString(),
               this.environment,
               this.processedDatabuckets,
+              this.globalVariables,
               request,
               response
             );
@@ -1291,6 +1302,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           header.value,
           this.environment,
           this.processedDatabuckets,
+          this.globalVariables,
           request
         );
       } catch (error: any) {
@@ -1491,7 +1503,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               false,
               databucket.value,
               environment,
-              this.processedDatabuckets
+              this.processedDatabuckets,
+              this.globalVariables
             );
 
             const JSONParsedContent = JSON.parse(templateParsedContent);
@@ -1576,6 +1589,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                 targetDatabucket.value,
                 environment,
                 this.processedDatabuckets,
+                this.globalVariables,
                 request
               );
               const JSONParsedcontent = JSON.parse(content);

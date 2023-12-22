@@ -11,6 +11,8 @@ import {
 import { Request, Response } from 'express';
 import { SafeString } from 'handlebars';
 import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
+import { JSONPath } from 'jsonpath-plus';
+import { get as objectGet } from 'object-path';
 import { isAbsolute, resolve } from 'path';
 import { URL } from 'url';
 import { brotliDecompressSync, inflateSync, unzipSync } from 'zlib';
@@ -346,4 +348,38 @@ export const fullTextSearch = (object: unknown, query: string): boolean => {
   }
 
   return new RegExp(query, 'i').test(String(object));
+};
+
+/**
+ * Look for a value in an object or array using a path (dot notation or JSONPath).
+ * If no path is provided, return the full data.
+ * If the value is not found, return the default value.
+ *
+ * @param data
+ * @param path
+ * @param defaultValue
+ * @returns
+ */
+export const getValueFromPath = (
+  data: any,
+  path: string,
+  defaultValue: any
+) => {
+  if (
+    (Array.isArray(data) || typeof data === 'object') &&
+    typeof path === 'string' &&
+    path !== ''
+  ) {
+    let foundValue: any;
+
+    if (path.startsWith('$')) {
+      foundValue = JSONPath({ json: data, path: path });
+    } else {
+      foundValue = objectGet(data, convertPathToArray(path));
+    }
+
+    return foundValue !== undefined ? foundValue : defaultValue;
+  }
+
+  return data;
 };

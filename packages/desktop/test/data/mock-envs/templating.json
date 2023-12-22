@@ -1719,6 +1719,64 @@
       ],
       "responseMode": null,
       "type": "http"
+    },
+    {
+      "uuid": "51cf840e-ab69-4162-829c-2dd01d0e62fb",
+      "method": "get",
+      "endpoint": "setglobalvar",
+      "documentation": "",
+      "responses": [
+        {
+          "uuid": "93be1c56-786c-4a3c-898d-34d1190f726b",
+          "body": "{{setGlobalVar 'testVar' 'value1'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
+      "uuid": "9a2ee9a3-fd1a-40da-9184-55a21bfca3dc",
+      "method": "get",
+      "endpoint": "getglobalvar",
+      "documentation": "",
+      "responses": [
+        {
+          "uuid": "914833be-c635-4bab-acc8-1d39b46a0b61",
+          "body": "{{getGlobalVar 'testVar'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -1842,7 +1900,9 @@
     { "type": "route", "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b" },
     { "type": "route", "uuid": "7a748b48-0ebb-4557-88f0-c44d50ae238c" },
     { "type": "route", "uuid": "0687ac28-bdd1-43f1-8dfe-0fd523a8c276" },
-    { "type": "route", "uuid": "5033832a-06cd-4936-969a-e6e634feddfc" }
+    { "type": "route", "uuid": "5033832a-06cd-4936-969a-e6e634feddfc" },
+    { "type": "route", "uuid": "51cf840e-ab69-4162-829c-2dd01d0e62fb" },
+    { "type": "route", "uuid": "9a2ee9a3-fd1a-40da-9184-55a21bfca3dc" }
   ],
   "callbacks": []
 }

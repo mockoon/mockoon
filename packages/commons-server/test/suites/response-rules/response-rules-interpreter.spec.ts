@@ -78,7 +78,8 @@ describe('Response rules interpreter', () => {
       request,
       null,
       EnvironmentDefault,
-      []
+      [],
+      {}
     ).chooseResponse(1);
 
     expect(routeResponse?.body).to.be.equal('unauthorized');
@@ -116,7 +117,8 @@ describe('Response rules interpreter', () => {
       request,
       null,
       EnvironmentDefault,
-      []
+      [],
+      {}
     ).chooseResponse(1);
 
     expect(routeResponse?.body).to.be.equal('unauthorized');
@@ -154,7 +156,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query1');
@@ -191,7 +194,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query1');
@@ -228,7 +232,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('unauthorized');
@@ -265,7 +270,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query3');
@@ -302,7 +308,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query4');
@@ -339,7 +346,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query5');
@@ -376,7 +384,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('unauthorized');
@@ -413,7 +422,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('unauthorized');
@@ -450,7 +460,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query7');
@@ -487,7 +498,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query7');
@@ -524,7 +536,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('unauthorized');
@@ -561,7 +574,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query9');
@@ -605,7 +619,8 @@ describe('Response rules interpreter', () => {
             value: { prop: 'value' },
             parsed: true
           }
-        ]
+        ],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('unauthorized');
@@ -649,7 +664,8 @@ describe('Response rules interpreter', () => {
             value: { prop: 'value' },
             parsed: false
           }
-        ]
+        ],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('query11');
@@ -686,7 +702,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('value');
@@ -725,7 +742,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('params1');
     });
@@ -761,7 +779,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('params1');
     });
@@ -797,7 +816,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('params2');
     });
@@ -833,7 +853,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -869,7 +890,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -905,7 +927,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -942,7 +965,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('params6');
     });
@@ -982,7 +1006,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('request_number_1');
     });
@@ -1020,7 +1045,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(2);
       expect(routeResponse?.body).to.be.equal('request_number_not_1');
     });
@@ -1058,7 +1084,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(2);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1096,7 +1123,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(99);
       expect(routeResponse?.body).to.be.equal('request_number_regex');
     });
@@ -1134,7 +1162,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(101);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1180,7 +1209,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       );
 
       expect(responseRulesinterpreter.chooseResponse(1)?.body).to.be.equal(
@@ -1231,7 +1261,8 @@ describe('Response rules interpreter', () => {
         request,
         ResponseMode.SEQUENTIAL,
         EnvironmentDefault,
-        []
+        [],
+        {}
       );
       expect(responseRulesInterpreter.chooseResponse(1)?.body).to.be.equal(
         'request_number_1'
@@ -1280,7 +1311,8 @@ describe('Response rules interpreter', () => {
         request,
         ResponseMode.DISABLE_RULES,
         EnvironmentDefault,
-        []
+        [],
+        {}
       );
       expect(responseRulesInterpreter.chooseResponse(1)?.body).to.be.equal(
         'request_number_2'
@@ -1322,7 +1354,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('header1');
     });
@@ -1360,7 +1393,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('header1');
     });
@@ -1398,7 +1432,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('header2');
     });
@@ -1436,7 +1471,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1474,7 +1510,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1512,7 +1549,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1556,7 +1594,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('cookie1');
     });
@@ -1596,7 +1635,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('cookie1');
     });
@@ -1638,7 +1678,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('cookie2');
     });
@@ -1680,7 +1721,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1721,7 +1763,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('cookie2');
     });
@@ -1760,7 +1803,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1799,7 +1843,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('cookie2');
     });
@@ -1841,7 +1886,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1883,7 +1929,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -1926,7 +1973,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body1');
     });
@@ -1964,7 +2012,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body1');
     });
@@ -2002,7 +2051,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body2');
     });
@@ -2040,7 +2090,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -2078,7 +2129,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body4');
     });
@@ -2116,7 +2168,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body5');
     });
@@ -2154,7 +2207,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body6');
     });
@@ -2192,7 +2246,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body7');
     });
@@ -2230,7 +2285,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body8');
     });
@@ -2268,7 +2324,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body9');
     });
@@ -2306,7 +2363,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body10');
     });
@@ -2344,7 +2402,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body11');
     });
@@ -2382,7 +2441,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body12');
     });
@@ -2420,7 +2480,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body13');
     });
@@ -2458,7 +2519,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body14');
     });
@@ -2496,7 +2558,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body15');
     });
@@ -2534,7 +2597,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body16');
     });
@@ -2572,7 +2636,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body17');
     });
@@ -2610,7 +2675,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body19');
     });
@@ -2648,7 +2714,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body19');
     });
@@ -2687,7 +2754,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body20');
     });
@@ -2726,7 +2794,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body21');
     });
@@ -2765,7 +2834,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body21');
     });
@@ -2818,7 +2888,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('body6');
     });
@@ -2853,7 +2924,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('value');
@@ -2903,7 +2975,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('complex1');
     });
@@ -2950,7 +3023,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('complex1');
     });
@@ -2996,7 +3070,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -3043,7 +3118,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('complex3');
     });
@@ -3089,7 +3165,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('unauthorized');
     });
@@ -3139,7 +3216,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
       expect(routeResponse?.body).to.be.equal('response2');
     });
@@ -3162,7 +3240,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('content');
@@ -3203,7 +3282,8 @@ describe('Response rules interpreter', () => {
         request,
         null,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('content1');
@@ -3246,7 +3326,8 @@ describe('Response rules interpreter', () => {
         request,
         ResponseMode.FALLBACK,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse?.body).to.be.equal('content1');
@@ -3287,7 +3368,8 @@ describe('Response rules interpreter', () => {
         request,
         ResponseMode.FALLBACK,
         EnvironmentDefault,
-        []
+        [],
+        {}
       ).chooseResponse(1);
 
       expect(routeResponse).to.be.null;

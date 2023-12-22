@@ -13,6 +13,7 @@ export type User = {
   teamRole: TeamRoles;
   templatesQuota: number;
   templatesQuotaUsed: number;
+  newsletter?: boolean;
   subscription: {
     renewOn: number;
     createdOn: number;

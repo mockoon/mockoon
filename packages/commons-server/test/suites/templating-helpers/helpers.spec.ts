@@ -15,6 +15,7 @@ describe('Template parser', () => {
         '{{#switch (body "prop1")}}{{#case "value1"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
         {} as any,
         [],
+        {},
         {
           body: { prop1: 'value1' }
         } as any
@@ -28,6 +29,7 @@ describe('Template parser', () => {
         '{{#switch (body "prop1")}}{{#case "value1"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
         {} as any,
         [],
+        {},
         { body: { prop1: 'defaultvalue' } } as any
       );
       expect(parseResult).to.be.equal('defaultvalue');
@@ -39,6 +41,7 @@ describe('Template parser', () => {
         '{{#repeat 2 comma=false}}{{@index}}{{#switch @index}}{{#case 0}}John{{/case}}{{#default}}Peter{{/default}}{{/switch}}{{/repeat}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0John1Peter');
@@ -50,6 +53,7 @@ describe('Template parser', () => {
         '{{#switch (bodyRaw "prop1")}}{{#case true}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
         {} as any,
         [],
+        {},
         { body: { prop1: true } } as any
       );
       expect(parseResult).to.be.equal('value1');
@@ -61,6 +65,7 @@ describe('Template parser', () => {
         '{{#switch (bodyRaw "prop1")}}{{#case true}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
         {} as any,
         [],
+        {},
         { body: { prop1: false } } as any
       );
       expect(parseResult).to.be.equal('defaultvalue');
@@ -74,6 +79,7 @@ describe('Template parser', () => {
         "{{concat 'test' 'test'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('testtest');
@@ -85,6 +91,7 @@ describe('Template parser', () => {
         "{{#repeat 1 comma=false}}{{concat 'test' @index 'test'}}{{/repeat}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('test0test');
@@ -96,6 +103,7 @@ describe('Template parser', () => {
         "{{#repeat 1 comma=false}}{{concat 'test' (body 'id') 'test'}}{{/repeat}}",
         {} as any,
         [],
+        {},
         { body: { id: '123' } } as any
       );
       expect(parseResult).to.be.equal('test123test');
@@ -107,6 +115,7 @@ describe('Template parser', () => {
         "{{concat 'test' 123 'test'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('test123test');
@@ -118,6 +127,7 @@ describe('Template parser', () => {
         "{{#repeat 2 comma=false}}item_{{body (concat 'a.' @index '.item')}}{{/repeat}}",
         {} as any,
         [],
+        {},
         { body: { a: [{ item: 10 }, { item: 20 }] } } as any
       );
       expect(parseResult).to.be.equal('item_10item_20');
@@ -128,11 +138,10 @@ describe('Template parser', () => {
     it('should set a variable to a string', () => {
       const parseResult = TemplateParser(
         false,
-
         "{{setVar 'testvar' 'testvalue'}}{{@testvar}}",
-
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('testvalue');
@@ -144,6 +153,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar' 123}}{{@testvar}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('123');
@@ -155,6 +165,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar' (body 'uuid')}}{{@testvar}}",
         {} as any,
         [],
+        {},
         { body: { uuid: '0d35618e-5e85-4c09-864d-6d63973271c8' } } as any
       );
       expect(parseResult).to.be.equal('0d35618e-5e85-4c09-864d-6d63973271c8');
@@ -166,6 +177,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar' (oneOf (array 'item1'))}}{{@testvar}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('item1');
@@ -177,6 +189,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar' 5}}{{#repeat @testvar comma=false}}test{{/repeat}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('testtesttesttesttest');
@@ -188,6 +201,7 @@ describe('Template parser', () => {
         "{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{@testvar}}{{/repeat}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('01234');
@@ -200,6 +214,7 @@ describe('Template parser', () => {
         "{{setVar 'outsidevar' 'test'}}{{@outsidevar}}{{#repeat 5 comma=false}}{{setVar 'testvar' @index}}{{@testvar}}{{@outsidevar}}{{/repeat}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('test0test1test2test3test4test');
@@ -211,6 +226,7 @@ describe('Template parser', () => {
         "{{#repeat 1 comma=false}}{{setVar 'itemId' 25}}Item:{{@itemId}}{{setVar 'nb' 1}}{{#repeat @nb comma=false}}{{setVar 'childId' 56}}Child:{{@childId}}parent:{{@itemId}}{{/repeat}}{{/repeat}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('Item:25Child:56parent:25');
@@ -222,6 +238,7 @@ describe('Template parser', () => {
         "{{#each (split '1 2')}}{{setVar 'item' this}}{{@item}}{{/each}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('12');
@@ -233,6 +250,7 @@ describe('Template parser', () => {
         "{{#repeat 2 comma=false}}{{setVar 'repeatvar' 'repeatvarvalue'}}{{#each (split '1 2')}}{{setVar 'item' this}}{{@repeatvar}}{{@item}}{{/each}}{{/repeat}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(
@@ -246,6 +264,7 @@ describe('Template parser', () => {
         "{{#each (split '1 2')}}{{setVar 'each1var' 'each1varvalue'}}{{#each (split '1 2')}}{{setVar 'each2var' this}}{{@each1var}}{{@each2var}}{{/each}}{{/each}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(
@@ -259,6 +278,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar'}}{{@testvar}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -270,6 +290,7 @@ describe('Template parser', () => {
         "{{setVar ''}}{{@testvar}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -280,11 +301,10 @@ describe('Template parser', () => {
     it('should return empty if no var name provided', () => {
       const parseResult = TemplateParser(
         false,
-
         "{{setVar 'testvar' 'testvalue'}}{{getVar}}",
-
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -293,11 +313,10 @@ describe('Template parser', () => {
     it('should get a variable from simple var name', () => {
       const parseResult = TemplateParser(
         false,
-
         "{{setVar 'testvar' 'testvalue'}}{{getVar 'testvar'}}",
-
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('testvalue');
@@ -306,11 +325,10 @@ describe('Template parser', () => {
     it('should get a variable from dynamically built var name', () => {
       const parseResult = TemplateParser(
         false,
-
         "{{setVar 'testvar' 'testvalue'}}{{getVar (concat 'test' 'var')}}",
-
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('testvalue');
@@ -319,11 +337,10 @@ describe('Template parser', () => {
     it('should get a variable from dynamically built var name', () => {
       const parseResult = TemplateParser(
         false,
-
         "{{setVar 'testvar' 'testvalue'}}{{getVar (bodyRaw 'prop1')}}",
-
         {} as any,
         [],
+        {},
         { body: { prop1: 'testvar' } } as any
       );
       expect(parseResult).to.be.equal('testvalue');
@@ -337,6 +354,7 @@ describe('Template parser', () => {
         '{{date}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -348,6 +366,7 @@ describe('Template parser', () => {
         "{{date '2022-01-01'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -360,6 +379,7 @@ describe('Template parser', () => {
         "{{date '2022-01-01' '2022-02-01' 'YYYY'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -372,6 +392,7 @@ describe('Template parser', () => {
         "{{date '2022-02-01' '2022-02-01' 'yyyy-MM-dd'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -389,6 +410,7 @@ describe('Template parser', () => {
           }
         } as any,
         [],
+        {},
         {} as any
       );
 
@@ -403,6 +425,7 @@ describe('Template parser', () => {
         '{{dateFormat}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -414,6 +437,7 @@ describe('Template parser', () => {
         "{{dateFormat '2022-01-01'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -426,6 +450,7 @@ describe('Template parser', () => {
         "{{dateFormat '2022-02-01' 'YYYY'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -438,6 +463,7 @@ describe('Template parser', () => {
         "{{dateFormat (faker 'date.recent' 1) 'YYYY'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -452,6 +478,7 @@ describe('Template parser', () => {
         '{{dateTimeShift 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -467,6 +494,7 @@ describe('Template parser', () => {
         '{{dateTimeShift days=2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -483,6 +511,7 @@ describe('Template parser', () => {
         "{{dateTimeShift date='2021-02-01' days=2 months=4}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -495,6 +524,7 @@ describe('Template parser', () => {
         "{{dateTimeShift date='2021-02-01' format='yyyy-MM-dd' days=2 months=4}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -507,6 +537,7 @@ describe('Template parser', () => {
         "{{dateTimeShift date='2021-02-01T10:45:00' format=\"yyyy-MM-dd'T'HH:mm:ss\" days=8 months=3 hours=1 minutes=2 seconds=3}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -519,6 +550,7 @@ describe('Template parser', () => {
         "{{dateTimeShift date=(queryParam 'date') format=\"yyyy-MM-dd'T'HH:mm:ss\" hours=1}}",
         {} as any,
         [],
+        {},
         { query: { date: '2021-01-01 05:00:00' } } as any
       );
 
@@ -531,6 +563,7 @@ describe('Template parser', () => {
         "{{dateTimeShift date=(queryParam 'date') format=\"yyyy-MM-dd\" days=(queryParam 'days') months=(queryParam 'months')}}",
         {} as any,
         [],
+        {},
         { query: { date: '2021-01-01', months: 1, days: 1 } } as any
       );
 
@@ -545,6 +578,7 @@ describe('Template parser', () => {
         "{{includes 'testdata' 'test'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -557,6 +591,7 @@ describe('Template parser', () => {
         "{{includes 'testdata' 'not'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -569,6 +604,7 @@ describe('Template parser', () => {
         '{{includes}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -581,6 +617,7 @@ describe('Template parser', () => {
         "{{includes 'testdata'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -595,6 +632,7 @@ describe('Template parser', () => {
         "{{substr 'testdata' 4 4}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -607,6 +645,7 @@ describe('Template parser', () => {
         "{{substr 'testdata' '4' '4'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -619,6 +658,7 @@ describe('Template parser', () => {
         "{{substr 'testdata' 4}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -631,6 +671,7 @@ describe('Template parser', () => {
         "{{substr 'testdata' '4'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -643,6 +684,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar' 'testdata'}}{{setVar 'from' 4}}{{setVar 'length' 4}}{{substr @testvar @from @length}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -655,6 +697,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar' 'testdata'}}{{setVar 'from' '4'}}{{setVar 'length' '4'}}{{substr @testvar @from @length}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -667,6 +710,7 @@ describe('Template parser', () => {
         "{{substr (body 'prop1') (body 'prop2') (body 'prop3')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 'testdata', prop2: 4, prop3: 4 } } as any
       );
 
@@ -679,6 +723,7 @@ describe('Template parser', () => {
         "{{substr (body 'prop1') (body 'prop2') (body 'prop3')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 'testdata', prop2: '4', prop3: '4' } } as any
       );
 
@@ -691,6 +736,7 @@ describe('Template parser', () => {
         '{{substr}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -703,6 +749,7 @@ describe('Template parser', () => {
         "{{substr 'testdata'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -717,6 +764,7 @@ describe('Template parser', () => {
         '{{split "I love dolphins" " "}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -729,6 +777,7 @@ describe('Template parser', () => {
         '{{split "I too, love dolphins" ","}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -741,6 +790,7 @@ describe('Template parser', () => {
         '{{split "I love dolphins"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -753,6 +803,7 @@ describe('Template parser', () => {
         '{{split "I love dolphins" 123}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -765,6 +816,7 @@ describe('Template parser', () => {
         '{{split 123 ","}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -777,6 +829,7 @@ describe('Template parser', () => {
         '{{#each (split "1 2 3" " ")}}dolphin,{{/each}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -789,6 +842,7 @@ describe('Template parser', () => {
         "{{#each (split (queryParam 'param1') ',')}}item{{this}},{{/each}}",
         {} as any,
         [],
+        {},
         { query: { param1: '123,456,789' } } as any
       );
 
@@ -803,6 +857,7 @@ describe('Template parser', () => {
         '{{lowercase}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -815,6 +870,7 @@ describe('Template parser', () => {
         '{{lowercase "ABCD"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -827,6 +883,7 @@ describe('Template parser', () => {
         '{{#switch (lowercase "ABCD")}}{{#case "abcd"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -839,6 +896,7 @@ describe('Template parser', () => {
         "{{lowercase (queryParam 'param1')}}",
         {} as any,
         [],
+        {},
         { query: { param1: 'ABCD' } } as any
       );
 
@@ -853,6 +911,7 @@ describe('Template parser', () => {
         '{{uppercase}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -865,6 +924,7 @@ describe('Template parser', () => {
         '{{uppercase "abcd"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -877,6 +937,7 @@ describe('Template parser', () => {
         '{{#switch (uppercase "abcd")}}{{#case "ABCD"}}value1{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -889,6 +950,7 @@ describe('Template parser', () => {
         "{{uppercase (queryParam 'param1')}}",
         {} as any,
         [],
+        {},
         { query: { param1: 'abcd' } } as any
       );
 
@@ -903,6 +965,7 @@ describe('Template parser', () => {
         '{{parseInt}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -915,6 +978,7 @@ describe('Template parser', () => {
         "{{parseInt 'zero'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -927,6 +991,7 @@ describe('Template parser', () => {
         "{{parseInt '10'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('10');
@@ -940,6 +1005,7 @@ describe('Template parser', () => {
         '{{join (array "Mockoon" "is" "nice") " "}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -952,6 +1018,7 @@ describe('Template parser', () => {
         '{{join "I too, love dolphins" " "}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -964,6 +1031,7 @@ describe('Template parser', () => {
         '{{join (array "Water" "Tea" "Coffee")}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -978,6 +1046,7 @@ describe('Template parser', () => {
         '{{slice "hello"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -990,6 +1059,7 @@ describe('Template parser', () => {
         '{{slice (array "Mockoon" "is" "very" "nice")}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1002,6 +1072,7 @@ describe('Template parser', () => {
         '{{slice (array "Mockoon" "is" "very" "nice") 0 2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1014,6 +1085,7 @@ describe('Template parser', () => {
         '{{slice (array "Mockoon" "is" "very" "nice") 2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1028,6 +1100,7 @@ describe('Template parser', () => {
         "{{indexOf 'testdata' 'data'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1040,6 +1113,7 @@ describe('Template parser', () => {
         "{{indexOf 'testdatadata' 'data' 6}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1052,6 +1126,7 @@ describe('Template parser', () => {
         "{{indexOf 'testdatadata' 'data' '6'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1064,6 +1139,7 @@ describe('Template parser', () => {
         "{{indexOf 'testdata12345' 3}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1076,6 +1152,7 @@ describe('Template parser', () => {
         "{{indexOf 'testdata12345' '3'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1088,6 +1165,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar' 'this is a test'}}{{indexOf @testvar 'test'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1100,6 +1178,7 @@ describe('Template parser', () => {
         "{{setVar 'testvar' 'this is a test'}}{{setVar 'searchstring' 'test'}}{{indexOf @testvar @searchstring}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1112,6 +1191,7 @@ describe('Template parser', () => {
         "{{indexOf (body 'prop1') (body 'prop2')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 'First test then test', prop2: 'test' } } as any
       );
 
@@ -1124,6 +1204,7 @@ describe('Template parser', () => {
         "{{indexOf (body 'prop1') (body 'prop2') (body 'prop3')}}",
         {} as any,
         [],
+        {},
         {
           body: {
             prop1: 'First test then test',
@@ -1142,6 +1223,7 @@ describe('Template parser', () => {
         '{{indexOf}}',
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1154,6 +1236,7 @@ describe('Template parser', () => {
         "{{indexOf 'testdata'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1168,6 +1251,7 @@ describe('Template parser', () => {
         "{{someOf (array 'value1' 'value2' 'value3' 'value4' 'value5' 'value6') 1 1}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1181,6 +1265,7 @@ describe('Template parser', () => {
         "{{someOf (array 'value1' 'value2' 'value3' 'value4' 'value5' 'value6') 1 3}}",
         {} as any,
         [],
+        {},
         {} as any
       );
 
@@ -1199,6 +1284,7 @@ describe('Template parser', () => {
         "{{someOf (array 'value1' 'value2' 'value3' 'value4' 'value5' 'value6') 1 3 true}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult.match(/^\[.*\]$/)?.length).to.equal(1);
@@ -1219,6 +1305,7 @@ describe('Template parser', () => {
         '{{len (array 1 2 3)}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('3');
@@ -1230,6 +1317,7 @@ describe('Template parser', () => {
         '{{len "Cowboy"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -1241,6 +1329,7 @@ describe('Template parser', () => {
         '{{len true}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1252,6 +1341,7 @@ describe('Template parser', () => {
         '{{len}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1265,6 +1355,7 @@ describe('Template parser', () => {
         "{{base64 'abc'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('YWJj');
@@ -1276,6 +1367,7 @@ describe('Template parser', () => {
         "{{base64 (body 'prop1')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('MTIz');
@@ -1287,6 +1379,7 @@ describe('Template parser', () => {
         "{{#base64}}value: {{body 'prop1'}}{{/base64}}",
         {} as any,
         [],
+        {},
         { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('dmFsdWU6IDEyMw==');
@@ -1300,6 +1393,7 @@ describe('Template parser', () => {
         "{{base64Decode 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkw'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
@@ -1311,6 +1405,7 @@ describe('Template parser', () => {
         "{{base64Decode (body 'prop1')}}",
         {} as any,
         [],
+        {},
         {
           body: { prop1: 'YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkw' }
         } as any
@@ -1324,6 +1419,7 @@ describe('Template parser', () => {
         "{{#base64Decode}}YWJjZGVmZ2hpamtsbW5vcHF{{body 'prop1'}}{{/base64Decode}}",
         {} as any,
         [],
+        {},
         { body: { prop1: 'yc3R1dnd4eXoxMjM0NTY3ODkw' } } as any
       );
       expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
@@ -1337,6 +1433,7 @@ describe('Template parser', () => {
         '{{add 1 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('2');
@@ -1348,6 +1445,7 @@ describe('Template parser', () => {
         "{{add '1' '1'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('2');
@@ -1359,6 +1457,7 @@ describe('Template parser', () => {
         '{{add 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1370,6 +1469,7 @@ describe('Template parser', () => {
         '{{add }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1381,6 +1481,7 @@ describe('Template parser', () => {
         "{{add 1 (body 'prop1')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('124');
@@ -1392,6 +1493,7 @@ describe('Template parser', () => {
         "{{add '1' '2' 'dolphins' '3'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -1405,6 +1507,7 @@ describe('Template parser', () => {
         '{{subtract 1 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1416,6 +1519,7 @@ describe('Template parser', () => {
         "{{subtract '1' '1'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1427,6 +1531,7 @@ describe('Template parser', () => {
         '{{subtract 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1438,6 +1543,7 @@ describe('Template parser', () => {
         '{{subtract }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1449,6 +1555,7 @@ describe('Template parser', () => {
         "{{subtract 1 (body 'prop1')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('-122');
@@ -1460,6 +1567,7 @@ describe('Template parser', () => {
         "{{subtract '6' '2' 'dolphins' '3'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1473,6 +1581,7 @@ describe('Template parser', () => {
         '{{multiply 2 3}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -1484,6 +1593,7 @@ describe('Template parser', () => {
         "{{multiply '2' '3'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -1495,6 +1605,7 @@ describe('Template parser', () => {
         '{{multiply 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1506,6 +1617,7 @@ describe('Template parser', () => {
         '{{multiply }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1517,6 +1629,7 @@ describe('Template parser', () => {
         "{{multiply 2 (body 'prop1')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('246');
@@ -1528,6 +1641,7 @@ describe('Template parser', () => {
         "{{multiply '1' '2' 'dolphins' '3'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('6');
@@ -1541,6 +1655,7 @@ describe('Template parser', () => {
         '{{divide 4 2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('2');
@@ -1552,6 +1667,7 @@ describe('Template parser', () => {
         "{{divide '6' '2'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('3');
@@ -1563,6 +1679,7 @@ describe('Template parser', () => {
         '{{divide 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1574,6 +1691,7 @@ describe('Template parser', () => {
         '{{divide }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1585,6 +1703,7 @@ describe('Template parser', () => {
         "{{divide 246 (body 'prop1')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: '123' } } as any
       );
       expect(parseResult).to.be.equal('2');
@@ -1596,6 +1715,7 @@ describe('Template parser', () => {
         "{{divide 5 '0' 5}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1607,6 +1727,7 @@ describe('Template parser', () => {
         "{{divide '6' '2' 'dolphins' '3'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1620,6 +1741,7 @@ describe('Template parser', () => {
         '{{modulo 4 2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1631,6 +1753,7 @@ describe('Template parser', () => {
         "{{modulo '4' '2'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1642,6 +1765,7 @@ describe('Template parser', () => {
         '{{modulo 4}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1653,6 +1777,7 @@ describe('Template parser', () => {
         '{{modulo }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1664,6 +1789,7 @@ describe('Template parser', () => {
         "{{modulo 4 (body 'prop1')}}",
         {} as any,
         [],
+        {},
         { body: { prop1: '2' } } as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1675,6 +1801,7 @@ describe('Template parser', () => {
         '{{modulo 4 0}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1688,6 +1815,7 @@ describe('Template parser', () => {
         '{{ceil 0.5}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1699,6 +1827,7 @@ describe('Template parser', () => {
         "{{ceil '0.5'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1710,6 +1839,7 @@ describe('Template parser', () => {
         '{{ceil 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1721,6 +1851,7 @@ describe('Template parser', () => {
         '{{ceil }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1734,6 +1865,7 @@ describe('Template parser', () => {
         '{{floor 0.5}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1745,6 +1877,7 @@ describe('Template parser', () => {
         "{{floor '0.5'}}",
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1756,6 +1889,7 @@ describe('Template parser', () => {
         '{{floor 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1767,6 +1901,7 @@ describe('Template parser', () => {
         '{{floor }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1780,6 +1915,7 @@ describe('Template parser', () => {
         '{{round 0.5}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -1791,6 +1927,7 @@ describe('Template parser', () => {
         '{{round 0.499}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1802,6 +1939,7 @@ describe('Template parser', () => {
         '{{round "0.499"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1813,6 +1951,7 @@ describe('Template parser', () => {
         '{{round}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -1826,6 +1965,7 @@ describe('Template parser', () => {
         '{{toFixed 1.11111 2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1.11');
@@ -1837,6 +1977,7 @@ describe('Template parser', () => {
         '{{toFixed 2.11111}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('2');
@@ -1848,6 +1989,7 @@ describe('Template parser', () => {
         '{{toFixed}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1859,6 +2001,7 @@ describe('Template parser', () => {
         '{{toFixed "hi"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('0');
@@ -1872,6 +2015,7 @@ describe('Template parser', () => {
         '{{gt 1.11111 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -1883,6 +2027,7 @@ describe('Template parser', () => {
         '{{gt 1.11111 1.2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -1894,6 +2039,7 @@ describe('Template parser', () => {
         '{{gt 1 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -1907,6 +2053,7 @@ describe('Template parser', () => {
         '{{gt 1.11111 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -1918,6 +2065,7 @@ describe('Template parser', () => {
         '{{gt 1.11111 1.2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -1929,6 +2077,7 @@ describe('Template parser', () => {
         '{{gt 1 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -1942,6 +2091,7 @@ describe('Template parser', () => {
         '{{gte 1.11111 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -1953,6 +2103,7 @@ describe('Template parser', () => {
         '{{gte 1.11111 1.2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -1964,6 +2115,7 @@ describe('Template parser', () => {
         '{{gte 1 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -1977,6 +2129,7 @@ describe('Template parser', () => {
         '{{lt 1 2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -1988,6 +2141,7 @@ describe('Template parser', () => {
         '{{lt 2 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -1999,6 +2153,7 @@ describe('Template parser', () => {
         '{{lt 1 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -2012,6 +2167,7 @@ describe('Template parser', () => {
         '{{lte 1 2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -2023,6 +2179,7 @@ describe('Template parser', () => {
         '{{lte 2 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -2034,6 +2191,7 @@ describe('Template parser', () => {
         '{{lte 1 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -2047,6 +2205,7 @@ describe('Template parser', () => {
         '{{eq 1 2}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -2058,6 +2217,7 @@ describe('Template parser', () => {
         '{{eq 2 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -2069,6 +2229,7 @@ describe('Template parser', () => {
         '{{eq 1 1}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -2080,6 +2241,7 @@ describe('Template parser', () => {
         '{{eq 1 "1"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -2091,6 +2253,7 @@ describe('Template parser', () => {
         '{{eq "v1" "v1"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -2102,6 +2265,7 @@ describe('Template parser', () => {
         '{{eq "v1" "v11"}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -2115,6 +2279,7 @@ describe('Template parser', () => {
         '{{{stringify (bodyRaw "prop2")}}}',
         {} as any,
         [],
+        {},
         {
           body: {
             prop1: '123',
@@ -2137,6 +2302,7 @@ describe('Template parser', () => {
         '{{padStart}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -2148,6 +2314,7 @@ describe('Template parser', () => {
         '{{padStart (bodyRaw "prop1")}}',
         {} as any,
         [],
+        {},
         {
           body: {
             prop1: '123'
@@ -2163,6 +2330,7 @@ describe('Template parser', () => {
         '{{padStart (bodyRaw "prop1") 10}}',
         {} as any,
         [],
+        {},
         {
           body: {
             prop1: '123'
@@ -2178,6 +2346,7 @@ describe('Template parser', () => {
         '{{padStart (bodyRaw "prop1") 10 "*"}}',
         {} as any,
         [],
+        {},
         {
           body: {
             prop1: '123'
@@ -2195,6 +2364,7 @@ describe('Template parser', () => {
         '{{padEnd}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -2206,6 +2376,7 @@ describe('Template parser', () => {
         '{{padEnd (bodyRaw "prop1")}}',
         {} as any,
         [],
+        {},
         {
           body: {
             prop1: '123'
@@ -2221,6 +2392,7 @@ describe('Template parser', () => {
         '{{padEnd (bodyRaw "prop1") 10}}',
         {} as any,
         [],
+        {},
         {
           body: {
             prop1: '123'
@@ -2236,6 +2408,7 @@ describe('Template parser', () => {
         '{{padEnd (bodyRaw "prop1") 10 "*"}}',
         {} as any,
         [],
+        {},
         {
           body: {
             prop1: '123'
@@ -2253,6 +2426,7 @@ describe('Template parser', () => {
         '{{oneOf}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -2264,6 +2438,7 @@ describe('Template parser', () => {
         '{{oneOf true}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -2282,6 +2457,7 @@ describe('Template parser', () => {
             value: [{ id: 1, value: 'value1' }]
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('{"id":1,"value":"value1"}');
@@ -2300,6 +2476,7 @@ describe('Template parser', () => {
             value: [{ id: 1, value: 'value1' }]
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('[object Object]');
@@ -2313,6 +2490,7 @@ describe('Template parser', () => {
         '{{ stringify (object) }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('{}');
@@ -2324,6 +2502,7 @@ describe('Template parser', () => {
         '{{{ stringify (object key="value") }}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(
@@ -2337,6 +2516,7 @@ describe('Template parser', () => {
         '{{{ stringify (object key="value" secondKey="secondValue" numericKey=5) }}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(
@@ -2360,6 +2540,7 @@ describe('Template parser', () => {
         '{{ stringify (filter (array 1 2 3 4 true false) 3 1 true) }}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(JSON.stringify([1, 3, true], null, 2));
@@ -2371,6 +2552,7 @@ describe('Template parser', () => {
         '{{{ stringify (filter (array (object key="value") 2 3) (object key="value") 3) }}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(
@@ -2384,6 +2566,7 @@ describe('Template parser', () => {
         '{{{ stringify (filter (array (object a="a1" b="b2") (object a="a1" b="b1") 2 3) (object a="a1" b="b1") 3) }}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(

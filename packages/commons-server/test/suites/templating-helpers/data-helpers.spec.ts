@@ -9,6 +9,7 @@ describe('Data helpers', () => {
         '{{data}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -27,6 +28,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -45,6 +47,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -63,6 +66,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -81,6 +85,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('null');
@@ -99,6 +104,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('["first","second"]');
@@ -117,6 +123,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('{"key":"value"}');
@@ -135,6 +142,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('test');
@@ -157,6 +165,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('value1');
@@ -179,6 +188,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -199,6 +209,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('false');
@@ -221,6 +232,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('value1');
@@ -251,6 +263,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(
@@ -266,6 +279,7 @@ describe('Data helpers', () => {
         '{{dataRaw}}',
         {} as any,
         [],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -284,6 +298,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -302,6 +317,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('test');
@@ -320,6 +336,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('1');
@@ -338,6 +355,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('true');
@@ -356,6 +374,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('null');
@@ -374,6 +393,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('first,second');
@@ -392,6 +412,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('dolphin1dolphin2dolphin3');
@@ -410,6 +431,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('dolphin');
@@ -428,6 +450,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('string1string2');
@@ -450,6 +473,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('value1');
@@ -472,6 +496,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('');
@@ -492,6 +517,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('truthy');
@@ -512,6 +538,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('value1');
@@ -532,6 +559,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         { query: { path: 'prop\\.with\\.dots' } } as any
       );
       expect(parseResult).to.be.equal('value1');
@@ -550,6 +578,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal('string1string2');
@@ -580,6 +609,7 @@ describe('Data helpers', () => {
             parsed: true
           }
         ],
+        {},
         {} as any
       );
       expect(parseResult).to.be.equal(

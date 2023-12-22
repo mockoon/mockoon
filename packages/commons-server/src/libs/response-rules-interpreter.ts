@@ -37,7 +37,8 @@ export class ResponseRulesInterpreter {
     private request: Request,
     private responseMode: Route['responseMode'],
     private environment: Environment,
-    private processedDatabuckets: ProcessedDatabucket[]
+    private processedDatabuckets: ProcessedDatabucket[],
+    private globalVariables: Record<string, any>
   ) {
     this.extractTargets();
   }
@@ -234,6 +235,7 @@ export class ResponseRulesInterpreter {
         value,
         this.environment,
         this.processedDatabuckets,
+        this.globalVariables,
         this.request
       );
     } catch (error) {
