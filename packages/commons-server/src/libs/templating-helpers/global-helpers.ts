@@ -1,6 +1,4 @@
-import { JSONPath } from 'jsonpath-plus';
-import { get as objectGet } from 'object-path';
-import { convertPathToArray, fromSafeString } from '../utils';
+import { fromSafeString, getValueFromPath } from '../utils';
 
 /**
  * Global helpers depending on environment scoped global variables
@@ -34,33 +32,11 @@ export const GlobalHelpers = function (globalVariables: Record<string, any>) {
 
       const name = fromSafeString(parameters[0]);
 
-      let value = globalVariables[name];
-      let path: string | string[] = fromSafeString(parameters[1]);
-
-      if (
-        (Array.isArray(globalVariables[name]) ||
-          typeof globalVariables[name] === 'object') &&
-        parameters.length > 1 &&
-        typeof path === 'string' &&
-        path !== ''
-      ) {
-        // path is provided and required
-        if (path.startsWith('$')) {
-          const foundValue = JSONPath({ json: value, path: path });
-          value = foundValue !== undefined ? foundValue : '';
-        } else {
-          // let path: string | string[] = fromSafeString(parameters[1]);
-          path = convertPathToArray(path);
-
-          // ensure a value was found at path
-          const foundValue = objectGet(value, path);
-          value = foundValue !== undefined ? foundValue : '';
-        }
-
-        return value;
-      }
-
-      return value;
+      return getValueFromPath(
+        globalVariables[name],
+        fromSafeString(parameters[1]),
+        ''
+      );
     }
   };
 };
