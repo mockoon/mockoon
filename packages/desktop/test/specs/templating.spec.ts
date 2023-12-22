@@ -1049,6 +1049,36 @@ const fakerSeedingTest: HttpCall = {
   }
 };
 
+const globalVarTests: Record<string, HttpCall> = {
+  beforeSet: {
+    description: '',
+    path: '/getglobalvar',
+    method: 'GET',
+    testedResponse: {
+      status: 200,
+      body: ''
+    }
+  },
+  setVar: {
+    description: '',
+    path: '/setglobalvar',
+    method: 'GET',
+    testedResponse: {
+      status: 200,
+      body: ''
+    }
+  },
+  afterSet: {
+    description: '',
+    path: '/getglobalvar',
+    method: 'GET',
+    testedResponse: {
+      status: 200,
+      body: 'value1'
+    }
+  }
+};
+
 describe('Templating', () => {
   describe('Helpers', () => {
     before(async () => {
@@ -1138,6 +1168,29 @@ describe('Templating', () => {
       await environments.stop();
       await environments.start();
       await http.assertCall(fakerSeedingTest);
+    });
+  });
+
+  describe('Global vars are reset when the serve restart', () => {
+    it('should open and start the environment', async () => {
+      await environments.close(1);
+      await environments.open('templating');
+      await environments.start();
+    });
+
+    it('should receive empty content when no var is set', async () => {
+      await http.assertCall(globalVarTests.beforeSet);
+    });
+
+    it('should set the var and receive its content', async () => {
+      await http.assertCall(globalVarTests.setVar);
+      await http.assertCall(globalVarTests.afterSet);
+    });
+
+    it('should receive empty content after restarting the server', async () => {
+      await environments.stop();
+      await environments.start();
+      await http.assertCall(globalVarTests.beforeSet);
     });
   });
 });

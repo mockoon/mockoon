@@ -1,9 +1,7 @@
 import { Environment } from '@mockoon/commons';
 import { Request } from 'express';
 import { SafeString } from 'handlebars';
-import { JSONPath } from 'jsonpath-plus';
-import { get as objectGet } from 'object-path';
-import { convertPathToArray, fromSafeString, getValueFromPath } from '../utils';
+import { fromSafeString, getValueFromPath } from '../utils';
 
 export const requestHelperNames: (keyof ReturnType<typeof RequestHelpers>)[] = [
   'bodyRaw',
@@ -32,13 +30,19 @@ export const RequestHelpers = function (
       const defaultValue = fromSafeString(parameters[1]) ?? '';
       const stringify = parameters[2] ?? false;
 
+      if (path === '' || path == null) {
+        return new SafeString(request.stringBody);
+      }
+
       let value: any = defaultValue;
 
       if (request.body) {
         value = request.body;
       }
 
-      value = getValueFromPath(value, path, defaultValue);
+      if (path != null && path !== '') {
+        value = getValueFromPath(value, path, defaultValue);
+      }
 
       if (Array.isArray(value) || typeof value === 'object' || stringify) {
         return new SafeString(JSON.stringify(value));
