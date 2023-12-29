@@ -13,10 +13,7 @@
     <p *ngIf="!changelog.loading && changelog.error" class="message">
       Changelog could not be loaded
     </p>
-    <markdown
-      *ngIf="!changelog.loading && !changelog.error"
-      ngPreserveWhitespaces
-    >
+    <markdown *ngIf="!changelog.loading && !changelog.error">
       {{ changelog.data }}
     </markdown>
     <p *ngIf="changelog.loading" class="message">
