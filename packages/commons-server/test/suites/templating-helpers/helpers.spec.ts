@@ -403,18 +403,18 @@ describe('Template parser', () => {
       const parseResult = TemplateParser(
         false,
         "{{date (queryParam 'dateFrom') (queryParam 'dateTo') 'YYYY'}}",
+        {} as any,
+        [],
+        {},
         {
           query: {
             dateFrom: '2022-06-01T00:00:00.000Z',
             dateTo: '2022-06-03T12:00:00.000Z'
           }
-        } as any,
-        [],
-        {},
-        {} as any
+        } as any
       );
 
-      expect(parseResult).to.be.equal('2023');
+      expect(parseResult).to.be.equal('2022');
     });
   });
 
@@ -460,14 +460,14 @@ describe('Template parser', () => {
     it('should return a date using a given format, when a Date object is passed as a param', () => {
       const parseResult = TemplateParser(
         false,
-        "{{dateFormat (faker 'date.recent' 1) 'YYYY'}}",
+        "{{dateFormat (faker 'date.recent' (object refDate='2022-01-10T00:00:00.000Z' days=1)) 'YYYY'}}",
         {} as any,
         [],
         {},
         {} as any
       );
 
-      expect(parseResult).to.be.equal('2023');
+      expect(parseResult).to.be.equal('2022');
     });
   });
 
