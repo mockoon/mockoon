@@ -57,7 +57,9 @@ export const markEnvStatusRestart = (
   const activeEnvironmentStatus =
     state.environmentsStatus[targetEnvironmentUuid];
 
-  const needRestart = activeEnvironmentStatus.running && condition;
+  const needRestart =
+    activeEnvironmentStatus.needRestart ||
+    (activeEnvironmentStatus.running && condition);
 
   return {
     ...state.environmentsStatus,
