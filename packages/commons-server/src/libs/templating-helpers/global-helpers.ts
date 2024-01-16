@@ -31,12 +31,14 @@ export const GlobalHelpers = function (globalVariables: Record<string, any>) {
       }
 
       const name = fromSafeString(parameters[0]);
+      const path = fromSafeString(parameters[1]);
+      const defaultValue = fromSafeString(parameters[2]) ?? '';
 
-      return getValueFromPath(
-        globalVariables[name],
-        fromSafeString(parameters[1]),
-        ''
-      );
+      if (globalVariables[name] === undefined) {
+        return defaultValue;
+      }
+
+      return getValueFromPath(globalVariables[name], path, defaultValue);
     }
   };
 };
