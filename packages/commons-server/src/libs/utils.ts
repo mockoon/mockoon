@@ -219,6 +219,26 @@ export const numberFromSafeString = (text: string | SafeString) => {
 };
 
 /**
+ *
+ * @param text
+ * @returns object | null
+ */
+export const objectFromSafeString = (text: string | SafeString) => {
+  const parsedText = text instanceof SafeString ? text.toString() : text;
+  // Remove any escape slashes used to escape double-quotes or single-quotes
+  // (Check test case).
+  // Surround all object keys with double-quotes to make it valid JSON text.
+  const objectText = parsedText
+    .replace(/\\/g, '')
+    .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
+  try {
+    return JSON.parse(objectText);
+  } catch (e) {
+    return null;
+  }
+};
+
+/**
  * Resolve a file path relatively to the current environment folder if provided
  */
 export const resolvePathFromEnvironment = (
