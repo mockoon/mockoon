@@ -73,6 +73,32 @@ describe('Global helpers', () => {
       expect(parsedContent).to.be.equal('');
     });
 
+    it('should get variable, return should be default with non existing var name (number)', () => {
+      const emptyGlobalVariables = {};
+      const parsedContent = TemplateParser(
+        false,
+        "{{{stringify (getGlobalVar 'nonexisting' null 25)}}}",
+        {} as any,
+        [],
+        emptyGlobalVariables,
+        {} as any
+      );
+      expect(parsedContent).to.be.equal('25');
+    });
+
+    it('should get variable, return should be default with non existing var name (boolean)', () => {
+      const emptyGlobalVariables = {};
+      const parsedContent = TemplateParser(
+        false,
+        "{{{stringify (getGlobalVar 'nonexisting' null false)}}}",
+        {} as any,
+        [],
+        emptyGlobalVariables,
+        {} as any
+      );
+      expect(parsedContent).to.be.equal('false');
+    });
+
     it('should get variable, return should be empty with non existing var name and path', () => {
       const emptyGlobalVariables = {};
       const parsedContent = TemplateParser(
@@ -120,6 +146,24 @@ describe('Global helpers', () => {
         deepprop1: 'hello'
       });
       expect(parsedContent).to.deep.equal('');
+    });
+
+    it('should set and get variable, should return default value when a wrong path is passed', () => {
+      const emptyGlobalVariables = {};
+      const parsedContent = TemplateParser(
+        false,
+        "{{setGlobalVar 'data1' (bodyRaw 'prop1')}}{{{stringify (getGlobalVar 'data1' 'wrongpath' 'default')}}}",
+        {} as any,
+        [],
+        emptyGlobalVariables,
+        {
+          body: { prop1: { deepprop1: 'hello' } }
+        } as any
+      );
+      expect(emptyGlobalVariables['data1']).to.deep.equal({
+        deepprop1: 'hello'
+      });
+      expect(parsedContent).to.deep.equal('default');
     });
 
     it('should set and get variable, should return value when a path is passed', () => {
