@@ -28,11 +28,11 @@ export const saveOpenUrlArgs = (url: string[]) => {
 
 export const getMainWindow = () => mainWindow;
 
-export const initMainWindow = () => {
+export const initMainWindow = (showSplash = true) => {
   let splashScreen: BrowserWindow;
 
   // only show the splashscreen when not running the tests
-  if (!IS_TESTING) {
+  if (!IS_TESTING && showSplash) {
     splashScreen = createSplashScreen();
   }
 

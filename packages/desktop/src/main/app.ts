@@ -16,6 +16,7 @@ setPaths();
 createMainLogger();
 
 let mainWindow: BrowserWindow;
+let isQuitting = false;
 
 // try getting a lock to ensure only one instance of the application is launched
 let appLock = app.requestSingleInstanceLock();
@@ -25,8 +26,8 @@ if (IS_DEV) {
   appLock = true;
 }
 
-const initApp = () => {
-  mainWindow = initMainWindow();
+const initApp = (showSplash = true) => {
+  mainWindow = initMainWindow(showSplash);
   initIPCListeners(mainWindow);
 
   if (IS_DEV) {
@@ -68,9 +69,13 @@ if (!appLock) {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (BrowserWindow.getAllWindows().length === 0) {
-        initApp();
+        initApp(false);
       }
     });
+  });
+
+  app.on('before-quit', () => {
+    isQuitting = true;
   });
 
   // Quit when all windows are closed.
@@ -81,7 +86,7 @@ if (!appLock) {
 
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q (except when running tests)
-    if (process.platform !== 'darwin' || IS_TESTING) {
+    if (isQuitting || process.platform !== 'darwin' || IS_TESTING) {
       app.quit();
     }
   });
