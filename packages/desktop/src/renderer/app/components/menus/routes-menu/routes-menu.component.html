@@ -113,6 +113,7 @@
         [ngTemplateOutlet]="routeItemTemplate"
         [ngTemplateOutletContext]="{
           route: child.data,
+          isHidden$: child.isHidden$,
           parentId: parentId === undefined ? 'root' : parentId,
           parentChainId: parentChainId === undefined ? ['root'] : parentChainId,
           level: level === undefined ? 0 : level
@@ -220,6 +221,7 @@
   <ng-template
     #routeItemTemplate
     let-route="route"
+    let-isHidden$="isHidden$"
     let-parentId="parentId"
     let-parentChainId="parentChainId"
     let-level="level"
@@ -227,7 +229,7 @@
     <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
       <li
         class="nav-item"
-        [appSearchFilter]="routesFilter$"
+        [ngClass]="{ 'd-none': isHidden$ | async }"
         appDraggable
         appDropzone
         dragContainer="routes"

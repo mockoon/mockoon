@@ -14,6 +14,7 @@ import {
 } from '@mockoon/commons';
 import { Observable, Subject, from } from 'rxjs';
 import {
+  combineLatestWith,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -24,7 +25,7 @@ import {
 import { CallbacksContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { trackByUuid } from 'src/renderer/app/libs/utils.lib';
+import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -82,7 +83,14 @@ export class CallbacksMenuComponent implements OnInit, OnDestroy {
     this.callbackList$ = this.store.selectActiveEnvironment().pipe(
       filter((activeEnvironment) => !!activeEnvironment),
       distinctUntilChanged(),
-      map((activeEnvironment) => activeEnvironment.callbacks)
+      combineLatestWith(this.callbacksFilter$),
+      map(([activeEnvironment, search]) =>
+        !search
+          ? activeEnvironment.callbacks
+          : activeEnvironment.callbacks.filter((callback) =>
+              textFilter(`${callback.name} ${callback.documentation}`, search)
+            )
+      )
     );
 
     this.callbacksFilter.valueChanges

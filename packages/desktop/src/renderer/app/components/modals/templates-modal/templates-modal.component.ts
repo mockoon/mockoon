@@ -22,6 +22,7 @@ import {
   Observable,
   Subject,
   catchError,
+  combineLatestWith,
   concat,
   concatMap,
   debounceTime,
@@ -42,6 +43,7 @@ import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { demoTemplates } from 'src/renderer/app/constants/demo-templates';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { textFilter } from 'src/renderer/app/libs/utils.lib';
 import { TemplatesTabsName } from 'src/renderer/app/models/store.model';
 import {
   Template,
@@ -193,19 +195,28 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
       )
     ).subscribe();
 
+    this.templatesFilter$ = this.store.selectFilter('templates').pipe(
+      tap((search) => {
+        this.templatesFilter.patchValue(search, { emitEvent: false });
+      })
+    );
+
     this.templates$ = this.templatesService.getTemplatesList().pipe(
-      withLatestFrom(this.user$),
-      filter(([templates]) => templates && templates.length > 0),
+      filter((templates) => templates && templates.length > 0),
+      combineLatestWith(this.user$, this.templatesFilter$),
       tap(([templates, user]) => {
         const firstFreeTemplate = templates.find(
           (template) => template.pro === false
         );
-
         this.setActiveTemplateListItem(
           user && user.plan !== 'FREE' ? templates[0] : firstFreeTemplate
         );
       }),
-      map(([templates]) => templates),
+      map(([templates, , search]) =>
+        !search
+          ? templates
+          : templates.filter((template) => textFilter(template.name, search))
+      ),
       catchError(() => EMPTY)
     );
 
@@ -214,12 +225,6 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
       switchMap((templateListItem) =>
         this.templatesService.getTemplateById(templateListItem.id)
       )
-    );
-
-    this.templatesFilter$ = this.store.selectFilter('templates').pipe(
-      tap((search) => {
-        this.templatesFilter.patchValue(search, { emitEvent: false });
-      })
     );
 
     // set back the prompt/template if we open/close the modal during a generation

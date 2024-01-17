@@ -47,7 +47,6 @@
         <li
           class="nav-item"
           *ngFor="let environmentCallback of callbackList; trackBy: trackByUuid"
-          [appSearchFilter]="callbacksFilter$"
           appDraggable
           appDropzone
           dragContainer="callbacks"

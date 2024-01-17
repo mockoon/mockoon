@@ -276,10 +276,9 @@ describe('Callback filter', () => {
     await browser.pause(100);
     await callbacks.assertCount(1);
 
-    // menu element is still no. 2 because filtering only add a d-none class
     await contextMenu.click(
       'callbacks',
-      2,
+      1,
       ContextMenuCallbackActions.DUPLICATE_TO_ENV
     );
     await $(
