@@ -197,10 +197,9 @@ describe('Databucket filter', () => {
     await browser.pause(100);
     await databuckets.assertCount(1);
 
-    // menu element is still no. 2 because filtering only add a d-none class
     await contextMenu.click(
       'databuckets',
-      2,
+      1,
       ContextMenuDatabucketActions.DUPLICATE_TO_ENV
     );
     await $(

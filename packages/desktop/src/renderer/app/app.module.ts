@@ -64,7 +64,6 @@ import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.d
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
-import { SearchFilterDirective } from 'src/renderer/app/directives/search-filter.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/renderer/app/modules-config/markdown.config';
 import { NgbDropdownConfigFactory } from 'src/renderer/app/modules-config/ngb-dropdown.config';
@@ -87,7 +86,6 @@ import { AppComponent } from './app.component';
     FocusOnEventDirective,
     DraggableDirective,
     DropzoneDirective,
-    SearchFilterDirective,
     ScrollWhenActiveDirective,
     ContextMenuComponent,
     CommandPaletteModalComponent,

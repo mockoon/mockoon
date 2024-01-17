@@ -37,6 +37,7 @@ import {
 } from 'src/renderer/app/components/context-menu/context-menus';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { textFilter } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import {
@@ -56,7 +57,8 @@ type FullFolder = {
   name: string;
   children: (
     | { type: 'folder'; data: Folder }
-    | { type: 'route'; data: Route }
+    // routes has an extra property isHidden$ that is an observable of the route visibility based on the search filter (thus we avoid using a function in the template)
+    | { type: 'route'; isHidden$: Observable<boolean>; data: Route }
   )[];
 };
 
@@ -288,6 +290,26 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Create an observable that will emit true if the route should be hidden by the search filter
+   *
+   * @param search
+   * @param route
+   * @returns
+   */
+  private createRouteHiddenObservable(route: Route) {
+    return this.routesFilter$.pipe(
+      debounceTime(100),
+      map(
+        (search) =>
+          !textFilter(
+            `${route.method} /${route.endpoint} ${route.documentation}`,
+            search
+          )
+      )
+    );
+  }
+
+  /**
    * Fill the folders objects with real sub folders and routes objects
    *
    * @param children
@@ -300,7 +322,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   ): {
     children: (
       | { type: 'folder'; data: Folder }
-      | { type: 'route'; data: Route }
+      | { type: 'route'; isHidden$: Observable<boolean>; data: Route }
     )[];
   } {
     return {
@@ -321,7 +343,11 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
             }
           };
         } else {
-          return { type: 'route', data: foundChild as Route };
+          return {
+            type: 'route',
+            isHidden$: this.createRouteHiddenObservable(foundChild as Route),
+            data: foundChild as Route
+          };
         }
       })
     };

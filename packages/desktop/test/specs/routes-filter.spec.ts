@@ -23,37 +23,38 @@ describe('Routes filter', () => {
     await routes.setFilter('dolphins');
     await routes.filter.click();
     await browser.keys(['Escape']);
+    await browser.pause(500);
     await routes.assertFilter('');
   });
 
   it('should filter route by name dolphins', async () => {
     await routes.assertCount(3);
     await routes.setFilter('/dolphins');
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(1);
   });
 
-  it('should filter route by mulitple words (dolphin + post)', async () => {
+  it('should filter route by multiple words (dolphin + post)', async () => {
     await routes.clearFilter();
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(3);
     await routes.setFilter('dolphins post');
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(1);
   });
 
   it('should filter route by method', async () => {
     await routes.clearFilter();
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(3);
     await routes.setFilter('post');
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(1);
   });
 
   it('should reset routes filter when clicking on the button Clear filter', async () => {
     await routes.clearFilter();
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(3);
   });
 
@@ -73,7 +74,7 @@ describe('Routes filter', () => {
   it('should reset routes filter when duplicating route to selected environment', async () => {
     await environments.select(1);
     await routes.setFilter('/dolphins');
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(1);
     // menu item id is still 3, as filtering is using d-none class
     await contextMenu.click(
