@@ -53,7 +53,12 @@ export const initMainWindow = (showSplash = true) => {
     height: mainWindowState.height,
     title: 'Mockoon',
     backgroundColor: '#252830',
-    icon: pathJoin(__dirname, '../build-res/icon_512x512x32.png'),
+    icon: pathJoin(
+      __dirname,
+      process.platform === 'win32'
+        ? '../build-res/icon.ico'
+        : '../build-res/icon_512x512x32.png'
+    ),
     // directly show the main window when running the tests
     show: false,
     webPreferences: {
