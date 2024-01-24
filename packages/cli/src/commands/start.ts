@@ -11,7 +11,6 @@ import {
   listenServerEvents
 } from '@mockoon/commons-server';
 import { Command, Flags } from '@oclif/core';
-import { red as chalkRed } from 'chalk';
 import { join } from 'path';
 import { format } from 'util';
 import { Config } from '../config';
@@ -191,7 +190,8 @@ export default class Start extends Command {
 
       // Cannot use this.error() as Oclif does not catch it (it seems to be lost due to the async nature of Node.js http server.listen errors).
       if (exitErrors.includes(errorCode)) {
-        this.log(`${chalkRed(' »')}   Error: ${errorMessage}`);
+        // red "»" character
+        this.log(`\x1b[31m»\x1b[0m   Error: ${errorMessage}`);
         process.exit(2);
       }
     });
