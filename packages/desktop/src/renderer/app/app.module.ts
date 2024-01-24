@@ -58,12 +58,14 @@ import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-r
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
+import { TourComponent } from 'src/renderer/app/components/tour/tour.component';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
+import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { MarkedOptionsFactory } from 'src/renderer/app/modules-config/markdown.config';
 import { NgbDropdownConfigFactory } from 'src/renderer/app/modules-config/ngb-dropdown.config';
@@ -118,7 +120,8 @@ import { AppComponent } from './app.component';
     CustomSelectComponent,
     ToggleComponent,
     SvgComponent,
-    EditableElementComponent
+    EditableElementComponent,
+    TourComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -126,6 +129,7 @@ import { AppComponent } from './app.component';
     FormsModule,
     HttpClientModule,
     NgbModule,
+    TourStepDirective,
     MarkdownModule.forRoot({
       sanitize: SecurityContext.NONE,
       markedOptions: {

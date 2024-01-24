@@ -5,10 +5,13 @@
     collapsedFolders: collapsedFolders$ | async
   } as data"
 >
-  <div class="routes-menu d-flex flex-column h-100">
-    <div class="d-flex">
+  <div
+    class="routes-menu d-flex flex-column h-100"
+    appTourStep="tour-routes-menu"
+  >
+    <div class="d-flex" appTestDirective>
       <div class="d-flex w-100 py-2 align-items-center">
-        <div ngbDropdown id="routes-add-dropdown">
+        <div ngbDropdown id="routes-add-dropdown" appTourStep="tour-route-add">
           <button
             class="btn btn-link dropdown-toggle dropdown-toggle-icon"
             type="button"

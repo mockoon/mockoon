@@ -22,6 +22,7 @@ import { EventsService } from 'src/renderer/app/services/events.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -50,7 +51,8 @@ export class AppComponent extends Logger implements OnInit {
     private settingsService: SettingsService,
     private appQuitService: AppQuitService,
     private userService: UserService,
-    private title: Title
+    private title: Title,
+    private tourService: TourService
   ) {
     super('[RENDERER][COMPONENT][APP] ', toastService);
 
@@ -92,6 +94,16 @@ export class AppComponent extends Logger implements OnInit {
       event.key.toLowerCase() === 'p'
     ) {
       this.uiService.openModal('commandPalette');
+    }
+
+    if (this.tourService.isInProgress()) {
+      if (event.key === 'ArrowLeft') {
+        this.tourService.previous();
+      } else if (event.key === 'ArrowRight') {
+        this.tourService.next();
+      } else if (event.key === 'Escape') {
+        this.tourService.stop();
+      }
     }
   }
 

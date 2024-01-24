@@ -43,6 +43,10 @@ export class HeaderComponent implements OnInit {
     TEAM: 'Team',
     ENTERPRISE: 'Enterprise'
   };
+  public tourIds = {
+    ENV_LOGS: 'tour-environment-logs',
+    ENV_PROXY: 'tour-environment-proxy'
+  };
 
   constructor(
     private store: Store,

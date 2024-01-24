@@ -337,6 +337,12 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       },
       { type: 'separator' },
       {
+        label: 'Take the tour',
+        click: () => {
+          mainWindow.webContents.send('APP_MENU', 'TOUR_START');
+        }
+      },
+      {
         label: `Release notes v${Config.appVersion}`,
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'OPEN_CHANGELOG');

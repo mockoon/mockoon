@@ -90,6 +90,8 @@ export class SvgComponent {
     | 'data'
     | 'low_priority'
     | 'command_palette'
+    | 'chevron_left'
+    | 'chevron_right'
     | string;
 
   constructor() {}
