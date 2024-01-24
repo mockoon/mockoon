@@ -109,14 +109,17 @@ export class EditableElementComponent implements ControlValueAccessor {
   }
 
   public save() {
+    // always set editing state to false and propagate to the parent
+    this.editChange.emit(false);
+    this.edit = false;
+
     // Do not save if the text is the same
     if (this._text === this.data.value) {
       return;
     }
 
+    // save the new value and propagate to the parent
     this.text = this.data.value;
     this.onChange(this.data.value);
-    this.edit = false;
-    this.editChange.emit(false);
   }
 }
