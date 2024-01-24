@@ -339,3 +339,15 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
     overflow: hidden;
   }
 }
+
+.tour-highlight {
+  pointer-events: none;
+  user-select: none;
+}
+
+.tour-backdrop {
+  position: fixed;
+  z-index: $zindex-modal-backdrop;
+  background-color: $modal-backdrop-bg;
+  opacity: 0.8;
+}
