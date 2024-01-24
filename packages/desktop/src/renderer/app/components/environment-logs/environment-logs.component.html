@@ -102,7 +102,7 @@
                     </div>
                     <div>
                       <span
-                        *ngIf="log.route"
+                        *ngIf="log.route && !log.proxied"
                         class="float-end text-success logs-metadata"
                       >
                         <app-svg
@@ -113,7 +113,7 @@
                     </div>
                     <div>
                       <span
-                        *ngIf="!log.route && log.proxied"
+                        *ngIf="log.proxied"
                         class="float-end text-primary logs-metadata"
                       >
                         <app-svg
@@ -214,7 +214,7 @@
                     {{ selectedLog.method | uppercase }}
                   </div>
                   <div
-                    *ngIf="selectedLog.route"
+                    *ngIf="selectedLog.route && !selectedLog.proxied"
                     class="environment-logs-content-item"
                   >
                     <strong>Caught by route:</strong> {{ selectedLog.route }}
