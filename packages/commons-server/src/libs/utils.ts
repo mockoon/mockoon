@@ -260,9 +260,12 @@ export const resolvePathFromEnvironment = (
  * @returns
  */
 export const stringIncludesArrayItems = (
-  array: string[],
+  array: (string | RegExp)[],
   str: string
-): boolean => array.some((item) => str.includes(item));
+): boolean =>
+  array.some((item) =>
+    item instanceof RegExp ? item.test(str) : str.includes(item)
+  );
 
 /**
  * Convert an object path (for the object-path lib) containing escaped dots '\.'
