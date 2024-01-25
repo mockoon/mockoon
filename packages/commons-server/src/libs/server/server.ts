@@ -560,6 +560,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           enabledRouteResponse.bodyType === BodyTypes.FILE &&
           enabledRouteResponse.filePath
         ) {
+          this.makeCallbacks(enabledRouteResponse, request, response);
+
           this.sendFile(
             route,
             enabledRouteResponse,

@@ -3,8 +3,11 @@ import callbacks from '../libs/callbacks';
 import contextMenu, { ContextMenuCallbackActions } from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
+import environmentsLogs from '../libs/environments-logs';
+import environmentsSettings from '../libs/environments-settings';
 import file from '../libs/file';
 import headersUtils from '../libs/headers-utils';
+import http from '../libs/http';
 import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
@@ -14,7 +17,7 @@ import utils from '../libs/utils';
 const env1FilePath = './tmp/storage/callbacks.json';
 
 describe('Callbacks navigation and deletion', () => {
-  it('should open and start the environment', async () => {
+  it('should open the environment', async () => {
     await environments.open('callbacks');
     await settings.open();
     await settings.setSettingValue('settings-faker-seed', '1');
@@ -478,5 +481,76 @@ describe('Callback usages', () => {
     await callbacks.assertUsageRouteText(2, 'POST /test/usages/2');
     await callbacks.assertUsageRouteResponseText(2, 1, 'Response 100');
     await callbacks.assertUsageRouteResponseText(2, 2, 'Response 200');
+  });
+
+  describe('Execute Callbacks', () => {
+    it('should open and start the environment', async () => {
+      // close the 3 already opened environments
+      await environments.close(1);
+      await environments.close(1);
+      await environments.close(1);
+      await browser.reloadSession();
+
+      await environments.open('callbacks');
+      await environments.open('basic-data');
+
+      // change port
+      await navigation.switchView('ENV_SETTINGS');
+      await environmentsSettings.port.setValue(3001);
+      // start basic-data
+      await environments.start();
+
+      await environments.select(1);
+    });
+
+    it('should add a callback', async () => {
+      await navigation.switchView('ENV_CALLBACKS');
+      await callbacks.add();
+      await callbacks.setName('basic call');
+      await callbacks.setUri('http://localhost:3001/answer');
+      await callbacks.setMethod(1);
+    });
+
+    it('should attach callback to each route', async () => {
+      await navigation.switchView('ENV_ROUTES');
+      await routes.select(1);
+      await routes.callbacksTab.click();
+      await callbacks.attachCallback();
+      await utils.openDropdown('callback0target');
+      await utils.selectDropdownItem('callback0target', 7);
+
+      await routes.select(2);
+      await routes.callbacksTab.click();
+      await callbacks.attachCallback();
+      await utils.openDropdown('callback0target');
+      await utils.selectDropdownItem('callback0target', 7);
+
+      await routes.select(3);
+      await routes.callbacksTab.click();
+      await callbacks.attachCallback();
+      await utils.openDropdown('callback0target');
+      await utils.selectDropdownItem('callback0target', 7);
+    });
+
+    it('should start the environment call each route and verify the callback has been called', async () => {
+      await environments.start();
+      await environments.select(2);
+      await navigation.switchView('ENV_LOGS');
+
+      await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
+      await browser.pause(500);
+      await environmentsLogs.assertCount(1);
+
+      await http.assertCallWithPort({ method: 'GET', path: '/file' }, 3000);
+      await browser.pause(500);
+      await environmentsLogs.assertCount(2);
+
+      await http.assertCallWithPort(
+        { method: 'GET', path: '/databucket' },
+        3000
+      );
+      await browser.pause(500);
+      await environmentsLogs.assertCount(3);
+    });
   });
 });
