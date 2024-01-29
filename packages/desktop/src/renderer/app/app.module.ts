@@ -7,10 +7,6 @@ import {
   getFunctions,
   provideFunctions
 } from '@angular/fire/functions';
-import {
-  getRemoteConfig,
-  provideRemoteConfig
-} from '@angular/fire/remote-config';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -149,15 +145,6 @@ import { AppComponent } from './app.component';
       }
 
       return auth;
-    }),
-    provideRemoteConfig(() => {
-      const remoteConfig = getRemoteConfig();
-
-      if (!environment.production) {
-        remoteConfig.settings.minimumFetchIntervalMillis = 1000;
-      }
-
-      return remoteConfig;
     }),
     provideFunctions(() => {
       const functions = getFunctions();

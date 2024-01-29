@@ -28,6 +28,7 @@ export class BannerComponent implements OnInit {
       mergeMap(() => this.remoteConfigService.get('banner')),
       filter(
         (banner) =>
+          banner &&
           banner.enabled &&
           !this.store.get('settings').bannerDismissed.includes(banner.id)
       )
