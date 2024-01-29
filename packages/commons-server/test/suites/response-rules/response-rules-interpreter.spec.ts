@@ -972,6 +972,161 @@ describe('Response rules interpreter', () => {
     });
   });
 
+  describe('Global var rules', () => {
+    const request: Request = {
+      header: function (headerName: string) {
+        return '';
+      },
+      body: '',
+      params: {} as QueryString.ParsedQs
+    } as Request;
+
+    it('should return default response when global var is not present', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: 'testvar',
+                value: 'testvalue',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar1'
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          // empty
+        }
+      ).chooseResponse(1);
+      expect(routeResponse?.body).to.be.equal('unauthorized');
+    });
+
+    it('should return the correct response when global var is present (string), using object path', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: 'testvar',
+                value: 'testvalue',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar2'
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          testvar: 'testvalue'
+        }
+      ).chooseResponse(1);
+      expect(routeResponse?.body).to.be.equal('globalvar2');
+    });
+
+    it('should return the correct response when global var is present number (number), using object path', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: 'testvar',
+                value: '2',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar3'
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          testvar: 2
+        }
+      ).chooseResponse(1);
+      expect(routeResponse?.body).to.be.equal('globalvar3');
+    });
+
+    it('should return the correct response when global var is present number (deep bool prop), using object path', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: 'testvar.prop1',
+                value: 'false',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar4'
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          testvar: { prop1: false }
+        }
+      ).chooseResponse(1);
+      expect(routeResponse?.body).to.be.equal('globalvar4');
+    });
+
+    it('should return the correct response when global var is present number (deep string prop), using JSONPath', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: '$.testvar.prop1',
+                value: 'testvalue',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar5'
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          testvar: { prop1: 'testvalue' }
+        }
+      ).chooseResponse(1);
+      expect(routeResponse?.body).to.be.equal('globalvar5');
+    });
+  });
+
   describe('Request number rules', () => {
     it('should return response if request number matches', () => {
       const request: Request = {

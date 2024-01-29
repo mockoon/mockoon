@@ -56,6 +56,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { value: 'header', label: 'Header' },
     { value: 'cookie', label: 'Cookie' },
     { value: 'params', label: 'Route params' },
+    { value: 'global_var', label: 'Global variable' },
     { value: 'request_number', label: 'Request number (starting at 1)' }
   ];
   public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
@@ -65,12 +66,13 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { value: 'null', label: 'null' },
     { value: 'empty_array', label: 'empty array' }
   ];
-  public modifierPlaceholders = {
-    body: 'Object path or empty for full body',
-    query: 'Property name or object path',
+  public modifierPlaceholders: Record<ResponseRuleTargets, string> = {
+    body: 'JSONPath or object path (empty for full body)',
+    query: 'JSONPath or object path',
     header: 'Header name',
     cookie: 'Cookie name',
     params: 'Route parameter name',
+    global_var: 'JSONPath or object path (start with var name)',
     request_number: ''
   };
   public valuePlaceholders = {
