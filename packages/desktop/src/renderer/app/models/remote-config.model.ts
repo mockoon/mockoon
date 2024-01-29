@@ -9,7 +9,7 @@ export type Banner = {
 };
 
 export type RemoteConfigData = {
-  banner: Banner;
+  banner: Banner | null;
   enableTelemetry: boolean;
   geoipEndpoint: string;
 };

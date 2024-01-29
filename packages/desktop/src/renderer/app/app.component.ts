@@ -19,6 +19,7 @@ import { ApiService } from 'src/renderer/app/services/api.service';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
@@ -52,7 +53,8 @@ export class AppComponent extends Logger implements OnInit {
     private appQuitService: AppQuitService,
     private userService: UserService,
     private title: Title,
-    private tourService: TourService
+    private tourService: TourService,
+    private remoteConfigService: RemoteConfigService
   ) {
     super('[RENDERER][COMPONENT][APP] ', toastService);
 
@@ -109,6 +111,7 @@ export class AppComponent extends Logger implements OnInit {
 
   ngOnInit() {
     this.appQuitService.init().subscribe();
+    this.remoteConfigService.init().subscribe();
     this.userService.init().subscribe();
     this.apiService.init();
 
