@@ -1,5 +1,5 @@
 {
-  "uuid": "1d9d70cf-e1d5-4000-bb53-dbc631fb7ec7",
+  "uuid": "8f6a86f2-e23b-4491-98d8-899b94ddec3d",
   "lastMigration": 32,
   "name": "Swagger Petstore v3",
   "endpointPrefix": "v2",
@@ -9,14 +9,14 @@
   "folders": [],
   "routes": [
     {
-      "uuid": "3af6c8d1-e586-45b8-a3e4-98a32cef7c44",
+      "uuid": "6c65d4f3-ca43-4571-94d1-a4f56d02ac7c",
       "type": "http",
       "documentation": "Returns all pets from the system that the user has access to\n",
       "method": "get",
       "endpoint": "pets",
       "responses": [
         {
-          "uuid": "1729ba4f-ac7e-4a13-947a-b1e23216fa4f",
+          "uuid": "7c89264c-b977-487c-801c-baab1f03d3fc",
           "body": "[\n  {\n    \"name\": \"\",\n    \"tag\": \"\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -28,11 +28,11 @@
             },
             {
               "key": "X-Rate-Limit",
-              "value": ""
+              "value": "{{faker 'number.int' max=99999}}"
             },
             {
               "key": "X-Expires-After",
-              "value": ""
+              "value": "{{faker 'date.recent' 365}}"
             }
           ],
           "bodyType": "INLINE",
@@ -48,7 +48,7 @@
           "callbacks": []
         },
         {
-          "uuid": "2f9c7412-f799-407b-b378-1a16254b76e4",
+          "uuid": "05f63665-4ed5-440c-b0c0-3f0a390dd271",
           "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -75,14 +75,14 @@
       "responseMode": null
     },
     {
-      "uuid": "4f5ff3ab-998d-4a6e-ade5-52dea221ef69",
+      "uuid": "3a075a09-38cb-430d-9534-6d439274ef60",
       "type": "http",
       "documentation": "Creates a new pet in the store.  Duplicates are allowed",
       "method": "post",
       "endpoint": "pets",
       "responses": [
         {
-          "uuid": "e6a4aef5-3025-4183-87fb-d07540d365de",
+          "uuid": "0b1f454a-5f88-4c4e-921f-825808833cc3",
           "body": "{\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -106,7 +106,7 @@
           "callbacks": []
         },
         {
-          "uuid": "c43811db-7c54-4b36-b4dd-ff6d4b02cbf5",
+          "uuid": "d25bc483-143c-4974-a70c-fad990e0d8b6",
           "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -133,14 +133,14 @@
       "responseMode": null
     },
     {
-      "uuid": "e82957b1-86a5-44e7-975a-51ad61ca3586",
+      "uuid": "7f19cab0-d254-48b0-ac4d-b640e40a15d4",
       "type": "http",
       "documentation": "Returns a user based on a single ID, if the user does not have access to the pet",
       "method": "get",
       "endpoint": "pets/:id",
       "responses": [
         {
-          "uuid": "627c83a0-fef9-4097-a944-4819e3d174f5",
+          "uuid": "c49c1c11-ce5f-47b2-954f-d22e7571e885",
           "body": "{\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -164,7 +164,7 @@
           "callbacks": []
         },
         {
-          "uuid": "c3a5232a-e3c6-43a2-bf4f-7310f5825f45",
+          "uuid": "9be3c766-537a-4136-bdde-b1531454794d",
           "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -191,14 +191,14 @@
       "responseMode": null
     },
     {
-      "uuid": "16d4d398-3342-480e-8e86-a594163640ab",
+      "uuid": "835ea6a6-becb-4dc9-9db7-17aae0af7b40",
       "type": "http",
       "documentation": "deletes a single pet based on the ID supplied",
       "method": "delete",
       "endpoint": "pets/:id",
       "responses": [
         {
-          "uuid": "06f350c9-958c-41d8-92b1-0c5524f11708",
+          "uuid": "b98c13d5-26ae-4fe1-8ba1-e05378042c6b",
           "body": "",
           "latency": 0,
           "statusCode": 204,
@@ -222,7 +222,7 @@
           "callbacks": []
         },
         {
-          "uuid": "a4a9b09e-9d68-4305-9dab-ae34c2d1497b",
+          "uuid": "cb2f28d7-1002-4153-9240-91674a68b454",
           "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -252,19 +252,19 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "3af6c8d1-e586-45b8-a3e4-98a32cef7c44"
+      "uuid": "6c65d4f3-ca43-4571-94d1-a4f56d02ac7c"
     },
     {
       "type": "route",
-      "uuid": "4f5ff3ab-998d-4a6e-ade5-52dea221ef69"
+      "uuid": "3a075a09-38cb-430d-9534-6d439274ef60"
     },
     {
       "type": "route",
-      "uuid": "e82957b1-86a5-44e7-975a-51ad61ca3586"
+      "uuid": "7f19cab0-d254-48b0-ac4d-b640e40a15d4"
     },
     {
       "type": "route",
-      "uuid": "16d4d398-3342-480e-8e86-a594163640ab"
+      "uuid": "835ea6a6-becb-4dc9-9db7-17aae0af7b40"
     }
   ],
   "proxyMode": false,

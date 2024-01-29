@@ -1,22 +1,22 @@
 {
-  "uuid": "5a4047ae-4b28-443f-b674-0d3692682ad9",
+  "uuid": "0cd3abf9-2fbf-404e-a9d0-f0af4cd0d83c",
   "lastMigration": 32,
   "name": "Sample v3 schema",
   "endpointPrefix": "api",
   "latency": 0,
-  "port": 3000,
+  "port": 3005,
   "hostname": "",
   "folders": [],
   "routes": [
     {
-      "uuid": "4d0b1204-aaff-4529-8932-b58850a2123b",
+      "uuid": "047eb7da-7622-45ea-bcf0-665f37df028a",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint",
       "responses": [
         {
-          "uuid": "c453964b-7ba3-4b8b-9883-86581edc95bc",
+          "uuid": "97d9a7d8-71b3-4878-ae80-e4d9d027611e",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -25,6 +25,22 @@
             {
               "key": "Content-Type",
               "value": "application/json"
+            },
+            {
+              "key": "Header-From-Example",
+              "value": "example value"
+            },
+            {
+              "key": "Header-From-First-Examples",
+              "value": "first example value"
+            },
+            {
+              "key": "Header-From-Schema-String",
+              "value": ""
+            },
+            {
+              "key": "Header-From-Schema-Int",
+              "value": "{{faker 'number.int' max=99999}}"
             }
           ],
           "bodyType": "INLINE",
@@ -43,14 +59,14 @@
       "responseMode": null
     },
     {
-      "uuid": "6f8fa86e-c838-4f00-b4e5-9c9f214628f7",
+      "uuid": "a0a5e12a-33a2-4583-a85d-e1521969f327",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint2",
       "responses": [
         {
-          "uuid": "fce4516f-4ec2-421e-b18b-7ef61ef67bf7",
+          "uuid": "bc0be1d1-75cf-4ef6-9c74-7a107f57d140",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -77,14 +93,14 @@
       "responseMode": null
     },
     {
-      "uuid": "38684ca8-7897-4e65-bb40-458c57c253ff",
+      "uuid": "d4447430-7f55-43d9-83f1-18a201ff41d6",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint3",
       "responses": [
         {
-          "uuid": "a043231c-c166-4d90-9c27-9fce675c25f7",
+          "uuid": "208516a8-9057-484f-9c57-73dd6626d2c4",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -114,15 +130,15 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "4d0b1204-aaff-4529-8932-b58850a2123b"
+      "uuid": "047eb7da-7622-45ea-bcf0-665f37df028a"
     },
     {
       "type": "route",
-      "uuid": "6f8fa86e-c838-4f00-b4e5-9c9f214628f7"
+      "uuid": "a0a5e12a-33a2-4583-a85d-e1521969f327"
     },
     {
       "type": "route",
-      "uuid": "38684ca8-7897-4e65-bb40-458c57c253ff"
+      "uuid": "d4447430-7f55-43d9-83f1-18a201ff41d6"
     }
   ],
   "proxyMode": false,

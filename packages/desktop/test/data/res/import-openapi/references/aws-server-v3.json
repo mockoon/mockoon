@@ -1,22 +1,22 @@
 {
-  "uuid": "7d27a618-773d-485b-9051-d69412e59df1",
+  "uuid": "2f1fa7c7-be37-4794-9f7d-78b80ffdc6e4",
   "lastMigration": 32,
   "name": "AWS Server Migration Service",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 3000,
+  "port": 3003,
   "hostname": "",
   "folders": [],
   "routes": [
     {
-      "uuid": "20c1d73a-e679-40f2-b292-4921be5abe3d",
+      "uuid": "2e15791a-e0d5-45ca-b893-cae6a7412bd0",
       "type": "http",
       "documentation": "Creates an application. An application consists of one or more server groups. Each server group contain one or more servers.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.CreateApp",
       "responses": [
         {
-          "uuid": "aeffbc6c-b523-40ea-a6bf-0ec1f6eb50f7",
+          "uuid": "102a7cb9-2dc4-4ff0-9e5d-1ee91b3f9fa9",
           "body": "{\n  \"appSummary\": {\n    \"appId\": \"\",\n    \"name\": \"\",\n    \"description\": \"\",\n    \"status\": \"{{oneOf (array 'CREATING' 'ACTIVE' 'UPDATING' 'DELETING' 'DELETED' 'DELETE_FAILED')}}\",\n    \"statusMessage\": \"\",\n    \"replicationStatus\": \"{{oneOf (array 'READY_FOR_CONFIGURATION' 'CONFIGURATION_IN_PROGRESS' 'CONFIGURATION_INVALID' 'READY_FOR_REPLICATION' 'VALIDATION_IN_PROGRESS' 'REPLICATION_PENDING' 'REPLICATION_IN_PROGRESS' 'REPLICATED' 'DELTA_REPLICATION_IN_PROGRESS' 'DELTA_REPLICATED' 'DELTA_REPLICATION_FAILED' 'REPLICATION_FAILED' 'REPLICATION_STOPPING' 'REPLICATION_STOP_FAILED' 'REPLICATION_STOPPED')}}\",\n    \"replicationStatusMessage\": \"\",\n    \"latestReplicationTime\": \"{{faker 'date.recent' 365}}\",\n    \"launchStatus\": \"{{oneOf (array 'READY_FOR_CONFIGURATION' 'CONFIGURATION_IN_PROGRESS' 'CONFIGURATION_INVALID' 'READY_FOR_LAUNCH' 'VALIDATION_IN_PROGRESS' 'LAUNCH_PENDING' 'LAUNCH_IN_PROGRESS' 'LAUNCHED' 'DELTA_LAUNCH_IN_PROGRESS' 'DELTA_LAUNCH_FAILED' 'LAUNCH_FAILED' 'TERMINATE_IN_PROGRESS' 'TERMINATE_FAILED' 'TERMINATED')}}\",\n    \"launchStatusMessage\": \"\",\n    \"launchDetails\": {\n      \"latestLaunchTime\": \"{{faker 'date.recent' 365}}\",\n      \"stackName\": \"\",\n      \"stackId\": \"\"\n    },\n    \"creationTime\": \"{{faker 'date.recent' 365}}\",\n    \"lastModified\": \"{{faker 'date.recent' 365}}\",\n    \"roleName\": \"\",\n    \"totalServerGroups\": {{faker 'number.int' max=99999}},\n    \"totalServers\": {{faker 'number.int' max=99999}}\n  },\n  \"serverGroups\": [\n    {\n      \"serverGroupId\": \"\",\n      \"name\": \"\",\n      \"serverList\": [\n        {\n          \"serverId\": \"\",\n          \"serverType\": \"{{oneOf (array 'VIRTUAL_MACHINE')}}\",\n          \"vmServer\": {\n            \"vmServerAddress\": {\n              \"vmManagerId\": \"\",\n              \"vmId\": \"\"\n            },\n            \"vmName\": \"\",\n            \"vmManagerName\": \"\",\n            \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n            \"vmPath\": \"\"\n          },\n          \"replicationJobId\": \"\",\n          \"replicationJobTerminated\": {{faker 'datatype.boolean'}}\n        }\n      ]\n    }\n  ],\n  \"tags\": [\n    {\n      \"key\": \"\",\n      \"value\": \"\"\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 200,
@@ -40,7 +40,7 @@
           "callbacks": []
         },
         {
-          "uuid": "d2d9b3f7-562d-49cf-b80d-9462db10b3bc",
+          "uuid": "06555047-fd7b-4930-8e78-176b620b9d96",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -64,7 +64,7 @@
           "callbacks": []
         },
         {
-          "uuid": "238d276a-7988-4288-a680-d314cd02ee55",
+          "uuid": "c1b7151b-104d-44ba-8cf0-1b6da57b7693",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -88,7 +88,7 @@
           "callbacks": []
         },
         {
-          "uuid": "a0b5c9e8-a8de-4cf4-b04d-c21544b3901a",
+          "uuid": "d4dfecb2-dba2-459c-8c8e-e2e76aaf473a",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -112,7 +112,7 @@
           "callbacks": []
         },
         {
-          "uuid": "aa6b6266-dad0-4b92-973b-9ed49fa2c2bf",
+          "uuid": "bbf5e40d-96ac-4246-a6c3-1cc8cda4ee0b",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -136,7 +136,7 @@
           "callbacks": []
         },
         {
-          "uuid": "61f436f3-6238-463b-96f2-25c5bd82169e",
+          "uuid": "8407b344-6a49-4751-b6e4-4d0f4f20259e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -163,14 +163,14 @@
       "responseMode": null
     },
     {
-      "uuid": "f1928fa8-6ecc-42bd-8ea5-a0a833b35e25",
+      "uuid": "30787e82-a68f-412f-841a-b82d3eac7d7a",
       "type": "http",
       "documentation": "Creates a replication job. The replication job schedules periodic replication runs to replicate your server to AWS. Each replication run creates an Amazon Machine Image (AMI).",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.CreateReplicationJob",
       "responses": [
         {
-          "uuid": "c3a71f8c-74f7-4f44-81c4-030b91f5e23e",
+          "uuid": "16d6c92d-e305-4f31-a8ea-32e9c5b1daea",
           "body": "{\n  \"replicationJobId\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -194,7 +194,7 @@
           "callbacks": []
         },
         {
-          "uuid": "0c4fac8c-3469-476c-9ce6-d71a29f2486c",
+          "uuid": "16b0ee7c-8d51-4b62-a59d-72f5724b7133",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -218,7 +218,7 @@
           "callbacks": []
         },
         {
-          "uuid": "41e1a2a3-60ee-468d-9167-851664bd308b",
+          "uuid": "6ddcc8fb-73b8-4d76-a8e7-91177e0dc228",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -242,7 +242,7 @@
           "callbacks": []
         },
         {
-          "uuid": "9045279d-6c11-4b94-b687-e5e3501b8c86",
+          "uuid": "e9446c73-23c7-4c9c-a4d8-35d12252f8dc",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -266,7 +266,7 @@
           "callbacks": []
         },
         {
-          "uuid": "47edf9d0-bc97-4b5c-a64c-67021a2090c6",
+          "uuid": "be9f9900-8aea-4d68-a26b-c96c1fef36bd",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -290,7 +290,7 @@
           "callbacks": []
         },
         {
-          "uuid": "efb55941-1083-4d03-b669-596be2941659",
+          "uuid": "c2cbd1a1-c34c-46d4-bf53-0208490a6a41",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -314,7 +314,7 @@
           "callbacks": []
         },
         {
-          "uuid": "5fe058f1-f4c6-4156-bae8-5dbc5054fa4e",
+          "uuid": "e0192e27-5ae6-449f-84f5-f2f744ad05ac",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 485,
@@ -338,7 +338,7 @@
           "callbacks": []
         },
         {
-          "uuid": "5a3ed628-e77e-4288-ac7e-0b1f1ee16f28",
+          "uuid": "edf928bd-6936-46d7-9525-1bccdb19cdb7",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 486,
@@ -362,7 +362,7 @@
           "callbacks": []
         },
         {
-          "uuid": "e8774f7b-732e-4cfa-9d83-8d991bd20961",
+          "uuid": "a683d31b-2f36-4045-bf89-d04a815ac29b",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 487,
@@ -386,7 +386,7 @@
           "callbacks": []
         },
         {
-          "uuid": "ce5ec6e9-14bd-4b72-bfd0-3d5cc10731b7",
+          "uuid": "d2664384-13d5-4d63-8cc6-2b07b6ca958f",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 488,
@@ -413,14 +413,14 @@
       "responseMode": null
     },
     {
-      "uuid": "9e65075e-8e37-4edf-8bda-f09904899841",
+      "uuid": "4bc055bd-538c-4c77-af95-19c045ca8130",
       "type": "http",
       "documentation": "Deletes an existing application. Optionally deletes the launched stack associated with the application and all AWS SMS replication jobs for servers in the application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteApp",
       "responses": [
         {
-          "uuid": "4d9c8960-ead1-4014-9042-ed68f3651247",
+          "uuid": "175bafac-1f6f-454c-93cc-609199f48eb2",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -444,7 +444,7 @@
           "callbacks": []
         },
         {
-          "uuid": "d610ac7a-51f2-4f7e-9db5-2d370c62f9cf",
+          "uuid": "807e5d5c-ae78-4a32-ad1b-53bc82a04563",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -468,7 +468,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b686f2da-d67f-4263-b23d-d1937c97aa85",
+          "uuid": "08eb04de-6b16-4478-93e8-09b4ed8bf23b",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -492,7 +492,7 @@
           "callbacks": []
         },
         {
-          "uuid": "e19d447d-cc1f-4b89-837b-33e86b45acaa",
+          "uuid": "4026da5b-638d-4474-8999-3b598ecfddbd",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -516,7 +516,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b8c60dec-8f19-41e8-aa98-55552ca39cca",
+          "uuid": "46fd0629-5a4a-46c3-a455-5678b8388848",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -540,7 +540,7 @@
           "callbacks": []
         },
         {
-          "uuid": "106c0f1a-731a-4b64-8576-a70e3036a571",
+          "uuid": "c2b40e2d-8199-4401-a26e-8e1934af9a15",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -567,14 +567,14 @@
       "responseMode": null
     },
     {
-      "uuid": "73ead09e-b203-4589-9856-44c7dce7bd4d",
+      "uuid": "a64f418a-0cfe-441a-9147-4a3ccc319202",
       "type": "http",
       "documentation": "Deletes existing launch configuration for an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteAppLaunchConfiguration",
       "responses": [
         {
-          "uuid": "758db09c-ebd6-453f-abbf-32ab75f99d98",
+          "uuid": "e43cb3cf-b379-41de-82d8-2d2844cf50c3",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -598,7 +598,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b0d88107-9c12-42f4-b877-179a9293d0b1",
+          "uuid": "be4b3b38-64f7-4043-94bb-cc1141c0d640",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -622,7 +622,7 @@
           "callbacks": []
         },
         {
-          "uuid": "abac5c87-c99b-4864-81c2-55455a7a5bb0",
+          "uuid": "4d088ceb-b026-4b8b-841c-9a208bfc1cd3",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -646,7 +646,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b376f57c-a6f5-4faa-9c02-d3cda0711c92",
+          "uuid": "2691a266-7223-4e90-97ee-97ab9de684bd",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -670,7 +670,7 @@
           "callbacks": []
         },
         {
-          "uuid": "dfa8a167-af7c-491f-a59e-c88d47a859d9",
+          "uuid": "2a808b41-dd95-4ce6-8eeb-109cbad86681",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -694,7 +694,7 @@
           "callbacks": []
         },
         {
-          "uuid": "35116793-317a-4151-b64f-d324b9e8795f",
+          "uuid": "2c95a56d-9fbe-43aa-9879-f7f22e066da9",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -721,14 +721,14 @@
       "responseMode": null
     },
     {
-      "uuid": "1825d9b2-4869-4081-bbdf-190ff03c9eaa",
+      "uuid": "4fe1e4c0-3929-495f-a9aa-3cf5f4f6b2f5",
       "type": "http",
       "documentation": "Deletes existing replication configuration for an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteAppReplicationConfiguration",
       "responses": [
         {
-          "uuid": "473e5885-5485-4e2e-ae63-e120bea9d1f8",
+          "uuid": "244b6975-2c23-408e-ae75-05a9d639a108",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -752,7 +752,7 @@
           "callbacks": []
         },
         {
-          "uuid": "8099179b-7481-4b7e-8f8b-dd93469928f3",
+          "uuid": "6758ce07-2981-4964-8482-8be857381e9e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -776,7 +776,7 @@
           "callbacks": []
         },
         {
-          "uuid": "c9caa751-5078-4e98-8bad-54a20232f784",
+          "uuid": "47fb8916-905b-421b-b34b-2d96c5a373a8",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -800,7 +800,7 @@
           "callbacks": []
         },
         {
-          "uuid": "4c5ad342-27dd-4002-938c-4b5ff1554d01",
+          "uuid": "12a47256-ea64-4cf4-8cad-c3eaea1a20ae",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -824,7 +824,7 @@
           "callbacks": []
         },
         {
-          "uuid": "0c86abfb-b4fe-4065-b182-06286c55b730",
+          "uuid": "377fa323-e2d2-4234-be53-16ff66e9b3ee",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -848,7 +848,7 @@
           "callbacks": []
         },
         {
-          "uuid": "5dad6c0a-dd2c-4fe0-a109-79c59b20cd36",
+          "uuid": "8530cb4e-913f-49ff-8b10-47fbad1f1836",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -875,14 +875,14 @@
       "responseMode": null
     },
     {
-      "uuid": "868447b0-973d-41e2-bae2-3f4898f418e1",
+      "uuid": "74510f66-9f9e-4420-8dcb-4d053f545769",
       "type": "http",
       "documentation": "<p>Deletes the specified replication job.</p> <p>After you delete a replication job, there are no further replication runs. AWS deletes the contents of the Amazon S3 bucket used to store AWS SMS artifacts. The AMIs created by the replication runs are not deleted.</p>",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteReplicationJob",
       "responses": [
         {
-          "uuid": "1af21046-e377-47d2-963c-9e65424b5c43",
+          "uuid": "733adcc8-b2ec-413f-bc11-ed582e0c7cae",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -906,7 +906,7 @@
           "callbacks": []
         },
         {
-          "uuid": "c4aa07c6-b682-4d8b-9b89-79aa3a319dd7",
+          "uuid": "9f03bfbe-697d-4541-bdce-ea548019851d",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -930,7 +930,7 @@
           "callbacks": []
         },
         {
-          "uuid": "8450bd24-c3e1-49d2-9598-f16d3f98a4b4",
+          "uuid": "f59dac20-06e5-4252-9130-a887b03f1977",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -954,7 +954,7 @@
           "callbacks": []
         },
         {
-          "uuid": "e42b220d-f2be-498a-867f-3356a02d7363",
+          "uuid": "b69ad6c6-cfd8-4a57-9b8d-230944c43730",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -978,7 +978,7 @@
           "callbacks": []
         },
         {
-          "uuid": "c56f60dc-4869-4c2f-8410-6562c92f47bc",
+          "uuid": "2e7bb4af-0426-460b-9340-a8979170750e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -1002,7 +1002,7 @@
           "callbacks": []
         },
         {
-          "uuid": "e63f34bd-5f37-49be-966f-456159627d35",
+          "uuid": "fc29ee82-9bfe-4ffa-a133-38011997f9d8",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -1029,14 +1029,14 @@
       "responseMode": null
     },
     {
-      "uuid": "9ababc97-df2c-4418-a441-c19e26605ebd",
+      "uuid": "6e18d967-265c-4d23-8959-db24106f64d7",
       "type": "http",
       "documentation": "Deletes all servers from your server catalog.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DeleteServerCatalog",
       "responses": [
         {
-          "uuid": "8f2dc8df-e3aa-487c-bef6-213178891257",
+          "uuid": "268b014f-a611-44ef-befe-d0da03ec0896",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -1060,7 +1060,7 @@
           "callbacks": []
         },
         {
-          "uuid": "090ec37a-a77e-438b-a0ee-6ebea24f4a5e",
+          "uuid": "18c87411-4036-498e-b4d0-ba1f2985de36",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -1084,7 +1084,7 @@
           "callbacks": []
         },
         {
-          "uuid": "0df67443-0659-43f4-a491-df6862c34045",
+          "uuid": "c702bf68-6ba7-46c5-91d6-de3549970f54",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -1108,7 +1108,7 @@
           "callbacks": []
         },
         {
-          "uuid": "24827cc9-28ee-4091-9c66-46d28599f082",
+          "uuid": "17c7b48b-7a9b-4b00-83e2-89ba6913eb82",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -1132,7 +1132,7 @@
           "callbacks": []
         },
         {
-          "uuid": "23757554-0545-412e-833b-a52d972ffe0d",
+          "uuid": "31c05722-d7cc-46d7-a371-f930b6b29770",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -1159,14 +1159,14 @@
       "responseMode": null
     },
     {
-      "uuid": "2b206c79-b890-4665-a102-f3a04a8fc621",
+      "uuid": "50007677-656f-44b8-817a-f23dbc4708e0",
       "type": "http",
       "documentation": "<p>Disassociates the specified connector from AWS SMS.</p> <p>After you disassociate a connector, it is no longer available to support replication jobs.</p>",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.DisassociateConnector",
       "responses": [
         {
-          "uuid": "b24bb593-1290-40fa-8ba5-045b03ef7d35",
+          "uuid": "d013a7cb-473d-42b6-8bc7-695ad72e79e1",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -1190,7 +1190,7 @@
           "callbacks": []
         },
         {
-          "uuid": "4439d2ce-1855-4299-b491-22e37ea05822",
+          "uuid": "f7ead30a-571a-42fe-9907-574020b5e823",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -1214,7 +1214,7 @@
           "callbacks": []
         },
         {
-          "uuid": "8160ecdb-1756-434d-bcfc-4ea0316aca35",
+          "uuid": "0247157f-be30-4edf-8cff-b4c5c7f4e51f",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -1238,7 +1238,7 @@
           "callbacks": []
         },
         {
-          "uuid": "a9ed3ced-6a8c-497f-8028-1432d78accd8",
+          "uuid": "5c8e32bf-1e60-4f06-9dd8-1d1c0a179955",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -1262,7 +1262,7 @@
           "callbacks": []
         },
         {
-          "uuid": "210d8966-f254-416c-bab9-34c3655f6d70",
+          "uuid": "21095af8-6eaf-4e85-9b45-2984b0bed989",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -1289,14 +1289,14 @@
       "responseMode": null
     },
     {
-      "uuid": "e5161cdc-0bf3-4d2e-966f-ae1f176774a1",
+      "uuid": "6fed5991-4767-4895-a9bc-267c9c7568ed",
       "type": "http",
       "documentation": "Generates a target change set for a currently launched stack and writes it to an Amazon S3 object in the customer’s Amazon S3 bucket.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GenerateChangeSet",
       "responses": [
         {
-          "uuid": "22247d43-b43e-4823-a8c8-43a5e3a0f913",
+          "uuid": "56661699-11e3-40a0-b4b0-11a5988eb11f",
           "body": "{\n  \"s3Location\": {\n    \"bucket\": \"\",\n    \"key\": \"\"\n  }\n}",
           "latency": 0,
           "statusCode": 200,
@@ -1320,7 +1320,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b334d938-e2d2-4dd7-bd49-9b13add40b89",
+          "uuid": "18023128-6c96-4885-a964-a8b3b76ab72c",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -1344,7 +1344,7 @@
           "callbacks": []
         },
         {
-          "uuid": "effc5e62-8ae9-4a50-82ae-56911fad7d44",
+          "uuid": "ddc72d72-12bc-4428-893f-0d5bff0ce336",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -1368,7 +1368,7 @@
           "callbacks": []
         },
         {
-          "uuid": "87283d75-6617-44ef-83ea-8103bfaba9b4",
+          "uuid": "f0165da5-ab7a-4b4f-bd1d-59286b3dcee6",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -1392,7 +1392,7 @@
           "callbacks": []
         },
         {
-          "uuid": "f6cd0993-2ca6-4884-9322-7e5d4de0099a",
+          "uuid": "eccf549a-ab80-4dfd-8002-1221ec673faa",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -1416,7 +1416,7 @@
           "callbacks": []
         },
         {
-          "uuid": "ef169ea4-e562-42fa-9cc5-5a0321a817dc",
+          "uuid": "f4267a39-56e8-4d46-a3ae-6daff3a53243",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -1443,14 +1443,14 @@
       "responseMode": null
     },
     {
-      "uuid": "0bdc111b-ac56-4fcd-a5ae-7c094cf29b38",
+      "uuid": "719e5be5-1f44-4de2-9754-80500d9c4775",
       "type": "http",
       "documentation": "Generates an Amazon CloudFormation template based on the current launch configuration and writes it to an Amazon S3 object in the customer’s Amazon S3 bucket.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GenerateTemplate",
       "responses": [
         {
-          "uuid": "9b1fd09e-dab3-43e4-b3b3-82c358673b63",
+          "uuid": "eddbcbf9-2d57-48f3-b6bf-4334bb60bcab",
           "body": "{\n  \"s3Location\": {\n    \"bucket\": \"\",\n    \"key\": \"\"\n  }\n}",
           "latency": 0,
           "statusCode": 200,
@@ -1474,7 +1474,7 @@
           "callbacks": []
         },
         {
-          "uuid": "45a3808d-373a-4a40-8e78-9212797144ef",
+          "uuid": "3bf7d864-dc76-4cd7-88c1-9a2a745b833d",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -1498,7 +1498,7 @@
           "callbacks": []
         },
         {
-          "uuid": "edce208e-1d5d-4c39-85d6-e1b98c532a67",
+          "uuid": "96d90319-16a1-4633-aee4-8a9d7a136251",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -1522,7 +1522,7 @@
           "callbacks": []
         },
         {
-          "uuid": "e2e2dfcf-90ed-44b4-b7b0-a6fe49565fa4",
+          "uuid": "b040f643-91ae-4a6a-a6e3-e2f0fbbe8b8d",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -1546,7 +1546,7 @@
           "callbacks": []
         },
         {
-          "uuid": "357a5698-9f9c-447e-b6ab-6bcf9837ce7e",
+          "uuid": "db02829a-57c1-4cba-ac88-11914cdd8ba7",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -1570,7 +1570,7 @@
           "callbacks": []
         },
         {
-          "uuid": "6e25dac3-c0a6-4887-8523-33e560a2583a",
+          "uuid": "2bc8f9c8-3666-47fb-b154-f5946c1f7fff",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -1597,14 +1597,14 @@
       "responseMode": null
     },
     {
-      "uuid": "bda3f37b-de32-4b52-960f-1e85ac0f8c2e",
+      "uuid": "b6e0ca80-54ed-45fc-8a0b-2f5cf31f6b5b",
       "type": "http",
       "documentation": "Retrieve information about an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetApp",
       "responses": [
         {
-          "uuid": "086955dc-76f2-4146-89cf-1248bb5fc091",
+          "uuid": "b5ad4f2a-6ad2-4331-ab0f-720e1c4e9d2d",
           "body": "{\n  \"appSummary\": {\n    \"appId\": \"\",\n    \"name\": \"\",\n    \"description\": \"\",\n    \"status\": \"{{oneOf (array 'CREATING' 'ACTIVE' 'UPDATING' 'DELETING' 'DELETED' 'DELETE_FAILED')}}\",\n    \"statusMessage\": \"\",\n    \"replicationStatus\": \"{{oneOf (array 'READY_FOR_CONFIGURATION' 'CONFIGURATION_IN_PROGRESS' 'CONFIGURATION_INVALID' 'READY_FOR_REPLICATION' 'VALIDATION_IN_PROGRESS' 'REPLICATION_PENDING' 'REPLICATION_IN_PROGRESS' 'REPLICATED' 'DELTA_REPLICATION_IN_PROGRESS' 'DELTA_REPLICATED' 'DELTA_REPLICATION_FAILED' 'REPLICATION_FAILED' 'REPLICATION_STOPPING' 'REPLICATION_STOP_FAILED' 'REPLICATION_STOPPED')}}\",\n    \"replicationStatusMessage\": \"\",\n    \"latestReplicationTime\": \"{{faker 'date.recent' 365}}\",\n    \"launchStatus\": \"{{oneOf (array 'READY_FOR_CONFIGURATION' 'CONFIGURATION_IN_PROGRESS' 'CONFIGURATION_INVALID' 'READY_FOR_LAUNCH' 'VALIDATION_IN_PROGRESS' 'LAUNCH_PENDING' 'LAUNCH_IN_PROGRESS' 'LAUNCHED' 'DELTA_LAUNCH_IN_PROGRESS' 'DELTA_LAUNCH_FAILED' 'LAUNCH_FAILED' 'TERMINATE_IN_PROGRESS' 'TERMINATE_FAILED' 'TERMINATED')}}\",\n    \"launchStatusMessage\": \"\",\n    \"launchDetails\": {\n      \"latestLaunchTime\": \"{{faker 'date.recent' 365}}\",\n      \"stackName\": \"\",\n      \"stackId\": \"\"\n    },\n    \"creationTime\": \"{{faker 'date.recent' 365}}\",\n    \"lastModified\": \"{{faker 'date.recent' 365}}\",\n    \"roleName\": \"\",\n    \"totalServerGroups\": {{faker 'number.int' max=99999}},\n    \"totalServers\": {{faker 'number.int' max=99999}}\n  },\n  \"serverGroups\": [\n    {\n      \"serverGroupId\": \"\",\n      \"name\": \"\",\n      \"serverList\": [\n        {\n          \"serverId\": \"\",\n          \"serverType\": \"{{oneOf (array 'VIRTUAL_MACHINE')}}\",\n          \"vmServer\": {\n            \"vmServerAddress\": {\n              \"vmManagerId\": \"\",\n              \"vmId\": \"\"\n            },\n            \"vmName\": \"\",\n            \"vmManagerName\": \"\",\n            \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n            \"vmPath\": \"\"\n          },\n          \"replicationJobId\": \"\",\n          \"replicationJobTerminated\": {{faker 'datatype.boolean'}}\n        }\n      ]\n    }\n  ],\n  \"tags\": [\n    {\n      \"key\": \"\",\n      \"value\": \"\"\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 200,
@@ -1628,7 +1628,7 @@
           "callbacks": []
         },
         {
-          "uuid": "f88fd52b-d08e-4fe2-9c38-b6ae2d534491",
+          "uuid": "28a66e39-eb4e-4030-a2a5-21ad8dc58b3d",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -1652,7 +1652,7 @@
           "callbacks": []
         },
         {
-          "uuid": "f2925522-a39d-464b-9674-c5846965cc04",
+          "uuid": "da49070e-949e-460e-8b5c-660008557736",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -1676,7 +1676,7 @@
           "callbacks": []
         },
         {
-          "uuid": "3c133e8b-049a-47a8-a987-ceec7aa65be9",
+          "uuid": "38c18069-6119-4574-a619-b89f6f9853b5",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -1700,7 +1700,7 @@
           "callbacks": []
         },
         {
-          "uuid": "357bacae-ccc5-43d2-9c06-e8e1a1bf734d",
+          "uuid": "64e0a852-2f52-429a-bd37-5cf9805c74e0",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -1724,7 +1724,7 @@
           "callbacks": []
         },
         {
-          "uuid": "77a9e117-7a2d-4358-98df-cbe5838419ef",
+          "uuid": "6bd3353b-28cc-4f7f-904c-822ec809083c",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -1751,14 +1751,14 @@
       "responseMode": null
     },
     {
-      "uuid": "ade8a5b6-d7a4-4bff-8252-108d8e28e3b7",
+      "uuid": "8baff2c5-b992-4a28-b7cf-275ad9391359",
       "type": "http",
       "documentation": "Retrieves the application launch configuration associated with an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetAppLaunchConfiguration",
       "responses": [
         {
-          "uuid": "8ef0134b-e55f-4f65-89be-28849c5ac8e4",
+          "uuid": "5166a504-75be-445e-9f08-8059f8c38d1b",
           "body": "{\n  \"appId\": \"\",\n  \"roleName\": \"\",\n  \"serverGroupLaunchConfigurations\": [\n    {\n      \"serverGroupId\": \"\",\n      \"launchOrder\": {{faker 'number.int' max=99999}},\n      \"serverLaunchConfigurations\": [\n        {\n          \"server\": {\n            \"serverId\": \"\",\n            \"serverType\": \"{{oneOf (array 'VIRTUAL_MACHINE')}}\",\n            \"vmServer\": {\n              \"vmServerAddress\": {\n                \"vmManagerId\": \"\",\n                \"vmId\": \"\"\n              },\n              \"vmName\": \"\",\n              \"vmManagerName\": \"\",\n              \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n              \"vmPath\": \"\"\n            },\n            \"replicationJobId\": \"\",\n            \"replicationJobTerminated\": {{faker 'datatype.boolean'}}\n          },\n          \"logicalId\": \"\",\n          \"vpc\": \"\",\n          \"subnet\": \"\",\n          \"securityGroup\": \"\",\n          \"ec2KeyName\": \"\",\n          \"userData\": {\n            \"s3Location\": {\n              \"bucket\": \"\",\n              \"key\": \"\"\n            }\n          },\n          \"instanceType\": \"\",\n          \"associatePublicIpAddress\": {{faker 'datatype.boolean'}}\n        }\n      ]\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 200,
@@ -1782,7 +1782,7 @@
           "callbacks": []
         },
         {
-          "uuid": "5eae4744-6ff2-4769-ab8b-6b726cd46c2f",
+          "uuid": "86022b67-6536-49a2-a652-0494da6d738b",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -1806,7 +1806,7 @@
           "callbacks": []
         },
         {
-          "uuid": "6f3ea577-26fd-4910-bfed-ef7e4bf4b32d",
+          "uuid": "5af49be0-4834-4747-847f-71a15c80bc53",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -1830,7 +1830,7 @@
           "callbacks": []
         },
         {
-          "uuid": "a551bc09-22dc-416f-90e4-6462d466f52a",
+          "uuid": "8bde395a-24fd-47c3-a99a-5de1b44ccf1b",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -1854,7 +1854,7 @@
           "callbacks": []
         },
         {
-          "uuid": "cc1e412b-0117-4a48-916f-06738099704b",
+          "uuid": "1989b767-79a3-4b4e-873b-8f2428f0c353",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -1878,7 +1878,7 @@
           "callbacks": []
         },
         {
-          "uuid": "8b3dbac2-2760-4d54-8926-792e9ebdbefd",
+          "uuid": "e0433af4-e5cc-436d-ae38-690aad99425b",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -1905,14 +1905,14 @@
       "responseMode": null
     },
     {
-      "uuid": "250f3fdd-aea7-44f3-901e-0163ca17ee67",
+      "uuid": "a1745ab1-80ca-4f1d-b146-f501d5a23c8d",
       "type": "http",
       "documentation": "Retrieves an application replication configuration associatd with an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetAppReplicationConfiguration",
       "responses": [
         {
-          "uuid": "fd6ab719-a02b-4b54-9fef-2e7c7de8aee0",
+          "uuid": "0664b3e3-3f45-4d59-be2d-1e8e6fe5936d",
           "body": "{\n  \"serverGroupReplicationConfigurations\": [\n    {\n      \"serverGroupId\": \"\",\n      \"serverReplicationConfigurations\": [\n        {\n          \"server\": {\n            \"serverId\": \"\",\n            \"serverType\": \"{{oneOf (array 'VIRTUAL_MACHINE')}}\",\n            \"vmServer\": {\n              \"vmServerAddress\": {\n                \"vmManagerId\": \"\",\n                \"vmId\": \"\"\n              },\n              \"vmName\": \"\",\n              \"vmManagerName\": \"\",\n              \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n              \"vmPath\": \"\"\n            },\n            \"replicationJobId\": \"\",\n            \"replicationJobTerminated\": {{faker 'datatype.boolean'}}\n          },\n          \"serverReplicationParameters\": {\n            \"seedTime\": \"{{faker 'date.recent' 365}}\",\n            \"frequency\": {{faker 'number.int' max=99999}},\n            \"runOnce\": {{faker 'datatype.boolean'}},\n            \"licenseType\": \"{{oneOf (array 'AWS' 'BYOL')}}\",\n            \"numberOfRecentAmisToKeep\": {{faker 'number.int' max=99999}},\n            \"encrypted\": {{faker 'datatype.boolean'}},\n            \"kmsKeyId\": \"\"\n          }\n        }\n      ]\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 200,
@@ -1936,7 +1936,7 @@
           "callbacks": []
         },
         {
-          "uuid": "673e3d3b-5f62-41d5-afbf-be2a86eab860",
+          "uuid": "57b30197-bc5f-43d9-8cc0-bd531790bcc0",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -1960,7 +1960,7 @@
           "callbacks": []
         },
         {
-          "uuid": "88a1d68b-f9ea-4285-a625-75432a34f0e2",
+          "uuid": "31e4b72b-9b57-44e6-8688-ddb4bca0c81b",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -1984,7 +1984,7 @@
           "callbacks": []
         },
         {
-          "uuid": "14dc4b58-5782-49c2-a85d-7cf70faaffa8",
+          "uuid": "be1c9f2e-1783-44dc-8b72-16fe6b1c8638",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -2008,7 +2008,7 @@
           "callbacks": []
         },
         {
-          "uuid": "1d94b066-ab14-45d2-84ee-652d18386d0d",
+          "uuid": "c0097d6c-a77b-404d-ae32-924905b90eac",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -2032,7 +2032,7 @@
           "callbacks": []
         },
         {
-          "uuid": "3a62fad3-0b8d-4a24-9ccb-e45fa6c58c9b",
+          "uuid": "d0503cb7-f643-4a10-8327-b6ed56b03066",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -2059,14 +2059,14 @@
       "responseMode": null
     },
     {
-      "uuid": "a2919d47-463b-4f06-8f2d-4560b56bc92e",
+      "uuid": "f64f8203-5596-4539-8570-00baa453da1f",
       "type": "http",
       "documentation": "Describes the connectors registered with the AWS SMS.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetConnectors",
       "responses": [
         {
-          "uuid": "07c6dc16-d266-4c69-9125-e3cff96ca358",
+          "uuid": "511b2d6f-25b9-4708-9d90-24008b10c741",
           "body": "{\n  \"connectorList\": [\n    {\n      \"connectorId\": \"\",\n      \"version\": \"\",\n      \"status\": \"{{oneOf (array 'HEALTHY' 'UNHEALTHY')}}\",\n      \"capabilityList\": [\n        \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER' 'SNAPSHOT_BATCHING')}}\"\n      ],\n      \"vmManagerName\": \"\",\n      \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n      \"vmManagerId\": \"\",\n      \"ipAddress\": \"\",\n      \"macAddress\": \"\",\n      \"associatedOn\": \"{{faker 'date.recent' 365}}\"\n    }\n  ],\n  \"nextToken\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -2090,7 +2090,7 @@
           "callbacks": []
         },
         {
-          "uuid": "13759376-36a7-4206-a1e3-3c4fc9927d3d",
+          "uuid": "47071754-a454-4c89-b6b5-ffb0490627dd",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -2117,14 +2117,14 @@
       "responseMode": null
     },
     {
-      "uuid": "cd98ca43-4f30-47e1-a1ba-b55098eeac80",
+      "uuid": "fadbaa0a-6ab8-4d90-835a-e7bbcff779ca",
       "type": "http",
       "documentation": "Describes the specified replication job or all of your replication jobs.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetReplicationJobs",
       "responses": [
         {
-          "uuid": "dfe2c3c9-496a-445a-b68e-2cb5b8f7e108",
+          "uuid": "611c007b-64da-4fc0-b187-b5efb257dd65",
           "body": "{\n  \"replicationJobList\": [\n    {\n      \"replicationJobId\": \"\",\n      \"serverId\": \"\",\n      \"serverType\": \"{{oneOf (array 'VIRTUAL_MACHINE')}}\",\n      \"vmServer\": {\n        \"vmServerAddress\": {\n          \"vmManagerId\": \"\",\n          \"vmId\": \"\"\n        },\n        \"vmName\": \"\",\n        \"vmManagerName\": \"\",\n        \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n        \"vmPath\": \"\"\n      },\n      \"seedReplicationTime\": \"{{faker 'date.recent' 365}}\",\n      \"frequency\": {{faker 'number.int' max=99999}},\n      \"runOnce\": {{faker 'datatype.boolean'}},\n      \"nextReplicationRunStartTime\": \"{{faker 'date.recent' 365}}\",\n      \"licenseType\": \"{{oneOf (array 'AWS' 'BYOL')}}\",\n      \"roleName\": \"\",\n      \"latestAmiId\": \"\",\n      \"state\": \"{{oneOf (array 'PENDING' 'ACTIVE' 'FAILED' 'DELETING' 'DELETED' 'COMPLETED' 'PAUSED_ON_FAILURE' 'FAILING')}}\",\n      \"statusMessage\": \"\",\n      \"description\": \"\",\n      \"numberOfRecentAmisToKeep\": {{faker 'number.int' max=99999}},\n      \"encrypted\": {{faker 'datatype.boolean'}},\n      \"kmsKeyId\": \"\",\n      \"replicationRunList\": [\n        {\n          \"replicationRunId\": \"\",\n          \"state\": \"{{oneOf (array 'PENDING' 'MISSED' 'ACTIVE' 'FAILED' 'COMPLETED' 'DELETING' 'DELETED')}}\",\n          \"type\": \"{{oneOf (array 'ON_DEMAND' 'AUTOMATIC')}}\",\n          \"stageDetails\": {\n            \"stage\": \"\",\n            \"stageProgress\": \"\"\n          },\n          \"statusMessage\": \"\",\n          \"amiId\": \"\",\n          \"scheduledStartTime\": \"{{faker 'date.recent' 365}}\",\n          \"completedTime\": \"{{faker 'date.recent' 365}}\",\n          \"description\": \"\",\n          \"encrypted\": {{faker 'datatype.boolean'}},\n          \"kmsKeyId\": \"\"\n        }\n      ]\n    }\n  ],\n  \"nextToken\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -2148,7 +2148,7 @@
           "callbacks": []
         },
         {
-          "uuid": "6e2e93dc-32f9-4d1b-b810-00e5b6b62924",
+          "uuid": "f8532300-3984-4593-89d9-fa224aee05de",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -2172,7 +2172,7 @@
           "callbacks": []
         },
         {
-          "uuid": "fe3c997c-5b96-454f-af80-0d94b4d3db83",
+          "uuid": "bfe85e6b-9d6e-4dc9-a2a7-3e72450214a3",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -2196,7 +2196,7 @@
           "callbacks": []
         },
         {
-          "uuid": "315e7ed9-31ae-4f33-adc6-12042b5a3bd4",
+          "uuid": "ecbb28d0-abcd-425d-8029-4bfdc0d8ca36",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -2223,14 +2223,14 @@
       "responseMode": null
     },
     {
-      "uuid": "2ae211e1-7605-41a7-a13e-0fe7cb81b671",
+      "uuid": "11287b31-c440-4d56-9270-d2f960a86832",
       "type": "http",
       "documentation": "Describes the replication runs for the specified replication job.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetReplicationRuns",
       "responses": [
         {
-          "uuid": "53b7e51f-f703-49ee-befb-e193cbc2d9cf",
+          "uuid": "50f92e23-ed60-48b1-967f-f9320336b980",
           "body": "{\n  \"replicationJob\": {\n    \"replicationJobId\": \"\",\n    \"serverId\": \"\",\n    \"serverType\": \"{{oneOf (array 'VIRTUAL_MACHINE')}}\",\n    \"vmServer\": {\n      \"vmServerAddress\": {\n        \"vmManagerId\": \"\",\n        \"vmId\": \"\"\n      },\n      \"vmName\": \"\",\n      \"vmManagerName\": \"\",\n      \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n      \"vmPath\": \"\"\n    },\n    \"seedReplicationTime\": \"{{faker 'date.recent' 365}}\",\n    \"frequency\": {{faker 'number.int' max=99999}},\n    \"runOnce\": {{faker 'datatype.boolean'}},\n    \"nextReplicationRunStartTime\": \"{{faker 'date.recent' 365}}\",\n    \"licenseType\": \"{{oneOf (array 'AWS' 'BYOL')}}\",\n    \"roleName\": \"\",\n    \"latestAmiId\": \"\",\n    \"state\": \"{{oneOf (array 'PENDING' 'ACTIVE' 'FAILED' 'DELETING' 'DELETED' 'COMPLETED' 'PAUSED_ON_FAILURE' 'FAILING')}}\",\n    \"statusMessage\": \"\",\n    \"description\": \"\",\n    \"numberOfRecentAmisToKeep\": {{faker 'number.int' max=99999}},\n    \"encrypted\": {{faker 'datatype.boolean'}},\n    \"kmsKeyId\": \"\",\n    \"replicationRunList\": [\n      {\n        \"replicationRunId\": \"\",\n        \"state\": \"{{oneOf (array 'PENDING' 'MISSED' 'ACTIVE' 'FAILED' 'COMPLETED' 'DELETING' 'DELETED')}}\",\n        \"type\": \"{{oneOf (array 'ON_DEMAND' 'AUTOMATIC')}}\",\n        \"stageDetails\": {\n          \"stage\": \"\",\n          \"stageProgress\": \"\"\n        },\n        \"statusMessage\": \"\",\n        \"amiId\": \"\",\n        \"scheduledStartTime\": \"{{faker 'date.recent' 365}}\",\n        \"completedTime\": \"{{faker 'date.recent' 365}}\",\n        \"description\": \"\",\n        \"encrypted\": {{faker 'datatype.boolean'}},\n        \"kmsKeyId\": \"\"\n      }\n    ]\n  },\n  \"replicationRunList\": [\n    {\n      \"replicationRunId\": \"\",\n      \"state\": \"{{oneOf (array 'PENDING' 'MISSED' 'ACTIVE' 'FAILED' 'COMPLETED' 'DELETING' 'DELETED')}}\",\n      \"type\": \"{{oneOf (array 'ON_DEMAND' 'AUTOMATIC')}}\",\n      \"stageDetails\": {\n        \"stage\": \"\",\n        \"stageProgress\": \"\"\n      },\n      \"statusMessage\": \"\",\n      \"amiId\": \"\",\n      \"scheduledStartTime\": \"{{faker 'date.recent' 365}}\",\n      \"completedTime\": \"{{faker 'date.recent' 365}}\",\n      \"description\": \"\",\n      \"encrypted\": {{faker 'datatype.boolean'}},\n      \"kmsKeyId\": \"\"\n    }\n  ],\n  \"nextToken\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -2254,7 +2254,7 @@
           "callbacks": []
         },
         {
-          "uuid": "fd1ead36-d9d4-499e-8976-0ccb84a009e0",
+          "uuid": "ac318d8c-5073-4182-946c-26ad03efa983",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -2278,7 +2278,7 @@
           "callbacks": []
         },
         {
-          "uuid": "07c3411b-eee0-416e-b84e-71cf3d49cc09",
+          "uuid": "3496d86d-c18f-4d65-98f5-5ffd9858a646",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -2302,7 +2302,7 @@
           "callbacks": []
         },
         {
-          "uuid": "4a2cd2d8-dba4-48e8-8470-b2d6ff376253",
+          "uuid": "305815d3-28c7-4dfc-9447-375996fca329",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -2329,14 +2329,14 @@
       "responseMode": null
     },
     {
-      "uuid": "45425648-53bd-4edb-ad19-6d25e15c93b5",
+      "uuid": "1a0c7891-5525-42a0-ba12-2e16bca4610b",
       "type": "http",
       "documentation": "<p>Describes the servers in your server catalog.</p> <p>Before you can describe your servers, you must import them using <a>ImportServerCatalog</a>.</p>",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.GetServers",
       "responses": [
         {
-          "uuid": "004c43e6-2c36-4150-a967-dbcfc0a9d5e3",
+          "uuid": "54ee075c-acb8-4eab-86d1-734370133a66",
           "body": "{\n  \"lastModifiedOn\": \"{{faker 'date.recent' 365}}\",\n  \"serverCatalogStatus\": \"{{oneOf (array 'NOT_IMPORTED' 'IMPORTING' 'AVAILABLE' 'DELETED' 'EXPIRED')}}\",\n  \"serverList\": [\n    {\n      \"serverId\": \"\",\n      \"serverType\": \"{{oneOf (array 'VIRTUAL_MACHINE')}}\",\n      \"vmServer\": {\n        \"vmServerAddress\": {\n          \"vmManagerId\": \"\",\n          \"vmId\": \"\"\n        },\n        \"vmName\": \"\",\n        \"vmManagerName\": \"\",\n        \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n        \"vmPath\": \"\"\n      },\n      \"replicationJobId\": \"\",\n      \"replicationJobTerminated\": {{faker 'datatype.boolean'}}\n    }\n  ],\n  \"nextToken\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -2360,7 +2360,7 @@
           "callbacks": []
         },
         {
-          "uuid": "a80e0f99-db27-425e-b4f4-7159f97f0e05",
+          "uuid": "6748af6e-3e99-4dcb-94a0-7aecfda40c61",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -2387,14 +2387,14 @@
       "responseMode": null
     },
     {
-      "uuid": "c031ce94-4adf-49fe-8e63-cae9c68b39a3",
+      "uuid": "91fc9019-927b-495a-acb4-93a482c4544d",
       "type": "http",
       "documentation": "<p>Gathers a complete list of on-premises servers. Connectors must be installed and monitoring all servers that you want to import.</p> <p>This call returns immediately, but might take additional time to retrieve all the servers.</p>",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.ImportServerCatalog",
       "responses": [
         {
-          "uuid": "07a4b870-d9a7-4d82-aff2-7b905c6593a0",
+          "uuid": "342a5c01-bb57-409b-9a63-42e3fe7659ce",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -2418,7 +2418,7 @@
           "callbacks": []
         },
         {
-          "uuid": "806d35c1-38b0-4c32-832f-fe1b65b22be2",
+          "uuid": "5ebf47d5-c69e-42ee-8bd4-7beed5a09776",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -2442,7 +2442,7 @@
           "callbacks": []
         },
         {
-          "uuid": "e1017b0c-22c3-4edd-98d7-bd0caba20fec",
+          "uuid": "36739bbb-ed57-4ac9-901f-58a467d67665",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -2466,7 +2466,7 @@
           "callbacks": []
         },
         {
-          "uuid": "6bf03aec-a621-4421-9006-73158547ee1e",
+          "uuid": "b7bd7fd3-9bdf-4476-870a-3f3233af5ed9",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -2490,7 +2490,7 @@
           "callbacks": []
         },
         {
-          "uuid": "2a50807e-d5a3-4ada-a368-6ac366dc772c",
+          "uuid": "ca40e5b6-9be5-41c7-9ea1-dac81445e65d",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -2514,7 +2514,7 @@
           "callbacks": []
         },
         {
-          "uuid": "ef9e2ec1-71ec-45c3-8ff2-22f9408f7fd2",
+          "uuid": "e9ce9986-8672-49ba-8370-69a126492d56",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -2541,14 +2541,14 @@
       "responseMode": null
     },
     {
-      "uuid": "304c480a-ba8d-412f-9aa7-e09a6c6df9a0",
+      "uuid": "4e6acac5-fa1d-4db9-962e-dd9d5729ac91",
       "type": "http",
       "documentation": "Launches an application stack.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.LaunchApp",
       "responses": [
         {
-          "uuid": "e2a8ea35-1cdc-4c7d-a721-ec2b0e7cdf2c",
+          "uuid": "6138d00e-8105-4963-91ad-2651e67232f7",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -2572,7 +2572,7 @@
           "callbacks": []
         },
         {
-          "uuid": "171ebee1-f077-4c89-a7dc-f07d342f3452",
+          "uuid": "58c6e90e-7d98-4c38-8445-138623a22f82",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -2596,7 +2596,7 @@
           "callbacks": []
         },
         {
-          "uuid": "7a5a27c5-bc3c-4bbb-a713-dd40c34143e0",
+          "uuid": "c1df39c4-ce87-42fa-89be-6992fff8a87e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -2620,7 +2620,7 @@
           "callbacks": []
         },
         {
-          "uuid": "fb6cde54-ed8d-4e42-81fb-5c60013a70aa",
+          "uuid": "a56e01b0-bbc6-4ed9-bac1-7a302a566eb3",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -2644,7 +2644,7 @@
           "callbacks": []
         },
         {
-          "uuid": "22410cb0-83ed-49f5-a1e8-3435ee083635",
+          "uuid": "b31d2095-1908-4a2e-add1-15cfa4da659e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -2668,7 +2668,7 @@
           "callbacks": []
         },
         {
-          "uuid": "54db55e2-569c-49ce-97a3-91ede6524d5f",
+          "uuid": "89c0da71-14ff-42f3-9bae-82e271152476",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -2695,14 +2695,14 @@
       "responseMode": null
     },
     {
-      "uuid": "2e21d829-a1c0-4170-9eec-922835a36833",
+      "uuid": "1b841af6-3880-4387-8147-02e40f84b5ce",
       "type": "http",
       "documentation": "Returns a list of summaries for all applications.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.ListApps",
       "responses": [
         {
-          "uuid": "e8f1c21a-0624-471a-ac33-78ed1a0430b7",
+          "uuid": "556484d5-4f5c-4aba-8930-bc9d784355cf",
           "body": "{\n  \"apps\": [\n    {\n      \"appId\": \"\",\n      \"name\": \"\",\n      \"description\": \"\",\n      \"status\": \"{{oneOf (array 'CREATING' 'ACTIVE' 'UPDATING' 'DELETING' 'DELETED' 'DELETE_FAILED')}}\",\n      \"statusMessage\": \"\",\n      \"replicationStatus\": \"{{oneOf (array 'READY_FOR_CONFIGURATION' 'CONFIGURATION_IN_PROGRESS' 'CONFIGURATION_INVALID' 'READY_FOR_REPLICATION' 'VALIDATION_IN_PROGRESS' 'REPLICATION_PENDING' 'REPLICATION_IN_PROGRESS' 'REPLICATED' 'DELTA_REPLICATION_IN_PROGRESS' 'DELTA_REPLICATED' 'DELTA_REPLICATION_FAILED' 'REPLICATION_FAILED' 'REPLICATION_STOPPING' 'REPLICATION_STOP_FAILED' 'REPLICATION_STOPPED')}}\",\n      \"replicationStatusMessage\": \"\",\n      \"latestReplicationTime\": \"{{faker 'date.recent' 365}}\",\n      \"launchStatus\": \"{{oneOf (array 'READY_FOR_CONFIGURATION' 'CONFIGURATION_IN_PROGRESS' 'CONFIGURATION_INVALID' 'READY_FOR_LAUNCH' 'VALIDATION_IN_PROGRESS' 'LAUNCH_PENDING' 'LAUNCH_IN_PROGRESS' 'LAUNCHED' 'DELTA_LAUNCH_IN_PROGRESS' 'DELTA_LAUNCH_FAILED' 'LAUNCH_FAILED' 'TERMINATE_IN_PROGRESS' 'TERMINATE_FAILED' 'TERMINATED')}}\",\n      \"launchStatusMessage\": \"\",\n      \"launchDetails\": {\n        \"latestLaunchTime\": \"{{faker 'date.recent' 365}}\",\n        \"stackName\": \"\",\n        \"stackId\": \"\"\n      },\n      \"creationTime\": \"{{faker 'date.recent' 365}}\",\n      \"lastModified\": \"{{faker 'date.recent' 365}}\",\n      \"roleName\": \"\",\n      \"totalServerGroups\": {{faker 'number.int' max=99999}},\n      \"totalServers\": {{faker 'number.int' max=99999}}\n    }\n  ],\n  \"nextToken\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -2726,7 +2726,7 @@
           "callbacks": []
         },
         {
-          "uuid": "f667222d-444c-4090-967f-eddad365e841",
+          "uuid": "275e5649-8c84-4ece-85f4-4c745c13dea0",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -2750,7 +2750,7 @@
           "callbacks": []
         },
         {
-          "uuid": "dad373ff-e19f-4f7e-9e76-7540629e3356",
+          "uuid": "b3497de5-ff9e-4d11-881c-b2514ec7a7bc",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -2774,7 +2774,7 @@
           "callbacks": []
         },
         {
-          "uuid": "ee444e7b-dede-4940-a19c-ef16a4cccaff",
+          "uuid": "faebf043-a97a-401c-a342-4fa20af44897",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -2798,7 +2798,7 @@
           "callbacks": []
         },
         {
-          "uuid": "f1a4f927-0adf-41d1-9081-e644097bf792",
+          "uuid": "4b722ca9-12f0-4267-82ec-749cc0abbaf6",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -2822,7 +2822,7 @@
           "callbacks": []
         },
         {
-          "uuid": "279ac73f-864e-495b-b8f2-c0a04eda3c4f",
+          "uuid": "88a1ed19-961a-4857-8702-49aaedb202d7",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -2849,14 +2849,14 @@
       "responseMode": null
     },
     {
-      "uuid": "34ba4799-df76-4cdc-a16d-2f2fac7a8b01",
+      "uuid": "ee029fc6-b4a0-4c8f-a948-430b2512b77e",
       "type": "http",
       "documentation": "Creates a launch configuration for an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.PutAppLaunchConfiguration",
       "responses": [
         {
-          "uuid": "96c55f7c-42a1-48c0-97b0-ffded4a4b360",
+          "uuid": "acd684db-baed-4b08-a369-338742540dc1",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -2880,7 +2880,7 @@
           "callbacks": []
         },
         {
-          "uuid": "ecf678a3-d995-4b4b-87ca-afd4df8a68f1",
+          "uuid": "e7449703-df5c-4296-83d4-6f113f6bc802",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -2904,7 +2904,7 @@
           "callbacks": []
         },
         {
-          "uuid": "cbc31f33-b647-4600-bab7-adf55c8dbfac",
+          "uuid": "643f4577-7114-462c-b65e-d45a9f8b8b84",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -2928,7 +2928,7 @@
           "callbacks": []
         },
         {
-          "uuid": "0c9b9ae9-252a-4bc6-a56c-c1ec05605550",
+          "uuid": "ddc5f36c-520d-465a-813a-53fdd8c7f806",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -2952,7 +2952,7 @@
           "callbacks": []
         },
         {
-          "uuid": "f412d63e-6ad9-46da-b432-1499a673e76a",
+          "uuid": "0c4ff50a-d926-4a20-82f7-b5a8a2af3a23",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -2976,7 +2976,7 @@
           "callbacks": []
         },
         {
-          "uuid": "d0ff2240-fb47-4464-b40e-47d35a1382d1",
+          "uuid": "cffbc2d3-0a1d-4542-a07d-ec8bc6691b1e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -3003,14 +3003,14 @@
       "responseMode": null
     },
     {
-      "uuid": "d893f3e6-5e9d-4a97-b1fa-57bc4137c3d2",
+      "uuid": "41a703e1-aad9-4e09-ad6b-9902938a262e",
       "type": "http",
       "documentation": "Creates or updates a replication configuration for an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.PutAppReplicationConfiguration",
       "responses": [
         {
-          "uuid": "4c89ee60-07b1-4b4a-9302-43ebb649bb36",
+          "uuid": "1b6bfb5d-68e6-4d07-aef5-c715eb9c6687",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -3034,7 +3034,7 @@
           "callbacks": []
         },
         {
-          "uuid": "9e05da94-c4d8-440d-bf19-03ae08f5e3c2",
+          "uuid": "9a45121d-4c9b-447e-a5e3-cf2aeb2c5da9",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -3058,7 +3058,7 @@
           "callbacks": []
         },
         {
-          "uuid": "de76b72a-8d97-48f4-afcb-2219ffecfb38",
+          "uuid": "aac3a50e-3472-48b2-8249-f1a45e51b35d",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -3082,7 +3082,7 @@
           "callbacks": []
         },
         {
-          "uuid": "2fb8c8f2-a4c8-4c6e-936c-a50a8bbe042b",
+          "uuid": "58d30aaa-9f85-4dfc-b418-1c7bb4d4443e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -3106,7 +3106,7 @@
           "callbacks": []
         },
         {
-          "uuid": "e7120e2d-2c7c-4351-9501-ea07188001dc",
+          "uuid": "7c264d34-bf31-4a21-b76a-61be74c08422",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -3130,7 +3130,7 @@
           "callbacks": []
         },
         {
-          "uuid": "fdfb32e4-6fd4-492e-8afb-986ba94fa0b3",
+          "uuid": "8d19d602-4d48-4eb4-8ccd-ab35a1996759",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -3157,14 +3157,14 @@
       "responseMode": null
     },
     {
-      "uuid": "4f69479a-a768-4984-80ed-fa8833347719",
+      "uuid": "e73f3dcc-f24c-41f7-a831-2ed36adef449",
       "type": "http",
       "documentation": "Starts replicating an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StartAppReplication",
       "responses": [
         {
-          "uuid": "844bd619-832d-4021-ad9d-97c7a6994a5a",
+          "uuid": "aef2f6e2-3bb8-4bd6-add3-15c966d8c634",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -3188,7 +3188,7 @@
           "callbacks": []
         },
         {
-          "uuid": "6fdcdcc1-a041-45e3-a294-31b7fc86bbe2",
+          "uuid": "6eedbc08-5b79-4270-92c9-53821f137fa1",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -3212,7 +3212,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b07465eb-60cb-4828-aab3-7e933d21c094",
+          "uuid": "227df200-46bc-47b5-b037-81cee0152223",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -3236,7 +3236,7 @@
           "callbacks": []
         },
         {
-          "uuid": "58621ee3-2caf-4404-90fa-65446538ddd0",
+          "uuid": "f55ced01-27ad-4e70-9f03-fabc2912d074",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -3260,7 +3260,7 @@
           "callbacks": []
         },
         {
-          "uuid": "345abc1a-8543-470b-ada3-8de39fa70734",
+          "uuid": "ce6d1657-ae35-49b2-a7fd-17ccdd2e8e03",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -3284,7 +3284,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b94160ba-676b-4e07-8d4f-cd9d794a0c1f",
+          "uuid": "5d727f33-395f-47df-9502-057bdae777ff",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -3311,14 +3311,14 @@
       "responseMode": null
     },
     {
-      "uuid": "42c22307-c3d1-4fd7-9541-20fda7f96d5b",
+      "uuid": "60a653ba-7d2c-4ba3-a6e4-eb83224b58f0",
       "type": "http",
       "documentation": "<p>Starts an on-demand replication run for the specified replication job. This replication run starts immediately. This replication run is in addition to the ones already scheduled.</p> <p>There is a limit on the number of on-demand replications runs you can request in a 24-hour period.</p>",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StartOnDemandReplicationRun",
       "responses": [
         {
-          "uuid": "4678a210-f11e-4dd4-8e06-9e4bfef8ce2e",
+          "uuid": "c7f4ad88-1b36-491c-b6a1-b0ebf9f5dc2c",
           "body": "{\n  \"replicationRunId\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -3342,7 +3342,7 @@
           "callbacks": []
         },
         {
-          "uuid": "d7255a25-b439-47f2-b252-c61f199f491a",
+          "uuid": "0b70a5d5-ac20-484e-93a3-ce8cc47482c7",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -3366,7 +3366,7 @@
           "callbacks": []
         },
         {
-          "uuid": "bc133915-2ba7-4614-8643-a09bdd603103",
+          "uuid": "ebb1697a-9254-4873-ab50-f8fe35007e96",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -3390,7 +3390,7 @@
           "callbacks": []
         },
         {
-          "uuid": "d17dd4ce-73cd-4443-a15c-c5fe675f8e9f",
+          "uuid": "d608622e-259f-420e-8a1e-ecc14f1ac749",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -3414,7 +3414,7 @@
           "callbacks": []
         },
         {
-          "uuid": "773e2772-0c31-42a8-9ec4-d7e487f003ee",
+          "uuid": "730814e0-dafa-49b0-adcb-6eefc32addca",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -3438,7 +3438,7 @@
           "callbacks": []
         },
         {
-          "uuid": "650a335d-95cf-4182-b870-241749865e4b",
+          "uuid": "c6728526-321a-4d81-94d7-25310391146a",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -3465,14 +3465,14 @@
       "responseMode": null
     },
     {
-      "uuid": "58f70232-0c6a-48ee-b7bc-a87cfa379b62",
+      "uuid": "451e54cc-8842-4368-9b74-376f941363bc",
       "type": "http",
       "documentation": "Stops replicating an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.StopAppReplication",
       "responses": [
         {
-          "uuid": "1a95ff04-6278-4d5e-9675-48e4d28fa2fa",
+          "uuid": "0e60d107-2209-4a57-a642-718881270eaa",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -3496,7 +3496,7 @@
           "callbacks": []
         },
         {
-          "uuid": "19f4a7cc-d2bb-47bd-9e79-9424644556b8",
+          "uuid": "e0cba7e5-e337-474b-b519-de78d9210303",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -3520,7 +3520,7 @@
           "callbacks": []
         },
         {
-          "uuid": "22337be8-d70d-4ded-a125-4dfe243ea838",
+          "uuid": "a5c60f51-3af3-4f6c-8d36-8e7ab1ad66a9",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -3544,7 +3544,7 @@
           "callbacks": []
         },
         {
-          "uuid": "6633d103-c0be-4772-b11f-4f14c05e1580",
+          "uuid": "a855245c-8b6c-4f77-853b-93477e99eca5",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -3568,7 +3568,7 @@
           "callbacks": []
         },
         {
-          "uuid": "0ee07f62-54eb-4947-ad4c-f56aeb1a57da",
+          "uuid": "f2dfe55a-1233-499a-91be-e175c7449378",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -3592,7 +3592,7 @@
           "callbacks": []
         },
         {
-          "uuid": "9fc8455e-3539-4d39-a83d-5bed51225bdd",
+          "uuid": "c757a752-6edb-472e-9a5e-e7d65d5cdb7f",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -3619,14 +3619,14 @@
       "responseMode": null
     },
     {
-      "uuid": "6cfc963d-9127-414d-aff6-ba029a4effd0",
+      "uuid": "99e18cec-8fd3-4bbb-9546-bec1e0ae4fff",
       "type": "http",
       "documentation": "Terminates the stack for an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.TerminateApp",
       "responses": [
         {
-          "uuid": "0d34412b-10b9-4741-9d59-c0b5bdd60b58",
+          "uuid": "2a6de84e-7e6b-44f8-8dfd-62b67ef8edcd",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -3650,7 +3650,7 @@
           "callbacks": []
         },
         {
-          "uuid": "be1e2cf5-32fd-4484-b37b-513d75be0ec4",
+          "uuid": "baab2406-a7fa-43b8-a70f-c4f1323dfeae",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -3674,7 +3674,7 @@
           "callbacks": []
         },
         {
-          "uuid": "768d4464-9a07-483f-9673-b5bf4e62a245",
+          "uuid": "e202f7a9-32a2-4008-8b63-af8bd93fc21b",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -3698,7 +3698,7 @@
           "callbacks": []
         },
         {
-          "uuid": "9b4e32b6-a8dd-458b-b9e5-30d0d9390ef0",
+          "uuid": "b82ec8ed-a1c5-4a33-8f77-89534186d02e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -3722,7 +3722,7 @@
           "callbacks": []
         },
         {
-          "uuid": "25726f04-f9fd-46d5-b461-7d22f26f6899",
+          "uuid": "bfe90637-9bd3-49b9-9be8-7137bfa204d2",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -3746,7 +3746,7 @@
           "callbacks": []
         },
         {
-          "uuid": "fa596db7-4dd6-4384-a8e4-5f4c94a00364",
+          "uuid": "da79ebc0-f890-423a-aedb-50e76eadabc7",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -3773,14 +3773,14 @@
       "responseMode": null
     },
     {
-      "uuid": "f7e768b7-d780-4323-8582-92ebc39ad805",
+      "uuid": "49355f55-2354-40df-b438-ef8930456dc9",
       "type": "http",
       "documentation": "Updates an application.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.UpdateApp",
       "responses": [
         {
-          "uuid": "1794b2d2-4bcc-475a-86af-7f0142eaa4ea",
+          "uuid": "32f58dfc-4cce-4653-9667-9fea3c807fc7",
           "body": "{\n  \"appSummary\": {\n    \"appId\": \"\",\n    \"name\": \"\",\n    \"description\": \"\",\n    \"status\": \"{{oneOf (array 'CREATING' 'ACTIVE' 'UPDATING' 'DELETING' 'DELETED' 'DELETE_FAILED')}}\",\n    \"statusMessage\": \"\",\n    \"replicationStatus\": \"{{oneOf (array 'READY_FOR_CONFIGURATION' 'CONFIGURATION_IN_PROGRESS' 'CONFIGURATION_INVALID' 'READY_FOR_REPLICATION' 'VALIDATION_IN_PROGRESS' 'REPLICATION_PENDING' 'REPLICATION_IN_PROGRESS' 'REPLICATED' 'DELTA_REPLICATION_IN_PROGRESS' 'DELTA_REPLICATED' 'DELTA_REPLICATION_FAILED' 'REPLICATION_FAILED' 'REPLICATION_STOPPING' 'REPLICATION_STOP_FAILED' 'REPLICATION_STOPPED')}}\",\n    \"replicationStatusMessage\": \"\",\n    \"latestReplicationTime\": \"{{faker 'date.recent' 365}}\",\n    \"launchStatus\": \"{{oneOf (array 'READY_FOR_CONFIGURATION' 'CONFIGURATION_IN_PROGRESS' 'CONFIGURATION_INVALID' 'READY_FOR_LAUNCH' 'VALIDATION_IN_PROGRESS' 'LAUNCH_PENDING' 'LAUNCH_IN_PROGRESS' 'LAUNCHED' 'DELTA_LAUNCH_IN_PROGRESS' 'DELTA_LAUNCH_FAILED' 'LAUNCH_FAILED' 'TERMINATE_IN_PROGRESS' 'TERMINATE_FAILED' 'TERMINATED')}}\",\n    \"launchStatusMessage\": \"\",\n    \"launchDetails\": {\n      \"latestLaunchTime\": \"{{faker 'date.recent' 365}}\",\n      \"stackName\": \"\",\n      \"stackId\": \"\"\n    },\n    \"creationTime\": \"{{faker 'date.recent' 365}}\",\n    \"lastModified\": \"{{faker 'date.recent' 365}}\",\n    \"roleName\": \"\",\n    \"totalServerGroups\": {{faker 'number.int' max=99999}},\n    \"totalServers\": {{faker 'number.int' max=99999}}\n  },\n  \"serverGroups\": [\n    {\n      \"serverGroupId\": \"\",\n      \"name\": \"\",\n      \"serverList\": [\n        {\n          \"serverId\": \"\",\n          \"serverType\": \"{{oneOf (array 'VIRTUAL_MACHINE')}}\",\n          \"vmServer\": {\n            \"vmServerAddress\": {\n              \"vmManagerId\": \"\",\n              \"vmId\": \"\"\n            },\n            \"vmName\": \"\",\n            \"vmManagerName\": \"\",\n            \"vmManagerType\": \"{{oneOf (array 'VSPHERE' 'SCVMM' 'HYPERV-MANAGER')}}\",\n            \"vmPath\": \"\"\n          },\n          \"replicationJobId\": \"\",\n          \"replicationJobTerminated\": {{faker 'datatype.boolean'}}\n        }\n      ]\n    }\n  ],\n  \"tags\": [\n    {\n      \"key\": \"\",\n      \"value\": \"\"\n    }\n  ]\n}",
           "latency": 0,
           "statusCode": 200,
@@ -3804,7 +3804,7 @@
           "callbacks": []
         },
         {
-          "uuid": "25e5522e-fc2b-4e45-8b27-f65597e6cc39",
+          "uuid": "5ba36189-e5a4-4104-9cbb-118277314a15",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -3828,7 +3828,7 @@
           "callbacks": []
         },
         {
-          "uuid": "0d2f983a-0996-4c65-a38d-692035577343",
+          "uuid": "b67f6562-a668-410a-85e0-df039711ed0e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -3852,7 +3852,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b663bf28-4e3c-4ce5-94ae-f43fb153df07",
+          "uuid": "c10a3999-3009-46d3-88c5-aa57efbf4be1",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -3876,7 +3876,7 @@
           "callbacks": []
         },
         {
-          "uuid": "fe56c99e-d6da-4e11-9a1d-8d40d9f9c5bc",
+          "uuid": "907e76a0-d90d-4b5e-b65e-30ba7801efc8",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -3900,7 +3900,7 @@
           "callbacks": []
         },
         {
-          "uuid": "2ec60356-cc4e-423a-a4a5-d5f867c4b6a8",
+          "uuid": "6eeef135-5e87-4a52-b772-2f10ae170073",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -3927,14 +3927,14 @@
       "responseMode": null
     },
     {
-      "uuid": "a2185431-6cb7-4f0a-a656-c612db62910d",
+      "uuid": "4ac66916-5b26-4844-8f99-50dd374568ba",
       "type": "http",
       "documentation": "Updates the specified settings for the specified replication job.",
       "method": "post",
       "endpoint": "#X-Amz-Target=AWSServerMigrationService_V2016_10_24.UpdateReplicationJob",
       "responses": [
         {
-          "uuid": "40d9caae-a90b-4398-8446-486eca211fd2",
+          "uuid": "c34db1f6-76c5-436a-b74c-8fe6a1641e1b",
           "body": "{}",
           "latency": 0,
           "statusCode": 200,
@@ -3958,7 +3958,7 @@
           "callbacks": []
         },
         {
-          "uuid": "d65cae9f-e9dd-45fb-b15d-737c35e6e8b8",
+          "uuid": "8d16d51c-8910-4477-b41a-6f73e0370577",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 480,
@@ -3982,7 +3982,7 @@
           "callbacks": []
         },
         {
-          "uuid": "b8a8be81-c4e9-4947-8415-0438bfbeced2",
+          "uuid": "bb33c53a-8291-415e-901c-8ba95a869498",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 481,
@@ -4006,7 +4006,7 @@
           "callbacks": []
         },
         {
-          "uuid": "f84ce738-5c0a-4c35-b29a-d427355d8600",
+          "uuid": "6e890902-fac7-42db-b6fb-353785445b0e",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 482,
@@ -4030,7 +4030,7 @@
           "callbacks": []
         },
         {
-          "uuid": "09ded170-556e-4043-b43b-5968c263e26f",
+          "uuid": "5a4e296f-d845-497c-b2c0-a55c57bd4e90",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 483,
@@ -4054,7 +4054,7 @@
           "callbacks": []
         },
         {
-          "uuid": "4b96a589-7dad-4362-a943-37637d005d48",
+          "uuid": "25ed0e2e-471f-436a-8a4b-0433a752e57a",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 484,
@@ -4078,7 +4078,7 @@
           "callbacks": []
         },
         {
-          "uuid": "fbd896b5-2bb2-437a-8e5f-9c41dd457946",
+          "uuid": "9530cc93-a7c7-43f3-8d8b-8e2bce816995",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 485,
@@ -4102,7 +4102,7 @@
           "callbacks": []
         },
         {
-          "uuid": "ca7acd9b-24bc-4a86-af5a-396684c8da74",
+          "uuid": "d165db64-f14c-436b-9374-c07917cde4db",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 486,
@@ -4126,7 +4126,7 @@
           "callbacks": []
         },
         {
-          "uuid": "1b1e23a6-98f1-4be9-915f-42d290310e96",
+          "uuid": "5435e476-6cee-4203-9154-20a43a811625",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 487,
@@ -4156,115 +4156,115 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "20c1d73a-e679-40f2-b292-4921be5abe3d"
+      "uuid": "2e15791a-e0d5-45ca-b893-cae6a7412bd0"
     },
     {
       "type": "route",
-      "uuid": "f1928fa8-6ecc-42bd-8ea5-a0a833b35e25"
+      "uuid": "30787e82-a68f-412f-841a-b82d3eac7d7a"
     },
     {
       "type": "route",
-      "uuid": "9e65075e-8e37-4edf-8bda-f09904899841"
+      "uuid": "4bc055bd-538c-4c77-af95-19c045ca8130"
     },
     {
       "type": "route",
-      "uuid": "73ead09e-b203-4589-9856-44c7dce7bd4d"
+      "uuid": "a64f418a-0cfe-441a-9147-4a3ccc319202"
     },
     {
       "type": "route",
-      "uuid": "1825d9b2-4869-4081-bbdf-190ff03c9eaa"
+      "uuid": "4fe1e4c0-3929-495f-a9aa-3cf5f4f6b2f5"
     },
     {
       "type": "route",
-      "uuid": "868447b0-973d-41e2-bae2-3f4898f418e1"
+      "uuid": "74510f66-9f9e-4420-8dcb-4d053f545769"
     },
     {
       "type": "route",
-      "uuid": "9ababc97-df2c-4418-a441-c19e26605ebd"
+      "uuid": "6e18d967-265c-4d23-8959-db24106f64d7"
     },
     {
       "type": "route",
-      "uuid": "2b206c79-b890-4665-a102-f3a04a8fc621"
+      "uuid": "50007677-656f-44b8-817a-f23dbc4708e0"
     },
     {
       "type": "route",
-      "uuid": "e5161cdc-0bf3-4d2e-966f-ae1f176774a1"
+      "uuid": "6fed5991-4767-4895-a9bc-267c9c7568ed"
     },
     {
       "type": "route",
-      "uuid": "0bdc111b-ac56-4fcd-a5ae-7c094cf29b38"
+      "uuid": "719e5be5-1f44-4de2-9754-80500d9c4775"
     },
     {
       "type": "route",
-      "uuid": "bda3f37b-de32-4b52-960f-1e85ac0f8c2e"
+      "uuid": "b6e0ca80-54ed-45fc-8a0b-2f5cf31f6b5b"
     },
     {
       "type": "route",
-      "uuid": "ade8a5b6-d7a4-4bff-8252-108d8e28e3b7"
+      "uuid": "8baff2c5-b992-4a28-b7cf-275ad9391359"
     },
     {
       "type": "route",
-      "uuid": "250f3fdd-aea7-44f3-901e-0163ca17ee67"
+      "uuid": "a1745ab1-80ca-4f1d-b146-f501d5a23c8d"
     },
     {
       "type": "route",
-      "uuid": "a2919d47-463b-4f06-8f2d-4560b56bc92e"
+      "uuid": "f64f8203-5596-4539-8570-00baa453da1f"
     },
     {
       "type": "route",
-      "uuid": "cd98ca43-4f30-47e1-a1ba-b55098eeac80"
+      "uuid": "fadbaa0a-6ab8-4d90-835a-e7bbcff779ca"
     },
     {
       "type": "route",
-      "uuid": "2ae211e1-7605-41a7-a13e-0fe7cb81b671"
+      "uuid": "11287b31-c440-4d56-9270-d2f960a86832"
     },
     {
       "type": "route",
-      "uuid": "45425648-53bd-4edb-ad19-6d25e15c93b5"
+      "uuid": "1a0c7891-5525-42a0-ba12-2e16bca4610b"
     },
     {
       "type": "route",
-      "uuid": "c031ce94-4adf-49fe-8e63-cae9c68b39a3"
+      "uuid": "91fc9019-927b-495a-acb4-93a482c4544d"
     },
     {
       "type": "route",
-      "uuid": "304c480a-ba8d-412f-9aa7-e09a6c6df9a0"
+      "uuid": "4e6acac5-fa1d-4db9-962e-dd9d5729ac91"
     },
     {
       "type": "route",
-      "uuid": "2e21d829-a1c0-4170-9eec-922835a36833"
+      "uuid": "1b841af6-3880-4387-8147-02e40f84b5ce"
     },
     {
       "type": "route",
-      "uuid": "34ba4799-df76-4cdc-a16d-2f2fac7a8b01"
+      "uuid": "ee029fc6-b4a0-4c8f-a948-430b2512b77e"
     },
     {
       "type": "route",
-      "uuid": "d893f3e6-5e9d-4a97-b1fa-57bc4137c3d2"
+      "uuid": "41a703e1-aad9-4e09-ad6b-9902938a262e"
     },
     {
       "type": "route",
-      "uuid": "4f69479a-a768-4984-80ed-fa8833347719"
+      "uuid": "e73f3dcc-f24c-41f7-a831-2ed36adef449"
     },
     {
       "type": "route",
-      "uuid": "42c22307-c3d1-4fd7-9541-20fda7f96d5b"
+      "uuid": "60a653ba-7d2c-4ba3-a6e4-eb83224b58f0"
     },
     {
       "type": "route",
-      "uuid": "58f70232-0c6a-48ee-b7bc-a87cfa379b62"
+      "uuid": "451e54cc-8842-4368-9b74-376f941363bc"
     },
     {
       "type": "route",
-      "uuid": "6cfc963d-9127-414d-aff6-ba029a4effd0"
+      "uuid": "99e18cec-8fd3-4bbb-9546-bec1e0ae4fff"
     },
     {
       "type": "route",
-      "uuid": "f7e768b7-d780-4323-8582-92ebc39ad805"
+      "uuid": "49355f55-2354-40df-b438-ef8930456dc9"
     },
     {
       "type": "route",
-      "uuid": "a2185431-6cb7-4f0a-a656-c612db62910d"
+      "uuid": "4ac66916-5b26-4844-8f99-50dd374568ba"
     }
   ],
   "proxyMode": false,

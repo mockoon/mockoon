@@ -431,7 +431,24 @@ export class OpenAPIConverter {
     if (responseHeaders) {
       return [
         routeContentTypeHeader,
-        ...Object.keys(responseHeaders).map((header) => BuildHeader(header, ''))
+        ...Object.keys(responseHeaders).map((headerName) => {
+          let headerValue = '';
+
+          if ('example' in responseHeaders[headerName]) {
+            headerValue = responseHeaders[headerName]['example'];
+          } else if ('examples' in responseHeaders[headerName]) {
+            headerValue =
+              responseHeaders[headerName]['examples'][
+                Object.keys(responseHeaders[headerName]['examples'])[0]
+              ]['value'];
+          } else if ('schema' in responseHeaders[headerName]) {
+            headerValue = this.generateSchema(
+              responseHeaders[headerName]['schema']
+            );
+          }
+
+          return BuildHeader(headerName, headerValue);
+        })
       ];
     }
 
