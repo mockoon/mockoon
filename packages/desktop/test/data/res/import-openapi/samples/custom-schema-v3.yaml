@@ -69,6 +69,19 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/SchemaObject"
+  /model:
+    get:
+      summary: Returns a model.
+      description: Some description.
+      responses:
+        "200":
+          description: A model with a name
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Model"
+
 components:
   schemas:
     SchemaObject:
@@ -143,3 +156,11 @@ components:
           type: "string"
     Tag:
       type: "string"
+
+    Model:
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: custom_name
