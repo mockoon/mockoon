@@ -1296,6 +1296,30 @@ describe('Template parser', () => {
       expect(countSeparators).is.least(0);
       expect(countSeparators).is.most(2);
     });
+
+    it('should return 1 element stringified', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{someOf (array 'value1') 1 1 true}}",
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.equal('[&quot;value1&quot;]');
+    });
+
+    it('should return 0 element stringified', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{someOf (array 'value1') 0 0 true}}",
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.equal('[]');
+    });
   });
 
   describe('Helper: len', () => {
