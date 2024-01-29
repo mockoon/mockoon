@@ -593,18 +593,17 @@ export class OpenAPIConverter {
         return schema.default;
       }
 
-      let schemaToBuild = schema;
+      const schemaToBuild = schema;
 
       // check if we have an array of schemas, and take first item
-      ['allOf', 'oneOf', 'anyOf'].forEach((propertyName) => {
+      for (const propertyName of ['allOf', 'oneOf', 'anyOf']) {
         if (
           schema.hasOwnProperty(propertyName) &&
           schema[propertyName].length > 0
         ) {
-          type = schema[propertyName][0].type;
-          schemaToBuild = schema[propertyName][0];
+          return this.generateSchema(schema[propertyName][0]);
         }
-      });
+      }
 
       // sometimes we have no type but only 'properties' (=object)
       if (
