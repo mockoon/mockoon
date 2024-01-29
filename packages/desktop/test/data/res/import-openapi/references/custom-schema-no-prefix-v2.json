@@ -1,5 +1,5 @@
 {
-  "uuid": "61c8f45f-b3de-4682-8212-0632cab898cf",
+  "uuid": "7a1a5cee-8349-49dc-a3f8-f7d6c0c5606f",
   "lastMigration": 32,
   "name": "Sample v2 schema",
   "endpointPrefix": "",
@@ -9,14 +9,14 @@
   "folders": [],
   "routes": [
     {
-      "uuid": "6d9f0e01-64cc-403d-a933-3b70912797c5",
+      "uuid": "c04e2525-b164-4845-b2cb-791dd3bbfbc5",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint",
       "responses": [
         {
-          "uuid": "529fbb9a-27e4-4d44-8ce9-151ca98d1066",
+          "uuid": "54dfc3f8-ebe6-40a8-a7ad-37ea1eec78c9",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -46,7 +46,7 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "6d9f0e01-64cc-403d-a933-3b70912797c5"
+      "uuid": "c04e2525-b164-4845-b2cb-791dd3bbfbc5"
     }
   ],
   "proxyMode": false,

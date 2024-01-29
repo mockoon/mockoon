@@ -1,22 +1,22 @@
 {
-  "uuid": "0b1204da-b31f-48a9-9293-f848077141f3",
+  "uuid": "9b0b72a7-3338-4599-985a-d4474edb712b",
   "lastMigration": 32,
   "name": "YouTube Analytics",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 3000,
+  "port": 3001,
   "hostname": "",
   "folders": [],
   "routes": [
     {
-      "uuid": "bf06b2d6-48f9-4aab-9206-2cff95765b36",
+      "uuid": "b4962b35-923b-4ddd-bc07-9c3f69a9b42b",
       "type": "http",
       "documentation": "Removes an item from a group.",
       "method": "delete",
       "endpoint": "v2/groupItems",
       "responses": [
         {
-          "uuid": "6fed0b01-433e-4153-a8c5-6e0abe3b4f82",
+          "uuid": "0eb7d687-96ee-49a0-8a5e-0cf357aed1f1",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -43,14 +43,14 @@
       "responseMode": null
     },
     {
-      "uuid": "221a3c00-e195-451d-a2bb-09955c134c1c",
+      "uuid": "c340eed3-6388-4c2c-8ea5-da13d5e1e40c",
       "type": "http",
       "documentation": "Returns a collection of group items that match the API request parameters.",
       "method": "get",
       "endpoint": "v2/groupItems",
       "responses": [
         {
-          "uuid": "2836c73f-0a46-4a1f-b4f7-8551d09c6335",
+          "uuid": "571c2db8-bb82-4d1e-aaec-f68cbd6d6ca7",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -77,14 +77,14 @@
       "responseMode": null
     },
     {
-      "uuid": "551d7b94-d3f3-4050-9f09-7c90a88a4ab4",
+      "uuid": "e0544247-afb9-4fd5-b30f-c06d84be9916",
       "type": "http",
       "documentation": "Creates a group item.",
       "method": "post",
       "endpoint": "v2/groupItems",
       "responses": [
         {
-          "uuid": "636964fe-8ee6-44ee-9bba-66ddcb17aa43",
+          "uuid": "5a47b8bc-2303-4194-b259-b4f7ef5fde8b",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -111,14 +111,14 @@
       "responseMode": null
     },
     {
-      "uuid": "c981cc15-b1b9-479d-8a87-005f60cce496",
+      "uuid": "6ca2b88d-5d9c-4408-bd5d-56a1dab42b26",
       "type": "http",
       "documentation": "Deletes a group.",
       "method": "delete",
       "endpoint": "v2/groups",
       "responses": [
         {
-          "uuid": "79cd9d24-2c37-4216-9f00-def2b78b6fd4",
+          "uuid": "9f7c1e6b-c9b7-4048-b8af-468f694c003c",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -145,14 +145,14 @@
       "responseMode": null
     },
     {
-      "uuid": "49a2146a-19fa-4798-a44a-8976b6fb995d",
+      "uuid": "8f0f6be8-0aeb-4330-ab62-8bfca24573d1",
       "type": "http",
       "documentation": "Returns a collection of groups that match the API request parameters. For\nexample, you can retrieve all groups that the authenticated user owns,\nor you can retrieve one or more groups by their unique IDs.",
       "method": "get",
       "endpoint": "v2/groups",
       "responses": [
         {
-          "uuid": "a5da0027-4f06-42d2-a809-d35cc2e446a0",
+          "uuid": "c4705684-9a07-4a1a-a1d7-bfc2a7caaee9",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -179,14 +179,14 @@
       "responseMode": null
     },
     {
-      "uuid": "a28c1410-0d16-4454-8754-9c0d599fa863",
+      "uuid": "3b195fe9-d975-4c99-8820-b07b6b6f3b46",
       "type": "http",
       "documentation": "Creates a group.",
       "method": "post",
       "endpoint": "v2/groups",
       "responses": [
         {
-          "uuid": "20e7a970-cfdb-4913-8736-50187de84bb6",
+          "uuid": "c32bd508-c1bd-4caf-b4f9-287580378d38",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -213,14 +213,14 @@
       "responseMode": null
     },
     {
-      "uuid": "7c6fdc8c-a25c-4c8b-a66e-4f15e049b4e8",
+      "uuid": "066b3729-9917-4d0e-a832-913b24c9e45e",
       "type": "http",
       "documentation": "Modifies a group. For example, you could change a group's title.",
       "method": "put",
       "endpoint": "v2/groups",
       "responses": [
         {
-          "uuid": "10efa3b3-cc7e-45b0-b94f-d673be20c90e",
+          "uuid": "529d5799-0dfa-4dcc-9cf0-3402a87a1d69",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -247,14 +247,14 @@
       "responseMode": null
     },
     {
-      "uuid": "af12fb07-afc4-46c7-8124-94ba8768bb13",
+      "uuid": "94058f03-284e-43d5-a90a-1e2b1eb74180",
       "type": "http",
       "documentation": "Retrieve your YouTube Analytics reports.",
       "method": "get",
       "endpoint": "v2/reports",
       "responses": [
         {
-          "uuid": "23e0c4f4-a229-4317-ad55-4657b04edcb5",
+          "uuid": "3046a077-2257-47d5-89bd-5a368515b412",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -284,35 +284,35 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "bf06b2d6-48f9-4aab-9206-2cff95765b36"
+      "uuid": "b4962b35-923b-4ddd-bc07-9c3f69a9b42b"
     },
     {
       "type": "route",
-      "uuid": "221a3c00-e195-451d-a2bb-09955c134c1c"
+      "uuid": "c340eed3-6388-4c2c-8ea5-da13d5e1e40c"
     },
     {
       "type": "route",
-      "uuid": "551d7b94-d3f3-4050-9f09-7c90a88a4ab4"
+      "uuid": "e0544247-afb9-4fd5-b30f-c06d84be9916"
     },
     {
       "type": "route",
-      "uuid": "c981cc15-b1b9-479d-8a87-005f60cce496"
+      "uuid": "6ca2b88d-5d9c-4408-bd5d-56a1dab42b26"
     },
     {
       "type": "route",
-      "uuid": "49a2146a-19fa-4798-a44a-8976b6fb995d"
+      "uuid": "8f0f6be8-0aeb-4330-ab62-8bfca24573d1"
     },
     {
       "type": "route",
-      "uuid": "a28c1410-0d16-4454-8754-9c0d599fa863"
+      "uuid": "3b195fe9-d975-4c99-8820-b07b6b6f3b46"
     },
     {
       "type": "route",
-      "uuid": "7c6fdc8c-a25c-4c8b-a66e-4f15e049b4e8"
+      "uuid": "066b3729-9917-4d0e-a832-913b24c9e45e"
     },
     {
       "type": "route",
-      "uuid": "af12fb07-afc4-46c7-8124-94ba8768bb13"
+      "uuid": "94058f03-284e-43d5-a90a-1e2b1eb74180"
     }
   ],
   "proxyMode": false,

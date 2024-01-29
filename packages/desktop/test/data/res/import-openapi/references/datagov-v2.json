@@ -1,5 +1,5 @@
 {
-  "uuid": "b5185f31-dcc2-4508-9308-219b6282ad91",
+  "uuid": "65af608b-313f-4ee8-ab60-a6e9384ec41c",
   "lastMigration": 32,
   "name": "Regulations.gov",
   "endpointPrefix": "regulations/v3",
@@ -9,14 +9,14 @@
   "folders": [],
   "routes": [
     {
-      "uuid": "5f67a653-da55-4eb7-881c-e0207c0e4d8b",
+      "uuid": "986f0512-6f33-45a9-a7f1-48711c9301ca",
       "type": "http",
       "documentation": "Returns Docket information",
       "method": "get",
       "endpoint": "docket.:response_format",
       "responses": [
         {
-          "uuid": "980fc3ba-b91c-43b9-961e-89c1a49fae95",
+          "uuid": "cd9d0828-10ba-4ff6-9f17-8d7059b073b3",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -40,7 +40,7 @@
           "callbacks": []
         },
         {
-          "uuid": "c94fd37d-2366-4d85-8b2c-08ff04d0f3b2",
+          "uuid": "4ddc0bbc-eba8-4555-81d5-0410341eecf2",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -64,7 +64,7 @@
           "callbacks": []
         },
         {
-          "uuid": "6d2a4dc5-65ae-47b2-9e3a-efcd8e9fb219",
+          "uuid": "29773473-3ac7-4f36-8035-f29eb825b40a",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -91,14 +91,14 @@
       "responseMode": null
     },
     {
-      "uuid": "d5963c39-c7d9-4095-bb03-e06649e25649",
+      "uuid": "e561fe1a-0347-490e-9766-e5eb5bdcceb9",
       "type": "http",
       "documentation": "Returns Document information",
       "method": "get",
       "endpoint": "document.:response_format",
       "responses": [
         {
-          "uuid": "08990de0-f2cc-4b45-9a28-5f344334a210",
+          "uuid": "8f4b1b87-b3df-4b56-b501-d08d9ca2035a",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -122,7 +122,7 @@
           "callbacks": []
         },
         {
-          "uuid": "236f7a8a-a051-4361-8ed2-b0a55735d1b9",
+          "uuid": "c9af1981-defc-4bad-9a45-9e8d48f7cf92",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -146,7 +146,7 @@
           "callbacks": []
         },
         {
-          "uuid": "1fd73f9d-59b4-4e76-b193-0a2353b39d9d",
+          "uuid": "d364509c-8b64-4e54-89a9-faaceb9270c2",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -173,14 +173,14 @@
       "responseMode": null
     },
     {
-      "uuid": "46ebcf84-9a7a-4cd2-8462-6eb94d5968ee",
+      "uuid": "2fc642b3-82dc-4406-8beb-6e13e6632a2f",
       "type": "http",
       "documentation": "Search for Documents",
       "method": "get",
       "endpoint": "documents.:response_format",
       "responses": [
         {
-          "uuid": "272c402a-a27c-48ad-8409-5d09a23f6649",
+          "uuid": "a906c5a4-9071-4835-b66d-303d8bef97b4",
           "body": "",
           "latency": 0,
           "statusCode": 200,
@@ -204,7 +204,7 @@
           "callbacks": []
         },
         {
-          "uuid": "33d4c75c-387a-48c3-9fc9-e9226fb807f7",
+          "uuid": "f0440536-4f12-40f2-b105-7c9cf1458fba",
           "body": "",
           "latency": 0,
           "statusCode": 400,
@@ -228,7 +228,7 @@
           "callbacks": []
         },
         {
-          "uuid": "f11730f7-ce93-42f1-88ae-0aba4710cb58",
+          "uuid": "4a218fc5-5310-4fe6-abed-c096566e5355",
           "body": "",
           "latency": 0,
           "statusCode": 404,
@@ -258,15 +258,15 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "5f67a653-da55-4eb7-881c-e0207c0e4d8b"
+      "uuid": "986f0512-6f33-45a9-a7f1-48711c9301ca"
     },
     {
       "type": "route",
-      "uuid": "d5963c39-c7d9-4095-bb03-e06649e25649"
+      "uuid": "e561fe1a-0347-490e-9766-e5eb5bdcceb9"
     },
     {
       "type": "route",
-      "uuid": "46ebcf84-9a7a-4cd2-8462-6eb94d5968ee"
+      "uuid": "2fc642b3-82dc-4406-8beb-6e13e6632a2f"
     }
   ],
   "proxyMode": false,
