@@ -48,6 +48,7 @@ import int from './int';
 import ipv4 from './ipv4';
 import ipv6 from './ipv6';
 import join from './join';
+import jsonParse from './json-parse';
 import lastName from './lastName';
 import lat from './lat';
 import len from './len';
@@ -152,6 +153,7 @@ export const Helpers = {
   split,
   street,
   stringify,
+  jsonParse,
   substr,
   subtract,
   switch: switchFunc,
