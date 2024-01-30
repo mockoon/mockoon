@@ -2319,7 +2319,7 @@ describe('Template parser', () => {
     });
   });
 
-  describe('Helper: parseJson', () => {
+  describe('Helper: jsonParse', () => {
     it('should return nothing if first string parameter is missing', () => {
       const parseResult = TemplateParser(
         false,
