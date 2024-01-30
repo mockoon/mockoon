@@ -8,7 +8,7 @@
   } as data"
 >
   <div class="header d-flex align-items-center">
-    <div *ngIf="data.activeEnvironment">
+    <div *ngIf="data.activeEnvironment" appTourStep="tour-environment-start">
       <button
         *ngIf="
           data.activeEnvironmentState?.running &&
@@ -48,7 +48,11 @@
 
     <div *ngIf="data.activeEnvironment">
       <ul class="nav nav-tabs">
-        <li *ngFor="let tab of tabs" class="nav-item">
+        <li
+          *ngFor="let tab of tabs"
+          class="nav-item"
+          [appTourStep]="tourIds[tab.id]"
+        >
           <a
             class="nav-link d-flex align-items-center"
             [ngClass]="{ active: data.activeView === tab.id }"

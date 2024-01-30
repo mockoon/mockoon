@@ -1,22 +1,22 @@
 {
-  "uuid": "627c4043-737b-4e6c-9e39-012c30d86172",
+  "uuid": "02bb7680-4e59-4574-a38b-a5e3d9d75666",
   "lastMigration": 32,
   "name": "Sample v3 schema",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 3000,
+  "port": 3006,
   "hostname": "",
   "folders": [],
   "routes": [
     {
-      "uuid": "f224c883-6ae1-443b-a370-dab427ffbe12",
+      "uuid": "5c1aeddb-4853-4b12-ac70-604fb93ea876",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint",
       "responses": [
         {
-          "uuid": "861c3ed7-e538-49f2-8b2f-ca95e0376111",
+          "uuid": "01da1deb-efd9-4732-b77e-b2153caedf1a",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -43,14 +43,14 @@
       "responseMode": null
     },
     {
-      "uuid": "c1ed97bf-03e1-41a7-abe6-39156a24b052",
+      "uuid": "1fabb15f-042a-4b11-a238-3a393ced6017",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint2",
       "responses": [
         {
-          "uuid": "bf2452b2-2163-4a8d-b0a2-970744e38e01",
+          "uuid": "f31db0df-a901-48a3-91f6-db241ef4451b",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -77,14 +77,14 @@
       "responseMode": null
     },
     {
-      "uuid": "053d93e5-792b-4521-8e43-aad85a6eebd8",
+      "uuid": "f573f69a-52e7-4500-9593-21396f360416",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint3",
       "responses": [
         {
-          "uuid": "94f96a5c-f63a-4b63-8085-1f5c625b1365",
+          "uuid": "41912345-6264-4a62-9e29-586c138b690d",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -114,15 +114,15 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "f224c883-6ae1-443b-a370-dab427ffbe12"
+      "uuid": "5c1aeddb-4853-4b12-ac70-604fb93ea876"
     },
     {
       "type": "route",
-      "uuid": "c1ed97bf-03e1-41a7-abe6-39156a24b052"
+      "uuid": "1fabb15f-042a-4b11-a238-3a393ced6017"
     },
     {
       "type": "route",
-      "uuid": "053d93e5-792b-4521-8e43-aad85a6eebd8"
+      "uuid": "f573f69a-52e7-4500-9593-21396f360416"
     }
   ],
   "proxyMode": false,

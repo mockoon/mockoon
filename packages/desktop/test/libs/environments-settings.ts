@@ -23,6 +23,10 @@ class EnvironmentsSettings {
     return $('app-environment-settings input[formcontrolname=hostname]');
   }
 
+  public get port() {
+    return $('app-environment-settings input[formcontrolname=port]');
+  }
+
   public get prefix() {
     return $('app-environment-settings input[formcontrolname=endpointPrefix]');
   }

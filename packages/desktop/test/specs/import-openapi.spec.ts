@@ -9,7 +9,8 @@ import utils from '../libs/utils';
 const dataSamplesPath = './test/data/res/import-openapi/samples/';
 const dataReferencesPath = './test/data/res/import-openapi/references/';
 
-const removeUUIDs = (environment: Environment) => {
+const cleanEnv = (environment: Environment) => {
+  environment.port = 3000;
   environment.uuid = '';
 
   environment.routes.forEach((route) => {
@@ -144,7 +145,9 @@ describe('Swagger/OpenAPI import', () => {
           }
 
           await dialogs.open(testCase.filePath);
-          await dialogs.save(resolve(`./tmp/storage/${filename}.json`));
+          await dialogs.save(
+            resolve(`./tmp/storage/import-result/${filename}.json`)
+          );
 
           await menu.click('MENU_IMPORT_OPENAPI_FILE');
 
@@ -156,7 +159,7 @@ describe('Swagger/OpenAPI import', () => {
           await utils.waitForAutosave();
 
           const environmentFile = await fs.readFile(
-            `./tmp/storage/${filename}.json`
+            `./tmp/storage/import-result/${filename}.json`
           );
           const referenceEnvironmentFile = await fs.readFile(
             testCase.referenceFilePath
@@ -168,8 +171,8 @@ describe('Swagger/OpenAPI import', () => {
           const referenceEnvironment: Environment = JSON.parse(
             referenceEnvironmentFile.toString()
           );
-          removeUUIDs(environment);
-          removeUUIDs(referenceEnvironment);
+          cleanEnv(environment);
+          cleanEnv(referenceEnvironment);
 
           expect(environment).toEqual(referenceEnvironment);
 

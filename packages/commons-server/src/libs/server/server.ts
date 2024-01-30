@@ -41,7 +41,10 @@ import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
 import { format } from 'util';
 import { xml2js } from 'xml-js';
-import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
+import {
+  ParsedJSONBodyMimeTypes,
+  ParsedXMLBodyMimeTypes
+} from '../../constants/common.constants';
 import { ServerMessages } from '../../constants/server-messages.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
 import { SetFakerLocale, SetFakerSeed } from '../faker';
@@ -303,7 +306,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       try {
         if (requestContentType) {
-          if (requestContentType.includes('application/json')) {
+          if (
+            stringIncludesArrayItems(
+              ParsedJSONBodyMimeTypes,
+              requestContentType
+            )
+          ) {
             request.body = JSON.parse(request.stringBody);
             next();
           } else if (
@@ -552,6 +560,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           enabledRouteResponse.bodyType === BodyTypes.FILE &&
           enabledRouteResponse.filePath
         ) {
+          this.makeCallbacks(enabledRouteResponse, request, response);
+
           this.sendFile(
             route,
             enabledRouteResponse,

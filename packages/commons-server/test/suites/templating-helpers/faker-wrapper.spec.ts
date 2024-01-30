@@ -160,4 +160,16 @@ describe('Template parser: Faker wrapper', () => {
     );
     expect(parseResult).to.be.equal('2');
   });
+
+  it('should allow objects as argument to faker function', () => {
+    const parseResult = TemplateParser(
+      false,
+      '{{faker \'string.alpha\' \'{ length: 5, casing: "upper", exclude: ["A"] }\' }}',
+      {} as any,
+      [],
+      {},
+      {} as any
+    );
+    expect(parseResult).to.be.equal('KFKJR');
+  });
 });

@@ -6,14 +6,14 @@ const someOf = function (
   itemList: string[],
   min: number,
   max: number,
-  asArray = false
+  stringify = false
 ) {
   const randomItems = itemList
     .sort(() => 0.5 - Math.random())
     .slice(0, RandomInt(min, max));
 
-  if (asArray === true) {
-    return `["${randomItems.join('","')}"]`;
+  if (stringify === true) {
+    return JSON.stringify(randomItems);
   }
 
   return randomItems;

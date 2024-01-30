@@ -1408,17 +1408,17 @@ $form-feedback-tooltip-border-radius: $tooltip-border-radius !default;
 // Popovers
 
 // scss-docs-start popover-variables
-$popover-font-size: $font-size-sm !default;
-$popover-bg: $white !default;
-$popover-max-width: 276px !default;
+$popover-font-size: $font-size-base;
+$popover-bg: lighten($gray-900, 2%);
+$popover-max-width: 350px;
 $popover-border-width: $border-width !default;
-$popover-border-color: var(--#{$prefix}border-color-translucent) !default;
-$popover-border-radius: $border-radius-lg !default;
+$popover-border-color: lighten($gray-900, 4%);
+$popover-border-radius: 0;
 $popover-inner-border-radius: subtract(
   $popover-border-radius,
   $popover-border-width
 ) !default;
-$popover-box-shadow: $box-shadow !default;
+$popover-box-shadow: none;
 
 $popover-header-font-size: $font-size-base !default;
 $popover-header-bg: shade-color($popover-bg, 6%) !default;
@@ -1426,7 +1426,7 @@ $popover-header-color: $headings-color !default;
 $popover-header-padding-y: 0.5rem !default;
 $popover-header-padding-x: $spacer !default;
 
-$popover-body-color: $body-color !default;
+$popover-body-color: $gray-300;
 $popover-body-padding-y: $spacer !default;
 $popover-body-padding-x: $spacer !default;
 
@@ -1672,7 +1672,7 @@ $btn-close-width: 1em !default;
 $btn-close-height: $btn-close-width !default;
 $btn-close-padding-x: 0.25em !default;
 $btn-close-padding-y: $btn-close-padding-x !default;
-$btn-close-color: $black !default;
+$btn-close-color: $gray-300;
 $btn-close-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>") !default;
 $btn-close-focus-shadow: $input-btn-focus-box-shadow !default;
 $btn-close-opacity: 0.5 !default;

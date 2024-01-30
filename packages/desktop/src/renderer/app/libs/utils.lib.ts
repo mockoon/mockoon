@@ -139,3 +139,20 @@ export const environmentHasRoute = (
 
 export const trackByUuid = (item: any) => item.uuid;
 export const trackById = (item: any) => item.id;
+
+/**
+ * Check if a text contains all the words (separated by a space) in a search string
+ *
+ * @param text
+ * @param search
+ * @returns
+ */
+export const textFilter = (text: string, search: string) => {
+  return search
+    .split(' ')
+    .filter((searchWord) => !!searchWord)
+    .every(
+      (searchWord) =>
+        !!searchWord && text.toLowerCase().includes(searchWord.toLowerCase())
+    );
+};

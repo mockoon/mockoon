@@ -78,7 +78,8 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
     menu[0].submenu.push(
       { label: 'Hide', role: 'hide' },
       { role: 'hideOthers' },
-      { type: 'separator' }
+      { type: 'separator' },
+      { label: 'Close window', accelerator: 'CmdOrCtrl+W', role: 'close' }
     );
   }
 
@@ -335,6 +336,12 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       { type: 'separator' },
+      {
+        label: 'Take the tour',
+        click: () => {
+          mainWindow.webContents.send('APP_MENU', 'TOUR_START');
+        }
+      },
       {
         label: `Release notes v${Config.appVersion}`,
         click: () => {

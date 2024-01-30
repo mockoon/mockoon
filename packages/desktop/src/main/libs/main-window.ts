@@ -28,11 +28,11 @@ export const saveOpenUrlArgs = (url: string[]) => {
 
 export const getMainWindow = () => mainWindow;
 
-export const initMainWindow = () => {
+export const initMainWindow = (showSplash = true) => {
   let splashScreen: BrowserWindow;
 
   // only show the splashscreen when not running the tests
-  if (!IS_TESTING) {
+  if (!IS_TESTING && showSplash) {
     splashScreen = createSplashScreen();
   }
 
@@ -53,7 +53,12 @@ export const initMainWindow = () => {
     height: mainWindowState.height,
     title: 'Mockoon',
     backgroundColor: '#252830',
-    icon: pathJoin(__dirname, '../build-res/icon_512x512x32.png'),
+    icon: pathJoin(
+      __dirname,
+      process.platform === 'win32'
+        ? '../build-res/icon.ico'
+        : '../build-res/icon_512x512x32.png'
+    ),
     // directly show the main window when running the tests
     show: false,
     webPreferences: {

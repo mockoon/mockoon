@@ -5,10 +5,13 @@
     collapsedFolders: collapsedFolders$ | async
   } as data"
 >
-  <div class="routes-menu d-flex flex-column h-100">
-    <div class="d-flex">
+  <div
+    class="routes-menu d-flex flex-column h-100"
+    appTourStep="tour-routes-menu"
+  >
+    <div class="d-flex" appTestDirective>
       <div class="d-flex w-100 py-2 align-items-center">
-        <div ngbDropdown id="routes-add-dropdown">
+        <div ngbDropdown id="routes-add-dropdown" appTourStep="tour-route-add">
           <button
             class="btn btn-link dropdown-toggle dropdown-toggle-icon"
             type="button"
@@ -113,6 +116,7 @@
         [ngTemplateOutlet]="routeItemTemplate"
         [ngTemplateOutletContext]="{
           route: child.data,
+          isHidden$: child.isHidden$,
           parentId: parentId === undefined ? 'root' : parentId,
           parentChainId: parentChainId === undefined ? ['root'] : parentChainId,
           level: level === undefined ? 0 : level
@@ -220,6 +224,7 @@
   <ng-template
     #routeItemTemplate
     let-route="route"
+    let-isHidden$="isHidden$"
     let-parentId="parentId"
     let-parentChainId="parentChainId"
     let-level="level"
@@ -227,7 +232,7 @@
     <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
       <li
         class="nav-item"
-        [appSearchFilter]="routesFilter$"
+        [ngClass]="{ 'd-none': isHidden$ | async }"
         appDraggable
         appDropzone
         dragContainer="routes"

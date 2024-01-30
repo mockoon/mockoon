@@ -10,7 +10,7 @@
       "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c",
       "documentation": "",
       "method": "get",
-      "endpoint": "databucket",
+      "endpoint": "inline",
       "responses": [
         {
           "uuid": "aa1b9d75-8161-49bf-80d7-c7a50d341a15",
@@ -26,8 +26,8 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "abc1",
-          "bodyType": "DATABUCKET",
+          "databucketID": "",
+          "bodyType": "INLINE",
           "callbacks": [],
           "crudKey": "id"
         }
@@ -39,7 +39,7 @@
       "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511",
       "documentation": "",
       "method": "get",
-      "endpoint": "databucketWithReqHelper",
+      "endpoint": "file",
       "responses": [
         {
           "uuid": "a6a47a6d-37df-49c9-816b-0b41c3501b73",
@@ -48,15 +48,15 @@
           "statusCode": 200,
           "label": "",
           "headers": [],
-          "filePath": "",
+          "filePath": "../body-files/file1.txt",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "abc2",
-          "bodyType": "DATABUCKET",
+          "databucketID": "",
+          "bodyType": "FILE",
           "callbacks": [],
           "crudKey": "id"
         }
@@ -68,7 +68,7 @@
       "uuid": "cf3b141e-ddc7-41e3-89b9-8ef6a0e64400",
       "documentation": "",
       "method": "get",
-      "endpoint": "databucketWithImbricatedReqHelper",
+      "endpoint": "databucket",
       "responses": [
         {
           "uuid": "8b98dfa6-a5b5-4d83-b129-5f86c9bfa317",
@@ -84,7 +84,7 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "abc3",
+          "databucketID": "abc1",
           "bodyType": "DATABUCKET",
           "callbacks": [],
           "crudKey": "id"
@@ -116,19 +116,7 @@
       "uuid": "cad3eee3-259f-4e28-b2ec-e7ff5e4879cf",
       "id": "abc1",
       "name": "Databucket",
-      "value": "{\"response\":\"{{faker 'person.firstName'}}\"}"
-    },
-    {
-      "uuid": "4bedba2f-df2f-4092-b32c-5984c52a1b98",
-      "id": "abc2",
-      "name": "Databucket with request helper",
-      "value": "{{queryParam 'param'}}"
-    },
-    {
-      "uuid": "c52fc579-11e6-4b11-99fa-f52520b041ec",
-      "id": "abc3",
-      "name": "Databucket with imbricated request helper",
-      "value": "{{#repeat (queryParamRaw 'limit' 2) comma=false}}test{{/repeat}}"
+      "value": "hello"
     }
   ],
   "callbacks": [
@@ -178,6 +166,7 @@
   "folders": [],
   "rootChildren": [
     { "type": "route", "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c" },
-    { "type": "route", "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511" }
+    { "type": "route", "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511" },
+    { "type": "route", "uuid": "cf3b141e-ddc7-41e3-89b9-8ef6a0e64400" }
   ]
 }

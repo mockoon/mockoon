@@ -83,7 +83,6 @@
             <div class="list-group list-group-flush h-100 overflow-auto">
               <button
                 *ngFor="let template of data.templates"
-                [appSearchFilter]="templatesFilter$"
                 class="list-group-item list-group-item-action"
                 [ngClass]="{
                   active: template.id === data.activeTemplateListItem?.id,

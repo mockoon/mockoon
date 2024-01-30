@@ -7,6 +7,8 @@
   <a href="https://mockoon.com/newsletter/"><img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/></a>
   <a href="https://twitter.com/GetMockoon"><img src="https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2"/></a>
   <a href="https://discord.gg/FtJjkejKGp"><img src="https://img.shields.io/badge/Discord-go-blue.svg?style=flat-square&colorA=6c84d9&colorB=1da1f2"/></a>
+  <a href="https://repo-rater.eddiehub.io/rate?owner=mockoon&name=mockoon"><img src="https://repo-rater.eddiehub.io/api/badge?owner=mockoon&name=mockoon"/></a>
+  
   <br>
   <br>
   <h1>Mockoon: awesome API mocking</h1>

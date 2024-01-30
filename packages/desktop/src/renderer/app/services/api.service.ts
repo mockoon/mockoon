@@ -13,6 +13,7 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -28,7 +29,8 @@ export class ApiService extends Logger {
     private zone: NgZone,
     private userService: UserService,
     protected toastsService: ToastsService,
-    private uiService: UIService
+    private uiService: UIService,
+    private tourService: TourService
   ) {
     super('[RENDERER][SERVICE][API] ', toastsService);
   }
@@ -85,6 +87,9 @@ export class ApiService extends Logger {
             break;
           case 'OPEN_SETTINGS':
             this.uiService.openModal('settings');
+            break;
+          case 'TOUR_START':
+            this.tourService.start();
             break;
           case 'OPEN_CHANGELOG':
             this.uiService.openModal('changelog');

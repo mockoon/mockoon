@@ -30,6 +30,23 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/SchemaObject"
+          headers:
+            Header-From-Example:
+              schema:
+                type: string
+              example: example value
+            Header-From-First-Examples:
+              schema:
+                type: string
+              examples:
+                test:
+                  value: first example value
+            Header-From-Schema-String:
+              schema:
+                type: string
+            Header-From-Schema-Int:
+              schema:
+                type: integer
   /endpoint2:
     get:
       responses:
@@ -52,6 +69,19 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/SchemaObject"
+  /model:
+    get:
+      summary: Returns a model.
+      description: Some description.
+      responses:
+        "200":
+          description: A model with a name
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Model"
+
 components:
   schemas:
     SchemaObject:
@@ -126,3 +156,11 @@ components:
           type: "string"
     Tag:
       type: "string"
+
+    Model:
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: custom_name

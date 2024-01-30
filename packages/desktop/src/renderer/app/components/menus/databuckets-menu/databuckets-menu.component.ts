@@ -14,6 +14,7 @@ import {
 } from '@mockoon/commons';
 import { Observable, Subject, from } from 'rxjs';
 import {
+  combineLatestWith,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -24,7 +25,7 @@ import {
 import { DatabucketsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { trackByUuid } from 'src/renderer/app/libs/utils.lib';
+import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -82,7 +83,17 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
     this.databucketList$ = this.store.selectActiveEnvironment().pipe(
       filter((activeEnvironment) => !!activeEnvironment),
       distinctUntilChanged(),
-      map((activeEnvironment) => activeEnvironment.data)
+      combineLatestWith(this.databucketsFilter$),
+      map(([activeEnvironment, search]) =>
+        !search
+          ? activeEnvironment.data
+          : activeEnvironment.data.filter((databucket) =>
+              textFilter(
+                `${databucket.name} ${databucket.documentation}`,
+                search
+              )
+            )
+      )
     );
 
     this.databucketsFilter.valueChanges

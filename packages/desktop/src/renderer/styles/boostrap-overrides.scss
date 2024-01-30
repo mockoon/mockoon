@@ -71,9 +71,6 @@
   max-height: 65vh;
 }
 .form-control {
-  letter-spacing: 0.02rem;
-  background-clip: border-box;
-
   &:disabled,
   &[readonly] {
     color: $text-muted;

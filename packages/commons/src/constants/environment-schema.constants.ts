@@ -203,7 +203,15 @@ const TLSOptionsSchema = Joi.object<EnvironmentTLSOptions, true>({
 
 const RouteResponseRuleSchema = Joi.object<ResponseRule, true>({
   target: Joi.string()
-    .valid('body', 'query', 'header', 'params', 'request_number', 'cookie')
+    .valid(
+      'body',
+      'query',
+      'header',
+      'params',
+      'request_number',
+      'cookie',
+      'global_var'
+    )
     .failover(ResponseRuleDefault.target)
     .required(),
   modifier: Joi.string()

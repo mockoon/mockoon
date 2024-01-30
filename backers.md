@@ -63,7 +63,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Emadashi
 - [EMQX](https://www.emqx.io/)
 - Everett
-- [Fern](www.devmark.ai/fern/?utm_source=mockoon&utm_loc=readme&utm_type=logo)
+- [Fern](https://buildwithfern.com/)
 - [fl0rian-p](https://github.com/fl0rian-p)
 - François Grémont
 - [GitHub](https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/)

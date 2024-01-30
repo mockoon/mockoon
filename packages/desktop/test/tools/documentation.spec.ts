@@ -169,10 +169,53 @@ const documentationTopics: {
 }[] = [
   {
     enabled: true,
-    folder: 'api-endpoints/routing',
+    folder: 'server-configuration/port-prefix',
     screenshots: [
       {
         tasks: null,
+        get highlightedTarget() {
+          return navigation.settingsTab;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 50, bottom: 125 },
+        fileName: 'open-environment-settings.png'
+      },
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_SETTINGS');
+        },
+        get highlightedTarget() {
+          return environmentsSettings.port;
+        },
+        highlight: true,
+        highlightGaps: { top: 10, right: 10, bottom: 10, left: 10 },
+        screenshotPosition: { top: 0, left: 0 },
+        screeenshotGaps: { right: 250, bottom: 125 },
+        fileName: 'environment-custom-port.png'
+      },
+      {
+        tasks: null,
+        get highlightedTarget() {
+          return environmentsSettings.prefix;
+        },
+        highlight: true,
+        highlightGaps: { top: 10, right: 10, bottom: 10, left: 10 },
+        screenshotPosition: { top: 0, left: 0 },
+        screeenshotGaps: { right: 250, bottom: 125 },
+        fileName: 'environment-custom-prefix.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'api-endpoints/routing',
+    screenshots: [
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_ROUTES');
+        },
         get highlightedTarget() {
           return navigation.settingsTab;
         },

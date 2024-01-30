@@ -431,7 +431,24 @@ export class OpenAPIConverter {
     if (responseHeaders) {
       return [
         routeContentTypeHeader,
-        ...Object.keys(responseHeaders).map((header) => BuildHeader(header, ''))
+        ...Object.keys(responseHeaders).map((headerName) => {
+          let headerValue = '';
+
+          if ('example' in responseHeaders[headerName]) {
+            headerValue = responseHeaders[headerName]['example'];
+          } else if ('examples' in responseHeaders[headerName]) {
+            headerValue =
+              responseHeaders[headerName]['examples'][
+                Object.keys(responseHeaders[headerName]['examples'])[0]
+              ]['value'];
+          } else if ('schema' in responseHeaders[headerName]) {
+            headerValue = this.generateSchema(
+              responseHeaders[headerName]['schema']
+            );
+          }
+
+          return BuildHeader(headerName, headerValue);
+        })
       ];
     }
 
@@ -576,18 +593,17 @@ export class OpenAPIConverter {
         return schema.default;
       }
 
-      let schemaToBuild = schema;
+      const schemaToBuild = schema;
 
       // check if we have an array of schemas, and take first item
-      ['allOf', 'oneOf', 'anyOf'].forEach((propertyName) => {
+      for (const propertyName of ['allOf', 'oneOf', 'anyOf']) {
         if (
           schema.hasOwnProperty(propertyName) &&
           schema[propertyName].length > 0
         ) {
-          type = schema[propertyName][0].type;
-          schemaToBuild = schema[propertyName][0];
+          return this.generateSchema(schema[propertyName][0]);
         }
-      });
+      }
 
       // sometimes we have no type but only 'properties' (=object)
       if (
