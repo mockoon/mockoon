@@ -193,8 +193,9 @@ export class ResponseRulesInterpreter {
         : regex.test(value);
     }
 
+    // value extracted by JSONPath is always an array, cast its values to string (in line with the equals operator below)
     if (Array.isArray(value)) {
-      return value.includes(parsedRuleValue);
+      return value.map((v) => String(v)).includes(parsedRuleValue);
     }
 
     return String(value) === String(parsedRuleValue);
@@ -217,7 +218,8 @@ export class ResponseRulesInterpreter {
       body,
       query: this.request.query,
       params: this.request.params,
-      bodyRaw: this.request.stringBody
+      bodyRaw: this.request.stringBody,
+      global_var: this.globalVariables
     };
   }
 
