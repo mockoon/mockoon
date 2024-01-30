@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/cli",
   "description": "Mockoon's CLI. Deploy your mock APIs anywhere.",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "guillaume@1kb.software",
@@ -45,8 +45,8 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "@mockoon/commons": "6.1.0",
-    "@mockoon/commons-server": "6.1.0",
+    "@mockoon/commons": "6.2.0",
+    "@mockoon/commons-server": "6.2.0",
     "@oclif/core": "2.15.0",
     "@oclif/plugin-help": "5.2.20",
     "jsonfile": "6.1.0",
