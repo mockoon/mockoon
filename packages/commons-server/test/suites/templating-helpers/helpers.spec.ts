@@ -2319,6 +2319,115 @@ describe('Template parser', () => {
     });
   });
 
+  describe('Helper: parseJson', () => {
+    it('should return nothing if first string parameter is missing', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{jsonParse}}',
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return nothing if first string parameter is empty', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{jsonParse ""}}',
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return nothing if first parameter is not a string', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{jsonParse 56}}',
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
+    });
+
+    it('should return content if string evaluated to true', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{#if (jsonParse "true")}}value{{/if}}',
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.be.equal('value');
+    });
+
+    it('should return content if string evaluated to number verifying equality', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{#if (eq (jsonParse "25") 25)}}value{{/if}}',
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.be.equal('value');
+    });
+
+    it('should return data property if string evaluated to object', () => {
+      const parseResult = TemplateParser(
+        false,
+        '{{lookup (jsonParse \'{"data":"test"}\') \'data\'}}',
+        {} as any,
+        [],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.be.equal('test');
+    });
+
+    it('should return array element when used with oneOf and string evaluated as an array', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{oneOf (jsonParse '[5]')}}",
+        {} as any,
+        [],
+        {},
+        {
+          body: {
+            prop1: '123',
+            prop2: {
+              data: 'super'
+            }
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('5');
+    });
+
+    it('should return correct data property when evaluating string coming from a SafeString helper (queryParam)', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{lookup (jsonParse (queryParam 'json')) 'data'}}",
+        {} as any,
+        [],
+        {},
+        {
+          query: {
+            json: '{"data":"test"}'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('test');
+    });
+  });
+
   describe('Helper: padStart', () => {
     it('should return empty string if no param provided', () => {
       const parseResult = TemplateParser(
