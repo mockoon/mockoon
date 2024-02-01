@@ -201,8 +201,24 @@ describe('Request helpers', () => {
         } as any
       );
       expect(parseResult).to.be.equal(
-        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]["value"]'
+        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]value'
       );
+    });
+
+    it('should return default if there are no properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{body '$.data1' '\"Default\"'}}",
+        {} as any,
+        [],
+        {},
+        {
+          body: {
+            data: 'value'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('"Default"');
     });
   });
 
@@ -382,6 +398,21 @@ describe('Request helpers', () => {
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
     });
+    it('should return default if there are no properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{bodyRaw '$.data1' 'Default'}}",
+        {} as any,
+        [],
+        {},
+        {
+          body: {
+            data: 'value'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('Default');
+    });
   });
 
   describe('Helper: queryParam', () => {
@@ -504,7 +535,7 @@ describe('Request helpers', () => {
       );
       expect(parseResult).to.be.equal('"value"');
     });
-    it('should return the properties matching jsonpath rexpression', () => {
+    it('should return the properties matching jsonpath expression', () => {
       const parseResult = TemplateParser(
         false,
         "{{queryParam '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParam '$.attributes.sub_attributes.*'}}{{queryParam '$.attributes.[attribute.with.dot].name'}}",
@@ -529,8 +560,23 @@ describe('Request helpers', () => {
         } as any
       );
       expect(parseResult).to.be.equal(
-        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]["value"]'
+        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]value'
       );
+    });
+    it('should return default if there are no properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{queryParam '$.data1' '\"Default\"'}}",
+        {} as any,
+        [],
+        {},
+        {
+          query: {
+            data: 'value'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('"Default"');
     });
   });
 
@@ -680,6 +726,21 @@ describe('Request helpers', () => {
       expect(parseResult).to.be.equal(
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
+    });
+    it('should return default if there are no properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{queryParamRaw '$.data1' 'Default'}}",
+        {} as any,
+        [],
+        {},
+        {
+          query: {
+            data: 'value'
+          }
+        } as any
+      );
+      expect(parseResult).to.be.equal('Default');
     });
   });
 
