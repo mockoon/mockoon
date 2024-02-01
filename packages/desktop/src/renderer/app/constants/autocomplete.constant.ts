@@ -68,6 +68,7 @@ export const helpersAutocompletions = [
   { caption: 'uppercase', value: '{{uppercase string}}', meta: '' },
   { caption: 'split', value: '{{split string}}', meta: '' },
   { caption: 'stringify', value: '{{stringify value}}', meta: '' },
+  { caption: 'jsonParse', value: "{{jsonParse 'JSON string'}}", meta: '' },
   { caption: 'concat', value: '{{concat value value}}', meta: '' },
   {
     caption: 'indexOf',
