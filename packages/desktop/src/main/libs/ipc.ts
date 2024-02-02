@@ -1,5 +1,6 @@
 import { Environment, Environments } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
+import { exec } from 'child_process';
 import {
   BrowserWindow,
   Menu,
@@ -263,6 +264,24 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.handle('APP_STOP_SERVER', (event, environmentUUID: string) => {
     ServerInstance.stop(environmentUUID);
+  });
+
+  ipcMain.on('OPEN_FILE_IN_VSCODE', (event, filePath: string) => {
+    exec(`code -n "${filePath}"`, (error, stdout, stderr) => {
+        if (error) {
+            logError(`Failed to open file in VSCode: ${error}`);
+            return;
+        }
+
+        if (stderr) {
+            logError(`stderr: ${stderr}`);
+            return;
+        }
+    });
+  });
+
+  ipcMain.on('OPEN_FOLDER_IN_FINDER', (event, filePath: string) => {
+    shell.showItemInFolder(filePath);
   });
 };
 

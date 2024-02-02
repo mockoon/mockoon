@@ -446,6 +446,30 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Open file in VSCODE
+   */
+  public openFile() {
+    const activeRouteResponse = this.store.getActiveRouteResponse();
+
+    MainAPI.send(
+      'OPEN_FILE_IN_VSCODE',
+      activeRouteResponse?.filePath
+    )
+  }
+
+  /**
+   * Open folder
+   */
+  public openFolder() {
+    const activeRouteResponse = this.store.getActiveRouteResponse();
+  
+    MainAPI.send(
+      'OPEN_FOLDER_IN_FINDER',
+      activeRouteResponse?.filePath
+    )
+  }
+
+  /**
    * If the body is set and the Content-Type is application/json, then prettify the JSON.
    */
   public formatBody() {
