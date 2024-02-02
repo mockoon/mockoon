@@ -268,17 +268,17 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.on('OPEN_FILE_IN_VSCODE', (event, filePath: string) => {
     exec(`code -n "${filePath}"`, (error, stdout, stderr) => {
-        if (error) {
-            logError(`Failed to open file in VSCode: ${error}`);
+      if (error) {
+        logError(`Failed to open file in VSCode: ${error}`);
 
-            return;
-        }
+        return;
+      }
 
-        if (stderr) {
-            logError(`stderr: ${stderr}`);
-            
-            return;
-        }
+      if (stderr) {
+        logError(`stderr: ${stderr}`);
+
+        return;
+      }
     });
   });
 
