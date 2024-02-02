@@ -454,7 +454,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     MainAPI.send(
       'OPEN_FILE_IN_VSCODE',
       activeRouteResponse?.filePath
-    )
+    );
   }
 
   /**
@@ -466,7 +466,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     MainAPI.send(
       'OPEN_FOLDER_IN_FINDER',
       activeRouteResponse?.filePath
-    )
+    );
   }
 
   /**

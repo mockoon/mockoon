@@ -270,11 +270,13 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     exec(`code -n "${filePath}"`, (error, stdout, stderr) => {
         if (error) {
             logError(`Failed to open file in VSCode: ${error}`);
+
             return;
         }
 
         if (stderr) {
             logError(`stderr: ${stderr}`);
+            
             return;
         }
     });
