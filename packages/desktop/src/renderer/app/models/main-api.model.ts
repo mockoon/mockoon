@@ -72,6 +72,8 @@ export interface MainAPIModel {
   invoke(channel: 'APP_UNWATCH_ALL_FILE'): Promise<void>;
 
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
+  send(channel: 'OPEN_FILE', filePath: string): void;
+  send(channel: 'OPEN_FOLDER_IN_FINDER', filePath: string): void;
   send(
     channel:
       | 'APP_DISABLE_ENVIRONMENT_MENU_ENTRIES'

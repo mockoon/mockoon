@@ -604,11 +604,31 @@
                       <app-svg icon="clear"></app-svg>
                     </button>
                     <button
+                      type="button"
+                      id="browse-file"
                       class="btn btn-link"
                       (click)="browseFiles()"
                       ngbTooltip="Browse"
                     >
                       <app-svg icon="find_in_page"></app-svg>
+                    </button>
+                    <button
+                      type="button"
+                      id="open-file"
+                      class="btn btn-link"
+                      (click)="openFile()"
+                      ngbTooltip="Open File in Editor"
+                    >
+                      <app-svg icon="folder_move"></app-svg>
+                    </button>
+                    <button
+                      type="button"
+                      id="open-folder"
+                      class="btn btn-link"
+                      (click)="openFolder()"
+                      ngbTooltip="Open Folder"
+                    >
+                      <app-svg icon="folder_open"></app-svg>
                     </button>
                   </div>
 

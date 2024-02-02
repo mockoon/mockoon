@@ -17,9 +17,10 @@ IMPORTANT RULES:
 <!-- Check relevant boxes -->
 
 - [ ] data migration added (@mockoon/commons)
-- [ ] data migration automated tests added (@mockoon/commons)
-- [ ] CLI automated tests added (@mockoon/cli)
-- [ ] desktop automated tests added (@mockoon/desktop)
+- [ ] commons lib tests added (@mockoon/commons)
+- [ ] commons-server lib tests added (@mockoon/commons-server)
+- [ ] CLI tests added (@mockoon/cli)
+- [ ] desktop UI automated tests added (@mockoon/desktop)
 
 <!-- Link to the original issue -->
 
