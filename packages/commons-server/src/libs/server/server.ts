@@ -661,17 +661,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           );
 
           let content = cb.body;
-          if (cb.bodyType === BodyTypes.INLINE) {
-            content = TemplateParser(
-              false,
-              content || '',
-              this.environment,
-              this.processedDatabuckets,
-              this.globalVariables,
-              request,
-              response
-            );
-          } else if (cb.bodyType === BodyTypes.DATABUCKET && cb.databucketID) {
+          let templateParse = true;
+
+          if (cb.bodyType === BodyTypes.DATABUCKET && cb.databucketID) {
+            templateParse = false;
+
             const servedDatabucket = this.processedDatabuckets.find(
               (processedDatabucket) =>
                 processedDatabucket.id === cb.databucketID
@@ -708,6 +702,19 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             headers: {}
           };
           this.setHeaders(cb.headers || [], sendingHeaders, request);
+
+          // apply templating if specified
+          if (!routeResponse.disableTemplating && templateParse) {
+            content = TemplateParser(
+              false,
+              content || '',
+              this.environment,
+              this.processedDatabuckets,
+              this.globalVariables,
+              request,
+              response
+            );
+          }
 
           setTimeout(() => {
             fetch(url, {
@@ -1373,7 +1380,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) {
     res.text().then((respText) => {
       const reqHeaders = Object.keys(requestHeaders).map(
-        (k) => ({ key: k, value: reqHeaders[k] }) as Header
+        (k) => ({ key: k, value: requestHeaders[k] }) as Header
       );
       this.emit(
         'callback-invoked',
@@ -1548,6 +1555,58 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
+   * Returns list of matched databucket ids in the given text.
+   *
+   * @param data text to be searched for possible databucket ids
+   */
+  private captureReferredDatabucketNames(
+    text?: string
+  ): IterableIterator<RegExpMatchArray> | undefined {
+    return text?.matchAll(
+      new RegExp('{{2,3}[#(\\s\\w]*data [\'|"]{1}([^(\'|")]*)', 'g')
+    );
+  }
+
+  /**
+   * Find and returns all unique databucket ids specified in callbacks
+   * of the given response.
+   * To achieve null safety, this will always return an empty set if no callbacks
+   * have been defined.
+   *
+   * @param response
+   * @param environment
+   */
+  private findDatabucketIdsInCallbacks(
+    response: RouteResponse,
+    environment: Environment
+  ): Set<string> {
+    const result = new Set<string>();
+
+    if (response.callbacks && response.callbacks.length > 0) {
+      for (const invocation of response.callbacks) {
+        const cb = environment.callbacks.find(
+          (ref) => ref.uuid === invocation.uuid
+        );
+
+        if (!cb) {
+          continue;
+        }
+
+        const results = this.captureReferredDatabucketNames(cb.body);
+        [...(results || [])]
+          .map((match) => match[1])
+          .forEach((id) => result.add(id));
+
+        if (cb.databucketID) {
+          result.add(cb.databucketID);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
    * Generate the databuckets called with the data helper on route call
    * @param route
    * @param environment
@@ -1568,9 +1627,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     route.responses.forEach((response) => {
-      const results = response.body?.matchAll(
-        new RegExp('{{2,3}[#(\\s\\w]*data [\'|"]{1}([^(\'|")]*)', 'g')
-      );
+      const results = this.captureReferredDatabucketNames(response.body);
       const databucketIdsToParse = new Set(
         [...(results || [])].map((match) => match[1])
       );
@@ -1578,6 +1635,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       if (response.databucketID) {
         databucketIdsToParse.add(response.databucketID);
       }
+
+      // capture databucket ids in relevant callback definitions
+      this.findDatabucketIdsInCallbacks(response, environment).forEach((id) =>
+        databucketIdsToParse.add(id)
+      );
 
       if (databucketIdsToParse.size > 0) {
         let targetDatabucket: ProcessedDatabucket | undefined;
