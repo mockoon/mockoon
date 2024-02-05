@@ -266,8 +266,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   });
 
   ipcMain.on('OPEN_FILE', (event, filePath: string) => {
-    shell.openPath(filePath)
-    .then((error) => {
+    shell.openPath(filePath).then((error) => {
       if (error) {
         logError(`Failed to open file in default editor: ${error}`);
       }

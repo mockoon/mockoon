@@ -453,7 +453,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
 
     MainAPI.send(
       'OPEN_FILE',
-       activeRouteResponse?.filePath
+      activeRouteResponse?.filePath
     );
   }
 
@@ -465,7 +465,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
 
     MainAPI.send(
       'OPEN_FOLDER_IN_FINDER',
-       activeRouteResponse?.filePath
+      activeRouteResponse?.filePath
     );
   }
 
