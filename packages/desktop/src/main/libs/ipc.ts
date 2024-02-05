@@ -266,14 +266,16 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   });
 
   ipcMain.on('OPEN_FILE', (event, filePath: string) => {
-    shell.openPath(filePath).then((error) => {
-      if (error) {
-        logError(`Failed to open file in default editor: ${error}`);
-      }
-    })
-    .catch((error) => {
-      logError(`Error opening file in default editor: ${error}`);
-    });
+    shell
+      .openPath(filePath)
+      .then((error) => {
+        if (error) {
+          logError(`Failed to open file in default editor: ${error}`);
+        }
+      })
+      .catch((error) => {
+        logError(`Error opening file in default editor: ${error}`);
+      });
   });
 
   ipcMain.on('OPEN_FOLDER_IN_FINDER', (event, filePath: string) => {

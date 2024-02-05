@@ -451,10 +451,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public openFile() {
     const activeRouteResponse = this.store.getActiveRouteResponse();
 
-    MainAPI.send(
-      'OPEN_FILE',
-      activeRouteResponse?.filePath
-    );
+    MainAPI.send('OPEN_FILE', activeRouteResponse?.filePath);
   }
 
   /**
@@ -463,10 +460,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public openFolder() {
     const activeRouteResponse = this.store.getActiveRouteResponse();
 
-    MainAPI.send(
-      'OPEN_FOLDER_IN_FINDER',
-      activeRouteResponse?.filePath
-    );
+    MainAPI.send('OPEN_FOLDER_IN_FINDER', activeRouteResponse?.filePath);
   }
 
   /**
