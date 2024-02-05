@@ -446,7 +446,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Open file in VSCODE
+   * Open file in Default Editor
    */
   public openFile() {
     const activeRouteResponse = this.store.getActiveRouteResponse();
