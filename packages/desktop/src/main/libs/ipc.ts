@@ -1,6 +1,5 @@
 import { Environment, Environments } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
-import { exec } from 'child_process';
 import {
   BrowserWindow,
   Menu,
@@ -266,19 +265,15 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     ServerInstance.stop(environmentUUID);
   });
 
-  ipcMain.on('OPEN_FILE_IN_VSCODE', (event, filePath: string) => {
-    exec(`code -n "${filePath}"`, (error, stdout, stderr) => {
+  ipcMain.on('OPEN_FILE', (event, filePath: string) => {
+    shell.openPath(filePath)
+    .then((error) => {
       if (error) {
-        logError(`Failed to open file in VSCode: ${error}`);
-
-        return;
+        logError(`Failed to open file in default editor: ${error}`);
       }
-
-      if (stderr) {
-        logError(`stderr: ${stderr}`);
-
-        return;
-      }
+    })
+    .catch((error) => {
+      logError(`Error opening file in default editor: ${error}`);
     });
   });
 
