@@ -136,8 +136,11 @@ export class ResponseRulesInterpreter {
       value = this.request.header(rule.modifier);
     } else {
       if (rule.modifier) {
-        let path: string | string[] = rule.modifier;
-        value = getValueFromPath(this.targets[rule.target], path, undefined);
+        value = getValueFromPath(
+          this.targets[rule.target],
+          rule.modifier,
+          undefined
+        );
       } else if (!rule.modifier && rule.target === 'body') {
         value = this.targets.bodyRaw;
       }
