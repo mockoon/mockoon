@@ -68,19 +68,34 @@ module.exports.handler = mockoonServerless.awsHandler();
 
 `@mockoon/serverless` is using the [`serverless-http`](https://www.npmjs.com/package/serverless-http) package to wrap Mockoon's Express.js API.
 
-### Firebase Functions
+### Firebase/GCP Functions
 
 To use Mockoon Serverless in a Firebase Function, you can use the following code:
 
 ```javascript
+const {onRequest} = require("firebase-functions/v2/https");
 const mockoon = require('@mockoon/serverless');
 
 // Load the Mockoon Environment object
 const mockEnv = require('./datafile.json');
 
-const app = new mockoon.MockoonServerless(mockEnv);
+const app = new mockoon.MockoonServerless(mockEnv).firebaseApp();
 
-exports.app = functions.https.onRequest(app);
+exports.app = onRequest(app);
+```
+
+As Firebase Functions uses GCP Functions underhood, a sighly different approach can be used with the [functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs):
+
+```javascript
+const functions = require('@google-cloud/functions-framework');
+const mockoon = require('@mockoon/serverless');
+
+// Load the Mockoon Environment object
+const mockEnv = require('./datafile.json');
+
+const app = new mockoon.MockoonServerless(mockEnv).firebaseApp();
+
+functions.http('app', app);
 ```
 
 ### Netlify Functions
