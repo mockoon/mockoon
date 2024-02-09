@@ -267,8 +267,28 @@ describe('Data helpers', () => {
         {} as any
       );
       expect(parseResult).to.be.equal(
-        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]["value"]'
+        '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]value'
       );
+    });
+    it('should return nothing if there are no properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{data 'jsonpathDatabucket' '$.data1'}}",
+        {} as any,
+        [
+          {
+            name: 'jsonpathDatabucket',
+            id: 'de69',
+            value: {
+              data: 'value'
+            },
+            parsed: true
+          }
+        ],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
     });
   });
 
@@ -615,6 +635,26 @@ describe('Data helpers', () => {
       expect(parseResult).to.be.equal(
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
+    });
+    it('should return nothing if there are no properties matching jsonpath expression', () => {
+      const parseResult = TemplateParser(
+        false,
+        "{{dataRaw 'jsonpathDatabucket' '$.data1'}}",
+        {} as any,
+        [
+          {
+            name: 'jsonpathDatabucket',
+            id: 'de69',
+            value: {
+              data: 'value'
+            },
+            parsed: true
+          }
+        ],
+        {},
+        {} as any
+      );
+      expect(parseResult).to.be.equal('');
     });
   });
 });
