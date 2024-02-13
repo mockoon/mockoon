@@ -258,7 +258,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run Mockoon CLI
-        uses: mockoon/cli-action@v1
+        uses: mockoon/cli-action@v2
         with:
           # Mockoon CLI version, default to 'latest'
           version: 'latest'
