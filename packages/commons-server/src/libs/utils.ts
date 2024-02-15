@@ -395,8 +395,9 @@ export const getValueFromPath = (
   ) {
     let foundValue: any;
 
+    // Added wrap = false (Check https://github.com/mockoon/mockoon/issues/1297)
     if (path.startsWith('$')) {
-      foundValue = JSONPath({ json: data, path: path });
+      foundValue = JSONPath({ json: data, path: path, wrap: false });
     } else {
       foundValue = objectGet(data, convertPathToArray(path));
     }
