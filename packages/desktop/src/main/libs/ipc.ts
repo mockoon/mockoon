@@ -265,9 +265,16 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     ServerInstance.stop(environmentUUID);
   });
 
-  ipcMain.on('OPEN_FILE', (event, filePath: string) => {
+  ipcMain.on('OPEN_FILE', (event, filePath: string, envPath: string) => {
+    const envDirectory = pathParse(envPath).dir
+    const fileDirectory = pathParse(filePath).dir.replace(envDirectory, '')
+    const fileName = pathParse(filePath).name
+    const fileExt = pathParse(filePath).ext
+
+    const path = envDirectory + fileDirectory + '/' + fileName + fileExt
+    
     shell
-      .openPath(filePath)
+      .openPath(path)
       .then((error) => {
         if (error) {
           logError(`Failed to open file in default editor: ${error}`);
@@ -278,8 +285,17 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
       });
   });
 
-  ipcMain.on('OPEN_FOLDER_IN_FINDER', (event, filePath: string) => {
-    shell.showItemInFolder(filePath);
+  ipcMain.on('OPEN_FOLDER_IN_FINDER', (event, filePath: string, envPath: string) => {
+    const envDirectory = pathParse(envPath).dir
+    const fileDirectory = pathParse(filePath).dir.replace(envDirectory, '')
+    const fileName = pathParse(filePath).name
+    const fileExt = pathParse(filePath).ext
+
+    const path = envDirectory + fileDirectory + '/' + fileName + fileExt
+
+    logInfo(path);
+
+    shell.showItemInFolder(path);
   });
 };
 
