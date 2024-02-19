@@ -66,6 +66,26 @@ const getDialogDefaultPath = () => {
   return getDataPath();
 };
 
+const makeFullFilePath = (filePath: string, envPath: string): string => {
+  const envDirectory = pathParse(envPath).dir;
+
+  let fileDirectory = pathParse(filePath).dir.replace(envDirectory, '');
+  if (fileDirectory.startsWith('/') == false) {
+    fileDirectory = '/' + fileDirectory;
+  }
+
+  if (fileDirectory.endsWith('/') == false) {
+    fileDirectory = fileDirectory + '/';
+  }
+
+  const fileName = pathParse(filePath).name;
+  const fileExt = pathParse(filePath).ext;
+
+  const path = envDirectory + fileDirectory + fileName + fileExt;
+
+  return path;
+};
+
 export const initIPCListeners = (mainWindow: BrowserWindow) => {
   // Quit requested by renderer (when waiting for save to finish)
   ipcMain.on('APP_QUIT', () => {
@@ -266,13 +286,8 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   });
 
   ipcMain.on('OPEN_FILE', (event, filePath: string, envPath: string) => {
-    const envDirectory = pathParse(envPath).dir
-    const fileDirectory = pathParse(filePath).dir.replace(envDirectory, '')
-    const fileName = pathParse(filePath).name
-    const fileExt = pathParse(filePath).ext
+    const path = makeFullFilePath(filePath, envPath);
 
-    const path = envDirectory + fileDirectory + '/' + fileName + fileExt
-    
     shell
       .openPath(path)
       .then((error) => {
@@ -285,18 +300,13 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
       });
   });
 
-  ipcMain.on('OPEN_FOLDER_IN_FINDER', (event, filePath: string, envPath: string) => {
-    const envDirectory = pathParse(envPath).dir
-    const fileDirectory = pathParse(filePath).dir.replace(envDirectory, '')
-    const fileName = pathParse(filePath).name
-    const fileExt = pathParse(filePath).ext
-
-    const path = envDirectory + fileDirectory + '/' + fileName + fileExt
-
-    logInfo(path);
-
-    shell.showItemInFolder(path);
-  });
+  ipcMain.on(
+    'OPEN_FOLDER_IN_FINDER',
+    (event, filePath: string, envPath: string) => {
+      const path = makeFullFilePath(filePath, envPath);
+      shell.showItemInFolder(path);
+    }
+  );
 };
 
 /**

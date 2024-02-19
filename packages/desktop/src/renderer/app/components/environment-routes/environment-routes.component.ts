@@ -451,10 +451,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public openFile() {
     const filePath = this.store.getActiveRouteResponse().filePath;
 
-    const environmentUUID = this.store.get('activeEnvironmentUUID')
+    const environmentUUID = this.store.get('activeEnvironmentUUID');
     const environment = this.store.getEnvironmentByUUID(environmentUUID);
     const environmentPath = this.store.getEnvironmentPath(environment.uuid);
-
 
     MainAPI.send('OPEN_FILE', filePath, environmentPath);
   }
@@ -465,7 +464,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public async openFolder() {
     const filePath = this.store.getActiveRouteResponse().filePath;
 
-    const environmentUUID = this.store.get('activeEnvironmentUUID')
+    const environmentUUID = this.store.get('activeEnvironmentUUID');
     const environment = this.store.getEnvironmentByUUID(environmentUUID);
     const environmentPath = this.store.getEnvironmentPath(environment.uuid);
 
