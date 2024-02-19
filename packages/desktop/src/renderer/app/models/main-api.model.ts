@@ -73,7 +73,11 @@ export interface MainAPIModel {
 
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
   send(channel: 'OPEN_FILE', filePath: string, envPath: string): void;
-  send(channel: 'OPEN_FOLDER_IN_FINDER', filePath: string, envPath: string): void;
+  send(
+    channel: 'OPEN_FOLDER_IN_FINDER',
+    filePath: string,
+    envPath: string
+  ): void;
   send(
     channel:
       | 'APP_DISABLE_ENVIRONMENT_MENU_ENTRIES'
