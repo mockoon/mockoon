@@ -17,6 +17,7 @@ import { Config } from '../config';
 import { commonFlags } from '../constants/command.constants';
 import { parseDataFiles } from '../libs/data';
 import { getDirname, transformEnvironmentName } from '../libs/utils';
+import { CLIMessages } from '../constants/cli-messages.constants';
 
 export default class Start extends Command {
   public static description = 'Start one or more mock API';
@@ -71,6 +72,13 @@ export default class Start extends Command {
       char: 's',
       description: 'Number for the Faker.js seed (e.g. 1234)',
       default: undefined
+    }),
+    'env-prefix': Flags.string({
+      char: 'x',
+      description:
+        'Prefix of environment variables available at runtime (default: "MOCKOON_")',
+      multiple: false,
+      default: 'MOCKOON_'
     })
   };
 
@@ -87,6 +95,8 @@ export default class Start extends Command {
         'Invalid Faker.js locale. See documentation for supported locales (https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md#fakerjs-options).'
       );
     }
+
+    await this.validateEnvPrefix(userFlags['env-prefix']);
 
     try {
       const parsedEnvironments = await parseDataFiles(
@@ -117,7 +127,8 @@ export default class Start extends Command {
           fakerOptions: {
             locale: userFlags['faker-locale'] as FakerAvailableLocales,
             seed: userFlags['faker-seed']
-          }
+          },
+          envPrefix: userFlags['env-prefix']
         });
       }
     } catch (error: any) {
@@ -135,6 +146,7 @@ export default class Start extends Command {
       locale?: FakerAvailableLocales;
       seed?: number | undefined;
     };
+    envPrefix: string;
   }) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
     const server = new MockoonServer(parameters.environment, {
@@ -202,4 +214,10 @@ export default class Start extends Command {
 
     server.start();
   };
+
+  private async validateEnvPrefix(prefix: string) {
+    if (!prefix) {
+      this.error(format(CLIMessages.PREFIX_INVALID_ERROR));
+    }
+  }
 }

@@ -20,6 +20,7 @@ export const TemplateParser = function (
   shouldOmitDataHelper: boolean,
   content: string,
   environment: Environment,
+  envPrefix: string,
   processedDatabuckets: ProcessedDatabucket[],
   globalVariables: Record<string, any>,
   request?: Request,
