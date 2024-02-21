@@ -1,26 +1,28 @@
+import { fromSafeString } from '../utils';
+
 export const systemHelperNames: (keyof ReturnType<typeof SystemHelpers>)[] = [
-  'env'
+  'getEnvVar'
 ];
 
-export const SystemHelpers = function (options: { envPrefix: string }) {
+export const SystemHelpers = function (options: { prefix: string }) {
   return {
     // get environment variable
-    env: function (variableName: string, defaultValue: string) {
-      if (typeof defaultValue === 'object') {
-        defaultValue = '';
+    getEnvVar: function (...args: any[]) {
+      // remove last item (handlebars options argument)
+      const parameters = args.slice(0, -1);
+
+      if (parameters.length <= 0) {
+        return;
       }
 
-      if (typeof variableName === 'object') {
-        return defaultValue;
+      let varName = String(fromSafeString(parameters[0]));
+      const defaultValue = fromSafeString(parameters[1]) ?? '';
+
+      if (!varName.startsWith(options.prefix)) {
+        varName = options.prefix + varName;
       }
 
-      if (!variableName.startsWith(options.envPrefix)) {
-        return '';
-      }
-
-      const value = process.env[variableName] ?? defaultValue;
-
-      return value;
+      return process.env[varName] ?? defaultValue;
     }
   };
 };

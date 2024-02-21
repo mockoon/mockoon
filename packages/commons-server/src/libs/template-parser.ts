@@ -7,6 +7,7 @@ import { GlobalHelpers } from './templating-helpers/global-helpers';
 import { Helpers } from './templating-helpers/helpers';
 import { RequestHelpers } from './templating-helpers/request-helpers';
 import { ResponseHelpers } from './templating-helpers/response-helpers';
+import { SystemHelpers } from './templating-helpers/system-helpers';
 
 /**
  * Parse a content with Handlebars
@@ -16,20 +17,30 @@ import { ResponseHelpers } from './templating-helpers/response-helpers';
  * @param processedDatabuckets
  * @param request
  */
-export const TemplateParser = function (
-  shouldOmitDataHelper: boolean,
-  content: string,
-  environment: Environment,
-  envPrefix: string,
-  processedDatabuckets: ProcessedDatabucket[],
-  globalVariables: Record<string, any>,
-  request?: Request,
-  response?: Response
-): string {
+export const TemplateParser = function ({
+  shouldOmitDataHelper,
+  content,
+  environment,
+  processedDatabuckets,
+  globalVariables,
+  request,
+  response,
+  envVarsPrefix
+}: {
+  shouldOmitDataHelper: boolean;
+  content: string;
+  environment: Environment;
+  processedDatabuckets: ProcessedDatabucket[];
+  globalVariables: Record<string, any>;
+  request?: Request;
+  response?: Response;
+  envVarsPrefix: string;
+}): string {
   let helpers = {
     ...FakerWrapper,
     ...Helpers,
-    ...GlobalHelpers(globalVariables)
+    ...GlobalHelpers(globalVariables),
+    ...SystemHelpers({ prefix: envVarsPrefix })
   };
 
   if (!shouldOmitDataHelper) {

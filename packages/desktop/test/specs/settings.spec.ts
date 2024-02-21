@@ -1,3 +1,4 @@
+import { defaultEnvironmentVariablesPrefix } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { sep } from 'path';
 import environments from '../libs/environments';
@@ -281,6 +282,56 @@ describe('Settings', () => {
         './tmp/storage/settings.json',
         'startEnvironmentsOnLoad',
         true
+      );
+    });
+  });
+
+  describe('Environment variables prefix', () => {
+    it('should verify default prefix', async () => {
+      await utils.waitForAutosave();
+
+      await file.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'envVarsPrefix',
+        defaultEnvironmentVariablesPrefix
+      );
+    });
+
+    it('should change env var prefix', async () => {
+      await settings.open();
+      await settings.setSettingValue('settings-env-vars-prefix', 'PREFIX_');
+
+      await modals.close();
+
+      await utils.waitForAutosave();
+      await file.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'envVarsPrefix',
+        'PREFIX_'
+      );
+    });
+
+    it('should remove prefix and allow empty', async () => {
+      await settings.open();
+      await settings.clearSettingValue('settings-env-vars-prefix');
+
+      await modals.close();
+
+      await utils.waitForAutosave();
+      await file.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'envVarsPrefix',
+        ''
+      );
+
+      // reload to verify schema allows empty string
+      await browser.reloadSession();
+
+      await utils.waitForAutosave();
+      await file.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'envVarsPrefix',
+        ''
       );
     });
   });

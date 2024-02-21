@@ -1,4 +1,8 @@
-import { Environment, FakerAvailableLocales } from '@mockoon/commons';
+import {
+  Environment,
+  FakerAvailableLocales,
+  defaultEnvironmentVariablesPrefix
+} from '@mockoon/commons';
 import {
   MockoonServer,
   createLoggerInstance,
@@ -26,10 +30,16 @@ export class MockoonServerless {
         // Number for the Faker.js seed (e.g. 1234)
         seed?: number;
       };
+
+      /**
+       * Environment variables prefix
+       */
+      envVarsPrefix: string;
     } = {
       logTransaction: false,
       disabledRoutes: [],
-      fakerOptions: {}
+      fakerOptions: {},
+      envVarsPrefix: defaultEnvironmentVariablesPrefix
     }
   ) {
     if (!environment) {
@@ -47,7 +57,8 @@ export class MockoonServerless {
     const logger = createLoggerInstance();
     const server = new MockoonServer(this.environment, {
       disabledRoutes: this.options.disabledRoutes,
-      fakerOptions: this.options.fakerOptions
+      fakerOptions: this.options.fakerOptions,
+      envVarsPrefix: this.options.envVarsPrefix
     });
     listenServerEvents(
       server,

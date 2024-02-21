@@ -31,3 +31,5 @@ export const MimeTypesWithTemplating = [
 ];
 
 export const FileExtensionsWithTemplating = ['.handlebars'];
+
+export const defaultEnvironmentVariablesPrefix = 'MOCKOON_';

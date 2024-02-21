@@ -88,7 +88,8 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
       storagePrettyPrint: [SettingsDefault.storagePrettyPrint],
       enableTelemetry: [SettingsDefault.enableTelemetry],
       startEnvironmentsOnLoad: [SettingsDefault.startEnvironmentsOnLoad],
-      logTransactions: [SettingsDefault.logTransactions]
+      logTransactions: [SettingsDefault.logTransactions],
+      envVarsPrefix: [SettingsDefault.envVarsPrefix]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -130,7 +131,8 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
               storagePrettyPrint: settings.storagePrettyPrint,
               enableTelemetry: settings.enableTelemetry,
               startEnvironmentsOnLoad: settings.startEnvironmentsOnLoad,
-              logTransactions: settings.logTransactions
+              logTransactions: settings.logTransactions,
+              envVarsPrefix: settings.envVarsPrefix
             },
             { emitEvent: false }
           );

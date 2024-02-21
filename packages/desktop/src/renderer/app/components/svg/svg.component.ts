@@ -31,6 +31,7 @@ export class SvgComponent {
   public size = '16';
   @Input()
   public icon:
+    | 'list'
     | 'record'
     | 'dots'
     | 'magic'
