@@ -73,7 +73,7 @@ module.exports.handler = mockoonServerless.awsHandler();
 To use Mockoon Serverless in a Firebase Function, you can use the following code:
 
 ```javascript
-const {onRequest} = require("firebase-functions/v2/https");
+const { onRequest } = require('firebase-functions/v2/https');
 const mockoon = require('@mockoon/serverless');
 
 // Load the Mockoon Environment object
@@ -142,12 +142,13 @@ After deploying to Netlify, any request starting with `/api/*` (e.g. `https://AP
 
 The `MockoonServerless` class accepts an optional `options` object as a second parameter. The following options are available:
 
-| Option name      | Type       | Default value | Description                                                          |
-| ---------------- | ---------- | ------------- | -------------------------------------------------------------------- |
-| `logTransaction` | `boolean`  | `false`       | [Enable full transaction logging](#transaction-logging) (see below). |
-| `disabledRoutes` | `string[]` | `[]`          | Disable route(s) by UUID(s) or keyword(s) in route path (see [below](#fakerjs-options)). |
-| `fakerOptions.locale` | `string` | `[]`          | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.) |
-| `fakerOptions.seed` | `number` | `[]`          | Number for the Faker.js seed (e.g. 1234) |
+| Option name           | Type       | Default value | Description                                                                                                                  |
+| --------------------- | ---------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `logTransaction`      | `boolean`  | `false`       | [Enable full transaction logging](#transaction-logging) (see below).                                                         |
+| `disabledRoutes`      | `string[]` | `[]`          | Disable route(s) by UUID(s) or keyword(s) in route path (see [below](#fakerjs-options)).                                     |
+| `fakerOptions.locale` | `string`   | `[]`          | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)                                                    |
+| `fakerOptions.seed`   | `number`   | `[]`          | Number for the Faker.js seed (e.g. 1234)                                                                                     |
+| `envVarsPrefix`       | `string`   | `MOCKOON_`    | [Environment variables prefix](https://mockoon.com/docs/latest/variables/environment-variables/). Leave empty to disable it. |
 
 Example:
 
@@ -159,7 +160,8 @@ const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
   fakerOptions: {
     locale: 'en_GB',
     seed: 1234
-  }
+  },
+  envVarsPrefix: 'CUSTOM_PREFIX_'
 });
 ```
 

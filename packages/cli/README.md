@@ -134,6 +134,7 @@ OPTIONS
   -X, --disable-log-to-file   Disable logging to file
   -e, --disable-routes        Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash)
   -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
+  -x, --env-vars-prefix       Prefix for environment variables (default: 'MOCKOON_')
   -h, --help                  Show CLI help
 
 EXAMPLES
@@ -148,6 +149,12 @@ EXAMPLES
 
 - **Locale**: You can set up Faker.js locale with the `--faker-locale` flag. If not provided, Faker.js will use the default locale: `en`. For a list of currently supported locales, you can check the [supported locales list](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/faker.model.ts#L1) in Mockoon's commons library. You can also check [Faker.js locales list](https://fakerjs.dev/guide/localization.html#available-locales) for more information (⚠️ Some locales may not yet be implemented in Mockoon).
 - **Seed**: You can set up Faker.js seed with the `--faker-seed` flag. If not provided, Faker.js will not use a seed. By providing a seed value, you can generate repeatable sequences of fake data. Using seeding will not always generate the same value but rather a predictable sequence.
+
+#### Customize the environment variables prefix
+
+You can access environment variables in your routes' responses by using the [`{{getEnvVar 'VARIABLE_NAME'}}` templating helper](https://mockoon.com/docs/latest/variables/environment-variables/). By default, only the environment variables prefixed with `MOCKOON_` are available, for example, `MOCKOON_MY_VARIABLE`.
+
+You can customize the prefix with the `--env-vars-prefix` flag. For example, if you set `--env-vars-prefix CUSTOM_PREFIX_`, you will be able to access the environment variable `CUSTOM_PREFIX_MY_VARIABLE` in your routes' responses. To disable the prefix, set it to an empty string: `--env-vars-prefix ''` or `--env-vars-prefix=`.
 
 ### Dockerize command
 
