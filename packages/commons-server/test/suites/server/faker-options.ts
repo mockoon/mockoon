@@ -14,7 +14,8 @@ describe('Server should follow Faker.js options', () => {
       fakerOptions: {
         seed: 1,
         locale: 'en_GB'
-      }
+      },
+      envVarsPrefix: ''
     });
     testServer.start();
     request = AssertRequest('http://localhost:3000');

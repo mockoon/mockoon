@@ -9,7 +9,7 @@ describe('Export command', () => {
       .command([
         'export',
         '--input',
-        './test/data/envs/mock1.json',
+        './test/data/envs/mock-export.json',
         '--output',
         './tmp/export-file.json'
       ])
@@ -20,7 +20,7 @@ describe('Export command', () => {
         const jsonFile = await fs.readFile('./tmp/export-file.json');
         const jsonFileContent = jsonFile.toString();
         const expectedFile = await fs.readFile(
-          './test/data/openapi/mock1-exported.json'
+          './test/data/openapi/mock-exported.json'
         );
         const expectedContent = expectedFile.toString();
 
@@ -34,7 +34,7 @@ describe('Export command', () => {
       .command([
         'export',
         '--input',
-        './test/data/envs/mock1.json',
+        './test/data/envs/mock-export.json',
         '--output',
         './tmp/export-file-prettified.json',
         '--prettify'
@@ -46,7 +46,7 @@ describe('Export command', () => {
         const jsonFile = await fs.readFile('./tmp/export-file-prettified.json');
         const jsonFileContent = jsonFile.toString();
         const expectedFile = await fs.readFile(
-          './test/data/openapi/mock1-exported-prettified.json'
+          './test/data/openapi/mock-exported-prettified.json'
         );
         const expectedContent = expectedFile.toString();
 
@@ -60,7 +60,7 @@ describe('Export command', () => {
       .command([
         'export',
         '-i',
-        './test/data/envs/mock1.json',
+        './test/data/envs/mock-export.json',
         '-o',
         './tmp/export-file-prettified-alias.json',
         '-p'
@@ -74,7 +74,7 @@ describe('Export command', () => {
         );
         const jsonFileContent = jsonFile.toString();
         const expectedFile = await fs.readFile(
-          './test/data/openapi/mock1-exported-prettified.json'
+          './test/data/openapi/mock-exported-prettified.json'
         );
         const expectedContent = expectedFile.toString();
 
@@ -88,7 +88,7 @@ describe('Export command', () => {
       .command([
         'export',
         '--input',
-        'https://raw.githubusercontent.com/mockoon/mockoon/main/packages/cli/test/data/envs/mock1.json',
+        'https://raw.githubusercontent.com/mockoon/mockoon/main/packages/cli/test/data/envs/mock-export.json',
         '--output',
         './tmp/export-url.json'
       ])
@@ -99,7 +99,7 @@ describe('Export command', () => {
         const jsonFile = await fs.readFile('./tmp/export-url.json');
         const jsonFileContent = jsonFile.toString();
         const expectedFile = await fs.readFile(
-          './test/data/openapi/mock1-exported.json'
+          './test/data/openapi/mock-exported.json'
         );
         const expectedContent = expectedFile.toString();
 
@@ -113,7 +113,7 @@ describe('Export command', () => {
       .command([
         'export',
         '--input',
-        'https://raw.githubusercontent.com/mockoon/mockoon/main/packages/cli/test/data/envs/mock1.json',
+        'https://raw.githubusercontent.com/mockoon/mockoon/main/packages/cli/test/data/envs/mock-export.json',
         '--output',
         './tmp/export-url-prettified.json',
         '--prettify'
@@ -125,7 +125,7 @@ describe('Export command', () => {
         const jsonFile = await fs.readFile('./tmp/export-url-prettified.json');
         const jsonFileContent = jsonFile.toString();
         const expectedFile = await fs.readFile(
-          './test/data/openapi/mock1-exported-prettified.json'
+          './test/data/openapi/mock-exported-prettified.json'
         );
         const expectedContent = expectedFile.toString();
 

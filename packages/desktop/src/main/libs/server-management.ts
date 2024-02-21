@@ -47,7 +47,8 @@ export class ServerInstance {
       fakerOptions: {
         seed: getSettings().fakerSeed,
         locale: getSettings().fakerLocale
-      }
+      },
+      envVarsPrefix: getSettings().envVarsPrefix
     });
 
     listenServerEvents(
