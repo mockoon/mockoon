@@ -10,7 +10,8 @@ type SettingNames =
   | 'settings-log-max-count'
   | 'settings-enable-telemetry'
   | 'settings-faker-locale'
-  | 'start-environments-on-load';
+  | 'start-environments-on-load'
+  | 'settings-env-vars-prefix';
 
 class Settings {
   public get fileWatchingInputGroup() {
@@ -49,6 +50,11 @@ class Settings {
   ): Promise<void> {
     const setting = this.getSettingInput(settingName);
     await utils.setElementValue(setting, value);
+  }
+
+  public async clearSettingValue(settingName: SettingNames): Promise<void> {
+    const setting = this.getSettingInput(settingName);
+    await utils.clearElementValue(setting);
   }
 
   public async setDropdownSettingValue(

@@ -28,4 +28,5 @@ export type Settings = {
   dialogWorkingDir: string;
   startEnvironmentsOnLoad: boolean;
   logTransactions: boolean;
+  envVarsPrefix: string;
 };

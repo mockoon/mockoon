@@ -2,7 +2,8 @@ import {
   Environment,
   FakerAvailableLocales,
   FakerAvailableLocalesList,
-  ServerErrorCodes
+  ServerErrorCodes,
+  defaultEnvironmentVariablesPrefix
 } from '@mockoon/commons';
 import {
   MockoonServer,
@@ -71,6 +72,12 @@ export default class Start extends Command {
       char: 's',
       description: 'Number for the Faker.js seed (e.g. 1234)',
       default: undefined
+    }),
+    'env-vars-prefix': Flags.string({
+      char: 'x',
+      description: `Prefix of environment variables available at runtime (default: "${defaultEnvironmentVariablesPrefix}")`,
+      multiple: false,
+      default: defaultEnvironmentVariablesPrefix
     })
   };
 
@@ -117,7 +124,8 @@ export default class Start extends Command {
           fakerOptions: {
             locale: userFlags['faker-locale'] as FakerAvailableLocales,
             seed: userFlags['faker-seed']
-          }
+          },
+          envVarsPrefix: userFlags['env-vars-prefix']
         });
       }
     } catch (error: any) {
@@ -135,12 +143,14 @@ export default class Start extends Command {
       locale?: FakerAvailableLocales;
       seed?: number | undefined;
     };
+    envVarsPrefix: string;
   }) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
     const server = new MockoonServer(parameters.environment, {
       environmentDirectory: parameters.environmentDir,
       disabledRoutes: parameters.disabledRoutes,
-      fakerOptions: parameters.fakerOptions
+      fakerOptions: parameters.fakerOptions,
+      envVarsPrefix: parameters.envVarsPrefix
     });
 
     listenServerEvents(

@@ -1822,6 +1822,28 @@ const documentationTopics: {
         fileName: 'link-callback-response.png'
       }
     ]
+  },
+  {
+    enabled: true,
+    folder: 'variables/environment-variables',
+    screenshots: [
+      {
+        tasks: async () => {
+          await settings.open();
+        },
+        get highlightedTarget() {
+          return $('app-title-separator[heading="Environment variables"]');
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 5, right: 5, bottom: 70, left: 5 },
+        screenshotPosition: {},
+        screeenshotGaps: { top: 30, left: 30, bottom: 30, right: 30 },
+        fileName: 'settings-environment-variables-prefix.png'
+      }
+    ]
   }
 ];
 

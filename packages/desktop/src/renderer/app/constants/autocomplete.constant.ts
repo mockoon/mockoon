@@ -62,6 +62,7 @@ export const helpersAutocompletions = [
     value: "{{setGlobalVar 'varname' 'value'}}",
     meta: ''
   },
+  { caption: 'getEnvVar', value: "{{getEnvVar 'varname'}}", meta: '' },
   { caption: 'includes', value: '{{includes string search}}', meta: '' },
   { caption: 'substr', value: '{{substr string startIndex length}}', meta: '' },
   { caption: 'lowercase', value: '{{lowercase string}}', meta: '' },

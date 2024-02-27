@@ -15,123 +15,134 @@ const requestMock = {
 describe('Request helpers', () => {
   describe('Helper: body', () => {
     it('should return number without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: 1 } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop1: 1 } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return boolean value without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: true } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop1: true } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('true');
     });
 
     it('should return null value without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: null } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop1: null } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('null');
     });
 
     it('should always return array as JSON string', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop1' undefined false}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: ['first', 'second'] } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop1' undefined false}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop1: ['first', 'second'] } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('["first","second"]');
     });
 
     it('should always return object as JSON string', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop1' undefined false}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: { key: 'value' } } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop1' undefined false}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop1: { key: 'value' } } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('{"key":"value"}');
     });
 
     it('should return default value enclosed in quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop2' 'default' true}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: 'test' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop2' 'default' true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop1: 'test' } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('"default"');
     });
 
     it('should return string enclosed in quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: 'test' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop1: 'test' } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('"test"');
     });
 
     it('should not return string enclosed in quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop1'}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: 'test' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop1'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop1: 'test' } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('test');
     });
 
     it('should escape newlines and quotes in string', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body 'prop1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop1: 'This \n is a "message" with quotes.' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body 'prop1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          body: { prop1: 'This \n is a "message" with quotes.' }
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal(
         '"This \\n is a \\"message\\" with quotes."'
       );
     });
 
     it('should return the enumerated objects when body contains a root array and a number is passed as path', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{#repeat 2}}{{body @index}}{{/repeat}}',
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{#repeat 2}}{{body @index}}{{/repeat}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: [
             {
               id: 1,
@@ -142,21 +153,23 @@ describe('Request helpers', () => {
               name: 'Doe'
             }
           ]
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal(
         `{"id":1,"name":"John"},${EOL}{"id":2,"name":"Doe"}${EOL}`
       );
     });
 
     it('should return the property with dots value', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body '0.deep.property\\.with\\.dots'}}{{body '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          "{{body '0.deep.property\\.with\\.dots'}}{{body '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: [
             {
               deep: {
@@ -171,19 +184,21 @@ describe('Request helpers', () => {
               }
             }
           ]
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('val1val2');
     });
 
     it('should return the properties matching jsonpath expression', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body '$.[?(@property.match(/attribute\\.1.*/))]'}}{{body '$.attributes.sub_attributes.*'}}{{body '$.attributes.[attribute.with.dot].name'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          "{{body '$.[?(@property.match(/attribute\\.1.*/))]'}}{{body '$.attributes.sub_attributes.*'}}{{body '$.attributes.[attribute.with.dot].name'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: {
             'attribute.1.value.1': 'attribute-value-1',
             'attribute.1.value.2': 'attribute-value-2',
@@ -198,159 +213,171 @@ describe('Request helpers', () => {
               }
             }
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal(
         '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]value'
       );
     });
 
     it('should return default if there are no properties matching jsonpath expression', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{body '$.data1' '\"Default\"'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{body '$.data1' '\"Default\"'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: {
             data: 'value'
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('"Default"');
     });
   });
 
   describe('Helper: bodyRaw', () => {
     it('should should return the number without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{bodyRaw 'prop'}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop: 1 } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{bodyRaw 'prop'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop: 1 } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return an array without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{bodyRaw 'prop'}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop: [1, 2, 3] } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{bodyRaw 'prop'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop: [1, 2, 3] } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('1,2,3');
     });
 
     it('should return a boolean without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{bodyRaw 'prop'}}",
-        {} as any,
-        [],
-        {},
-        { body: { prop: true } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{bodyRaw 'prop'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { prop: true } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('true');
     });
 
     it('should be usable with a each', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{#each (bodyRaw 'myList')}}dolphin{{/each}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{#each (bodyRaw 'myList')}}dolphin{{/each}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: {
             prop: '1',
             myList: [1, 2, 3],
             boolean: true
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('dolphindolphindolphin');
     });
 
     it('should be usable within a if clause', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{#if (bodyRaw 'boolean')}}dolphin{{/if}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{#if (bodyRaw 'boolean')}}dolphin{{/if}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: {
             prop: '1',
             myList: [1, 2, 3],
             boolean: true
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('dolphin');
     });
 
     it('should return the default value in a each when no request body', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{#each (bodyRaw 'dolphin' (array 1 2 3))}}dolphin{{/each}}",
-        {} as any,
-        [],
-        {},
-        {} as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{#each (bodyRaw 'dolphin' (array 1 2 3))}}dolphin{{/each}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('dolphindolphindolphin');
     });
 
     it('should return the default value in a if clause when no request body', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{#if (bodyRaw 'dolphin' true)}}dolphin{{/if}}",
-        {} as any,
-        [],
-        {},
-        {} as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{#if (bodyRaw 'dolphin' true)}}dolphin{{/if}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('dolphin');
     });
 
     it('should return the enumerated strings when body contains a root array and no path is provided', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{#each (bodyRaw)}}{{this}}{{/each}}',
-        {} as any,
-        [],
-        {},
-        { body: ['string1', 'string2'] } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{#each (bodyRaw)}}{{this}}{{/each}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: ['string1', 'string2'] } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('string1string2');
     });
 
     it('should return the enumerated strings when body contains a root array and a number is passed as path', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{#repeat 2}}{{bodyRaw @index}}{{/repeat}}',
-        {} as any,
-        [],
-        {},
-        { body: ['string1', 'string2'] } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{#repeat 2}}{{bodyRaw @index}}{{/repeat}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: ['string1', 'string2'] } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal(`string1,${EOL}string2${EOL}`);
     });
 
     it('should return the property with dots value', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{bodyRaw '0.deep.property\\.with\\.dots'}}{{bodyRaw '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          "{{bodyRaw '0.deep.property\\.with\\.dots'}}{{bodyRaw '0.deep.deeper.another\\.property\\.with\\.dots.0.final\\.property\\.with\\.dots'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: [
             {
               deep: {
@@ -365,19 +392,21 @@ describe('Request helpers', () => {
               }
             }
           ]
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('val1val2');
     });
 
     it('should return the properties matching jsonpath expression', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{bodyRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{bodyRaw '$.attributes.sub_attributes.*'}}{{bodyRaw '$.attributes.[attribute.with.dot].name'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          "{{bodyRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{bodyRaw '$.attributes.sub_attributes.*'}}{{bodyRaw '$.attributes.[attribute.with.dot].name'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: {
             'attribute.1.value.1': 'attribute-value-1',
             'attribute.1.value.2': 'attribute-value-2',
@@ -392,157 +421,172 @@ describe('Request helpers', () => {
               }
             }
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal(
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
     });
     it('should return default if there are no properties matching jsonpath expression', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{bodyRaw '$.data1' 'Default'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{bodyRaw '$.data1' 'Default'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           body: {
             data: 'value'
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('Default');
     });
   });
 
   describe('Helper: queryParam', () => {
     it('should return number without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { query: { param1: 1 } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { param1: 1 } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('1');
     });
 
     it('should return boolean value without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { query: { param1: true } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { param1: true } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('true');
     });
 
     it('should return null value without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { query: { param1: null } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { param1: null } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('null');
     });
 
     it('should always return array as JSON string', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' undefined false}}",
-        {} as any,
-        [],
-        {},
-        { query: { param1: ['first', 'second'] } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' undefined false}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { param1: ['first', 'second'] } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('["first","second"]');
     });
 
     it('should always return object as JSON string', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' undefined false}}",
-        {} as any,
-        [],
-        {},
-        { query: { param1: { key: 'value' } } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' undefined false}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { param1: { key: 'value' } } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('{"key":"value"}');
     });
 
     it('should not return string enclosed in quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' 'default'}}",
-        {} as any,
-        [],
-        {},
-        { query: { param1: 'test' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' 'default'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { param1: 'test' } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('test');
     });
 
     it('should return string enclosed in quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { query: { param1: 'test' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { param1: 'test' } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('"test"');
     });
 
     it('should return default value enclosed in quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' 'default' true}}",
-        {} as any,
-        [],
-        {},
-        { query: { param2: 'test' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' 'default' true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { param2: 'test' } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('"default"');
     });
 
     it('should escape quotes in string', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { query: { param1: 'This is a "message" with quotes.' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          query: { param1: 'This is a "message" with quotes.' }
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('"This is a \\"message\\" with quotes."');
     });
 
     it('should return the value of parameter with dots in parameter name', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam 'param1\\.name' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { query: { 'param1.name': 'value' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam 'param1\\.name' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { 'param1.name': 'value' } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('"value"');
     });
     it('should return the properties matching jsonpath expression', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParam '$.attributes.sub_attributes.*'}}{{queryParam '$.attributes.[attribute.with.dot].name'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          "{{queryParam '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParam '$.attributes.sub_attributes.*'}}{{queryParam '$.attributes.[attribute.with.dot].name'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             'attribute.1.value.1': 'attribute-value-1',
             'attribute.1.value.2': 'attribute-value-2',
@@ -557,156 +601,168 @@ describe('Request helpers', () => {
               }
             }
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal(
         '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]value'
       );
     });
     it('should return default if there are no properties matching jsonpath expression', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParam '$.data1' '\"Default\"'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParam '$.data1' '\"Default\"'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             data: 'value'
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('"Default"');
     });
   });
 
   describe('Helper: queryParamRaw', () => {
     it('should return the number without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParamRaw 'param1'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParamRaw 'param1'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             param1: '1',
             param2: [1, 2, 3],
             param3: true
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('1');
     });
     it('should return an array without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParamRaw 'param2'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParamRaw 'param2'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             param1: '1',
             param2: [1, 2, 3],
             param3: true
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('1,2,3');
     });
     it('should return a boolean without quotes', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParamRaw 'param3'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParamRaw 'param3'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             param1: '1',
             param2: [1, 2, 3],
             param3: true
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('true');
     });
     it('should be usable with a each', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{#each (queryParamRaw 'param2')}}dolphin{{/each}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{#each (queryParamRaw 'param2')}}dolphin{{/each}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             param1: '1',
             param2: [1, 2, 3],
             param3: true
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('dolphindolphindolphin');
     });
     it('should be usable within a if clause', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{#if (queryParamRaw 'param3')}}dolphin{{/if}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{#if (queryParamRaw 'param3')}}dolphin{{/if}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             param1: '1',
             param2: [1, 2, 3],
             param3: true
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('dolphin');
     });
     it('should return the default value in a each when no query', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{#each (queryParamRaw 'dolphin' (array 1 2 3))}}dolphin{{/each}}",
-        {} as any,
-        [],
-        {},
-        {} as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          "{{#each (queryParamRaw 'dolphin' (array 1 2 3))}}dolphin{{/each}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('dolphindolphindolphin');
     });
     it('should return the default value in a if clause when no request body', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{#if (queryParamRaw 'dolphin' true)}}dolphin{{/if}}",
-        {} as any,
-        [],
-        {},
-        {} as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{#if (queryParamRaw 'dolphin' true)}}dolphin{{/if}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('dolphin');
     });
     it('should return the value of parameter with dots in parameter name', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParamRaw 'param1\\.name' undefined true}}",
-        {} as any,
-        [],
-        {},
-        { query: { 'param1.name': 'value' } } as any
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParamRaw 'param1\\.name' undefined true}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { 'param1.name': 'value' } } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('value');
     });
     it('should return the properties matching jsonpath expression', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParamRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParamRaw '$.attributes.sub_attributes.*'}}{{queryParamRaw '$.attributes.[attribute.with.dot].name'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          "{{queryParamRaw '$.[?(@property.match(/attribute\\.1.*/))]'}}{{queryParamRaw '$.attributes.sub_attributes.*'}}{{queryParamRaw '$.attributes.[attribute.with.dot].name'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             'attribute.1.value.1': 'attribute-value-1',
             'attribute.1.value.2': 'attribute-value-2',
@@ -721,35 +777,37 @@ describe('Request helpers', () => {
               }
             }
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal(
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
     });
     it('should return default if there are no properties matching jsonpath expression', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{queryParamRaw '$.data1' 'Default'}}",
-        {} as any,
-        [],
-        {},
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{queryParamRaw '$.data1' 'Default'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           query: {
             data: 'value'
           }
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('Default');
     });
   });
 
   describe('Helper: baseUrl', () => {
     it('should return correct protocol if https is false', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{baseUrl}}',
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{baseUrl}}',
+        environment: {
           tlsOptions: {
             enabled: false,
             type: 'CERT',
@@ -762,19 +820,20 @@ describe('Request helpers', () => {
           port: 3000,
           endpointPrefix: 'api'
         } as any,
-        [],
-        {},
-        {
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           hostname: 'localhost'
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('http://localhost:3000/api');
     });
     it('should return correct protocol if https is true', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{baseUrl}}',
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{baseUrl}}',
+        environment: {
           tlsOptions: {
             enabled: true,
             type: 'CERT',
@@ -787,20 +846,21 @@ describe('Request helpers', () => {
           port: 3000,
           endpointPrefix: 'api'
         } as any,
-        [],
-        {},
-        {
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           hostname: 'localhost'
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('https://localhost:3000/api');
     });
 
     it('should return correct url format with correct port', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{baseUrl}}',
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{baseUrl}}',
+        environment: {
           tlsOptions: {
             enabled: true,
             type: 'CERT',
@@ -813,20 +873,21 @@ describe('Request helpers', () => {
           port: 3001,
           endpointPrefix: 'api'
         } as any,
-        [],
-        {},
-        {
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           hostname: 'localhost'
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('https://localhost:3001/api');
     });
 
     it('should return correct url based on hostname', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{baseUrl}}',
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{baseUrl}}',
+        environment: {
           port: 3005,
           tlsOptions: {
             enabled: true,
@@ -839,20 +900,21 @@ describe('Request helpers', () => {
           },
           endpointPrefix: 'api'
         } as any,
-        [],
-        {},
-        {
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           hostname: 'domain.tld'
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('https://domain.tld:3005/api');
     });
 
     it('should return correct url format with endpointPrefix', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{baseUrl}}',
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{baseUrl}}',
+        environment: {
           tlsOptions: {
             enabled: true,
             type: 'CERT',
@@ -865,20 +927,21 @@ describe('Request helpers', () => {
           port: 3001,
           endpointPrefix: 'v1'
         } as any,
-        [],
-        {},
-        {
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           hostname: 'localhost'
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('https://localhost:3001/v1');
     });
 
     it('should return correct url format without endpointPrefix', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{baseUrl}}',
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{baseUrl}}',
+        environment: {
           tlsOptions: {
             enabled: true,
             type: 'CERT',
@@ -890,20 +953,21 @@ describe('Request helpers', () => {
           },
           port: 3001
         } as any,
-        [],
-        {},
-        {
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           hostname: 'localhost'
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('https://localhost:3001');
     });
 
     it('should return correct url format when endpointPrefix is empty string', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{baseUrl}}',
-        {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{baseUrl}}',
+        environment: {
           tlsOptions: {
             enabled: true,
             type: 'CERT',
@@ -916,62 +980,67 @@ describe('Request helpers', () => {
           port: 3001,
           endpointPrefix: ''
         } as any,
-        [],
-        {},
-        {
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
           hostname: 'localhost'
-        } as any
-      );
+        } as any,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('https://localhost:3001');
     });
   });
 
   describe('Helper: header', () => {
     it('should return the header value', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{header 'Test-Header'}}",
-        {} as any,
-        [],
-        {},
-        requestMock
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{header 'Test-Header'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: requestMock,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('headervalue');
     });
 
     it('should return an empty string if no name provided', () => {
-      const parseResult = TemplateParser(
-        false,
-        '{{header}}',
-        {} as any,
-        [],
-        {},
-        requestMock
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{header}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: requestMock,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('');
     });
 
     it('should return a empty string if name not found', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{header 'notfound'}}",
-        {} as any,
-        [],
-        {},
-        requestMock
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{header 'notfound'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: requestMock,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('');
     });
 
     it('should return a default value if provided and name not found', () => {
-      const parseResult = TemplateParser(
-        false,
-        "{{header 'notfound' 'defaultvalue'}}",
-        {} as any,
-        [],
-        {},
-        requestMock
-      );
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{header 'notfound' 'defaultvalue'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: requestMock,
+        envVarsPrefix: ''
+      });
       expect(parseResult).to.be.equal('defaultvalue');
     });
   });

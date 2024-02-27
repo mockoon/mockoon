@@ -36,7 +36,8 @@ export class ResponseRulesInterpreter {
     private responseMode: Route['responseMode'],
     private environment: Environment,
     private processedDatabuckets: ProcessedDatabucket[],
-    private globalVariables: Record<string, any>
+    private globalVariables: Record<string, any>,
+    private envVarsPrefix: string
   ) {
     this.extractTargets();
   }
@@ -222,14 +223,15 @@ export class ResponseRulesInterpreter {
   private parseValue(value: string): string {
     let parsedValue: string;
     try {
-      parsedValue = TemplateParser(
-        false,
-        value,
-        this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
-        this.request
-      );
+      parsedValue = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: value,
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request: this.request,
+        envVarsPrefix: this.envVarsPrefix
+      });
     } catch (error) {
       return value;
     }

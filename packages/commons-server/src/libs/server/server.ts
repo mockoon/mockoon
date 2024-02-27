@@ -4,6 +4,7 @@ import {
   Callback,
   CallbackInvocation,
   CORSHeaders,
+  defaultEnvironmentVariablesPrefix,
   Environment,
   FakerAvailableLocales,
   FileExtensionsWithTemplating,
@@ -105,7 +106,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         // Number for the Faker.js seed (e.g. 1234)
         seed?: number;
       };
-    } = {}
+
+      /**
+       * Environment variables prefix
+       */
+      envVarsPrefix: string;
+    } = { envVarsPrefix: defaultEnvironmentVariablesPrefix }
   ) {
     super();
   }
@@ -527,7 +533,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         currentRoute.responseMode,
         this.environment,
         this.processedDatabuckets,
-        this.globalVariables
+        this.globalVariables,
+        this.options.envVarsPrefix
       ).chooseResponse(requestNumber);
 
       if (!enabledRouteResponse) {
@@ -650,15 +657,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
 
         try {
-          const url = TemplateParser(
-            false,
-            cb.uri,
-            this.environment,
-            this.processedDatabuckets,
-            this.globalVariables,
+          const url = TemplateParser({
+            shouldOmitDataHelper: false,
+            content: cb.uri,
+            environment: this.environment,
+            processedDatabuckets: this.processedDatabuckets,
+            globalVariables: this.globalVariables,
             request,
-            response
-          );
+            response,
+            envVarsPrefix: this.options.envVarsPrefix
+          });
 
           let content = cb.body;
           let templateParse = true;
@@ -705,15 +713,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           // apply templating if specified
           if (!routeResponse.disableTemplating && templateParse) {
-            content = TemplateParser(
-              false,
-              content || '',
-              this.environment,
-              this.processedDatabuckets,
-              this.globalVariables,
+            content = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: content || '',
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
               request,
-              response
-            );
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
           }
 
           setTimeout(() => {
@@ -763,15 +772,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) {
     try {
       if (!routeResponse.disableTemplating && templateParse) {
-        content = TemplateParser(
-          false,
-          content || '',
-          this.environment,
-          this.processedDatabuckets,
-          this.globalVariables,
+        content = TemplateParser({
+          shouldOmitDataHelper: false,
+          content: content || '',
+          environment: this.environment,
+          processedDatabuckets: this.processedDatabuckets,
+          globalVariables: this.globalVariables,
           request,
-          response
-        );
+          response,
+          envVarsPrefix: this.options.envVarsPrefix
+        });
       }
 
       this.applyResponseLocals(response);
@@ -810,24 +820,26 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     };
 
     try {
-      const url = TemplateParser(
-        false,
-        callback.uri,
-        this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
+      const url = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: callback.uri,
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
         request,
-        response
-      );
+        response,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
-      let filePath = TemplateParser(
-        false,
-        callback.filePath.replace(/\\/g, '/'),
-        this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
-        request
-      );
+      let filePath = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: callback.filePath.replace(/\\/g, '/'),
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
       filePath = resolvePathFromEnvironment(
         filePath,
@@ -879,15 +891,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             MimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
             !routeResponse.disableTemplating
           ) {
-            fileContent = TemplateParser(
-              false,
-              data.toString(),
-              this.environment,
-              this.processedDatabuckets,
-              this.globalVariables,
+            fileContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: data.toString(),
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
               request,
-              response
-            );
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
           } else {
             fileContent = data.toString();
           }
@@ -965,14 +978,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     };
 
     try {
-      let filePath = TemplateParser(
-        false,
-        routeResponse.filePath.replace(/\\/g, '/'),
-        this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
-        request
-      );
+      let filePath = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: routeResponse.filePath.replace(/\\/g, '/'),
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
       filePath = resolvePathFromEnvironment(
         filePath,
@@ -1007,15 +1021,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           }
 
           try {
-            const fileContent = TemplateParser(
-              false,
-              data.toString(),
-              this.environment,
-              this.processedDatabuckets,
-              this.globalVariables,
+            const fileContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: data.toString(),
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
               request,
-              response
-            );
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
 
             this.applyResponseLocals(response);
 
@@ -1314,14 +1329,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     if (header.key && header.value) {
       try {
-        parsedHeaderValue = TemplateParser(
-          false,
-          header.value,
-          this.environment,
-          this.processedDatabuckets,
-          this.globalVariables,
-          request
-        );
+        parsedHeaderValue = TemplateParser({
+          shouldOmitDataHelper: false,
+          content: header.value,
+          environment: this.environment,
+          processedDatabuckets: this.processedDatabuckets,
+          globalVariables: this.globalVariables,
+          request,
+          envVarsPrefix: this.options.envVarsPrefix
+        });
       } catch (error: any) {
         this.emit('error', ServerErrorCodes.HEADER_PARSING_ERROR, error, {
           headerKey: header.key,
@@ -1516,13 +1532,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           let templateParsedContent;
 
           try {
-            templateParsedContent = TemplateParser(
-              false,
-              databucket.value,
+            templateParsedContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: databucket.value,
               environment,
-              this.processedDatabuckets,
-              this.globalVariables
-            );
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
 
             const JSONParsedContent = JSON.parse(templateParsedContent);
             newProcessedDatabucket = {
@@ -1656,14 +1673,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           if (targetDatabucket && !targetDatabucket?.parsed) {
             let content = targetDatabucket.value;
             try {
-              content = TemplateParser(
-                false,
-                targetDatabucket.value,
+              content = TemplateParser({
+                shouldOmitDataHelper: false,
+                content: targetDatabucket.value,
                 environment,
-                this.processedDatabuckets,
-                this.globalVariables,
-                request
-              );
+                processedDatabuckets: this.processedDatabuckets,
+                globalVariables: this.globalVariables,
+                request,
+                envVarsPrefix: this.options.envVarsPrefix
+              });
               const JSONParsedcontent = JSON.parse(content);
               targetDatabucket.value = JSONParsedcontent;
               targetDatabucket.parsed = true;
