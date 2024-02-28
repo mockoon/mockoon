@@ -605,12 +605,7 @@
                     </button>
 
                     <!-- File options dropdown -->
-                    <div
-                      ngbDropdown
-                      id="file-options-dropdown"
-                      placement="bottom-right"
-                      #dropdownElement
-                    >
+                    <div ngbDropdown id="file-options-dropdown">
                       <button
                         class="btn dropdown-toggle-icon me-1"
                         type="button"
@@ -647,6 +642,11 @@
                       </div>
                     </div>
                   </div>
+                  <style>
+                    .dropdown-toggle::after {
+                      display: none;
+                    }
+                  </style>
 
                   <div
                     *ngIf="data.activeRouteResponse?.filePath"
