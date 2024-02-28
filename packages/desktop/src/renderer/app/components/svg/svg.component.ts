@@ -34,6 +34,8 @@ export class SvgComponent {
     | 'list'
     | 'record'
     | 'dots'
+    | 'more_vert'
+    | 'file_open'
     | 'magic'
     | 'spinner'
     | 'account'

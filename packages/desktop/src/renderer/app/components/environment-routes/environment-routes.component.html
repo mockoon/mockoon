@@ -604,15 +604,26 @@
                       <app-svg icon="clear"></app-svg>
                     </button>
 
-                    <div ngbDropdown placement="bottom-right" #dropdownElement>
+                    <!-- File options dropdown -->
+                    <div 
+                      ngbDropdown
+                      id="file-options-dropdown"
+                      placement="bottom-right"
+                      #dropdownElement
+                    >
                       <button
-                        class="btn dropdown-toggle dropdown-toggle-icon btn-link"
+                        class="btn dropdown-toggle-icon me-1"
                         type="button"
                         ngbDropdownToggle
+                        ngbTooltip="More file options"
                       >
-                        <app-svg icon="dots"></app-svg>
+                        <app-svg icon="more_vert"></app-svg>
                       </button>
-                      <div class="dropdown-menu" ngbDropdownMenu>
+
+                      <div 
+                        class="dropdown-menu" 
+                        ngbDropdownMenu
+                      >
                         <ng-container *ngIf="data.activeRouteResponse">
                           <button
                             class="btn dropdown-item"
@@ -625,14 +636,14 @@
                             class="btn dropdown-item"
                             (click)="openFolder()"
                           >
-                            <app-svg icon="folder_open" class="ps-2"></app-svg>
+                            <app-svg icon="folder" class="ps-2"></app-svg>
                             Open folder
                           </button>
                           <button
                             class="btn dropdown-item"
                             (click)="openFile()"
                           >
-                            <app-svg icon="folder_move" class="ps-2"></app-svg>
+                            <app-svg icon="file_open" class="ps-2"></app-svg>
                             Open file in editor
                           </button>
                         </ng-container>
