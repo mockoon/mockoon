@@ -89,7 +89,7 @@ describe('Environment logs', () => {
         );
 
         await environmentsLogs.assertLogItem(
-          'Connection: close',
+          'Connection: keep-alive',
           'request',
           4,
           1

@@ -19,7 +19,7 @@ import {
   NgbTypeaheadConfig
 } from '@ng-bootstrap/ng-bootstrap';
 import { browserLocalPersistence, connectAuthEmulator } from 'firebase/auth';
-import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
+import { MARKED_OPTIONS, MarkdownModule } from 'ngx-markdown';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { BannerComponent } from 'src/renderer/app/components/banner/banner.component';
 import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/context-menu.component';
@@ -129,7 +129,7 @@ import { AppComponent } from './app.component';
     MarkdownModule.forRoot({
       sanitize: SecurityContext.NONE,
       markedOptions: {
-        provide: MarkedOptions,
+        provide: MARKED_OPTIONS,
         useFactory: MarkedOptionsFactory
       }
     }),
@@ -173,8 +173,7 @@ import { AppComponent } from './app.component';
     },
     {
       provide: NgbTooltipConfig,
-      useFactory: NgbTooltipConfigFactory,
-      deps: [NgbConfig]
+      useFactory: NgbTooltipConfigFactory
     },
     {
       provide: NgbDropdownConfig,

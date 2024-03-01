@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
 describe('System helpers', () => {
@@ -19,7 +19,7 @@ describe('System helpers', () => {
         envVarsPrefix: ''
       });
 
-      expect(parsedContent).to.equal('');
+      strictEqual(parsedContent, '');
     });
 
     it('should return env var value when exists', () => {
@@ -33,7 +33,7 @@ describe('System helpers', () => {
         envVarsPrefix: ''
       });
 
-      expect(parsedContent).to.equal('test');
+      strictEqual(parsedContent, 'test');
     });
 
     it('should return nothing if env var does not exist', () => {
@@ -47,7 +47,7 @@ describe('System helpers', () => {
         envVarsPrefix: ''
       });
 
-      expect(parsedContent).to.equal('');
+      strictEqual(parsedContent, '');
     });
 
     it('should return default value if provided and env var does not exist', () => {
@@ -61,7 +61,7 @@ describe('System helpers', () => {
         envVarsPrefix: ''
       });
 
-      expect(parsedContent).to.equal('default');
+      strictEqual(parsedContent, 'default');
     });
 
     it('should be able to return all variables when there is no prefix', () => {
@@ -76,7 +76,7 @@ describe('System helpers', () => {
         envVarsPrefix: ''
       });
 
-      expect(parsedContent).to.equal('test-testprefix');
+      strictEqual(parsedContent, 'test-testprefix');
     });
 
     it('should be able to return only prefixed variables when there is a prefix (prefix in helper is optional', () => {
@@ -91,7 +91,7 @@ describe('System helpers', () => {
         envVarsPrefix: 'PREFIX_'
       });
 
-      expect(parsedContent).to.equal('-testprefix-testprefix');
+      strictEqual(parsedContent, '-testprefix-testprefix');
     });
   });
 });

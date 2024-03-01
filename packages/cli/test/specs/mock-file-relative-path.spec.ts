@@ -1,5 +1,5 @@
 import { test } from '@oclif/test';
-import { expect } from 'chai';
+import { ok } from 'assert';
 
 describe('Relative file path', () => {
   test
@@ -8,7 +8,7 @@ describe('Relative file path', () => {
     .do(async () => {
       const result = await (await fetch('http://localhost:3000/file')).text();
 
-      expect(result).to.contain('filecontent');
+      ok(result.includes('filecontent'));
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -16,7 +16,7 @@ describe('Relative file path', () => {
     .it(
       'should start mock on port 3000 and call GET /file and get the file with a relative path from the environment file',
       (context) => {
-        expect(context.stdout).to.contain('Server started');
+        ok(context.stdout.includes('Server started'));
       }
     );
 });

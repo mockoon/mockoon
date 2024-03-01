@@ -1,11 +1,7 @@
 import { generateUUID } from '@mockoon/commons';
+import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { mock } from 'node:test';
 import { databucketActions } from '../../../src/libs/server/crud';
-
-const chai = require('chai');
-const spies = require('chai-spies');
-const expect = chai.expect;
-
-chai.use(spies);
 
 describe('Databucket Actions', () => {
   let databucket;
@@ -40,14 +36,16 @@ describe('Databucket Actions', () => {
   it('should push request body to databucket in create case and generates ID', () => {
     request.body = { name: 'John' };
 
-    const statusSpy = chai.spy.on(response, 'status');
+    mock.method(response, 'status');
 
     databucketActions('create', databucket, request, response, routeCrudKey);
 
-    expect(statusSpy).to.have.been.called.with(201);
-    expect(databucket.value[0]).to.have.property('id');
-    expect(databucket.value[0]).to.have.property('name');
-    expect(databucket.value[0].name).to.deep.equal('John');
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [201]);
+    notStrictEqual(databucket.value[0].id, undefined);
+    notStrictEqual(databucket.value[0].name, undefined);
+    strictEqual(databucket.value[0].name, 'John');
   });
 
   it('should not generate id key if crudkey != "id"', () => {
@@ -57,26 +55,30 @@ describe('Databucket Actions', () => {
     };
     routeCrudKey = 'uuid';
 
-    const statusSpy = chai.spy.on(response, 'status');
+    mock.method(response, 'status');
 
     databucketActions('create', databucket, request, response, routeCrudKey);
 
-    expect(statusSpy).to.have.been.called.with(201);
-    expect(databucket.value[0]).to.not.have.property('id');
-    expect(databucket.value[0]).to.deep.equal(request.body);
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [201]);
+    strictEqual(databucket.value[0].id, undefined);
+    deepStrictEqual(databucket.value[0], request.body);
   });
 
   it('should set entire request body if databucket.value != []', () => {
     request.body = { name: 'John' };
     databucket.value = null;
 
-    const statusSpy = chai.spy.on(response, 'status');
+    mock.method(response, 'status');
 
     databucketActions('create', databucket, request, response, routeCrudKey);
 
-    expect(statusSpy).to.have.been.called.with(201);
-    expect(databucket.value).to.be.an('object');
-    expect(databucket.value).to.deep.equal(request.body);
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [201]);
+    ok(typeof databucket.value === 'object');
+    deepStrictEqual(databucket.value, request.body);
   });
 
   it('should assign responseBody to databucket.value', () => {
@@ -95,7 +97,7 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect([responseBody]).to.deep.equal([databucket.value]);
+    deepStrictEqual([responseBody], [databucket.value]);
   });
 
   // Case: get
@@ -129,8 +131,9 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(responseBody).to.deep.equal(expectedResponse);
+    deepStrictEqual(responseBody, expectedResponse);
   });
+
   it('should not modify response body when it is not an array', () => {
     databucket.value = { id: 1, name: 'John' };
 
@@ -142,7 +145,7 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(responseBody).to.deep.equal(databucket.value);
+    deepStrictEqual(responseBody, databucket.value);
   });
 
   it("should default 'limit' to 10 when it is not a string or not provided", () => {
@@ -165,7 +168,7 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(responseBody).to.have.lengthOf(10);
+    strictEqual(responseBody.length, 10);
   });
 
   // Case: get by ID:
@@ -186,7 +189,7 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(responseBody).to.deep.equal({ id: 2, name: 'Peter' });
+    deepStrictEqual(responseBody, { id: 2, name: 'Peter' });
   });
 
   it('should set response status to 404 when the index is not found', () => {
@@ -197,7 +200,7 @@ describe('Databucket Actions', () => {
     ];
     databucket.value = data;
 
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     request.params = { id: '4' };
 
@@ -209,14 +212,16 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(404);
-    expect(responseBody).to.deep.equal({});
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [404]);
+    deepStrictEqual(responseBody, {});
   });
 
   it('should assign databucket.value to responseBody when databucket.value is not an array', () => {
     databucket.value = { id: 1, name: 'John' };
 
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     request.params = { id: '1' };
 
@@ -228,15 +233,17 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.not.have.been.called;
-    expect(responseBody).to.deep.equal(databucket.value);
+    const statusSpy = response.status.mock.calls;
+
+    strictEqual(statusSpy.length, 0);
+    deepStrictEqual(responseBody, databucket.value);
   });
 
   // Case: Update
   it('should update databucket value and set response status to 200', () => {
     databucket.value = { id: 1, name: 'John Doe' };
 
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = {};
 
@@ -248,8 +255,10 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal(responseBody);
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, responseBody);
   });
 
   // Case: updatebyID:
@@ -257,7 +266,8 @@ describe('Databucket Actions', () => {
     const requestBody = { id: 2, name: 'Updated Name' };
 
     request = { params: { id: '2' }, body: requestBody };
-    response = { status: chai.spy(), set: () => {} };
+
+    mock.method(response, 'status');
 
     databucket.value = [
       { id: 1, name: 'John Doe' },
@@ -273,20 +283,23 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal([
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, [
       { id: 1, name: 'John Doe' },
       { id: 2, name: 'Updated Name' },
       { id: 3, name: 'Alice Johnson' }
     ]);
-    expect(responseBody).to.deep.equal({ id: 2, name: 'Updated Name' });
+    deepStrictEqual(responseBody, { id: 2, name: 'Updated Name' });
   });
 
   it('should set response status to 404 when the index is not found', () => {
     const requestBody = { id: 4, name: 'New Item' };
 
     request = { params: { id: '4' }, body: requestBody };
-    response = { status: chai.spy(), set: () => {} };
+
+    mock.method(response, 'status');
 
     databucket.value = [
       { id: 1, name: 'John Doe' },
@@ -302,20 +315,23 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(404);
-    expect(databucket.value).to.deep.equal([
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [404]);
+    deepStrictEqual(databucket.value, [
       { id: 1, name: 'John Doe' },
       { id: 2, name: 'Jane Smith' },
       { id: 3, name: 'Alice Johnson' }
     ]);
-    expect(responseBody).to.deep.equal({});
+    deepStrictEqual(responseBody, {});
   });
 
   it('should update databucket value to the request body when databucket.value is not an array', () => {
     const requestBody = { id: 1, name: 'Updated Name' };
 
     request = { params: { id: '1' }, body: requestBody };
-    response = { status: chai.spy(), set: () => {} };
+
+    mock.method(response, 'status');
 
     databucket.value = { id: 1, name: 'John Doe' };
 
@@ -327,9 +343,11 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal({ id: 1, name: 'Updated Name' });
-    expect(responseBody).to.deep.equal({ id: 1, name: 'Updated Name' });
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, { id: 1, name: 'Updated Name' });
+    deepStrictEqual(responseBody, { id: 1, name: 'Updated Name' });
   });
 
   // Case: updateMerge
@@ -340,7 +358,7 @@ describe('Databucket Actions', () => {
       { id: 5, name: 'New Item 2' }
     ];
 
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = [
       { id: 1, name: 'Item 1' },
@@ -356,8 +374,10 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal([
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, [
       { id: 1, name: 'Item 1' },
       { id: 2, name: 'Item 2' },
       { id: 3, name: 'Item 3' },
@@ -372,7 +392,7 @@ describe('Databucket Actions', () => {
       { id: 5, name: 'New Item 2' }
     ];
 
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = { id: 1, name: 'Item 1' };
 
@@ -384,8 +404,10 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal({
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, {
       id: 1,
       name: 'Item 1',
       '0': { id: 4, name: 'New Item 1' },
@@ -396,7 +418,7 @@ describe('Databucket Actions', () => {
   it('should merge databucket value with requestBody object when both are objects', () => {
     request.body = { id: 4, name: 'New Item' };
 
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = { id: 1, name: 'Item 1' };
 
@@ -408,8 +430,10 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal({
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, {
       id: 1,
       name: 'Item 1',
       ...request.body
@@ -419,7 +443,7 @@ describe('Databucket Actions', () => {
   it('should update databucket value to the requestBody when databucket.value is not an array or object', () => {
     request.body = { id: 1, name: 'New Item' };
 
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = 'Old Item';
 
@@ -431,15 +455,18 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal(request.body);
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, request.body);
   });
 
   // Case: updateMergebyId
   it('should update the specific item in the databucket value array when indexToModify is found', () => {
     request.body = { id: 2, name: 'Updated Item' };
     request.params = { id: '2' };
-    response = { status: chai.spy(), set: () => {} };
+
+    mock.method(response, 'status');
 
     databucket.value = [
       { id: 1, name: 'Item 1' },
@@ -455,8 +482,10 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal([
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, [
       { id: 1, name: 'Item 1' },
       { id: 2, name: 'Updated Item' },
       { id: 3, name: 'Item 3' }
@@ -466,7 +495,8 @@ describe('Databucket Actions', () => {
   it('should set the response status to 404 when indexToModify is not found in the databucket value array', () => {
     request.body = { id: 4, name: 'New Item' };
     request.params = { id: '4' };
-    response = { status: chai.spy(), set: () => {} };
+
+    mock.method(response, 'status');
 
     databucket.value = [
       { id: 1, name: 'Item 1' },
@@ -482,8 +512,10 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(404);
-    expect(databucket.value).to.deep.equal([
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [404]);
+    deepStrictEqual(databucket.value, [
       { id: 1, name: 'Item 1' },
       { id: 2, name: 'Item 2' },
       { id: 3, name: 'Item 3' }
@@ -493,7 +525,8 @@ describe('Databucket Actions', () => {
   it('should update the databucket value object with the requestBody when databucket.value is an object', () => {
     request.body = { id: 1, name: 'Updated Item' };
     request.params = { id: '1' };
-    response = { status: chai.spy(), set: () => {} };
+
+    mock.method(response, 'status');
 
     databucket.value = { id: 1, name: 'Item 1' };
 
@@ -505,14 +538,16 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal({ id: 1, name: 'Updated Item' });
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, { id: 1, name: 'Updated Item' });
   });
 
   it('should update the databucket value to the requestBody when databucket.value is not an array or object', () => {
     request.body = { id: 1, name: 'New Item' };
     request.param = { id: '1' };
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = 'Old Item';
 
@@ -524,13 +559,15 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal(request.body);
-    expect(responseBody).to.deep.equal(request.body);
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, request.body);
+    deepStrictEqual(responseBody, request.body);
   });
 
   it('should set the databucket value to undefined and set the response status to 200', () => {
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = [
       { id: 1, name: 'Item 1' },
@@ -539,14 +576,16 @@ describe('Databucket Actions', () => {
 
     databucketActions('delete', databucket, request, response, routeCrudKey);
 
-    expect(databucket.value).to.be.undefined;
-    expect(response.status).to.have.been.called.with(200);
+    const statusSpy = response.status.mock.calls[0];
+
+    strictEqual(databucket.value, undefined);
+    deepStrictEqual(statusSpy.arguments, [200]);
   });
 
   // Case: deletebyID
 
   it('should set the databucket value to undefined and set the response status to 200 when the databucket value is not an array', () => {
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = 'some value';
 
@@ -558,13 +597,15 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(databucket.value).to.be.undefined;
-    expect(response.status).to.have.been.called.with(200);
+    const statusSpy = response.status.mock.calls[0];
+
+    strictEqual(databucket.value, undefined);
+    deepStrictEqual(statusSpy.arguments, [200]);
   });
 
   it('should remove the item from the databucket value array at the specified index and set the response status to 200', () => {
     request.params = { id: '2' };
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = [
       { id: 1, name: 'Item 1' },
@@ -580,17 +621,19 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(response.status).to.have.been.called.with(200);
-    expect(databucket.value).to.deep.equal([
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(statusSpy.arguments, [200]);
+    deepStrictEqual(databucket.value, [
       { id: 1, name: 'Item 1' },
       { id: 3, name: 'Item 3' }
     ]);
-    expect(responseBody).to.deep.equal({});
+    deepStrictEqual(responseBody, {});
   });
 
   it('should set the response status to 404 when the index is not found in the databucket value array', () => {
     request = { params: { id: 4 } };
-    response = { status: chai.spy(), set: () => {} };
+    mock.method(response, 'status');
 
     databucket.value = [
       { id: 1, name: 'Item 1' },
@@ -606,12 +649,15 @@ describe('Databucket Actions', () => {
       routeCrudKey
     );
 
-    expect(databucket.value).to.deep.equal([
+    const statusSpy = response.status.mock.calls[0];
+
+    deepStrictEqual(databucket.value, [
       { id: 1, name: 'Item 1' },
       { id: 2, name: 'Item 2' },
       { id: 3, name: 'Item 3' }
     ]);
-    expect(response.status).to.have.been.called.with(404);
-    expect(responseBody).to.deep.equal({});
+
+    deepStrictEqual(statusSpy.arguments, [404]);
+    deepStrictEqual(responseBody, {});
   });
 });

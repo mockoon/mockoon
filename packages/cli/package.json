@@ -8,7 +8,7 @@
     "url": "https://1kb.software/"
   },
   "bin": {
-    "mockoon-cli": "./bin/run"
+    "mockoon-cli": "./bin/run.js"
   },
   "license": "MIT",
   "scripts": {
@@ -47,33 +47,29 @@
   "dependencies": {
     "@mockoon/commons": "6.2.0",
     "@mockoon/commons-server": "6.2.0",
-    "@oclif/core": "2.15.0",
-    "@oclif/plugin-help": "5.2.20",
+    "@oclif/core": "3.20.0",
+    "@oclif/plugin-help": "6.0.14",
     "jsonfile": "6.1.0",
     "mkdirp": "3.0.1",
     "mustache": "4.2.0",
     "tslib": "2.6.2"
   },
   "devDependencies": {
-    "@oclif/test": "3.0.1",
-    "@types/chai": "4.3.6",
-    "@types/jsonfile": "6.1.2",
-    "@types/mocha": "10.0.2",
-    "@types/mustache": "4.2.3",
-    "@types/node": "20.7.1",
-    "@typescript-eslint/eslint-plugin": "6.7.3",
-    "@typescript-eslint/parser": "6.7.3",
-    "chai": "4.3.10",
-    "chai-exclude": "^2.1.0",
-    "eslint": "8.50.0",
-    "eslint-config-oclif": "5.0.0",
-    "eslint-config-oclif-typescript": "2.0.1",
-    "eslint-plugin-jsdoc": "46.8.2",
-    "mocha": "10.2.0",
-    "oclif": "3.17.2",
+    "@oclif/test": "3.2.1",
+    "@types/jsonfile": "6.1.4",
+    "@types/mocha": "10.0.6",
+    "@types/mustache": "4.2.5",
+    "@types/node": "20.11.21",
+    "@typescript-eslint/eslint-plugin": "7.1.0",
+    "@typescript-eslint/parser": "7.1.0",
+    "eslint": "8.57.0",
+    "eslint-config-oclif": "5.0.3",
+    "eslint-config-oclif-typescript": "3.0.48",
+    "eslint-plugin-jsdoc": "48.2.0",
+    "mocha": "10.3.0",
+    "oclif": "4.4.19",
     "ts-mocha": "10.0.0",
-    "ts-node": "10.9.1",
-    "typescript": "5.2.2"
+    "typescript": "5.3.3"
   },
   "engines": {
     "node": ">=18"

@@ -236,9 +236,9 @@ small,
 
 // inline code
 code {
-  padding: 0.25rem;
+  padding: 0.1rem 0.25rem;
   background-color: lighten($gray-900, 10%);
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
 }
 
 // code blocks (for release note)

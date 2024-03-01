@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { deepStrictEqual, strictEqual } from 'assert';
 import {
   FILTERS,
   FilterData,
@@ -14,7 +14,7 @@ describe('Filters', () => {
         { path: 'name', filter: 'eq', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse the "ne" filter', () => {
@@ -23,7 +23,7 @@ describe('Filters', () => {
         { path: 'name', filter: 'ne', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse the "gt" filter', () => {
@@ -32,7 +32,7 @@ describe('Filters', () => {
         { path: 'age', filter: 'gt', value: '18' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse the "gte" filter', () => {
@@ -41,7 +41,7 @@ describe('Filters', () => {
         { path: 'age', filter: 'gte', value: '18' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse the "lt" filter', () => {
@@ -50,7 +50,7 @@ describe('Filters', () => {
         { path: 'age', filter: 'lt', value: '18' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse the "lte" filter', () => {
@@ -59,7 +59,7 @@ describe('Filters', () => {
         { path: 'age', filter: 'lte', value: '18' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse the "like" filter', () => {
@@ -68,7 +68,7 @@ describe('Filters', () => {
         { path: 'name', filter: 'like', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse the "start" filter', () => {
@@ -77,7 +77,7 @@ describe('Filters', () => {
         { path: 'name', filter: 'start', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse the "end" filter', () => {
@@ -86,7 +86,7 @@ describe('Filters', () => {
         { path: 'name', filter: 'end', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should parse multiple filters', () => {
@@ -101,7 +101,7 @@ describe('Filters', () => {
         { path: 'age', filter: 'lt', value: '30' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should ignore invalid filters', () => {
@@ -117,7 +117,7 @@ describe('Filters', () => {
         { path: 'age', filter: 'lt', value: '30' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should accept nested paths', () => {
@@ -126,7 +126,7 @@ describe('Filters', () => {
         { path: 'user.name', filter: 'eq', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should accept nested paths (array)', () => {
@@ -135,7 +135,7 @@ describe('Filters', () => {
         { path: 'users.0.name', filter: 'eq', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should accept paths with underscores', () => {
@@ -144,7 +144,7 @@ describe('Filters', () => {
         { path: 'user_name', filter: 'eq', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should accept paths with underscores containing a filter name', () => {
@@ -153,7 +153,7 @@ describe('Filters', () => {
         { path: 'user_like', filter: 'like', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should accept more complex object-path notation', () => {
@@ -162,7 +162,7 @@ describe('Filters', () => {
         { path: 'user.0.name', filter: 'eq', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
 
     it('should accept filters with empty path', () => {
@@ -171,7 +171,7 @@ describe('Filters', () => {
         { path: '', filter: 'eq', value: 'peter' }
       ];
 
-      expect(parseFilters(queryParams)).to.deep.equal(expected);
+      deepStrictEqual(parseFilters(queryParams), expected);
     });
   });
 
@@ -184,7 +184,7 @@ describe('Filters', () => {
         value: 'peter'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should apply the "ne" filter', () => {
@@ -195,7 +195,7 @@ describe('Filters', () => {
         value: 'john'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should apply the "gt" filter', () => {
@@ -206,7 +206,7 @@ describe('Filters', () => {
         value: '18'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should apply the "gte" filter', () => {
@@ -217,7 +217,7 @@ describe('Filters', () => {
         value: '18'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should apply the "lt" filter', () => {
@@ -228,7 +228,7 @@ describe('Filters', () => {
         value: '30'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should apply the "lte" filter', () => {
@@ -239,7 +239,7 @@ describe('Filters', () => {
         value: '30'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should apply the "like" filter', () => {
@@ -250,7 +250,7 @@ describe('Filters', () => {
         value: 'et'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should apply the "start" filter', () => {
@@ -261,7 +261,7 @@ describe('Filters', () => {
         value: 'p'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should apply the "end" filter', () => {
@@ -272,7 +272,7 @@ describe('Filters', () => {
         value: 'r'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should accept nested paths', () => {
@@ -283,7 +283,7 @@ describe('Filters', () => {
         value: 'peter'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should accept nested paths (array)', () => {
@@ -294,7 +294,7 @@ describe('Filters', () => {
         value: 'peter'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should filter non-object values', () => {
@@ -305,7 +305,7 @@ describe('Filters', () => {
         value: 'peter'
       };
 
-      expect(applyFilter(data, filterData)).to.be.true;
+      strictEqual(applyFilter(data, filterData), true);
     });
 
     it('should not filter object values if path is empty', () => {
@@ -316,265 +316,265 @@ describe('Filters', () => {
         value: 'peter'
       };
 
-      expect(applyFilter(data, filterData)).to.be.false;
+      strictEqual(applyFilter(data, filterData), false);
     });
   });
 
   describe('FILTERS', () => {
     describe('eq', () => {
       it('should return true if the data is equal to the query', () => {
-        expect(FILTERS.eq('peter', 'peter')).to.be.true;
+        strictEqual(FILTERS.eq('peter', 'peter'), true);
       });
 
       it('should return true if the data is equal to the query (number)', () => {
-        expect(FILTERS.eq(18, '18')).to.be.true;
+        strictEqual(FILTERS.eq(18, '18'), true);
       });
 
       it('should return true if the data is equal to the query (number, more complex)', () => {
-        expect(FILTERS.eq(18, '+18.00')).to.be.true;
+        strictEqual(FILTERS.eq(18, '+18.00'), true);
       });
 
       it('should return false if the data is different from the query', () => {
-        expect(FILTERS.eq('peter', 'john')).to.be.false;
+        strictEqual(FILTERS.eq('peter', 'john'), false);
       });
 
       it('should work for "true"', () => {
-        expect(FILTERS.eq(true, 'true')).to.be.true;
+        strictEqual(FILTERS.eq(true, 'true'), true);
       });
 
       it('should work for "false"', () => {
-        expect(FILTERS.eq(false, 'false')).to.be.true;
+        strictEqual(FILTERS.eq(false, 'false'), true);
       });
 
       it('should work for "null"', () => {
-        expect(FILTERS.eq(null, 'null')).to.be.true;
+        strictEqual(FILTERS.eq(null, 'null'), true);
       });
 
       it('should work on edge cases', () => {
-        expect(FILTERS.eq('', '0')).to.be.false;
-        expect(FILTERS.eq('', 'null')).to.be.false;
-        expect(FILTERS.eq('', 'false')).to.be.false;
-        expect(FILTERS.eq(0, '')).to.be.false;
-        expect(FILTERS.eq(0, 'null')).to.be.false;
-        expect(FILTERS.eq(0, 'false')).to.be.false;
-        expect(FILTERS.eq('0', '')).to.be.false;
-        expect(FILTERS.eq('0', 'null')).to.be.false;
-        expect(FILTERS.eq('0', 'false')).to.be.false;
-        expect(FILTERS.eq(null, '')).to.be.false;
-        expect(FILTERS.eq(null, '0')).to.be.false;
-        expect(FILTERS.eq(null, 'false')).to.be.false;
-        expect(FILTERS.eq(false, '')).to.be.false;
-        expect(FILTERS.eq(false, '0')).to.be.false;
-        expect(FILTERS.eq(false, 'null')).to.be.false;
+        strictEqual(FILTERS.eq('', '0'), false);
+        strictEqual(FILTERS.eq('', 'null'), false);
+        strictEqual(FILTERS.eq('', 'false'), false);
+        strictEqual(FILTERS.eq(0, ''), false);
+        strictEqual(FILTERS.eq(0, 'null'), false);
+        strictEqual(FILTERS.eq(0, 'false'), false);
+        strictEqual(FILTERS.eq('0', ''), false);
+        strictEqual(FILTERS.eq('0', 'null'), false);
+        strictEqual(FILTERS.eq('0', 'false'), false);
+        strictEqual(FILTERS.eq(null, ''), false);
+        strictEqual(FILTERS.eq(null, '0'), false);
+        strictEqual(FILTERS.eq(null, 'false'), false);
+        strictEqual(FILTERS.eq(false, ''), false);
+        strictEqual(FILTERS.eq(false, '0'), false);
+        strictEqual(FILTERS.eq(false, 'null'), false);
       });
     });
 
     describe('ne', () => {
       it('should return false if the data is equal to the query', () => {
-        expect(FILTERS.ne('peter', 'peter')).to.be.false;
+        strictEqual(FILTERS.ne('peter', 'peter'), false);
       });
 
       it('should return false if the data is equal to the query (number)', () => {
-        expect(FILTERS.ne(18, '18')).to.be.false;
+        strictEqual(FILTERS.ne(18, '18'), false);
       });
 
       it('should return false if the data is equal to the query (number, more complex)', () => {
-        expect(FILTERS.ne(18, '+18.00')).to.be.false;
+        strictEqual(FILTERS.ne(18, '+18.00'), false);
       });
 
       it('should return true if the data is different from the query', () => {
-        expect(FILTERS.ne('peter', 'john')).to.be.true;
+        strictEqual(FILTERS.ne('peter', 'john'), true);
       });
 
       it('should work for "true"', () => {
-        expect(FILTERS.ne(true, 'true')).to.be.false;
+        strictEqual(FILTERS.ne(true, 'true'), false);
       });
 
       it('should work for "false"', () => {
-        expect(FILTERS.ne(false, 'false')).to.be.false;
+        strictEqual(FILTERS.ne(false, 'false'), false);
       });
 
       it('should work for "null"', () => {
-        expect(FILTERS.ne(null, 'null')).to.be.false;
+        strictEqual(FILTERS.ne(null, 'null'), false);
       });
 
       it('should work on edge cases', () => {
-        expect(FILTERS.ne('', '0')).to.be.true;
-        expect(FILTERS.ne('', 'null')).to.be.true;
-        expect(FILTERS.ne('', 'false')).to.be.true;
-        expect(FILTERS.ne(0, '')).to.be.true;
-        expect(FILTERS.ne(0, 'null')).to.be.true;
-        expect(FILTERS.ne(0, 'false')).to.be.true;
-        expect(FILTERS.ne('0', '')).to.be.true;
-        expect(FILTERS.ne('0', 'null')).to.be.true;
-        expect(FILTERS.ne('0', 'false')).to.be.true;
-        expect(FILTERS.ne(null, '')).to.be.true;
-        expect(FILTERS.ne(null, '0')).to.be.true;
-        expect(FILTERS.ne(null, 'false')).to.be.true;
-        expect(FILTERS.ne(false, '')).to.be.true;
-        expect(FILTERS.ne(false, '0')).to.be.true;
-        expect(FILTERS.ne(false, 'null')).to.be.true;
+        strictEqual(FILTERS.ne('', '0'), true);
+        strictEqual(FILTERS.ne('', 'null'), true);
+        strictEqual(FILTERS.ne('', 'false'), true);
+        strictEqual(FILTERS.ne(0, ''), true);
+        strictEqual(FILTERS.ne(0, 'null'), true);
+        strictEqual(FILTERS.ne(0, 'false'), true);
+        strictEqual(FILTERS.ne('0', ''), true);
+        strictEqual(FILTERS.ne('0', 'null'), true);
+        strictEqual(FILTERS.ne('0', 'false'), true);
+        strictEqual(FILTERS.ne(null, ''), true);
+        strictEqual(FILTERS.ne(null, '0'), true);
+        strictEqual(FILTERS.ne(null, 'false'), true);
+        strictEqual(FILTERS.ne(false, ''), true);
+        strictEqual(FILTERS.ne(false, '0'), true);
+        strictEqual(FILTERS.ne(false, 'null'), true);
       });
     });
 
     describe('gt', () => {
       it('should return true if the data is greater than the query', () => {
-        expect(FILTERS.gt(2, '1')).to.be.true;
+        strictEqual(FILTERS.gt(2, '1'), true);
       });
 
       it('should return false if the data is equal to the query', () => {
-        expect(FILTERS.gt(2, '2')).to.be.false;
+        strictEqual(FILTERS.gt(2, '2'), false);
       });
 
       it('should return false if the data is less than the query', () => {
-        expect(FILTERS.gt(2, '3')).to.be.false;
+        strictEqual(FILTERS.gt(2, '3'), false);
       });
 
       it('should use number ordering on numbers', () => {
-        expect(FILTERS.gt(2, '10')).to.be.false;
+        strictEqual(FILTERS.gt(2, '10'), false);
       });
 
       it('should use string ordering on strings', () => {
-        expect(FILTERS.gt('2', '10')).to.be.true;
+        strictEqual(FILTERS.gt('2', '10'), true);
       });
     });
 
     describe('gte', () => {
       it('should return true if the data is greater than the query', () => {
-        expect(FILTERS.gte(2, '1')).to.be.true;
+        strictEqual(FILTERS.gte(2, '1'), true);
       });
 
       it('should return true if the data is equal to the query', () => {
-        expect(FILTERS.gte(2, '2')).to.be.true;
+        strictEqual(FILTERS.gte(2, '2'), true);
       });
 
       it('should return false if the data is less than the query', () => {
-        expect(FILTERS.gte(2, '3')).to.be.false;
+        strictEqual(FILTERS.gte(2, '3'), false);
       });
 
       it('should use number ordering on numbers', () => {
-        expect(FILTERS.gte(2, '10')).to.be.false;
+        strictEqual(FILTERS.gte(2, '10'), false);
       });
 
       it('should use string ordering on strings', () => {
-        expect(FILTERS.gte('2', '10')).to.be.true;
+        strictEqual(FILTERS.gte('2', '10'), true);
       });
     });
 
     describe('lt', () => {
       it('should return false if the data is greater than the query', () => {
-        expect(FILTERS.lt(2, '1')).to.be.false;
+        strictEqual(FILTERS.lt(2, '1'), false);
       });
 
       it('should return false if the data is equal to the query', () => {
-        expect(FILTERS.lt(2, '2')).to.be.false;
+        strictEqual(FILTERS.lt(2, '2'), false);
       });
 
       it('should return true if the data is less than the query', () => {
-        expect(FILTERS.lt(2, '3')).to.be.true;
+        strictEqual(FILTERS.lt(2, '3'), true);
       });
 
       it('should use number ordering on numbers', () => {
-        expect(FILTERS.lt(2, '10')).to.be.true;
+        strictEqual(FILTERS.lt(2, '10'), true);
       });
 
       it('should use string ordering on strings', () => {
-        expect(FILTERS.lt('2', '10')).to.be.false;
+        strictEqual(FILTERS.lt('2', '10'), false);
       });
     });
 
     describe('lte', () => {
       it('should return false if the data is greater than the query', () => {
-        expect(FILTERS.lte(2, '1')).to.be.false;
+        strictEqual(FILTERS.lte(2, '1'), false);
       });
 
       it('should return true if the data is equal to the query', () => {
-        expect(FILTERS.lte(2, '2')).to.be.true;
+        strictEqual(FILTERS.lte(2, '2'), true);
       });
 
       it('should return true if the data is less than the query', () => {
-        expect(FILTERS.lte(2, '3')).to.be.true;
+        strictEqual(FILTERS.lte(2, '3'), true);
       });
 
       it('should use number ordering on numbers', () => {
-        expect(FILTERS.lte(2, '10')).to.be.true;
+        strictEqual(FILTERS.lte(2, '10'), true);
       });
 
       it('should use string ordering on strings', () => {
-        expect(FILTERS.lte('2', '10')).to.be.false;
+        strictEqual(FILTERS.lte('2', '10'), false);
       });
     });
 
     describe('like', () => {
       it('should return true if the data matches the query', () => {
-        expect(FILTERS.like('peter', 'peter')).to.be.true;
+        strictEqual(FILTERS.like('peter', 'peter'), true);
       });
 
       it('should return true if the data matches the query (number)', () => {
-        expect(FILTERS.like(18, '18')).to.be.true;
+        strictEqual(FILTERS.like(18, '18'), true);
       });
 
       it('should return true if the data contains the query', () => {
-        expect(FILTERS.like('peter', 'et')).to.be.true;
+        strictEqual(FILTERS.like('peter', 'et'), true);
       });
 
       it('should match case-insensitive', () => {
-        expect(FILTERS.like('peter', 'T')).to.be.true;
+        strictEqual(FILTERS.like('peter', 'T'), true);
       });
 
       it('should return false if the data does not match the query', () => {
-        expect(FILTERS.like('peter', 'o')).to.be.false;
+        strictEqual(FILTERS.like('peter', 'o'), false);
       });
 
       it('should match a regex', () => {
-        expect(FILTERS.like('peter', 'p.*r')).to.be.true;
-        expect(FILTERS.like('1', '^(1|2|3)$')).to.be.true;
+        strictEqual(FILTERS.like('peter', 'p.*r'), true);
+        strictEqual(FILTERS.like('1', '^(1|2|3)$'), true);
       });
     });
 
     describe('start', () => {
       it('should return true if the data starts with the query', () => {
-        expect(FILTERS.start('peter', 'p')).to.be.true;
+        strictEqual(FILTERS.start('peter', 'p'), true);
       });
 
       it('should return true if the data starts with the query (number)', () => {
-        expect(FILTERS.start(18, '1')).to.be.true;
+        strictEqual(FILTERS.start(18, '1'), true);
       });
 
       it('should match case-insensitive', () => {
-        expect(FILTERS.start('peter', 'P')).to.be.true;
+        strictEqual(FILTERS.start('peter', 'P'), true);
       });
 
       it('should return false if the data does not start with the query', () => {
-        expect(FILTERS.start('peter', 'e')).to.be.false;
+        strictEqual(FILTERS.start('peter', 'e'), false);
       });
 
       it('should match a regex', () => {
-        expect(FILTERS.like('peter', 'p.*r')).to.be.true;
-        expect(FILTERS.like('1', '(1|2|3)$')).to.be.true;
+        strictEqual(FILTERS.like('peter', 'p.*r'), true);
+        strictEqual(FILTERS.like('1', '(1|2|3)$'), true);
       });
     });
 
     describe('end', () => {
       it('should return true if the data ends with the query', () => {
-        expect(FILTERS.end('peter', 'r')).to.be.true;
+        strictEqual(FILTERS.end('peter', 'r'), true);
       });
 
       it('should return true if the data ends with the query (number)', () => {
-        expect(FILTERS.end(18, '8')).to.be.true;
+        strictEqual(FILTERS.end(18, '8'), true);
       });
 
       it('should match case-insensitive', () => {
-        expect(FILTERS.end('peter', 'R')).to.be.true;
+        strictEqual(FILTERS.end('peter', 'R'), true);
       });
 
       it('should return false if the data does not end with the query', () => {
-        expect(FILTERS.end('peter', 'e')).to.be.false;
+        strictEqual(FILTERS.end('peter', 'e'), false);
       });
 
       it('should match a regex', () => {
-        expect(FILTERS.like('peter', 'p.*r')).to.be.true;
-        expect(FILTERS.like('1', '^(1|2|3)')).to.be.true;
+        strictEqual(FILTERS.like('peter', 'p.*r'), true);
+        strictEqual(FILTERS.like('1', '^(1|2|3)'), true);
       });
     });
   });

@@ -228,7 +228,7 @@ describe('Callback filter', () => {
     await callbacks.select(1);
     await callbacks.setDocumentation('This is use to test a Post callback');
     await callbacks.select(2);
-    await callbacks.setName('Still a nice databucket');
+    await callbacks.setName('Still a nice callback');
 
     await callbacks.assertCount(4);
 
@@ -489,6 +489,7 @@ describe('Callback usages', () => {
       await environments.close(1);
       await environments.close(1);
       await environments.close(1);
+      await utils.waitForAutosave();
       await browser.reloadSession();
 
       await environments.open('callbacks');

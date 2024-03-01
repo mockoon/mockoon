@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { deepStrictEqual, strictEqual } from 'assert';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
 describe('Global helpers', () => {
@@ -14,7 +14,7 @@ describe('Global helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(emptyGlobalVariables).to.deep.equal({});
+      deepStrictEqual(emptyGlobalVariables, {});
     });
 
     it('should do nothing if value is missing', () => {
@@ -28,7 +28,7 @@ describe('Global helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(emptyGlobalVariables).to.deep.equal({});
+      deepStrictEqual(emptyGlobalVariables, {});
     });
 
     it('should store variables (testing safestring compat too)', () => {
@@ -46,9 +46,9 @@ describe('Global helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(emptyGlobalVariables['data1']).to.be.equal(1);
-      expect(emptyGlobalVariables['data2']).to.be.equal(false);
-      expect(emptyGlobalVariables['test']).to.be.equal('hello');
+      strictEqual(emptyGlobalVariables['data1'], 1);
+      strictEqual(emptyGlobalVariables['data2'], false);
+      strictEqual(emptyGlobalVariables['test'], 'hello');
     });
 
     it('should get variable, return should be empty when omitting the var name', () => {
@@ -62,7 +62,7 @@ describe('Global helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parsedContent).to.be.equal('');
+      strictEqual(parsedContent, '');
     });
 
     it('should get variable, return should be empty with non existing var name', () => {
@@ -76,7 +76,7 @@ describe('Global helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parsedContent).to.be.equal('');
+      strictEqual(parsedContent, '');
     });
 
     it('should get variable, return should be default with non existing var name (number)', () => {
@@ -90,7 +90,7 @@ describe('Global helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parsedContent).to.be.equal('25');
+      strictEqual(parsedContent, '25');
     });
 
     it('should get variable, return should be default with non existing var name (boolean)', () => {
@@ -104,7 +104,7 @@ describe('Global helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parsedContent).to.be.equal('false');
+      strictEqual(parsedContent, 'false');
     });
 
     it('should get variable, return should be empty with non existing var name and path', () => {
@@ -118,7 +118,7 @@ describe('Global helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parsedContent).to.be.equal('');
+      strictEqual(parsedContent, '');
     });
 
     it('should set and get variable, should return full content without path', () => {
@@ -135,10 +135,10 @@ describe('Global helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(emptyGlobalVariables['data1']).to.deep.equal({
+      deepStrictEqual(emptyGlobalVariables['data1'], {
         deepprop1: 'hello'
       });
-      expect(parsedContent).to.deep.equal('{\n  "deepprop1": "hello"\n}');
+      deepStrictEqual(parsedContent, '{\n  "deepprop1": "hello"\n}');
     });
 
     it('should set and get variable, should return nothing when a wrong path is passed', () => {
@@ -155,10 +155,10 @@ describe('Global helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(emptyGlobalVariables['data1']).to.deep.equal({
+      deepStrictEqual(emptyGlobalVariables['data1'], {
         deepprop1: 'hello'
       });
-      expect(parsedContent).to.deep.equal('');
+      deepStrictEqual(parsedContent, '');
     });
 
     it('should set and get variable, should return default value when a wrong path is passed', () => {
@@ -175,10 +175,10 @@ describe('Global helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(emptyGlobalVariables['data1']).to.deep.equal({
+      deepStrictEqual(emptyGlobalVariables['data1'], {
         deepprop1: 'hello'
       });
-      expect(parsedContent).to.deep.equal('default');
+      deepStrictEqual(parsedContent, 'default');
     });
 
     it('should set and get variable, should return value when a path is passed', () => {
@@ -195,10 +195,10 @@ describe('Global helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(emptyGlobalVariables['data1']).to.deep.equal({
+      deepStrictEqual(emptyGlobalVariables['data1'], {
         deepprop1: 'hello'
       });
-      expect(parsedContent).to.deep.equal('hello');
+      deepStrictEqual(parsedContent, 'hello');
     });
   });
 });
