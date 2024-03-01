@@ -24,21 +24,21 @@ describe('Databuckets navigation and deletion', () => {
 
   it('should navigate to the databuckets tab and verify the header count', async () => {
     await navigation.switchView('ENV_DATABUCKETS');
-    await databuckets.assertCount(4);
-    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 4');
+    await databuckets.assertCount(5);
+    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 5');
   });
 
   it('should delete the single databucket and verify the header count and message', async () => {
-    await databuckets.remove(4);
-    await databuckets.assertCount(3);
-    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 3');
+    await databuckets.remove(5);
+    await databuckets.assertCount(4);
+    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 4');
   });
 });
 
 describe('Databuckets addition', () => {
   it('should add a databucket', async () => {
     await databuckets.add();
-    await databuckets.assertCount(4);
+    await databuckets.assertCount(5);
     await databuckets.assertName('New data');
   });
 
@@ -46,13 +46,13 @@ describe('Databuckets addition', () => {
     await utils.waitForAutosave();
     const id = await file.getObjectPropertyInFile(
       './tmp/storage/databuckets.json',
-      'data.3.id'
+      'data.4.id'
     );
     expect(await databuckets.idElement.getText()).toContain(`Unique ID: ${id}`);
   });
 
   it('should copy the ID to the clipboard via the context menu', async () => {
-    await databuckets.copyID(4);
+    await databuckets.copyID(5);
     expect(await databuckets.idElement.getText()).toContain(
       await clipboard.read()
     );
@@ -68,7 +68,7 @@ describe('Databuckets edition', () => {
     await databuckets.assertName('My Databucket');
     await file.verifyObjectPropertyInFile(
       './tmp/storage/databuckets.json',
-      ['data.3.name'],
+      ['data.4.name'],
       ['My Databucket']
     );
   });
@@ -81,7 +81,7 @@ describe('Databuckets edition', () => {
     await databuckets.assertDocumentation('Documentation of the databucket');
     await file.verifyObjectPropertyInFile(
       './tmp/storage/databuckets.json',
-      ['data.3.documentation'],
+      ['data.4.documentation'],
       ['Documentation of the databucket']
     );
   });
@@ -89,8 +89,8 @@ describe('Databuckets edition', () => {
 
 describe('Databucket duplication', () => {
   it('should duplicate a databucket', async () => {
-    await databuckets.duplicate(4);
-    await databuckets.assertCount(5);
+    await databuckets.duplicate(5);
+    await databuckets.assertCount(6);
     await databuckets.assertName('My Databucket (copy)');
   });
 });
@@ -104,7 +104,7 @@ describe('Databucket duplication to another envionment', () => {
     await environments.open('basic-data.json');
     await environments.select(1);
     await navigation.switchView('ENV_DATABUCKETS');
-    await databuckets.duplicateToEnv(4);
+    await databuckets.duplicateToEnv(5);
 
     await modals.assertExists();
 
@@ -148,7 +148,7 @@ describe('Databucket filter', () => {
     await databuckets.select(2);
     await databuckets.setName('Still a nice databucket');
 
-    await databuckets.assertCount(5);
+    await databuckets.assertCount(6);
 
     await databuckets.setFilter('Best');
     await browser.pause(100);
@@ -163,7 +163,7 @@ describe('Databucket filter', () => {
     await databuckets.select(2);
     await databuckets.setName('Second databucket');
 
-    await databuckets.assertCount(5);
+    await databuckets.assertCount(6);
 
     await databuckets.setFilter('Second');
     await browser.pause(100);
@@ -173,14 +173,14 @@ describe('Databucket filter', () => {
   it('should reset databuckets filter when clicking on the button Clear filter', async () => {
     await databuckets.clearFilter();
     await browser.pause(100);
-    await databuckets.assertCount(5);
+    await databuckets.assertCount(6);
   });
 
   it('should reset databuckets filter when adding a new databucket', async () => {
     await databuckets.setFilter('Second');
     await databuckets.add();
     await databuckets.assertFilter('');
-    await databuckets.remove(5);
+    await databuckets.remove(6);
   });
 
   it('should reset databuckets filter when switching env', async () => {
@@ -355,6 +355,36 @@ describe('Databuckets selection in responses', () => {
       method: 'GET',
       path: '/databucketWithImbricatedReqHelper',
       testedResponse: { body: 'testtesttesttesttesttesttest' }
+    });
+  });
+
+  it('should generate databucket when referenced with either data or dataRaw helper and when imbricated in other helpers', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/multipleDatabucketsFromBody?param=paramvalue1&limit=4',
+      testedResponse: { body: 'paramvalue1testtesttesttesthello' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/multipleDatabucketsFromBody',
+      testedResponse: { body: 'paramvalue1testtesttesttesthello' }
+    });
+  });
+
+  it('should generate nested databucket (not referenced anywhere else) containing request helpers', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/nestedDatabuckets?param=1234',
+      testedResponse: { body: '{"id":"1234","otherBucketId":"1234"}' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/nestedDatabuckets',
+      testedResponse: { body: '{"id":"1234","otherBucketId":"1234"}' }
     });
   });
 });
