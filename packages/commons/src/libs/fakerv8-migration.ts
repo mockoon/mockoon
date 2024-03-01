@@ -19,8 +19,8 @@ export const fakerV8Migration = (data: any) => {
         value instanceof Array
           ? `\$1${value[0]}\$2 ${value.slice(1).join(' ')}$3`
           : value === ''
-          ? ''
-          : `\$1${value}\$2$3`;
+            ? ''
+            : `\$1${value}\$2$3`;
       data = data.replace(oldMethod, newMethod);
     }
   }

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
 describe('Data helpers', () => {
@@ -13,7 +13,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return nothing if given a wrong databucket name', () => {
@@ -33,7 +33,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return number without without quotes', () => {
@@ -53,7 +53,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return boolean value without quotes', () => {
@@ -73,7 +73,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return null value without quotes', () => {
@@ -93,7 +93,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('null');
+      strictEqual(parseResult, 'null');
     });
 
     it('should always return array as JSON string', () => {
@@ -113,7 +113,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('["first","second"]');
+      strictEqual(parseResult, '["first","second"]');
     });
 
     it('should always return object as JSON string', () => {
@@ -133,7 +133,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('{"key":"value"}');
+      strictEqual(parseResult, '{"key":"value"}');
     });
 
     it('should return string without enclosing it in quotes', () => {
@@ -153,7 +153,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test');
+      strictEqual(parseResult, 'test');
     });
 
     it('should return property at a path', () => {
@@ -177,7 +177,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
 
     it('should return empty string if property at a path does not exists', () => {
@@ -201,7 +201,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return falsy property at a path', () => {
@@ -223,7 +223,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return property at a path with dots', () => {
@@ -247,7 +247,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
     it('should return the data matching jsonpath expression', () => {
       const parseResult = TemplateParser({
@@ -280,7 +280,8 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]value'
       );
     });
@@ -303,7 +304,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
   });
 
@@ -318,7 +319,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return nothing if given a wrong databucket name', () => {
@@ -338,7 +339,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return string without enclosing it in quotes', () => {
@@ -358,7 +359,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test');
+      strictEqual(parseResult, 'test');
     });
 
     it('should return number without without quotes', () => {
@@ -378,7 +379,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return boolean value without quotes', () => {
@@ -398,7 +399,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return null value without quotes', () => {
@@ -418,7 +419,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('null');
+      strictEqual(parseResult, 'null');
     });
 
     it('should return array as JSON string', () => {
@@ -438,7 +439,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('first,second');
+      strictEqual(parseResult, 'first,second');
     });
 
     it('should be usable with a each', () => {
@@ -458,7 +459,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphin1dolphin2dolphin3');
+      strictEqual(parseResult, 'dolphin1dolphin2dolphin3');
     });
 
     it('should be usable within a if clause', () => {
@@ -478,7 +479,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphin');
+      strictEqual(parseResult, 'dolphin');
     });
 
     it('should return the enumerated strings when databucket contains an array and no path is provided', () => {
@@ -498,7 +499,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('string1string2');
+      strictEqual(parseResult, 'string1string2');
     });
 
     it('should return property at a path', () => {
@@ -522,7 +523,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
 
     it('should return empty string if property does not exist', () => {
@@ -546,7 +547,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return falsy property at a path', () => {
@@ -569,7 +570,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('truthy');
+      strictEqual(parseResult, 'truthy');
     });
 
     it('should return property at a path with dots', () => {
@@ -591,7 +592,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
 
     it('should return property at a path with dots, when path comes from a SafeString', () => {
@@ -613,7 +614,7 @@ describe('Data helpers', () => {
         request: { query: { path: 'prop\\.with\\.dots' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
 
     it('should return and use the array at path', () => {
@@ -633,7 +634,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('string1string2');
+      strictEqual(parseResult, 'string1string2');
     });
     it('should return the data matching jsonpath expression', () => {
       const parseResult = TemplateParser({
@@ -666,7 +667,8 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
     });
@@ -689,7 +691,7 @@ describe('Data helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
   });
 });

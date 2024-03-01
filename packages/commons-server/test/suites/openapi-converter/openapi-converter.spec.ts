@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { OpenAPIConverter } from '../../../src';
 
 describe('OpenAPI converter', () => {
@@ -8,7 +8,7 @@ describe('OpenAPI converter', () => {
       './test/data/openapi/openapi-v3.yaml'
     );
 
-    expect(environment?.endpointPrefix).to.be.equal('prefix');
+    strictEqual(environment?.endpointPrefix, 'prefix');
   });
 
   it('should return default response if route has no examples (no response added)', async () => {
@@ -20,10 +20,8 @@ describe('OpenAPI converter', () => {
       (route) => route.endpoint === 'without-examples'
     );
 
-    expect(routeWithoutExample?.responses.length).to.be.equal(1);
-    expect(routeWithoutExample?.responses[0].label).to.be.equal(
-      'Default response'
-    );
+    strictEqual(routeWithoutExample?.responses.length, 1);
+    strictEqual(routeWithoutExample?.responses[0].label, 'Default response');
   });
 
   it('should add route response from example (Swagger)', async () => {
@@ -36,8 +34,8 @@ describe('OpenAPI converter', () => {
       (route) => route.endpoint === 'with-one-example'
     );
 
-    expect(routeWithOneExample?.responses.length).to.be.equal(2);
-    expect(routeWithOneExample?.responses[1].label).to.be.equal('Sports');
+    strictEqual(routeWithOneExample?.responses.length, 2);
+    strictEqual(routeWithOneExample?.responses[1].label, 'Sports');
   });
 
   it('should add route response from example (OpenAPI v3)', async () => {
@@ -49,8 +47,8 @@ describe('OpenAPI converter', () => {
       (route) => route.endpoint === 'with-one-example'
     );
 
-    expect(routeWithOneExample?.responses.length).to.be.equal(2);
-    expect(routeWithOneExample?.responses[1].label).to.be.equal('Sports');
+    strictEqual(routeWithOneExample?.responses.length, 2);
+    strictEqual(routeWithOneExample?.responses[1].label, 'Sports');
   });
 
   it('should add multiple route responses from multiple examples', async () => {
@@ -62,8 +60,8 @@ describe('OpenAPI converter', () => {
       (route) => route.endpoint === 'with-examples'
     );
 
-    expect(routeWithExamples?.responses.length).to.be.equal(3);
-    expect(routeWithExamples?.responses[2].label).to.be.equal('Music');
+    strictEqual(routeWithExamples?.responses.length, 3);
+    strictEqual(routeWithExamples?.responses[2].label, 'Music');
   });
 
   it('should add route response with example data', async () => {
@@ -85,7 +83,7 @@ describe('OpenAPI converter', () => {
   }
 ]`;
 
-    expect(routeWithOneExample?.responses[1].body).to.be.equal(expectedBody);
+    strictEqual(routeWithOneExample?.responses[1].body, expectedBody);
   });
 
   it('should keep route response from schema as default', async () => {
@@ -103,7 +101,7 @@ describe('OpenAPI converter', () => {
       (response) => response.label === 'Music'
     );
 
-    expect(defaultResponse?.default).to.be.equal(true);
-    expect(exampleResponse?.default).to.be.equal(false);
+    strictEqual(defaultResponse?.default, true);
+    strictEqual(exampleResponse?.default, false);
   });
 });

@@ -157,6 +157,7 @@ describe('Databucket filter', () => {
   });
 
   it('should filter databuckets by name', async () => {
+    await utils.closeTooltip();
     await databuckets.select(1);
     await databuckets.setName('First databucket');
     await databuckets.select(2);

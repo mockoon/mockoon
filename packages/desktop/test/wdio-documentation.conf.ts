@@ -1,5 +1,5 @@
 import { Options } from '@wdio/types';
-import { config as defaultConfig } from './wdio.conf';
+import { config as defaultConfig } from './wdio-common.conf';
 
 const config: Options.Testrunner = {
   ...defaultConfig,

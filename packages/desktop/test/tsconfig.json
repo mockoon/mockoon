@@ -2,6 +2,12 @@
   "compilerOptions": {
     "baseUrl": "./test",
     "module": "commonjs",
-    "types": ["node", "@wdio/globals/types", "@wdio/mocha-framework"]
+    "types": [
+      "node",
+      "@wdio/globals/types",
+      "expect-webdriverio",
+      "@wdio/mocha-framework",
+      "wdio-electron-service"
+    ]
   }
 }

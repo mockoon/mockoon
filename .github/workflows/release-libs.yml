@@ -16,15 +16,15 @@ jobs:
       NPM_TOKEN: ${{secrets.NPM_TOKEN}}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -58,7 +58,7 @@ jobs:
     needs: npm-publish
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Extract app version
         id: app-version
         run: |

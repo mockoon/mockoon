@@ -98,21 +98,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mockoon:build"
+            "buildTarget": "mockoon:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mockoon:build:production"
+              "buildTarget": "mockoon:build:production"
             },
             "development": {
-              "browserTarget": "mockoon:build:development"
+              "buildTarget": "mockoon:build:development"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mockoon:build"
+            "buildTarget": "mockoon:build"
           }
         },
         "lint": {

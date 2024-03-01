@@ -47,10 +47,9 @@
     "test:libs": "lerna run --stream --scope @mockoon/commons test && lerna run --scope @mockoon/commons-server test",
     "test:serverless": "lerna run --stream --scope @mockoon/serverless test",
     "test:cli": "lerna run --stream --scope @mockoon/cli test",
-    "test:desktop": "lerna run --stream --scope @mockoon/desktop test",
-    "test:desktop:packaged:win": "lerna run --stream --scope @mockoon/desktop test:packaged:win",
-    "test:desktop:packaged:mac": "lerna run --stream --scope @mockoon/desktop test:packaged:mac",
-    "test:desktop:packaged:linux": "lerna run --stream --scope @mockoon/desktop test:packaged:linux",
+    "test:desktop:win": "lerna run --stream --scope @mockoon/desktop test:win",
+    "test:desktop:mac": "lerna run --stream --scope @mockoon/desktop test:mac",
+    "test:desktop:linux": "lerna run --stream --scope @mockoon/desktop test:linux",
     "package:desktop:win": "lerna run --stream --scope @mockoon/desktop package:win",
     "package:desktop:win:appx": "lerna run --stream --scope @mockoon/desktop package:win:appx",
     "package:desktop:mac": "lerna run --stream --scope @mockoon/desktop package:mac",
@@ -61,11 +60,11 @@
     "documentation:desktop": "lerna run --stream --scope @mockoon/desktop documentation"
   },
   "devDependencies": {
-    "concurrently": "8.2.1",
-    "dotenv": "16.3.1",
-    "eslint-config-prettier": "9.0.0",
+    "concurrently": "8.2.2",
+    "dotenv": "16.4.5",
+    "eslint-config-prettier": "9.1.0",
     "lerna": "6.5.1",
-    "prettier": "3.0.3",
-    "prettier-plugin-organize-imports": "3.2.3"
+    "prettier": "3.2.5",
+    "prettier-plugin-organize-imports": "3.2.4"
   }
 }

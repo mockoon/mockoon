@@ -120,9 +120,10 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.activeEnvironment$ = this.store.selectActiveEnvironment();
-    this.hasCallbacks$ = this.store.selectActiveEnvironment().pipe(
-      filter((activeEnvironment) => !!activeEnvironment),
+    this.activeEnvironment$ = this.store
+      .selectActiveEnvironment()
+      .pipe(filter((activeEnvironment) => !!activeEnvironment));
+    this.hasCallbacks$ = this.activeEnvironment$.pipe(
       map((activeEnvironment) => activeEnvironment.callbacks.length > 0)
     );
     this.activeCallback$ = this.store.selectActiveCallback();
@@ -154,9 +155,8 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
         routes
           .filter((r) => {
             if (r.responses) {
-              return !!r.responses.find(
-                (res) =>
-                  res.callbacks?.find((cb) => cb.uuid === activeCallbackId)
+              return !!r.responses.find((res) =>
+                res.callbacks?.find((cb) => cb.uuid === activeCallbackId)
               );
             }
 
@@ -168,9 +168,8 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
                 routeUUID: r.uuid,
                 label: `${r.method.toUpperCase()} /${r.endpoint}`,
                 responses: r.responses
-                  ?.filter(
-                    (rs) =>
-                      rs.callbacks?.find((cb) => cb.uuid === activeCallbackId)
+                  ?.filter((rs) =>
+                    rs.callbacks?.find((cb) => cb.uuid === activeCallbackId)
                   )
                   .map((rs) => ({
                     responseUUID: rs.uuid,
@@ -184,7 +183,6 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     );
 
     this.databuckets$ = this.activeEnvironment$.pipe(
-      filter((activeEnvironment) => !!activeEnvironment),
       map((activeEnvironment) =>
         activeEnvironment.data.map((data) => ({
           value: data.id,

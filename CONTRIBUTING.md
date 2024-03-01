@@ -100,15 +100,31 @@ After the packages are build, you can run the tests necessary to your changes:
 
 - `npm run test:commons`
 - `npm run test:commons-server`
-- `npm run test:libs`
+- `npm run test:libs` (includes `commons` and `commons-server`)
 - `npm run test:serverless`
 - `npm run test:cli`
-- `npm run test:desktop` or `npm run test:desktop -- -- --spec "filename.spec.ts"` from the monorepo root level to run one test file.
-- `npm run test:desktop:packaged:win`
-- `npm run test:desktop:packaged:mac`
-- `npm run test:desktop:packaged:linux`
 
-All tests will also be run on each commit or pull request in the CI environment.
+To run the desktop application tests, first you need to package the application for your platform. Run one of the following commands:
+
+- `package:desktop:test:win`
+- `package:desktop:test:mac`
+- `package:desktop:test:linux`
+
+This will create a packaged version of the desktop application (without installer) in the `./packages/desktop/packages/{win-unpacked|mac|linux-unpacked}` folder.
+
+You can then run the tests with one of the following commands:
+
+- `test:desktop:win`
+- `test:desktop:mac`
+- `test:desktop:linux`
+
+You can also run a single test file with the following commands (from the monorepo root level):
+
+- `npm run test:desktop:{win|mac|linux} -- -- --spec "filename.spec.ts"`
+
+All tests will also be run on each commit or pull request in the CI environment. You can perfectly rely on the CI to check if your changes are breaking the tests or not.
+
+> ℹ️ Note: Since update v7.0.0 where dependencies were update (especially Webdriverio and Electron 29), running the desktop test against an unpackaged version of the application using the `node_modules` binary (e.g. `node_modules/.bin/electron app=dist/app.js`) is not working anymore.
 
 ## Open a pull request
 
