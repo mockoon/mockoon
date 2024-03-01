@@ -1576,12 +1576,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    *
    * @param data text to be searched for possible databucket ids
    */
-  private captureReferredDatabucketNames(
-    text?: string
-  ): IterableIterator<RegExpMatchArray> | undefined {
-    return text?.matchAll(
-      new RegExp('{{2,3}[#(\\s\\w]*data [\'|"]{1}([^(\'|")]*)', 'g')
+  private captureReferencedDatabucketIds(text?: string): string[] {
+    const matches = text?.matchAll(
+      new RegExp('data(?:Raw)? +[\'|"]{1}([^(\'|")]*)', 'g')
     );
+
+    return [...(matches || [])].map((match) => match[1]);
   }
 
   /**
@@ -1596,35 +1596,33 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private findDatabucketIdsInCallbacks(
     response: RouteResponse,
     environment: Environment
-  ): Set<string> {
-    const result = new Set<string>();
-
+  ): string[] {
     if (response.callbacks && response.callbacks.length > 0) {
       for (const invocation of response.callbacks) {
-        const cb = environment.callbacks.find(
+        const callback = environment.callbacks.find(
           (ref) => ref.uuid === invocation.uuid
         );
 
-        if (!cb) {
+        if (!callback) {
           continue;
         }
 
-        const results = this.captureReferredDatabucketNames(cb.body);
-        [...(results || [])]
-          .map((match) => match[1])
-          .forEach((id) => result.add(id));
+        const dataBucketIds = this.captureReferencedDatabucketIds(
+          callback.body
+        );
 
-        if (cb.databucketID) {
-          result.add(cb.databucketID);
+        if (callback.databucketID) {
+          dataBucketIds.push(callback.databucketID);
         }
       }
     }
 
-    return result;
+    return [];
   }
 
   /**
-   * Generate the databuckets called with the data helper on route call
+   * Generate the databuckets that were not parsed at the server start
+   *
    * @param route
    * @param environment
    * @param request
@@ -1643,60 +1641,80 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       return;
     }
 
+    let databucketIdsToParse = new Set<string>();
+
     route.responses.forEach((response) => {
-      const results = this.captureReferredDatabucketNames(response.body);
-      const databucketIdsToParse = new Set(
-        [...(results || [])].map((match) => match[1])
-      );
+      // capture databucket ids in body and relevant callback definitions
+      [
+        ...this.captureReferencedDatabucketIds(response.body),
+        ...this.findDatabucketIdsInCallbacks(response, environment)
+      ].forEach((dataBucketName) => databucketIdsToParse.add(dataBucketName));
 
       if (response.databucketID) {
         databucketIdsToParse.add(response.databucketID);
       }
+    });
 
-      // capture databucket ids in relevant callback definitions
-      this.findDatabucketIdsInCallbacks(response, environment).forEach((id) =>
-        databucketIdsToParse.add(id)
-      );
+    // capture databucket ids in found databuckets to allow for nested databucket parsing
+    let nestedDatabucketIds: string[] = [];
 
-      if (databucketIdsToParse.size > 0) {
-        let targetDatabucket: ProcessedDatabucket | undefined;
+    environment.data.forEach((databucket) => {
+      if (
+        databucketIdsToParse.has(databucket.id) ||
+        [...databucketIdsToParse.keys()].some((id) =>
+          databucket.name.toLowerCase().includes(id.toLowerCase())
+        )
+      ) {
+        nestedDatabucketIds = [
+          ...this.captureReferencedDatabucketIds(databucket.value)
+        ];
+      }
+    });
 
-        for (const databucketIdToParse of databucketIdsToParse) {
-          targetDatabucket = this.processedDatabuckets.find(
-            (databucket) =>
-              databucket.id === databucketIdToParse ||
-              databucket.name
-                .toLowerCase()
-                .includes(databucketIdToParse.toLowerCase())
-          );
+    // add nested databucket ids at the beginning of the set to ensure they are parsed first
+    databucketIdsToParse = new Set([
+      ...nestedDatabucketIds,
+      ...databucketIdsToParse
+    ]);
 
-          if (targetDatabucket && !targetDatabucket?.parsed) {
-            let content = targetDatabucket.value;
-            try {
-              content = TemplateParser({
-                shouldOmitDataHelper: false,
-                content: targetDatabucket.value,
-                environment,
-                processedDatabuckets: this.processedDatabuckets,
-                globalVariables: this.globalVariables,
-                request,
-                envVarsPrefix: this.options.envVarsPrefix
-              });
-              const JSONParsedcontent = JSON.parse(content);
-              targetDatabucket.value = JSONParsedcontent;
-              targetDatabucket.parsed = true;
-            } catch (error: any) {
-              if (error instanceof SyntaxError) {
-                targetDatabucket.value = content;
-              } else {
-                targetDatabucket.value = error.message;
-              }
-              targetDatabucket.parsed = true;
+    if (databucketIdsToParse.size > 0) {
+      let targetDatabucket: ProcessedDatabucket | undefined;
+
+      for (const databucketIdToParse of databucketIdsToParse) {
+        targetDatabucket = this.processedDatabuckets.find(
+          (databucket) =>
+            databucket.id === databucketIdToParse ||
+            databucket.name
+              .toLowerCase()
+              .includes(databucketIdToParse.toLowerCase())
+        );
+
+        if (targetDatabucket && !targetDatabucket?.parsed) {
+          let content = targetDatabucket.value;
+          try {
+            content = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: targetDatabucket.value,
+              environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              request,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
+            const JSONParsedcontent = JSON.parse(content);
+            targetDatabucket.value = JSONParsedcontent;
+            targetDatabucket.parsed = true;
+          } catch (error: any) {
+            if (error instanceof SyntaxError) {
+              targetDatabucket.value = content;
+            } else {
+              targetDatabucket.value = error.message;
             }
+            targetDatabucket.parsed = true;
           }
         }
       }
-    });
+    }
   }
 
   /**
