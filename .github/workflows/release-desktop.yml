@@ -125,7 +125,7 @@ jobs:
       - name: Upload Windows portable exe
         uses: actions/upload-artifact@v4
         with:
-          name: exe
+          name: exe-portable
           path: ./packages/desktop/packages/mockoon.portable.*.exe
 
   # APPX build requires no code signing env vars to work, thus the separated job
