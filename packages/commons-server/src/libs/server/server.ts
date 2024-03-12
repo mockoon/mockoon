@@ -567,8 +567,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           enabledRouteResponse.bodyType === BodyTypes.FILE &&
           enabledRouteResponse.filePath
         ) {
-          this.makeCallbacks(enabledRouteResponse, request, response);
-
           this.sendFile(
             route,
             enabledRouteResponse,
@@ -576,6 +574,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             request,
             response
           );
+
           // serve inline body or databucket
         } else {
           let templateParse = true;
@@ -625,8 +624,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               }
             }
           }
-
-          this.makeCallbacks(enabledRouteResponse, request, response);
 
           this.serveBody(
             content || '',
@@ -787,6 +784,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.applyResponseLocals(response);
 
       response.body = content;
+
+      // execute callbacks after generating the template, to be able to use the eventual templating variables in the callback
+      this.makeCallbacks(routeResponse, request, response);
 
       response.send(content);
     } catch (error: any) {
@@ -1035,6 +1035,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             this.applyResponseLocals(response);
 
             response.body = fileContent;
+
+            // execute callbacks after generating the file content, to be able to use the eventual templating variables in the callback
+            this.makeCallbacks(routeResponse, request, response);
+
             response.send(fileContent);
           } catch (error: any) {
             fileServingError(error);
@@ -1104,6 +1108,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               stream = createReadStream(filePath, { start, end });
             }
           }
+
+          this.makeCallbacks(routeResponse, request, response);
 
           stream.pipe(response);
         } catch (error: any) {

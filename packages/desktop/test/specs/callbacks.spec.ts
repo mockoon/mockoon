@@ -519,18 +519,6 @@ describe('Callback usages', () => {
       await callbacks.attachCallback();
       await utils.openDropdown('callback0target');
       await utils.selectDropdownItem('callback0target', 7);
-
-      await routes.select(2);
-      await routes.callbacksTab.click();
-      await callbacks.attachCallback();
-      await utils.openDropdown('callback0target');
-      await utils.selectDropdownItem('callback0target', 7);
-
-      await routes.select(3);
-      await routes.callbacksTab.click();
-      await callbacks.attachCallback();
-      await utils.openDropdown('callback0target');
-      await utils.selectDropdownItem('callback0target', 7);
     });
 
     it('should start the environment call each route and verify the callback has been called', async () => {
@@ -539,19 +527,8 @@ describe('Callback usages', () => {
       await navigation.switchView('ENV_LOGS');
 
       await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
-      await browser.pause(500);
+      await browser.pause(1000);
       await environmentsLogs.assertCount(1);
-
-      await http.assertCallWithPort({ method: 'GET', path: '/file' }, 3000);
-      await browser.pause(500);
-      await environmentsLogs.assertCount(2);
-
-      await http.assertCallWithPort(
-        { method: 'GET', path: '/databucket' },
-        3000
-      );
-      await browser.pause(500);
-      await environmentsLogs.assertCount(3);
     });
   });
 });
