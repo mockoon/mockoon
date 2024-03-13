@@ -298,21 +298,6 @@ describe('Databuckets selection in responses', () => {
     });
   });
 
-  it('should generate databucket with req helper at first call (number) and always serve the same content', async () => {
-    await environments.stop();
-    await environments.start();
-    await http.assertCall({
-      method: 'GET',
-      path: '/databucketWithReqHelper?param=560',
-      testedResponse: { body: '560' }
-    });
-    await http.assertCall({
-      method: 'GET',
-      path: '/databucketWithReqHelper?param=testvalue2',
-      testedResponse: { body: '560' }
-    });
-  });
-
   it('should generate databucket with req helper at first call (boolean) and always serve the same content', async () => {
     await environments.stop();
     await environments.start();
@@ -385,6 +370,41 @@ describe('Databuckets selection in responses', () => {
       method: 'GET',
       path: '/nestedDatabuckets',
       testedResponse: { body: '{"id":"1234","otherBucketId":"1234"}' }
+    });
+  });
+
+  it('should be able to purge databuckets state with admin endpoint', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue1',
+      testedResponse: { body: 'testvalue1' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue2',
+      testedResponse: { body: 'testvalue1' }
+    });
+
+    await http.assertCall({
+      method: 'PURGE',
+      path: '/mockoon-admin/state'
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue3',
+      testedResponse: { body: 'testvalue3' }
+    });
+
+    await http.assertCall({
+      method: 'POST',
+      path: '/mockoon-admin/state/purge'
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue4',
+      testedResponse: { body: 'testvalue4' }
     });
   });
 });

@@ -62,6 +62,7 @@ import {
   routesFromFolder,
   stringIncludesArrayItems
 } from '../utils';
+import { createAdminEndpoint } from './admin-endpoint';
 import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
 
 /**
@@ -73,6 +74,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
+  // store the request number for each route
+  private requestNumbers: Record<string, number> = {};
   // templating global variables
   private globalVariables: Record<string, any> = {};
 
@@ -213,6 +216,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
+
+    // admin endpoint must be created before all other routes to avoid conflicts
+    createAdminEndpoint(app, {
+      statePurgeCallback: () => {
+        // reset request numbers
+        Object.keys(this.requestNumbers).forEach((routeUUID) => {
+          this.requestNumbers[routeUUID] = 1;
+        });
+
+        // reset databuckets
+        this.processedDatabuckets = [];
+        this.generateDatabuckets(this.environment);
+      }
+    });
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
@@ -445,6 +462,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         )
       ) {
         try {
+          this.requestNumbers[declaredRoute.uuid] = 1;
+
           if (declaredRoute.type === RouteType.CRUD) {
             this.createCRUDRoute(server, declaredRoute, routePath);
           } else {
@@ -479,7 +498,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     route: Route,
     routePath: string
   ) {
-    server[route.method](routePath, this.createRouteHandler(route, 1));
+    server[route.method](routePath, this.createRouteHandler(route));
   }
 
   /**
@@ -499,16 +518,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     for (const crudRoute of crudRoutes) {
       server[crudRoute.method](
         crudRoute.path,
-        this.createRouteHandler(route, 1, crudRoute.id)
+        this.createRouteHandler(route, crudRoute.id)
       );
     }
   }
 
-  private createRouteHandler(
-    route: Route,
-    requestNumber: number,
-    crudId?: CrudRouteIds
-  ) {
+  private createRouteHandler(route: Route, crudId?: CrudRouteIds) {
     return (request: Request, response: Response, next: NextFunction) => {
       this.generateRequestDatabuckets(route, this.environment, request);
 
@@ -535,13 +550,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.processedDatabuckets,
         this.globalVariables,
         this.options.envVarsPrefix
-      ).chooseResponse(requestNumber);
+      ).chooseResponse(this.requestNumbers[route.uuid]);
 
       if (!enabledRouteResponse) {
         return next();
       }
 
-      requestNumber += 1;
+      this.requestNumbers[route.uuid] += 1;
 
       // save route and response UUIDs for logs (only in desktop app)
       if (route.uuid && enabledRouteResponse.uuid) {
