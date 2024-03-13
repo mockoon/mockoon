@@ -13,7 +13,7 @@ export const helpersAutocompletions = [
   },
   { caption: 'urlParam', value: "{{urlParam 'paramName'}}", meta: '' },
   { caption: 'cookie', value: "{{cookie 'cookie_name'}}", meta: '' },
-  { caption: 'header', value: "{{header 'cookie_name'}}", meta: '' },
+  { caption: 'header', value: "{{header 'Header-Name'}}", meta: '' },
   { caption: 'hostname', value: '{{hostname}}', meta: '' },
   { caption: 'ip', value: '{{ip}}', meta: '' },
   { caption: 'method', value: '{{method}}', meta: '' },
