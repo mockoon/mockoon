@@ -1570,7 +1570,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'api-endpoints/templates-and-ai-assistant',
+    folder: 'mockoon-pro/templates-and-ai-assistant',
     screenshots: [
       {
         tasks: async () => {
