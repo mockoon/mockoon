@@ -57,6 +57,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { value: 'cookie', label: 'Cookie' },
     { value: 'params', label: 'Route params' },
     { value: 'global_var', label: 'Global variable' },
+    { value: 'data_bucket', label: 'Data bucket' },
     { value: 'request_number', label: 'Request number (starting at 1)' }
   ];
   public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
@@ -73,6 +74,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     cookie: 'Cookie name',
     params: 'Route parameter name',
     global_var: 'JSONPath or object path (start with var name)',
+    data_bucket: 'JSONPath or object path (start with bucket name or ID)',
     request_number: ''
   };
   public valuePlaceholders = {

@@ -210,7 +210,8 @@ const RouteResponseRuleSchema = Joi.object<ResponseRule, true>({
       'params',
       'request_number',
       'cookie',
-      'global_var'
+      'global_var',
+      'data_bucket'
     )
     .failover(ResponseRuleDefault.target)
     .required(),
