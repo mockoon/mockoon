@@ -37,7 +37,8 @@ export enum ContextMenuFolderActions {
   ADD_CRUD = 1,
   ADD_HTTP = 2,
   ADD_FOLDER = 3,
-  DELETE = 4
+  TOGGLE_FOLDER = 4,
+  DELETE = 5
 }
 
 class ContextMenu {

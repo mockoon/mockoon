@@ -90,6 +90,16 @@ export const FoldersContextMenu = (folderUUID: string): ContextMenuItem[] => [
   {
     payload: {
       subject: 'folder',
+      action: 'toggle',
+      subjectUUID: folderUUID
+    },
+    label: 'Toggle folder',
+    icon: 'power_settings_new',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'folder',
       action: 'delete',
       subjectUUID: folderUUID
     },

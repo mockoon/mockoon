@@ -214,6 +214,9 @@ export class AppComponent extends Logger implements OnInit {
         if (payload.subject === 'route') {
           this.environmentsService.toggleRoute(payload.subjectUUID);
         }
+        if (payload.subject === 'folder') {
+          this.environmentsService.toggleFolder(payload.subjectUUID);
+        }
         break;
       case 'duplicateToEnv':
         this.startEntityDuplicationToAnotherEnvironment(

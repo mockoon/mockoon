@@ -131,4 +131,24 @@ describe('Folders', () => {
     await routes.assertRoutePaddingLevel(2, 1);
     await routes.assertRoutePaddingLevel(3, 1);
   });
+
+  it('should toggle all the routes inside the folder', async () => {
+    await environments.open('basic-folder-2-routes');
+    await contextMenu.open('routes', 1);
+    await contextMenu.getItem(4).click();
+    await $(
+      '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled'
+    ).waitForExist();
+    await utils.waitForAutosave();
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      ['disabledRoutes.c8cdc030-344f-452f-aec4-56ded95b440c.0'],
+      ['8745c4cf-88bd-4960-8353-858ae80623a5']
+    );
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      ['disabledRoutes.c8cdc030-344f-452f-aec4-56ded95b440c.1'],
+      ['7cad788c-433f-404e-bd0f-ca0bef288492']
+    );
+  });
 });
