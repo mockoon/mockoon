@@ -8,12 +8,10 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { Request } from 'express';
-import { JSONPath } from 'jsonpath-plus';
-import { get as objectPathGet } from 'object-path';
 import { ParsedQs } from 'qs';
 import { ParsedBodyMimeTypes } from '../constants/common.constants';
 import { TemplateParser } from './template-parser';
-import { convertPathToArray, stringIncludesArrayItems } from './utils';
+import { getValueFromPath, stringIncludesArrayItems } from './utils';
 
 /**
  * Interpretor for the route response rules.
@@ -38,7 +36,8 @@ export class ResponseRulesInterpreter {
     private responseMode: Route['responseMode'],
     private environment: Environment,
     private processedDatabuckets: ProcessedDatabucket[],
-    private globalVariables: Record<string, any>
+    private globalVariables: Record<string, any>,
+    private envVarsPrefix: string
   ) {
     this.extractTargets();
   }
@@ -138,19 +137,11 @@ export class ResponseRulesInterpreter {
       value = this.request.header(rule.modifier);
     } else {
       if (rule.modifier) {
-        let path: string | string[] = rule.modifier;
-
-        if (typeof path === 'string') {
-          if (path.startsWith('$')) {
-            value = JSONPath({
-              json: this.targets[rule.target],
-              path: path
-            });
-          } else {
-            path = convertPathToArray(path);
-            value = objectPathGet(this.targets[rule.target], path);
-          }
-        }
+        value = getValueFromPath(
+          this.targets[rule.target],
+          rule.modifier,
+          undefined
+        );
       } else if (!rule.modifier && rule.target === 'body') {
         value = this.targets.bodyRaw;
       }
@@ -193,7 +184,7 @@ export class ResponseRulesInterpreter {
         : regex.test(value);
     }
 
-    // value extracted by JSONPath is always an array, cast its values to string (in line with the equals operator below)
+    // value extracted by JSONPath can be an array, cast its values to string (in line with the equals operator below)
     if (Array.isArray(value)) {
       return value.map((v) => String(v)).includes(parsedRuleValue);
     }
@@ -232,14 +223,15 @@ export class ResponseRulesInterpreter {
   private parseValue(value: string): string {
     let parsedValue: string;
     try {
-      parsedValue = TemplateParser(
-        false,
-        value,
-        this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
-        this.request
-      );
+      parsedValue = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: value,
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request: this.request,
+        envVarsPrefix: this.envVarsPrefix
+      });
     } catch (error) {
       return value;
     }

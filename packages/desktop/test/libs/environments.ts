@@ -66,6 +66,8 @@ class Environments {
       const activeEnvironment = await this.activeEnvironmentMenuEntry;
       await activeEnvironment.waitForExist();
     }
+
+    await browser.pause(100);
   }
 
   public async select(environmentIndex: number): Promise<void> {

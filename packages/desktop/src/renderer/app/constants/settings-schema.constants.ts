@@ -1,3 +1,4 @@
+import { defaultEnvironmentVariablesPrefix } from '@mockoon/commons';
 import * as Joi from 'joi';
 import { Config } from 'src/renderer/config';
 import {
@@ -25,7 +26,8 @@ export const SettingsDefault: Settings = {
   fileWatcherEnabled: FileWatcherOptions.DISABLED,
   dialogWorkingDir: '',
   startEnvironmentsOnLoad: false,
-  logTransactions: false
+  logTransactions: false,
+  envVarsPrefix: defaultEnvironmentVariablesPrefix
 };
 
 export const SettingsSchema = Joi.object<Settings, true>({
@@ -101,6 +103,10 @@ export const SettingsSchema = Joi.object<Settings, true>({
     .required(),
   logTransactions: Joi.boolean()
     .failover(SettingsDefault.logTransactions)
+    .required(),
+  envVarsPrefix: Joi.string()
+    .allow('')
+    .failover(SettingsDefault.envVarsPrefix)
     .required()
 })
   .failover(SettingsDefault)

@@ -4,6 +4,7 @@ import {
   Callback,
   CallbackInvocation,
   CORSHeaders,
+  defaultEnvironmentVariablesPrefix,
   Environment,
   FakerAvailableLocales,
   FileExtensionsWithTemplating,
@@ -61,6 +62,7 @@ import {
   routesFromFolder,
   stringIncludesArrayItems
 } from '../utils';
+import { createAdminEndpoint } from './admin-endpoint';
 import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
 
 /**
@@ -72,6 +74,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
+  // store the request number for each route
+  private requestNumbers: Record<string, number> = {};
   // templating global variables
   private globalVariables: Record<string, any> = {};
 
@@ -105,7 +109,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         // Number for the Faker.js seed (e.g. 1234)
         seed?: number;
       };
-    } = {}
+
+      /**
+       * Environment variables prefix
+       */
+      envVarsPrefix: string;
+    } = { envVarsPrefix: defaultEnvironmentVariablesPrefix }
   ) {
     super();
   }
@@ -207,6 +216,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
+
+    // admin endpoint must be created before all other routes to avoid conflicts
+    createAdminEndpoint(app, {
+      statePurgeCallback: () => {
+        // reset request numbers
+        Object.keys(this.requestNumbers).forEach((routeUUID) => {
+          this.requestNumbers[routeUUID] = 1;
+        });
+
+        // reset databuckets
+        this.processedDatabuckets = [];
+        this.generateDatabuckets(this.environment);
+      }
+    });
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
@@ -439,6 +462,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         )
       ) {
         try {
+          this.requestNumbers[declaredRoute.uuid] = 1;
+
           if (declaredRoute.type === RouteType.CRUD) {
             this.createCRUDRoute(server, declaredRoute, routePath);
           } else {
@@ -473,7 +498,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     route: Route,
     routePath: string
   ) {
-    server[route.method](routePath, this.createRouteHandler(route, 1));
+    server[route.method](routePath, this.createRouteHandler(route));
   }
 
   /**
@@ -493,16 +518,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     for (const crudRoute of crudRoutes) {
       server[crudRoute.method](
         crudRoute.path,
-        this.createRouteHandler(route, 1, crudRoute.id)
+        this.createRouteHandler(route, crudRoute.id)
       );
     }
   }
 
-  private createRouteHandler(
-    route: Route,
-    requestNumber: number,
-    crudId?: CrudRouteIds
-  ) {
+  private createRouteHandler(route: Route, crudId?: CrudRouteIds) {
     return (request: Request, response: Response, next: NextFunction) => {
       this.generateRequestDatabuckets(route, this.environment, request);
 
@@ -527,14 +548,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         currentRoute.responseMode,
         this.environment,
         this.processedDatabuckets,
-        this.globalVariables
-      ).chooseResponse(requestNumber);
+        this.globalVariables,
+        this.options.envVarsPrefix
+      ).chooseResponse(this.requestNumbers[route.uuid]);
 
       if (!enabledRouteResponse) {
         return next();
       }
 
-      requestNumber += 1;
+      this.requestNumbers[route.uuid] += 1;
 
       // save route and response UUIDs for logs (only in desktop app)
       if (route.uuid && enabledRouteResponse.uuid) {
@@ -560,8 +582,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           enabledRouteResponse.bodyType === BodyTypes.FILE &&
           enabledRouteResponse.filePath
         ) {
-          this.makeCallbacks(enabledRouteResponse, request, response);
-
           this.sendFile(
             route,
             enabledRouteResponse,
@@ -569,6 +589,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             request,
             response
           );
+
           // serve inline body or databucket
         } else {
           let templateParse = true;
@@ -619,8 +640,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             }
           }
 
-          this.makeCallbacks(enabledRouteResponse, request, response);
-
           this.serveBody(
             content || '',
             route,
@@ -650,28 +669,23 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
 
         try {
-          const url = TemplateParser(
-            false,
-            cb.uri,
-            this.environment,
-            this.processedDatabuckets,
-            this.globalVariables,
+          const url = TemplateParser({
+            shouldOmitDataHelper: false,
+            content: cb.uri,
+            environment: this.environment,
+            processedDatabuckets: this.processedDatabuckets,
+            globalVariables: this.globalVariables,
             request,
-            response
-          );
+            response,
+            envVarsPrefix: this.options.envVarsPrefix
+          });
 
           let content = cb.body;
-          if (cb.bodyType === BodyTypes.INLINE) {
-            content = TemplateParser(
-              false,
-              content || '',
-              this.environment,
-              this.processedDatabuckets,
-              this.globalVariables,
-              request,
-              response
-            );
-          } else if (cb.bodyType === BodyTypes.DATABUCKET && cb.databucketID) {
+          let templateParse = true;
+
+          if (cb.bodyType === BodyTypes.DATABUCKET && cb.databucketID) {
+            templateParse = false;
+
             const servedDatabucket = this.processedDatabuckets.find(
               (processedDatabucket) =>
                 processedDatabucket.id === cb.databucketID
@@ -708,6 +722,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             headers: {}
           };
           this.setHeaders(cb.headers || [], sendingHeaders, request);
+
+          // apply templating if specified
+          if (!routeResponse.disableTemplating && templateParse) {
+            content = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: content || '',
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              request,
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
+          }
 
           setTimeout(() => {
             fetch(url, {
@@ -756,20 +784,24 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) {
     try {
       if (!routeResponse.disableTemplating && templateParse) {
-        content = TemplateParser(
-          false,
-          content || '',
-          this.environment,
-          this.processedDatabuckets,
-          this.globalVariables,
+        content = TemplateParser({
+          shouldOmitDataHelper: false,
+          content: content || '',
+          environment: this.environment,
+          processedDatabuckets: this.processedDatabuckets,
+          globalVariables: this.globalVariables,
           request,
-          response
-        );
+          response,
+          envVarsPrefix: this.options.envVarsPrefix
+        });
       }
 
       this.applyResponseLocals(response);
 
       response.body = content;
+
+      // execute callbacks after generating the template, to be able to use the eventual templating variables in the callback
+      this.makeCallbacks(routeResponse, request, response);
 
       response.send(content);
     } catch (error: any) {
@@ -803,24 +835,26 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     };
 
     try {
-      const url = TemplateParser(
-        false,
-        callback.uri,
-        this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
+      const url = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: callback.uri,
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
         request,
-        response
-      );
+        response,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
-      let filePath = TemplateParser(
-        false,
-        callback.filePath.replace(/\\/g, '/'),
-        this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
-        request
-      );
+      let filePath = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: callback.filePath.replace(/\\/g, '/'),
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
       filePath = resolvePathFromEnvironment(
         filePath,
@@ -872,15 +906,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             MimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
             !routeResponse.disableTemplating
           ) {
-            fileContent = TemplateParser(
-              false,
-              data.toString(),
-              this.environment,
-              this.processedDatabuckets,
-              this.globalVariables,
+            fileContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: data.toString(),
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
               request,
-              response
-            );
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
           } else {
             fileContent = data.toString();
           }
@@ -958,14 +993,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     };
 
     try {
-      let filePath = TemplateParser(
-        false,
-        routeResponse.filePath.replace(/\\/g, '/'),
-        this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
-        request
-      );
+      let filePath = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: routeResponse.filePath.replace(/\\/g, '/'),
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
       filePath = resolvePathFromEnvironment(
         filePath,
@@ -1000,19 +1036,24 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           }
 
           try {
-            const fileContent = TemplateParser(
-              false,
-              data.toString(),
-              this.environment,
-              this.processedDatabuckets,
-              this.globalVariables,
+            const fileContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: data.toString(),
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
               request,
-              response
-            );
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
 
             this.applyResponseLocals(response);
 
             response.body = fileContent;
+
+            // execute callbacks after generating the file content, to be able to use the eventual templating variables in the callback
+            this.makeCallbacks(routeResponse, request, response);
+
             response.send(fileContent);
           } catch (error: any) {
             fileServingError(error);
@@ -1082,6 +1123,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               stream = createReadStream(filePath, { start, end });
             }
           }
+
+          this.makeCallbacks(routeResponse, request, response);
 
           stream.pipe(response);
         } catch (error: any) {
@@ -1307,14 +1350,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     if (header.key && header.value) {
       try {
-        parsedHeaderValue = TemplateParser(
-          false,
-          header.value,
-          this.environment,
-          this.processedDatabuckets,
-          this.globalVariables,
-          request
-        );
+        parsedHeaderValue = TemplateParser({
+          shouldOmitDataHelper: false,
+          content: header.value,
+          environment: this.environment,
+          processedDatabuckets: this.processedDatabuckets,
+          globalVariables: this.globalVariables,
+          request,
+          envVarsPrefix: this.options.envVarsPrefix
+        });
       } catch (error: any) {
         this.emit('error', ServerErrorCodes.HEADER_PARSING_ERROR, error, {
           headerKey: header.key,
@@ -1373,7 +1417,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) {
     res.text().then((respText) => {
       const reqHeaders = Object.keys(requestHeaders).map(
-        (k) => ({ key: k, value: reqHeaders[k] }) as Header
+        (k) => ({ key: k, value: requestHeaders[k] }) as Header
       );
       this.emit(
         'callback-invoked',
@@ -1509,13 +1553,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           let templateParsedContent;
 
           try {
-            templateParsedContent = TemplateParser(
-              false,
-              databucket.value,
+            templateParsedContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: databucket.value,
               environment,
-              this.processedDatabuckets,
-              this.globalVariables
-            );
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
 
             const JSONParsedContent = JSON.parse(templateParsedContent);
             newProcessedDatabucket = {
@@ -1548,7 +1593,57 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
-   * Generate the databuckets called with the data helper on route call
+   * Returns list of matched databucket ids in the given text.
+   *
+   * @param data text to be searched for possible databucket ids
+   */
+  private captureReferencedDatabucketIds(text?: string): string[] {
+    const matches = text?.matchAll(
+      new RegExp('data(?:Raw)? +[\'|"]{1}([^(\'|")]*)', 'g')
+    );
+
+    return [...(matches || [])].map((match) => match[1]);
+  }
+
+  /**
+   * Find and returns all unique databucket ids specified in callbacks
+   * of the given response.
+   * To achieve null safety, this will always return an empty set if no callbacks
+   * have been defined.
+   *
+   * @param response
+   * @param environment
+   */
+  private findDatabucketIdsInCallbacks(
+    response: RouteResponse,
+    environment: Environment
+  ): string[] {
+    if (response.callbacks && response.callbacks.length > 0) {
+      for (const invocation of response.callbacks) {
+        const callback = environment.callbacks.find(
+          (ref) => ref.uuid === invocation.uuid
+        );
+
+        if (!callback) {
+          continue;
+        }
+
+        const dataBucketIds = this.captureReferencedDatabucketIds(
+          callback.body
+        );
+
+        if (callback.databucketID) {
+          dataBucketIds.push(callback.databucketID);
+        }
+      }
+    }
+
+    return [];
+  }
+
+  /**
+   * Generate the databuckets that were not parsed at the server start
+   *
    * @param route
    * @param environment
    * @param request
@@ -1567,56 +1662,80 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       return;
     }
 
+    let databucketIdsToParse = new Set<string>();
+
     route.responses.forEach((response) => {
-      const results = response.body?.matchAll(
-        new RegExp('{{2,3}[#(\\s\\w]*data [\'|"]{1}([^(\'|")]*)', 'g')
-      );
-      const databucketIdsToParse = new Set(
-        [...(results || [])].map((match) => match[1])
-      );
+      // capture databucket ids in body and relevant callback definitions
+      [
+        ...this.captureReferencedDatabucketIds(response.body),
+        ...this.findDatabucketIdsInCallbacks(response, environment)
+      ].forEach((dataBucketName) => databucketIdsToParse.add(dataBucketName));
 
       if (response.databucketID) {
         databucketIdsToParse.add(response.databucketID);
       }
+    });
 
-      if (databucketIdsToParse.size > 0) {
-        let targetDatabucket: ProcessedDatabucket | undefined;
+    // capture databucket ids in found databuckets to allow for nested databucket parsing
+    let nestedDatabucketIds: string[] = [];
 
-        for (const databucketIdToParse of databucketIdsToParse) {
-          targetDatabucket = this.processedDatabuckets.find(
-            (databucket) =>
-              databucket.id === databucketIdToParse ||
-              databucket.name
-                .toLowerCase()
-                .includes(databucketIdToParse.toLowerCase())
-          );
+    environment.data.forEach((databucket) => {
+      if (
+        databucketIdsToParse.has(databucket.id) ||
+        [...databucketIdsToParse.keys()].some((id) =>
+          databucket.name.toLowerCase().includes(id.toLowerCase())
+        )
+      ) {
+        nestedDatabucketIds = [
+          ...this.captureReferencedDatabucketIds(databucket.value)
+        ];
+      }
+    });
 
-          if (targetDatabucket && !targetDatabucket?.parsed) {
-            let content = targetDatabucket.value;
-            try {
-              content = TemplateParser(
-                false,
-                targetDatabucket.value,
-                environment,
-                this.processedDatabuckets,
-                this.globalVariables,
-                request
-              );
-              const JSONParsedcontent = JSON.parse(content);
-              targetDatabucket.value = JSONParsedcontent;
-              targetDatabucket.parsed = true;
-            } catch (error: any) {
-              if (error instanceof SyntaxError) {
-                targetDatabucket.value = content;
-              } else {
-                targetDatabucket.value = error.message;
-              }
-              targetDatabucket.parsed = true;
+    // add nested databucket ids at the beginning of the set to ensure they are parsed first
+    databucketIdsToParse = new Set([
+      ...nestedDatabucketIds,
+      ...databucketIdsToParse
+    ]);
+
+    if (databucketIdsToParse.size > 0) {
+      let targetDatabucket: ProcessedDatabucket | undefined;
+
+      for (const databucketIdToParse of databucketIdsToParse) {
+        targetDatabucket = this.processedDatabuckets.find(
+          (databucket) =>
+            databucket.id === databucketIdToParse ||
+            databucket.name
+              .toLowerCase()
+              .includes(databucketIdToParse.toLowerCase())
+        );
+
+        if (targetDatabucket && !targetDatabucket?.parsed) {
+          let content = targetDatabucket.value;
+          try {
+            content = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: targetDatabucket.value,
+              environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              request,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
+            const JSONParsedcontent = JSON.parse(content);
+            targetDatabucket.value = JSONParsedcontent;
+            targetDatabucket.parsed = true;
+          } catch (error: any) {
+            if (error instanceof SyntaxError) {
+              targetDatabucket.value = content;
+            } else {
+              targetDatabucket.value = error.message;
             }
+            targetDatabucket.parsed = true;
           }
         }
       }
-    });
+    }
   }
 
   /**

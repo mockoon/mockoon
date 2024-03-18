@@ -10,6 +10,7 @@ import { fromSafeString, getValueFromPath } from '../utils';
 export const GlobalHelpers = function (globalVariables: Record<string, any>) {
   return {
     setGlobalVar: function (...args: any[]) {
+      // remove last item (handlebars options argument)
       const parameters = args.slice(0, -1);
 
       // we need at least the name and the value
@@ -23,6 +24,7 @@ export const GlobalHelpers = function (globalVariables: Record<string, any>) {
       globalVariables[name] = value;
     },
     getGlobalVar: function (...args: any[]) {
+      // remove last item (handlebars options argument)
       const parameters = args.slice(0, -1);
 
       // we need at least the name

@@ -378,6 +378,7 @@ describe('Schema validation', () => {
 
     it('should not open the file if cancel is clicked', async () => {
       await $('.modal-footer .btn:last-of-type').click();
+      await browser.pause(100);
       await environments.assertCount(0);
     });
 
@@ -386,6 +387,7 @@ describe('Schema validation', () => {
 
       await modals.assertTitle('Confirm opening');
       await $('.modal-footer .btn:first-of-type').click();
+      await browser.pause(100);
       await environments.assertCount(1);
       await environments.assertActiveMenuEntryText('missing identifier');
 

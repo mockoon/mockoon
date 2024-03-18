@@ -29,6 +29,43 @@
     </div>
 
     <app-title-separator
+      heading="Environment variables"
+      icon="list"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <label for="settings-env-vars-prefix" class="col-form-label pe-2">
+            Environment variables prefix
+          </label>
+          <input
+            type="text"
+            class="form-control col-1"
+            id="settings-env-vars-prefix"
+            formControlName="envVarsPrefix"
+          />
+          <div class="input-group-text">
+            <app-svg icon="info" [ngbTooltip]="envVarsPrefixTooltip"></app-svg>
+            <ng-template #envVarsPrefixTooltip>
+              <div>
+                Restrict access to environment variables starting with the
+                specified prefix. Leave empty to disable prefix filtering.
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires a server restart to take effect
+              </div>
+              <div class="mt-2">
+                ⚠️ Updating the environment variables requires an application
+                restart
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-title-separator
       heading="Environment logs"
       icon="history"
     ></app-title-separator>

@@ -51,6 +51,7 @@ describe('Environment external reload', () => {
       port: 5005,
       uuid: newUUID
     });
+    await browser.pause(2000);
     await environments.assertMenuEntryText(
       1,
       'env 1 (change1)',
@@ -130,7 +131,7 @@ describe('Environment external reload', () => {
     await settings.assertDropdownSettingValue('fileWatcherEnabled', 'Auto');
     await settings.setDropdownSettingValue('settings-storage-file-watcher', 2);
     await modals.close();
-    await browser.pause(500);
+    await utils.waitForAutosave();
   });
 
   it('should modify the two environments and assert that a prompt is displayed and ignore the changes', async () => {

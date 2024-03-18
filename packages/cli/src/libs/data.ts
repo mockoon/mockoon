@@ -81,12 +81,10 @@ export const parseDataFiles = async (
   let errorMessage = `${CLIMessages.DATA_INVALID}:`;
 
   for (const [index, filePath] of filePaths.entries()) {
-    try {
-      const environment = await openAPIConverter.convertFromOpenAPI(filePath);
+    let environment: Environment | null = null;
 
-      if (environment) {
-        environments.push({ environment, originalPath: filePath });
-      }
+    try {
+      environment = await openAPIConverter.convertFromOpenAPI(filePath);
     } catch (openAPIError: any) {
       errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;
 
@@ -109,28 +107,24 @@ export const parseDataFiles = async (
         }
 
         if (typeof data === 'object') {
-          const parsedEnvironment = await migrateAndValidateEnvironment(
-            data,
-            repair
-          );
-
-          if (userOptions.ports[index] !== undefined) {
-            parsedEnvironment.port = userOptions.ports[index];
-          }
-
-          if (userOptions.hostnames[index] !== undefined) {
-            parsedEnvironment.hostname = userOptions.hostnames[index];
-          }
-
-          environments.push({
-            environment: parsedEnvironment,
-            originalPath: filePath
-          });
+          environment = await migrateAndValidateEnvironment(data, repair);
         }
       } catch (JSONError: any) {
         errorMessage += `\nMockoon parser: ${JSONError.message}`;
         throw new Error(errorMessage);
       }
+    }
+
+    if (environment) {
+      if (userOptions.ports[index] !== undefined) {
+        environment.port = userOptions.ports[index];
+      }
+
+      if (userOptions.hostnames[index] !== undefined) {
+        environment.hostname = userOptions.hostnames[index];
+      }
+
+      environments.push({ environment, originalPath: filePath });
     }
 
     filePathIndex++;

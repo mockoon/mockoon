@@ -22,8 +22,8 @@ jobs:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "18.x"
       - name: Update NPM
@@ -44,7 +44,7 @@ jobs:
         run: |
           shasum -a 256 ./packages/desktop/packages/mockoon.setup.*.universal.dmg
       - name: Upload macOS dmg
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dmg
           path: ./packages/desktop/packages/mockoon.setup*.dmg
@@ -58,8 +58,8 @@ jobs:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "18.x"
       - name: Update NPM
@@ -72,22 +72,22 @@ jobs:
           npm run build:desktop:prod
           npm run package:desktop:linux
       - name: Upload Linux AppImage
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: appimage
           path: ./packages/desktop/packages/mockoon-*.AppImage
       - name: Upload Linux deb
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deb
           path: ./packages/desktop/packages/mockoon-*.deb
       - name: Upload Linux rpm
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: rpm
           path: ./packages/desktop/packages/mockoon-*.rpm
       - name: Upload Linux snap
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: snap
           path: ./packages/desktop/packages/mockoon-*.snap
@@ -103,8 +103,8 @@ jobs:
       CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "18.x"
       - name: Update NPM
@@ -118,14 +118,14 @@ jobs:
           npm run package:desktop:win
         shell: pwsh
       - name: Upload Windows setup exe
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: exe
           path: ./packages/desktop/packages/mockoon.setup.*.exe
       - name: Upload Windows portable exe
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: exe
+          name: exe-portable
           path: ./packages/desktop/packages/mockoon.portable.*.exe
 
   # APPX build requires no code signing env vars to work, thus the separated job
@@ -136,8 +136,8 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "18.x"
       - name: Update NPM
@@ -151,7 +151,7 @@ jobs:
           npm run package:desktop:win:appx
         shell: pwsh
       - name: Upload Windows appx
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: appx
           path: ./packages/desktop/packages/mockoon.*.appx

@@ -34,6 +34,35 @@
       ],
       "responseMode": null,
       "type": "http"
+    },
+    {
+      "uuid": "290fe1d2-a924-4dd5-b6c0-d36190f990f8",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "test-envvar-prefix-custom",
+      "responses": [
+        {
+          "uuid": "a0f193f5-c920-45e1-a960-b160e6346cbd",
+          "body": "{{getEnvVar 'TEST_ENV_VAR'}}-{{getEnvVar 'PREFIX_TEST_ENV_VAR'}}-{{getEnvVar 'OTHER_VAR'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "", "value": "" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -56,7 +85,8 @@
   "data": [],
   "folders": [],
   "rootChildren": [
-    { "type": "route", "uuid": "61ec2669-447e-4b55-a22b-2a1fda1e8da3" }
+    { "type": "route", "uuid": "61ec2669-447e-4b55-a22b-2a1fda1e8da3" },
+    { "type": "route", "uuid": "290fe1d2-a924-4dd5-b6c0-d36190f990f8" }
   ],
   "callbacks": []
 }

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import {
   BodyTypes,
   Migrations,
@@ -29,7 +29,7 @@ describe('Migrations', () => {
 
       applyMigration(9, environment);
 
-      expect(environment.routes[0].responses[0].label).to.not.be.undefined;
+      notStrictEqual(environment.routes[0].responses[0].label, undefined);
     });
   });
 
@@ -39,10 +39,10 @@ describe('Migrations', () => {
 
       applyMigration(10, environment);
 
-      expect(environment.proxyReqHeaders).to.not.be.undefined;
-      expect(environment.proxyReqHeaders[0].key).to.equal('');
-      expect(environment.proxyResHeaders).to.not.be.undefined;
-      expect(environment.proxyResHeaders[0].key).to.equal('');
+      notStrictEqual(environment.proxyReqHeaders, undefined);
+      strictEqual(environment.proxyReqHeaders[0].key, '');
+      notStrictEqual(environment.proxyResHeaders, undefined);
+      strictEqual(environment.proxyResHeaders[0].key, '');
     });
   });
 
@@ -54,10 +54,8 @@ describe('Migrations', () => {
 
       applyMigration(11, environment);
 
-      expect(environment.routes[0].responses[0].disableTemplating).to.equal(
-        false
-      );
-      expect(environment.routes[0].responses[0].statusCode).to.equal(200);
+      strictEqual(environment.routes[0].responses[0].disableTemplating, false);
+      strictEqual(environment.routes[0].responses[0].statusCode, 200);
     });
   });
 
@@ -69,7 +67,7 @@ describe('Migrations', () => {
 
       applyMigration(12, environment);
 
-      expect(environment.routes[0].responses[0].rulesOperator).to.equal('OR');
+      strictEqual(environment.routes[0].responses[0].rulesOperator, 'OR');
     });
   });
 
@@ -81,7 +79,7 @@ describe('Migrations', () => {
 
       applyMigration(13, environment);
 
-      expect(environment.routes[0].randomResponse).to.equal(false);
+      strictEqual(environment.routes[0].randomResponse, false);
     });
   });
 
@@ -93,7 +91,7 @@ describe('Migrations', () => {
 
       applyMigration(14, environment);
 
-      expect(environment.routes[0].sequentialResponse).to.equal(false);
+      strictEqual(environment.routes[0].sequentialResponse, false);
     });
   });
 
@@ -103,7 +101,7 @@ describe('Migrations', () => {
 
       applyMigration(15, environment);
 
-      expect(environment.proxyRemovePrefix).to.equal(false);
+      strictEqual(environment.proxyRemovePrefix, false);
     });
   });
 
@@ -113,7 +111,7 @@ describe('Migrations', () => {
 
       applyMigration(16, environment);
 
-      expect(environment.hostname).to.equal('0.0.0.0');
+      strictEqual(environment.hostname, '0.0.0.0');
     });
   });
 
@@ -125,7 +123,7 @@ describe('Migrations', () => {
 
       applyMigration(17, environment);
 
-      expect(environment.routes[0].responses[0].fallbackTo404).to.equal(false);
+      strictEqual(environment.routes[0].responses[0].fallbackTo404, false);
     });
   });
 
@@ -158,16 +156,20 @@ describe('Migrations', () => {
 
       applyMigration(18, environment);
 
-      expect(environment.routes[0].responses[0].rules[0].isRegex).to.equal(
+      strictEqual(
+        environment.routes[0].responses[0].rules[0].isRegex,
         undefined
       );
-      expect(environment.routes[0].responses[0].rules[0].operator).to.equal(
+      strictEqual(
+        environment.routes[0].responses[0].rules[0].operator,
         'equals'
       );
-      expect(environment.routes[0].responses[0].rules[1].isRegex).to.equal(
+      strictEqual(
+        environment.routes[0].responses[0].rules[1].isRegex,
         undefined
       );
-      expect(environment.routes[0].responses[0].rules[1].operator).to.equal(
+      strictEqual(
+        environment.routes[0].responses[0].rules[1].operator,
         'regex'
       );
     });
@@ -181,8 +183,8 @@ describe('Migrations', () => {
 
       applyMigration(19, environment);
 
-      expect(environment.https).to.be.undefined;
-      expect(environment.tlsOptions).to.deep.equal({
+      strictEqual(environment.https, undefined);
+      deepStrictEqual(environment.tlsOptions, {
         enabled: true,
         type: 'CERT',
         pfxPath: '',
@@ -202,8 +204,8 @@ describe('Migrations', () => {
 
       applyMigration(20, environment);
 
-      expect(environment.routes[0].responses[0]['default']).to.equal(true);
-      expect(environment.routes[0].responses[1]['default']).to.equal(false);
+      strictEqual(environment.routes[0].responses[0]['default'], true);
+      strictEqual(environment.routes[0].responses[1]['default'], false);
     });
   });
 
@@ -215,9 +217,9 @@ describe('Migrations', () => {
 
       applyMigration(21, environment);
 
-      expect(environment.routes[0]['responseMode']).to.equal(null);
-      expect(environment.routes[0]['sequentialResponse']).to.equal(undefined);
-      expect(environment.routes[0]['randomResponse']).to.equal(undefined);
+      strictEqual(environment.routes[0]['responseMode'], null);
+      strictEqual(environment.routes[0]['sequentialResponse'], undefined);
+      strictEqual(environment.routes[0]['randomResponse'], undefined);
     });
 
     it('should add `responseMode` and remove `sequentialResponse` and `randomResponse`, initialized to SEQUENTIAL', () => {
@@ -227,11 +229,12 @@ describe('Migrations', () => {
 
       applyMigration(21, environment);
 
-      expect(environment.routes[0]['responseMode']).to.equal(
+      strictEqual(
+        environment.routes[0]['responseMode'],
         ResponseMode.SEQUENTIAL
       );
-      expect(environment.routes[0]['sequentialResponse']).to.equal(undefined);
-      expect(environment.routes[0]['randomResponse']).to.equal(undefined);
+      strictEqual(environment.routes[0]['sequentialResponse'], undefined);
+      strictEqual(environment.routes[0]['randomResponse'], undefined);
     });
 
     it('should add `responseMode` and remove `sequentialResponse` and `randomResponse`, initialized to RANDOM', () => {
@@ -241,11 +244,9 @@ describe('Migrations', () => {
 
       applyMigration(21, environment);
 
-      expect(environment.routes[0]['responseMode']).to.equal(
-        ResponseMode.RANDOM
-      );
-      expect(environment.routes[0]['sequentialResponse']).to.equal(undefined);
-      expect(environment.routes[0]['randomResponse']).to.equal(undefined);
+      strictEqual(environment.routes[0]['responseMode'], ResponseMode.RANDOM);
+      strictEqual(environment.routes[0]['sequentialResponse'], undefined);
+      strictEqual(environment.routes[0]['randomResponse'], undefined);
     });
   });
 
@@ -272,9 +273,7 @@ describe('Migrations', () => {
 
       applyMigration(22, environment);
 
-      expect(environment.routes[0].responses[0].rules[0]['invert']).to.equal(
-        false
-      );
+      strictEqual(environment.routes[0].responses[0].rules[0]['invert'], false);
     });
   });
 
@@ -284,8 +283,7 @@ describe('Migrations', () => {
 
       applyMigration(23, environment);
 
-      expect(environment.data).to.be.an('array');
-      expect(environment.data).to.be.empty;
+      deepStrictEqual(environment.data, []);
     });
   });
 
@@ -297,13 +295,12 @@ describe('Migrations', () => {
 
       applyMigration(24, environment);
 
-      expect(environment.routes[0].responses[0].bodyType).to.equal(
-        BodyTypes.FILE
-      );
-      expect(environment.routes[0].responses[1].bodyType).to.equal(
+      strictEqual(environment.routes[0].responses[0].bodyType, BodyTypes.FILE);
+      strictEqual(
+        environment.routes[0].responses[1].bodyType,
         BodyTypes.INLINE
       );
-      expect(environment.routes[0].responses[0].databucketID).to.be.equal('');
+      strictEqual(environment.routes[0].responses[0].databucketID, '');
     });
   });
 
@@ -313,11 +310,9 @@ describe('Migrations', () => {
 
       applyMigration(25, environment);
 
-      expect(environment['folders']).to.be.an('array');
-      expect(environment['folders']).to.be.empty;
+      deepStrictEqual(environment['folders'], []);
 
-      expect(environment['rootChildren']).to.be.an('array');
-      expect(environment['rootChildren']).to.be.deep.equal([
+      deepStrictEqual(environment['rootChildren'], [
         { type: 'route', uuid: '1' },
         { type: 'route', uuid: '2' }
       ]);
@@ -330,8 +325,8 @@ describe('Migrations', () => {
 
       applyMigration(26, environment);
 
-      expect(environment.routes[0]['type']).to.equal(RouteDefault.type);
-      expect(environment.routes[1]['type']).to.equal(RouteDefault.type);
+      strictEqual(environment.routes[0]['type'], RouteDefault.type);
+      strictEqual(environment.routes[1]['type'], RouteDefault.type);
     });
   });
 
@@ -343,8 +338,8 @@ describe('Migrations', () => {
       applyMigration(27, environment1);
       applyMigration(27, environment2);
 
-      expect(environment1.hostname).to.equal('');
-      expect(environment2.hostname).to.equal('127.0.0.1');
+      strictEqual(environment1.hostname, '');
+      strictEqual(environment2.hostname, '127.0.0.1');
     });
   });
 
@@ -356,10 +351,12 @@ describe('Migrations', () => {
 
       applyMigration(28, environment);
 
-      expect(environment.routes[0].responses[0].crudKey).to.equal(
+      strictEqual(
+        environment.routes[0].responses[0].crudKey,
         RouteResponseDefault.crudKey
       );
-      expect(environment.routes[0].responses[1].crudKey).to.equal(
+      strictEqual(
+        environment.routes[0].responses[1].crudKey,
         RouteResponseDefault.crudKey
       );
     });
@@ -378,14 +375,16 @@ describe('Migrations', () => {
 
       applyMigration(28, environment);
 
-      expect(environment.routes[0].responses[0].crudKey).to.not.equal(
+      notStrictEqual(
+        environment.routes[0].responses[0].crudKey,
         RouteResponseDefault.crudKey
       );
-      expect(environment.routes[0].responses[1].crudKey).to.not.equal(
+      notStrictEqual(
+        environment.routes[0].responses[1].crudKey,
         RouteResponseDefault.crudKey
       );
-      expect(environment.routes[0].responses[0].crudKey).to.deep.equal('uuid');
-      expect(environment.routes[0].responses[1].crudKey).to.deep.equal('uuid');
+      strictEqual(environment.routes[0].responses[0].crudKey, 'uuid');
+      strictEqual(environment.routes[0].responses[1].crudKey, 'uuid');
     });
   });
 
@@ -405,7 +404,8 @@ describe('Migrations', () => {
       };
       applyMigration(29, environment);
 
-      expect(environment.routes[0].responses[0].body).to.equal(
+      strictEqual(
+        environment.routes[0].responses[0].body,
         '{\n  "name": "{{{faker \'number.int\' max=99999}}}",\n  "name": "{{{faker \'person.firstName\'}}}"\n    "title": "{{{setVar \'x\' (faker \'person.prefix\' sex=\'male\')}}}"\n}'
       );
     });
@@ -435,7 +435,8 @@ describe('Migrations', () => {
       };
       applyMigration(29, environment);
 
-      expect(environment.data[0].value).to.equal(
+      strictEqual(
+        environment.data[0].value,
         '{\n  "name": "{{faker \'person.firstName\'}}"\n    "image": "{{faker \'image.urlLoremFlickr\' width=128 height=128 category="abstract"}}"\n}'
       );
     });
@@ -449,11 +450,11 @@ describe('Migrations', () => {
       applyMigration(30, environment1);
       applyMigration(30, environment2);
 
-      expect(environment1.callbacks).to.be.not.undefined;
-      expect(environment1.callbacks).to.have.length(0);
-      expect(environment1.routes[0].responses[0].callbacks).to.be.not.undefined;
-      expect(environment1.routes[0].responses[0].callbacks).to.have.length(0);
-      expect(environment2.callbacks).to.have.length(0);
+      notStrictEqual(environment1.callbacks, undefined);
+      strictEqual(environment1.callbacks.length, 0);
+      notStrictEqual(environment1.routes[0].responses[0].callbacks, undefined);
+      strictEqual(environment1.routes[0].responses[0].callbacks.length, 0);
+      strictEqual(environment2.callbacks.length, 0);
     });
   });
 
@@ -485,22 +486,22 @@ describe('Migrations', () => {
       const postMigrationAction2 = applyMigration(31, environment2);
       const postMigrationAction3 = applyMigration(31, environment3);
 
-      expect(environment1.routes[0].enabled).to.be.undefined;
-      expect(environment1.routes[1].enabled).to.be.undefined;
-      expect(environment2.routes[0].enabled).to.be.undefined;
-      expect(environment2.routes[1].enabled).to.be.undefined;
-      expect(environment3.routes[0].enabled).to.be.undefined;
-      expect(environment3.routes[1].enabled).to.be.undefined;
+      strictEqual(environment1.routes[0].enabled, undefined);
+      strictEqual(environment1.routes[1].enabled, undefined);
+      strictEqual(environment2.routes[0].enabled, undefined);
+      strictEqual(environment2.routes[1].enabled, undefined);
+      strictEqual(environment3.routes[0].enabled, undefined);
+      strictEqual(environment3.routes[1].enabled, undefined);
 
-      expect(postMigrationAction1).to.deep.equal({
+      deepStrictEqual(postMigrationAction1, {
         type: PostMigrationActions.DISABLED_ROUTES_MIGRATION,
         disabledRoutesUuids: []
       });
-      expect(postMigrationAction2).to.deep.equal({
+      deepStrictEqual(postMigrationAction2, {
         type: PostMigrationActions.DISABLED_ROUTES_MIGRATION,
         disabledRoutesUuids: ['b2']
       });
-      expect(postMigrationAction3).to.deep.equal({
+      deepStrictEqual(postMigrationAction3, {
         type: PostMigrationActions.DISABLED_ROUTES_MIGRATION,
         disabledRoutesUuids: ['c1', 'c2']
       });
@@ -535,22 +536,22 @@ describe('Migrations', () => {
       const postMigrationAction2 = applyMigration(32, environment2);
       const postMigrationAction3 = applyMigration(32, environment3);
 
-      expect(environment1.folders[0].collapsed).to.be.undefined;
-      expect(environment1.folders[1].collapsed).to.be.undefined;
-      expect(environment2.folders[0].collapsed).to.be.undefined;
-      expect(environment2.folders[1].collapsed).to.be.undefined;
-      expect(environment3.folders[0].collapsed).to.be.undefined;
-      expect(environment3.folders[1].collapsed).to.be.undefined;
+      strictEqual(environment1.folders[0].collapsed, undefined);
+      strictEqual(environment1.folders[1].collapsed, undefined);
+      strictEqual(environment2.folders[0].collapsed, undefined);
+      strictEqual(environment2.folders[1].collapsed, undefined);
+      strictEqual(environment3.folders[0].collapsed, undefined);
+      strictEqual(environment3.folders[1].collapsed, undefined);
 
-      expect(postMigrationAction1).to.deep.equal({
+      deepStrictEqual(postMigrationAction1, {
         type: PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION,
         collapsedFoldersUuids: []
       });
-      expect(postMigrationAction2).to.deep.equal({
+      deepStrictEqual(postMigrationAction2, {
         type: PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION,
         collapsedFoldersUuids: ['b2']
       });
-      expect(postMigrationAction3).to.deep.equal({
+      deepStrictEqual(postMigrationAction3, {
         type: PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION,
         collapsedFoldersUuids: ['c1', 'c2']
       });

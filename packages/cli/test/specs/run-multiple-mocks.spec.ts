@@ -1,5 +1,5 @@
 import { test } from '@oclif/test';
-import { expect } from 'chai';
+import { ok } from 'assert';
 
 describe('Run two mocks on different ports', () => {
   test
@@ -21,8 +21,8 @@ describe('Run two mocks on different ports', () => {
         await fetch('http://localhost:3001/api/test')
       ).text();
 
-      expect(call1).to.contain('mock-content-1');
-      expect(call2).to.contain('mock-content-2');
+      ok(call1.includes('mock-content-1'));
+      ok(call2.includes('mock-content-2'));
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -30,8 +30,8 @@ describe('Run two mocks on different ports', () => {
     .it(
       'should start first mock on port 3000 and call GET /api/test endpoints and get a result',
       (context) => {
-        expect(context.stdout).to.contain('Server started on port 3000');
-        expect(context.stdout).to.contain('Server started on port 3001');
+        ok(context.stdout.includes('Server started on port 3000'));
+        ok(context.stdout.includes('Server started on port 3001'));
       }
     );
 });
@@ -56,8 +56,8 @@ describe('Run same mock twice on different ports', () => {
         await fetch('http://localhost:3001/api/test')
       ).text();
 
-      expect(call1).to.contain('mock-content-1');
-      expect(call2).to.contain('mock-content-1');
+      ok(call1.includes('mock-content-1'));
+      ok(call2.includes('mock-content-1'));
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -65,8 +65,8 @@ describe('Run same mock twice on different ports', () => {
     .it(
       'should start first mock on port 3000 and call GET /api/test endpoints and get a result',
       (context) => {
-        expect(context.stdout).to.contain('Server started on port 3000');
-        expect(context.stdout).to.contain('Server started on port 3001');
+        ok(context.stdout.includes('Server started on port 3000'));
+        ok(context.stdout.includes('Server started on port 3001'));
       }
     );
 });
