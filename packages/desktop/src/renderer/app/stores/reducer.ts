@@ -519,7 +519,8 @@ export const environmentReducer = (
         'proxyRemovePrefix',
         'tlsOptions',
         'hostname',
-        'cors'
+        'cors',
+        'routesFolder'
       ];
 
       newState = {

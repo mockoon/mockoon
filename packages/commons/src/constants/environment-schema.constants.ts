@@ -46,6 +46,7 @@ export const EnvironmentDefault: Environment = {
     passphrase: ''
   },
   cors: true,
+  routesFolder: false,
   headers: [],
   proxyReqHeaders: [],
   proxyResHeaders: [],
@@ -444,6 +445,9 @@ export const EnvironmentSchema = Joi.object<Environment, true>({
     .required(),
   tlsOptions: TLSOptionsSchema,
   cors: Joi.boolean().failover(EnvironmentDefault.cors).required(),
+  routesFolder: Joi.boolean()
+    .failover(EnvironmentDefault.routesFolder)
+    .required(),
   headers: Joi.array()
     .items(HeaderSchema, Joi.any().strip())
     .failover(EnvironmentDefault.headers)

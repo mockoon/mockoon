@@ -64,6 +64,7 @@ export type Environment = {
   proxyResHeaders: Header[];
   tlsOptions: EnvironmentTLSOptions;
   cors: boolean;
+  routesFolder: boolean;
   headers: Header[];
   data: DataBucket[];
   callbacks: Callback[];
