@@ -5,7 +5,7 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import { expect } from 'chai';
+import { ok, strictEqual } from 'assert';
 import { IncomingMessage } from 'http';
 import { fromWsRequest } from '../../../src/libs/requests';
 import {
@@ -27,34 +27,38 @@ const sleep = (ms: number) =>
 const EMPTY_SERVER_CTX = {
   environment: {} as Environment,
   globalVariables: {},
-  processedDatabuckets: []
+  processedDatabuckets: [],
+  envVarPrefix: ''
 } as ServerContext;
 
 const EMPTY_WS_REQUEST = fromWsRequest({} as IncomingMessage);
 
 describe('Minimum Streaming Interval', () => {
   it('minimum interval should not lower than 10ms', () => {
-    expect(getSafeStreamingInterval(0)).to.be.equal(
+    strictEqual(
+      getSafeStreamingInterval(0),
       SMALLEST_POSSIBLE_STREAMING_INTERVAL
     );
-    expect(getSafeStreamingInterval(-100)).to.be.equal(
+    strictEqual(
+      getSafeStreamingInterval(-100),
       SMALLEST_POSSIBLE_STREAMING_INTERVAL
     );
-    expect(getSafeStreamingInterval(9)).to.be.equal(
+    strictEqual(
+      getSafeStreamingInterval(9),
       SMALLEST_POSSIBLE_STREAMING_INTERVAL
     );
-    expect(getSafeStreamingInterval(10)).to.be.equal(10);
-    expect(getSafeStreamingInterval(11)).to.be.equal(11);
-    expect(getSafeStreamingInterval(500)).to.be.equal(500);
-    expect(getSafeStreamingInterval(1000)).to.be.equal(1000);
+    strictEqual(getSafeStreamingInterval(10), 10);
+    strictEqual(getSafeStreamingInterval(11), 11);
+    strictEqual(getSafeStreamingInterval(500), 500);
+    strictEqual(getSafeStreamingInterval(1000), 1000);
   });
 });
 
 describe('WS Streaming Runner', () => {
   const assertIsRunning = (runner: WsRunningInstance) =>
-    expect(runner._isRunning).to.be.true;
+    strictEqual(runner._isRunning, true);
   const assertNotRunning = (runner: WsRunningInstance) =>
-    expect(runner._isRunning).to.be.false;
+    strictEqual(runner._isRunning, false);
 
   it('should not fail if close() is called before start or repeatedly afterwards', async () => {
     const received = [] as string[];
@@ -92,7 +96,7 @@ describe('WS Streaming Runner', () => {
     await sleep(200);
     assertIsRunning(runner);
 
-    expect(received.length).to.be.greaterThan(0);
+    ok(received.length > 0);
 
     // close and check
     runner.close();
@@ -134,7 +138,7 @@ describe('WS Streaming Runner', () => {
     await sleep(200);
     assertIsRunning(runner);
 
-    expect(received.length).to.be.greaterThan(0);
+    ok(received.length > 0);
 
     // close and check
     runner.close();
@@ -146,7 +150,7 @@ describe('WS Streaming Runner', () => {
     assertIsRunning(runner);
 
     runner.close();
-    expect(prevLength).to.be.lessThan(received.length);
+    ok(prevLength < received.length);
     assertNotRunning(runner);
   });
 });
@@ -172,7 +176,7 @@ describe('Broadcast Context', () => {
       streamingInterval: 20
     } as Route;
 
-    expect(brdCtx._runningInstances.size).to.be.equal(0);
+    strictEqual(brdCtx._runningInstances.size, 0);
     const added = brdCtx.registerRoute(
       route,
       EMPTY_SERVER_CTX,
@@ -180,19 +184,20 @@ describe('Broadcast Context', () => {
       handler
     );
 
-    expect(added).to.be.true;
-    expect(brdCtx._runningInstances.size).to.be.equal(1);
+    ok(added);
+    strictEqual(brdCtx._runningInstances.size, 1);
 
     // adding again should be unsuccessful
-    expect(
-      brdCtx.registerRoute(route, EMPTY_SERVER_CTX, EMPTY_WS_REQUEST, handler)
-    ).to.be.false;
-    expect(brdCtx._runningInstances.size).to.be.equal(1);
+    strictEqual(
+      brdCtx.registerRoute(route, EMPTY_SERVER_CTX, EMPTY_WS_REQUEST, handler),
+      false
+    );
+    strictEqual(brdCtx._runningInstances.size, 1);
 
     await sleep(100);
 
     brdCtx.closeAll();
-    expect(brdCtx._runningInstances.size).to.be.equal(0);
+    strictEqual(brdCtx._runningInstances.size, 0);
   });
 
   it('should be able to register route again after closing previous runners', async () => {
@@ -215,21 +220,21 @@ describe('Broadcast Context', () => {
       streamingInterval: 20
     } as Route;
 
-    expect(brdCtx._runningInstances.size).to.be.equal(0);
-    expect(
+    strictEqual(brdCtx._runningInstances.size, 0);
+    ok(
       brdCtx.registerRoute(route, EMPTY_SERVER_CTX, EMPTY_WS_REQUEST, handler)
-    ).to.be.true;
+    );
 
     await sleep(100);
 
     brdCtx.closeAll();
-    expect(brdCtx._runningInstances.size).to.be.equal(0);
+    strictEqual(brdCtx._runningInstances.size, 0);
 
-    expect(
+    ok(
       brdCtx.registerRoute(route, EMPTY_SERVER_CTX, EMPTY_WS_REQUEST, handler)
-    ).to.be.true;
+    );
 
     brdCtx.closeAll();
-    expect(brdCtx._runningInstances.size).to.be.equal(0);
+    strictEqual(brdCtx._runningInstances.size, 0);
   });
 });

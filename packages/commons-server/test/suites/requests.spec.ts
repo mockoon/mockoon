@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import { Request } from 'express';
 import { ParamsDictionary, Query } from 'express-serve-static-core';
 import { IncomingMessage } from 'http';
@@ -13,19 +13,20 @@ describe('Requests', () => {
     it('should create ServerRequest correctly from empty express request', () => {
       const req = {} as Request;
       const result = fromExpressRequest(req);
-      expect(result.body).to.be.undefined;
-      expect(result.stringBody).to.be.equal('');
-      expect(result.cookies).to.be.undefined;
-      expect(result.hostname).to.be.undefined;
-      expect(result.ip).to.be.undefined;
-      expect(result.method).to.be.undefined;
-      expect(result.params).to.be.undefined;
-      expect(result.query).to.be.undefined;
-      expect(result.header).to.be.not.undefined;
-      expect(result.get).to.be.not.undefined;
 
-      expect(result.header('content-type')).to.be.undefined;
-      expect(result.get('content-type')).to.be.undefined;
+      strictEqual(result.body, undefined);
+      strictEqual(result.stringBody, '');
+      strictEqual(result.cookies, undefined);
+      strictEqual(result.hostname, undefined);
+      strictEqual(result.ip, undefined);
+      strictEqual(result.method, undefined);
+      strictEqual(result.params, undefined);
+      strictEqual(result.query, undefined);
+      notStrictEqual(result.header, undefined);
+      notStrictEqual(result.get, undefined);
+
+      strictEqual(result.header('content-type'), undefined);
+      strictEqual(result.get('content-type'), undefined);
     });
 
     it('should return body and stringBody correctly', () => {
@@ -34,8 +35,8 @@ describe('Requests', () => {
         stringBody: "{ a: 1, text: 'hello' }"
       } as Request;
       const result = fromExpressRequest(req);
-      expect(result.body).to.be.deep.equals({ a: 1, text: 'hello' });
-      expect(result.stringBody).to.be.equals("{ a: 1, text: 'hello' }");
+      deepStrictEqual(result.body, { a: 1, text: 'hello' });
+      strictEqual(result.stringBody, "{ a: 1, text: 'hello' }");
     });
 
     it('should return cookies correctly', () => {
@@ -43,7 +44,7 @@ describe('Requests', () => {
         cookies: { 'session-id': 'abc' }
       } as Request;
       const result = fromExpressRequest(req);
-      expect(result.cookies).to.be.deep.equals({ 'session-id': 'abc' });
+      deepStrictEqual(result.cookies, { 'session-id': 'abc' });
     });
 
     it('should return headers correctly and should return via header and get methods', () => {
@@ -55,9 +56,9 @@ describe('Requests', () => {
         header: (name: string) => headers[name]
       } as Request;
       const result = fromExpressRequest(req);
-      expect(result.header('content-type')).to.be.equals('application/json');
-      expect(result.get('content-type')).to.be.equals('application/json');
-      expect(result.get('non-existence-header')).to.be.undefined;
+      strictEqual(result.header('content-type'), 'application/json');
+      strictEqual(result.get('content-type'), 'application/json');
+      strictEqual(result.get('non-existence-header'), undefined);
     });
 
     it('should return params correctly', () => {
@@ -68,7 +69,7 @@ describe('Requests', () => {
         } as ParamsDictionary
       } as Request;
       const result = fromExpressRequest(req);
-      expect(result.params).to.be.deep.equals({
+      deepStrictEqual(result.params, {
         path1: 'value1',
         path2: 'value2'
       });
@@ -82,7 +83,7 @@ describe('Requests', () => {
         } as Query
       } as Request;
       const result = fromExpressRequest(req);
-      expect(result.query).to.be.deep.equals({
+      deepStrictEqual(result.query, {
         search: 'abc',
         range: '1'
       });
@@ -95,9 +96,9 @@ describe('Requests', () => {
         method: 'GET'
       } as Request;
       const result = fromExpressRequest(req);
-      expect(result.hostname).to.be.equals('localhost');
-      expect(result.ip).to.be.equals('127.0.0.2');
-      expect(result.method).to.be.equals('GET');
+      strictEqual(result.hostname, 'localhost');
+      strictEqual(result.ip, '127.0.0.2');
+      strictEqual(result.method, 'GET');
     });
   });
 
@@ -107,9 +108,9 @@ describe('Requests', () => {
         url: 'api/path1/test?q=1&p=abc'
       } as IncomingMessage;
       const result = fromWsRequest(req);
-      expect(result.query).to.be.deep.equals({ q: '1', p: 'abc' });
-      expect(result.params).to.be.deep.equals({});
-      expect(result.originalRequest).to.be.equals(req);
+      deepStrictEqual(result.query, { q: '1', p: 'abc' });
+      deepStrictEqual(result.params, {});
+      strictEqual(result.originalRequest, req);
     });
 
     it('should return body and stringBody correctly when message is not given', () => {
@@ -118,10 +119,8 @@ describe('Requests', () => {
         body: { a: 1, text: 'hello' }
       } as IncomingMessage;
       const result = fromWsRequest(req);
-      expect(result.body).to.be.deep.equals({ a: 1, text: 'hello' });
-      expect(result.stringBody).to.be.equal(
-        JSON.stringify({ a: 1, text: 'hello' })
-      );
+      deepStrictEqual(result.body, { a: 1, text: 'hello' });
+      strictEqual(result.stringBody, JSON.stringify({ a: 1, text: 'hello' }));
     });
 
     it('should return body and stringBody correctly when message is given', () => {
@@ -136,10 +135,8 @@ describe('Requests', () => {
         req,
         JSON.stringify({ b: 2, hello: 'world' })
       );
-      expect(result.body).to.be.deep.equals({ b: 2, hello: 'world' });
-      expect(result.stringBody).to.be.equal(
-        JSON.stringify({ b: 2, hello: 'world' })
-      );
+      deepStrictEqual(result.body, { b: 2, hello: 'world' });
+      strictEqual(result.stringBody, JSON.stringify({ b: 2, hello: 'world' }));
     });
 
     it('should parse headers and metadata correctly', () => {
@@ -151,11 +148,11 @@ describe('Requests', () => {
         } as NodeJS.Dict<string | string[]>
       } as IncomingMessage;
       const result = fromWsRequest(req);
-      expect(result.header('content-type')).to.be.equals('application/json');
-      expect(result.get('accept')).to.be.equals('text/html');
-      expect(result.get('non-existence-header')).to.be.undefined;
-      expect(result.hostname).to.be.undefined;
-      expect(result.ip).to.be.undefined;
+      strictEqual(result.header('content-type'), 'application/json');
+      strictEqual(result.get('accept'), 'text/html');
+      strictEqual(result.get('non-existence-header'), undefined);
+      strictEqual(result.hostname, undefined);
+      strictEqual(result.ip, undefined);
     });
 
     it('should parse hostname and ip from headers if specified', () => {
@@ -168,14 +165,14 @@ describe('Requests', () => {
         } as NodeJS.Dict<string | string[]>
       } as IncomingMessage;
       const result = fromWsRequest(req);
-      expect(result.hostname).to.be.equal('localhost');
-      expect(result.ip).to.be.equal('192.168.1.1');
+      strictEqual(result.hostname, 'localhost');
+      strictEqual(result.ip, '192.168.1.1');
     });
 
     it('should cookies will always be null', () => {
       const req = {} as IncomingMessage;
       const result = fromWsRequest(req);
-      expect(result.cookies).to.be.null;
+      strictEqual(result.cookies, null);
     });
   });
 
@@ -193,7 +190,7 @@ describe('Requests', () => {
         JSON.stringify({ b: 2, hello: 'world' })
       );
 
-      expect(result.originalRequest).to.be.equals(originalReq);
+      strictEqual(result.originalRequest, originalReq);
     });
 
     it('should return empty when no message or no body is specified', () => {
@@ -205,8 +202,8 @@ describe('Requests', () => {
       } as IncomingMessage);
       const result = fromServerRequest(req);
 
-      expect(result.body).to.be.undefined;
-      expect(result.stringBody).to.be.equal('');
+      strictEqual(result.body, undefined);
+      strictEqual(result.stringBody, '');
     });
 
     it('should update body and stringBody correctly when parsing from existing request', () => {
@@ -222,15 +219,13 @@ describe('Requests', () => {
         JSON.stringify({ b: 2, hello: 'world' })
       );
 
-      expect(result.body).to.be.deep.equals({ b: 2, hello: 'world' });
-      expect(result.stringBody).to.be.equals(
-        JSON.stringify({ b: 2, hello: 'world' })
-      );
+      deepStrictEqual(result.body, { b: 2, hello: 'world' });
+      strictEqual(result.stringBody, JSON.stringify({ b: 2, hello: 'world' }));
       // other props should remain as it is
-      expect(result.query).to.be.deep.equals({ q: '1', p: 'abc' });
-      expect(result.params).to.be.deep.equals({});
-      expect(result.header('content-type')).to.be.equals('application/json');
-      expect(result.get('content-type')).to.be.equals('application/json');
+      deepStrictEqual(result.query, { q: '1', p: 'abc' });
+      deepStrictEqual(result.params, {});
+      strictEqual(result.header('content-type'), 'application/json');
+      strictEqual(result.get('content-type'), 'application/json');
     });
 
     it('should fallback to original body and stringBody is message is not given', () => {
@@ -243,10 +238,8 @@ describe('Requests', () => {
       } as IncomingMessage);
       const result = fromServerRequest(req);
 
-      expect(result.body).to.be.deep.equals({ a: 1, text: 'hello' });
-      expect(result.stringBody).to.be.equals(
-        JSON.stringify({ a: 1, text: 'hello' })
-      );
+      deepStrictEqual(result.body, { a: 1, text: 'hello' });
+      strictEqual(result.stringBody, JSON.stringify({ a: 1, text: 'hello' }));
     });
   });
 });

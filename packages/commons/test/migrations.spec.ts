@@ -468,24 +468,30 @@ describe('Migrations', () => {
       applyMigration(33, environment1);
       applyMigration(33, environment2);
 
-      expect(environment0.routes).to.be.undefined;
-      expect(environment1.routes[0]).to.not.be.undefined;
-      expect(environment1.routes[0].streamingMode).to.equal(
+      strictEqual(environment0.routes, undefined);
+      notStrictEqual(environment1.routes[0], undefined);
+      strictEqual(
+        environment1.routes[0].streamingMode,
         RouteDefault.streamingMode
       );
-      expect(environment1.routes[0].streamingInterval).to.equal(
+      strictEqual(
+        environment1.routes[0].streamingInterval,
         RouteDefault.streamingInterval
       );
-      expect(environment2.routes[0].streamingMode).to.equal(
+      strictEqual(
+        environment2.routes[0].streamingMode,
         RouteDefault.streamingMode
       );
-      expect(environment2.routes[0].streamingInterval).to.equal(
+      strictEqual(
+        environment2.routes[0].streamingInterval,
         RouteDefault.streamingInterval
       );
-      expect(environment2.routes[1].streamingMode).to.equal(
+      strictEqual(
+        environment2.routes[1].streamingMode,
         RouteDefault.streamingMode
       );
-      expect(environment2.routes[1].streamingInterval).to.equal(
+      strictEqual(
+        environment2.routes[1].streamingInterval,
         RouteDefault.streamingInterval
       );
     });

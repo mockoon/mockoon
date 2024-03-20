@@ -90,7 +90,7 @@ export class WsConnection {
   }
 
   public assertHasAtLeastNoOfMessages(num: number) {
-    expect(this.messageArray.length >= num).toBeTruthy();
+    expect(this.messageArray.length).toBeGreaterThanOrEqual(num);
   }
 
   public drainAllMessages() {

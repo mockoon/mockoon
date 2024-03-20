@@ -301,15 +301,15 @@
                   route.type === 'crud'
                     ? 'crud'
                     : route.type === 'ws'
-                    ? 'ws'
-                    : route.method
+                      ? 'ws'
+                      : route.method
                 }}"
                 >{{
                   route.type === 'crud'
                     ? 'CRUD'
                     : route.type === 'ws'
-                    ? 'WS'
-                    : (route.method | uppercase)
+                      ? 'WS'
+                      : (route.method | uppercase)
                 }}
               </span>
             </div>

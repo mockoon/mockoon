@@ -87,7 +87,7 @@ export const fromWsRequest = (
     method: req.method,
     originalRequest: req,
     params: {},
-    query: location.query,
+    query: JSON.parse(JSON.stringify(location.query)),
     stringBody: message || toString(req.body) || ''
   } as ServerRequest;
 };
