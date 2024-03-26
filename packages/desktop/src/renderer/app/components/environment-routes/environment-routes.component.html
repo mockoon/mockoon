@@ -75,6 +75,52 @@
               formControlName="documentation"
             />
           </div>
+
+          <div
+            *ngIf="activeRoute && activeRoute.type === 'ws'"
+            class="d-flex mt-2"
+          >
+            <app-toggle
+              prefix="streaming-modes"
+              formControlName="streamingMode"
+              [items]="streamingModes"
+            ></app-toggle>
+            <div class="input-group">
+              <div
+                class="input-group-prepend"
+                ngbTooltip="Streaming interval (ms)"
+              >
+                <span class="input-group-text">
+                  <app-svg icon="access_time"></app-svg>
+                </span>
+              </div>
+              <input
+                type="number"
+                class="form-control"
+                [attr.disabled]="
+                  activeRouteForm.get(['streamingMode']).value === null
+                    ? true
+                    : null
+                "
+                [appInputNumber]="{
+                  min: 10,
+                  max: Infinity,
+                  canBeEmpty: false
+                }"
+                formControlName="streamingInterval"
+              />
+              <div
+                *ngIf="
+                  10 > (activeRouteForm.get(['streamingInterval']).value || 0)
+                "
+                class="warning-message ms-auto text-center ps-2 align-self-center"
+                id="disabled-rules-warning-message"
+                [ngbTooltip]="texts.MINIMUM_STREAMING_INTERVAL_WARNING"
+              >
+                <app-svg icon="warning" class="pe-1"></app-svg>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Route responses navigation tabs -->
@@ -152,6 +198,9 @@
                       "
                       class="pe-2"
                       >CRUD operations
+                    </span>
+                    <span *ngIf="activeRoute.type === 'ws'" class="pe-2"
+                      >Response {{ (activeRouteResponseIndex$ | async) + 1 }}
                     </span>
                     {{ data.activeRouteResponse?.label }}
                   </div>
@@ -232,6 +281,9 @@
                         class="pe-2"
                         >CRUD operations</span
                       >
+                      <span *ngIf="activeRoute.type === 'ws'" class="pe-2"
+                        >Response {{ routeResponseIndex + 1 }}</span
+                      >
                       {{ routeResponse.label }}
                     </span>
                     <ng-container
@@ -246,7 +298,12 @@
                         <app-svg icon="data"></app-svg>
                       </span>
                     </ng-container>
-                    <ng-container *ngIf="activeRoute?.type === 'http'">
+                    <ng-container
+                      *ngIf="
+                        activeRoute?.type === 'http' ||
+                        activeRoute?.type === 'ws'
+                      "
+                    >
                       <span
                         *ngIf="routeResponse.default"
                         class="px-2"
@@ -283,7 +340,9 @@
                 class="ms-2"
                 prefix="response-modes"
                 formControlName="responseMode"
-                [items]="responseModes"
+                [items]="
+                  activeRoute.type === 'ws' ? responseModesForWs : responseModes
+                "
                 appTourStep="tour-route-response-modes"
               ></app-toggle>
             </div>
@@ -305,7 +364,7 @@
                     }}</a
                   >
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" *ngIf="activeRoute.type !== 'ws'">
                   <a
                     class="nav-link d-flex align-items-center"
                     [ngClass]="{ active: activeTab === 'HEADERS' }"
@@ -324,6 +383,7 @@
                   class="nav-item"
                   *ngIf="
                     activeRoute.type === 'http' ||
+                    activeRoute.type === 'ws' ||
                     (activeRoute.type === 'crud' &&
                       !data.activeRouteResponse?.default)
                   "
@@ -337,7 +397,7 @@
                       *ngIf="
                         rulesDisablingResponseModes.includes(
                           activeRoute.responseMode
-                        )
+                        ) || !!activeRoute.streamingMode
                       "
                       class="text-warning"
                       [ngbTooltip]="texts.DISABLED_RULES_WARNING"
@@ -379,6 +439,7 @@
                   class="nav-item"
                   *ngIf="
                     activeRoute.type === 'http' ||
+                    activeRoute.type === 'ws' ||
                     (activeRoute.type === 'crud' &&
                       !data.activeRouteResponse?.default)
                   "
@@ -408,7 +469,8 @@
               <button
                 *ngIf="
                   (activeRoute?.responses.length > 1 &&
-                    activeRoute?.type === 'http') ||
+                    (activeRoute?.type === 'http' ||
+                      activeRoute?.type === 'ws')) ||
                   (!data.activeRouteResponse?.default &&
                     activeRoute?.type === 'crud')
                 "
@@ -453,7 +515,7 @@
                     activeRoute.type === 'crud' &&
                     data.activeRouteResponse?.default
                       ? 'crud'
-                      : 'http'
+                      : activeRoute.type
                   }}"
                 >
                   <app-custom-select
@@ -513,6 +575,11 @@
                   <input
                     type="number"
                     class="form-control"
+                    [attr.disabled]="
+                      activeRoute.type === 'ws' && !!activeRoute.streamingMode
+                        ? true
+                        : null
+                    "
                     [appInputNumber]="{
                       min: 0,
                       max: Infinity,
@@ -534,6 +601,7 @@
               <ng-container
                 *ngIf="
                   activeRoute.type === 'http' ||
+                  activeRoute.type === 'ws' ||
                   (activeRoute.type === 'crud' &&
                     !data.activeRouteResponse?.default)
                 "
@@ -739,7 +807,10 @@
                   ></app-svg>
                 </div>
               </div>
-              <div class="input-group align-items-center">
+              <div
+                class="input-group align-items-center"
+                *ngIf="activeRoute.type !== 'ws'"
+              >
                 <div class="form-check mb-0">
                   <input
                     type="checkbox"

@@ -67,11 +67,17 @@
                 <div class="d-flex">
                   <div>
                     <span
+                      *ngIf="log.protocol === 'http'"
                       class="badge badge-default ms-0 me-3 route-badge-{{
                         log.method | lowercase
                       }} route-method"
                       >{{ log.method | uppercase }}</span
                     >
+                    <app-svg
+                      *ngIf="log.protocol === 'ws'"
+                      icon="websocket"
+                      class="me-3"
+                    ></app-svg>
                   </div>
                   <div
                     class="route"
@@ -131,9 +137,9 @@
                   <div class="d-flex ms-auto nav-link-subtitle">
                     <span
                       class="mt-0 badge badge-default response-badge-{{
-                        log.response.status.toString().slice(0, 1).concat('xx')
+                        log.response?.status.toString().slice(0, 1).concat('xx')
                       }}"
-                      >{{ log.response.status }}</span
+                      >{{ log.response?.status }}</span
                     >
                   </div>
                 </div>
@@ -171,7 +177,7 @@
                   >Request <app-svg icon="call_received"></app-svg
                 ></a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" *ngIf="selectedLog?.response">
                 <a
                   class="nav-link"
                   [ngClass]="{
@@ -206,6 +212,9 @@
                   General
                 </div>
                 <div [ngbCollapse]="collapseStates['request.general']">
+                  <div class="environment-logs-content-item">
+                    <strong>Protocol:</strong> {{ selectedLog.protocol }}
+                  </div>
                   <div class="environment-logs-content-item">
                     <strong>Request URL:</strong> {{ selectedLog.url }}
                   </div>

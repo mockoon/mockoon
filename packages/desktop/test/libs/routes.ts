@@ -278,9 +278,14 @@ class Routes {
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(3)').click();
   }
 
-  public async addFolder(): Promise<void> {
+  public async addWebSocket(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(4)').click();
+  }
+
+  public async addFolder(): Promise<void> {
+    await $('#routes-add-dropdown .dropdown-toggle').click();
+    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(5)').click();
   }
 
   public async selectTemplateTab(index: 1 | 2): Promise<void> {

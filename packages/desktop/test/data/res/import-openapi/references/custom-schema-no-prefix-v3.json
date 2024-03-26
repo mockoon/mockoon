@@ -1,6 +1,6 @@
 {
   "uuid": "02bb7680-4e59-4574-a38b-a5e3d9d75666",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Sample v3 schema",
   "endpointPrefix": "",
   "latency": 0,
@@ -40,7 +40,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "1fabb15f-042a-4b11-a238-3a393ced6017",
@@ -74,7 +76,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "f573f69a-52e7-4500-9593-21396f360416",
@@ -108,7 +112,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -139,18 +145,8 @@
   },
   "cors": true,
   "headers": [],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
   "callbacks": []
 }

@@ -33,6 +33,9 @@
             <button class="btn dropdown-item" (click)="addHTTPRoute()">
               <app-svg icon="endpoint" class="me-1"></app-svg> HTTP route
             </button>
+            <button class="btn dropdown-item" (click)="addWebSocketRoute()">
+              <app-svg icon="websocket" class="me-1"></app-svg> WebSocket
+            </button>
             <button class="btn dropdown-item" (click)="addFolder()">
               <app-svg icon="folder" class="me-1"></app-svg> Folder
             </button>
@@ -295,10 +298,18 @@
             <div class="ms-auto ps-2 d-flex align-items-center">
               <span
                 class="badge badge-default route-badge-{{
-                  route.type === 'crud' ? 'crud' : route.method
+                  route.type === 'crud'
+                    ? 'crud'
+                    : route.type === 'ws'
+                      ? 'ws'
+                      : route.method
                 }}"
                 >{{
-                  route.type === 'crud' ? 'CRUD' : (route.method | uppercase)
+                  route.type === 'crud'
+                    ? 'CRUD'
+                    : route.type === 'ws'
+                      ? 'WS'
+                      : (route.method | uppercase)
                 }}
               </span>
             </div>

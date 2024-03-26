@@ -15,7 +15,10 @@
       </ng-container>
 
       <div class="rules-list flex-grow-1">
-        <ng-container formArrayName="rules">
+        <ng-container
+          formArrayName="rules"
+          *ngIf="activeRoute$ | async as activeRoute"
+        >
           <div
             *ngFor="
               let rule of form.get('rules')['controls'];
@@ -40,7 +43,11 @@
               class="overflow-hidden me-2"
               formControlName="target"
               [enableCustomInput]="false"
-              [items]="responseRuleTargets"
+              [items]="
+                activeRoute.type === 'ws'
+                  ? webSocketResponseRuleTargets
+                  : responseRuleTargets
+              "
               [dropdownId]="'rules' + ruleIndex + 'target'"
             ></app-custom-select>
 

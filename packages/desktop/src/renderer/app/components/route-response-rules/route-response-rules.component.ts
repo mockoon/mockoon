@@ -59,6 +59,9 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { value: 'global_var', label: 'Global variable' },
     { value: 'request_number', label: 'Request number (starting at 1)' }
   ];
+  public webSocketResponseRuleTargets = this.responseRuleTargets.filter(
+    (rt) => !['cookie', 'params'].includes(rt.value)
+  );
   public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
     { value: 'equals', label: 'equals' },
     { value: 'regex', label: 'regex' },

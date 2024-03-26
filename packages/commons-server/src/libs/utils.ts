@@ -3,6 +3,7 @@ import {
   Folder,
   FolderChild,
   Header,
+  InFlightRequest,
   InvokedCallback,
   Methods,
   Route,
@@ -10,12 +11,22 @@ import {
 } from '@mockoon/commons';
 import { Request, Response } from 'express';
 import { SafeString } from 'handlebars';
-import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
+import {
+  IncomingHttpHeaders,
+  IncomingMessage,
+  OutgoingHttpHeaders
+} from 'http';
 import { JSONPath } from 'jsonpath-plus';
 import { get as objectGet } from 'object-path';
 import { isAbsolute, resolve } from 'path';
-import { URL } from 'url';
+import { URL, parse as parseUrl } from 'url';
+import { xml2js } from 'xml-js';
 import { brotliDecompressSync, inflateSync, unzipSync } from 'zlib';
+import {
+  ParsedJSONBodyMimeTypes,
+  ParsedXMLBodyMimeTypes
+} from '../constants/common.constants';
+import { ServerRequest } from './requests';
 
 /**
  * Transform http headers objects to Mockoon's Header key value object
@@ -133,6 +144,42 @@ export function CreateCallbackInvocation(
     responseHeaders: Object.keys(resHeadersObj).map(
       (k) => ({ key: k, value: resHeadersObj[k] }) as Header
     )
+  };
+}
+
+/**
+ * Creates in-flight request object.
+ *
+ * @param requestId
+ * @param request
+ * @param route
+ */
+export function CreateInFlightRequest(
+  requestId: string,
+  request: IncomingMessage,
+  route: Route
+): InFlightRequest {
+  const parsedUrl = parseUrl(request.url || '', true);
+
+  return {
+    requestId,
+    routeUUID: route.uuid,
+    request: {
+      method: (request.method as keyof typeof Methods) || 'get',
+      urlPath: parsedUrl.pathname,
+      route: route.endpoint,
+      headers: TransformHeaders(request.headers).sort(AscSort),
+      body: request.body,
+      query: parsedUrl.search,
+      params: [], // we don't support params yet
+      queryParams: parsedUrl.query
+        ? Object.keys(parsedUrl.query).map((k) => ({
+            name: k,
+            value: parsedUrl.query[k]
+          }))
+        : []
+    },
+    completed: false
   };
 }
 
@@ -406,4 +453,55 @@ export const getValueFromPath = (
   }
 
   return data;
+};
+
+/**
+ * Returns data based on the content type.
+ *
+ * @param data
+ * @param contentType
+ */
+const parseByContentType = (data: string, contentType?: string): any => {
+  if (contentType) {
+    if (stringIncludesArrayItems(ParsedJSONBodyMimeTypes, contentType)) {
+      return JSON.parse(data || '{}');
+    } else if (stringIncludesArrayItems(ParsedXMLBodyMimeTypes, contentType)) {
+      return xml2js(data, { compact: true });
+    }
+  }
+
+  return data;
+};
+
+/**
+ * Parses a websocket message based on the content-type specified in the socket connection.
+ * We have to use this function, because this has to be called when creating a Mockoon
+ * ServerRequest object from a WS connection request.
+ *
+ * @param messageData
+ * @param request
+ */
+export const parseWebSocketMessage = (
+  messageData: string,
+  request?: IncomingMessage
+): any => {
+  const contentType = request?.headers['content-type'];
+
+  return parseByContentType(messageData, contentType);
+};
+
+/**
+ * Returns appropiate object by parsing it as necessary.
+ * This will check content-type header and will parse messageData based on the type.
+ *
+ * @param data
+ * @param request
+ */
+export const parseRequestMessage = (
+  data: string,
+  request?: ServerRequest
+): any => {
+  const contentType = request?.header('content-type');
+
+  return parseByContentType(data, contentType);
 };

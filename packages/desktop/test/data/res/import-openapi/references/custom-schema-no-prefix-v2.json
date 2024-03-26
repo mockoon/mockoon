@@ -1,6 +1,6 @@
 {
   "uuid": "7a1a5cee-8349-49dc-a3f8-f7d6c0c5606f",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Sample v2 schema",
   "endpointPrefix": "",
   "latency": 0,
@@ -40,7 +40,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -63,18 +65,8 @@
   },
   "cors": true,
   "headers": [],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
   "callbacks": []
 }

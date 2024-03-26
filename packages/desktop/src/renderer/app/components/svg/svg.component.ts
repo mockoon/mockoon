@@ -93,6 +93,9 @@ export class SvgComponent {
     | 'command_palette'
     | 'chevron_left'
     | 'chevron_right'
+    | 'websocket'
+    | 'broadcast'
+    | 'events'
     | string;
 
   constructor() {}

@@ -458,6 +458,45 @@ describe('Migrations', () => {
     });
   });
 
+  describe('migration n. 33', () => {
+    it('should have set default websocket specifics to existing routes', () => {
+      const environment0: any = {};
+      const environment1: any = { routes: [{}] };
+      const environment2: any = { routes: [{ uuid: 'abc' }, { uuid: 'abc2' }] };
+
+      applyMigration(33, environment0);
+      applyMigration(33, environment1);
+      applyMigration(33, environment2);
+
+      strictEqual(environment0.routes, undefined);
+      notStrictEqual(environment1.routes[0], undefined);
+      strictEqual(
+        environment1.routes[0].streamingMode,
+        RouteDefault.streamingMode
+      );
+      strictEqual(
+        environment1.routes[0].streamingInterval,
+        RouteDefault.streamingInterval
+      );
+      strictEqual(
+        environment2.routes[0].streamingMode,
+        RouteDefault.streamingMode
+      );
+      strictEqual(
+        environment2.routes[0].streamingInterval,
+        RouteDefault.streamingInterval
+      );
+      strictEqual(
+        environment2.routes[1].streamingMode,
+        RouteDefault.streamingMode
+      );
+      strictEqual(
+        environment2.routes[1].streamingInterval,
+        RouteDefault.streamingInterval
+      );
+    });
+  });
+
   describe('migration n. 31', () => {
     it('should remove route toggling and return the list of disabled route uuids', () => {
       const environment1: any = {

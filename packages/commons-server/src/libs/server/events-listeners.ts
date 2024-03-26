@@ -2,6 +2,7 @@ import {
   CloneObject,
   Environment,
   Header,
+  InFlightRequest,
   InvokedCallback,
   Methods,
   Transaction
@@ -74,6 +75,9 @@ export const listenServerEvents = function (
       case 'HEADER_PARSING_ERROR':
       case 'CALLBACK_ERROR':
       case 'CALLBACK_FILE_ERROR':
+      case 'WS_SERVING_ERROR':
+      case 'WS_UNKNOWN_ROUTE':
+      case 'WS_UNSUPPORTED_CONTENT':
         message = format(ServerMessages[errorCode], error?.message || '');
         break;
       case 'CERT_FILE_NOT_FOUND':
@@ -144,4 +148,75 @@ export const listenServerEvents = function (
     }
     logger.info('Callback invoked', logMeta);
   });
+
+  server.on('ws-new-connection', (inflightRequest: InFlightRequest) => {
+    const logMeta: { inflightRequest: InFlightRequest } = {
+      ...defaultLogMeta,
+      websocketId: inflightRequest.requestId,
+      url: inflightRequest.request.urlPath,
+      routeUUID: inflightRequest.routeUUID
+    };
+
+    if (logTransaction) {
+      logMeta.inflightRequest = CloneObject(inflightRequest) as InFlightRequest;
+      logMeta.inflightRequest.request.headers = logMeta.inflightRequest.request
+        ?.headers
+        ? logMeta.inflightRequest.request?.headers.map(
+            filterAuthorizationHeaders
+          )
+        : [];
+    }
+    logger.info('WebSocket New Connection', logMeta);
+  });
+
+  server.on(
+    'ws-message-received',
+    (inflightRequest: InFlightRequest, message: string) => {
+      const logMeta: { inflightRequest: InFlightRequest; messageData: string } =
+        {
+          ...defaultLogMeta,
+          websocketId: inflightRequest.requestId,
+          url: inflightRequest.request.urlPath,
+          routeUUID: inflightRequest.routeUUID
+        };
+
+      if (logTransaction) {
+        logMeta.inflightRequest = CloneObject(
+          inflightRequest
+        ) as InFlightRequest;
+        logMeta.messageData = message;
+        logMeta.inflightRequest.request.headers = logMeta.inflightRequest
+          .request?.headers
+          ? logMeta.inflightRequest.request?.headers.map(
+              filterAuthorizationHeaders
+            )
+          : [];
+      }
+      logger.info('WebSocket Message Recieved', logMeta);
+    }
+  );
+
+  server.on(
+    'ws-closed',
+    (request: InFlightRequest, code: number, reason?: string | null) => {
+      const logMeta: { inflightRequest: InFlightRequest } = {
+        ...defaultLogMeta,
+        websocketId: request.requestId,
+        code,
+        reason
+      };
+
+      if (logTransaction) {
+        logMeta.inflightRequest = CloneObject(request) as InFlightRequest;
+        logMeta.inflightRequest.request.headers = logMeta.inflightRequest
+          .request?.headers
+          ? logMeta.inflightRequest.request?.headers.map(
+              filterAuthorizationHeaders
+            )
+          : [];
+      }
+
+      logger.info('WebSocket Closed', logMeta);
+    }
+  );
 };

@@ -74,18 +74,19 @@ describe('Environment logs', () => {
       });
 
       it('should verify request tab content', async () => {
+        await environmentsLogs.assertLogItem('Protocol: http', 'request', 2, 1);
         await environmentsLogs.assertLogItem(
           'Request URL: /prefix/endpoint/1',
           'request',
           2,
-          1
+          2
         );
-        await environmentsLogs.assertLogItem('Method: GET', 'request', 2, 2);
+        await environmentsLogs.assertLogItem('Method: GET', 'request', 2, 3);
         await environmentsLogs.assertLogItem(
           'Caught by route: /prefix/endpoint/:param1',
           'request',
           2,
-          3
+          4
         );
 
         await environmentsLogs.assertLogItem(
@@ -371,11 +372,12 @@ describe('Environment logs', () => {
 
       it('should select entry and verify that it is displayed on the right', async () => {
         await environmentsLogs.select(1);
+        await environmentsLogs.assertLogItem('Protocol: http', 'request', 2, 1);
         await environmentsLogs.assertLogItem(
           'Request URL: /prefix/endpoint/1',
           'request',
           2,
-          1
+          2
         );
       });
 

@@ -1,6 +1,6 @@
 {
   "uuid": "8f6a86f2-e23b-4491-98d8-899b94ddec3d",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Swagger Petstore v3",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -72,7 +72,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "3a075a09-38cb-430d-9534-6d439274ef60",
@@ -130,7 +132,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "7f19cab0-d254-48b0-ac4d-b640e40a15d4",
@@ -188,7 +192,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "835ea6a6-becb-4dc9-9db7-17aae0af7b40",
@@ -246,7 +252,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -281,18 +289,8 @@
   },
   "cors": true,
   "headers": [],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
   "callbacks": []
 }

@@ -8,6 +8,7 @@ import {
   GenerateUniqueID,
   generateUUID,
   HighestMigrationId,
+  InFlightRequest,
   repairRefs,
   Route,
   Transaction
@@ -66,6 +67,33 @@ export class DataService extends Logger {
   }
 
   /**
+   * Creates a new environment log record from given inflight request.
+   *
+   * @param request
+   */
+  public formatLogFromInFlightRequest(
+    request: InFlightRequest
+  ): EnvironmentLog {
+    return {
+      UUID: request.requestId,
+      routeUUID: request.routeUUID,
+      timestamp: new Date(),
+      method: request.request.method as EnvironmentLog['method'],
+      url: request.request.urlPath,
+      route: request.request.route,
+      protocol: 'ws',
+      request: {
+        query: request.request.query,
+        body: request.request.body,
+        headers: request.request.headers,
+        params: request.request.params || [],
+        queryParams: request.request.queryParams || []
+      },
+      proxied: false
+    };
+  }
+
+  /**
    * Format request/response to EnvironmentLog to be consumed by the UI
    *
    * @param response
@@ -79,6 +107,7 @@ export class DataService extends Logger {
       method: transaction.request.method as EnvironmentLog['method'],
       route: transaction.request.route,
       url: transaction.request.urlPath,
+      protocol: 'http',
       request: {
         params: transaction.request.params,
         query: transaction.request.query,

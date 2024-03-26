@@ -85,16 +85,16 @@ export class EnvironmentLogsComponent implements OnInit {
       ),
       map((environmentLog) => {
         if (environmentLog) {
-          if (environmentLog.request.body) {
+          if (environmentLog.request?.body) {
             environmentLog.request.truncatedBody =
               this.dataService.truncateBody(environmentLog.request.body);
           }
 
-          if (environmentLog.response.body) {
+          if (environmentLog.response?.body) {
             environmentLog.response.truncatedBody =
               this.dataService.truncateBody(environmentLog.response.body);
 
-            const contentEncoding = environmentLog.response.headers.find(
+            const contentEncoding = environmentLog.response?.headers.find(
               (header) => header.key.toLowerCase() === 'content-encoding'
             )?.value;
 
