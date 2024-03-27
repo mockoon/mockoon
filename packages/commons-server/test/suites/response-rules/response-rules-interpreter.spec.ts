@@ -1156,6 +1156,117 @@ describe('Response rules interpreter', () => {
     });
   });
 
+  describe('Data bucket rules', () => {
+    const request: Request = {
+      header: function (headerName: string) {
+        return '';
+      },
+      body: '',
+      params: {} as QueryString.ParsedQs
+    } as Request;
+
+    it('should return default response when data bucket prop is not present', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            statusCode: 204,
+            rules: [
+              {
+                target: 'data_bucket',
+                modifier: 'test.path',
+                value: 'testValue',
+                operator: 'equals',
+                invert: false
+              }
+            ]
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [
+          // empty
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.statusCode, 403);
+    });
+
+    it('should return the correct response when data bucket prop is present, using bucket name and object path', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            statusCode: 204,
+            rules: [
+              {
+                target: 'data_bucket',
+                modifier: 'Best Bucket.onRequest.returnStatusCode',
+                value: '204',
+                operator: 'equals',
+                invert: false
+              }
+            ]
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [
+          {
+            id: GenerateUniqueID(),
+            name: 'Best Bucket',
+            value: { onRequest: { returnStatusCode: 204 } },
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.statusCode, 204);
+    });
+
+    it('should return the correct response when data bucket prop is present, using bucket id and JSONPath', () => {
+      const bucketId = GenerateUniqueID();
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            statusCode: 204,
+            rules: [
+              {
+                target: 'data_bucket',
+                modifier: `$.${bucketId}[0].key`,
+                value: 'value',
+                operator: 'equals',
+                invert: false
+              }
+            ]
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [
+          {
+            id: bucketId,
+            name: 'bucket',
+            value: [{ key: 'value' }],
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.statusCode, 204);
+    });
+  });
+
   describe('Request number rules', () => {
     it('should return response if request number matches', () => {
       const request: Request = {
