@@ -1,14 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  BuildCallback,
+  EnvironmentsListPayload,
+  getEnvironmentByteSize
+} from '@mockoon/cloud';
+import {
   BuildCRUDRoute,
+  BuildCallback,
   BuildDatabucket,
   BuildDemoEnvironment,
   BuildEnvironment,
   BuildFolder,
-  BuildHeader,
   BuildHTTPRoute,
+  BuildHeader,
   BuildRouteResponse,
   Callback,
   CloneCallback,
@@ -19,27 +23,27 @@ import {
   Environment,
   EnvironmentDefault,
   Folder,
-  generateUUID,
   Header,
   HighestMigrationId,
-  ReorderableContainers,
   ReorderAction,
+  ReorderableContainers,
   Route,
   RouteDefault,
   RouteResponse,
   RouteResponseDefault,
   RouteSchema,
-  RouteType
+  RouteType,
+  deterministicStringify,
+  generateUUID
 } from '@mockoon/commons';
 import {
   BehaviorSubject,
-  concat,
   EMPTY,
+  Observable,
+  concat,
   forkJoin,
   from,
-  Observable,
   of,
-  Subject,
   throwError,
   zip
 } from 'rxjs';
@@ -60,8 +64,8 @@ import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
-  environmentHasRoute,
-  HumanizeText
+  HumanizeText,
+  environmentHasRoute
 } from 'src/renderer/app/libs/utils.lib';
 import {
   CallbackResponseUsage,
@@ -91,6 +95,7 @@ import {
   addFolderAction,
   addRouteAction,
   addRouteResponseAction,
+  convertEnvironmentToLocalAction,
   duplicateCallbackToAnotherEnvironmentAction,
   duplicateDatabucketToAnotherEnvironmentAction,
   duplicateRouteToAnotherEnvironmentAction,
@@ -167,9 +172,7 @@ export class EnvironmentsService extends Logger {
    *
    * @returns
    */
-  public loadEnvironments(): Observable<
-    { environment: Environment; path: string }[]
-  > {
+  public loadEnvironments() {
     return forkJoin([
       this.store.select('settings').pipe(
         filter((settings) => !!settings),
@@ -186,23 +189,30 @@ export class EnvironmentsService extends Logger {
           return of([
             {
               environment: defaultEnvironment,
-              path: demoFilePath
+              environmentDescriptor: {
+                uuid: defaultEnvironment.uuid,
+                path: demoFilePath,
+                cloud: false,
+                lastServerHash: null
+              }
             }
           ]);
         }
 
         return forkJoin(
-          settings.environments.map((environmentItem) =>
-            this.storageService.loadEnvironment(environmentItem.path).pipe(
-              map((environment) =>
-                environment
-                  ? {
-                      environment,
-                      path: environmentItem.path
-                    }
-                  : null
+          settings.environments.map((environmentDescriptor) =>
+            this.storageService
+              .loadEnvironment(environmentDescriptor.path)
+              .pipe(
+                map((environment) =>
+                  environment
+                    ? {
+                        environment,
+                        environmentDescriptor
+                      }
+                    : null
+                )
               )
-            )
           )
         );
       }),
@@ -233,8 +243,9 @@ export class EnvironmentsService extends Logger {
         this.store.update(
           updateSettingsAction({
             environments: environmentsData.map((environmentData) => ({
-              uuid: environmentData.environment.uuid,
-              path: environmentData.path
+              ...environmentData.environmentDescriptor,
+              // update the environment UUID if it changed during migration/UUIDdeduplication
+              uuid: environmentData.environment.uuid
             }))
           })
         );
@@ -285,15 +296,17 @@ export class EnvironmentsService extends Logger {
         from(environments).pipe(
           map((environment) => ({
             data: environment,
-            path: settings.environments.find(
+            descriptor: settings.environments.find(
               (environmentItem) => environmentItem.uuid === environment.uuid
-            )?.path
+            )
           })),
-          filter((environmentInfo) => environmentInfo.path !== undefined),
+          filter(
+            (environmentInfo) => environmentInfo.descriptor?.path !== undefined
+          ),
           mergeMap((environmentInfo) =>
             this.storageService.saveEnvironment(
               environmentInfo.data,
-              environmentInfo.path,
+              environmentInfo.descriptor,
               settings.storagePrettyPrint
             )
           )
@@ -331,49 +344,45 @@ export class EnvironmentsService extends Logger {
     if (!this.environmentChangesNotified) {
       this.environmentChangesNotified = true;
 
-      const confirmReload$ = new Subject<boolean>();
-
-      this.eventsService.confirmModalPayload$.next({
-        title: 'External changes detected',
-        text: 'The following environments were modified outside Mockoon:',
-        sub: 'You can disable file monitoring in the application settings (Ctrl + Comma)',
-        confirmButtonText: 'Reload all',
-        cancelButtonText: 'Ignore',
-        subIcon: 'info',
-        list$: this.environmentChanges$.pipe(
-          map((environmentChanges) =>
-            environmentChanges.map(
-              (environmentChange) => environmentChange.name
+      return this.uiService
+        .showConfirmDialog({
+          title: 'External changes detected',
+          text: 'The following environments were modified outside Mockoon:',
+          sub: 'You can disable file monitoring in the application settings (Ctrl + Comma)',
+          confirmButtonText: 'Reload all',
+          cancelButtonText: 'Ignore',
+          subIcon: 'info',
+          list$: this.environmentChanges$.pipe(
+            map((environmentChanges) =>
+              environmentChanges.map(
+                (environmentChange) => environmentChange.name
+              )
             )
           )
-        ),
-        confirmed$: confirmReload$
-      });
-      this.uiService.openModal('confirm');
+        })
+        .pipe(
+          switchMap((confirmed) => {
+            this.environmentChangesNotified = false;
 
-      return confirmReload$.pipe(
-        switchMap((confirmed) => {
-          this.environmentChangesNotified = false;
+            if (confirmed) {
+              const obs = this.environmentChanges$.value.map(
+                (environmentChange) =>
+                  this.reloadEnvironment(
+                    environmentChange.UUID,
+                    environmentChange.environmentPath
+                  )
+              );
 
-          if (confirmed) {
-            const obs = this.environmentChanges$.value.map(
-              (environmentChange) =>
-                this.reloadEnvironment(
-                  environmentChange.UUID,
-                  environmentChange.environmentPath
-                )
-            );
+              this.environmentChanges$.next([]);
+
+              return concat(...obs);
+            }
 
             this.environmentChanges$.next([]);
 
-            return concat(...obs);
-          }
-
-          this.environmentChanges$.next([]);
-
-          return EMPTY;
-        })
-      );
+            return EMPTY;
+          })
+        );
     }
 
     return EMPTY;
@@ -447,12 +456,41 @@ export class EnvironmentsService extends Logger {
 
   /**
    * Add a new default environment, or the one provided, and save it in the store
+   *
+   * if promptSave is false, the environment will be added without asking for a save path, using the environment uuid as filename. But the environment object needs to be provided
    */
   public addEnvironment(
-    environment?: Environment,
-    insertAfterIndex?: number
-  ): Observable<[string, string]> {
-    return this.dialogsService.showSaveDialog('Save your new environment').pipe(
+    options?: {
+      environment?: Environment;
+      insertAfterIndex?: number;
+      promptSave?: boolean;
+      cloud?: boolean;
+    },
+    storeUpdateOptions = { force: false, emit: true }
+  ) {
+    options = {
+      ...{
+        environment: null,
+        insertAfterIndex: null,
+        promptSave: true,
+        cloud: false
+      },
+      ...options
+    };
+
+    let filePath$: Observable<string>;
+
+    if (options.promptSave) {
+      filePath$ = this.dialogsService.showSaveDialog(
+        'Save your new environment'
+      );
+    } else if (!options.promptSave && options.environment) {
+      filePath$ = from(
+        MainAPI.invoke('APP_BUILD_STORAGE_FILEPATH', options.environment.uuid)
+      );
+    }
+
+    return filePath$.pipe(
       switchMap((filePath) => {
         if (!filePath) {
           return EMPTY;
@@ -473,14 +511,9 @@ export class EnvironmentsService extends Logger {
           from(MainAPI.invoke('APP_GET_FILENAME', filePath))
         );
       }),
-      catchError((errorCode) => {
-        this.logMessage('error', errorCode as MessageCodes);
-
-        return EMPTY;
-      }),
-      tap(([filePath, filename]) => {
-        const newEnvironment = environment
-          ? environment
+      switchMap(([filePath, filename]) => {
+        const newEnvironment = options.environment
+          ? options.environment
           : BuildEnvironment({
               hasDefaultHeader: true,
               hasDefaultRoute: true,
@@ -492,12 +525,39 @@ export class EnvironmentsService extends Logger {
           newEnvironment.name = HumanizeText(filename);
         }
 
+        let observable: Observable<string | null> = of(null);
+
+        if (options.cloud) {
+          observable = from(
+            MainAPI.invoke(
+              'APP_GET_HASH',
+              deterministicStringify(newEnvironment)
+            )
+          );
+        }
+
+        return observable.pipe(
+          map((hash) => {
+            return { newEnvironment, filePath, hash };
+          })
+        );
+      }),
+      tap(({ newEnvironment, filePath, hash }) => {
         this.store.update(
           addEnvironmentAction(newEnvironment, {
             filePath,
-            insertAfterIndex
-          })
+            insertAfterIndex: options.insertAfterIndex,
+            cloud: options.cloud,
+            hash
+          }),
+          storeUpdateOptions.force,
+          storeUpdateOptions.emit
         );
+      }),
+      catchError((errorCode) => {
+        this.logMessage('error', errorCode as MessageCodes);
+
+        return EMPTY;
       })
     );
   }
@@ -513,7 +573,7 @@ export class EnvironmentsService extends Logger {
         const migratedEnvironment =
           this.dataService.migrateAndValidateEnvironment(environment);
 
-        return this.addEnvironment(migratedEnvironment);
+        return this.addEnvironment({ environment: migratedEnvironment });
       }),
       catchError((error) => {
         this.logMessage('error', 'NEW_ENVIRONMENT_CLIPBOARD_ERROR', {
@@ -542,7 +602,7 @@ export class EnvironmentsService extends Logger {
           const migratedEnvironment =
             this.dataService.migrateAndValidateEnvironment(environment);
 
-          return this.addEnvironment(migratedEnvironment);
+          return this.addEnvironment({ environment: migratedEnvironment });
         }),
         catchError((error) => {
           this.logMessage('error', 'NEW_ENVIRONMENT_URL_ERROR', {
@@ -562,7 +622,7 @@ export class EnvironmentsService extends Logger {
    */
   public duplicateEnvironment(
     environmentUUID: string = this.store.get('activeEnvironmentUUID')
-  ): Observable<[string, string]> {
+  ) {
     if (environmentUUID) {
       const environmentToDuplicateindex = this.store
         .get('environments')
@@ -579,10 +639,242 @@ export class EnvironmentsService extends Logger {
 
       newEnvironment = this.dataService.deduplicateUUIDs(newEnvironment, true);
 
-      return this.addEnvironment(newEnvironment, environmentToDuplicateindex);
+      return this.addEnvironment({
+        environment: newEnvironment,
+        insertAfterIndex: environmentToDuplicateindex
+      });
     }
 
     return EMPTY;
+  }
+
+  /**
+   * Add a new cloud environment
+   * If no environment data are provided, create a new one
+   *
+   * @param environment
+   * @param storeUpdateOptions
+   */
+  public addCloudEnvironment(
+    environment?: Environment,
+    storeUpdateOptions = { force: false, emit: true }
+  ) {
+    const user = this.store.get('user');
+    const cloudEnvironments = this.store
+      .get('settings')
+      .environments.filter(
+        (environmentDescriptor) => environmentDescriptor.cloud
+      );
+
+    if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
+      this.logMessage('error', 'CLOUD_QUOTA_EXCEEDED', {
+        quota: user.cloudSyncItemsQuota
+      });
+
+      return EMPTY;
+    } else if (getEnvironmentByteSize(environment) > user.cloudSyncSizeQuota) {
+      this.logMessage('error', 'CLOUD_ENVIRONMENT_TOO_LARGE', {
+        maxSize: this.store.get('user').cloudSyncSizeQuota
+      });
+
+      return EMPTY;
+    }
+
+    // if no environment provided, create a new one
+    if (!environment) {
+      environment = {
+        ...BuildEnvironment({
+          hasDefaultHeader: true,
+          hasDefaultRoute: true
+        }),
+        // provide a name or the filename (UUID) will be used
+        name: 'New cloud environment'
+      };
+    }
+
+    return this.addEnvironment(
+      {
+        environment,
+        promptSave: false,
+        cloud: true
+      },
+      storeUpdateOptions
+    );
+  }
+
+  /**
+   * Add a new cloud environment directly from a local file
+   *
+   */
+  public addCloudEnvironmentFromLocalFile() {
+    const user = this.store.get('user');
+    const cloudEnvironments = this.store
+      .get('settings')
+      .environments.filter(
+        (environmentDescriptor) => environmentDescriptor.cloud
+      );
+
+    if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
+      this.logMessage('error', 'CLOUD_QUOTA_EXCEEDED', {
+        quota: user.cloudSyncItemsQuota
+      });
+
+      return EMPTY;
+    }
+
+    return this.dialogsService
+      .showOpenDialog('Open environment JSON file', 'json')
+      .pipe(
+        filter((filePath) => !!filePath),
+        switchMap((filePath) =>
+          this.storageService.loadEnvironment(filePath).pipe(
+            switchMap((environment) => {
+              if (
+                getEnvironmentByteSize(environment) > user.cloudSyncSizeQuota
+              ) {
+                this.logMessage('error', 'CLOUD_ENVIRONMENT_TOO_LARGE', {
+                  maxSize: this.store.get('user').cloudSyncSizeQuota
+                });
+
+                return EMPTY;
+              }
+
+              return of(environment);
+            }),
+            switchMap((environment) => this.verifyData(environment)),
+            map((environment) => this.validateEnvironment(environment)),
+            switchMap((environment) => this.addCloudEnvironment(environment))
+          )
+        )
+      );
+  }
+
+  /**
+   * Duplicate an environment and save it to the cloud
+   */
+  public duplicateToCloud(environmentUuid: string) {
+    const environmentIsCloud = this.environmentIsCloud(environmentUuid);
+
+    const environmentToDuplicate =
+      this.store.getEnvironmentByUUID(environmentUuid);
+
+    // copy the environment, reset some properties and change name
+    let newEnvironment: Environment = {
+      ...CloneObject(environmentToDuplicate),
+      name: `${environmentToDuplicate.name} ${
+        environmentIsCloud ? '(copy)' : '(cloud copy)'
+      }`
+    };
+
+    newEnvironment = this.dataService.deduplicateUUIDs(newEnvironment, true);
+
+    return this.addCloudEnvironment(newEnvironment);
+  }
+
+  public environmentIsCloud(environmentUuid: string) {
+    return !!this.store
+      .get('settings')
+      .environments.find(
+        (environmentItem) =>
+          environmentItem.uuid === environmentUuid && environmentItem.cloud
+      );
+  }
+
+  /**
+   * Convert a cloud env to a local one
+   * Action will get dispatched through the sync service
+   *
+   * @param environmentUuid
+   */
+  public convertCloudToLocal(environmentUuid: string) {
+    return this.uiService
+      .showConfirmDialog({
+        title: 'Convert to local environment',
+        text: 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+        confirmButtonText: 'Convert',
+        cancelButtonText: 'Cancel'
+      })
+      .pipe(
+        tap((confirmed) => {
+          if (confirmed) {
+            this.store.update(convertEnvironmentToLocalAction(environmentUuid));
+          }
+        })
+      );
+  }
+
+  /**
+   * Delete an environment from the cloud
+   * Action will get dispatched through the sync service
+   *
+   * @param environmentUuid
+   */
+  public deleteFromCloud(environmentUuid: string) {
+    const environmentDescriptor = this.store
+      .get('settings')
+      .environments.find(
+        (environmentItem) => environmentItem.uuid === environmentUuid
+      );
+
+    return this.uiService
+      .showConfirmDialog({
+        title: 'Delete from the cloud',
+        text: 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+        sub: `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
+        subIcon: 'info',
+        confirmButtonText: 'Delete',
+        cancelButtonText: 'Cancel'
+      })
+      .pipe(
+        switchMap((confirmed) => {
+          if (confirmed) {
+            this.store.update(convertEnvironmentToLocalAction(environmentUuid));
+
+            // Close the environment too
+            return this.closeEnvironment(environmentUuid, true);
+          }
+
+          return EMPTY;
+        })
+      );
+  }
+
+  /**
+   * Convert all the cloud environments to local ones based on the current cloud environments list
+   *
+   * @param currentCloudEnvironmentUuids
+   */
+  public convertAllToLocal(
+    currentCloudEnvironmentUuids: EnvironmentsListPayload
+  ) {
+    const environmentDescriptors = this.store.get('settings').environments;
+
+    const deletedCloudEnvironments = environmentDescriptors.filter(
+      (environmentDescriptor) =>
+        environmentDescriptor.cloud === true &&
+        !currentCloudEnvironmentUuids.find(
+          (currentCloudEnvironment) =>
+            currentCloudEnvironment.environmentUuid ===
+            environmentDescriptor.uuid
+        )
+    );
+
+    // convert to local environments
+    deletedCloudEnvironments.forEach((deletedCloudEnvironment) => {
+      this.store.update(
+        convertEnvironmentToLocalAction(deletedCloudEnvironment.uuid),
+        true,
+        false
+      );
+
+      const environment = this.store.getEnvironmentByUUID(
+        deletedCloudEnvironment.uuid
+      );
+      this.logMessage('error', 'CLOUD_ENVIRONMENT_CONVERTED', {
+        name: environment.name,
+        uuid: environment.uuid
+      });
+    });
   }
 
   /**
@@ -632,8 +924,20 @@ export class EnvironmentsService extends Logger {
    * @param environmentUUID
    */
   public closeEnvironment(
-    environmentUUID: string = this.store.get('activeEnvironmentUUID')
+    environmentUUID: string = this.store.get('activeEnvironmentUUID'),
+    force = false
   ): Observable<boolean> {
+    const environmentDescriptor = this.store
+      .get('settings')
+      .environments.find(
+        (environmentItem) => environmentItem.uuid === environmentUUID
+      );
+
+    // Do not close cloud environments
+    if (environmentDescriptor.cloud && !force) {
+      return of(true);
+    }
+
     return this.storageService.saving().pipe(
       tap(() => {
         this.store.update(updateUIStateAction({ saving: true }));
@@ -716,7 +1020,8 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Remove a folder and save
+   * Remove a folder and save.
+   * Move all children to the parent container (root or folder) one by one
    */
   public removeFolder(folderUuid: string) {
     if (folderUuid) {
@@ -864,13 +1169,15 @@ export class EnvironmentsService extends Logger {
           return EMPTY;
         } else {
           return this.addEnvironment({
-            ...BuildEnvironment({
-              hasDefaultHeader: true,
-              hasDefaultRoute: true,
-              port: this.dataService.getNewEnvironmentPort()
-            }),
-            routes: [route],
-            rootChildren: [{ type: 'route', uuid: route.uuid }]
+            environment: {
+              ...BuildEnvironment({
+                hasDefaultHeader: true,
+                hasDefaultRoute: true,
+                port: this.dataService.getNewEnvironmentPort()
+              }),
+              routes: [route],
+              rootChildren: [{ type: 'route', uuid: route.uuid }]
+            }
           });
         }
       }),
@@ -1671,6 +1978,7 @@ export class EnvironmentsService extends Logger {
               environments: settings.environments.map((environment) => {
                 if (environment.uuid === environmentUUID) {
                   return {
+                    ...environment,
                     uuid: environmentUUID,
                     path: filePath
                   };
@@ -1836,21 +2144,15 @@ export class EnvironmentsService extends Logger {
     }
 
     if (environment.lastMigration === undefined) {
-      const confirmed$ = new Subject<boolean>();
-
-      this.eventsService.confirmModalPayload$.next({
-        title: 'Confirm opening',
-        text: 'This content does not seem to be a valid Mockoon environment. Open it anyway?',
-        sub: 'Mockoon will attempt to migrate and repair the content, which may be altered and overwritten.',
-        subIcon: 'warning',
-        subIconClass: 'text-warning',
-        confirmed$
-      });
-      this.uiService.openModal('confirm');
-
-      return confirmed$.pipe(
-        switchMap((confirmed) => (confirmed ? of(environment) : EMPTY))
-      );
+      return this.uiService
+        .showConfirmDialog({
+          title: 'Confirm opening',
+          text: 'This content does not seem to be a valid Mockoon environment. Open it anyway?',
+          sub: 'Mockoon will attempt to migrate and repair the content, which may be altered and overwritten.',
+          subIcon: 'warning',
+          subIconClass: 'text-warning'
+        })
+        .pipe(switchMap((confirmed) => (confirmed ? of(environment) : EMPTY)));
     }
 
     return of(environment);
@@ -1871,5 +2173,14 @@ export class EnvironmentsService extends Logger {
         filePath
       })
     );
+  }
+
+  /**
+   * Validate/migrate the environment
+   *
+   * @param environment
+   */
+  private validateEnvironment(environment: Environment) {
+    return this.dataService.migrateAndValidateEnvironment(environment);
   }
 }

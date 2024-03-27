@@ -1,16 +1,27 @@
-import { Environments } from '@mockoon/commons';
+import { Environments, Folder } from '@mockoon/commons';
 import { ContextMenuItem } from 'src/renderer/app/models/context-menu.model';
 
-export const EnvironmentsContextMenu = (
-  environmentUUID: string
+export const CloudEnvironmentsContextMenu = (
+  environmentUuid: string,
+  syncStatus: boolean
 ): ContextMenuItem[] => [
   {
     payload: {
       subject: 'environment',
-      action: 'duplicate',
-      subjectUUID: environmentUUID
+      action: 'duplicateToCloud',
+      subjectUUID: environmentUuid
     },
-    label: 'Duplicate',
+    label: 'Duplicate to the cloud',
+    icon: 'cloud',
+    disabled: !syncStatus
+  },
+  {
+    payload: {
+      subject: 'environment',
+      action: 'duplicate',
+      subjectUUID: environmentUuid
+    },
+    label: 'Duplicate to local',
     icon: 'content_copy',
     disabled: false
   },
@@ -18,7 +29,7 @@ export const EnvironmentsContextMenu = (
     payload: {
       subject: 'environment',
       action: 'copyJSON',
-      subjectUUID: environmentUUID
+      subjectUUID: environmentUuid
     },
     label: 'Copy configuration to clipboard (JSON)',
     icon: 'assignment',
@@ -28,7 +39,75 @@ export const EnvironmentsContextMenu = (
     payload: {
       subject: 'environment',
       action: 'showInFolder',
-      subjectUUID: environmentUUID
+      subjectUUID: environmentUuid
+    },
+    label: 'Show local backup data file in explorer/finder',
+    icon: 'folder',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'environment',
+      action: 'convertToLocal',
+      subjectUUID: environmentUuid
+    },
+    label: 'Delete from cloud and convert to local',
+    icon: 'cloud_remove',
+    separator: false,
+    disabled: !syncStatus
+  },
+  {
+    payload: {
+      subject: 'environment',
+      action: 'deleteFromCloud',
+      subjectUUID: environmentUuid
+    },
+    label: 'Delete from cloud and close',
+    icon: 'cloud_remove',
+    separator: false,
+    disabled: !syncStatus
+  }
+];
+
+export const EnvironmentsContextMenu = (
+  environmentUuid: string,
+  syncStatus: boolean
+): ContextMenuItem[] => [
+  {
+    payload: {
+      subject: 'environment',
+      action: 'duplicateToCloud',
+      subjectUUID: environmentUuid
+    },
+    label: 'Duplicate to the cloud',
+    icon: 'cloud',
+    disabled: !syncStatus
+  },
+  {
+    payload: {
+      subject: 'environment',
+      action: 'duplicate',
+      subjectUUID: environmentUuid
+    },
+    label: 'Duplicate to local',
+    icon: 'content_copy',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'environment',
+      action: 'copyJSON',
+      subjectUUID: environmentUuid
+    },
+    label: 'Copy configuration to clipboard (JSON)',
+    icon: 'assignment',
+    disabled: false
+  },
+  {
+    payload: {
+      subject: 'environment',
+      action: 'showInFolder',
+      subjectUUID: environmentUuid
     },
     label: 'Show data file in explorer/finder',
     icon: 'folder',
@@ -38,7 +117,7 @@ export const EnvironmentsContextMenu = (
     payload: {
       subject: 'environment',
       action: 'move',
-      subjectUUID: environmentUUID
+      subjectUUID: environmentUuid
     },
     label: 'Move data file to folder',
     icon: 'folder_move',
@@ -48,7 +127,7 @@ export const EnvironmentsContextMenu = (
     payload: {
       subject: 'environment',
       action: 'close',
-      subjectUUID: environmentUUID
+      subjectUUID: environmentUuid
     },
     label: 'Close environment',
     icon: 'close',
@@ -56,12 +135,12 @@ export const EnvironmentsContextMenu = (
   }
 ];
 
-export const FoldersContextMenu = (folderUUID: string): ContextMenuItem[] => [
+export const FoldersContextMenu = (folder: Folder): ContextMenuItem[] => [
   {
     payload: {
       subject: 'folder',
       action: 'add_crud_route',
-      subjectUUID: folderUUID
+      subjectUUID: folder.uuid
     },
     label: 'Add CRUD route',
     icon: 'endpoints',
@@ -71,7 +150,7 @@ export const FoldersContextMenu = (folderUUID: string): ContextMenuItem[] => [
     payload: {
       subject: 'folder',
       action: 'add_http_route',
-      subjectUUID: folderUUID
+      subjectUUID: folder.uuid
     },
     label: 'Add HTTP route',
     icon: 'endpoint',
@@ -81,7 +160,7 @@ export const FoldersContextMenu = (folderUUID: string): ContextMenuItem[] => [
     payload: {
       subject: 'folder',
       action: 'add_folder',
-      subjectUUID: folderUUID
+      subjectUUID: folder.uuid
     },
     label: 'Add folder',
     icon: 'folder',
@@ -91,16 +170,19 @@ export const FoldersContextMenu = (folderUUID: string): ContextMenuItem[] => [
     payload: {
       subject: 'folder',
       action: 'delete',
-      subjectUUID: folderUUID
+      subjectUUID: folder.uuid
     },
-    label: 'Delete folder',
+    label:
+      folder.children.length > 0
+        ? 'Delete folder (not empty)'
+        : 'Delete folder',
     icon: 'delete',
     confirm: {
       icon: 'error',
       label: 'Confirm deletion'
     },
     confirmColor: 'text-danger',
-    disabled: false
+    disabled: folder.children.length > 0
   }
 ];
 

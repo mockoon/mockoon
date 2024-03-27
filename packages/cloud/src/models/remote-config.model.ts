@@ -12,4 +12,5 @@ export type RemoteConfigData = {
   banner: Banner | null;
   enableTelemetry: boolean;
   geoipEndpoint: string;
+  cloudSyncUrl?: string;
 };

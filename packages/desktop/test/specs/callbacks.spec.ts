@@ -297,8 +297,7 @@ describe('Callback filter', () => {
     await navigation.switchView('ENV_CALLBACKS');
 
     await callbacks.setFilter('Second');
-    await dialogs.save(resolve('./tmp/storage/dup2-callbacks.json'));
-    await environments.add();
+    await environments.add('dup2-callbacks');
     await navigation.switchView('ENV_CALLBACKS');
 
     await callbacks.assertFilter('');

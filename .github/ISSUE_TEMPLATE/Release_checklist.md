@@ -1,24 +1,26 @@
 ---
 name: Release checklist
-about: Checklist for releases (admin use only)
+about: Checklist for releases (maintainers use only)
 ---
-
-- [ ] Bump packages versions
-- [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
-- [ ] Wait for desktop binaries build (automated after pre-release publication)
 
 **Tests:**
 
 - [ ] Manually test desktop binaries (if significant dependencies or native behavior changes)
 
-**Release desktop:**
+**Versions:**
 
-- [ ] Add desktop binaries to the GitHub release
-- [ ] Set the release to final (non pre-release)
+- [ ] Bump packages versions
 
-**Release the libs (commons, commons-server, serverless, CLI):**
+**Release the libs (commons, commons-server, cloud, serverless, CLI):**
 
 - [ ] Create a `libs-v{x.x.x}` tag to release all the NPM libraries
+
+**Release desktop:**
+
+- [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
+- [ ] Wait for desktop binaries build (automated after pre-release publication)
+- [ ] Add desktop binaries to the GitHub release
+- [ ] Set the release to final (non pre-release)
 
 **Website (publish changelogs):**
 
@@ -29,6 +31,10 @@ about: Checklist for releases (admin use only)
 - [ ] Update desktop latest version in `/releases/desktop/stable.json`
 - [ ] Merge release branch on main
 - [ ] Wait for deployment and purge cache on CF
+
+**Sync server:**
+
+- [ ] Re-deploy after libs release and API update
 
 **Website (update desktop version):**
 

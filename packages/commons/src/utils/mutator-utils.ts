@@ -1,3 +1,4 @@
+import { Environment } from '../models/environment.model';
 import { ReorderActionType } from '../models/reorder.model';
 
 /**
@@ -83,4 +84,59 @@ export const moveItemAtTarget = <T extends { uuid: string } | string>(
   insertAtIndex(newItems, targetIndex, itemToMove);
 
   return newItems;
+};
+
+/**
+ * Sort a list of items by a list of UUIDs
+ *
+ * @param items
+ * @param uuids
+ * @returns
+ */
+export const sortByUuidsList = <T extends { uuid: string }>(
+  items: T[],
+  uuids: string[]
+): T[] => {
+  const newItems = [...items];
+
+  newItems.sort((a, b) => {
+    // ensure that items not in the list are at the end
+    if (!uuids.includes(a.uuid)) {
+      return 1;
+    }
+
+    return uuids.indexOf(a.uuid) - uuids.indexOf(b.uuid);
+  });
+
+  return newItems;
+};
+
+/**
+ * Return the current container of a route or folder
+ * if not found, return null
+ *
+ * @param routeOrFolderUuid
+ * @param environment
+ */
+export const findRouteOrFolderContainer = (
+  routeOrFolderUuid: string,
+  environment: Environment
+): 'root' | string | null => {
+  const inRoot = environment.rootChildren.find(
+    (child) => child.uuid === routeOrFolderUuid
+  );
+
+  if (inRoot) {
+    return 'root';
+  }
+
+  const container = environment.folders.find((folder) =>
+    folder.children.some((child) => child.uuid === routeOrFolderUuid)
+  );
+
+  if (container) {
+    return container.uuid;
+  }
+
+  return null;
 };

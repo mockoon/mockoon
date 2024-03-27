@@ -1,20 +1,23 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { User } from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
-import { BehaviorSubject, Observable, from } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { EMPTY, Observable, forkJoin, from } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
-import { User } from 'src/renderer/app/models/user.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
+import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
+import { SyncService } from 'src/renderer/app/services/sync.service';
+import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment as env } from 'src/renderer/environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -25,18 +28,17 @@ import { Config } from 'src/renderer/config';
 export class HeaderComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;
   public user$: Observable<User>;
-  public refreshingAccount$ = new BehaviorSubject(false);
   public activeView$: Observable<ViewsNameType>;
   public activeEnvironmentState$: Observable<EnvironmentStatus>;
   public environmentLogs$: Observable<EnvironmentLog[]>;
   public os$: Observable<string>;
+  public sync$ = this.store.select('sync');
   public tabs: {
     id: ViewsNameType;
     title: string;
     icon: string;
     count$?: Observable<number>;
   }[];
-
   public planLabels = {
     FREE: 'Free',
     SOLO: 'Solo',
@@ -47,13 +49,16 @@ export class HeaderComponent implements OnInit {
     ENV_LOGS: 'tour-environment-logs',
     ENV_PROXY: 'tour-environment-proxy'
   };
+  public isDev = !env.production;
 
   constructor(
     private store: Store,
     private environmentsService: EnvironmentsService,
     private userService: UserService,
-    private eventsService: EventsService,
-    private uiService: UIService
+    private remoteConfigService: RemoteConfigService,
+    private uiService: UIService,
+    private syncService: SyncService,
+    private toastsService: ToastsService
   ) {}
 
   ngOnInit() {
@@ -70,8 +75,7 @@ export class HeaderComponent implements OnInit {
         title: 'Routes',
         icon: 'endpoints',
         count$: this.activeEnvironment$.pipe(
-          filter((environment) => !!environment),
-          map((environment) => environment.routes.length)
+          map((environment) => (environment ? environment.routes.length : null))
         )
       },
       {
@@ -79,8 +83,7 @@ export class HeaderComponent implements OnInit {
         title: 'Data',
         icon: 'data',
         count$: this.activeEnvironment$.pipe(
-          filter((environment) => !!environment),
-          map((environment) => environment.data.length)
+          map((environment) => (environment ? environment.data.length : null))
         )
       },
       {
@@ -88,8 +91,9 @@ export class HeaderComponent implements OnInit {
         title: 'Headers',
         icon: 'featured_play_list',
         count$: this.activeEnvironment$.pipe(
-          filter((environment) => !!environment),
-          map((environment) => environment.headers.length)
+          map((environment) =>
+            environment ? environment.headers.length : null
+          )
         )
       },
       {
@@ -97,8 +101,9 @@ export class HeaderComponent implements OnInit {
         title: 'Callbacks',
         icon: 'call_made',
         count$: this.activeEnvironment$.pipe(
-          filter((environment) => !!environment),
-          map((environment) => environment.callbacks.length)
+          map((environment) =>
+            environment ? environment.callbacks.length : null
+          )
         )
       },
       {
@@ -106,8 +111,9 @@ export class HeaderComponent implements OnInit {
         title: 'Logs',
         icon: 'history',
         count$: this.environmentLogs$.pipe(
-          filter((environmentLogs) => !!environmentLogs),
-          map((environmentLogs) => environmentLogs.length)
+          map((environmentLogs) =>
+            environmentLogs ? environmentLogs.length : null
+          )
         )
       },
       {
@@ -166,10 +172,22 @@ export class HeaderComponent implements OnInit {
    * Refresh the user account information
    */
   public refreshAccount() {
-    this.refreshingAccount$.next(true);
-    this.userService.getUserInfo().subscribe(() => {
-      this.refreshingAccount$.next(false);
-    });
+    forkJoin([
+      this.userService.getUserInfo(),
+      this.remoteConfigService.fetchConfig()
+    ])
+      .pipe(catchError(() => EMPTY))
+      .subscribe(() => {
+        this.toastsService.addToast('success', 'Account information refreshed');
+      });
+  }
+
+  public disconnectSync() {
+    this.syncService.disconnect();
+  }
+
+  public refreshAuthToken() {
+    this.userService.refreshToken().subscribe();
   }
 
   /**

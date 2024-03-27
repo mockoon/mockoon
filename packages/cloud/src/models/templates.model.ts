@@ -5,13 +5,10 @@ export type Template = {
   content: string;
   type: string;
   source?: string;
+  // even if templates are free (>v8.0.0) the pro flag needs to be kept for backward compatibility with older versions
   pro: boolean;
 };
 
 export type TemplateListItem = Omit<Template, 'content' | 'type' | 'source'>;
 
-export type TemplateGenerateOptions = {
-  templating: boolean;
-  json: boolean;
-  list: boolean;
-};
+export type TemplateGenerateOptions = ('templating' | 'json' | 'list')[];

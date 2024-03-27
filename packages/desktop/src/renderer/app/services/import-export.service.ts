@@ -43,7 +43,7 @@ export class ImportExportService extends Logger {
           return EMPTY;
         }),
         switchMap((environment) =>
-          this.environmentsService.addEnvironment(environment).pipe(
+          this.environmentsService.addEnvironment({ environment }).pipe(
             tap(() => {
               this.logMessage('info', 'OPENAPI_IMPORT_SUCCESS', {
                 environmentName: environment.name

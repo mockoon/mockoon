@@ -1,23 +1,20 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  Template,
+  TemplateGenerateOptions,
+  TemplateListItem
+} from '@mockoon/cloud';
+import {
   BehaviorSubject,
   EMPTY,
   Observable,
   catchError,
-  distinctUntilChanged,
   map,
-  of,
   shareReplay,
   switchMap,
   tap
 } from 'rxjs';
-import {
-  Template,
-  TemplateGenerateOptions,
-  TemplateListItem
-} from 'src/renderer/app/models/template.model';
-import { Plans, User } from 'src/renderer/app/models/user.model';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { updateUserAction } from 'src/renderer/app/stores/actions';
@@ -40,55 +37,41 @@ export class TemplatesService {
     private store: Store
   ) {}
 
+  /**
+   * Get the list of available templates
+   */
   public getTemplatesList(): Observable<TemplateListItem[]> {
     return this.httpClient
       .get<Template[]>(`${Config.apiURL}templates`)
       .pipe(shareReplay(1));
   }
 
+  /**
+   * Get a template by its id
+   *
+   * @param id
+   */
   public getTemplateById(id: string): Observable<Template> {
-    return this.store.select('user').pipe(
-      distinctUntilChanged(
-        (previous: User, current: User) =>
-          previous === current && previous.plan === current.plan
-      ),
-      switchMap((user) => {
-        const cacheKey =
-          !user || user.plan === Plans.FREE ? `free/${id}` : `pro/${id}`;
+    const cacheKey = id;
 
-        if (!this.templateCache.has(cacheKey)) {
-          let http$: Observable<Template>;
+    if (!this.templateCache.has(cacheKey)) {
+      this.templateCache.set(
+        cacheKey,
+        this.httpClient
+          .get<Template>(`${Config.apiURL}templates/${id}`)
+          .pipe(shareReplay(1))
+      );
+    }
 
-          if (!user || user.plan === Plans.FREE) {
-            http$ = this.httpClient
-              .get<Template>(`${Config.apiURL}templates/free/${id}`)
-              .pipe(shareReplay(1));
-          } else {
-            http$ = of(true).pipe(
-              switchMap(() => this.userService.getIdToken()),
-              switchMap((idToken) =>
-                this.httpClient.get<Template>(
-                  `${Config.apiURL}templates/pro/${id}`,
-                  {
-                    headers: new HttpHeaders().set(
-                      'Authorization',
-                      `Bearer ${idToken}`
-                    )
-                  }
-                )
-              ),
-              shareReplay(1)
-            );
-          }
-
-          this.templateCache.set(cacheKey, http$);
-        }
-
-        return this.templateCache.get(cacheKey);
-      })
-    );
+    return this.templateCache.get(cacheKey);
   }
 
+  /**
+   * Generate a template from a prompt
+   *
+   * @param prompt
+   * @param options
+   */
   public generateTemplate(
     prompt: string,
     options: (keyof TemplateGenerateOptions)[]

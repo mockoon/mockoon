@@ -269,11 +269,15 @@ describe('Schema validation', () => {
         environments: [
           {
             uuid: 'a93e9c88-62f9-40a7-be4f-9645e1988d8a',
-            path: resolve('./tmp/storage/schema-uuid-dedup-1.json')
+            path: resolve('./tmp/storage/schema-uuid-dedup-1.json'),
+            cloud: false,
+            lastServerHash: null
           },
           {
             uuid: 'a93e9c88-62f9-40a7-be4f-9645e1988d8a',
-            path: resolve('./tmp/storage/schema-uuid-dedup-2.json')
+            path: resolve('./tmp/storage/schema-uuid-dedup-2.json'),
+            cloud: false,
+            lastServerHash: null
           }
         ]
       });

@@ -145,7 +145,7 @@
       [dragIsContainer]="true"
       [dragId]="folder.uuid"
       (dropped)="reorderRoutes($event)"
-      (contextmenu)="openContextMenu('folder', folder.uuid, $event)"
+      (contextmenu)="openFolderContextMenu(folder, $event)"
     >
       <!-- Calculate padding of 2 rem + 0.5 (gap between the folder icon and folder name) -->
       <a
@@ -256,7 +256,7 @@
           }"
           appScrollWhenActive
           (click)="selectRoute(route.uuid)"
-          (contextmenu)="openContextMenu('route', route.uuid, $event, parentId)"
+          (contextmenu)="openRouteContextMenu(route.uuid, $event, parentId)"
         >
           <div class="d-flex">
             <div

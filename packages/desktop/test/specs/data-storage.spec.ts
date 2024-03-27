@@ -7,7 +7,12 @@ describe('Data storage', () => {
     before(async () => {
       await file.editSettingsAndReload({
         environments: [
-          { uuid: '6f2d0c0b-cf7b-494d-9080-8d614bf761db', path: 'wrongpath' }
+          {
+            uuid: '6f2d0c0b-cf7b-494d-9080-8d614bf761db',
+            path: 'wrongpath',
+            cloud: false,
+            lastServerHash: null
+          }
         ]
       });
     });

@@ -26,7 +26,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
   // chain of dragged element's parent ids
   @Input()
   public dragParentChainId: string | 'root';
-  // UUID or index of the dragged element
+  // UUID or index of the target element (dropzone)
   @Input()
   public dragId: number | string;
   // is the dropzone a container (drop action type can be INSIDE)

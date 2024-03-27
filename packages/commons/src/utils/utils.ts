@@ -183,3 +183,22 @@ export const RandomInt = (a = 1, b = 0) => {
 
 export const randomArrayItem = <T>(array: T[]) =>
   array[RandomInt(0, array.length - 1)];
+
+/**
+ * Returns a deterministic stringified version of an object
+ *
+ * @param obj
+ * @returns
+ */
+export const deterministicStringify = (obj: any) =>
+  JSON.stringify(obj, (_key, value) =>
+    value instanceof Object && !(value instanceof Array)
+      ? Object.keys(value)
+          .sort()
+          .reduce((sorted, key) => {
+            sorted[key] = value[key];
+
+            return sorted;
+          }, {})
+      : value
+  );

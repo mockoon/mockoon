@@ -10,7 +10,10 @@ import {
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
-import { Settings } from 'src/shared/models/settings.model';
+import {
+  EnvironmentDescriptor,
+  Settings
+} from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService extends Logger {
@@ -56,12 +59,12 @@ export class StorageService extends Logger {
    * Handles storage failure.
    *
    * @param data - data to save
-   * @param path - storage file full path
+   * @param descriptor - EnvironmentDescriptor
    * @returns
    */
   public saveEnvironment(
     data: Environment,
-    path: string,
+    descriptor: EnvironmentDescriptor,
     storagePrettyPrint?: boolean
   ) {
     return of(true).pipe(
@@ -70,12 +73,15 @@ export class StorageService extends Logger {
           MainAPI.invoke(
             'APP_WRITE_ENVIRONMENT_DATA',
             data,
-            path,
+            descriptor,
             storagePrettyPrint
           )
         ).pipe(
           catchError((error) => {
-            this.logMessage('error', 'STORAGE_SAVE_ERROR', { path, error });
+            this.logMessage('error', 'STORAGE_SAVE_ERROR', {
+              path: descriptor.path,
+              error
+            });
 
             return EMPTY;
           }),

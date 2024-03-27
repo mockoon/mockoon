@@ -85,8 +85,7 @@
                 *ngFor="let template of data.templates"
                 class="list-group-item list-group-item-action"
                 [ngClass]="{
-                  active: template.id === data.activeTemplateListItem?.id,
-                  'pro-badge': flags.isFree && template.pro
+                  active: template.id === data.activeTemplateListItem?.id
                 }"
                 type="button"
                 (click)="setActiveTemplateListItem(template)"
@@ -98,28 +97,9 @@
             </div>
           </div>
 
-          <div
-            class="col ps-4 d-flex flex-column"
-            [ngClass]="
-              flags.isFree && data.activeTemplateListItem?.pro
-                ? 'h-75'
-                : 'h-100'
-            "
-          >
-            <h1
-              *ngIf="flags.isFree && data.activeTemplateListItem?.pro"
-              class="text-center mt-4 mb-5 text-shadow"
-            >
-              Pro templates
-            </h1>
+          <div class="col ps-4 d-flex flex-column h-100">
             <app-editor
-              [ngClass]="
-                flags.isFree && data.activeTemplateListItem?.pro
-                  ? 'no-interact editor-fade-out mb-5'
-                  : ''
-              "
               [readOnly]="true"
-              [hideCursor]="flags.isFree && data.activeTemplateListItem?.pro"
               [text]="data.activeTemplate?.content"
               [options]="defaultEditorOptions.options"
               [mode]="data.activeTemplate?.type"
@@ -135,17 +115,6 @@
                 data.activeTemplate?.source
               }}</a>
             </p>
-            <div
-              *ngIf="flags.isFree && data.activeTemplateListItem?.pro"
-              class="d-flex mt-auto"
-            >
-              <h4 class="text-center my-4 pe-4 text-shadow w-50">
-                Prototype in seconds using our pro templates
-              </h4>
-              <h4 class="text-center my-4 ps-4 text-shadow w-50">
-                New templates will be published every week
-              </h4>
-            </div>
           </div>
         </ng-container>
       </div>
@@ -255,12 +224,10 @@
               uuid="demoTemplateGenPreview"
             ></app-editor>
           </div>
-          <div [@fade-2]="demoRuns >= 2" class="d-flex mt-auto">
-            <h4 class="text-center my-4 pe-4 text-shadow w-50">
-              Get access to dozens of Pro templates
-            </h4>
-            <h4 class="text-center my-4 ps-4 text-shadow w-50">
-              Generate your own in seconds using AI
+          <div [@fade-2]="demoRuns >= 2" class="mt-auto">
+            <h4 class="text-center my-4 text-shadow w-75 mx-auto">
+              Generate your own templates using our AI assistant and prototype
+              faster than ever
             </h4>
           </div>
         </div>
@@ -302,11 +269,10 @@
           Close
         </button>
 
-        <!-- Display creation CTA only if paid user -->
+        <!-- Display creation CTA only for templates or if paid user on generate tab -->
         <ng-container
           *ngIf="
-            (data.activeTemplatesTab === 'LIST' &&
-              (flags.isPro || !data.activeTemplateListItem?.pro)) ||
+            data.activeTemplatesTab === 'LIST' ||
             (data.activeTemplatesTab === 'GENERATE' && flags.isPro)
           "
         >
@@ -334,12 +300,7 @@
           </button>
         </ng-container>
         <a
-          *ngIf="
-            flags.isFree &&
-            ((data.activeTemplatesTab === 'LIST' &&
-              data.activeTemplateListItem?.pro) ||
-              data.activeTemplatesTab === 'GENERATE')
-          "
+          *ngIf="flags.isFree && data.activeTemplatesTab === 'GENERATE'"
           class="btn btn-warning ms-2"
           href="{{ proPlansURL }}"
           target="_blank"

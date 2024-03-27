@@ -9,7 +9,9 @@ describe('Environments incompatibility', () => {
       environments: [
         {
           uuid: '323a25c6-b196-4d27-baf8-8aeb83d87c76',
-          path: resolve('./tmp/storage/incompatible.json')
+          path: resolve('./tmp/storage/incompatible.json'),
+          cloud: false,
+          lastServerHash: null
         }
       ]
     });

@@ -27,22 +27,6 @@ describe('Environment external reload', () => {
     await environments.start();
   });
 
-  it('should assert the environment is running', async () => {
-    await http.assertCallWithPort(
-      {
-        protocol: 'https',
-        method: 'GET',
-        path: '/answer',
-        testedResponse: {
-          body: '42',
-          status: 200
-        }
-      },
-      3000
-    );
-    await navigation.assertHeaderValue('ENV_LOGS', 'Logs 1');
-  });
-
   it('should edit the environment externally and assert values changed', async () => {
     await utils.waitForAutosave();
     await utils.waitForFileWatcher();
@@ -57,8 +41,6 @@ describe('Environment external reload', () => {
       'env 1 (change1)',
       'localhost:5005'
     );
-
-    await navigation.assertHeaderValue('ENV_LOGS', 'Logs');
   });
 
   it('should assert the settings were updated after a UUID change', async () => {

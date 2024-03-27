@@ -77,11 +77,15 @@ Branches naming convention:
 
 ## Adding migrations
 
-When a feature or bugfix requires a change in the data model (`Environment`, `Route`, `RouteResponse`, etc.) you must add a new migration:
+When a feature or bugfix requires a change in the data model (`Environment`, `Route`, `RouteResponse`, etc.) you may have to add a new migration:
 
 - Add a new migration function in the @mockoon/commons library `./packages/commons/src/libs/migrations.ts` file.
 - Add a new test for the migration in the same library `./packages/commons/test/data/migrations/{MIGRATION_ID}/environments.json` and `./packages/commons//test/suites/migrations.spec.ts` files.
-- Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' `environments.json` samples to the latest migration. Please note that some folders/sample files are excluded from the migration on purpose.
+- Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' JSON samples (usually located in `./packages/{package_name}/test/data/...`) to the latest migration. Please note that some folders/sample files are excluded from the migration on purpose.
+
+Some data model changes may not require a migration, for example, adding a new choice in an enum (translated in the UI by a dropdown).
+
+> ⚠️ All data model changes must be release in a **major** version. In any case, please discuss the migration with the maintainers.
 
 ## Lint and format
 
