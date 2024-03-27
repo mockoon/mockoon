@@ -9,14 +9,12 @@ class Environments {
   private activeMenuEntrySelector =
     '.environments-menu .nav-item .nav-link.active';
 
-  public get openBtn() {
-    return $(
-      '.environments-menu .nav:first-of-type .nav-item .nav-link.open-environment'
-    );
-  }
-
   public get recordingIndicator() {
     return $(`${this.activeMenuEntrySelector} app-svg[icon="record"]`);
+  }
+
+  public get addBtn() {
+    return $('#environments-add-dropdown .dropdown-toggle');
   }
 
   private get startBtn() {
@@ -37,18 +35,28 @@ class Environments {
     );
   }
 
-  private get environmentMenuEntry() {
-    return $(this.activeMenuEntrySelector);
-  }
-
   private get activeEnvironmentMenuEntry() {
     return $(this.activeMenuEntrySelector);
   }
 
-  public async add() {
-    await $(
-      '.environments-menu .nav:first-of-type .nav-item .nav-link.add-environment'
-    ).click();
+  public getAddMenuEntry(index: number) {
+    return $(
+      `#environments-add-dropdown-menu .dropdown-item:nth-child(${index})`
+    );
+  }
+
+  public async add(environmentName: string) {
+    await dialogs.save(resolve(`./tmp/storage/${environmentName}.json`));
+    await this.addBtn.click();
+    await this.getAddMenuEntry(1).click();
+    await utils.closeTooltip();
+  }
+
+  /**
+   * Open the environment add menu
+   */
+  public async openAddMenu(): Promise<void> {
+    await this.addBtn.click();
   }
 
   /**
@@ -59,7 +67,10 @@ class Environments {
     assertActive = true
   ): Promise<void> {
     await dialogs.open(resolve(`./tmp/storage/${environmentName}.json`));
-    await this.openBtn.click();
+
+    await this.addBtn.click();
+    await this.getAddMenuEntry(2).click();
+
     await utils.closeTooltip();
 
     if (assertActive) {

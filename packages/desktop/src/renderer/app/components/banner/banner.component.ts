@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Banner } from '@mockoon/cloud';
 import { Observable } from 'rxjs';
 import { filter, first, mergeMap } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { Banner } from 'src/renderer/app/models/remote-config.model';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';

@@ -1,142 +1,315 @@
-<div
-  class="environments-menu d-flex flex-column h-100"
-  appTourStep="tour-environments-menu"
+<ng-container
+  *ngIf="{
+    environments: {
+      local: environments$ | async,
+      cloud: cloudEnvironments$ | async
+    },
+    activeEnvironment: activeEnvironment$ | async,
+    environmentsStatus: environmentsStatus$ | async,
+    isCloudEnabled: (isCloudEnabled$ | async),
+    categories: categories$ | async,
+    sync: sync$ | async,
+    syncAlert: syncAlert$ | async
+  } as data"
 >
-  <div>
-    <ul class="nav d-flex justify-content-end">
-      <li class="nav-item">
-        <a
-          class="nav-link text-primary add-environment"
-          (click)="addEnvironment()"
-          ngbTooltip="New environment"
-        >
-          <app-svg icon="note_add"></app-svg>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link text-primary open-environment"
-          (click)="openEnvironment()"
-          ngbTooltip="Open environment"
-        >
-          <app-svg icon="folder_open"></app-svg>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <ul class="nav flex-column flex-fill menu-list">
-    <ng-container *ngIf="environments$ | async as environments">
-      <ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
-        <ng-container *ngIf="environmentsStatus$ | async as environmentsStatus">
-          <li
-            *ngFor="let environment of environments; trackBy: trackByUuid"
-            class="nav-item"
-            appDraggable
-            appDropzone
-            dragContainer="environments"
-            [dragEnabled]="dragEnabled"
-            dragParentId="root"
-            [dragIsContainer]="false"
-            [dragId]="environment.uuid"
-            (dropped)="reorganizeEnvironments($event)"
-          >
-            <a
-              class="nav-link d-flex"
-              [ngClass]="{
-                active: activeEnvironment?.uuid === environment.uuid,
-                running:
-                  environmentsStatus[environment.uuid]?.running &&
-                  !environmentsStatus[environment.uuid]?.needRestart,
-                'need-restart':
-                  environmentsStatus[environment.uuid]?.needRestart
-              }"
-              appScrollWhenActive
-              (click)="selectEnvironment(environment.uuid)"
-              (contextmenu)="openContextMenu(environment.uuid, $event)"
-            >
-              <div
-                *ngIf="settings$ | async as settings"
-                [formGroup]="activeEnvironmentForm"
-                class="mw0"
-              >
-                <div class="d-flex">
-                  <app-editable-element
-                    [text]="environment.name"
-                    formControlName="name"
-                    [ngClass]="{
-                      'text-truncate': settings.truncateRouteName,
-                      'text-break': !settings.truncateRouteName
-                    }"
-                    [editCondition]="
-                      activeEnvironment?.uuid === environment.uuid
-                    "
-                    (editChange)="enableDrag(!$event)"
-                  ></app-editable-element>
-                </div>
-
-                <div
-                  class="nav-link-subtitle pt-2"
-                  [ngClass]="{
-                    'text-truncate': settings.truncateRouteName,
-                    'text-break': !settings.truncateRouteName
-                  }"
-                >
-                  <app-svg
-                    *ngIf="environment.tlsOptions.enabled"
-                    class="text-warning pe-1"
-                    icon="https"
-                    size="12"
-                    ngbTooltip="TLS enabled"
-                  ></app-svg>
-                  <span
-                    >{{ environment.hostname || 'localhost' }}:{{
-                      environment.port
-                    }}/{{ environment.endpointPrefix }}</span
-                  >
-                </div>
-              </div>
-              <div class="ms-auto ps-2">
-                <!-- Using .visible and .invisible to avoid content jumping -->
-                <div>
-                  <app-svg
-                    class="text-primary"
-                    [ngClass]="{
-                      visible: environment.proxyMode,
-                      invisible: !environment.proxyMode
-                    }"
-                    icon="security"
-                    size="12"
-                    ngbTooltip="Proxy mode enabled"
-                  ></app-svg>
-                </div>
-                <div
-                  *ngIf="(logsRecording$ | async)[environment.uuid] === true"
-                >
-                  <app-svg
-                    class="text-danger animation-flash"
-                    [ngClass]="{
-                      visible:
-                        (logsRecording$ | async)[environment.uuid] === true,
-                      invisible: !(logsRecording$ | async)[environment.uuid]
-                    }"
-                    icon="record"
-                    size="12"
-                    ngbTooltip="Recording in progress"
-                  ></app-svg>
-                </div>
-              </div>
-            </a>
-          </li>
-        </ng-container>
-      </ng-container>
-    </ng-container>
-  </ul>
-
   <div
-    appResizeColumn
-    type="main"
-    [minWidth]="menuSize"
-    [maxWidthFactor]="0.2"
-    class="resize-column"
-  ></div>
-</div>
+    class="environments-menu d-flex flex-column h-100"
+    appTourStep="tour-environments-menu"
+  >
+    <div
+      *ngFor="
+        let category of data.categories;
+        first as isFirst;
+        last as isLast;
+        trackBy: trackById
+      "
+      class="d-flex flex-column overflow-hidden"
+      [ngStyle]="{
+        flex: category.collapsed ? '0 0 min-content' : 1
+      }"
+      [ngClass]="{
+        'border-bottom': (category.collapsed && !isLast) || !isLast
+      }"
+    >
+      <div
+        class="d-flex align-items-center p-2"
+        appDraggable
+        appDropzone
+        dragContainer="environmentCategories"
+        [dragEnabled]="dragEnabled"
+        dragParentId="root"
+        [dragIsContainer]="false"
+        [dragId]="category.id"
+        (dropped)="reorganizeEnvironmentsCategories($event)"
+      >
+        <div class="text-truncate">
+          <button
+            type="button"
+            class="btn btn-link btn-icon p-0"
+            [ngClass]="category.iconClasses$ | async"
+            (click)="cloudReconnect()"
+          >
+            <app-svg
+              [icon]="category.icon$ | async"
+              [ngbTooltip]="category.iconTooltip$ | async"
+              class="pe-2"
+            ></app-svg>
+          </button>
+          {{ category.label }}
+          <span
+            *ngIf="category.id === 'cloud' && data?.syncAlert"
+            class="ms-2 text-warning"
+            [ngClass]="{
+              'cursor-pointer': data?.syncAlert.includes('OFFLINE_WARNING')
+            }"
+            [ngbTooltip]="alertLabels[data?.syncAlert]"
+            (click)="openSyncAlert(data?.syncAlert)"
+          >
+            <app-svg icon="warning"></app-svg>
+          </span>
+        </div>
+        <div class="ms-auto d-flex align-items-center">
+          <span
+            *ngIf="category.collapsed"
+            class="badge badge-hollow font-weight-bold"
+          >
+            {{ data.environments[category.id]?.length }}
+          </span>
+          <ng-container
+            [ngTemplateOutlet]="
+              category.id === 'cloud'
+                ? cloudEnvironmentsDropdown
+                : environmentsDropdown
+            "
+            [ngTemplateOutletContext]="{ syncStatus: data.sync?.status }"
+          ></ng-container>
+          <button
+            type="button"
+            class="btn btn-link btn-icon p-0"
+            (click)="collapseCategory(category.id, category.collapsed)"
+          >
+            <app-svg
+              [icon]="category.collapsed ? 'unfold_more' : 'unfold_less'"
+            ></app-svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-auto" [ngbCollapse]="category.collapsed">
+        <ng-container
+          [ngTemplateOutlet]="environmentListTemplate"
+          [ngTemplateOutletContext]="{
+            isCloud: category.id === 'cloud',
+            environments: data.environments[category.id],
+            activeEnvironment: data.activeEnvironment,
+            environmentsStatus: data.environmentsStatus,
+            dragContainer: category.id + 'Environments'
+          }"
+        >
+        </ng-container>
+        <ng-container *ngIf="data.environments[category.id]?.length === 0">
+          <div
+            *ngIf="
+              category.id === 'local' &&
+              data.environments[category.id]?.length === 0
+            "
+            class="message message-sm m-2"
+          >
+            No local environment
+          </div>
+
+          <div
+            *ngIf="
+              category.id === 'cloud' &&
+              data.isCloudEnabled &&
+              data.environments[category.id]?.length === 0
+            "
+            class="message message-sm m-2"
+          >
+            No cloud environment
+          </div>
+
+          <div
+            *ngIf="category.id === 'cloud' && !data.isCloudEnabled"
+            class="message message-sm m-2"
+          >
+            <a href="#" (click)="login($event)">Log in</a> or
+            <a [href]="proPlansURL" target="_blank">Upgrade to Pro</a> to create
+            cloud environments
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <div
+      appResizeColumn
+      type="main"
+      [minWidth]="menuSize"
+      [maxWidthFactor]="0.2"
+      class="resize-column"
+    ></div>
+  </div>
+</ng-container>
+
+<ng-template
+  #environmentListTemplate
+  let-isCloud="isCloud"
+  let-environments="environments"
+  let-activeEnvironment="activeEnvironment"
+  let-environmentsStatus="environmentsStatus"
+  let-dragContainer="dragContainer"
+>
+  <ul class="nav flex-column flex-fill menu-list">
+    <li
+      *ngFor="let environment of environments; trackBy: trackByUuid"
+      class="nav-item"
+      appDraggable
+      appDropzone
+      [dragContainer]="dragContainer"
+      [dragEnabled]="dragEnabled"
+      dragParentId="root"
+      [dragIsContainer]="false"
+      [dragId]="environment.uuid"
+      (dropped)="reorganizeEnvironments($event)"
+    >
+      <a
+        class="nav-link d-flex"
+        [ngClass]="{
+          active: activeEnvironment?.uuid === environment.uuid,
+          running:
+            environmentsStatus[environment.uuid]?.running &&
+            !environmentsStatus[environment.uuid]?.needRestart,
+          'need-restart': environmentsStatus[environment.uuid]?.needRestart
+        }"
+        appScrollWhenActive
+        (click)="selectEnvironment(environment.uuid)"
+        (contextmenu)="openContextMenu(isCloud, environment.uuid, $event)"
+      >
+        <div
+          *ngIf="settings$ | async as settings"
+          [formGroup]="activeEnvironmentForm"
+          class="mw0"
+        >
+          <div class="d-flex">
+            <app-editable-element
+              [text]="environment.name"
+              formControlName="name"
+              [ngClass]="{
+                'text-truncate': settings.truncateRouteName,
+                'text-break': !settings.truncateRouteName
+              }"
+              [editCondition]="activeEnvironment?.uuid === environment.uuid"
+              (editChange)="enableDrag(!$event)"
+            ></app-editable-element>
+          </div>
+
+          <div
+            class="nav-link-subtitle pt-2"
+            [ngClass]="{
+              'text-truncate': settings.truncateRouteName,
+              'text-break': !settings.truncateRouteName
+            }"
+          >
+            <app-svg
+              *ngIf="environment.tlsOptions.enabled"
+              class="text-warning pe-1"
+              icon="https"
+              size="12"
+              ngbTooltip="TLS enabled"
+            ></app-svg>
+            <span
+              >{{ environment.hostname || 'localhost' }}:{{
+                environment.port
+              }}/{{ environment.endpointPrefix }}</span
+            >
+          </div>
+        </div>
+        <div class="ms-auto ps-2">
+          <!-- Using .visible and .invisible to avoid content jumping -->
+          <div>
+            <app-svg
+              class="text-primary"
+              [ngClass]="{
+                visible: environment.proxyMode,
+                invisible: !environment.proxyMode
+              }"
+              icon="security"
+              size="12"
+              ngbTooltip="Proxy mode enabled"
+            ></app-svg>
+          </div>
+          <div *ngIf="(logsRecording$ | async)[environment.uuid] === true">
+            <app-svg
+              class="text-danger animation-flash"
+              [ngClass]="{
+                visible: (logsRecording$ | async)[environment.uuid] === true,
+                invisible: !(logsRecording$ | async)[environment.uuid]
+              }"
+              icon="record"
+              size="12"
+              ngbTooltip="Recording in progress"
+            ></app-svg>
+          </div>
+        </div>
+      </a>
+    </li>
+  </ul>
+</ng-template>
+
+<ng-template #environmentsDropdown>
+  <div ngbDropdown id="environments-add-dropdown">
+    <button
+      class="btn btn-link btn-icon btn-sm dropdown-toggle dropdown-toggle-icon dropdown-toggle-no-caret"
+      type="button"
+      ngbDropdownToggle
+    >
+      <app-svg icon="add_box"></app-svg>
+    </button>
+    <div
+      class="dropdown-menu"
+      id="environments-add-dropdown-menu"
+      ngbDropdownMenu
+    >
+      <button class="btn dropdown-item" (click)="addLocalEnvironment()">
+        <app-svg icon="note_add" class="pe-2"></app-svg> New local environment
+      </button>
+      <button class="btn dropdown-item" (click)="openLocalEnvironment()">
+        <app-svg icon="folder_open" class="pe-2"></app-svg> Open local
+        environment
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #cloudEnvironmentsDropdown let-syncStatus="syncStatus">
+  <div ngbDropdown id="cloud-environments-add-dropdown">
+    <button
+      class="btn btn-link btn-icon btn-sm dropdown-toggle dropdown-toggle-icon dropdown-toggle-no-caret"
+      type="button"
+      ngbDropdownToggle
+    >
+      <app-svg icon="add_box"></app-svg>
+    </button>
+    <div
+      class="dropdown-menu"
+      id="cloud-environments-add-dropdown-menu"
+      ngbDropdownMenu
+    >
+      <button
+        class="btn dropdown-item"
+        (click)="addCloudEnvironment()"
+        [disabled]="!syncStatus"
+      >
+        <app-svg icon="cloud_add" class="pe-2"></app-svg> New cloud environment
+      </button>
+      <button
+        class="btn dropdown-item"
+        (click)="addCloudEnvironmentFromLocalFile()"
+        [disabled]="!syncStatus"
+      >
+        <app-svg icon="folder_open" class="pe-2"></app-svg> New cloud
+        environment from local file
+      </button>
+    </div>
+  </div>
+</ng-template>

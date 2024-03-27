@@ -1,12 +1,21 @@
 import { FakerAvailableLocales } from '@mockoon/commons';
 
-export type EnvironmentDescriptor = { uuid: string; path: string };
+export type EnvironmentDescriptor = {
+  uuid: string;
+  path: string;
+  // is it a cloud environment?
+  cloud: boolean;
+  // last hash seen on the server
+  lastServerHash: string | null;
+};
 
 export enum FileWatcherOptions {
   DISABLED = 'disabled',
   PROMPT = 'prompt',
   AUTO = 'auto'
 }
+
+export type EnvironmentsCategories = 'cloud' | 'local';
 
 export type Settings = {
   welcomeShown: boolean;
@@ -28,5 +37,9 @@ export type Settings = {
   dialogWorkingDir: string;
   startEnvironmentsOnLoad: boolean;
   logTransactions: boolean;
+  environmentsCategoriesOrder: EnvironmentsCategories[];
+  environmentsCategoriesCollapsed: {
+    [key in EnvironmentsCategories]: boolean;
+  };
   envVarsPrefix: string;
 };

@@ -90,8 +90,7 @@ describe('Routes filter', () => {
 
   it('should reset routes filter when adding a new environment', async () => {
     await routes.setFilter('/dolphins');
-    await dialogs.save(resolve('./tmp/storage/new-env1-test.json'));
-    await environments.add();
+    await environments.add('new-env1-test');
     await routes.assertFilter('');
   });
 

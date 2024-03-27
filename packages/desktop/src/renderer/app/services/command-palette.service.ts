@@ -301,6 +301,7 @@ export class CommandPaletteService {
     const activeCallback = this.store.getActiveCallback();
     const hasActiveCallback = !!activeCallback;
     const activeCallbackUuid = activeCallback?.uuid;
+    const environmentDescriptors = this.store.get('settings').environments;
 
     const commonCommands: Commands = [
       {
@@ -516,7 +517,7 @@ export class CommandPaletteService {
       },
       {
         id: 'NEW_ENVIRONMENT',
-        label: 'Create a New Environment',
+        label: 'Create a New Local Environment',
         shortcut$: this.ctrlOrCmd$(['N']),
         action: () => {
           this.environmentsService.addEnvironment().subscribe();
@@ -526,7 +527,7 @@ export class CommandPaletteService {
       },
       {
         id: 'NEW_ENVIRONMENT_CLIPBOARD',
-        label: 'Create a New Environment From Clipboard',
+        label: 'Create a New Local Environment From Clipboard',
         action: () => {
           this.environmentsService.newEnvironmentFromClipboard().subscribe();
         },
@@ -535,7 +536,7 @@ export class CommandPaletteService {
       },
       {
         id: 'OPEN_ENVIRONMENT',
-        label: 'Open Environment',
+        label: 'Open Local Environment',
         shortcut$: this.ctrlOrCmd$(['O']),
         action: () => {
           this.environmentsService.openEnvironment().subscribe();
@@ -545,7 +546,7 @@ export class CommandPaletteService {
       },
       {
         id: 'DUPLICATE_ENVIRONMENT',
-        label: 'Duplicate Current Environment',
+        label: 'Duplicate Current Environment to Local',
         shortcut$: this.ctrlOrCmd$(['D']),
         action: () => {
           this.environmentsService.duplicateEnvironment().subscribe();
@@ -561,7 +562,13 @@ export class CommandPaletteService {
           this.environmentsService.closeEnvironment().subscribe();
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled:
+          hasActiveEnvironment &&
+          environmentDescriptors.find(
+            (descriptor) =>
+              descriptor.uuid === activeEnvironment.uuid &&
+              descriptor.cloud === false
+          ) !== undefined
       },
       {
         id: 'COPY_ENVIRONMENT_CLIPBOARD',

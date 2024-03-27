@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subject, first } from 'rxjs';
 import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-modal/auth-modal.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
@@ -11,6 +12,7 @@ import { TemplatesModalComponent } from 'src/renderer/app/components/modals/temp
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { UIState } from 'src/renderer/app/models/store.model';
+import { ConfirmModalPayload } from 'src/renderer/app/models/ui.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -170,5 +172,25 @@ export class UIService {
    */
   public getModalInstance(modalName: keyof typeof this.modals) {
     return this.modalsInstances[modalName];
+  }
+
+  /**
+   * Show a confirmation dialog and return an observable
+   */
+  public showConfirmDialog(
+    payload: Omit<ConfirmModalPayload, 'confirmed$'>
+  ): Observable<boolean> {
+    const confirmed$ = new Subject<boolean>();
+
+    this.eventsService.confirmModalPayload$.next({ ...payload, confirmed$ });
+
+    this.openModal('confirm');
+
+    /**
+     * Complete the Subject using first() as we only need the first value.
+     * Not completing the Subject can cause multiple successives modals to be ignored when
+     * used in combination with concat for example.
+     */
+    return confirmed$.pipe(first());
   }
 }

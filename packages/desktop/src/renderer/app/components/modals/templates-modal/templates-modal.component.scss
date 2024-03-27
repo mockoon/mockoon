@@ -4,17 +4,3 @@
   height: 65vh;
   overflow-y: hidden;
 }
-
-.pro-badge {
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    top: 0;
-    right: 0;
-    background: linear-gradient(-135deg, $yellow 4px, transparent 0);
-  }
-}

@@ -4,11 +4,12 @@
     activeEnvironment: activeEnvironment$ | async,
     activeEnvironmentState: activeEnvironmentState$ | async,
     activeView: activeView$ | async,
+    sync: sync$ | async,
     os: os$ | async
   } as data"
 >
   <div class="header d-flex align-items-center">
-    <div *ngIf="data.activeEnvironment" appTourStep="tour-environment-start">
+    <div appTourStep="tour-environment-start">
       <button
         *ngIf="
           data.activeEnvironmentState?.running &&
@@ -18,6 +19,7 @@
         type="button"
         ngbTooltip="Server needs restart"
         (click)="toggleEnvironment()"
+        [disabled]="!data.activeEnvironment"
       >
         <app-svg icon="refresh" size="20"></app-svg>
       </button>
@@ -31,6 +33,7 @@
         type="button"
         ngbTooltip="Stop server"
         (click)="toggleEnvironment()"
+        [disabled]="!data.activeEnvironment"
       >
         <app-svg icon="stop" size="20"></app-svg>
       </button>
@@ -41,48 +44,94 @@
         type="button"
         ngbTooltip="Start server"
         (click)="toggleEnvironment()"
+        [disabled]="!data.activeEnvironment"
       >
         <app-svg icon="play_arrow" size="20"></app-svg>
       </button>
     </div>
 
-    <div *ngIf="data.activeEnvironment">
-      <ul class="nav nav-tabs">
-        <li
-          *ngFor="let tab of tabs"
-          class="nav-item"
-          [appTourStep]="tourIds[tab.id]"
+    <ul class="nav nav-tabs">
+      <li
+        *ngFor="let tab of tabs"
+        class="nav-item"
+        [appTourStep]="tourIds[tab.id]"
+      >
+        <a
+          class="nav-link d-flex align-items-center"
+          [ngClass]="{
+            active: data.activeView === tab.id && data.activeEnvironment,
+            disabled: !data.activeEnvironment
+          }"
+          (click)="setActiveView(tab.id)"
         >
-          <a
-            class="nav-link d-flex align-items-center"
-            [ngClass]="{ active: data.activeView === tab.id }"
-            (click)="setActiveView(tab.id)"
+          <app-svg [icon]="tab.icon" class="pe-2"></app-svg>
+          {{ tab.title }}
+          <span
+            *ngIf="tab.count$ | async as tabCount"
+            class="badge badge-hollow fw-bold ms-2"
           >
-            <app-svg [icon]="tab.icon" class="pe-2"></app-svg>
-            {{ tab.title }}
-            <span
-              *ngIf="tab.count$ | async as tabCount"
-              class="badge badge-hollow fw-bold ms-2"
-            >
-              {{ tabCount }}
-            </span>
-          </a>
-        </li>
-      </ul>
+            {{ tabCount }}
+          </span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="ms-auto d-flex align-items-center">
+      <div>
+        <button
+          type="button"
+          class="btn btn-link btn-icon"
+          [ngbTooltip]="
+            'Command palette (' +
+            (data.os === 'darwin' ? 'Cmd' : 'Ctrl') +
+            '+P)'
+          "
+          (click)="openCommandPalette()"
+        >
+          <app-svg class="align-bottom" icon="command_palette"></app-svg>
+        </button>
+      </div>
     </div>
 
-    <div class="ms-auto">
-      <button
-        type="button"
-        class="btn btn-link btn-icon"
-        [ngbTooltip]="
-          'Command palette (' + (data.os === 'darwin' ? 'Cmd' : 'Ctrl') + '+P)'
-        "
-        (click)="openCommandPalette()"
-      >
-        <app-svg class="align-bottom" icon="command_palette"></app-svg>
-      </button>
+    <div
+      *ngIf="data.sync.status && data.sync.presence?.devices > 1"
+      ngbTooltip="{{ data.sync.presence.devices - 1 }} other {{
+        data.sync.presence.devices - 1 > 1 ? 'devices' : 'device'
+      }} connected"
+      class="badge badge-custom align-middle"
+    >
+      <app-svg icon="computer"></app-svg>
+      <span class="number-indicator">
+        {{ data.sync.presence.devices - 1 }}
+      </span>
     </div>
+
+    <div
+      *ngIf="data.sync.status && data.sync.presence?.users.length > 1"
+      [ngbTooltip]="presenceTooltip"
+      class="badge badge-custom align-middle"
+    >
+      <app-svg icon="people"></app-svg>
+      <span class="number-indicator">
+        {{ data.sync.presence.users.length - 1 }}
+      </span>
+    </div>
+
+    <ng-template #presenceTooltip>
+      {{ data.sync.presence.users.length - 1 }} other
+      {{ data.sync.presence.users.length - 1 > 1 ? 'users' : 'user' }}
+      connected<br />
+
+      @for (
+        presenceUser of data.sync.presence.users;
+        track presenceUser.email
+      ) {
+        @if (presenceUser.email !== data.user.email) {
+          {{ presenceUser.email }}<br />
+        }
+      }
+      <span></span>
+    </ng-template>
 
     <div ngbDropdown placement="bottom-right" #dropdownElement>
       <button
@@ -91,40 +140,27 @@
         ngbDropdownToggle
       >
         <span [ngClass]="{ 'with-indicator': !!data.user }">
-          <app-svg icon="account"></app-svg
-        ></span>
+          <app-svg icon="account"></app-svg>
+        </span>
       </button>
       <div class="dropdown-menu" ngbDropdownMenu>
         <ng-container *ngIf="!!data.user">
           <div>
             <h6 class="dropdown-header d-flex flex-column">
-              <p class="mb-1">
-                {{ data?.user?.email }}
-              </p>
               <div class="d-flex align-items-center">
+                <div class="pe-2">{{ data?.user?.email }}</div>
                 <div class="badge text-bg-warning">
                   {{ planLabels[data.user?.plan] }} plan
                 </div>
-                <button
-                  class="btn btn-link btn-icon py-0 px-1"
-                  (click)="refreshAccount()"
-                  ngbTooltip="Refresh account information"
-                >
-                  <app-svg
-                    *ngIf="refreshingAccount$ | async"
-                    icon="spinner"
-                  ></app-svg>
-                  <app-svg
-                    *ngIf="(refreshingAccount$ | async) === false"
-                    icon="refresh"
-                  ></app-svg>
-                </button>
               </div>
             </h6>
           </div>
           <button class="btn dropdown-item" (click)="account()">
             My account
             <app-svg icon="open_in_new" class="ps-2"></app-svg>
+          </button>
+          <button class="btn dropdown-item" (click)="refreshAccount()">
+            Refresh account information
           </button>
           <button class="btn dropdown-item" (click)="logout()">Log out</button>
         </ng-container>
@@ -138,6 +174,20 @@
             <app-svg icon="open_in_new" class="ps-2"></app-svg>
           </button>
         </ng-container>
+
+        @if (isDev) {
+          <!-- Debug menu -->
+          <div><hr class="dropdown-divider" /></div>
+          <div>
+            <button class="btn dropdown-item" disabled>Debug</button>
+            <button class="btn dropdown-item" (click)="disconnectSync()">
+              Disconnect sync server
+            </button>
+            <button class="btn dropdown-item" (click)="refreshAuthToken()">
+              Refresh auth token
+            </button>
+          </div>
+        }
       </div>
     </div>
   </div>

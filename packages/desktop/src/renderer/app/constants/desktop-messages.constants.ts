@@ -294,11 +294,31 @@ export const DesktopMessages: {
     showToast: true
   }),
   ENVIRONMENT_MOVED: (messageParams) => ({
-    message: `Environment ${messageParams.environmentUUID} was moved to the new location.`,
+    message: 'Environment was moved to the new location.',
     log: true,
     loggerMessage: 'Environment was moved to the new location.',
     logPayload: messageParams,
     toastType: 'success',
+    showToast: true
+  }),
+  CLOUD_ENVIRONMENT_CONVERTED: (messageParams) => ({
+    message: `Environment "${messageParams.name}" was not present on the server and was converted to a local environment.`,
+    log: true,
+    loggerMessage: `Environment "${messageParams.name}" was not present on the server and was converted to a local environment.`,
+    logPayload: messageParams,
+    toastType: 'success',
+    showToast: true
+  }),
+  CLOUD_QUOTA_EXCEEDED: (messageParams) => ({
+    message: `Your cloud account has exceeded its quota (${messageParams.quota}). Please upgrade your plan or delete environments to free up space.`,
+    log: false,
+    toastType: 'warning',
+    showToast: true
+  }),
+  CLOUD_ENVIRONMENT_TOO_LARGE: (messageParams) => ({
+    message: `Your environment is too large to be saved on the cloud (max size: ${messageParams.maxSize / 1e6}MB). Please reduce its size.`,
+    log: false,
+    toastType: 'warning',
     showToast: true
   })
 };

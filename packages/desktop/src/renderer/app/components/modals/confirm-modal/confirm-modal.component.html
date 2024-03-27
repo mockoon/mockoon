@@ -15,11 +15,11 @@
       <small>
         <app-svg
           [icon]="confirmModalPayload.subIcon"
-          class="{{ confirmModalPayload.subIconClass }}"
+          class="{{ confirmModalPayload.subIconClass }} me-2"
         ></app-svg>
 
-        {{ confirmModalPayload.sub }}</small
-      >
+        <span [innerHTML]="confirmModalPayload.sub"></span>
+      </small>
     </div>
   </div>
   <div class="modal-footer">
