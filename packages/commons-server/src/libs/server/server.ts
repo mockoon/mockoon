@@ -1597,7 +1597,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    *
    * @param data text to be searched for possible databucket ids
    */
-  private captureReferencedDatabucketIds(text?: string): string[] {
+  private extractDatabucketIdsFromString(text?: string): string[] {
     const matches = text?.matchAll(
       new RegExp('data(?:Raw)? +[\'|"]{1}([^(\'|")]*)', 'g')
     );
@@ -1618,19 +1618,25 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     response: RouteResponse,
     environment: Environment
   ): string[] {
+    let dataBucketIds: string[] = [];
+
     if (response.callbacks && response.callbacks.length > 0) {
       for (const invocation of response.callbacks) {
         const callback = environment.callbacks.find(
-          (ref) => ref.uuid === invocation.uuid
+          (envCallback) => envCallback.uuid === invocation.uuid
         );
 
         if (!callback) {
           continue;
         }
 
-        const dataBucketIds = this.captureReferencedDatabucketIds(
-          callback.body
-        );
+        dataBucketIds = [
+          ...dataBucketIds,
+          ...this.extractDatabucketIdsFromString(callback.uri),
+          ...this.extractDatabucketIdsFromString(callback.body),
+          ...this.extractDatabucketIdsFromString(callback.filePath),
+          ...this.findDatabucketIdsInHeaders(callback.headers)
+        ];
 
         if (callback.databucketID) {
           dataBucketIds.push(callback.databucketID);
@@ -1638,7 +1644,45 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       }
     }
 
-    return [];
+    return dataBucketIds;
+  }
+
+  /**
+   * Find data buckets referenced in the provided headers
+   *
+   * @param headers
+   */
+  private findDatabucketIdsInHeaders(headers: Header[]): string[] {
+    return headers.reduce<string[]>(
+      (acc, header) => [
+        ...acc,
+        ...this.extractDatabucketIdsFromString(header.value)
+      ],
+      []
+    );
+  }
+
+  /**
+   * Find databucket ids in the rules target and value of the given response
+   *
+   * @param response
+   */
+  private findDatabucketIdsInRules(response: RouteResponse): string[] {
+    let dataBucketIds: string[] = [];
+
+    response.rules.forEach((rule) => {
+      const splitRules = rule.modifier.split('.');
+      if (rule.target === 'data_bucket') {
+        dataBucketIds = [
+          ...dataBucketIds,
+          // split by dots, take first section, or second if first is a dollar
+          splitRules[0].startsWith('$') ? splitRules[1] : splitRules[0],
+          ...this.extractDatabucketIdsFromString(rule.value)
+        ];
+      }
+    });
+
+    return dataBucketIds;
   }
 
   /**
@@ -1664,12 +1708,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     let databucketIdsToParse = new Set<string>();
 
+    // find databucket ids in environment headers
+    this.findDatabucketIdsInHeaders(environment.headers).forEach(
+      (dataBucketId) => databucketIdsToParse.add(dataBucketId)
+    );
+
     route.responses.forEach((response) => {
       // capture databucket ids in body and relevant callback definitions
       [
-        ...this.captureReferencedDatabucketIds(response.body),
-        ...this.findDatabucketIdsInCallbacks(response, environment)
-      ].forEach((dataBucketName) => databucketIdsToParse.add(dataBucketName));
+        ...this.findDatabucketIdsInHeaders(response.headers),
+        ...this.extractDatabucketIdsFromString(response.body),
+        ...this.extractDatabucketIdsFromString(response.filePath),
+        ...this.findDatabucketIdsInCallbacks(response, environment),
+        ...this.findDatabucketIdsInRules(response)
+      ].forEach((dataBucketId) => databucketIdsToParse.add(dataBucketId));
 
       if (response.databucketID) {
         databucketIdsToParse.add(response.databucketID);
@@ -1687,7 +1739,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         )
       ) {
         nestedDatabucketIds = [
-          ...this.captureReferencedDatabucketIds(databucket.value)
+          ...this.extractDatabucketIdsFromString(databucket.value)
         ];
       }
     });
