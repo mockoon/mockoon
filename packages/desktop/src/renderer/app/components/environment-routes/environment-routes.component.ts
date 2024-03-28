@@ -459,7 +459,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   /**
    * Show file in Finder / Explorer
    */
-  public async showFile(filePath: string, activeEnvironmentUuid: string) {
+  public showFile(filePath: string, activeEnvironmentUuid: string) {
     const environmentPath = this.store.getEnvironmentPath(
       activeEnvironmentUuid
     );
