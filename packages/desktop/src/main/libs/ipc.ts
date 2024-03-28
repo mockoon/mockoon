@@ -68,6 +68,26 @@ const getDialogDefaultPath = () => {
   return getDataPath();
 };
 
+const makeFullFilePath = (filePath: string, envPath: string): string => {
+  const envDirectory = pathParse(envPath).dir;
+
+  let fileDirectory = pathParse(filePath).dir.replace(envDirectory, '');
+  if (fileDirectory.startsWith('/') == false) {
+    fileDirectory = '/' + fileDirectory;
+  }
+
+  if (fileDirectory.endsWith('/') == false) {
+    fileDirectory = fileDirectory + '/';
+  }
+
+  const fileName = pathParse(filePath).name;
+  const fileExt = pathParse(filePath).ext;
+
+  const path = envDirectory + fileDirectory + fileName + fileExt;
+
+  return path;
+};
+
 export const initIPCListeners = (mainWindow: BrowserWindow) => {
   // Quit requested by renderer (when waiting for save to finish)
   ipcMain.on('APP_QUIT', () => {
@@ -270,6 +290,29 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   ipcMain.handle('APP_STOP_SERVER', (event, environmentUUID: string) => {
     ServerInstance.stop(environmentUUID);
   });
+
+  ipcMain.on('OPEN_FILE', (event, filePath: string, envPath: string) => {
+    const path = makeFullFilePath(filePath, envPath);
+
+    shell
+      .openPath(path)
+      .then((error) => {
+        if (error) {
+          logError(`Failed to open file in default editor: ${error}`);
+        }
+      })
+      .catch((error) => {
+        logError(`Error opening file in default editor: ${error}`);
+      });
+  });
+
+  ipcMain.on(
+    'OPEN_FOLDER_IN_FINDER',
+    (event, filePath: string, envPath: string) => {
+      const path = makeFullFilePath(filePath, envPath);
+      shell.showItemInFolder(path);
+    }
+  );
 };
 
 /**

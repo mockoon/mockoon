@@ -446,6 +446,32 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Open file in Default Editor
+   */
+  public openFile() {
+    const filePath = this.store.getActiveRouteResponse().filePath;
+
+    const environmentUUID = this.store.get('activeEnvironmentUUID');
+    const environment = this.store.getEnvironmentByUUID(environmentUUID);
+    const environmentPath = this.store.getEnvironmentPath(environment.uuid);
+
+    MainAPI.send('OPEN_FILE', filePath, environmentPath);
+  }
+
+  /**
+   * Open folder
+   */
+  public async openFolder() {
+    const filePath = this.store.getActiveRouteResponse().filePath;
+
+    const environmentUUID = this.store.get('activeEnvironmentUUID');
+    const environment = this.store.getEnvironmentByUUID(environmentUUID);
+    const environmentPath = this.store.getEnvironmentPath(environment.uuid);
+
+    MainAPI.send('OPEN_FOLDER_IN_FINDER', filePath, environmentPath);
+  }
+
+  /**
    * If the body is set and the Content-Type is application/json, then prettify the JSON.
    */
   public formatBody() {
