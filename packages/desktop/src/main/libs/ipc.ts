@@ -16,7 +16,8 @@ import { lookup as mimeTypeLookup } from 'mime-types';
 import {
   format as pathFormat,
   join as pathJoin,
-  parse as pathParse
+  parse as pathParse,
+  resolve as pathResolve
 } from 'path';
 import {
   IPCMainHandlerChannels,
@@ -68,24 +69,22 @@ const getDialogDefaultPath = () => {
   return getDataPath();
 };
 
-const makeFullFilePath = (filePath: string, envPath: string): string => {
-  const envDirectory = pathParse(envPath).dir;
+/**
+ * Build a full file path by combining an environment path to which a file is reletively located and a file path
+ *
+ * @param filePath
+ * @param relativeToFile
+ * @returns
+ */
+const buildFilePath = (filePath: string, relativeToFile: string): string => {
+  let relativeDir = '';
 
-  let fileDirectory = pathParse(filePath).dir.replace(envDirectory, '');
-  if (fileDirectory.startsWith('/') == false) {
-    fileDirectory = '/' + fileDirectory;
+  // if a relative path (mostly a path to an env data file) is provided, extract the directory
+  if (relativeToFile) {
+    relativeDir = pathParse(relativeToFile).dir;
   }
 
-  if (fileDirectory.endsWith('/') == false) {
-    fileDirectory = fileDirectory + '/';
-  }
-
-  const fileName = pathParse(filePath).name;
-  const fileExt = pathParse(filePath).ext;
-
-  const path = envDirectory + fileDirectory + fileName + fileExt;
-
-  return path;
+  return pathResolve(relativeDir, filePath);
 };
 
 export const initIPCListeners = (mainWindow: BrowserWindow) => {
@@ -114,8 +113,8 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     }
   });
 
-  ipcMain.on('APP_SHOW_FILE', (event, path) => {
-    shell.showItemInFolder(path);
+  ipcMain.on('APP_SHOW_FILE', (event, filePath, relativeToFile) => {
+    shell.showItemInFolder(buildFilePath(filePath, relativeToFile));
   });
 
   ipcMain.on('APP_SHOW_FOLDER', (event, name) => {
@@ -291,26 +290,16 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     ServerInstance.stop(environmentUUID);
   });
 
-  ipcMain.on('OPEN_FILE', (event, filePath: string, envPath: string) => {
-    const path = makeFullFilePath(filePath, envPath);
-
-    shell
-      .openPath(path)
-      .then((error) => {
-        if (error) {
-          logError(`Failed to open file in default editor: ${error}`);
-        }
-      })
-      .catch((error) => {
-        logError(`Error opening file in default editor: ${error}`);
-      });
-  });
-
   ipcMain.on(
-    'OPEN_FOLDER_IN_FINDER',
-    (event, filePath: string, envPath: string) => {
-      const path = makeFullFilePath(filePath, envPath);
-      shell.showItemInFolder(path);
+    'APP_OPEN_FILE',
+    async (event, filePath: string, relativeToFile: string) => {
+      const result = await shell.openPath(
+        buildFilePath(filePath, relativeToFile)
+      );
+
+      if (result) {
+        logError(`Failed to open file in default editor: ${result}`);
+      }
     }
   );
 };
