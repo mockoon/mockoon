@@ -221,6 +221,28 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Open file in Default Editor
+   */
+  public openFile(filePath: string, activeEnvironmentUuid: string) {
+    const environmentPath = this.store.getEnvironmentPath(
+      activeEnvironmentUuid
+    );
+
+    MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+  }
+
+  /**
+   * Show file in Finder / Explorer
+   */
+  public showFile(filePath: string, activeEnvironmentUuid: string) {
+    const environmentPath = this.store.getEnvironmentPath(
+      activeEnvironmentUuid
+    );
+
+    MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
+  }
+
+  /**
    * Update the store when proxy headers lists are updated
    */
   public headersUpdated(headers: Header[]) {
