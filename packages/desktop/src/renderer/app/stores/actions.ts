@@ -1,9 +1,11 @@
+import { User } from '@mockoon/cloud';
 import {
   Callback,
   DataBucket,
   Environment,
   Folder,
   ReorderAction,
+  ReorderableContainers,
   Route,
   RouteResponse
 } from '@mockoon/commons';
@@ -16,18 +18,23 @@ import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentLogsTabsNameType,
   EnvironmentStatus,
+  StoreType,
   TabsNameType,
   TemplatesTabsName,
   UIState,
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import { User } from 'src/renderer/app/models/user.model';
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
-import { Settings } from 'src/shared/models/settings.model';
+import {
+  EnvironmentDescriptor,
+  Settings
+} from 'src/shared/models/settings.model';
 
 export const enum ActionTypes {
+  CONVERT_ENVIRONMENT_TO_LOCAL = 'CONVERT_ENVIRONMENT_TO_LOCAL',
   UPDATE_USER = 'UPDATE_USER',
+  UPDATE_SYNC = 'UPDATE_SYNC',
   SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
   SET_ACTIVE_TAB_IN_CALLBACK = 'SET_ACTIVE_TAB_IN_CALLBACK',
   SET_ACTIVE_VIEW = 'SET_ACTIVE_VIEW',
@@ -73,13 +80,27 @@ export const enum ActionTypes {
   REMOVE_TOAST = 'REMOVE_TOAST',
   SET_USER_ID = 'SET_USER_ID',
   UPDATE_SETTINGS = 'UPDATE_SETTINGS',
+  UPDATE_SETTINGS_ENVIRONMENT_DESCRIPTOR = 'UPDATE_SETTINGS_ENVIRONMENT_DESCRIPTOR',
   UPDATE_UI_STATE = 'UPDATE_UI_STATE',
   START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT'
+  DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT',
+  FULL_REORDER_ENTITIES = 'FULL_REORDER_ENTITIES'
 }
+
+/**
+ * When emitter, remove an environment from the cloud
+ * When receiver, convert an environment to local
+ *
+ * @param environmentUuid - environment UUID to remove
+ */
+export const convertEnvironmentToLocalAction = (environmentUuid: string) =>
+  ({
+    type: ActionTypes.CONVERT_ENVIRONMENT_TO_LOCAL,
+    environmentUuid
+  }) as const;
 
 /**
  * Update the user information
@@ -89,6 +110,17 @@ export const enum ActionTypes {
 export const updateUserAction = (properties: Partial<User>) =>
   ({
     type: ActionTypes.UPDATE_USER,
+    properties
+  }) as const;
+
+/**
+ * Update the cloud sync information
+ *
+ * @param properties - cloud sync status properties to update
+ */
+export const updateSyncAction = (properties: Partial<StoreType['sync']>) =>
+  ({
+    type: ActionTypes.UPDATE_SYNC,
     properties
   }) as const;
 
@@ -243,6 +275,28 @@ export const reorderDatabucketsAction = (
   }) as const;
 
 /**
+ * Full reorder of entities
+ *
+ * @param environmentUuid - environment UUID to which the entities belong to
+ * @param entity - entity to reorder
+ * @param order - new order of the entities (uuids)
+ * @param parentId - route UUID to which the route response belong to, if entity is route response, or 'root'/uuid of the parent folder if entity is a folder/route
+ */
+export const fullReorderEntitiesAction = (
+  environmentUuid: string,
+  entity: ReorderableContainers,
+  order: string[],
+  parentId?: string | 'root'
+) =>
+  ({
+    type: ActionTypes.FULL_REORDER_ENTITIES,
+    environmentUuid,
+    entity,
+    order,
+    parentId
+  }) as const;
+
+/**
  * Reorder callbacks
  *
  * @param environmentUuid - environment UUID to which the databuckets belong to
@@ -266,6 +320,8 @@ export const reorderCallbacksAction = (
  * @param options.filePath - update the filepath
  * @param options.insertIndex - insert at index, default to end of list
  * @param options.activeEnvironment - if provided, keep another environment active instead of the one being added
+ * @param options.cloud - indicates if the environment is added to the cloud
+ * @param options.hash - hash of the environment file, if cloud is true
  */
 export const addEnvironmentAction = (
   environment: Environment,
@@ -273,6 +329,8 @@ export const addEnvironmentAction = (
     filePath?: string;
     insertAfterIndex?: number;
     activeEnvironment?: Environment;
+    cloud?: boolean;
+    hash?: string;
   }
 ) =>
   ({
@@ -311,6 +369,7 @@ export const updateEnvironmentAction = (
 /**
  * Reload an environment
  *
+ * @param previousUUID - previous environment UUID
  * @param newEnvironment - new environment
  */
 export const reloadEnvironmentAction = (
@@ -380,7 +439,8 @@ export const setActiveRouteAction = (routeUUID: string) =>
  *
  * @param environmentUuid - environment UUID to which the folder is linked to
  * @param folder - folder to add
- * @param parentId - target parent (root or folder) Id * @param uiReset - indicates if the filters must be reset after addition
+ * @param parentId - target parent (root or folder) Id
+ * @param uiReset - indicates if the filters must be reset after addition
  */
 export const addFolderAction = (
   environmentUuid: string,
@@ -836,6 +896,20 @@ export const updateSettingsAction = (properties: Partial<Settings>) =>
   }) as const;
 
 /**
+ * Update settings environment descriptor
+ *
+ * @param properties - properties to update (uuid and partial descriptor)
+ */
+export const updateSettingsEnvironmentDescriptorAction = (
+  descriptor: Partial<EnvironmentDescriptor> &
+    Pick<EnvironmentDescriptor, 'uuid'>
+) =>
+  ({
+    type: ActionTypes.UPDATE_SETTINGS_ENVIRONMENT_DESCRIPTOR,
+    descriptor
+  }) as const;
+
+/**
  * Update UI state
  *
  * @param properties - properties to update
@@ -847,7 +921,9 @@ export const updateUIStateAction = (properties: Partial<UIState>) =>
   }) as const;
 
 export type Actions =
+  | ReturnType<typeof convertEnvironmentToLocalAction>
   | ReturnType<typeof updateUserAction>
+  | ReturnType<typeof updateSyncAction>
   | ReturnType<typeof setActiveTabAction>
   | ReturnType<typeof setActiveTabInCallbackViewAction>
   | ReturnType<typeof setActiveViewAction>
@@ -859,6 +935,7 @@ export type Actions =
   | ReturnType<typeof reorderRoutesAction>
   | ReturnType<typeof reorderRouteResponsesAction>
   | ReturnType<typeof reorderDatabucketsAction>
+  | ReturnType<typeof fullReorderEntitiesAction>
   | ReturnType<typeof reorderCallbacksAction>
   | ReturnType<typeof addEnvironmentAction>
   | ReturnType<typeof removeEnvironmentAction>
@@ -893,6 +970,7 @@ export type Actions =
   | ReturnType<typeof removeToastAction>
   | ReturnType<typeof updateUIStateAction>
   | ReturnType<typeof updateSettingsAction>
+  | ReturnType<typeof updateSettingsEnvironmentDescriptorAction>
   | ReturnType<typeof startEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof cancelEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>

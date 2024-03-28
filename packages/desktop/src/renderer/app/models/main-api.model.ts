@@ -12,7 +12,11 @@ import {
   SaveDialogReturnValue,
   app
 } from 'electron';
-import { Settings } from 'src/shared/models/settings.model';
+import { MenuStateUpdatePayload } from 'src/shared/models/ipc.model';
+import {
+  EnvironmentDescriptor,
+  Settings
+} from 'src/shared/models/settings.model';
 
 export interface MainAPIModel {
   invoke(
@@ -23,7 +27,7 @@ export interface MainAPIModel {
   invoke(
     channel: 'APP_WRITE_ENVIRONMENT_DATA',
     data: Environment,
-    path: string,
+    descriptor: EnvironmentDescriptor,
     storagePrettyPrint?: boolean
   ): Promise<void>;
   invoke(
@@ -44,12 +48,13 @@ export interface MainAPIModel {
   invoke(
     channel:
       | 'APP_GET_MIME_TYPE'
+      | 'APP_GET_HASH'
       | 'APP_GET_FILENAME'
       | 'APP_READ_FILE'
       | 'APP_BUILD_STORAGE_FILEPATH'
       | 'APP_GET_BASE_PATH'
       | 'APP_REPLACE_FILEPATH_EXTENSION',
-    pathOrName: string
+    pathOrNameOrString: string
   ): Promise<string>;
   invoke(channel: 'APP_WRITE_FILE', path: string, data: string): Promise<void>;
   invoke(
@@ -71,6 +76,7 @@ export interface MainAPIModel {
   invoke(channel: 'APP_UNWATCH_FILE', UUID: string): Promise<void>;
   invoke(channel: 'APP_UNWATCH_ALL_FILE'): Promise<void>;
 
+  send(channel: 'APP_UPDATE_MENU_STATE', state: MenuStateUpdatePayload): void;
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
   send(channel: 'OPEN_FILE', filePath: string, envPath: string): void;
   send(
@@ -78,16 +84,7 @@ export interface MainAPIModel {
     filePath: string,
     envPath: string
   ): void;
-  send(
-    channel:
-      | 'APP_DISABLE_ENVIRONMENT_MENU_ENTRIES'
-      | 'APP_ENABLE_ENVIRONMENT_MENU_ENTRIES'
-      | 'APP_DISABLE_ROUTE_MENU_ENTRIES'
-      | 'APP_ENABLE_ROUTE_MENU_ENTRIES'
-      | 'APP_QUIT'
-      | 'APP_HIDE_WINDOW'
-      | 'APP_APPLY_UPDATE'
-  ): void;
+  send(channel: 'APP_QUIT' | 'APP_HIDE_WINDOW' | 'APP_APPLY_UPDATE'): void;
   send(
     channel: 'APP_OPEN_EXTERNAL_LINK' | 'APP_SHOW_FILE',
     urlOrPath: string

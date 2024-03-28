@@ -1,5 +1,5 @@
 import { test } from '@oclif/test';
-import { expect } from 'chai';
+import { notStrictEqual, ok } from 'assert';
 
 describe('Run OpenAPI spec (YAML)', () => {
   test
@@ -10,7 +10,7 @@ describe('Run OpenAPI spec (YAML)', () => {
         await fetch('http://localhost:3000/v1/pets')
       ).json();
 
-      expect(result[0].id).to.not.equal(undefined);
+      notStrictEqual(result[0].id, undefined);
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -18,7 +18,7 @@ describe('Run OpenAPI spec (YAML)', () => {
     .it(
       'should start mock on port 3000 and call GET /v1/pets endpoint and get a result',
       (context) => {
-        expect(context.stdout).to.contain('Server started');
+        ok(context.stdout.includes('Server started'));
       }
     );
 });
@@ -32,7 +32,7 @@ describe('Run OpenAPI spec (JSON)', () => {
         await fetch('http://localhost:3000/v1/pets')
       ).json();
 
-      expect(result[0].id).to.not.equal(undefined);
+      notStrictEqual(result[0].id, undefined);
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -40,7 +40,7 @@ describe('Run OpenAPI spec (JSON)', () => {
     .it(
       'should start mock on port 3000 and call GET /v1/pets endpoint and get a result',
       (context) => {
-        expect(context.stdout).to.contain('Server started');
+        ok(context.stdout.includes('Server started'));
       }
     );
 });
@@ -58,7 +58,7 @@ describe('Run OpenAPI spec from URL (JSON)', () => {
         await fetch('http://localhost:3000/v1/pets')
       ).json();
 
-      expect(result[0].id).to.not.equal(undefined);
+      notStrictEqual(result[0].id, undefined);
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -66,7 +66,7 @@ describe('Run OpenAPI spec from URL (JSON)', () => {
     .it(
       'should start mock on port 3000 and call GET /v1/pets endpoint and get a result',
       (context) => {
-        expect(context.stdout).to.contain('Server started');
+        ok(context.stdout.includes('Server started'));
       }
     );
 });

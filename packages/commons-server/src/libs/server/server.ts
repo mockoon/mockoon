@@ -62,6 +62,7 @@ import {
   routesFromFolder,
   stringIncludesArrayItems
 } from '../utils';
+import { createAdminEndpoint } from './admin-endpoint';
 import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
 
 /**
@@ -73,6 +74,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private serverInstance: httpServer | httpsServer;
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
+  // store the request number for each route
+  private requestNumbers: Record<string, number> = {};
   // templating global variables
   private globalVariables: Record<string, any> = {};
 
@@ -213,6 +216,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
+
+    // admin endpoint must be created before all other routes to avoid conflicts
+    createAdminEndpoint(app, {
+      statePurgeCallback: () => {
+        // reset request numbers
+        Object.keys(this.requestNumbers).forEach((routeUUID) => {
+          this.requestNumbers[routeUUID] = 1;
+        });
+
+        // reset databuckets
+        this.processedDatabuckets = [];
+        this.generateDatabuckets(this.environment);
+      }
+    });
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
@@ -445,6 +462,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         )
       ) {
         try {
+          this.requestNumbers[declaredRoute.uuid] = 1;
+
           if (declaredRoute.type === RouteType.CRUD) {
             this.createCRUDRoute(server, declaredRoute, routePath);
           } else {
@@ -479,7 +498,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     route: Route,
     routePath: string
   ) {
-    server[route.method](routePath, this.createRouteHandler(route, 1));
+    server[route.method](routePath, this.createRouteHandler(route));
   }
 
   /**
@@ -499,16 +518,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     for (const crudRoute of crudRoutes) {
       server[crudRoute.method](
         crudRoute.path,
-        this.createRouteHandler(route, 1, crudRoute.id)
+        this.createRouteHandler(route, crudRoute.id)
       );
     }
   }
 
-  private createRouteHandler(
-    route: Route,
-    requestNumber: number,
-    crudId?: CrudRouteIds
-  ) {
+  private createRouteHandler(route: Route, crudId?: CrudRouteIds) {
     return (request: Request, response: Response, next: NextFunction) => {
       this.generateRequestDatabuckets(route, this.environment, request);
 
@@ -535,13 +550,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.processedDatabuckets,
         this.globalVariables,
         this.options.envVarsPrefix
-      ).chooseResponse(requestNumber);
+      ).chooseResponse(this.requestNumbers[route.uuid]);
 
       if (!enabledRouteResponse) {
         return next();
       }
 
-      requestNumber += 1;
+      this.requestNumbers[route.uuid] += 1;
 
       // save route and response UUIDs for logs (only in desktop app)
       if (route.uuid && enabledRouteResponse.uuid) {
@@ -567,8 +582,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           enabledRouteResponse.bodyType === BodyTypes.FILE &&
           enabledRouteResponse.filePath
         ) {
-          this.makeCallbacks(enabledRouteResponse, request, response);
-
           this.sendFile(
             route,
             enabledRouteResponse,
@@ -576,6 +589,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             request,
             response
           );
+
           // serve inline body or databucket
         } else {
           let templateParse = true;
@@ -625,8 +639,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               }
             }
           }
-
-          this.makeCallbacks(enabledRouteResponse, request, response);
 
           this.serveBody(
             content || '',
@@ -787,6 +799,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.applyResponseLocals(response);
 
       response.body = content;
+
+      // execute callbacks after generating the template, to be able to use the eventual templating variables in the callback
+      this.makeCallbacks(routeResponse, request, response);
 
       response.send(content);
     } catch (error: any) {
@@ -1035,6 +1050,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             this.applyResponseLocals(response);
 
             response.body = fileContent;
+
+            // execute callbacks after generating the file content, to be able to use the eventual templating variables in the callback
+            this.makeCallbacks(routeResponse, request, response);
+
             response.send(fileContent);
           } catch (error: any) {
             fileServingError(error);
@@ -1104,6 +1123,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               stream = createReadStream(filePath, { start, end });
             }
           }
+
+          this.makeCallbacks(routeResponse, request, response);
 
           stream.pipe(response);
         } catch (error: any) {
@@ -1576,12 +1597,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    *
    * @param data text to be searched for possible databucket ids
    */
-  private captureReferredDatabucketNames(
-    text?: string
-  ): IterableIterator<RegExpMatchArray> | undefined {
-    return text?.matchAll(
-      new RegExp('{{2,3}[#(\\s\\w]*data [\'|"]{1}([^(\'|")]*)', 'g')
+  private extractDatabucketIdsFromString(text?: string): string[] {
+    const matches = text?.matchAll(
+      new RegExp('data(?:Raw)? +[\'|"]{1}([^(\'|")]*)', 'g')
     );
+
+    return [...(matches || [])].map((match) => match[1]);
   }
 
   /**
@@ -1596,35 +1617,77 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private findDatabucketIdsInCallbacks(
     response: RouteResponse,
     environment: Environment
-  ): Set<string> {
-    const result = new Set<string>();
+  ): string[] {
+    let dataBucketIds: string[] = [];
 
     if (response.callbacks && response.callbacks.length > 0) {
       for (const invocation of response.callbacks) {
-        const cb = environment.callbacks.find(
-          (ref) => ref.uuid === invocation.uuid
+        const callback = environment.callbacks.find(
+          (envCallback) => envCallback.uuid === invocation.uuid
         );
 
-        if (!cb) {
+        if (!callback) {
           continue;
         }
 
-        const results = this.captureReferredDatabucketNames(cb.body);
-        [...(results || [])]
-          .map((match) => match[1])
-          .forEach((id) => result.add(id));
+        dataBucketIds = [
+          ...dataBucketIds,
+          ...this.extractDatabucketIdsFromString(callback.uri),
+          ...this.extractDatabucketIdsFromString(callback.body),
+          ...this.extractDatabucketIdsFromString(callback.filePath),
+          ...this.findDatabucketIdsInHeaders(callback.headers)
+        ];
 
-        if (cb.databucketID) {
-          result.add(cb.databucketID);
+        if (callback.databucketID) {
+          dataBucketIds.push(callback.databucketID);
         }
       }
     }
 
-    return result;
+    return dataBucketIds;
   }
 
   /**
-   * Generate the databuckets called with the data helper on route call
+   * Find data buckets referenced in the provided headers
+   *
+   * @param headers
+   */
+  private findDatabucketIdsInHeaders(headers: Header[]): string[] {
+    return headers.reduce<string[]>(
+      (acc, header) => [
+        ...acc,
+        ...this.extractDatabucketIdsFromString(header.value)
+      ],
+      []
+    );
+  }
+
+  /**
+   * Find databucket ids in the rules target and value of the given response
+   *
+   * @param response
+   */
+  private findDatabucketIdsInRules(response: RouteResponse): string[] {
+    let dataBucketIds: string[] = [];
+
+    response.rules.forEach((rule) => {
+      const splitRules = rule.modifier.split('.');
+      if (rule.target === 'data_bucket') {
+        dataBucketIds = [
+          ...dataBucketIds,
+          // split by dots, take first section, or second if first is a dollar
+          splitRules[0].startsWith('$') ? splitRules[1] : splitRules[0],
+          ...this.extractDatabucketIdsFromString(rule.value)
+        ];
+      }
+    });
+
+    return dataBucketIds;
+  }
+
+  /**
+   * Generate the databuckets that were not parsed at the server start
+   *
    * @param route
    * @param environment
    * @param request
@@ -1643,60 +1706,88 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       return;
     }
 
+    let databucketIdsToParse = new Set<string>();
+
+    // find databucket ids in environment headers
+    this.findDatabucketIdsInHeaders(environment.headers).forEach(
+      (dataBucketId) => databucketIdsToParse.add(dataBucketId)
+    );
+
     route.responses.forEach((response) => {
-      const results = this.captureReferredDatabucketNames(response.body);
-      const databucketIdsToParse = new Set(
-        [...(results || [])].map((match) => match[1])
-      );
+      // capture databucket ids in body and relevant callback definitions
+      [
+        ...this.findDatabucketIdsInHeaders(response.headers),
+        ...this.extractDatabucketIdsFromString(response.body),
+        ...this.extractDatabucketIdsFromString(response.filePath),
+        ...this.findDatabucketIdsInCallbacks(response, environment),
+        ...this.findDatabucketIdsInRules(response)
+      ].forEach((dataBucketId) => databucketIdsToParse.add(dataBucketId));
 
       if (response.databucketID) {
         databucketIdsToParse.add(response.databucketID);
       }
+    });
 
-      // capture databucket ids in relevant callback definitions
-      this.findDatabucketIdsInCallbacks(response, environment).forEach((id) =>
-        databucketIdsToParse.add(id)
-      );
+    // capture databucket ids in found databuckets to allow for nested databucket parsing
+    let nestedDatabucketIds: string[] = [];
 
-      if (databucketIdsToParse.size > 0) {
-        let targetDatabucket: ProcessedDatabucket | undefined;
+    environment.data.forEach((databucket) => {
+      if (
+        databucketIdsToParse.has(databucket.id) ||
+        [...databucketIdsToParse.keys()].some((id) =>
+          databucket.name.toLowerCase().includes(id.toLowerCase())
+        )
+      ) {
+        nestedDatabucketIds = [
+          ...this.extractDatabucketIdsFromString(databucket.value)
+        ];
+      }
+    });
 
-        for (const databucketIdToParse of databucketIdsToParse) {
-          targetDatabucket = this.processedDatabuckets.find(
-            (databucket) =>
-              databucket.id === databucketIdToParse ||
-              databucket.name
-                .toLowerCase()
-                .includes(databucketIdToParse.toLowerCase())
-          );
+    // add nested databucket ids at the beginning of the set to ensure they are parsed first
+    databucketIdsToParse = new Set([
+      ...nestedDatabucketIds,
+      ...databucketIdsToParse
+    ]);
 
-          if (targetDatabucket && !targetDatabucket?.parsed) {
-            let content = targetDatabucket.value;
-            try {
-              content = TemplateParser({
-                shouldOmitDataHelper: false,
-                content: targetDatabucket.value,
-                environment,
-                processedDatabuckets: this.processedDatabuckets,
-                globalVariables: this.globalVariables,
-                request,
-                envVarsPrefix: this.options.envVarsPrefix
-              });
-              const JSONParsedcontent = JSON.parse(content);
-              targetDatabucket.value = JSONParsedcontent;
-              targetDatabucket.parsed = true;
-            } catch (error: any) {
-              if (error instanceof SyntaxError) {
-                targetDatabucket.value = content;
-              } else {
-                targetDatabucket.value = error.message;
-              }
-              targetDatabucket.parsed = true;
+    if (databucketIdsToParse.size > 0) {
+      let targetDatabucket: ProcessedDatabucket | undefined;
+
+      for (const databucketIdToParse of databucketIdsToParse) {
+        targetDatabucket = this.processedDatabuckets.find(
+          (databucket) =>
+            databucket.id === databucketIdToParse ||
+            databucket.name
+              .toLowerCase()
+              .includes(databucketIdToParse.toLowerCase())
+        );
+
+        if (targetDatabucket && !targetDatabucket?.parsed) {
+          let content = targetDatabucket.value;
+          try {
+            content = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: targetDatabucket.value,
+              environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              request,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
+            const JSONParsedcontent = JSON.parse(content);
+            targetDatabucket.value = JSONParsedcontent;
+            targetDatabucket.parsed = true;
+          } catch (error: any) {
+            if (error instanceof SyntaxError) {
+              targetDatabucket.value = content;
+            } else {
+              targetDatabucket.value = error.message;
             }
+            targetDatabucket.parsed = true;
           }
         }
       }
-    });
+    }
   }
 
   /**

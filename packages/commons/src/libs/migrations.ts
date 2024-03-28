@@ -448,8 +448,8 @@ export const Migrations: {
             .sequentialResponse
             ? ResponseMode.SEQUENTIAL
             : (route as RouteWithResponseModes).randomResponse
-            ? ResponseMode.RANDOM
-            : null;
+              ? ResponseMode.RANDOM
+              : null;
         }
 
         delete route['sequentialResponse'];

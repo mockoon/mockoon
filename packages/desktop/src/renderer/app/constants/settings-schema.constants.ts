@@ -27,6 +27,11 @@ export const SettingsDefault: Settings = {
   dialogWorkingDir: '',
   startEnvironmentsOnLoad: false,
   logTransactions: false,
+  environmentsCategoriesOrder: ['local', 'cloud'],
+  environmentsCategoriesCollapsed: {
+    local: false,
+    cloud: false
+  },
   envVarsPrefix: defaultEnvironmentVariablesPrefix
 };
 
@@ -67,20 +72,28 @@ export const SettingsSchema = Joi.object<Settings, true>({
     .items(
       Joi.object<EnvironmentDescriptor, true>({
         uuid: Joi.string().uuid().required(),
-        path: Joi.string().required()
+        path: Joi.string().required(),
+        cloud: Joi.boolean().failover(false).required(),
+        lastServerHash: Joi.string().allow(null).failover(null).required()
       }),
       Joi.any().strip()
     )
     .failover(SettingsDefault.environments)
     .required(),
-  disabledRoutes: Joi.object<Settings['disabledRoutes']>().pattern(
-    Joi.string(),
-    Joi.array().items(Joi.string(), Joi.any().strip()).failover([])
-  ),
-  collapsedFolders: Joi.object<Settings['collapsedFolders']>().pattern(
-    Joi.string(),
-    Joi.array().items(Joi.string(), Joi.any().strip()).failover([])
-  ),
+  disabledRoutes: Joi.object<Settings['disabledRoutes']>()
+    .pattern(
+      Joi.string(),
+      Joi.array().items(Joi.string(), Joi.any().strip()).failover([])
+    )
+    .required()
+    .failover(SettingsDefault.disabledRoutes),
+  collapsedFolders: Joi.object<Settings['collapsedFolders']>()
+    .pattern(
+      Joi.string(),
+      Joi.array().items(Joi.string(), Joi.any().strip()).failover([])
+    )
+    .required()
+    .failover(SettingsDefault.collapsedFolders),
   enableTelemetry: Joi.boolean()
     .failover(SettingsDefault.enableTelemetry)
     .required(),
@@ -103,6 +116,19 @@ export const SettingsSchema = Joi.object<Settings, true>({
     .required(),
   logTransactions: Joi.boolean()
     .failover(SettingsDefault.logTransactions)
+    .required(),
+  environmentsCategoriesOrder: Joi.array()
+    .items(Joi.string().valid('cloud', 'local'), Joi.any().strip())
+    .failover(SettingsDefault.environmentsCategoriesOrder)
+    .required(),
+  environmentsCategoriesCollapsed: Joi.object<
+    Settings['environmentsCategoriesCollapsed'],
+    true
+  >({
+    cloud: Joi.boolean().required(),
+    local: Joi.boolean().required()
+  })
+    .failover(SettingsDefault.environmentsCategoriesCollapsed)
     .required(),
   envVarsPrefix: Joi.string()
     .allow('')

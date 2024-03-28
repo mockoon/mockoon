@@ -14,6 +14,7 @@ import {
   OnInit
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { Template, TemplateListItem, User } from '@mockoon/cloud';
 import { RandomInt } from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -45,11 +46,6 @@ import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constant
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter } from 'src/renderer/app/libs/utils.lib';
 import { TemplatesTabsName } from 'src/renderer/app/models/store.model';
-import {
-  Template,
-  TemplateListItem
-} from 'src/renderer/app/models/template.model';
-import { User } from 'src/renderer/app/models/user.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { TemplatesService } from 'src/renderer/app/services/templates.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -203,16 +199,11 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
 
     this.templates$ = this.templatesService.getTemplatesList().pipe(
       filter((templates) => templates && templates.length > 0),
-      combineLatestWith(this.user$, this.templatesFilter$),
-      tap(([templates, user]) => {
-        const firstFreeTemplate = templates.find(
-          (template) => template.pro === false
-        );
-        this.setActiveTemplateListItem(
-          user && user.plan !== 'FREE' ? templates[0] : firstFreeTemplate
-        );
+      combineLatestWith(this.templatesFilter$),
+      tap(([templates]) => {
+        this.setActiveTemplateListItem(templates[0]);
       }),
-      map(([templates, , search]) =>
+      map(([templates, search]) =>
         !search
           ? templates
           : templates.filter((template) => textFilter(template.name, search))

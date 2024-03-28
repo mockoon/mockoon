@@ -1,6 +1,6 @@
 import * as cliUX from '@oclif/core/lib/cli-ux';
 import { test } from '@oclif/test';
-import { expect } from 'chai';
+import { doesNotMatch, match } from 'assert';
 
 /**
  * Test file contains a broken export, with missing `lastMigration` and route methods
@@ -12,8 +12,9 @@ describe('Data validation', () => {
       .stub(cliUX, 'confirm', (stub) => stub.returns(false))
       .command(['start', '--data', './test/data/envs/repair.json'])
       .catch((context) => {
-        expect(context.message).to.contain(
-          "These environment's data are too old or not a valid Mockoon environment."
+        match(
+          context.message,
+          /These environment's data are too old or not a valid Mockoon environment./
         );
       })
       .it('should throw an error if repair is not accepted');
@@ -27,7 +28,7 @@ describe('Data validation', () => {
       .do(async () => {
         const call1 = await (await fetch('http://localhost:3000/users')).text();
 
-        expect(call1).to.contain('ok');
+        match(call1, /ok/);
       })
       .finally(() => {
         process.emit('SIGINT');
@@ -35,8 +36,8 @@ describe('Data validation', () => {
       .it(
         'should repair and start mock on port 3000 if repair is accepted, and call GET /users endpoint and get a result',
         (context) => {
-          expect(context.stdout).to.contain('Server started');
-          expect(context.stdout).to.contain('"environmentName":"Demo API"');
+          match(context.stdout, /Server started/);
+          match(context.stdout, /"environmentName":"Demo API"/);
         }
       );
   });
@@ -48,7 +49,7 @@ describe('Data validation', () => {
       .do(async () => {
         const call1 = await (await fetch('http://localhost:3000/users')).text();
 
-        expect(call1).to.contain('ok');
+        match(call1, /ok/);
       })
       .finally(() => {
         process.emit('SIGINT');
@@ -56,8 +57,8 @@ describe('Data validation', () => {
       .it(
         'should repair and start mock on port 3000 if repair was forced with the flag',
         (context) => {
-          expect(context.stdout).to.contain('Server started');
-          expect(context.stdout).to.contain('"environmentName":"Demo API"');
+          match(context.stdout, /Server started/);
+          match(context.stdout, /"environmentName":"Demo API"/);
         }
       );
   });
@@ -68,12 +69,11 @@ describe('Data validation', () => {
       .stub(cliUX, 'confirm', (stub) => stub.returns(false))
       .command(['start', '--data', './test/data/openapi/petstore-broken.json'])
       .catch((context) => {
-        expect(context.message).to.contain(
-          "These environment's data are too old or not a valid Mockoon environment."
+        match(
+          context.message,
+          /These environment's data are too old or not a valid Mockoon environment./
         );
-        expect(context.message).to.contain(
-          'is not a valid Openapi API definition'
-        );
+        match(context.message, /is not a valid Openapi API definition/);
       })
       .it('should show all the error messages (OpenAPI and Mockoon parsers');
   });
@@ -84,12 +84,11 @@ describe('Data validation', () => {
       .stub(cliUX, 'confirm', (stub) => stub.returns(false))
       .command(['start', '--data', './test/data/openapi/petstore-broken.yaml'])
       .catch((context) => {
-        expect(context.message).to.not.contain(
-          "These environment's data are too old or not a valid Mockoon environment."
+        doesNotMatch(
+          context.message,
+          /These environment's data are too old or not a valid Mockoon environment./
         );
-        expect(context.message).to.contain(
-          'is not a valid Openapi API definition'
-        );
+        match(context.message, /is not a valid Openapi API definition/);
       })
       .it(
         'should only show OpenAPI parser error messages (early fail as Mockoon does not support YAML)'

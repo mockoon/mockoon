@@ -1,12 +1,7 @@
 import { Environment } from '@mockoon/commons';
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { MockoonServer } from '../../../src';
 import { getEnvironment } from '../../libs/environment';
-
-const chai = require('chai');
-const spies = require('chai-spies');
-
-chai.use(spies);
 
 describe('Range headers', () => {
   let environment: Environment;
@@ -43,8 +38,8 @@ describe('Range headers', () => {
     });
     const body = await response.text();
 
-    expect(response.status).to.equal(400);
-    expect(body).to.equal('Malformed range header');
+    strictEqual(response.status, 400);
+    strictEqual(body, 'Malformed range header');
   });
 
   it('should return 416 when Range header is unsatisfiable', async () => {
@@ -55,8 +50,8 @@ describe('Range headers', () => {
     });
     const body = await response.text();
 
-    expect(response.status).to.equal(416);
-    expect(body).to.equal('Requested range not satisfiable');
+    strictEqual(response.status, 416);
+    strictEqual(body, 'Requested range not satisfiable');
   });
 
   it('should handle correct range headers', async () => {
@@ -68,12 +63,12 @@ describe('Range headers', () => {
     const body = await response.text();
 
     // 206 Partial Content
-    expect(response.status).to.equal(206);
+    strictEqual(response.status, 206);
     // assuming the server should respond with the first 5 bytes of a 1234-byte file
-    expect(response.headers.get('Content-Range')).to.equal('bytes 0-5/144');
-    expect(response.headers.get('Accept-Ranges')).to.equal('bytes');
-    expect(response.headers.get('Content-Length')).to.equal('6');
+    strictEqual(response.headers.get('Content-Range'), 'bytes 0-5/144');
+    strictEqual(response.headers.get('Accept-Ranges'), 'bytes');
+    strictEqual(response.headers.get('Content-Length'), '6');
 
-    expect(body).to.equal('abcdef');
+    strictEqual(body, 'abcdef');
   });
 });

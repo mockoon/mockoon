@@ -2,9 +2,10 @@
   "packages": [
     "packages/commons",
     "packages/commons-server",
+    "packages/cloud",
     "packages/serverless",
     "packages/cli",
     "packages/desktop"
   ],
-  "version": "6.2.0"
+  "version": "7.0.0"
 }

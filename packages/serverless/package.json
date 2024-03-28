@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/serverless",
   "description": "Mockoon's serverless library. Use Mockoon in serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.",
-  "version": "6.2.0",
+  "version": "7.0.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "guillaume@1kb.software",
@@ -31,21 +31,19 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@mockoon/commons": "6.2.0",
-    "@mockoon/commons-server": "6.2.0",
+    "@mockoon/commons": "7.0.0",
+    "@mockoon/commons-server": "7.0.0",
     "serverless-http": "3.2.0"
   },
   "devDependencies": {
-    "@types/chai": "4.3.6",
-    "@types/mocha": "10.0.2",
-    "@types/node": "20.7.1",
-    "@typescript-eslint/eslint-plugin": "6.7.3",
-    "@typescript-eslint/parser": "6.7.3",
-    "chai": "4.3.10",
-    "eslint": "8.50.0",
-    "eslint-plugin-jsdoc": "46.8.2",
-    "mocha": "10.2.0",
+    "@types/mocha": "10.0.6",
+    "@types/node": "20.11.30",
+    "@typescript-eslint/eslint-plugin": "7.4.0",
+    "@typescript-eslint/parser": "7.4.0",
+    "eslint": "8.57.0",
+    "eslint-plugin-jsdoc": "48.2.1",
+    "mocha": "10.4.0",
     "ts-mocha": "10.0.0",
-    "typescript": "5.2.2"
+    "typescript": "5.4.3"
   }
 }

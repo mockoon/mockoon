@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { EOL } from 'os';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
@@ -24,7 +24,7 @@ describe('Request helpers', () => {
         request: { body: { prop1: 1 } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return boolean value without quotes', () => {
@@ -37,7 +37,7 @@ describe('Request helpers', () => {
         request: { body: { prop1: true } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return null value without quotes', () => {
@@ -50,7 +50,7 @@ describe('Request helpers', () => {
         request: { body: { prop1: null } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('null');
+      strictEqual(parseResult, 'null');
     });
 
     it('should always return array as JSON string', () => {
@@ -63,7 +63,7 @@ describe('Request helpers', () => {
         request: { body: { prop1: ['first', 'second'] } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('["first","second"]');
+      strictEqual(parseResult, '["first","second"]');
     });
 
     it('should always return object as JSON string', () => {
@@ -76,7 +76,7 @@ describe('Request helpers', () => {
         request: { body: { prop1: { key: 'value' } } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('{"key":"value"}');
+      strictEqual(parseResult, '{"key":"value"}');
     });
 
     it('should return default value enclosed in quotes', () => {
@@ -89,7 +89,7 @@ describe('Request helpers', () => {
         request: { body: { prop1: 'test' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('"default"');
+      strictEqual(parseResult, '"default"');
     });
 
     it('should return string enclosed in quotes', () => {
@@ -102,7 +102,7 @@ describe('Request helpers', () => {
         request: { body: { prop1: 'test' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('"test"');
+      strictEqual(parseResult, '"test"');
     });
 
     it('should not return string enclosed in quotes', () => {
@@ -115,7 +115,7 @@ describe('Request helpers', () => {
         request: { body: { prop1: 'test' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test');
+      strictEqual(parseResult, 'test');
     });
 
     it('should escape newlines and quotes in string', () => {
@@ -130,9 +130,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
-        '"This \\n is a \\"message\\" with quotes."'
-      );
+      strictEqual(parseResult, '"This \\n is a \\"message\\" with quotes."');
     });
 
     it('should return the enumerated objects when body contains a root array and a number is passed as path', () => {
@@ -156,7 +154,8 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         `{"id":1,"name":"John"},${EOL}{"id":2,"name":"Doe"}${EOL}`
       );
     });
@@ -187,7 +186,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('val1val2');
+      strictEqual(parseResult, 'val1val2');
     });
 
     it('should return the properties matching jsonpath expression', () => {
@@ -216,7 +215,8 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]value'
       );
     });
@@ -235,7 +235,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('"Default"');
+      strictEqual(parseResult, '"Default"');
     });
   });
 
@@ -250,7 +250,7 @@ describe('Request helpers', () => {
         request: { body: { prop: 1 } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return an array without quotes', () => {
@@ -263,7 +263,7 @@ describe('Request helpers', () => {
         request: { body: { prop: [1, 2, 3] } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1,2,3');
+      strictEqual(parseResult, '1,2,3');
     });
 
     it('should return a boolean without quotes', () => {
@@ -276,7 +276,7 @@ describe('Request helpers', () => {
         request: { body: { prop: true } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should be usable with a each', () => {
@@ -295,7 +295,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphindolphindolphin');
+      strictEqual(parseResult, 'dolphindolphindolphin');
     });
 
     it('should be usable within a if clause', () => {
@@ -314,7 +314,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphin');
+      strictEqual(parseResult, 'dolphin');
     });
 
     it('should return the default value in a each when no request body', () => {
@@ -327,7 +327,7 @@ describe('Request helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphindolphindolphin');
+      strictEqual(parseResult, 'dolphindolphindolphin');
     });
 
     it('should return the default value in a if clause when no request body', () => {
@@ -340,7 +340,7 @@ describe('Request helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphin');
+      strictEqual(parseResult, 'dolphin');
     });
 
     it('should return the enumerated strings when body contains a root array and no path is provided', () => {
@@ -353,7 +353,7 @@ describe('Request helpers', () => {
         request: { body: ['string1', 'string2'] } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('string1string2');
+      strictEqual(parseResult, 'string1string2');
     });
 
     it('should return the enumerated strings when body contains a root array and a number is passed as path', () => {
@@ -366,7 +366,7 @@ describe('Request helpers', () => {
         request: { body: ['string1', 'string2'] } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(`string1,${EOL}string2${EOL}`);
+      strictEqual(parseResult, `string1,${EOL}string2${EOL}`);
     });
 
     it('should return the property with dots value', () => {
@@ -395,7 +395,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('val1val2');
+      strictEqual(parseResult, 'val1val2');
     });
 
     it('should return the properties matching jsonpath expression', () => {
@@ -424,7 +424,8 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
     });
@@ -442,7 +443,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('Default');
+      strictEqual(parseResult, 'Default');
     });
   });
 
@@ -457,7 +458,7 @@ describe('Request helpers', () => {
         request: { query: { param1: 1 } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return boolean value without quotes', () => {
@@ -470,7 +471,7 @@ describe('Request helpers', () => {
         request: { query: { param1: true } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return null value without quotes', () => {
@@ -483,7 +484,7 @@ describe('Request helpers', () => {
         request: { query: { param1: null } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('null');
+      strictEqual(parseResult, 'null');
     });
 
     it('should always return array as JSON string', () => {
@@ -496,7 +497,7 @@ describe('Request helpers', () => {
         request: { query: { param1: ['first', 'second'] } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('["first","second"]');
+      strictEqual(parseResult, '["first","second"]');
     });
 
     it('should always return object as JSON string', () => {
@@ -509,7 +510,7 @@ describe('Request helpers', () => {
         request: { query: { param1: { key: 'value' } } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('{"key":"value"}');
+      strictEqual(parseResult, '{"key":"value"}');
     });
 
     it('should not return string enclosed in quotes', () => {
@@ -522,7 +523,7 @@ describe('Request helpers', () => {
         request: { query: { param1: 'test' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test');
+      strictEqual(parseResult, 'test');
     });
 
     it('should return string enclosed in quotes', () => {
@@ -535,7 +536,7 @@ describe('Request helpers', () => {
         request: { query: { param1: 'test' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('"test"');
+      strictEqual(parseResult, '"test"');
     });
 
     it('should return default value enclosed in quotes', () => {
@@ -548,7 +549,7 @@ describe('Request helpers', () => {
         request: { query: { param2: 'test' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('"default"');
+      strictEqual(parseResult, '"default"');
     });
 
     it('should escape quotes in string', () => {
@@ -563,7 +564,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('"This is a \\"message\\" with quotes."');
+      strictEqual(parseResult, '"This is a \\"message\\" with quotes."');
     });
 
     it('should return the value of parameter with dots in parameter name', () => {
@@ -576,7 +577,7 @@ describe('Request helpers', () => {
         request: { query: { 'param1.name': 'value' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('"value"');
+      strictEqual(parseResult, '"value"');
     });
     it('should return the properties matching jsonpath expression', () => {
       const parseResult = TemplateParser({
@@ -604,7 +605,8 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         '["attribute-value-1","attribute-value-2"]["attribute-1-name","attribute-2-name","attribute-3-name"]value'
       );
     });
@@ -622,7 +624,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('"Default"');
+      strictEqual(parseResult, '"Default"');
     });
   });
 
@@ -643,7 +645,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
     it('should return an array without quotes', () => {
       const parseResult = TemplateParser({
@@ -661,7 +663,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1,2,3');
+      strictEqual(parseResult, '1,2,3');
     });
     it('should return a boolean without quotes', () => {
       const parseResult = TemplateParser({
@@ -679,7 +681,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
     it('should be usable with a each', () => {
       const parseResult = TemplateParser({
@@ -697,7 +699,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphindolphindolphin');
+      strictEqual(parseResult, 'dolphindolphindolphin');
     });
     it('should be usable within a if clause', () => {
       const parseResult = TemplateParser({
@@ -715,7 +717,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphin');
+      strictEqual(parseResult, 'dolphin');
     });
     it('should return the default value in a each when no query', () => {
       const parseResult = TemplateParser({
@@ -728,7 +730,7 @@ describe('Request helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphindolphindolphin');
+      strictEqual(parseResult, 'dolphindolphindolphin');
     });
     it('should return the default value in a if clause when no request body', () => {
       const parseResult = TemplateParser({
@@ -740,7 +742,7 @@ describe('Request helpers', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dolphin');
+      strictEqual(parseResult, 'dolphin');
     });
     it('should return the value of parameter with dots in parameter name', () => {
       const parseResult = TemplateParser({
@@ -752,7 +754,7 @@ describe('Request helpers', () => {
         request: { query: { 'param1.name': 'value' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value');
+      strictEqual(parseResult, 'value');
     });
     it('should return the properties matching jsonpath expression', () => {
       const parseResult = TemplateParser({
@@ -780,7 +782,8 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
     });
@@ -798,7 +801,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('Default');
+      strictEqual(parseResult, 'Default');
     });
   });
 
@@ -827,7 +830,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('http://localhost:3000/api');
+      strictEqual(parseResult, 'http://localhost:3000/api');
     });
     it('should return correct protocol if https is true', () => {
       const parseResult = TemplateParser({
@@ -853,7 +856,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('https://localhost:3000/api');
+      strictEqual(parseResult, 'https://localhost:3000/api');
     });
 
     it('should return correct url format with correct port', () => {
@@ -880,7 +883,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('https://localhost:3001/api');
+      strictEqual(parseResult, 'https://localhost:3001/api');
     });
 
     it('should return correct url based on hostname', () => {
@@ -907,7 +910,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('https://domain.tld:3005/api');
+      strictEqual(parseResult, 'https://domain.tld:3005/api');
     });
 
     it('should return correct url format with endpointPrefix', () => {
@@ -934,7 +937,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('https://localhost:3001/v1');
+      strictEqual(parseResult, 'https://localhost:3001/v1');
     });
 
     it('should return correct url format without endpointPrefix', () => {
@@ -960,7 +963,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('https://localhost:3001');
+      strictEqual(parseResult, 'https://localhost:3001');
     });
 
     it('should return correct url format when endpointPrefix is empty string', () => {
@@ -987,7 +990,7 @@ describe('Request helpers', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('https://localhost:3001');
+      strictEqual(parseResult, 'https://localhost:3001');
     });
   });
 
@@ -1002,7 +1005,7 @@ describe('Request helpers', () => {
         request: requestMock,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('headervalue');
+      strictEqual(parseResult, 'headervalue');
     });
 
     it('should return an empty string if no name provided', () => {
@@ -1015,7 +1018,7 @@ describe('Request helpers', () => {
         request: requestMock,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return a empty string if name not found', () => {
@@ -1028,7 +1031,7 @@ describe('Request helpers', () => {
         request: requestMock,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return a default value if provided and name not found', () => {
@@ -1041,7 +1044,7 @@ describe('Request helpers', () => {
         request: requestMock,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('defaultvalue');
+      strictEqual(parseResult, 'defaultvalue');
     });
   });
 });

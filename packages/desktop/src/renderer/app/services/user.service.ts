@@ -1,6 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Auth, idToken, signInWithCustomToken } from '@angular/fire/auth';
+import {
+  Auth,
+  idToken,
+  reload,
+  signInWithCustomToken
+} from '@angular/fire/auth';
+import { User } from '@mockoon/cloud';
 import {
   catchError,
   EMPTY,
@@ -12,7 +18,6 @@ import {
   tap,
   throwError
 } from 'rxjs';
-import { User } from 'src/renderer/app/models/user.model';
 import { updateUserAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -35,6 +40,14 @@ export class UserService {
       filter((token) => !!token),
       mergeMap(() => this.getUserInfo())
     );
+  }
+
+  /**
+   * Reload the user info
+   * Can be used to trigger an authentication after going offline
+   */
+  public reloadUser() {
+    reload(this.auth.currentUser);
   }
 
   /**
@@ -78,6 +91,10 @@ export class UserService {
 
   public idTokenChanges() {
     return this.idToken$;
+  }
+
+  public refreshToken() {
+    return from(this.auth.currentUser.getIdToken(true));
   }
 
   public logout() {

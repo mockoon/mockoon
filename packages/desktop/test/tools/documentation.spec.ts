@@ -3,8 +3,8 @@ import { promises as fs } from 'fs';
 import { ChainablePromiseElement } from 'webdriverio';
 import callbacks from '../libs/callbacks';
 import contextMenu, {
-  ContextMenuFolderActions,
-  ContextMenuRouteActions
+  ContextMenuEnvironmentActions,
+  ContextMenuFolderActions
 } from '../libs/context-menu';
 import databuckets from '../libs/databuckets';
 import environments from '../libs/environments';
@@ -1256,31 +1256,11 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'mockoon-data-files/sharing-mock-api-files',
-    screenshots: [
-      {
-        tasks: async () => {
-          await modals.close();
-          await navigation.switchView('ENV_ROUTES');
-          await routes.select(1);
-        },
-        get highlightedTarget() {
-          return environments.openBtn;
-        },
-        highlight: true,
-        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { bottom: 200, right: 350 },
-        fileName: 'open-environment.png'
-      }
-    ]
-  },
-  {
-    enabled: true,
     folder: 'mockoon-data-files/data-storage-location',
     screenshots: [
       {
         tasks: async () => {
+          await modals.close();
           await navigation.switchView('ENV_ROUTES');
           await contextMenu.open('environments', 1);
         },
@@ -1288,7 +1268,7 @@ const documentationTopics: {
           await contextMenu.close();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(3);
+          return contextMenu.getItem(ContextMenuEnvironmentActions.SHOW_FOLDER);
         },
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
@@ -1304,7 +1284,7 @@ const documentationTopics: {
           await contextMenu.close();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(4);
+          return contextMenu.getItem(ContextMenuEnvironmentActions.MOVE_FOLDER);
         },
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
@@ -1342,9 +1322,10 @@ const documentationTopics: {
         tasks: async () => {
           await navigation.switchView('ENV_ROUTES');
           await routes.select(1);
+          await environments.openAddMenu();
         },
         get highlightedTarget() {
-          return environments.openBtn;
+          return environments.getAddMenuEntry(2);
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
@@ -1388,7 +1369,7 @@ const documentationTopics: {
           await contextMenu.close();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(2);
+          return contextMenu.getItem(ContextMenuEnvironmentActions.COPY_JSON);
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
@@ -1445,6 +1426,14 @@ const documentationTopics: {
           );
           await routes.pathInput.setValue('/invoices/:id');
         },
+        postTasks: async () => {
+          await routes.remove(2);
+          await routes.remove(2);
+          await routes.removeFolder(1);
+          await routes.remove(2);
+          await routes.remove(2);
+          await routes.removeFolder(1);
+        },
         get screenshotTarget() {
           return routes.getMenuItem(1);
         },
@@ -1463,47 +1452,6 @@ const documentationTopics: {
     screenshots: [
       {
         tasks: async () => {
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuFolderActions.DELETE
-          );
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuFolderActions.DELETE
-          );
-
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuRouteActions.DELETE
-          );
-
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuRouteActions.DELETE
-          );
-
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuRouteActions.DELETE
-          );
-
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuRouteActions.DELETE
-          );
-
           await routes.openAddMenu();
         },
         postTasks: async () => {
@@ -1570,7 +1518,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'api-endpoints/templates-and-ai-assistant',
+    folder: 'mockoon-cloud/templates-and-ai-assistant',
     screenshots: [
       {
         tasks: async () => {
@@ -1849,19 +1797,6 @@ const documentationTopics: {
 
 describe('Documentation screenshots', () => {
   it('should open and start the environment', async () => {
-    await fs.mkdir('./tmp/docs');
-    await fs.writeFile(
-      './tmp/window-state.json',
-      JSON.stringify({
-        width: 1280,
-        height: 1024,
-        x: 150,
-        y: 150,
-        isMaximized: false,
-        isFullScreen: false
-      })
-    );
-    await browser.reloadSession();
     await environments.open('documentation');
   });
 

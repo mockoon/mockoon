@@ -1,8 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map, mergeMap, tap } from 'rxjs/operators';
-import { RemoteConfigData } from 'src/renderer/app/models/remote-config.model';
+import { RemoteConfigData } from '@mockoon/cloud';
+import { BehaviorSubject, EMPTY, Observable, from } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  tap
+} from 'rxjs/operators';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Config } from 'src/renderer/config';
 import { environment } from 'src/renderer/environments/environment';
@@ -34,28 +40,34 @@ export class RemoteConfigService {
    * Monitor auth state and update the store
    */
   public init() {
-    return this.userService.idTokenChanges().pipe(
-      mergeMap((token) => this.fetchConfig(token)),
-      tap((config) => {
-        this.remoteConfig$.next(config);
-      })
-    );
+    return this.userService
+      .idTokenChanges()
+      .pipe(switchMap(() => this.fetchConfig()));
   }
 
   /**
    * Fetch the remote config
    */
-  private fetchConfig(token: string): Observable<RemoteConfigData> {
-    const headers = token
-      ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
-      : undefined;
+  public fetchConfig(): Observable<RemoteConfigData> {
+    return from(this.userService.getIdToken()).pipe(
+      switchMap((token) => {
+        const headers = token
+          ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
+          : undefined;
 
-    return this.httpClient.post<RemoteConfigData>(
-      `${environment.apiURL}remoteconfig`,
-      { version: Config.appVersion },
-      {
-        headers
-      }
+        return this.httpClient
+          .post<RemoteConfigData>(
+            `${environment.apiURL}remoteconfig`,
+            { version: Config.appVersion },
+            {
+              headers
+            }
+          )
+          .pipe(catchError(() => EMPTY));
+      }),
+      tap((config) => {
+        this.remoteConfig$.next(config);
+      })
     );
   }
 }

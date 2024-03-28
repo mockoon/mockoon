@@ -4,6 +4,7 @@ import { join as pathJoin } from 'path';
 import { argv } from 'process';
 import { parseProtocolArgs } from 'src/main/libs/custom-protocol';
 import { createMenu } from 'src/main/libs/menu';
+import { getRuntimeArg } from 'src/main/libs/runtime-args';
 import { createSplashScreen } from 'src/main/libs/splashscreen';
 import { checkForUpdate } from 'src/main/libs/update';
 
@@ -29,6 +30,7 @@ export const saveOpenUrlArgs = (url: string[]) => {
 export const getMainWindow = () => mainWindow;
 
 export const initMainWindow = (showSplash = true) => {
+  const enableDevTools = IS_DEV || !!getRuntimeArg('enable-dev-tools');
   let splashScreen: BrowserWindow;
 
   // only show the splashscreen when not running the tests
@@ -65,7 +67,7 @@ export const initMainWindow = (showSplash = true) => {
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: true,
-      devTools: IS_DEV ? true : false,
+      devTools: enableDevTools,
       spellcheck: false,
       preload: pathJoin(__dirname, '/preload.js')
     }
@@ -76,7 +78,7 @@ export const initMainWindow = (showSplash = true) => {
     mainWindow.maximize();
   }
 
-  if (IS_DEV) {
+  if (enableDevTools) {
     mainWindow.webContents.openDevTools();
   }
 

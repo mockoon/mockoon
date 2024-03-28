@@ -1,3 +1,4 @@
+import { SyncPresence, User } from '@mockoon/cloud';
 import { Environments } from '@mockoon/commons';
 import {
   CallbackSpecTabNameType,
@@ -9,7 +10,6 @@ import {
   EnvironmentLogs
 } from 'src/renderer/app/models/environment-logs.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import { User } from 'src/renderer/app/models/user.model';
 import { Settings } from 'src/shared/models/settings.model';
 
 export type ViewsNameType =
@@ -88,4 +88,10 @@ export type StoreType = {
   };
   user: User;
   callbackSettings: CallbackSettings;
+  sync: {
+    status: boolean;
+    presence: SyncPresence;
+    offlineReason: string | null;
+    alert: string | null;
+  };
 };

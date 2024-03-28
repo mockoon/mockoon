@@ -1,10 +1,20 @@
 import { test } from '@oclif/test';
-import * as chai from 'chai';
-import { expect } from 'chai';
-import chaiExclude from 'chai-exclude';
+import { deepStrictEqual, ok } from 'assert';
 import { promises as fs } from 'fs';
 
-chai.use(chaiExclude);
+const clearAllUuids = (obj: any) => {
+  if (obj && typeof obj === 'object') {
+    for (const key in obj) {
+      if (key === 'uuid') {
+        obj[key] = '';
+      } else {
+        clearAllUuids(obj[key]);
+      }
+    }
+  }
+
+  return obj;
+};
 
 describe('Import command', () => {
   describe('Import from JSON file', () => {
@@ -23,16 +33,16 @@ describe('Import command', () => {
       .it('should successfully import', async () => {
         const importedFile = await fs.readFile('./tmp/import-json-file.json');
         const importedContent = importedFile.toString();
-        const importedJson = JSON.parse(importedContent);
+        const importedJson = clearAllUuids(JSON.parse(importedContent));
         const expectedFile = await fs.readFile(
           './test/data/envs/petstore-imported.json'
         );
-        const expectedContent = JSON.parse(expectedFile.toString());
+        const expectedContent = clearAllUuids(
+          JSON.parse(expectedFile.toString())
+        );
 
-        expect(importedContent).to.not.contains('\n');
-        expect(importedJson)
-          .excludingEvery('uuid')
-          .to.deep.equal(expectedContent);
+        ok(!importedContent.includes('\n'));
+        deepStrictEqual(importedJson, expectedContent);
       });
   });
 
@@ -55,16 +65,16 @@ describe('Import command', () => {
           './tmp/import-json-file-prettified.json'
         );
         const importedContent = importedFile.toString();
-        const importedJson = JSON.parse(importedContent);
+        const importedJson = clearAllUuids(JSON.parse(importedContent));
         const expectedFile = await fs.readFile(
           './test/data/envs/petstore-imported.json'
         );
-        const expectedContent = JSON.parse(expectedFile.toString());
+        const expectedContent = clearAllUuids(
+          JSON.parse(expectedFile.toString())
+        );
 
-        expect(importedContent).to.contains('{\n  ');
-        expect(importedJson)
-          .excludingEvery('uuid')
-          .to.deep.equal(expectedContent);
+        ok(importedContent.includes('{\n  '));
+        deepStrictEqual(importedJson, expectedContent);
       });
   });
 
@@ -87,16 +97,16 @@ describe('Import command', () => {
           './tmp/import-json-file-prettified-alias.json'
         );
         const importedContent = importedFile.toString();
-        const importedJson = JSON.parse(importedContent);
+        const importedJson = clearAllUuids(JSON.parse(importedContent));
         const expectedFile = await fs.readFile(
           './test/data/envs/petstore-imported.json'
         );
-        const expectedContent = JSON.parse(expectedFile.toString());
+        const expectedContent = clearAllUuids(
+          JSON.parse(expectedFile.toString())
+        );
 
-        expect(importedContent).to.contains('{\n  ');
-        expect(importedJson)
-          .excludingEvery('uuid')
-          .to.deep.equal(expectedContent);
+        ok(importedContent.includes('{\n  '));
+        deepStrictEqual(importedJson, expectedContent);
       });
   });
 
@@ -116,16 +126,16 @@ describe('Import command', () => {
       .it('should successfully import', async () => {
         const importedFile = await fs.readFile('./tmp/import-yaml-file.json');
         const importedContent = importedFile.toString();
-        const importedJson = JSON.parse(importedContent);
+        const importedJson = clearAllUuids(JSON.parse(importedContent));
         const expectedFile = await fs.readFile(
           './test/data/envs/petstore-imported.json'
         );
-        const expectedContent = JSON.parse(expectedFile.toString());
+        const expectedContent = clearAllUuids(
+          JSON.parse(expectedFile.toString())
+        );
 
-        expect(importedContent).to.not.contains('\n');
-        expect(importedJson)
-          .excludingEvery('uuid')
-          .to.deep.equal(expectedContent);
+        ok(!importedContent.includes('\n'));
+        deepStrictEqual(importedJson, expectedContent);
       });
   });
 
@@ -148,16 +158,16 @@ describe('Import command', () => {
           './tmp/import-yaml-file-prettified.json'
         );
         const importedContent = importedFile.toString();
-        const importedJson = JSON.parse(importedContent);
+        const importedJson = clearAllUuids(JSON.parse(importedContent));
         const expectedFile = await fs.readFile(
           './test/data/envs/petstore-imported.json'
         );
-        const expectedContent = JSON.parse(expectedFile.toString());
+        const expectedContent = clearAllUuids(
+          JSON.parse(expectedFile.toString())
+        );
 
-        expect(importedContent).to.contains('{\n  ');
-        expect(importedJson)
-          .excludingEvery('uuid')
-          .to.deep.equal(expectedContent);
+        ok(importedContent.includes('{\n  '));
+        deepStrictEqual(importedJson, expectedContent);
       });
   });
 
@@ -177,16 +187,16 @@ describe('Import command', () => {
       .it('should successfully import', async () => {
         const importedFile = await fs.readFile('./tmp/import-url-file.json');
         const importedContent = importedFile.toString();
-        const importedJson = JSON.parse(importedContent);
+        const importedJson = clearAllUuids(JSON.parse(importedContent));
         const expectedFile = await fs.readFile(
           './test/data/envs/petstore-imported.json'
         );
-        const expectedContent = JSON.parse(expectedFile.toString());
+        const expectedContent = clearAllUuids(
+          JSON.parse(expectedFile.toString())
+        );
 
-        expect(importedContent).to.not.contains('\n');
-        expect(importedJson)
-          .excludingEvery('uuid')
-          .to.deep.equal(expectedContent);
+        ok(!importedContent.includes('\n'));
+        deepStrictEqual(importedJson, expectedContent);
       });
   });
 
@@ -209,16 +219,16 @@ describe('Import command', () => {
           './tmp/import-url-file-prettified.json'
         );
         const importedContent = importedFile.toString();
-        const importedJson = JSON.parse(importedContent);
+        const importedJson = clearAllUuids(JSON.parse(importedContent));
         const expectedFile = await fs.readFile(
           './test/data/envs/petstore-imported.json'
         );
-        const expectedContent = JSON.parse(expectedFile.toString());
+        const expectedContent = clearAllUuids(
+          JSON.parse(expectedFile.toString())
+        );
 
-        expect(importedContent).to.contains('{\n  ');
-        expect(importedJson)
-          .excludingEvery('uuid')
-          .to.deep.equal(expectedContent);
+        ok(importedContent.includes('{\n  '));
+        deepStrictEqual(importedJson, expectedContent);
       });
   });
 });

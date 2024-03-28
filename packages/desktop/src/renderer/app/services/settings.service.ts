@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Environment, IsEqual } from '@mockoon/commons';
+import {
+  Environment,
+  IsEqual,
+  ReorderAction,
+  moveItemAtTarget
+} from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import {
   debounceTime,
@@ -18,7 +23,11 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
+import {
+  EnvironmentsCategories,
+  FileWatcherOptions,
+  Settings
+} from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -161,5 +170,23 @@ export class SettingsService {
         this.updateSettings({ collapsedFolders });
       }
     }
+  }
+
+  /**
+   * Reorganize environments categories
+   *
+   * @param reorderAction
+   */
+  public reorganizeEnvironmentsCategories(
+    reorderAction: ReorderAction<string>
+  ) {
+    this.updateSettings({
+      environmentsCategoriesOrder: moveItemAtTarget<EnvironmentsCategories>(
+        this.store.get('settings').environmentsCategoriesOrder,
+        reorderAction.reorderActionType,
+        reorderAction.sourceId as string,
+        reorderAction.targetId as string
+      )
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { match, ok, strictEqual } from 'assert';
 import { format as dateFormat } from 'date-fns';
 import { SetFakerSeed } from '../../../src';
 import { TemplateParser } from '../../../src/libs/template-parser';
@@ -22,7 +22,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
 
     it('should return default values depending on the string value', () => {
@@ -36,7 +36,7 @@ describe('Template parser', () => {
         request: { body: { prop1: 'defaultvalue' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('defaultvalue');
+      strictEqual(parseResult, 'defaultvalue');
     });
 
     it('should return different values depending on the index', () => {
@@ -50,7 +50,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0John1Peter');
+      strictEqual(parseResult, '0John1Peter');
     });
 
     it('should return different values depending on the boolean value', () => {
@@ -64,7 +64,7 @@ describe('Template parser', () => {
         request: { body: { prop1: true } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
 
     it('should return different values depending on the boolean value', () => {
@@ -78,7 +78,7 @@ describe('Template parser', () => {
         request: { body: { prop1: false } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('defaultvalue');
+      strictEqual(parseResult, 'defaultvalue');
     });
   });
 
@@ -93,7 +93,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('testtest');
+      strictEqual(parseResult, 'testtest');
     });
 
     it('should concat two strings and repeat index', () => {
@@ -107,7 +107,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test0test');
+      strictEqual(parseResult, 'test0test');
     });
 
     it('should concat two strings and the result of a helper', () => {
@@ -121,7 +121,7 @@ describe('Template parser', () => {
         request: { body: { id: '123' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test123test');
+      strictEqual(parseResult, 'test123test');
     });
 
     it('should concat two strings and number', () => {
@@ -134,7 +134,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test123test');
+      strictEqual(parseResult, 'test123test');
     });
 
     it('should concat object path to retrieve body array items', () => {
@@ -148,7 +148,7 @@ describe('Template parser', () => {
         request: { body: { a: [{ item: 10 }, { item: 20 }] } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('item_10item_20');
+      strictEqual(parseResult, 'item_10item_20');
     });
   });
 
@@ -163,7 +163,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('testvalue');
+      strictEqual(parseResult, 'testvalue');
     });
 
     it('should set a variable to a number', () => {
@@ -176,7 +176,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('123');
+      strictEqual(parseResult, '123');
     });
 
     it('should set a variable value to body helper result', () => {
@@ -191,7 +191,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0d35618e-5e85-4c09-864d-6d63973271c8');
+      strictEqual(parseResult, '0d35618e-5e85-4c09-864d-6d63973271c8');
     });
 
     it('should set a variable value to oneOf helper result', () => {
@@ -204,7 +204,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('item1');
+      strictEqual(parseResult, 'item1');
     });
 
     it('should set a variable and use it in another helper', () => {
@@ -218,7 +218,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('testtesttesttesttest');
+      strictEqual(parseResult, 'testtesttesttesttest');
     });
 
     it('should set a variable in a different scope: repeat', () => {
@@ -232,7 +232,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('01234');
+      strictEqual(parseResult, '01234');
     });
 
     it('should set a variable in root scope and child scope: repeat', () => {
@@ -246,7 +246,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test0test1test2test3test4test');
+      strictEqual(parseResult, 'test0test1test2test3test4test');
     });
 
     it('should set variables in two nested repeat', () => {
@@ -260,7 +260,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('Item:25Child:56parent:25');
+      strictEqual(parseResult, 'Item:25Child:56parent:25');
     });
 
     it('should set variables in a each', () => {
@@ -274,7 +274,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('12');
+      strictEqual(parseResult, '12');
     });
 
     it('should set variables in a each in a repeat', () => {
@@ -288,7 +288,8 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         'repeatvarvalue1repeatvarvalue2repeatvarvalue1repeatvarvalue2'
       );
     });
@@ -304,7 +305,8 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         'each1varvalue1each1varvalue2each1varvalue1each1varvalue2'
       );
     });
@@ -319,7 +321,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should not set a variable if no name provided', () => {
@@ -332,7 +334,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
   });
 
@@ -347,7 +349,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should get a variable from simple var name', () => {
@@ -360,7 +362,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('testvalue');
+      strictEqual(parseResult, 'testvalue');
     });
 
     it('should get a variable from dynamically built var name', () => {
@@ -374,7 +376,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('testvalue');
+      strictEqual(parseResult, 'testvalue');
     });
 
     it('should get a variable from dynamically built var name', () => {
@@ -387,7 +389,7 @@ describe('Template parser', () => {
         request: { body: { prop1: 'testvar' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('testvalue');
+      strictEqual(parseResult, 'testvalue');
     });
   });
 
@@ -402,7 +404,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return an empty string if given the wrong amount of arguments', () => {
@@ -416,7 +418,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return a date using a the default format', () => {
@@ -430,7 +432,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('2022');
+      strictEqual(parseResult, '2022');
     });
 
     it('should return a date using a given format', () => {
@@ -444,7 +446,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('2022-02-01');
+      strictEqual(parseResult, '2022-02-01');
     });
 
     it('should return a date when using queryParams', () => {
@@ -464,7 +466,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('2022');
+      strictEqual(parseResult, '2022');
     });
   });
 
@@ -479,7 +481,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return an empty string if given the wrong amount of arguments', () => {
@@ -493,7 +495,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return a date using a given format', () => {
@@ -507,7 +509,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('2022');
+      strictEqual(parseResult, '2022');
     });
 
     it('should return a date using a given format, when a Date object is passed as a param', () => {
@@ -522,7 +524,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('2022');
+      strictEqual(parseResult, '2022');
     });
   });
 
@@ -541,7 +543,7 @@ describe('Template parser', () => {
       // When invalid parameters are passed, the default should just be to return the current date with no shift.
       const date = new Date();
       const dateString = dateFormat(date, "yyyy-MM-dd'T'HH:mm");
-      expect(parseResult).to.match(new RegExp(dateString + '.*'));
+      match(parseResult, new RegExp(dateString + '.*'));
     });
 
     it('should return a date shifted the specified amount of days from now.', () => {
@@ -559,7 +561,7 @@ describe('Template parser', () => {
       date.setDate(date.getDate() + 2);
       // As our reference date here may differ slightly from the one interally used in the helper, it's more reliable to just compare the date/time with the seconds (and lower) excluded.
       const dateString = dateFormat(date, "yyyy-MM-dd'T'HH:mm");
-      expect(parseResult).to.match(new RegExp(dateString + '.*'));
+      match(parseResult, new RegExp(dateString + '.*'));
     });
 
     it('should return a date shifted by the requested amount from a specified start date.', () => {
@@ -573,7 +575,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.match(/2021-06-03.*/);
+      match(parseResult, /2021-06-03.*/);
     });
 
     it('should return a date shifted by the requested amount from the specified start date in the specified format.', () => {
@@ -588,7 +590,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.equals('2021-06-03');
+      strictEqual(parseResult, '2021-06-03');
     });
 
     it('should return a date time shifted by the requested amount from the specified start date in the specified format.', () => {
@@ -603,7 +605,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.equals('2021-05-09T11:47:03');
+      strictEqual(parseResult, '2021-05-09T11:47:03');
     });
 
     it('should return a date time shifted by the requested amount when another helper is used as the date source (safestring).', () => {
@@ -618,7 +620,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.equals('2021-01-01T06:00:00');
+      strictEqual(parseResult, '2021-01-01T06:00:00');
     });
 
     it('should return a date time shifted by the requested amount when another helper is used as the date and months and days source (safestring).', () => {
@@ -633,7 +635,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.equals('2021-02-02');
+      strictEqual(parseResult, '2021-02-02');
     });
   });
 
@@ -649,7 +651,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return false if a string does not include a search string', () => {
@@ -663,7 +665,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should not fail when passing no parameters', () => {
@@ -677,7 +679,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should not fail when passing only one parameter', () => {
@@ -691,7 +693,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
   });
 
@@ -707,7 +709,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('data');
+      strictEqual(parseResult, 'data');
     });
 
     it('should work correctly when from and length parameters are passed as strings', () => {
@@ -721,7 +723,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('data');
+      strictEqual(parseResult, 'data');
     });
 
     it('should return a substring of the provided string to the end when the length parameter is excluded (from as a number)', () => {
@@ -735,7 +737,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('data');
+      strictEqual(parseResult, 'data');
     });
 
     it('should return a substring of the provided string to the end when the length parameter is excluded (from as a string)', () => {
@@ -749,7 +751,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('data');
+      strictEqual(parseResult, 'data');
     });
 
     it('should work correctly when variables are passed as parameters as numbers', () => {
@@ -764,7 +766,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('data');
+      strictEqual(parseResult, 'data');
     });
 
     it('should work correctly when variables are passed as parameters as strings', () => {
@@ -779,7 +781,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('data');
+      strictEqual(parseResult, 'data');
     });
 
     it('should work correctly when other helpers are used for parameters as numbers', () => {
@@ -793,7 +795,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('data');
+      strictEqual(parseResult, 'data');
     });
 
     it('should work correctly when other helpers are used for parameters as strings', () => {
@@ -807,7 +809,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('data');
+      strictEqual(parseResult, 'data');
     });
 
     it('should not fail when passing no parameters', () => {
@@ -821,7 +823,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should not fail when passing only one parameter', () => {
@@ -835,7 +837,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('testdata');
+      strictEqual(parseResult, 'testdata');
     });
   });
 
@@ -851,7 +853,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('I,love,dolphins');
+      strictEqual(parseResult, 'I,love,dolphins');
     });
 
     it('should split a string using commas', () => {
@@ -865,7 +867,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('I too, love dolphins');
+      strictEqual(parseResult, 'I too, love dolphins');
     });
 
     it('should split a string using spaces by default', () => {
@@ -879,7 +881,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('I,love,dolphins');
+      strictEqual(parseResult, 'I,love,dolphins');
     });
 
     it('should split a string using spaces when given anything else but a string as separator', () => {
@@ -893,7 +895,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('I,love,dolphins');
+      strictEqual(parseResult, 'I,love,dolphins');
     });
 
     it('should return an empty string when given anything else but a string as data', () => {
@@ -907,7 +909,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should be usable within a #each', () => {
@@ -921,7 +923,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('dolphin,dolphin,dolphin,');
+      strictEqual(parseResult, 'dolphin,dolphin,dolphin,');
     });
 
     it('should be compatible with SafeString (queryParam)', () => {
@@ -936,7 +938,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('item123,item456,item789,');
+      strictEqual(parseResult, 'item123,item456,item789,');
     });
   });
 
@@ -952,7 +954,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should lowercase a string', () => {
@@ -966,7 +968,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('abcd');
+      strictEqual(parseResult, 'abcd');
     });
 
     it('should be usable within a #switch', () => {
@@ -981,7 +983,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
 
     it('should be compatible with SafeString (queryParam)', () => {
@@ -995,7 +997,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('abcd');
+      strictEqual(parseResult, 'abcd');
     });
   });
 
@@ -1011,7 +1013,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should uppercase a string', () => {
@@ -1025,7 +1027,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('ABCD');
+      strictEqual(parseResult, 'ABCD');
     });
 
     it('should be usable within a #switch', () => {
@@ -1040,7 +1042,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('value1');
+      strictEqual(parseResult, 'value1');
     });
 
     it('should be compatible with SafeString (queryParam)', () => {
@@ -1054,7 +1056,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('ABCD');
+      strictEqual(parseResult, 'ABCD');
     });
   });
 
@@ -1070,7 +1072,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should parse string and return an int', () => {
@@ -1084,7 +1086,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should parse string and return an int', () => {
@@ -1097,7 +1099,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('10');
+      strictEqual(parseResult, '10');
     });
   });
 
@@ -1113,7 +1115,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('Mockoon is nice');
+      strictEqual(parseResult, 'Mockoon is nice');
     });
 
     it('should ignore non Array values and return same value', () => {
@@ -1127,7 +1129,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('I too, love dolphins');
+      strictEqual(parseResult, 'I too, love dolphins');
     });
 
     it('should use comma separator if no separator was provided', () => {
@@ -1141,7 +1143,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('Water, Tea, Coffee');
+      strictEqual(parseResult, 'Water, Tea, Coffee');
     });
   });
 
@@ -1157,7 +1159,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return the stringified array (same content)', () => {
@@ -1171,7 +1173,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('Mockoon,is,very,nice');
+      strictEqual(parseResult, 'Mockoon,is,very,nice');
     });
 
     it('should return the stringified first two elements', () => {
@@ -1185,7 +1187,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('Mockoon,is');
+      strictEqual(parseResult, 'Mockoon,is');
     });
 
     it('should return the stringified last two elements', () => {
@@ -1199,7 +1201,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('very,nice');
+      strictEqual(parseResult, 'very,nice');
     });
   });
 
@@ -1215,7 +1217,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('4');
+      strictEqual(parseResult, '4');
     });
 
     it('should return the index of a matching substring from a given starting position', () => {
@@ -1229,7 +1231,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('8');
+      strictEqual(parseResult, '8');
     });
 
     it('should still work correctly if the position parameter is passed as a string', () => {
@@ -1243,7 +1245,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('8');
+      strictEqual(parseResult, '8');
     });
 
     it('should be possible to search for a number', () => {
@@ -1257,7 +1259,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('10');
+      strictEqual(parseResult, '10');
     });
 
     it('should be possible to search for a number (as a string)', () => {
@@ -1271,7 +1273,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('10');
+      strictEqual(parseResult, '10');
     });
 
     it('Can return the index from a previously set variable', () => {
@@ -1286,7 +1288,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('10');
+      strictEqual(parseResult, '10');
     });
 
     it('Can return the index from a previously set variable using a variable for the search string', () => {
@@ -1301,7 +1303,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('10');
+      strictEqual(parseResult, '10');
     });
 
     it('Can return the index from a body property', () => {
@@ -1317,7 +1319,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('6');
+      strictEqual(parseResult, '6');
     });
 
     it('Can return the index from a body property with a position', () => {
@@ -1337,7 +1339,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('16');
+      strictEqual(parseResult, '16');
     });
 
     it('should not fail when passing no parameters', () => {
@@ -1351,7 +1353,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should not fail when passing only one parameter', () => {
@@ -1365,7 +1367,7 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
 
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
   });
 
@@ -1383,7 +1385,7 @@ describe('Template parser', () => {
       });
 
       const count = (parseResult.match(/value/g) || []).length;
-      expect(count).to.equal(1);
+      strictEqual(count, 1);
     });
 
     it('should return 1 to 3 elements', () => {
@@ -1399,12 +1401,10 @@ describe('Template parser', () => {
       });
 
       const countItems = (parseResult.match(/value/g) || []).length;
-      expect(countItems).is.least(1);
-      expect(countItems).is.most(3);
+      ok(countItems >= 1 && countItems <= 3);
 
       const countSeparators = (parseResult.match(/,/g) || []).length;
-      expect(countSeparators).is.least(0);
-      expect(countSeparators).is.most(2);
+      ok(countSeparators >= 0 && countSeparators <= 2);
     });
 
     it('should return 1 to 3 elements as array', () => {
@@ -1418,14 +1418,12 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult.match(/^\[.*\]$/)?.length).to.equal(1);
+      strictEqual(parseResult.match(/^\[.*\]$/)?.length, 1);
       const countItems = (parseResult.match(/value/g) || []).length;
-      expect(countItems).is.least(1);
-      expect(countItems).is.most(3);
+      ok(countItems >= 1 && countItems <= 3);
 
       const countSeparators = (parseResult.match(/,/g) || []).length;
-      expect(countSeparators).is.least(0);
-      expect(countSeparators).is.most(2);
+      ok(countSeparators >= 0 && countSeparators <= 2);
     });
 
     it('should return 1 element stringified', () => {
@@ -1438,7 +1436,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.equal('[&quot;value1&quot;]');
+      strictEqual(parseResult, '[&quot;value1&quot;]');
     });
 
     it('should return 0 element stringified', () => {
@@ -1451,7 +1449,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.equal('[]');
+      strictEqual(parseResult, '[]');
     });
   });
 
@@ -1466,7 +1464,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('3');
+      strictEqual(parseResult, '3');
     });
 
     it('should return the length of a string', () => {
@@ -1479,7 +1477,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('6');
+      strictEqual(parseResult, '6');
     });
 
     it('should return 0 if value is not an array', () => {
@@ -1492,7 +1490,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should return 0 if no value was provided', () => {
@@ -1505,7 +1503,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
   });
 
@@ -1520,7 +1518,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('YWJj');
+      strictEqual(parseResult, 'YWJj');
     });
 
     it('should encode body property to base64', () => {
@@ -1533,7 +1531,7 @@ describe('Template parser', () => {
         request: { body: { prop1: '123' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('MTIz');
+      strictEqual(parseResult, 'MTIz');
     });
 
     it('should encode block to base64', () => {
@@ -1546,7 +1544,7 @@ describe('Template parser', () => {
         request: { body: { prop1: '123' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('dmFsdWU6IDEyMw==');
+      strictEqual(parseResult, 'dmFsdWU6IDEyMw==');
     });
   });
 
@@ -1562,7 +1560,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
+      strictEqual(parseResult, 'abcdefghijklmnopqrstuvwxyz1234567890');
     });
 
     it('should decode body property from base64', () => {
@@ -1577,7 +1575,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
+      strictEqual(parseResult, 'abcdefghijklmnopqrstuvwxyz1234567890');
     });
 
     it('should decode block from base64', () => {
@@ -1591,7 +1589,7 @@ describe('Template parser', () => {
         request: { body: { prop1: 'yc3R1dnd4eXoxMjM0NTY3ODkw' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('abcdefghijklmnopqrstuvwxyz1234567890');
+      strictEqual(parseResult, 'abcdefghijklmnopqrstuvwxyz1234567890');
     });
   });
 
@@ -1606,7 +1604,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('2');
+      strictEqual(parseResult, '2');
     });
 
     it('should add the number described by a string to another number described by a string', () => {
@@ -1619,7 +1617,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('2');
+      strictEqual(parseResult, '2');
     });
 
     it('should return the base value when given a single parameter', () => {
@@ -1632,7 +1630,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return an empty string when given no arguments', () => {
@@ -1645,7 +1643,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should add the body property to the initial value', () => {
@@ -1658,7 +1656,7 @@ describe('Template parser', () => {
         request: { body: { prop1: '123' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('124');
+      strictEqual(parseResult, '124');
     });
 
     it('should omit arguments that are NaN', () => {
@@ -1671,7 +1669,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('6');
+      strictEqual(parseResult, '6');
     });
   });
 
@@ -1686,7 +1684,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should subtract the number described by a string to another number described by a string', () => {
@@ -1699,7 +1697,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should return the base value when given a single parameter', () => {
@@ -1712,7 +1710,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return an empty string when given no arguments', () => {
@@ -1725,7 +1723,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should subtract the body property to the initial value', () => {
@@ -1738,7 +1736,7 @@ describe('Template parser', () => {
         request: { body: { prop1: '123' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('-122');
+      strictEqual(parseResult, '-122');
     });
 
     it('should omit arguments that are NaN', () => {
@@ -1751,7 +1749,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
   });
 
@@ -1766,7 +1764,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('6');
+      strictEqual(parseResult, '6');
     });
 
     it('should multiply the number described by a string by another number described by a string', () => {
@@ -1779,7 +1777,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('6');
+      strictEqual(parseResult, '6');
     });
 
     it('should return the base value when given a single parameter', () => {
@@ -1792,7 +1790,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return an empty string when given no arguments', () => {
@@ -1805,7 +1803,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should multiply the body property by the initial value', () => {
@@ -1818,7 +1816,7 @@ describe('Template parser', () => {
         request: { body: { prop1: '123' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('246');
+      strictEqual(parseResult, '246');
     });
 
     it('should omit arguments that are NaN', () => {
@@ -1831,7 +1829,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('6');
+      strictEqual(parseResult, '6');
     });
   });
 
@@ -1846,7 +1844,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('2');
+      strictEqual(parseResult, '2');
     });
 
     it('should divide the number described by a string by another number described by a string', () => {
@@ -1859,7 +1857,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('3');
+      strictEqual(parseResult, '3');
     });
 
     it('should return the base value when given a single parameter', () => {
@@ -1872,7 +1870,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return an empty string when given no arguments', () => {
@@ -1885,7 +1883,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should divide the initial value by the body property', () => {
@@ -1898,7 +1896,7 @@ describe('Template parser', () => {
         request: { body: { prop1: '123' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('2');
+      strictEqual(parseResult, '2');
     });
 
     it('should return an emtpy string when attempting to divide by 0', () => {
@@ -1911,7 +1909,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should omit arguments that are NaN', () => {
@@ -1924,7 +1922,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
   });
 
@@ -1939,7 +1937,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should compute the modulo x (passed as a string) of a number described by a string', () => {
@@ -1952,7 +1950,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should return an empty string when given a single parameter', () => {
@@ -1965,7 +1963,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return an empty string when given no arguments', () => {
@@ -1978,7 +1976,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should compute the modulo of the initial value by the body property', () => {
@@ -1991,7 +1989,7 @@ describe('Template parser', () => {
         request: { body: { prop1: '2' } } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should return an empty string when attempting to compute modulo 0', () => {
@@ -2004,7 +2002,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
   });
 
@@ -2019,7 +2017,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should ceil a number described by a string', () => {
@@ -2032,7 +2030,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return the base value when given an integer', () => {
@@ -2045,7 +2043,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return an empty string when given no arguments', () => {
@@ -2058,7 +2056,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
   });
 
@@ -2073,7 +2071,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should floor a number described by a string', () => {
@@ -2086,7 +2084,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should return the base value when given an integer', () => {
@@ -2099,7 +2097,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should return an empty string when given no arguments', () => {
@@ -2112,7 +2110,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
   });
 
@@ -2127,7 +2125,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1');
+      strictEqual(parseResult, '1');
     });
 
     it('should round a number down when smaller than .5', () => {
@@ -2140,7 +2138,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should take a string', () => {
@@ -2153,7 +2151,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should return empty string if no parameters', () => {
@@ -2166,7 +2164,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
   });
 
@@ -2181,7 +2179,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('1.11');
+      strictEqual(parseResult, '1.11');
     });
 
     it('should delete all decimal places if no fix value is given', () => {
@@ -2194,7 +2192,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('2');
+      strictEqual(parseResult, '2');
     });
 
     it('should return 0 if no values are given', () => {
@@ -2207,7 +2205,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
 
     it('should return 0 if wrong values are given as number', () => {
@@ -2220,7 +2218,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('0');
+      strictEqual(parseResult, '0');
     });
   });
 
@@ -2235,7 +2233,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return false if first number is smaller than second number', () => {
@@ -2248,7 +2246,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return false if first number is equal to the second number', () => {
@@ -2261,7 +2259,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
   });
 
@@ -2276,7 +2274,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return false if first number is smaller than second number', () => {
@@ -2289,7 +2287,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return false if first number is equal to the second number', () => {
@@ -2302,7 +2300,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
   });
 
@@ -2317,7 +2315,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return false if first number is smaller than second number', () => {
@@ -2330,7 +2328,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return true if first number is equal to the second number', () => {
@@ -2343,7 +2341,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
   });
 
@@ -2358,7 +2356,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return false if second number is bigger than second number', () => {
@@ -2371,7 +2369,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return false if first number is equal to the second number', () => {
@@ -2384,7 +2382,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
   });
 
@@ -2399,7 +2397,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return false if second number is bigger than second number', () => {
@@ -2412,7 +2410,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return true if first number is equal to the second number', () => {
@@ -2425,7 +2423,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
   });
 
@@ -2440,7 +2438,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return false if second number is bigger than second number', () => {
@@ -2453,7 +2451,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return true if first number is equal to the second number', () => {
@@ -2466,7 +2464,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return false if first number is number and second is string', () => {
@@ -2479,7 +2477,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
 
     it('should return true if first value is string equal to second string', () => {
@@ -2492,7 +2490,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('true');
+      strictEqual(parseResult, 'true');
     });
 
     it('should return false if first value is string and not equal to second string', () => {
@@ -2505,7 +2503,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('false');
+      strictEqual(parseResult, 'false');
     });
   });
 
@@ -2527,9 +2525,12 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(`{
+      strictEqual(
+        parseResult,
+        `{
   "data": "super"
-}`);
+}`
+      );
     });
   });
 
@@ -2544,7 +2545,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return nothing if first string parameter is empty', () => {
@@ -2557,7 +2558,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return nothing if first parameter is not a string', () => {
@@ -2570,7 +2571,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return content if string evaluated to true', () => {
@@ -2583,7 +2584,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value');
+      strictEqual(parseResult, 'value');
     });
 
     it('should return content if string evaluated to number verifying equality', () => {
@@ -2596,7 +2597,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('value');
+      strictEqual(parseResult, 'value');
     });
 
     it('should return data property if string evaluated to object', () => {
@@ -2609,7 +2610,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test');
+      strictEqual(parseResult, 'test');
     });
 
     it('should return array element when used with oneOf and string evaluated as an array', () => {
@@ -2629,7 +2630,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('5');
+      strictEqual(parseResult, '5');
     });
 
     it('should return correct data property when evaluating string coming from a SafeString helper (queryParam)', () => {
@@ -2646,7 +2647,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('test');
+      strictEqual(parseResult, 'test');
     });
   });
 
@@ -2661,7 +2662,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return string as is if no length and no padchar', () => {
@@ -2678,7 +2679,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('123');
+      strictEqual(parseResult, '123');
     });
 
     it('should return string padded with spaces if no padchar', () => {
@@ -2695,7 +2696,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('       123');
+      strictEqual(parseResult, '       123');
     });
 
     it('should return string padded with chosen char', () => {
@@ -2712,7 +2713,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('*******123');
+      strictEqual(parseResult, '*******123');
     });
   });
 
@@ -2727,7 +2728,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return string as is if no length and no padchar', () => {
@@ -2744,7 +2745,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('123');
+      strictEqual(parseResult, '123');
     });
 
     it('should return string padded with spaces if no padchar', () => {
@@ -2761,7 +2762,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('123       ');
+      strictEqual(parseResult, '123       ');
     });
 
     it('should return string padded with chosen char', () => {
@@ -2778,7 +2779,7 @@ describe('Template parser', () => {
         } as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('123*******');
+      strictEqual(parseResult, '123*******');
     });
   });
 
@@ -2793,7 +2794,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return empty string if first param is not an array', () => {
@@ -2806,7 +2807,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('');
+      strictEqual(parseResult, '');
     });
 
     it('should return a stringified object if choses from array of object and stringify is true', () => {
@@ -2826,7 +2827,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('{"id":1,"value":"value1"}');
+      strictEqual(parseResult, '{"id":1,"value":"value1"}');
     });
 
     it('should return an [object Object] string if choses from array of object and stringify is false', () => {
@@ -2846,7 +2847,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('[object Object]');
+      strictEqual(parseResult, '[object Object]');
     });
   });
 
@@ -2861,7 +2862,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal('{}');
+      strictEqual(parseResult, '{}');
     });
 
     it('should return valid key=value object if key=value passed', () => {
@@ -2874,9 +2875,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
-        JSON.stringify({ key: 'value' }, null, 2)
-      );
+      strictEqual(parseResult, JSON.stringify({ key: 'value' }, null, 2));
     });
 
     it('should return valid multiple keys object if multiple keys passed', () => {
@@ -2890,7 +2889,8 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         JSON.stringify(
           {
             numericKey: 5,
@@ -2915,7 +2915,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(JSON.stringify([1, 3, true], null, 2));
+      strictEqual(parseResult, JSON.stringify([1, 3, true], null, 2));
     });
 
     it('should return correctly filtered array with mixed data OR condition', () => {
@@ -2929,9 +2929,7 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
-        JSON.stringify([{ key: 'value' }, 3], null, 2)
-      );
+      strictEqual(parseResult, JSON.stringify([{ key: 'value' }, 3], null, 2));
     });
 
     it('should return correctly filtered array with mixed AND condition', () => {
@@ -2945,7 +2943,8 @@ describe('Template parser', () => {
         request: {} as any,
         envVarsPrefix: ''
       });
-      expect(parseResult).to.be.equal(
+      strictEqual(
+        parseResult,
         JSON.stringify([{ b: 'b1', a: 'a1' }, 3], null, 2)
       );
     });

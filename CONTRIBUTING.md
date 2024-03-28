@@ -77,11 +77,15 @@ Branches naming convention:
 
 ## Adding migrations
 
-When a feature or bugfix requires a change in the data model (`Environment`, `Route`, `RouteResponse`, etc.) you must add a new migration:
+When a feature or bugfix requires a change in the data model (`Environment`, `Route`, `RouteResponse`, etc.) you may have to add a new migration:
 
 - Add a new migration function in the @mockoon/commons library `./packages/commons/src/libs/migrations.ts` file.
 - Add a new test for the migration in the same library `./packages/commons/test/data/migrations/{MIGRATION_ID}/environments.json` and `./packages/commons//test/suites/migrations.spec.ts` files.
-- Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' `environments.json` samples to the latest migration. Please note that some folders/sample files are excluded from the migration on purpose.
+- Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' JSON samples (usually located in `./packages/{package_name}/test/data/...`) to the latest migration. Please note that some folders/sample files are excluded from the migration on purpose.
+
+Some data model changes may not require a migration, for example, adding a new choice in an enum (translated in the UI by a dropdown).
+
+> ⚠️ All data model changes must be release in a **major** version. In any case, please discuss the migration with the maintainers.
 
 ## Lint and format
 
@@ -100,15 +104,31 @@ After the packages are build, you can run the tests necessary to your changes:
 
 - `npm run test:commons`
 - `npm run test:commons-server`
-- `npm run test:libs`
+- `npm run test:libs` (includes `commons` and `commons-server`)
 - `npm run test:serverless`
 - `npm run test:cli`
-- `npm run test:desktop` or `npm run test:desktop -- -- --spec "filename.spec.ts"` from the monorepo root level to run one test file.
-- `npm run test:desktop:packaged:win`
-- `npm run test:desktop:packaged:mac`
-- `npm run test:desktop:packaged:linux`
 
-All tests will also be run on each commit or pull request in the CI environment.
+To run the desktop application tests, first you need to package the application for your platform. Run one of the following commands:
+
+- `package:desktop:test:win`
+- `package:desktop:test:mac`
+- `package:desktop:test:linux`
+
+This will create a packaged version of the desktop application (without installer) in the `./packages/desktop/packages/{win-unpacked|mac|linux-unpacked}` folder.
+
+You can then run the tests with one of the following commands:
+
+- `test:desktop:win`
+- `test:desktop:mac`
+- `test:desktop:linux`
+
+You can also run a single test file with the following commands (from the monorepo root level):
+
+- `npm run test:desktop:{win|mac|linux} -- -- --spec "filename.spec.ts"`
+
+All tests will also be run on each commit or pull request in the CI environment. You can perfectly rely on the CI to check if your changes are breaking the tests or not.
+
+> ℹ️ Note: Since update v7.0.0 where dependencies were update (especially Webdriverio and Electron 29), running the desktop test against an unpackaged version of the application using the `node_modules` binary (e.g. `node_modules/.bin/electron app=dist/app.js`) is not working anymore.
 
 ## Open a pull request
 

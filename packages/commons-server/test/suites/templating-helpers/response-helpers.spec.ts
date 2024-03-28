@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { Response } from 'express';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
@@ -23,7 +23,7 @@ describe('Response helpers', () => {
         response: responseMock,
         envVarsPrefix: ''
       });
-      expect(responseMock.locals.statusCode).to.be.undefined;
+      strictEqual(responseMock.locals.statusCode, undefined);
     });
 
     it('should not set the statusCode if param missing', () => {
@@ -37,7 +37,7 @@ describe('Response helpers', () => {
         response: responseMock,
         envVarsPrefix: ''
       });
-      expect(responseMock.locals.statusCode).to.be.undefined;
+      strictEqual(responseMock.locals.statusCode, undefined);
     });
 
     it('should not set the statusCode if param is NaN', () => {
@@ -51,7 +51,7 @@ describe('Response helpers', () => {
         response: responseMock,
         envVarsPrefix: ''
       });
-      expect(responseMock.locals.statusCode).to.be.undefined;
+      strictEqual(responseMock.locals.statusCode, undefined);
     });
 
     it('should set status code if string passed', () => {
@@ -65,7 +65,7 @@ describe('Response helpers', () => {
         response: responseMock,
         envVarsPrefix: ''
       });
-      expect(responseMock.locals.statusCode).to.be.equal(404);
+      strictEqual(responseMock.locals.statusCode, 404);
     });
 
     it('should set status code if number passed', () => {
@@ -79,7 +79,7 @@ describe('Response helpers', () => {
         response: responseMock,
         envVarsPrefix: ''
       });
-      expect(responseMock.locals.statusCode).to.be.equal(404);
+      strictEqual(responseMock.locals.statusCode, 404);
     });
 
     it('should not set status code as condition is not fulfilled', () => {
@@ -93,7 +93,7 @@ describe('Response helpers', () => {
         response: responseMock,
         envVarsPrefix: ''
       });
-      expect(responseMock.locals.statusCode).to.be.undefined;
+      strictEqual(responseMock.locals.statusCode, undefined);
     });
   });
 });

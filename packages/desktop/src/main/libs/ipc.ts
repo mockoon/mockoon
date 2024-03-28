@@ -1,5 +1,6 @@
 import { Environment, Environments } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
+import { createHash } from 'crypto';
 import {
   BrowserWindow,
   Menu,
@@ -22,10 +23,7 @@ import {
   IPCMainListenerChannels
 } from 'src/main/constants/ipc.constants';
 import { logError, logInfo } from 'src/main/libs/logs';
-import {
-  toggleEnvironmentMenuItems,
-  toggleRouteMenuItems
-} from 'src/main/libs/menu';
+import { updateMenuState } from 'src/main/libs/menu';
 import { showFolderInExplorer } from 'src/main/libs/paths';
 import { ServerInstance } from 'src/main/libs/server-management';
 import {
@@ -45,7 +43,11 @@ import {
   handleZoomOut,
   handleZoomReset
 } from 'src/main/libs/zoom';
-import { Settings } from 'src/shared/models/settings.model';
+import { MenuStateUpdatePayload } from 'src/shared/models/ipc.model';
+import {
+  EnvironmentDescriptor,
+  Settings
+} from 'src/shared/models/settings.model';
 
 declare const IS_TESTING: boolean;
 
@@ -97,21 +99,12 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     mainWindow.hide();
   });
 
-  ipcMain.on('APP_DISABLE_ENVIRONMENT_MENU_ENTRIES', () => {
-    toggleEnvironmentMenuItems(false);
-  });
-
-  ipcMain.on('APP_ENABLE_ENVIRONMENT_MENU_ENTRIES', () => {
-    toggleEnvironmentMenuItems(true);
-  });
-
-  ipcMain.on('APP_DISABLE_ROUTE_MENU_ENTRIES', () => {
-    toggleRouteMenuItems(false);
-  });
-
-  ipcMain.on('APP_ENABLE_ROUTE_MENU_ENTRIES', () => {
-    toggleRouteMenuItems(true);
-  });
+  ipcMain.on(
+    'APP_UPDATE_MENU_STATE',
+    (event, state: MenuStateUpdatePayload) => {
+      updateMenuState(state);
+    }
+  );
 
   ipcMain.on('APP_LOGS', (event, data) => {
     if (data.type === 'info') {
@@ -174,12 +167,21 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.handle(
     'APP_WRITE_ENVIRONMENT_DATA',
-    async (event, data, path: string, storagePrettyPrint?: boolean) => {
-      unwatchEnvironmentFile(data.uuid);
+    async (
+      event,
+      data,
+      descriptor: EnvironmentDescriptor,
+      storagePrettyPrint?: boolean
+    ) => {
+      if (!descriptor.cloud) {
+        unwatchEnvironmentFile(data.uuid);
+      }
 
-      await writeJSONData(data, path, storagePrettyPrint);
+      await writeJSONData(data, descriptor.path, storagePrettyPrint);
 
-      watchEnvironmentFile(data.uuid, path);
+      if (!descriptor.cloud) {
+        watchEnvironmentFile(data.uuid, descriptor.path);
+      }
     }
   );
 
@@ -258,6 +260,10 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
     return parsedPath.name;
   });
+
+  ipcMain.handle('APP_GET_HASH', (event, str) =>
+    createHash('sha1').update(str, 'utf-8').digest('hex')
+  );
 
   ipcMain.handle(
     'APP_OPENAPI_CONVERT_FROM',

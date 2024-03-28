@@ -1,5 +1,5 @@
 import { Environment, ServerErrorCodes } from '@mockoon/commons';
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { MockoonServer } from '../../../src';
 import { getEnvironment } from '../../libs/environment';
 
@@ -14,7 +14,7 @@ describe('Server should handle bad hostnames', () => {
     environment.hostname = '1922.0.0.1';
     const server = new MockoonServer(environment);
     server.on('error', (errorCode) => {
-      expect(errorCode).to.equal(ServerErrorCodes.HOSTNAME_UNKNOWN);
+      strictEqual(errorCode, ServerErrorCodes.HOSTNAME_UNKNOWN);
       server.stop();
       done();
     });
@@ -27,7 +27,7 @@ describe('Server should handle bad hostnames', () => {
 
     const server = new MockoonServer(environment);
     server.on('error', (errorCode) => {
-      expect(errorCode).to.equal(ServerErrorCodes.HOSTNAME_UNAVAILABLE);
+      strictEqual(errorCode, ServerErrorCodes.HOSTNAME_UNAVAILABLE);
       server.stop();
       done();
     });
@@ -50,7 +50,7 @@ describe('Server should handle port errors', () => {
     const server1 = new MockoonServer(environment);
     server1.start();
     server.on('error', (errorCode) => {
-      expect(errorCode).to.equal(ServerErrorCodes.PORT_ALREADY_USED);
+      strictEqual(errorCode, ServerErrorCodes.PORT_ALREADY_USED);
       server1.stop();
       server.stop();
       done();

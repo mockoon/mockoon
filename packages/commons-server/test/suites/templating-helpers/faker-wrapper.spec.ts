@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { strictEqual, throws } from 'assert';
 import { SetFakerSeed } from '../../../src/libs/faker';
 import { TemplateParser } from '../../../src/libs/template-parser';
 
@@ -8,66 +8,82 @@ describe('Template parser: Faker wrapper', () => {
   });
 
   it('should throw if helper name is missing', () => {
-    expect(() => {
-      TemplateParser({
-        shouldOmitDataHelper: false,
-        content: '{{faker}}',
-        environment: {} as any,
-        processedDatabuckets: [],
-        globalVariables: {},
-        request: {} as any,
-        envVarsPrefix: ''
-      });
-    }).to.throw(
-      'Faker method name is missing (valid: "location.zipCode", "date.past", etc) line 1'
+    throws(
+      () => {
+        TemplateParser({
+          shouldOmitDataHelper: false,
+          content: '{{faker}}',
+          environment: {} as any,
+          processedDatabuckets: [],
+          globalVariables: {},
+          request: {} as any,
+          envVarsPrefix: ''
+        });
+      },
+      {
+        message:
+          'Faker method name is missing (valid: "location.zipCode", "date.past", etc) line 1'
+      }
     );
   });
 
   it('should throw if helper name is malformed', () => {
-    expect(() => {
-      TemplateParser({
-        shouldOmitDataHelper: false,
-        content: "{{faker 'random'}}",
-        environment: {} as any,
-        processedDatabuckets: [],
-        globalVariables: {},
-        request: {} as any,
-        envVarsPrefix: ''
-      });
-    }).to.throw(
-      'random is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
+    throws(
+      () => {
+        TemplateParser({
+          shouldOmitDataHelper: false,
+          content: "{{faker 'random'}}",
+          environment: {} as any,
+          processedDatabuckets: [],
+          globalVariables: {},
+          request: {} as any,
+          envVarsPrefix: ''
+        });
+      },
+      {
+        message:
+          'random is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
+      }
     );
   });
 
   it('should throw if helper name is malformed', () => {
-    expect(() => {
-      TemplateParser({
-        shouldOmitDataHelper: false,
-        content: "{{faker 'random.'}}",
-        environment: {} as any,
-        processedDatabuckets: [],
-        globalVariables: {},
-        request: {} as any,
-        envVarsPrefix: ''
-      });
-    }).to.throw(
-      'random. is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
+    throws(
+      () => {
+        TemplateParser({
+          shouldOmitDataHelper: false,
+          content: "{{faker 'random.'}}",
+          environment: {} as any,
+          processedDatabuckets: [],
+          globalVariables: {},
+          request: {} as any,
+          envVarsPrefix: ''
+        });
+      },
+      {
+        message:
+          'random. is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
+      }
     );
   });
 
   it('should throw if helper name does not exists', () => {
-    expect(() => {
-      TemplateParser({
-        shouldOmitDataHelper: false,
-        content: "{{faker 'donotexists.donotexists'}}",
-        environment: {} as any,
-        processedDatabuckets: [],
-        globalVariables: {},
-        request: {} as any,
-        envVarsPrefix: ''
-      });
-    }).to.throw(
-      'donotexists.donotexists is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
+    throws(
+      () => {
+        TemplateParser({
+          shouldOmitDataHelper: false,
+          content: "{{faker 'donotexists.donotexists'}}",
+          environment: {} as any,
+          processedDatabuckets: [],
+          globalVariables: {},
+          request: {} as any,
+          envVarsPrefix: ''
+        });
+      },
+      {
+        message:
+          'donotexists.donotexists is not a valid Faker method (valid: "location.zipCode", "date.past", etc) line 1'
+      }
     );
   });
 
@@ -81,7 +97,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('Hayley');
+    strictEqual(parseResult, 'Hayley');
   });
 
   it('should return value for helper with named parameters', () => {
@@ -94,7 +110,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('20');
+    strictEqual(parseResult, '20');
   });
 
   it('should return value for helper with arguments', () => {
@@ -107,7 +123,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('I');
+    strictEqual(parseResult, 'I');
   });
 
   it('should be able to use a string value in a switch', () => {
@@ -121,7 +137,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('Torey');
+    strictEqual(parseResult, 'Torey');
   });
 
   it('should be able to use a number value in a repeat', () => {
@@ -135,7 +151,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('testtesttesttesttest');
+    strictEqual(parseResult, 'testtesttesttesttest');
   });
 
   it('should be able to use a number value in a setvar and reuse the setvar', () => {
@@ -148,7 +164,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('5');
+    strictEqual(parseResult, '5');
   });
 
   it('should be able to use a number value in a setvar and reuse the variable in a helper requiring a number (int)', () => {
@@ -162,7 +178,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('6565');
+    strictEqual(parseResult, '6565');
   });
 
   it('should be able to use a boolean value in a if', () => {
@@ -176,7 +192,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('activated');
+    strictEqual(parseResult, 'activated');
   });
 
   it('should be able to use an array', () => {
@@ -189,7 +205,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('2');
+    strictEqual(parseResult, '2');
   });
 
   it('should allow objects as argument to faker function', () => {
@@ -203,6 +219,6 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    expect(parseResult).to.be.equal('KFKJR');
+    strictEqual(parseResult, 'KFKJR');
   });
 });

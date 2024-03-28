@@ -1,12 +1,7 @@
 import { Environment } from '@mockoon/commons';
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { MockoonServer } from '../../../src';
 import { getEnvironment } from '../../libs/environment';
-
-const chai = require('chai');
-const spies = require('chai-spies');
-
-chai.use(spies);
 
 describe('Env vars prefix default', () => {
   let environment: Environment;
@@ -42,7 +37,7 @@ describe('Env vars prefix default', () => {
     const response = await fetch('http://localhost:3010/envvar-prefix-default');
     const body = await response.text();
 
-    expect(body).to.equal('testenvvar-testenvvar-');
+    strictEqual(body, 'testenvvar-testenvvar-');
   });
 });
 
@@ -80,7 +75,7 @@ describe('Env vars prefix custom', () => {
     const response = await fetch('http://localhost:3010/envvar-prefix-custom');
     const body = await response.text();
 
-    expect(body).to.equal('testenvvar-testenvvar-');
+    strictEqual(body, 'testenvvar-testenvvar-');
   });
 });
 
@@ -118,6 +113,6 @@ describe('Env vars prefix none', () => {
     const response = await fetch('http://localhost:3010/envvar-no-prefix');
     const body = await response.text();
 
-    expect(body).to.equal('testenvvar-othervar');
+    strictEqual(body, 'testenvvar-othervar');
   });
 });

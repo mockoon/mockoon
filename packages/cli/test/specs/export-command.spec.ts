@@ -1,5 +1,5 @@
 import { test } from '@oclif/test';
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { promises as fs } from 'fs';
 
 describe('Export command', () => {
@@ -24,7 +24,7 @@ describe('Export command', () => {
         );
         const expectedContent = expectedFile.toString();
 
-        expect(jsonFileContent).to.equal(expectedContent);
+        strictEqual(jsonFileContent, expectedContent);
       });
   });
 
@@ -50,7 +50,7 @@ describe('Export command', () => {
         );
         const expectedContent = expectedFile.toString();
 
-        expect(jsonFileContent).to.equal(expectedContent);
+        strictEqual(jsonFileContent, expectedContent);
       });
   });
 
@@ -78,7 +78,7 @@ describe('Export command', () => {
         );
         const expectedContent = expectedFile.toString();
 
-        expect(jsonFileContent).to.equal(expectedContent);
+        strictEqual(jsonFileContent, expectedContent);
       });
   });
 
@@ -103,7 +103,7 @@ describe('Export command', () => {
         );
         const expectedContent = expectedFile.toString();
 
-        expect(jsonFileContent).to.equal(expectedContent);
+        strictEqual(jsonFileContent, expectedContent);
       });
   });
 
@@ -129,7 +129,7 @@ describe('Export command', () => {
         );
         const expectedContent = expectedFile.toString();
 
-        expect(jsonFileContent).to.equal(expectedContent);
+        strictEqual(jsonFileContent, expectedContent);
       });
   });
 });

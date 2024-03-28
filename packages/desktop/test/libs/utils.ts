@@ -153,11 +153,11 @@ class Utils {
   }
 
   public async waitForAutosave(): Promise<void> {
-    await browser.pause(Config.storageSaveDelay + 500);
+    await browser.pause(Config.storageSaveDelay + 1000);
   }
 
   public async waitForFileWatcher(): Promise<void> {
-    await browser.pause(Config.fileReWatchDelay + 500);
+    await browser.pause(Config.fileReWatchDelay + 1000);
   }
 
   public async checkToastDisplayed(toastType: ToastTypes, text: string) {

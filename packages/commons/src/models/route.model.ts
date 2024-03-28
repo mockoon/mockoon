@@ -74,7 +74,8 @@ export type ResponseRuleTargets =
   | 'params'
   | 'request_number'
   | 'cookie'
-  | 'global_var';
+  | 'global_var'
+  | 'data_bucket';
 
 export enum RouteType {
   HTTP = 'http',

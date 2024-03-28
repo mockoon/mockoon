@@ -1,10 +1,10 @@
+import { Texts } from '../../src/renderer/app/constants/texts.constant';
 import environments from '../libs/environments';
 import file from '../libs/file';
 import http from '../libs/http';
 import { HttpCall } from '../libs/models';
 import routes from '../libs/routes';
 import utils from '../libs/utils';
-import { Texts } from '../../src/renderer/app/constants/texts.constant';
 
 describe('Responses rules', () => {
   describe('Create, update, delete and test basic rules', async () => {
@@ -598,6 +598,50 @@ describe('Responses rules', () => {
         method: 'GET',
         body: { test: 'value1' },
         testedResponse: { status: 202, body: 'accepted' }
+      });
+    });
+  });
+
+  describe('Request number rules', async () => {
+    it('should restart the environment', async () => {
+      await environments.stop();
+      await environments.start();
+    });
+
+    it('should call the request number endpoint twice and get different responses', async () => {
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res1' }
+      });
+
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res2' }
+      });
+    });
+
+    it('should reset the state with the admin endpoint and get the first response again', async () => {
+      await http.assertCall({
+        path: '/mockoon-admin/state/purge',
+        method: 'POST'
+      });
+
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res1' }
+      });
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res2' }
+      });
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res3' }
       });
     });
   });
