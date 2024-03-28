@@ -603,14 +603,50 @@
                     >
                       <app-svg icon="clear"></app-svg>
                     </button>
-                    <button
-                      class="btn btn-link"
-                      (click)="browseFiles()"
-                      ngbTooltip="Browse"
-                    >
-                      <app-svg icon="find_in_page"></app-svg>
-                    </button>
+
+                    <!-- File options dropdown -->
+                    <div ngbDropdown id="file-options-dropdown">
+                      <button
+                        class="btn dropdown-toggle-icon me-1"
+                        type="button"
+                        ngbDropdownToggle
+                        ngbTooltip="More file options"
+                      >
+                        <app-svg icon="more_vert"></app-svg>
+                      </button>
+
+                      <div class="dropdown-menu" ngbDropdownMenu>
+                        <ng-container *ngIf="data.activeRouteResponse">
+                          <button
+                            class="btn dropdown-item"
+                            (click)="browseFiles()"
+                          >
+                            <app-svg icon="find_in_page" class="ps-2"></app-svg>
+                            Browse
+                          </button>
+                          <button
+                            class="btn dropdown-item"
+                            (click)="openFolder()"
+                          >
+                            <app-svg icon="folder" class="ps-2"></app-svg>
+                            Open folder
+                          </button>
+                          <button
+                            class="btn dropdown-item"
+                            (click)="openFile()"
+                          >
+                            <app-svg icon="file_open" class="ps-2"></app-svg>
+                            Open file in editor
+                          </button>
+                        </ng-container>
+                      </div>
+                    </div>
                   </div>
+                  <style>
+                    .dropdown-toggle::after {
+                      display: none;
+                    }
+                  </style>
 
                   <div
                     *ngIf="data.activeRouteResponse?.filePath"
