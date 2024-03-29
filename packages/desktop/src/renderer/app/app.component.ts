@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
-import { Observable, from, tap } from 'rxjs';
+import { Observable, from, fromEvent, tap } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -21,6 +21,7 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
+import { SyncService } from 'src/renderer/app/services/sync.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
@@ -54,7 +55,8 @@ export class AppComponent extends Logger implements OnInit {
     private userService: UserService,
     private title: Title,
     private tourService: TourService,
-    private remoteConfigService: RemoteConfigService
+    private remoteConfigService: RemoteConfigService,
+    private syncService: SyncService
   ) {
     super('[RENDERER][COMPONENT][APP] ', toastService);
 
@@ -113,6 +115,7 @@ export class AppComponent extends Logger implements OnInit {
     this.appQuitService.init().subscribe();
     this.remoteConfigService.init().subscribe();
     this.userService.init().subscribe();
+    this.syncService.init().subscribe();
     this.apiService.init();
 
     this.logMessage('info', 'INITIALIZING_APP');
@@ -124,6 +127,13 @@ export class AppComponent extends Logger implements OnInit {
         })
       )
       .subscribe();
+
+    /**
+     * Listen to online event to reload user and trigger the Firebase auth state change
+     */
+    fromEvent(window, 'online').subscribe(() => {
+      this.userService.reloadUser();
+    });
 
     this.telemetryService.init().subscribe();
 
@@ -154,6 +164,16 @@ export class AppComponent extends Logger implements OnInit {
    */
   public contextMenuItemClicked(payload: ContextMenuItemPayload) {
     switch (payload.action) {
+      case 'duplicateToCloud':
+        this.environmentsService
+          .duplicateToCloud(payload.subjectUUID)
+          .subscribe();
+        break;
+      case 'convertToLocal':
+        this.environmentsService
+          .convertCloudToLocal(payload.subjectUUID)
+          .subscribe();
+        break;
       case 'duplicate':
         if (payload.subject === 'route') {
           this.environmentsService.duplicateRoute(
@@ -188,6 +208,13 @@ export class AppComponent extends Logger implements OnInit {
           this.environmentsService.removeFolder(payload.subjectUUID);
         } else if (payload.subject === 'callback') {
           this.environmentsService.removeCallback(payload.subjectUUID);
+        }
+        break;
+      case 'deleteFromCloud':
+        if (payload.subject === 'environment') {
+          this.environmentsService
+            .deleteFromCloud(payload.subjectUUID)
+            .subscribe();
         }
         break;
       case 'add_crud_route':

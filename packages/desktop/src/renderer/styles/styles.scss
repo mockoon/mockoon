@@ -89,6 +89,10 @@ input,
   overflow-y: scroll;
 }
 
+.cursor-default {
+  cursor: default !important;
+}
+
 .cursor-pointer {
   cursor: pointer !important;
 }
@@ -142,30 +146,29 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
   width: 250px;
   top: calc($spacer / 2) + 2rem;
   right: calc($spacer / 2);
+}
+.toast {
+  word-break: break-word;
+}
 
-  .toast {
-    word-break: break-word;
+.toast-success {
+  .toast-body {
+    background-color: $green;
+    border-color: lighten($green, 10%);
   }
+}
 
-  .toast-success {
-    .toast-body {
-      background-color: $green;
-      border-color: lighten($green, 10%);
-    }
+.toast-warning {
+  .toast-body {
+    background-color: $orange;
+    border-color: lighten($orange, 10%);
   }
+}
 
-  .toast-warning {
-    .toast-body {
-      background-color: $orange;
-      border-color: lighten($orange, 10%);
-    }
-  }
-
-  .toast-error {
-    .toast-body {
-      background-color: $red;
-      border-color: lighten($red, 10%);
-    }
+.toast-error {
+  .toast-body {
+    background-color: $red;
+    border-color: lighten($red, 10%);
   }
 }
 
@@ -345,9 +348,28 @@ $response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
   user-select: none;
 }
 
+.warning-backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: $zindex-modal-backdrop;
+  background-color: $modal-backdrop-bg;
+  opacity: 0.4;
+}
+
 .tour-backdrop {
   position: fixed;
   z-index: $zindex-modal-backdrop;
   background-color: $modal-backdrop-bg;
   opacity: 0.8;
+}
+
+.dropdown-toggle-no-caret {
+  &::after {
+    display: none;
+  }
+}
+
+.text-break-all {
+  word-break: break-all;
 }

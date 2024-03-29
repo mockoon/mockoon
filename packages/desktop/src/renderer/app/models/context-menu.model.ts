@@ -8,10 +8,13 @@ export type ContextMenuEvent = {
 export type ContextMenuItemPayload = {
   subject: DataSubject;
   action:
+    | 'duplicateToCloud'
+    | 'convertToLocal'
     | 'add_crud_route'
     | 'add_http_route'
     | 'add_folder'
     | 'delete'
+    | 'deleteFromCloud'
     | 'close'
     | 'duplicate'
     | 'duplicateToEnv'

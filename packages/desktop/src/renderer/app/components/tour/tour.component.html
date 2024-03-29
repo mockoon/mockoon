@@ -11,8 +11,10 @@
     </div>
 
     <div [innerHTML]="data.content"></div>
-    <div *ngIf="data.link" class="mt-2">
-      <a href="{{ data.link }}" target="_blank">Learn more</a>
+    <div *ngFor="let link of data.links" class="mt-2">
+      <a href="{{ link.url }}" target="_blank">{{
+        link.text ? link.text : 'Learn more'
+      }}</a>
     </div>
 
     <div class="d-flex align-items-center justify-content-between mt-4">

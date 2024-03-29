@@ -8,6 +8,7 @@ import {
   addFolderMutator,
   addRouteMutator,
   addRouteResponseMutator,
+  fullReorderEntitiesMutator,
   moveItemAtTarget,
   removeCallbackMutator,
   removeDatabucketMutator,
@@ -51,6 +52,26 @@ export const environmentReducer = (
   let newState: StoreType;
 
   switch (action.type) {
+    case ActionTypes.CONVERT_ENVIRONMENT_TO_LOCAL: {
+      newState = {
+        ...state,
+        settings: {
+          ...state.settings,
+          environments: state.settings.environments.map((environment) => {
+            if (environment.uuid === action.environmentUuid) {
+              return {
+                ...environment,
+                cloud: false
+              };
+            }
+
+            return environment;
+          })
+        }
+      };
+      break;
+    }
+
     case ActionTypes.UPDATE_USER: {
       newState = {
         ...state,
@@ -58,6 +79,14 @@ export const environmentReducer = (
           action.properties === null
             ? null
             : { ...state.user, ...action.properties }
+      };
+      break;
+    }
+
+    case ActionTypes.UPDATE_SYNC: {
+      newState = {
+        ...state,
+        sync: { ...state.sync, ...action.properties }
       };
       break;
     }
@@ -255,6 +284,27 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.FULL_REORDER_ENTITIES: {
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.environmentUuid) {
+          return fullReorderEntitiesMutator(
+            environment,
+            action.entity,
+            action.order,
+            action.parentId
+          );
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments
+      };
+      break;
+    }
+
     case ActionTypes.REORDER_CALLBACKS: {
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === action.environmentUuid) {
@@ -308,6 +358,7 @@ export const environmentReducer = (
         // uncollapse folders in hierarchy if some are collapsed (selecting a route in a collapsed folder is only possible after a search)
         if (
           foldersUuidHierarchy.length > 0 &&
+          newCollapsedFolders &&
           newCollapsedFolders[activeEnvironment.uuid] &&
           newCollapsedFolders[activeEnvironment.uuid].length > 0
         ) {
@@ -385,17 +436,22 @@ export const environmentReducer = (
           environments: [...state.settings.environments]
         };
 
+        const newEnvironmentDescriptor: EnvironmentDescriptor = {
+          uuid: newEnvironment.uuid,
+          path: action.filePath,
+          cloud: action.cloud,
+          lastServerHash: action.hash
+        };
+
         // we may be reloading or duplicating so we want to keep the descriptors order
         if (action.insertAfterIndex != null) {
-          newSettings.environments.splice(action.insertAfterIndex + 1, 0, {
-            uuid: newEnvironment.uuid,
-            path: action.filePath
-          });
+          newSettings.environments.splice(
+            action.insertAfterIndex + 1,
+            0,
+            newEnvironmentDescriptor
+          );
         } else {
-          newSettings.environments.push({
-            uuid: newEnvironment.uuid,
-            path: action.filePath
-          });
+          newSettings.environments.push(newEnvironmentDescriptor);
         }
       }
 
@@ -561,41 +617,24 @@ export const environmentReducer = (
         return environment;
       });
 
-      // always reset the active route, active route response and active databucket if environment was active, as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
-      if (state.activeEnvironmentUUID === action.previousUUID) {
-        const {
-          routeUUID: newActiveRouteUUID,
-          routeResponseUUID: newActiveRouteResponseUUID
-        } = getFirstRouteAndResponseUUIDs(action.newEnvironment);
-
-        activeRouteUUID = newActiveRouteUUID;
-        activeRouteResponseUUID = newActiveRouteResponseUUID;
-        activeDatabucketUUID = action.newEnvironment.data.length
-          ? action.newEnvironment.data[0].uuid
-          : null;
-        activeCallbackUUID = action.newEnvironment.callbacks.length
-          ? action.newEnvironment.callbacks[0].uuid
-          : null;
-      }
-
-      // always reset env logs and the active log entry as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
-      environmentsLogs = {
-        ...environmentsLogs,
-        [action.newEnvironment.uuid]: []
-      };
-      activeEnvironmentLogsUUID = {
-        ...activeEnvironmentLogsUUID,
-        [action.newEnvironment.uuid]: null
-      };
-
       // if environment's UUID changed
       if (action.newEnvironment.uuid !== action.previousUUID) {
+        // if it was active env, keep it active
         if (state.activeEnvironmentUUID === action.previousUUID) {
           activeEnvironmentUUID = action.newEnvironment.uuid;
         }
 
-        // eventually delete logs info stored under previous UUID
+        // move logs info stored under previous UUID
+        environmentsLogs = {
+          ...environmentsLogs,
+          [action.newEnvironment.uuid]: environmentsLogs[action.previousUUID]
+        };
         delete environmentsLogs[action.previousUUID];
+        activeEnvironmentLogsUUID = {
+          ...activeEnvironmentLogsUUID,
+          [action.newEnvironment.uuid]:
+            activeEnvironmentLogsUUID[action.previousUUID]
+        };
         delete activeEnvironmentLogsUUID[action.previousUUID];
 
         // move status to new UUID
@@ -619,6 +658,56 @@ export const environmentReducer = (
             return environmentDescriptor;
           })
         };
+      }
+
+      // if this is the currently active environment
+      if (activeEnvironmentUUID === action.newEnvironment.uuid) {
+        // eventually update active route and response UUIDs
+        const selectedRoute = action.newEnvironment.routes.find(
+          (route) => route.uuid === activeRouteUUID
+        );
+
+        if (!selectedRoute) {
+          const {
+            routeUUID: newActiveRouteUUID,
+            routeResponseUUID: newActiveRouteResponseUUID
+          } = getFirstRouteAndResponseUUIDs(action.newEnvironment);
+
+          activeRouteUUID = newActiveRouteUUID;
+          activeRouteResponseUUID = newActiveRouteResponseUUID;
+        } else {
+          if (
+            !selectedRoute.responses.find(
+              (response) => response.uuid === activeRouteResponseUUID
+            )
+          ) {
+            activeRouteResponseUUID = selectedRoute.responses.length
+              ? selectedRoute.responses[0].uuid
+              : null;
+          }
+        }
+
+        // eventually update active databucket UUID
+        const existingDatabucket = action.newEnvironment.data.find(
+          (databucket) => databucket.uuid === activeDatabucketUUID
+        );
+
+        if (!existingDatabucket) {
+          activeDatabucketUUID = action.newEnvironment.data.length
+            ? action.newEnvironment.data[0].uuid
+            : null;
+        }
+
+        // eventually update active callback UUID
+        const existingCallback = action.newEnvironment.callbacks.find(
+          (callback) => callback.uuid === activeCallbackUUID
+        );
+
+        if (!existingCallback) {
+          activeCallbackUUID = action.newEnvironment.callbacks.length
+            ? action.newEnvironment.callbacks[0].uuid
+            : null;
+        }
       }
 
       // remove needRestart from status as env will always be restarted if it was running
@@ -1203,6 +1292,28 @@ export const environmentReducer = (
       newState = {
         ...state,
         settings: { ...state.settings, ...action.properties }
+      };
+      break;
+    }
+
+    case ActionTypes.UPDATE_SETTINGS_ENVIRONMENT_DESCRIPTOR: {
+      newState = {
+        ...state,
+        settings: {
+          ...state.settings,
+          environments: state.settings.environments.map(
+            (environmentDescriptor) => {
+              if (environmentDescriptor.uuid === action.descriptor.uuid) {
+                return {
+                  ...environmentDescriptor,
+                  ...action.descriptor
+                };
+              }
+
+              return environmentDescriptor;
+            }
+          )
+        }
       };
       break;
     }

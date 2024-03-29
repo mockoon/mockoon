@@ -33,7 +33,9 @@ export const SharedConfig = (options: {
       headers: docsURL + 'response-configuration/response-headers/',
       rules: docsURL + 'route-responses/multiple-responses/',
       hostname: docsURL + 'server-configuration/listening-hostname/',
-      faq: options.websiteURL + 'faq/'
+      faq: options.websiteURL + 'faq/',
+      cloudSync:
+        docsURL + 'mockoon-cloud/data-synchronization-team-collaboration/'
     },
     loginURL: `${options.websiteURL}login/?inapp=true`,
     signupURL: `${options.websiteURL}signup/?inapp=true`,

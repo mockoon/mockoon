@@ -107,28 +107,12 @@ describe('Folders', () => {
     await routes.assertRoutePaddingLevel(4, 3);
   });
 
-  it('should delete subfolder and add route to parent folder', async () => {
-    await routes.removeFolder(2);
-    await routes.assertCount(4);
-
-    await routes.assertMenuEntryText(1, 'New folder');
-    await routes.assertMenuEntryText(2, '/subroute');
-    await routes.assertMenuEntryText(3, '/subroute2');
-
-    await routes.assertRoutePaddingLevel(1, 1);
-    await routes.assertRoutePaddingLevel(2, 2);
-    await routes.assertRoutePaddingLevel(3, 2);
-  });
-
-  it('should delete root folder and add routes to root level', async () => {
-    await routes.removeFolder(1);
-    await routes.assertCount(3);
-
-    await routes.assertMenuEntryText(1, '/rootroute');
-    await routes.assertMenuEntryText(2, '/subroute');
-    await routes.assertMenuEntryText(3, '/subroute2');
-    await routes.assertRoutePaddingLevel(1, 1);
-    await routes.assertRoutePaddingLevel(2, 1);
-    await routes.assertRoutePaddingLevel(3, 1);
+  it('should not be able to delete non empty folder', async () => {
+    await contextMenu.assertEntryEnabled(
+      'routes',
+      1,
+      ContextMenuFolderActions.DELETE,
+      false
+    );
   });
 });

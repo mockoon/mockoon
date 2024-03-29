@@ -9,6 +9,7 @@ import {
   removeRouteAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
@@ -24,9 +25,18 @@ export class TourService {
       id: 'tour-environments-menu',
       title: 'Environments list',
       content:
-        'This is the list of your <strong>environments or mock APIs</strong>. Each of them is a separate file on your computer and runs on a different localhost port (e.g. <code>http://localhost:3000</code>).',
+        'This is the list of your <strong>environments or mock APIs</strong>. Each local environment is a separate file on your computer and runs on a different localhost port (e.g. <code>http://localhost:3000</code>).<br/>You can also create <strong>cloud environments</strong> by subscribing to Mockoon Pro.',
       placement: 'right',
-      link: 'https://mockoon.com/docs/latest/server-configuration/port-prefix/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/mockoon-data-files/data-storage-location/',
+          text: 'Local environments documentation'
+        },
+        {
+          url: Config.docs.cloudSync,
+          text: 'Cloud environments documentation'
+        }
+      ]
     },
     {
       id: 'tour-routes-menu',
@@ -34,7 +44,12 @@ export class TourService {
       content:
         'This is the <strong>list of routes</strong>, or API endpoints, for the selected environment. You can add as many routes as you want to an environment and arrange them into folders.',
       placement: 'right',
-      link: 'https://mockoon.com/docs/latest/api-endpoints/routing/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/api-endpoints/routing/',
+          text: 'Routing documentation'
+        }
+      ]
     },
     {
       id: 'tour-route-add',
@@ -42,7 +57,12 @@ export class TourService {
       content:
         'You can always add more routes using this menu. Mockoon supports a wide range of <strong>HTTP routes</strong> and also provides <strong>fully automated CRUD routes</strong>.',
       placement: 'bottom-left',
-      link: 'https://mockoon.com/docs/latest/api-endpoints/crud-routes/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/api-endpoints/crud-routes/',
+          text: 'CRUD routes documentation'
+        }
+      ]
     },
     {
       id: 'tour-route-config',
@@ -50,7 +70,12 @@ export class TourService {
       content:
         'Here, you can set up your route <strong>method and path</strong>. They support <strong>parameters</strong>, <strong>wildcards</strong>, and <strong>regexes</strong> and can be <strong>prefixed</strong>.',
       placement: 'bottom',
-      link: 'https://mockoon.com/docs/latest/api-endpoints/routing/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/api-endpoints/routing/#route-patterns-and-regexes',
+          text: 'Routes path documentation'
+        }
+      ]
     },
     {
       id: 'tour-route-response-add',
@@ -58,7 +83,12 @@ export class TourService {
       content:
         'This is where you can add <strong>multiple responses</strong> to your route with different contents (body, file, etc.).',
       placement: 'bottom',
-      link: 'https://mockoon.com/docs/latest/route-responses/multiple-responses/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/route-responses/multiple-responses/',
+          text: 'Route responses documentation'
+        }
+      ]
     },
     {
       id: 'tour-route-response-modes',
@@ -66,7 +96,12 @@ export class TourService {
       content:
         'You can serve your different responses <strong>sequentially or randomly</strong>...',
       placement: 'left',
-      link: 'https://mockoon.com/docs/latest/route-responses/multiple-responses/#random-route-response'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/route-responses/multiple-responses/#random-route-response',
+          text: 'Response modes documentation'
+        }
+      ]
     },
     {
       id: 'tour-route-response-rules',
@@ -74,7 +109,12 @@ export class TourService {
       content:
         '... or you can use <strong>complex rules</strong> to serve your responses based on the <strong>request parameters</strong> (presence of a header, etc.).',
       placement: 'bottom',
-      link: 'https://mockoon.com/docs/latest/route-responses/dynamic-rules/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/route-responses/dynamic-rules/',
+          text: 'Response rules documentation'
+        }
+      ]
     },
     {
       id: 'tour-route-response-config',
@@ -82,7 +122,12 @@ export class TourService {
       content:
         "Here, you can set up your response's status code, delay, and body. You can easily create <strong>realistic and dynamic content</strong> using our <strong>templating system</strong>.",
       placement: 'top',
-      link: 'https://mockoon.com/docs/latest/response-configuration/response-body/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/response-configuration/response-body/',
+          text: 'Response body documentation'
+        }
+      ]
     },
     {
       id: 'tour-environment-start',
@@ -90,7 +135,7 @@ export class TourService {
       content:
         'After you configured your environment, you can start it, and it will <strong>run on your local machine</strong>. <br/>You can also run your mock API on your <strong>server or CI environment</strong> using our CLI or Docker image.',
       placement: 'bottom-left',
-      link: 'https://mockoon.com/cli/'
+      links: [{ url: 'https://mockoon.com/cli/', text: 'Discover the CLI' }]
     },
     {
       id: 'tour-environment-logs',
@@ -98,7 +143,12 @@ export class TourService {
       content:
         'You can view your environment logs here. They will show you the <strong>requests</strong> made to your environment and how Mockoon responded. You can also <strong>automatically create endpoints</strong> from your logs.',
       placement: 'bottom',
-      link: 'https://mockoon.com/docs/latest/logging-and-recording/requests-logging/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/logging-and-recording/requests-logging/',
+          text: 'Requests logging documentation'
+        }
+      ]
     },
     {
       id: 'tour-environment-proxy',
@@ -106,7 +156,12 @@ export class TourService {
       content:
         'Using the proxy mode, you can <strong>partially mock</strong> your API by forwarding the calls to endpoints not declared in Mockoon.',
       placement: 'bottom',
-      link: 'https://mockoon.com/docs/latest/server-configuration/proxy-mode/'
+      links: [
+        {
+          url: 'https://mockoon.com/docs/latest/server-configuration/proxy-mode/',
+          text: 'Proxy mode documentation'
+        }
+      ]
     }
   ];
   private popoverTemplateRef: TemplateRef<HTMLElement>;
@@ -213,7 +268,10 @@ export class TourService {
       removeRouteAction(
         this.store.getActiveEnvironment().uuid,
         this.newRouteUuid
-      )
+      ),
+      false,
+      // avoid emitting and triggering the sync
+      false
     );
 
     this.newRouteUuid = null;
@@ -253,7 +311,10 @@ export class TourService {
     this.newRouteUuid = newRoute.uuid;
 
     this.store.update(
-      addRouteAction(activeEnvironment.uuid, newRoute, 'root', true)
+      addRouteAction(activeEnvironment.uuid, newRoute, 'root', true),
+      false,
+      // avoid emitting and triggering the sync
+      false
     );
   }
 }

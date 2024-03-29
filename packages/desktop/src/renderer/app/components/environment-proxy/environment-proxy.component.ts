@@ -11,7 +11,7 @@ import {
   Header,
   IsValidURL
 } from '@mockoon/commons';
-import { merge, Observable, Subject } from 'rxjs';
+import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { HeadersProperties } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';

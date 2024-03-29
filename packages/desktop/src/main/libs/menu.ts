@@ -6,6 +6,7 @@ import {
   handleZoomOut,
   handleZoomReset
 } from 'src/main/libs/zoom';
+import { MenuStateUpdatePayload } from 'src/shared/models/ipc.model';
 
 export const createMenu = (mainWindow: BrowserWindow): Menu => {
   const menu: any = [
@@ -28,7 +29,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       submenu: [
         {
           id: 'MENU_NEW_ENVIRONMENT',
-          label: 'New environment',
+          label: 'New local environment',
           accelerator: 'CmdOrCtrl+N',
           click: () => {
             mainWindow.webContents.send('APP_MENU', 'NEW_ENVIRONMENT');
@@ -36,7 +37,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         },
         {
           id: 'MENU_NEW_ENVIRONMENT_CLIPBOARD',
-          label: 'New environment from clipboard',
+          label: 'New local environment from clipboard',
           click: () => {
             mainWindow.webContents.send(
               'APP_MENU',
@@ -46,7 +47,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         },
         {
           id: 'MENU_OPEN_ENVIRONMENT',
-          label: 'Open environment',
+          label: 'Open local environment',
           accelerator: 'CmdOrCtrl+O',
           click: () => {
             mainWindow.webContents.send('APP_MENU', 'OPEN_ENVIRONMENT');
@@ -54,10 +55,36 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         },
         {
           id: 'MENU_DUPLICATE_ENVIRONMENT',
-          label: 'Duplicate current environment',
+          label: 'Duplicate current environment to local',
           accelerator: 'CmdOrCtrl+D',
           click: () => {
             mainWindow.webContents.send('APP_MENU', 'DUPLICATE_ENVIRONMENT');
+          }
+        },
+        { type: 'separator' },
+        {
+          id: 'MENU_NEW_CLOUD_ENVIRONMENT',
+          label: 'New cloud environment',
+          accelerator: 'CmdOrCtrl+Shift+N',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'NEW_CLOUD_ENVIRONMENT');
+          }
+        },
+        { type: 'separator' },
+        {
+          id: 'MENU_PREVIOUS_ENVIRONMENT',
+          label: 'Select previous environment',
+          accelerator: 'CmdOrCtrl+Up',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'PREVIOUS_ENVIRONMENT');
+          }
+        },
+        {
+          id: 'MENU_NEXT_ENVIRONMENT',
+          label: 'Select next environment',
+          accelerator: 'CmdOrCtrl+Down',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'NEXT_ENVIRONMENT');
           }
         },
         { type: 'separator' },
@@ -160,28 +187,6 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         accelerator: 'Shift+CmdOrCtrl+A',
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'START_ALL_ENVIRONMENTS');
-        }
-      }
-    ]
-  });
-
-  menu.push({
-    label: 'Navigate',
-    submenu: [
-      {
-        id: 'MENU_PREVIOUS_ENVIRONMENT',
-        label: 'Select previous environment',
-        accelerator: 'CmdOrCtrl+Up',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'PREVIOUS_ENVIRONMENT');
-        }
-      },
-      {
-        id: 'MENU_NEXT_ENVIRONMENT',
-        label: 'Select next environment',
-        accelerator: 'CmdOrCtrl+Down',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'NEXT_ENVIRONMENT');
         }
       }
     ]
@@ -354,42 +359,55 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
   return Menu.buildFromTemplate(menu);
 };
 
-export const toggleEnvironmentMenuItems = (state: boolean) => {
+// menu items requiring at least one environment
+const requireEnvironmentsMenuItems = [
+  'MENU_DUPLICATE_ENVIRONMENT',
+  'MENU_CLOSE_ENVIRONMENT',
+  'MENU_NEW_ROUTE',
+  'MENU_DUPLICATE_ROUTE',
+  'MENU_DELETE_ROUTE',
+  'MENU_START_ENVIRONMENT',
+  'MENU_START_ALL_ENVIRONMENTS',
+  'MENU_PREVIOUS_ENVIRONMENT',
+  'MENU_NEXT_ENVIRONMENT',
+  'MENU_PREVIOUS_ROUTE',
+  'MENU_NEXT_ROUTE',
+  'MENU_EXPORT_OPENAPI_FILE'
+];
+
+// menu items requiring cloud to be active
+const requireCloudMenuItems = ['MENU_NEW_CLOUD_ENVIRONMENT'];
+// menu items requiring an active cloud environment
+const requireCloudActiveEnvironmentMenuItems = ['MENU_CLOSE_ENVIRONMENT'];
+// route specific menu items based on active environment routes count
+const requireRoutesMenuItems = [
+  'MENU_DUPLICATE_ROUTE',
+  'MENU_DELETE_ROUTE',
+  'MENU_PREVIOUS_ROUTE',
+  'MENU_NEXT_ROUTE'
+];
+
+const toggleMenuItems = (items: string[], enabled: boolean) => {
   const menu = Menu.getApplicationMenu();
-  [
-    'MENU_DUPLICATE_ENVIRONMENT',
-    'MENU_CLOSE_ENVIRONMENT',
-    'MENU_NEW_ROUTE',
-    'MENU_DUPLICATE_ROUTE',
-    'MENU_DELETE_ROUTE',
-    'MENU_START_ENVIRONMENT',
-    'MENU_START_ALL_ENVIRONMENTS',
-    'MENU_PREVIOUS_ENVIRONMENT',
-    'MENU_NEXT_ENVIRONMENT',
-    'MENU_PREVIOUS_ROUTE',
-    'MENU_NEXT_ROUTE',
-    'MENU_EXPORT_OPENAPI_FILE'
-  ].forEach((id) => {
+
+  items.forEach((id) => {
     const menuItem = menu?.getMenuItemById(id);
 
     if (menuItem) {
-      menuItem.enabled = state;
+      menuItem.enabled = enabled;
     }
   });
 };
 
-export const toggleRouteMenuItems = (state: boolean) => {
-  const menu = Menu.getApplicationMenu();
-  [
-    'MENU_DUPLICATE_ROUTE',
-    'MENU_DELETE_ROUTE',
-    'MENU_PREVIOUS_ROUTE',
-    'MENU_NEXT_ROUTE'
-  ].forEach((id) => {
-    const menuItem = menu?.getMenuItemById(id);
-
-    if (menuItem) {
-      menuItem.enabled = state;
-    }
-  });
+export const updateMenuState = (state: MenuStateUpdatePayload) => {
+  toggleMenuItems(requireEnvironmentsMenuItems, state.environmentsCount > 0);
+  toggleMenuItems(requireCloudMenuItems, state.cloudEnabled);
+  toggleMenuItems(
+    requireCloudActiveEnvironmentMenuItems,
+    !state.isActiveEnvironmentCloud
+  );
+  toggleMenuItems(
+    requireRoutesMenuItems,
+    state.activeEnvironmentRoutesCount > 0
+  );
 };

@@ -38,8 +38,6 @@ import {
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter } from 'src/renderer/app/libs/utils.lib';
-import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
-import { DataSubject } from 'src/renderer/app/models/data.model';
 import {
   DuplicatedRoutesTypes,
   EnvironmentsStatuses
@@ -174,6 +172,19 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * check if the route is hidden by the search filter
+   *
+   * @param search
+   * @param route
+   * @returns
+   */
+  public isRouteHidden(search: string, route: Route) {
+    return !`${route.method} ${route.endpoint} ${route.documentation}`
+      .toLowerCase()
+      .includes(search.toLowerCase());
+  }
+
+  /**
    * Callback called when reordering routes and folders
    *
    * @param reorderAction
@@ -228,38 +239,43 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Show and position the context menu
+   * Show and position the folder context menu
    *
    * @param event - click event
    */
-  public openContextMenu(
-    subject: Exclude<DataSubject, 'databucket' | 'environment'>,
-    subjectUUID: string,
+  public openFolderContextMenu(folder: Folder, event: MouseEvent) {
+    if (event?.button !== 2) {
+      return;
+    }
+
+    this.eventsService.contextMenuEvents.next({
+      event,
+      items: FoldersContextMenu(folder)
+    });
+  }
+
+  /**
+   * Show and position the route context menu
+   *
+   * @param event - click event
+   */
+  public openRouteContextMenu(
+    subjectUuid: string,
     event: MouseEvent,
-    parentId?: string
+    parentId: string
   ) {
     if (event?.button !== 2) {
       return;
     }
 
-    let menu: ContextMenuEvent;
-
-    if (subject === 'folder') {
-      menu = {
-        event,
-        items: FoldersContextMenu(subjectUUID)
-      };
-    } else if (subject === 'route') {
-      menu = {
-        event,
-        items: RoutesContextMenu(
-          subjectUUID,
-          parentId,
-          this.store.get('environments')
-        )
-      };
-    }
-    this.eventsService.contextMenuEvents.next(menu);
+    this.eventsService.contextMenuEvents.next({
+      event,
+      items: RoutesContextMenu(
+        subjectUuid,
+        parentId,
+        this.store.get('environments')
+      )
+    });
   }
 
   public toggleCollapse(folder: Folder) {

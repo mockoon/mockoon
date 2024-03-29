@@ -4,6 +4,6 @@ export type TourStep = {
   id: string;
   title: string;
   content: string;
-  link?: string;
+  links?: { url: string; text?: string }[];
   placement: Placement;
 };

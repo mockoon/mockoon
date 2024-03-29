@@ -1,8 +1,17 @@
 import { Callback, DataBucket, Environment } from '../models/environment.model';
 import { Folder, FolderChild } from '../models/folder.model';
-import { ReorderAction, ReorderActionType } from '../models/reorder.model';
+import {
+  ReorderAction,
+  ReorderActionType,
+  ReorderableContainers
+} from '../models/reorder.model';
 import { Route, RouteResponse, RouteType } from '../models/route.model';
-import { insertItemAtTarget, moveItemAtTarget } from '../utils/mutator-utils';
+import {
+  findRouteOrFolderContainer,
+  insertItemAtTarget,
+  moveItemAtTarget,
+  sortByUuidsList
+} from '../utils/mutator-utils';
 
 /**
  * Update an environment direct properties
@@ -14,7 +23,7 @@ import { insertItemAtTarget, moveItemAtTarget } from '../utils/mutator-utils';
 export const updateEnvironmentMutator = (
   environment: Environment,
   properties: Partial<Environment>
-) => ({
+): Environment => ({
   ...environment,
   ...properties
 });
@@ -31,7 +40,7 @@ export const addRouteMutator = (
   environment: Environment,
   newRoute: Route,
   parentId: string | 'root'
-) => {
+): Environment => {
   let rootChildren = environment.rootChildren;
   const routes = [...environment.routes];
   let folders = environment.folders;
@@ -77,7 +86,7 @@ export const updateRouteMutator = (
   environment: Environment,
   routeUuid: string,
   properties: Partial<Route>
-) => ({
+): Environment => ({
   ...environment,
   routes: environment.routes.map((route) => {
     if (route.uuid === routeUuid) {
@@ -101,7 +110,7 @@ export const updateRouteMutator = (
 export const removeRouteMutator = (
   environment: Environment,
   routeUuid: string
-) => {
+): Environment => {
   let newRootChildren = environment.rootChildren;
   let newFolders: Folder[] = environment.folders;
 
@@ -150,75 +159,30 @@ export const removeRouteMutator = (
 export const reorderRoutesMutator = (
   environment: Environment,
   reorderAction: ReorderAction<string>
-) => {
+): Environment => {
   let newRootChildren = environment.rootChildren;
   let newFolders = environment.folders;
 
-  // remove source item UUID from it's parent container chidlren
-  if (reorderAction.sourceParentId === 'root') {
-    newRootChildren = newRootChildren.filter(
-      (rootChild) => rootChild.uuid !== reorderAction.sourceId
-    );
-  } else {
-    newFolders = newFolders.map((folder) => {
-      if (folder.uuid === reorderAction.sourceParentId) {
-        return {
-          ...folder,
-          children: folder.children.filter(
-            (folderChild) => folderChild.uuid !== reorderAction.sourceId
-          )
-        };
-      }
+  // check in which container the source item is. It could have been moved in another container in the meantime (sync)
+  const containerId: 'root' | string | null = findRouteOrFolderContainer(
+    reorderAction.sourceId,
+    environment
+  );
 
-      return folder;
-    });
-  }
-
-  // move in correct target (inside or before/after)
-  if (
-    reorderAction.reorderActionType === ReorderActionType.INSIDE &&
-    reorderAction.isTargetContainer
-  ) {
-    newFolders = newFolders.map((folder) => {
-      if (folder.uuid === reorderAction.targetId) {
-        return {
-          ...folder,
-          children: [
-            ...folder.children,
-            {
-              type: reorderAction.isSourceContainer ? 'folder' : 'route',
-              uuid: reorderAction.sourceId
-            }
-          ]
-        };
-      }
-
-      return folder;
-    });
-  } else {
-    if (reorderAction.targetParentId === 'root') {
-      newRootChildren = insertItemAtTarget<FolderChild>(
-        newRootChildren,
-        reorderAction.reorderActionType,
-        {
-          type: reorderAction.isSourceContainer ? 'folder' : 'route',
-          uuid: reorderAction.sourceId
-        },
-        reorderAction.targetId
+  // only do something if it can be found in the environment
+  if (containerId) {
+    // remove source item UUID from its parent container children
+    if (containerId === 'root') {
+      newRootChildren = newRootChildren.filter(
+        (rootChild) => rootChild.uuid !== reorderAction.sourceId
       );
     } else {
       newFolders = newFolders.map((folder) => {
-        if (folder.uuid === reorderAction.targetParentId) {
+        if (folder.uuid === containerId) {
           return {
             ...folder,
-            children: insertItemAtTarget<FolderChild>(
-              folder.children,
-              reorderAction.reorderActionType,
-              {
-                type: reorderAction.isSourceContainer ? 'folder' : 'route',
-                uuid: reorderAction.sourceId
-              },
-              reorderAction.targetId
+            children: folder.children.filter(
+              (folderChild) => folderChild.uuid !== reorderAction.sourceId
             )
           };
         }
@@ -226,13 +190,94 @@ export const reorderRoutesMutator = (
         return folder;
       });
     }
+
+    // move in correct target (inside or before/after)
+    if (reorderAction.reorderActionType === ReorderActionType.INSIDE) {
+      if (reorderAction.isTargetContainer) {
+        newFolders = newFolders.map((folder) => {
+          if (
+            folder.uuid === reorderAction.targetId &&
+            // check that the target folder doesn't already contain the source item
+            !folder.children.find(
+              (folderChild) => folderChild.uuid === reorderAction.sourceId
+            )
+          ) {
+            return {
+              ...folder,
+              children: [
+                ...folder.children,
+                {
+                  type: reorderAction.isSourceContainer ? 'folder' : 'route',
+                  uuid: reorderAction.sourceId
+                }
+              ]
+            };
+          }
+
+          return folder;
+        });
+      } else if (reorderAction.targetId === 'root') {
+        newRootChildren = [
+          ...newRootChildren,
+          {
+            type: reorderAction.isSourceContainer ? 'folder' : 'route',
+            uuid: reorderAction.sourceId
+          }
+        ];
+      }
+    } else {
+      if (
+        reorderAction.targetParentId === 'root' &&
+        // check that the target folder doesn't already contain the source item
+        !newRootChildren.find(
+          (rootChild) => rootChild.uuid === reorderAction.sourceId
+        )
+      ) {
+        newRootChildren = insertItemAtTarget<FolderChild>(
+          newRootChildren,
+          reorderAction.reorderActionType,
+          {
+            type: reorderAction.isSourceContainer ? 'folder' : 'route',
+            uuid: reorderAction.sourceId
+          },
+          reorderAction.targetId
+        );
+      } else {
+        newFolders = newFolders.map((folder) => {
+          if (
+            folder.uuid === reorderAction.targetParentId &&
+            // check that the target folder doesn't already contain the source item
+            !folder.children.find(
+              (folderChild) => folderChild.uuid === reorderAction.sourceId
+            )
+          ) {
+            return {
+              ...folder,
+              children: insertItemAtTarget<FolderChild>(
+                folder.children,
+                reorderAction.reorderActionType,
+                {
+                  type: reorderAction.isSourceContainer ? 'folder' : 'route',
+                  uuid: reorderAction.sourceId
+                },
+                reorderAction.targetId
+              )
+            };
+          }
+
+          return folder;
+        });
+      }
+    }
+
+    return {
+      ...environment,
+      folders: newFolders,
+      rootChildren: newRootChildren
+    };
   }
 
-  return {
-    ...environment,
-    folders: newFolders,
-    rootChildren: newRootChildren
-  };
+  return environment;
 };
 
 /**
@@ -247,7 +292,7 @@ export const reorderRouteResponseMutator = (
   environment: Environment,
   routeUuid: string,
   reorderAction: ReorderAction<string>
-) => ({
+): Environment => ({
   ...environment,
   routes: environment.routes.map((route) => {
     if (route.uuid === routeUuid) {
@@ -276,7 +321,7 @@ export const reorderRouteResponseMutator = (
 export const reorderDatabucketMutator = (
   environment: Environment,
   reorderAction: ReorderAction<string>
-) => ({
+): Environment => ({
   ...environment,
   data: moveItemAtTarget<DataBucket>(
     environment.data,
@@ -296,7 +341,7 @@ export const reorderDatabucketMutator = (
 export const reorderCallbackMutator = (
   environment: Environment,
   reorderAction: ReorderAction<string>
-) => ({
+): Environment => ({
   ...environment,
   callbacks: moveItemAtTarget<Callback>(
     environment.callbacks,
@@ -318,7 +363,7 @@ export const addFolderMutator = (
   environment: Environment,
   newFolder: Folder,
   parentId: string | 'root'
-) => {
+): Environment => {
   let rootChildren = environment.rootChildren;
   let folders = [...environment.folders];
   folders.push(newFolder);
@@ -364,7 +409,7 @@ export const updateFolderMutator = (
   environment: Environment,
   folderUuid: string,
   properties: Partial<Folder>
-) => ({
+): Environment => ({
   ...environment,
   folders: environment.folders.map((folder) => {
     if (folder.uuid === folderUuid) {
@@ -377,7 +422,6 @@ export const updateFolderMutator = (
 
 /**
  * Remove a folder from an environment, and remove it from the root level or from a folder
- * Also add back children to the root level or parent folder
  *
  * @param environment
  * @param folderUuid
@@ -386,11 +430,7 @@ export const updateFolderMutator = (
 export const removeFolderMutator = (
   environment: Environment,
   folderUuid: string
-) => {
-  const { children: folderChildren } = environment.folders.find(
-    (folder) => folder.uuid === folderUuid
-  ) ?? { children: [] };
-
+): Environment => {
   let newFolders: Folder[] = environment.folders;
   let newRootChildren = environment.rootChildren;
 
@@ -398,12 +438,11 @@ export const removeFolderMutator = (
   if (
     environment.rootChildren.some((rootchild) => rootchild.uuid === folderUuid)
   ) {
-    // remove folder from root level and add back children to root level
+    // remove folder from root level
     newRootChildren = [
       ...environment.rootChildren.filter(
         (rootChild) => rootChild.uuid !== folderUuid
-      ),
-      ...folderChildren
+      )
     ];
   } else {
     // find and remove from parent folder
@@ -412,8 +451,7 @@ export const removeFolderMutator = (
         return {
           ...folder,
           children: [
-            ...folder.children.filter((child) => child.uuid !== folderUuid),
-            ...folderChildren
+            ...folder.children.filter((child) => child.uuid !== folderUuid)
           ]
         };
       }
@@ -444,7 +482,7 @@ export const addDatabucketMutator = (
   environment: Environment,
   newDatabucket: DataBucket,
   insertAfterUuid?: string
-) => {
+): Environment => {
   const data = [...environment.data];
 
   let afterIndex = data.length;
@@ -478,7 +516,7 @@ export const updateDatabucketMutator = (
   environment: Environment,
   databucketUuid: string,
   properties: Partial<DataBucket>
-) => ({
+): Environment => ({
   ...environment,
   data: environment.data.map((databucket) => {
     if (databucket.uuid === databucketUuid) {
@@ -499,7 +537,7 @@ export const updateDatabucketMutator = (
 export const removeDatabucketMutator = (
   environment: Environment,
   databucketUuid: string
-) => {
+): Environment => {
   const deletedBucket = environment.data.find(
     (databucket) => databucket.uuid === databucketUuid
   );
@@ -545,7 +583,7 @@ export const addRouteResponseMutator = (
   routeUuid: string,
   newRouteResponse: RouteResponse,
   insertAfterUuid?: string
-) => ({
+): Environment => ({
   ...environment,
   routes: environment.routes.map((route) => {
     if (route.uuid === routeUuid) {
@@ -586,7 +624,7 @@ export const updateRouteResponseMutator = (
   routeUuid: string,
   routeResponseUuid: string,
   properties: Partial<RouteResponse>
-) => ({
+): Environment => ({
   ...environment,
   routes: environment.routes.map((route) => {
     if (route.uuid === routeUuid) {
@@ -633,7 +671,7 @@ export const removeRouteResponseMutator = (
   environment: Environment,
   routeUuid: string,
   routeResponseUuid: string
-) => ({
+): Environment => ({
   ...environment,
   routes: environment.routes.map((route) => {
     if (route.uuid === routeUuid) {
@@ -672,7 +710,7 @@ export const addCallbackMutator = (
   environment: Environment,
   newCallback: Callback,
   insertAfterUuid?: string
-) => {
+): Environment => {
   const callbacks = [...environment.callbacks];
 
   let afterIndex = callbacks.length;
@@ -707,7 +745,7 @@ export const updateCallbackMutator = (
   environment: Environment,
   callbackUuid: string,
   properties: Partial<Callback>
-) => ({
+): Environment => ({
   ...environment,
   callbacks: environment.callbacks.map((callback) => {
     if (callback.uuid === callbackUuid) {
@@ -731,7 +769,7 @@ export const updateCallbackMutator = (
 export const removeCallbackMutator = (
   environment: Environment,
   callbackUuid: string
-) => ({
+): Environment => ({
   ...environment,
   callbacks: environment.callbacks.filter(
     (callback) => callback.uuid !== callbackUuid
@@ -761,3 +799,73 @@ export const removeCallbackMutator = (
     return route;
   })
 });
+
+/**
+ * Reorder all entities in an environment
+ *
+ * @param environment
+ * @param entity - entity type to reorder
+ * @param order - array of entities uuids
+ * @param parentId - route uuid if entity is a route response, or 'root'/uuid of a folder if entity is a folder/route
+ * @returns
+ */
+export const fullReorderEntitiesMutator = (
+  environment: Environment,
+  entity: ReorderableContainers,
+  order: string[],
+  parentId?: string
+): Environment => {
+  switch (entity) {
+    case ReorderableContainers.ROUTES:
+      if (parentId === 'root') {
+        return {
+          ...environment,
+          rootChildren: sortByUuidsList(environment.rootChildren, order)
+        };
+      } else {
+        return {
+          ...environment,
+          folders: environment.folders.map((folder) => {
+            if (folder.uuid === parentId) {
+              return {
+                ...folder,
+                children: sortByUuidsList(folder.children, order)
+              };
+            }
+
+            return folder;
+          })
+        };
+      }
+
+    case ReorderableContainers.ROUTE_RESPONSES:
+      return {
+        ...environment,
+        routes: environment.routes.map((route) => {
+          if (route.uuid === parentId) {
+            return {
+              ...route,
+              responses: sortByUuidsList(route.responses, order)
+            };
+          }
+
+          return route;
+        })
+      };
+
+    case ReorderableContainers.DATABUCKETS:
+      return {
+        ...environment,
+        data: sortByUuidsList(environment.data, order)
+      };
+
+    case ReorderableContainers.CALLBACKS:
+      return {
+        ...environment,
+        callbacks: sortByUuidsList(environment.callbacks, order)
+      };
+
+    default:
+      return environment;
+  }
+};

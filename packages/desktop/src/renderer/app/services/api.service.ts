@@ -1,12 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
-import { EMPTY } from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  filter,
-  map,
-  tap
-} from 'rxjs/operators';
+import { EMPTY, combineLatest } from 'rxjs';
+import { catchError, distinctUntilChanged, tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -48,6 +42,9 @@ export class ApiService extends Logger {
         switch (action) {
           case 'NEW_ENVIRONMENT':
             this.environmentsService.addEnvironment().subscribe();
+            break;
+          case 'NEW_CLOUD_ENVIRONMENT':
+            this.environmentsService.addCloudEnvironment().subscribe();
             break;
           case 'NEW_ENVIRONMENT_CLIPBOARD':
             this.environmentsService.newEnvironmentFromClipboard().subscribe();
@@ -158,32 +155,27 @@ export class ApiService extends Logger {
     );
 
     // listen to environments and enable/disable some menu entries
-    this.store
-      .select('environments')
+    combineLatest([
+      this.store.select('environments').pipe(distinctUntilChanged()),
+      this.store.selectActiveEnvironment().pipe(distinctUntilChanged()),
+      this.store.select('settings').pipe(distinctUntilChanged()),
+      this.store.select('sync').pipe(distinctUntilChanged())
+    ])
       .pipe(
-        distinctUntilChanged(),
-        tap((environments) => {
-          MainAPI.send(
-            environments.length >= 1
-              ? 'APP_ENABLE_ENVIRONMENT_MENU_ENTRIES'
-              : 'APP_DISABLE_ENVIRONMENT_MENU_ENTRIES'
-          );
-        })
-      )
-      .subscribe();
-
-    this.store
-      .selectActiveEnvironment()
-      .pipe(
-        filter((activeEnvironment) => !!activeEnvironment),
-        distinctUntilChanged(),
-        map((activeEnvironment) => activeEnvironment.routes),
-        tap((routes) => {
-          MainAPI.send(
-            routes.length >= 1
-              ? 'APP_ENABLE_ROUTE_MENU_ENTRIES'
-              : 'APP_DISABLE_ROUTE_MENU_ENTRIES'
-          );
+        tap(([environments, activeEnvironment, settings, sync]) => {
+          MainAPI.send('APP_UPDATE_MENU_STATE', {
+            cloudEnabled: sync.status,
+            environmentsCount: environments.length,
+            hasActiveEnvironment: !!activeEnvironment,
+            isActiveEnvironmentCloud: activeEnvironment
+              ? !!settings?.environments.find(
+                  (environmentDescriptor) =>
+                    environmentDescriptor.uuid === activeEnvironment.uuid &&
+                    environmentDescriptor.cloud
+                )
+              : false,
+            activeEnvironmentRoutesCount: activeEnvironment?.routes.length ?? 0
+          });
         })
       )
       .subscribe();

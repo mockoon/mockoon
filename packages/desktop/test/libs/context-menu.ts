@@ -4,11 +4,12 @@ import utils from '../libs/utils';
 type Targets = 'environments' | 'routes' | 'databuckets' | 'callbacks';
 
 export enum ContextMenuEnvironmentActions {
-  DUPLICATE = 1,
-  COPY_JSON = 2,
-  SHOW_FOLDER = 3,
-  MOVE_FOLDER = 4,
-  CLOSE = 5
+  DUPLICATE_TO_CLOUD = 1,
+  DUPLICATE = 2,
+  COPY_JSON = 3,
+  SHOW_FOLDER = 4,
+  MOVE_FOLDER = 5,
+  CLOSE = 6
 }
 
 export enum ContextMenuDatabucketActions {
@@ -48,7 +49,14 @@ class ContextMenu {
     callbacks: '.callbacks-menu'
   };
 
-  public getItem(contextMenuItemIndex: number) {
+  public getItem(
+    contextMenuItemIndex:
+      | ContextMenuEnvironmentActions
+      | ContextMenuRouteActions
+      | ContextMenuFolderActions
+      | ContextMenuDatabucketActions
+      | ContextMenuCallbackActions
+  ) {
     return $(
       `.context-menu .context-menu-item:nth-child(${contextMenuItemIndex})`
     );

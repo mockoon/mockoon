@@ -7,10 +7,13 @@ import { clearIPCChannels, initIPCListeners } from 'src/main/libs/ipc';
 import { createMainLogger, logInfo } from 'src/main/libs/logs';
 import { initMainWindow, saveOpenUrlArgs } from 'src/main/libs/main-window';
 import { setPaths } from 'src/main/libs/paths';
+import { getRuntimeArg, parseRuntimeArgs } from 'src/main/libs/runtime-args';
 import { ServerInstance } from 'src/main/libs/server-management';
 
 declare const IS_TESTING: boolean;
 declare const IS_DEV: boolean;
+
+parseRuntimeArgs();
 
 setPaths();
 createMainLogger();
@@ -30,7 +33,7 @@ const initApp = (showSplash = true) => {
   mainWindow = initMainWindow(showSplash);
   initIPCListeners(mainWindow);
 
-  if (IS_DEV) {
+  if (IS_DEV && !getRuntimeArg('disable-hot-reload')) {
     // when serving (dev mode) enable hot reloading
     import('src/main/libs/hot-reload').then((hotReloadModule) => {
       hotReloadModule.hotReload();
