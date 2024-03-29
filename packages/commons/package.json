@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/commons",
   "description": "Mockoon's commons library. Used in Mockoon desktop application and CLI.",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "guillaume@1kb.software",
