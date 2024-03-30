@@ -93,6 +93,7 @@
       </div>
     </div>
 
+    <!-- Display solo devices presence -->
     <div
       *ngIf="data.sync.status && data.sync.presence?.devices > 1"
       ngbTooltip="{{ data.sync.presence.devices - 1 }} other {{
@@ -106,8 +107,9 @@
       </span>
     </div>
 
+    <!-- Display team users presence -->
     <div
-      *ngIf="data.sync.status && data.sync.presence?.users.length > 1"
+      *ngIf="data.sync.status && data.sync.presence?.users?.length > 1"
       [ngbTooltip]="presenceTooltip"
       class="badge badge-custom align-middle"
     >
