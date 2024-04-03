@@ -251,7 +251,7 @@ Please also take a look at our [Code of Conduct](https://github.com/mockoon/mock
 
 ## Documentation
 
-You will find Mockoon's [documentation](https://mockoon.com/docs/latest) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
+You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
 
 ## Roadmap
 
