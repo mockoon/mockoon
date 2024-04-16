@@ -1,10 +1,20 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
 import { Observable } from 'rxjs';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import {
+  combineLatestWith,
+  distinctUntilChanged,
+  filter,
+  map
+} from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
-import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
+import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import {
+  GetEditorModeFromContentType,
+  textFilter
+} from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -39,8 +49,8 @@ export class EnvironmentLogsComponent implements OnInit {
   public environmentLogs$: Observable<EnvironmentLog[]>;
   public activeEnvironmentLogsTab$: Observable<EnvironmentLogsTabsNameType>;
   public activeEnvironmentUUID$: Observable<string>;
-  public activeEnvironmentLogUUID$: Observable<string>;
   public activeEnvironmentLog$: Observable<EnvironmentLog>;
+  public environmentLogsCount$: Observable<number>;
   public settings$: Observable<Settings>;
   public collapseStates: CollapseStates = {
     'request.general': false,
@@ -59,30 +69,41 @@ export class EnvironmentLogsComponent implements OnInit {
     request: typeof defaultEditorOptions;
     response: typeof defaultEditorOptions;
   }>;
+  public logsFilter$: Observable<string>;
+  public dateFormat = 'yyyy-MM-dd HH:mm:ss:SSS';
+  public focusableInputs = FocusableInputs;
 
   constructor(
     private store: Store,
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
-    private uiService: UIService
+    private uiService: UIService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit() {
+    this.logsFilter$ = this.store.selectFilter('logs');
     this.settings$ = this.store.select('settings');
     this.activeEnvironmentUUID$ = this.store.select('activeEnvironmentUUID');
-    this.environmentLogs$ = this.store.selectActiveEnvironmentLogs();
-
-    this.activeEnvironmentLogUUID$ = this.environmentLogs$.pipe(
-      mergeMap(() => this.store.selectActiveEnvironmentLogUUID())
+    this.environmentLogsCount$ = this.store
+      .selectActiveEnvironmentLogs()
+      .pipe(map((logs) => logs.length));
+    this.environmentLogs$ = this.store.selectActiveEnvironmentLogs().pipe(
+      combineLatestWith(this.logsFilter$),
+      map(([environmentLogs, search]) =>
+        !search
+          ? environmentLogs
+          : environmentLogs.filter((log) =>
+              textFilter(
+                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestamp, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+                search
+              )
+            )
+      )
     );
 
-    this.activeEnvironmentLog$ = this.activeEnvironmentLogUUID$.pipe(
-      withLatestFrom(this.environmentLogs$),
-      map(([activeEnvironmentLogUUID, environmentLogs]) =>
-        environmentLogs.find(
-          (environmentLog) => environmentLog.UUID === activeEnvironmentLogUUID
-        )
-      ),
+    this.activeEnvironmentLog$ = this.store.selectActiveEnvironmentLog().pipe(
+      distinctUntilChanged(),
       map((environmentLog) => {
         if (environmentLog) {
           if (environmentLog.response.body) {
@@ -105,6 +126,7 @@ export class EnvironmentLogsComponent implements OnInit {
     );
 
     this.editorConfigs$ = this.activeEnvironmentLog$.pipe(
+      filter((activeEnvironmentLog) => !!activeEnvironmentLog),
       map((activeEnvironmentLog) => {
         const responseContentTypeHeader = GetContentType(
           activeEnvironmentLog.response.headers
@@ -211,5 +233,9 @@ export class EnvironmentLogsComponent implements OnInit {
    */
   public stopRecording(environmentUuid: string) {
     this.environmentsService.stopRecording(environmentUuid);
+  }
+
+  public openSettings() {
+    this.uiService.openModal('settings');
   }
 }

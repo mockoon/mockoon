@@ -2,16 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostListener,
   OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import {
   Environment,
   Folder,
@@ -21,7 +16,7 @@ import {
   ResponseMode,
   Route
 } from '@mockoon/commons';
-import { Observable, Subject, from, merge } from 'rxjs';
+import { Observable, Subject, merge } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -35,7 +30,6 @@ import {
   FoldersContextMenu,
   RoutesContextMenu
 } from 'src/renderer/app/components/context-menu/context-menus';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter } from 'src/renderer/app/libs/utils.lib';
 import {
@@ -45,7 +39,6 @@ import {
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { updateFilterAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
@@ -78,11 +71,9 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public disabledRoutes$: Observable<string[]>;
   public collapsedFolders$: Observable<string[]>;
   public routesFilter$: Observable<string>;
-  public routesFilter: UntypedFormControl;
   public dragEnabled = true;
   public focusableInputs = FocusableInputs;
   public folderForm: UntypedFormGroup;
-  public os$: Observable<string>;
   public menuSize = Config.defaultSecondaryMenuSize;
   public draggedFolderCollapsed: boolean;
   public ResponseMode = ResponseMode;
@@ -96,27 +87,13 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     private formBuilder: UntypedFormBuilder
   ) {}
 
-  @HostListener('keydown', ['$event'])
-  public escapeFilterInput(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.clearFilter();
-    }
-  }
-
   ngOnInit() {
-    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
-    this.routesFilter = this.formBuilder.control('');
-
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeRoute$ = this.store.selectActiveRoute();
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.settings$ = this.store.select('settings');
-    this.routesFilter$ = this.store.selectFilter('routes').pipe(
-      tap((search) => {
-        this.routesFilter.patchValue(search, { emitEvent: false });
-      })
-    );
+    this.routesFilter$ = this.store.selectFilter('routes');
     this.disabledRoutes$ = this.store.selectActiveEnvironment().pipe(
       withLatestFrom(this.store.select('settings')),
       filter(
@@ -152,16 +129,6 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         };
       })
     );
-
-    this.routesFilter.valueChanges
-      .pipe(
-        debounceTime(10),
-        tap((search) =>
-          this.store.update(updateFilterAction('routes', search))
-        ),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
 
     this.initForms();
   }
@@ -296,13 +263,6 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     } else {
       this.dragEnabled = true;
     }
-  }
-
-  /**
-   * Clear the filter route
-   */
-  public clearFilter() {
-    this.store.update(updateFilterAction('routes', ''));
   }
 
   /**

@@ -168,7 +168,8 @@ export const environmentReducer = (
             ...state.filters,
             routes: '',
             databuckets: '',
-            callbacks: ''
+            callbacks: '',
+            logs: ''
           }
         };
         break;
@@ -223,7 +224,8 @@ export const environmentReducer = (
           ...state.filters,
           routes: '',
           databuckets: '',
-          callbacks: ''
+          callbacks: '',
+          logs: ''
         }
       };
       break;
@@ -493,7 +495,8 @@ export const environmentReducer = (
           ...state.filters,
           routes: '',
           databuckets: '',
-          callbacks: ''
+          callbacks: '',
+          logs: ''
         },
         settings: newSettings
       };
@@ -523,7 +526,8 @@ export const environmentReducer = (
           ...state.filters,
           routes: '',
           databuckets: '',
-          callbacks: ''
+          callbacks: '',
+          logs: ''
         },
         settings: {
           ...state.settings,
@@ -1254,6 +1258,10 @@ export const environmentReducer = (
         activeEnvironmentLogsUUID: {
           ...state.activeEnvironmentLogsUUID,
           [action.environmentUUID]: null
+        },
+        filters: {
+          ...state.filters,
+          logs: ''
         }
       };
       break;
@@ -1363,7 +1371,9 @@ export const environmentReducer = (
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: '',
+          logs: ''
         }
       };
       break;
@@ -1418,7 +1428,9 @@ export const environmentReducer = (
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: '',
+          logs: ''
         }
       };
       break;

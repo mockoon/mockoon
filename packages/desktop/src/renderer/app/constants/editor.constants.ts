@@ -17,6 +17,5 @@ export const defaultEditorOptions = {
       }
     ]
   },
-  mode: 'json',
-  theme: 'editor-theme'
+  mode: 'json'
 };
