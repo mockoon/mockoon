@@ -116,29 +116,6 @@
           />
         </div>
       </div>
-      <div class="mb-3">
-        <div class="input-group align-items-center">
-          <label for="settings-log-body-size" class="col-form-label pe-2">
-            Log's body maximum characters size
-          </label>
-          <input
-            type="number"
-            class="form-control col-1"
-            id="settings-log-body-size"
-            [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
-            placeholder="10000 (default)"
-            formControlName="logSizeLimit"
-          />
-          <div class="input-group-text">
-            <app-svg
-              icon="info"
-              ngbTooltip="Truncate the entering requests and exiting responses bodies if bigger than {{
-                settings.logSizeLimit
-              }} characters"
-            ></app-svg>
-          </div>
-        </div>
-      </div>
     </div>
 
     <app-title-separator

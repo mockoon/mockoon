@@ -2,10 +2,8 @@ import { defaultEnvironmentVariablesPrefix } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { sep } from 'path';
 import environments from '../libs/environments';
-import environmentsLogs from '../libs/environments-logs';
 import environmentsSettings from '../libs/environments-settings';
 import file from '../libs/file';
-import http from '../libs/http';
 import modals from '../libs/modals';
 import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
@@ -119,83 +117,6 @@ describe('Settings', () => {
         './tmp/storage/settings.json',
         'enableTelemetry',
         false
-      );
-    });
-  });
-
-  describe('Log body truncate', () => {
-    it('should start the environment', async () => {
-      await environments.start();
-      await navigation.switchView('ENV_LOGS');
-    });
-
-    it('should set log body size to 100', async () => {
-      await settings.open();
-      await settings.setSettingValue('settings-log-body-size', '100');
-      await modals.close();
-
-      await utils.waitForAutosave();
-      await file.verifyObjectPropertyInFile(
-        './tmp/storage/settings.json',
-        'logSizeLimit',
-        100
-      );
-    });
-
-    it('should log request full body of 100 characters', async () => {
-      const str = utils.makeString(100);
-      await http.assertCall(generateCall(str));
-      await environmentsLogs.assertCount(1);
-      await environmentsLogs.select(1);
-      await environmentsLogs.assertLogItem(` ${str} `, 'request', 10, 1);
-    });
-
-    it('should truncate request body of 101 characters', async () => {
-      const str = utils.makeString(101);
-      await http.assertCall(generateCall(str));
-      await environmentsLogs.assertCount(2);
-      await environmentsLogs.select(1);
-      await environmentsLogs.assertLogItem(
-        ` ${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED -------- `,
-        'request',
-        10,
-        1
-      );
-    });
-
-    it('should set log body size to 1000', async () => {
-      await settings.open();
-      await settings.setSettingValue('settings-log-body-size', '1000');
-      await modals.close();
-
-      await utils.waitForAutosave();
-      await file.verifyObjectPropertyInFile(
-        './tmp/storage/settings.json',
-        'logSizeLimit',
-        1000
-      );
-    });
-
-    it('should log request full body of 1000 characters', async () => {
-      const str = utils.makeString(1000);
-      await http.assertCall(generateCall(str));
-      await environmentsLogs.assertCount(3);
-      await environmentsLogs.select(1);
-
-      await environmentsLogs.assertLogItem(` ${str} `, 'request', 10, 1);
-    });
-
-    it('should truncate request body of 1001 characters', async () => {
-      const str = utils.makeString(1001);
-      await http.assertCall(generateCall(str));
-      await environmentsLogs.assertCount(4);
-      await environmentsLogs.select(1);
-
-      await environmentsLogs.assertLogItem(
-        ` ${str.slice(0, -1)}\n\n-------- BODY HAS BEEN TRUNCATED -------- `,
-        'request',
-        10,
-        1
       );
     });
   });

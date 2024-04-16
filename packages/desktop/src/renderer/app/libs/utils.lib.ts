@@ -1,4 +1,10 @@
-import { Environment, Route, RouteType } from '@mockoon/commons';
+import {
+  Environment,
+  ParsedJSONBodyMimeTypes,
+  Route,
+  RouteType,
+  stringIncludesArrayItems
+} from '@mockoon/commons';
 import { EditorModes } from 'src/renderer/app/models/editor.model';
 
 export const ArrayContainsObjectKey = (
@@ -20,7 +26,7 @@ export const ArrayContainsObjectKey = (
 export const GetEditorModeFromContentType = (
   contentType: string
 ): EditorModes => {
-  if (contentType.includes('application/json')) {
+  if (stringIncludesArrayItems(ParsedJSONBodyMimeTypes, contentType)) {
     return 'json';
   } else if (
     contentType.includes('text/html') ||

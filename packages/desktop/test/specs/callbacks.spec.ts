@@ -253,7 +253,7 @@ describe('Callback filter', () => {
 
   it('should reset callback filter when clicking on the button Clear filter', async () => {
     await callbacks.clearFilter();
-    await browser.pause(100);
+    await browser.pause(200);
     await callbacks.assertCount(4);
   });
 

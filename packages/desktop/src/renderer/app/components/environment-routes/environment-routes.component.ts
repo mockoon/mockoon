@@ -14,6 +14,7 @@ import {
   INDENT_SIZE,
   Methods,
   MimeTypesWithTemplating,
+  ParsedJSONBodyMimeTypes,
   ReorderAction,
   ReorderableContainers,
   ResponseMode,
@@ -22,7 +23,8 @@ import {
   RouteResponse,
   RouteResponseDefault,
   RulesDisablingResponseModes,
-  RulesNotUsingDefaultResponse
+  RulesNotUsingDefaultResponse,
+  stringIncludesArrayItems
 } from '@mockoon/commons';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, combineLatest, from, merge } from 'rxjs';
@@ -482,7 +484,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       activeRouteResponse
     );
 
-    if (contentType.includes('application/json')) {
+    if (stringIncludesArrayItems(ParsedJSONBodyMimeTypes, contentType)) {
       try {
         this.activeRouteResponseForm
           .get('body')

@@ -8,6 +8,8 @@ import {
   GenerateUniqueID,
   generateUUID,
   HighestMigrationId,
+  INDENT_SIZE,
+  isContentTypeApplicationJson,
   repairRefs,
   Route,
   Transaction
@@ -71,6 +73,41 @@ export class DataService extends Logger {
    * @param response
    */
   public formatLog(transaction: Transaction): EnvironmentLog {
+    let isResJsonInvalid = false;
+    let isReqJsonInvalid = false;
+    let responseBody = transaction.response.body;
+    let requestBody = transaction.request.body;
+
+    if (
+      responseBody &&
+      isContentTypeApplicationJson(transaction.response.headers)
+    ) {
+      try {
+        responseBody = JSON.stringify(
+          JSON.parse(transaction.response.body),
+          null,
+          INDENT_SIZE
+        );
+      } catch (error) {
+        isResJsonInvalid = true;
+      }
+    }
+
+    if (
+      requestBody &&
+      isContentTypeApplicationJson(transaction.request.headers)
+    ) {
+      try {
+        requestBody = JSON.stringify(
+          JSON.parse(transaction.request.body),
+          null,
+          2
+        );
+      } catch (error) {
+        isReqJsonInvalid = true;
+      }
+    }
+
     return {
       UUID: generateUUID(),
       routeUUID: transaction.routeUUID,
@@ -83,16 +120,18 @@ export class DataService extends Logger {
         params: transaction.request.params,
         query: transaction.request.query,
         queryParams: this.formatQueryParams(transaction.request.queryParams),
-        body: transaction.request.body,
-        headers: transaction.request.headers
+        body: requestBody,
+        headers: transaction.request.headers,
+        isInvalidJson: isReqJsonInvalid
       },
       proxied: transaction.proxied,
       response: {
         status: transaction.response.statusCode,
         statusMessage: transaction.response.statusMessage,
         headers: transaction.response.headers,
-        body: transaction.response.body,
-        binaryBody: transaction.response.body === BINARY_BODY
+        body: responseBody,
+        binaryBody: transaction.response.body === BINARY_BODY,
+        isInvalidJson: isResJsonInvalid
       }
     };
   }
@@ -190,23 +229,6 @@ export class DataService extends Logger {
     } while (foundID);
 
     return callback;
-  }
-
-  /**
-   * Truncate the body to the maximum length defined in the settings
-   *
-   * @param body
-   */
-  public truncateBody(body: string) {
-    const logSizeLimit = this.store.get('settings').logSizeLimit;
-
-    if (body.length > logSizeLimit) {
-      body =
-        body.substring(0, logSizeLimit) +
-        '\n\n-------- BODY HAS BEEN TRUNCATED --------';
-    }
-
-    return body;
   }
 
   /**

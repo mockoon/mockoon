@@ -13,12 +13,15 @@ import {
   Header,
   IsValidURL,
   MimeTypesWithTemplating,
+  ParsedJSONBodyMimeTypes,
+  ParsedXMLBodyMimeTypes,
   ProcessedDatabucket,
   Route,
   RouteResponse,
   RouteType,
   ServerErrorCodes,
-  ServerEvents
+  ServerEvents,
+  stringIncludesArrayItems
 } from '@mockoon/commons';
 import appendField from 'append-field';
 import busboy from 'busboy';
@@ -42,10 +45,6 @@ import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
 import { format } from 'util';
 import { xml2js } from 'xml-js';
-import {
-  ParsedJSONBodyMimeTypes,
-  ParsedXMLBodyMimeTypes
-} from '../../constants/common.constants';
 import { ServerMessages } from '../../constants/server-messages.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
 import { SetFakerLocale, SetFakerSeed } from '../faker';
@@ -59,8 +58,7 @@ import {
   isBodySupportingMethod,
   preparePath,
   resolvePathFromEnvironment,
-  routesFromFolder,
-  stringIncludesArrayItems
+  routesFromFolder
 } from '../utils';
 import { createAdminEndpoint } from './admin-endpoint';
 import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';

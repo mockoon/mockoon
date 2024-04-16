@@ -10,10 +10,6 @@ class EnvironmentsLogs {
     return $('.environment-logs');
   }
 
-  public get viewBodyEditor() {
-    return $('.environment-logs-open-request-body');
-  }
-
   public get startRecordingBtn() {
     return $('.environment-logs-header button#start-recording');
   }
@@ -97,16 +93,24 @@ class EnvironmentsLogs {
     await utils.assertElementText($(selector), text);
   }
 
+  public async assertLogBody(text: string, tab: 'request' | 'response') {
+    const selector = `.environment-logs-content-${tab} div:nth-child(${tab === 'request' ? '10' : '6'}) .ace_content`;
+
+    await $(selector).waitForExist();
+    await utils.assertElementText($(selector), text);
+  }
+
   public async assertLogItemTitle(
     text: string,
     tab: 'request' | 'response',
     sectionIndex: number
   ) {
-    const selector = `.environment-logs-content-${tab} div:nth-child(${sectionIndex}) div:first-child`;
+    const selector = `.environment-logs-content-${tab} > div:nth-child(${sectionIndex})`;
 
     await $(selector).waitForExist();
-    const elementText = await $(selector).getText();
-    expect(elementText).toContain(text);
+    const elementText = (await $(selector).getText()).trim();
+
+    expect(elementText).toEqual(text);
   }
 
   public async switchTab(tabName: EnvironmentLogsTabsNameType) {
@@ -130,12 +134,6 @@ class EnvironmentsLogs {
 
   public async clickViewBodyLogButton() {
     await $('.view-body-link').click();
-  }
-
-  public async clickOpenBodyInEditorButton(tab: 'request' | 'response') {
-    await $(
-      `.environment-logs-content-${tab} .environment-logs-open-${tab}-body`
-    ).click();
   }
 
   public async startRecording() {

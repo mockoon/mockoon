@@ -1,17 +1,18 @@
 import {
   Environment,
+  ParsedBodyMimeTypes,
   ProcessedDatabucket,
   ResponseMode,
   ResponseRule,
   ResponseRuleTargets,
   Route,
-  RouteResponse
+  RouteResponse,
+  stringIncludesArrayItems
 } from '@mockoon/commons';
 import { Request } from 'express';
 import { ParsedQs } from 'qs';
-import { ParsedBodyMimeTypes } from '../constants/common.constants';
 import { TemplateParser } from './template-parser';
-import { getValueFromPath, stringIncludesArrayItems } from './utils';
+import { getValueFromPath } from './utils';
 
 /**
  * Interpretor for the route response rules.

@@ -139,7 +139,7 @@ describe('Environment logs', () => {
           8,
           6
         );
-        await environmentsLogs.assertLogItem(' requestbody ', 'request', 10, 1);
+        await environmentsLogs.assertLogBody('requestbody', 'request');
       });
 
       it('should verify response tab content', async () => {
@@ -174,12 +174,7 @@ describe('Environment logs', () => {
           4,
           4
         );
-        await environmentsLogs.assertLogItem(
-          ' responsebody ',
-          'response',
-          6,
-          1
-        );
+        await environmentsLogs.assertLogBody('responsebody', 'response');
       });
     });
 
@@ -345,7 +340,7 @@ describe('Environment logs', () => {
         2,
         1
       );
-      await environmentsLogs.assertLogItem(' responsebody ', 'response', 6, 1);
+      await environmentsLogs.assertLogBody('responsebody', 'response');
     });
   });
 
@@ -377,22 +372,6 @@ describe('Environment logs', () => {
           2,
           1
         );
-      });
-
-      it('should open request body in editor', async () => {
-        await environmentsLogs.clickOpenBodyInEditorButton('request');
-        await browser.pause(100);
-        await modals.assertExists();
-        await modals.close();
-      });
-
-      it('should open response body in editor', async () => {
-        await environmentsLogs.switchTab('RESPONSE');
-
-        await environmentsLogs.clickOpenBodyInEditorButton('response');
-        await browser.pause(100);
-        await modals.assertExists();
-        await modals.close();
       });
 
       it('should clear logs, verify message presence and counter absence', async () => {
