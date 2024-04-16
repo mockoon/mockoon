@@ -11,8 +11,8 @@ import routes from '../libs/routes';
 const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
   [
     {
-      assertTitle: 'raw',
-      assertBody: ' test ',
+      assertTitle: 'Body',
+      assertBody: 'test',
       call: {
         description:
           'should call GET /test and verify logs body is not encoded',
@@ -27,8 +27,8 @@ const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
       }
     },
     {
-      assertTitle: 'unzipped',
-      assertBody: ' gziptest ',
+      assertTitle: 'Body (unzipped)',
+      assertBody: 'gziptest',
       call: {
         description:
           'should call GET /test and verify logs body is decoded (gzip)',
@@ -42,8 +42,8 @@ const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
       }
     },
     {
-      assertTitle: 'unzipped',
-      assertBody: ' deflatetest ',
+      assertTitle: 'Body (unzipped)',
+      assertBody: 'deflatetest',
       call: {
         description:
           'should call GET /test and verify logs body is decoded (deflate)',
@@ -57,8 +57,8 @@ const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
       }
     },
     {
-      assertTitle: 'unzipped',
-      assertBody: ' brtest ',
+      assertTitle: 'Body (unzipped)',
+      assertBody: 'brtest',
       call: {
         description:
           'should call GET /test and verify logs body is decoded (br)',
@@ -94,12 +94,7 @@ describe('Proxy to server with zipped content', () => {
       await http.assertCallWithPort(testCase.call, 3004);
       await environmentsLogs.select(1);
       await environmentsLogs.switchTab('RESPONSE');
-      await environmentsLogs.assertLogItem(
-        testCase.assertBody,
-        'response',
-        6,
-        1
-      );
+      await environmentsLogs.assertLogBody(testCase.assertBody, 'response');
       await environmentsLogs.assertLogItemTitle(
         testCase.assertTitle,
         'response',

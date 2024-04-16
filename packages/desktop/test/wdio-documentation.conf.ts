@@ -35,7 +35,6 @@ const config: Partial<Options.Testrunner> = {
         JSON.stringify({
           welcomeShown: true,
           bannerDismissed: [],
-          logSizeLimit: 10000,
           maxLogsPerEnvironment: 50,
           truncateRouteName: true,
           mainMenuSize: 150,

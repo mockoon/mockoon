@@ -832,6 +832,42 @@
                 class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link"
                 (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)"
               >
+                <span
+                  *ngIf="
+                    activeRouteResponseLastLog.response.isInvalidJson ||
+                    activeRouteResponseLastLog.request.isInvalidJson
+                  "
+                  class="text-warning"
+                  [ngbTooltip]="tooltiptmp"
+                  tooltipClass="text-start"
+                >
+                  <app-svg icon="warning"></app-svg>
+                </span>
+                <ng-template #tooltiptmp>
+                  <div class="text-left">
+                    One of the last transaction's JSON body was invalid:
+                    <strong>
+                      {{
+                        activeRouteResponseLastLog.request.isInvalidJson
+                          ? 'request'
+                          : ''
+                      }}
+                    </strong>
+                    {{
+                      activeRouteResponseLastLog.response.isInvalidJson &&
+                      activeRouteResponseLastLog.request.isInvalidJson
+                        ? ' and '
+                        : ''
+                    }}
+                    <strong>
+                      {{
+                        activeRouteResponseLastLog.response.isInvalidJson
+                          ? 'response'
+                          : ''
+                      }}
+                    </strong>
+                  </div>
+                </ng-template>
                 Last log
               </button>
             </div>

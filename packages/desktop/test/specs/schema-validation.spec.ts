@@ -24,7 +24,6 @@ describe('Schema validation', () => {
     it('should prepare the broken settings', async () => {
       await file.editSettingsAndReload({
         welcomeShown: true,
-        logSizeLimit: 10000,
         maxLogsPerEnvironment: 50,
         truncateRouteName: true,
         mainMenuSize: 100,

@@ -1,7 +1,6 @@
 {
   "welcomeShown": true,
   "bannerDismissed": [],
-  "logSizeLimit": 10000,
   "maxLogsPerEnvironment": 50,
   "truncateRouteName": true,
   "mainMenuSize": 100,

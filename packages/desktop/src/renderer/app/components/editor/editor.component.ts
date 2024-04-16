@@ -57,7 +57,7 @@ export class EditorComponent
   private _readOnly = false;
   private _hideInterface = false;
   private _theme = 'editor-theme';
-  private _mode = 'html';
+  private _mode = 'text';
   private _autoUpdateContent = true;
   private _editor: Editor;
   private _durationBeforeCallback = 0;

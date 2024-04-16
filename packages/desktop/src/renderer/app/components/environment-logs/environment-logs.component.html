@@ -3,7 +3,8 @@
     environmentLogs: environmentLogs$ | async,
     activeEnvironmentUUID: activeEnvironmentUUID$ | async,
     logsRecording: logsRecording$ | async,
-    settings: settings$ | async
+    settings: settings$ | async,
+    editorConfigs: editorConfigs$ | async
   } as data"
 >
   <div class="environment-logs-header d-flex justify-content-between">
@@ -318,36 +319,36 @@
                 </div>
 
                 <!-- Body -->
-                <div class="environment-logs-content-title d-flex">
-                  <div
-                    (click)="
-                      collapseStates['request.body'] =
-                        !collapseStates['request.body']
+                <div
+                  class="environment-logs-content-title d-flex"
+                  (click)="
+                    collapseStates['request.body'] =
+                      !collapseStates['request.body']
+                  "
+                >
+                  <app-svg
+                    [icon]="
+                      selectedLog?.request?.body &&
+                      collapseStates['request.body']
+                        ? 'unfold_more'
+                        : 'unfold_less'
                     "
-                  >
-                    <app-svg
-                      [icon]="
-                        selectedLog?.request?.body &&
-                        collapseStates['request.body']
-                          ? 'unfold_more'
-                          : 'unfold_less'
-                      "
-                    ></app-svg>
+                  ></app-svg>
 
-                    Body ({{ !selectedLog?.request?.body ? 'none' : 'raw' }})
-                  </div>
-                  <div class="ms-auto">
-                    <span
-                      *ngIf="selectedLog?.request?.truncatedBody"
-                      class="btn btn-link btn-icon text-primary p-0 environment-logs-open-request-body"
-                      (click)="viewBodyInEditor(selectedLog.request, 'request')"
-                      >View full body in editor</span
-                    >
-                  </div>
+                  Body {{ !selectedLog?.request?.body ? '(none)' : '' }}
                 </div>
                 <div [ngbCollapse]="collapseStates['request.body']">
-                  <div class="environment-logs-content-item pre">
-                    {{ selectedLog?.request?.truncatedBody }}
+                  <div class="environment-logs-content-item">
+                    <app-editor
+                      style="height: 60vh"
+                      [options]="data.editorConfigs?.request?.options"
+                      [mode]="data.editorConfigs?.request?.mode"
+                      [theme]="data.editorConfigs?.request?.theme"
+                      [readOnly]="true"
+                      [uuid]="selectedLog?.UUID + '-request'"
+                      [text]="selectedLog?.request?.body"
+                    >
+                    </app-editor>
                   </div>
                 </div>
               </div>
@@ -420,48 +421,43 @@
                 </div>
 
                 <!-- Response Body -->
-                <div class="environment-logs-content-title d-flex">
-                  <div
-                    (click)="
-                      collapseStates['response.body'] =
-                        !collapseStates['response.body']
+                <div
+                  class="environment-logs-content-title"
+                  (click)="
+                    collapseStates['response.body'] =
+                      !collapseStates['response.body']
+                  "
+                >
+                  <app-svg
+                    [icon]="
+                      selectedLog.response?.body &&
+                      collapseStates['response.body']
+                        ? 'unfold_more'
+                        : 'unfold_less'
                     "
-                  >
-                    <app-svg
-                      [icon]="
-                        selectedLog.response?.body &&
-                        collapseStates['response.body']
-                          ? 'unfold_more'
-                          : 'unfold_less'
-                      "
-                    ></app-svg>
+                  ></app-svg>
 
-                    Body ({{
-                      !selectedLog.response?.bodyState
-                        ? 'none'
-                        : selectedLog.response?.bodyState
-                    }})
-                  </div>
-                  <div *ngIf="!selectedLog.response.binaryBody" class="ms-auto">
-                    <span
-                      *ngIf="selectedLog?.response?.truncatedBody"
-                      class="btn btn-link btn-icon text-primary p-0 environment-logs-open-response-body"
-                      (click)="
-                        viewBodyInEditor(selectedLog.response, 'response')
-                      "
-                      >View full body in editor</span
-                    >
-                  </div>
+                  Body
+                  {{ selectedLog.response?.unzipped ? '(unzipped)' : '' }}
                 </div>
                 <div [ngbCollapse]="collapseStates['response.body']">
                   <div
-                    *ngIf="!selectedLog.response.binaryBody"
-                    class="environment-logs-content-item pre"
+                    *ngIf="selectedLog && !selectedLog.response.binaryBody"
+                    class="environment-logs-content-item"
                   >
-                    {{ selectedLog.response?.truncatedBody }}
+                    <app-editor
+                      style="height: 60vh"
+                      [options]="data.editorConfigs?.response?.options"
+                      [mode]="data.editorConfigs?.response?.mode"
+                      [theme]="data.editorConfigs?.response?.theme"
+                      [readOnly]="true"
+                      [uuid]="selectedLog?.UUID + '-response'"
+                      [text]="selectedLog?.response?.body"
+                    >
+                    </app-editor>
                   </div>
                   <div
-                    *ngIf="selectedLog.response.binaryBody"
+                    *ngIf="selectedLog?.response.binaryBody"
                     class="environment-logs-content-item"
                   >
                     <p class="message mt-4">

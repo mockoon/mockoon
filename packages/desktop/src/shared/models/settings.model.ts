@@ -20,7 +20,6 @@ export type EnvironmentsCategories = 'cloud' | 'local';
 export type Settings = {
   welcomeShown: boolean;
   bannerDismissed: string[];
-  logSizeLimit: number;
   maxLogsPerEnvironment: number;
   truncateRouteName: boolean;
   mainMenuSize: number;

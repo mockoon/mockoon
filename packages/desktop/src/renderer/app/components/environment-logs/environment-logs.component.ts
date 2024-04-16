@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
-import {
-  EnvironmentLog,
-  EnvironmentLogRequest,
-  EnvironmentLogResponse
-} from 'src/renderer/app/models/environment-logs.model';
+import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model';
-import { DataService } from 'src/renderer/app/services/data.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -58,11 +55,14 @@ export class EnvironmentLogsComponent implements OnInit {
   public menuSize = Config.defaultSecondaryMenuSize;
   public clearEnvironmentLogsRequested$ = new TimedBoolean();
   public logsRecording$ = this.eventsService.logsRecording$;
+  public editorConfigs$: Observable<{
+    request: typeof defaultEditorOptions;
+    response: typeof defaultEditorOptions;
+  }>;
 
   constructor(
     private store: Store,
     private environmentsService: EnvironmentsService,
-    private dataService: DataService,
     private eventsService: EventsService,
     private uiService: UIService
   ) {}
@@ -85,15 +85,7 @@ export class EnvironmentLogsComponent implements OnInit {
       ),
       map((environmentLog) => {
         if (environmentLog) {
-          if (environmentLog.request.body) {
-            environmentLog.request.truncatedBody =
-              this.dataService.truncateBody(environmentLog.request.body);
-          }
-
           if (environmentLog.response.body) {
-            environmentLog.response.truncatedBody =
-              this.dataService.truncateBody(environmentLog.response.body);
-
             const contentEncoding = environmentLog.response.headers.find(
               (header) => header.key.toLowerCase() === 'content-encoding'
             )?.value;
@@ -103,14 +95,61 @@ export class EnvironmentLogsComponent implements OnInit {
               contentEncoding === 'br' ||
               contentEncoding === 'deflate'
             ) {
-              environmentLog.response.bodyState = 'unzipped';
-            } else {
-              environmentLog.response.bodyState = 'raw';
+              environmentLog.response.unzipped = true;
             }
           }
         }
 
         return environmentLog;
+      })
+    );
+
+    this.editorConfigs$ = this.activeEnvironmentLog$.pipe(
+      map((activeEnvironmentLog) => {
+        const responseContentTypeHeader = GetContentType(
+          activeEnvironmentLog.response.headers
+        );
+        const requestContentTypeHeader = GetContentType(
+          activeEnvironmentLog.request.headers
+        );
+        const baseEditorConfig = this.store.get('bodyEditorConfig');
+
+        const responseEditorMode = responseContentTypeHeader
+          ? GetEditorModeFromContentType(responseContentTypeHeader)
+          : 'text';
+
+        const requestEditorMode = requestContentTypeHeader
+          ? GetEditorModeFromContentType(requestContentTypeHeader)
+          : 'text';
+
+        return {
+          request: {
+            ...baseEditorConfig,
+            options: {
+              ...baseEditorConfig.options,
+              // enable JSON validation
+              useWorker: isContentTypeApplicationJson(
+                activeEnvironmentLog.request.headers
+              )
+                ? true
+                : false
+            },
+            mode: requestEditorMode
+          },
+          response: {
+            ...baseEditorConfig,
+            options: {
+              ...baseEditorConfig.options,
+              // enable JSON validation
+              useWorker: isContentTypeApplicationJson(
+                activeEnvironmentLog.response.headers
+              )
+                ? true
+                : false
+            },
+            mode: responseEditorMode
+          }
+        };
       })
     );
 
@@ -147,32 +186,6 @@ export class EnvironmentLogsComponent implements OnInit {
    */
   public createRouteFromLog(environmentUUID: string, logUUID: string) {
     this.environmentsService.createRouteFromLog(environmentUUID, logUUID, true);
-  }
-
-  /**
-   * Open editor modal to view the body
-   */
-  public viewBodyInEditor(
-    logResponseOrRequest: EnvironmentLogResponse | EnvironmentLogRequest,
-    location: 'request' | 'response'
-  ) {
-    const contentTypeHeader = logResponseOrRequest.headers.find(
-      (header) => header.key.toLowerCase() === 'content-type'
-    );
-    const editorMode =
-      contentTypeHeader && contentTypeHeader.value
-        ? GetEditorModeFromContentType(contentTypeHeader.value)
-        : 'text';
-
-    this.eventsService.editorModalPayload$.next({
-      title: `${location} body`,
-      content: logResponseOrRequest.body,
-      editorConfig: {
-        mode: editorMode
-      }
-    });
-
-    this.uiService.openModal('editor');
   }
 
   /**

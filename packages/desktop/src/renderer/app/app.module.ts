@@ -45,7 +45,6 @@ import { ChangelogModalComponent } from 'src/renderer/app/components/modals/chan
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
-import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
@@ -91,7 +90,6 @@ import { AppComponent } from './app.component';
     WelcomeModalComponent,
     SettingsModalComponent,
     ChangelogModalComponent,
-    EditorModalComponent,
     ConfirmModalComponent,
     TemplatesModalComponent,
     EnvironmentLogsComponent,
