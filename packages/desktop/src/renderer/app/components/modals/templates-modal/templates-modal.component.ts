@@ -26,7 +26,6 @@ import {
   combineLatestWith,
   concat,
   concatMap,
-  debounceTime,
   delay,
   filter,
   from,
@@ -49,10 +48,7 @@ import { TemplatesTabsName } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { TemplatesService } from 'src/renderer/app/services/templates.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import {
-  setActiveTemplatesTabAction,
-  updateFilterAction
-} from 'src/renderer/app/stores/actions';
+import { setActiveTemplatesTabAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -83,7 +79,6 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   public activeTemplatesTab$: Observable<TemplatesTabsName>;
   public templates$: Observable<TemplateListItem[]>;
   public templatesFilter$: Observable<string>;
-  public os$: Observable<string>;
   public demo$: Observable<any>;
   public user$: Observable<User>;
   public generatingTemplate$ = this.templatesService.generatingTemplate$;
@@ -150,7 +145,6 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
     this.user$ = this.store.select('user');
     this.activeTemplatesTab$ = this.store.select('activeTemplatesTab');
     this.activeTemplatesTab$
@@ -191,11 +185,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
       )
     ).subscribe();
 
-    this.templatesFilter$ = this.store.selectFilter('templates').pipe(
-      tap((search) => {
-        this.templatesFilter.patchValue(search, { emitEvent: false });
-      })
-    );
+    this.templatesFilter$ = this.store.selectFilter('templates');
 
     this.templates$ = this.templatesService.getTemplatesList().pipe(
       filter((templates) => templates && templates.length > 0),
@@ -225,16 +215,6 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
         tap((template) => {
           this.generatedTemplateBody.setValue(template);
         }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-
-    this.templatesFilter.valueChanges
-      .pipe(
-        debounceTime(10),
-        tap((search) =>
-          this.store.update(updateFilterAction('templates', search))
-        ),
         takeUntil(this.destroy$)
       )
       .subscribe();
@@ -335,13 +315,6 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     }
     this.environmentsService.addHTTPRoute('root', options);
     this.modalService.dismissAll();
-  }
-
-  /**
-   * Clear the databucket filter
-   */
-  public clearFilter() {
-    this.store.update(updateFilterAction('templates', ''));
   }
 
   public close() {

@@ -9,7 +9,6 @@ import { Environment } from '@mockoon/commons';
 import { Observable, from, fromEvent, tap } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { BuildFullPath } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuItemPayload } from 'src/renderer/app/models/context-menu.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
@@ -18,7 +17,6 @@ import { Toast } from 'src/renderer/app/models/toasts.model';
 import { ApiService } from 'src/renderer/app/services/api.service';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
@@ -45,7 +43,6 @@ export class AppComponent extends Logger implements OnInit {
   constructor(
     private telemetryService: TelemetryService,
     private environmentsService: EnvironmentsService,
-    private eventsService: EventsService,
     private store: Store,
     protected toastService: ToastsService,
     private uiService: UIService,
@@ -74,24 +71,7 @@ export class AppComponent extends Logger implements OnInit {
   }
 
   @HostListener('document:keydown', ['$event'])
-  public focusFilterInput(event: KeyboardEvent) {
-    if (
-      ((event.ctrlKey && this.os !== 'darwin') ||
-        (event.metaKey && this.os === 'darwin')) &&
-      event.shiftKey &&
-      event.key.toLowerCase() === 'f'
-    ) {
-      if (this.uiService.getModalInstance('templates')) {
-        this.eventsService.focusInput.next(FocusableInputs.TEMPLATES_FILTER);
-      } else if (this.store.get('activeView') === 'ENV_ROUTES') {
-        this.eventsService.focusInput.next(FocusableInputs.ROUTE_FILTER);
-      } else if (this.store.get('activeView') === 'ENV_DATABUCKETS') {
-        this.eventsService.focusInput.next(FocusableInputs.DATABUCKET_FILTER);
-      } else if (this.store.get('activeView') === 'ENV_CALLBACKS') {
-        this.eventsService.focusInput.next(FocusableInputs.CALLBACK_FILTER);
-      }
-    }
-
+  public globalKeyListener(event: KeyboardEvent) {
     if (
       ((event.ctrlKey && this.os !== 'darwin') ||
         (event.metaKey && this.os === 'darwin')) &&

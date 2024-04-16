@@ -414,7 +414,7 @@ export const updateEnvironmentStatusAction = (
  * @param filterValue
  */
 export const updateFilterAction = (
-  filter: 'routes' | 'databuckets' | 'templates' | 'callbacks',
+  filter: keyof StoreType['filters'],
   filterValue: string
 ) =>
   ({

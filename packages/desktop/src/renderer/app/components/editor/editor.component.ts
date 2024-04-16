@@ -56,7 +56,6 @@ export class EditorComponent
   private _options = {};
   private _readOnly = false;
   private _hideInterface = false;
-  private _theme = 'editor-theme';
   private _mode = 'text';
   private _autoUpdateContent = true;
   private _editor: Editor;
@@ -130,11 +129,6 @@ export class EditorComponent
   }
 
   @Input()
-  public set theme(theme: any) {
-    this.setTheme(theme);
-  }
-
-  @Input()
   public set mode(mode: any) {
     this.setMode(mode);
   }
@@ -186,7 +180,7 @@ export class EditorComponent
 
   private init() {
     this.setOptions(this._options || {});
-    this.setTheme(this._theme);
+    this._editor.setTheme('ace/theme/editor-theme');
     this.setMode(this._mode);
     this.setReadOnly(this._readOnly);
   }
@@ -246,11 +240,6 @@ export class EditorComponent
 
     this._editor.renderer.setShowGutter(!hideInterface);
     (this._editor.renderer as any).$cursorLayer.element.style.display = 'none';
-  }
-
-  private setTheme(theme: any) {
-    this._theme = theme;
-    this._editor.setTheme(`ace/theme/${theme}`);
   }
 
   private setMode(mode: any) {

@@ -12,32 +12,10 @@
           </a>
         </li>
         <li class="nav-item flex-grow-1">
-          <div class="input-group" *ngIf="os$ | async as os">
-            <input
-              type="text"
-              class="form-control"
-              id="callback-filter"
-              placeholder="Filter"
-              [formControl]="callbacksFilter"
-              [ngbTooltip]="
-                'Filter callbacks (' +
-                (os === 'darwin' ? 'Cmd' : 'Ctrl') +
-                '+Shift+F)'
-              "
-              triggers="hover"
-              [appFocusOnEvent]="focusableInputs.CALLBACK_FILTER"
-            />
-            <button
-              *ngIf="callbacksFilter.value.length > 0"
-              type="button"
-              id="callback-filter-clear"
-              (click)="clearFilter()"
-              class="btn btn-custom"
-              ngbTooltip="Clear filter"
-            >
-              <app-svg icon="clear"></app-svg>
-            </button>
-          </div>
+          <app-filter
+            filterName="callbacks"
+            [focusableInput]="focusableInputs.CALLBACK_FILTER"
+          ></app-filter>
         </li>
       </ul>
     </div>

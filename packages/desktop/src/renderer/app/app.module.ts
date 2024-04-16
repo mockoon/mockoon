@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule, SecurityContext } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -33,6 +34,7 @@ import { EnvironmentLogsComponent } from 'src/renderer/app/components/environmen
 import { EnvironmentProxyComponent } from 'src/renderer/app/components/environment-proxy/environment-proxy.component';
 import { EnvironmentRoutesComponent } from 'src/renderer/app/components/environment-routes/environment-routes.component';
 import { EnvironmentSettingsComponent } from 'src/renderer/app/components/environment-settings/environment-settings.component';
+import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
 import { FooterComponent } from 'src/renderer/app/components/footer/footer.component';
 import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
 import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
@@ -115,7 +117,8 @@ import { AppComponent } from './app.component';
     ToggleComponent,
     SvgComponent,
     EditableElementComponent,
-    TourComponent
+    TourComponent,
+    FilterComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -157,6 +160,7 @@ import { AppComponent } from './app.component';
     NgxMaskDirective
   ],
   providers: [
+    DatePipe,
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler

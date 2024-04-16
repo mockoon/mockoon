@@ -85,6 +85,7 @@ export type StoreType = {
     databuckets: string;
     templates: string;
     callbacks: string;
+    logs: string;
   };
   user: User;
   callbackSettings: CallbackSettings;

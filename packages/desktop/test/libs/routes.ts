@@ -47,7 +47,7 @@ class Routes {
   }
 
   public get filter() {
-    return $('input[id="route-filter"]');
+    return $('input[id="routes-filter"]');
   }
 
   public get bodyEditor() {

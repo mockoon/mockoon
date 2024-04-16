@@ -1,35 +1,23 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   DataBucket,
   Environment,
   ReorderAction,
   ReorderableContainers
 } from '@mockoon/commons';
-import { Observable, Subject, from } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   combineLatestWith,
-  debounceTime,
   distinctUntilChanged,
   filter,
-  map,
-  takeUntil,
-  tap
+  map
 } from 'rxjs/operators';
 import { DatabucketsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { updateFilterAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
@@ -40,45 +28,27 @@ import { Settings } from 'src/shared/models/settings.model';
   styleUrls: ['./databuckets-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatabucketsMenuComponent implements OnInit, OnDestroy {
+export class DatabucketsMenuComponent implements OnInit {
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public databucketList$: Observable<DataBucket[]>;
   public activeDatabucket$: Observable<DataBucket>;
   public databucketsFilter$: Observable<string>;
-  public databucketsFilter: UntypedFormControl;
   public focusableInputs = FocusableInputs;
-  public os$: Observable<string>;
   public menuSize = Config.defaultSecondaryMenuSize;
   public trackByUuid = trackByUuid;
-  private destroy$ = new Subject<void>();
 
   constructor(
     private environmentsService: EnvironmentsService,
     private store: Store,
-    private eventsService: EventsService,
-    private formBuilder: UntypedFormBuilder
+    private eventsService: EventsService
   ) {}
 
-  @HostListener('keydown', ['$event'])
-  public escapeFilterInput(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.clearFilter();
-    }
-  }
-
   ngOnInit() {
-    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
-    this.databucketsFilter = this.formBuilder.control('');
-
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
     this.settings$ = this.store.select('settings');
-    this.databucketsFilter$ = this.store.selectFilter('databuckets').pipe(
-      tap((search) => {
-        this.databucketsFilter.patchValue(search, { emitEvent: false });
-      })
-    );
+    this.databucketsFilter$ = this.store.selectFilter('databuckets');
 
     this.databucketList$ = this.store.selectActiveEnvironment().pipe(
       filter((activeEnvironment) => !!activeEnvironment),
@@ -95,21 +65,6 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
             )
       )
     );
-
-    this.databucketsFilter.valueChanges
-      .pipe(
-        debounceTime(10),
-        tap((search) =>
-          this.store.update(updateFilterAction('databuckets', search))
-        ),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
   }
 
   /**
@@ -156,12 +111,5 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
 
       this.eventsService.contextMenuEvents.next(menu);
     }
-  }
-
-  /**
-   * Clear the databucket filter
-   */
-  public clearFilter() {
-    this.store.update(updateFilterAction('databuckets', ''));
   }
 }
