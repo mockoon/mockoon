@@ -1,4 +1,4 @@
-export type SyncInfo = {
+export type CloudInfo = {
   highestMajorVersion: number;
   cloudSyncItemsQuotaUsed: number;
 };
