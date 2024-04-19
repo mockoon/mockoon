@@ -12,9 +12,8 @@ const adminApiPrefix = '/mockoon-admin';
 const createStateEndpoints = (
   app: Express,
   statePurgeCallback: () => void,
-  getglobalVariables: any,
-  setGlobalVariables: any,
-  purgeGlobalVariables: any
+  setGlobalVariables: (key: string, value: any) => void,
+  purgeGlobalVariables: () => void
 ) => {
   const stateEndpoint = `${adminApiPrefix}/state`;
   const purgeHandler = (req, res) => {
@@ -23,7 +22,7 @@ const createStateEndpoints = (
       response: 'State purged successfully.'
     });
   };
-  const setGlobalEnv = (req, res) => {
+  const setGlobalVar = (req, res) => {
     try {
       const { key, value } = req.body; // Destructure key and value from req.body
       if (key && value) {
@@ -39,8 +38,9 @@ const createStateEndpoints = (
       res.status(400).send({ message: 'Invalid JSON or missing key/value' });
     }
   };
-  const purgeGlobalEnv = (req, res) => {
+  const purgeGlobalVars = (req, res) => {
     try {
+      purgeGlobalVariables();
       res.send({
         message: 'Global variables have been purged.'
       });
@@ -52,8 +52,8 @@ const createStateEndpoints = (
   };
   app.purge(stateEndpoint, purgeHandler);
   app.post(`${stateEndpoint}/purge`, purgeHandler);
-  app.post(`${stateEndpoint}/setGlobalVars`, setGlobalEnv);
-  app.post(`${stateEndpoint}/purgeGlobalVars`, purgeGlobalEnv);
+  app.post(`${stateEndpoint}/setGlobalVars`, setGlobalVar);
+  app.post(`${stateEndpoint}/purgeGlobalVars`, purgeGlobalVars);
 };
 
 /**
@@ -64,9 +64,8 @@ const createStateEndpoints = (
 export const createAdminEndpoint = (
   app: Express,
   { statePurgeCallback }: { statePurgeCallback: () => void },
-  getglobalVariables: any,
-  setGlobalVariables: any,
-  purgeGlobalVariables: any
+  setGlobalVariables: (key: string, value: any) => void,
+  purgeGlobalVariables: () => void
 ) => {
   app.get(adminApiPrefix, (req, res) => {
     res.send({
@@ -77,7 +76,6 @@ export const createAdminEndpoint = (
   createStateEndpoints(
     app,
     statePurgeCallback,
-    getglobalVariables,
     setGlobalVariables,
     purgeGlobalVariables
   );
