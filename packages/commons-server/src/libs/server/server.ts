@@ -197,6 +197,18 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
   }
 
+  public getGlobalVariables = (): Record<string, any> => {
+    return this.globalVariables;
+  }
+
+  public setGlobalVariables = (key: string, value: any): void => {
+    this.globalVariables[key] = value;
+  }
+
+  public purgeGlobalVariables = (): void => {
+    Object.keys(this.globalVariables).forEach(key => delete this.globalVariables[key]);
+  }
+
   /**
    * Create a request listener
    */
@@ -212,9 +224,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const app = express();
     app.disable('x-powered-by');
     app.disable('etag');
-
+    
     this.generateDatabuckets(this.environment);
-
+    app.use(this.parseBody);
+    
     // admin endpoint must be created before all other routes to avoid conflicts
     createAdminEndpoint(app, {
       statePurgeCallback: () => {
@@ -227,16 +240,26 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.processedDatabuckets = [];
         this.generateDatabuckets(this.environment);
       }
-    });
+    },
+      this.getGlobalVariables,
+      this.setGlobalVariables,
+      this.purgeGlobalVariables
+      
+  );
+  
+
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
     app.use(this.deduplicateRequestSlashes);
     app.use(cookieParser());
-    app.use(this.parseBody);
+    
     app.use(this.logRequest);
     app.use(this.setResponseHeaders);
+    const stateEndpoint = `/mockoon-admin/state`;
 
+//   // Middleware to handle JSON parsing for these endpoints
+    app.use(stateEndpoint, this.parseBody); 
     this.setRoutes(app);
     this.setCors(app);
     this.enableProxy(app);
@@ -298,6 +321,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     next();
   }
 
+  
+
   /**
    * ### Middleware ###
    * Parse entering request body
@@ -306,6 +331,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param response
    * @param next
    */
+ 
   private parseBody = (
     request: Request,
     response: Response,
@@ -316,7 +342,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       request.header('Content-Type');
 
     const rawBody: Buffer[] = [];
-
+    
     request.on('data', (chunk) => {
       rawBody.push(Buffer.from(chunk, 'binary'));
     });
@@ -388,6 +414,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       }
     });
   };
+  
 
   /**
    * ### Middleware ###

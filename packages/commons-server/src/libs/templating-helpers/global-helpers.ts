@@ -42,5 +42,6 @@ export const GlobalHelpers = function (globalVariables: Record<string, any>) {
 
       return getValueFromPath(globalVariables[name], path, defaultValue);
     }
+
   };
 };
