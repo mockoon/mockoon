@@ -1,7 +1,7 @@
 import { Express } from 'express';
 const adminApiPrefix = '/mockoon-admin';
 
-/*
+/**
  * Expose two endpoints to purge the state
  * PURGE /mockoon-admin/state
  * POST /mockoon-admin/state/purge
@@ -10,6 +10,8 @@ const adminApiPrefix = '/mockoon-admin';
  *
  * @param app
  * @param statePurgeCallback
+ * @param setGlibalVariables
+ * @param purgeGlobalVariables
  */
 const createStateEndpoints = (
   app: Express,
@@ -61,6 +63,9 @@ const createStateEndpoints = (
  * Create the admin endpoints
  *
  * @param app
+ * @param { statePurgeCallback }
+ * @param setGlibalVariables
+ * @param purgeGlobalVariables
  */
 export const createAdminEndpoint = (
   app: Express,
