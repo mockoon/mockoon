@@ -5,6 +5,8 @@ const adminApiPrefix = '/mockoon-admin';
  * Expose two endpoints to purge the state
  * PURGE /mockoon-admin/state
  * POST /mockoon-admin/state/purge
+ * POST /mockoon-admin/state/setGlobalVars
+ * POST /mockoon-admin/state/purgeGlobalVars
  *
  * @param app
  * @param statePurgeCallback
@@ -26,7 +28,7 @@ const createStateEndpoints = (
     try {
       const { key, value } = req.body; // Destructure key and value from req.body
       if (key && value) {
-        setGlobalVariables(key, value); // Set global variables, assume this function is defined properly
+        setGlobalVariables(key, value); // Set global variables
         res.send({
           message: `Global variable ${key} has been set to ${value}.`
         });
@@ -46,7 +48,6 @@ const createStateEndpoints = (
       });
     } catch (err) {
       console.log(err);
-      // Handle any potential errors that might occur when accessing the global variable
       res.status(500).send({ message: 'Failed to retrieve global variable' });
     }
   };

@@ -197,10 +197,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
   }
 
+  /**
+   * Set a global variable
+   */
   public setGlobalVariables = (key: string, value: any): void => {
     this.globalVariables[key] = value;
   };
 
+  /**
+   * Resets the global variables
+   */
   public purgeGlobalVariables = (): void => {
     Object.keys(this.globalVariables).forEach(
       (key) => delete this.globalVariables[key]
@@ -224,7 +230,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
-    app.use(this.parseBody);
+    app.use(this.parseBody); // This middleware is required to parse the body for createAdminEndpoint requests
 
     // admin endpoint must be created before all other routes to avoid conflicts
     createAdminEndpoint(
@@ -251,10 +257,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.use(cookieParser());
     app.use(this.logRequest);
     app.use(this.setResponseHeaders);
-    const stateEndpoint = '/mockoon-admin/state';
 
-    //   // Middleware to handle JSON parsing for these endpoints
-    app.use(stateEndpoint, this.parseBody);
     this.setRoutes(app);
     this.setCors(app);
     this.enableProxy(app);
