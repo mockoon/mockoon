@@ -23,37 +23,26 @@ const createStateEndpoints = (
       response: 'State purged successfully.'
     });
   };
-
   const setGlobalEnv = (req, res) => {
-    
     try {
-      
-      const { key, value } = req.body;  // Destructure key and value from req.body
-      
+      const { key, value } = req.body; // Destructure key and value from req.body
       if (key && value) {
-          setGlobalVariables(key, value); // Set global variables, assume this function is defined properly
-
-          res.send({
-              message: `Global variable ${key} has been set to ${value}.`
-          });
+        setGlobalVariables(key, value); // Set global variables, assume this function is defined properly
+        res.send({
+          message: `Global variable ${key} has been set to ${value}.`
+        });
       } else {
-          throw new Error('Key or value missing from request');  // Throw error if key or value are missing
+        throw new Error('Key or value missing from request'); // Throw error if key or value are missing
       }
-  } catch (err) {
+    } catch (err) {
       console.error('Error handling request:', err);
       res.status(400).send({ message: 'Invalid JSON or missing key/value' });
-  }
-   
+    }
   };
-
-
   const purgeGlobalEnv = (req, res) => {
     try {
-      // Assuming 'helpers' is properly imported or defined elsewhere in your code
-      console.log('purging the envs');
-      console.log(purgeGlobalVariables());
       res.send({
-        message: `Global variables have been purged.`
+        message: 'Global variables have been purged.'
       });
     } catch (err) {
       console.log(err);
@@ -61,13 +50,10 @@ const createStateEndpoints = (
       res.status(500).send({ message: 'Failed to retrieve global variable' });
     }
   };
-
-
   app.purge(stateEndpoint, purgeHandler);
   app.post(`${stateEndpoint}/purge`, purgeHandler);
   app.post(`${stateEndpoint}/setGlobalVars`, setGlobalEnv);
   app.post(`${stateEndpoint}/purgeGlobalVars`, purgeGlobalEnv);
-  
 };
 
 /**
@@ -88,6 +74,11 @@ export const createAdminEndpoint = (
         "Welcome to Mockoon's admin API. Check the documentation at https://mockoon.com/docs/latest/admin-api/overview/ for more information."
     });
   });
-
-  createStateEndpoints(app, statePurgeCallback, getglobalVariables, setGlobalVariables, purgeGlobalVariables);
+  createStateEndpoints(
+    app,
+    statePurgeCallback,
+    getglobalVariables,
+    setGlobalVariables,
+    purgeGlobalVariables
+  );
 };
