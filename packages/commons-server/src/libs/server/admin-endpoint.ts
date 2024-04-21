@@ -48,7 +48,6 @@ const createStateEndpoints = (
         message: 'Global variables have been purged.'
       });
     } catch (err) {
-      console.log(err);
       res.status(500).send({ message: 'Failed to purge global variable' });
     }
   };
