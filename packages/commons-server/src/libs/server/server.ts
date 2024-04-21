@@ -208,9 +208,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * Resets the global variables
    */
   public purgeGlobalVariables = (): void => {
-    Object.keys(this.globalVariables).forEach(
-      (key) => delete this.globalVariables[key]
-    );
+    this.globalVariables = {};
   };
 
   /**

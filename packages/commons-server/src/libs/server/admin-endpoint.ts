@@ -38,7 +38,6 @@ const createStateEndpoints = (
         throw new Error('Key or value missing from request'); // Throw error if key or value are missing
       }
     } catch (err) {
-      console.error('Error handling request:', err);
       res.status(400).send({ message: 'Invalid JSON or missing key/value' });
     }
   };
@@ -50,13 +49,16 @@ const createStateEndpoints = (
       });
     } catch (err) {
       console.log(err);
-      res.status(500).send({ message: 'Failed to retrieve global variable' });
+      res.status(500).send({ message: 'Failed to purge global variable' });
     }
   };
   app.purge(stateEndpoint, purgeHandler);
   app.post(`${stateEndpoint}/purge`, purgeHandler);
-  app.post(`${stateEndpoint}/setGlobalVars`, setGlobalVar);
-  app.post(`${stateEndpoint}/purgeGlobalVars`, purgeGlobalVars);
+  app.post(`${adminApiPrefix}/global-vars`, setGlobalVar);
+  app.put(`${adminApiPrefix}/global-vars`, setGlobalVar);
+  app.patch(`${adminApiPrefix}/global-vars`, setGlobalVar);
+  app.purge(`${adminApiPrefix}/global-vars`, purgeGlobalVars);
+  app.post(`${adminApiPrefix}/global-vars/purge`, purgeGlobalVars);
 };
 
 /**
