@@ -59,13 +59,6 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/localazy.png">
       <img src="https://mockoon.com/images/sponsors/light/localazy.png" alt="Localazy logo" />
       </picture>
-  </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="https://www.peakcrypto.com/">
-      <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
-      <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
-      </picture>
   </a>
 </div>
 
@@ -73,7 +66,7 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">  
   <a href="https://www.emqx.io/">  
-      <img src="https://mockoon.com/images/sponsors/emqx.png" alt="Peakcrypto logo" />
+      <img src="https://mockoon.com/images/sponsors/emqx.png" alt="emqx logo" />
   </a>
 </div>
 
