@@ -51,7 +51,7 @@ const createStateEndpoints = (
       res.status(500).send({ message: 'Failed to purge global variable' });
     }
   };
-  app.purge(stateEndpoint, purgeHandler);
+  app.purge(`${stateEndpoint}`, purgeHandler);
   app.post(`${stateEndpoint}/purge`, purgeHandler);
   app.post(`${adminApiPrefix}/global-vars`, setGlobalVar);
   app.put(`${adminApiPrefix}/global-vars`, setGlobalVar);
