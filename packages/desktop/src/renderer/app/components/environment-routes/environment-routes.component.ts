@@ -496,7 +496,13 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             )
           );
       } catch (e) {
-        // ignore any errors with parsing / stringifying the JSON
+        this.uiService
+          .showConfirmDialog({
+            title: 'Error white parsing JSON',
+            text: 'The JSON body could not be parsed.',
+            subIcon: 'warning',
+            subIconClass: 'text-warning'
+          });
       }
     }
   }
