@@ -5,12 +5,15 @@ const adminApiPrefix = '/mockoon-admin';
  * Expose two endpoints to purge the state
  * PURGE /mockoon-admin/state
  * POST /mockoon-admin/state/purge
- * POST /mockoon-admin/state/setGlobalVars
- * POST /mockoon-admin/state/purgeGlobalVars
+ * POST /mockoon-admin/global-vars
+ * PUT /mockoon-admin/global-vars
+ * PATCH /mockoon-admin/global-vars
+ * PURGE /mockoon-admin/global-vars
+ * POST /mockoon-admin/global-vars/purge
  *
  * @param app
  * @param statePurgeCallback
- * @param setGlibalVariables
+ * @param setGlobalVariables
  * @param purgeGlobalVariables
  */
 const createStateEndpoints = (
@@ -51,7 +54,7 @@ const createStateEndpoints = (
       res.status(500).send({ message: 'Failed to purge global variable' });
     }
   };
-  app.purge(`${stateEndpoint}`, purgeHandler);
+  app.purge(stateEndpoint, purgeHandler);
   app.post(`${stateEndpoint}/purge`, purgeHandler);
   app.post(`${adminApiPrefix}/global-vars`, setGlobalVar);
   app.put(`${adminApiPrefix}/global-vars`, setGlobalVar);
