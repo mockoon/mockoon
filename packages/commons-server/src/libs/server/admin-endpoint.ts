@@ -51,14 +51,12 @@ const createStateEndpoints = (
         message: 'Global variables have been purged.'
       });
     } catch (err) {
-      res.status(500).send({ message: 'Failed to purge global variable' });
+      res.status(500).send({ message: 'Failed to purge global variables' });
     }
   };
   app.purge(stateEndpoint, purgeHandler);
   app.post(`${stateEndpoint}/purge`, purgeHandler);
   app.post(`${adminApiPrefix}/global-vars`, setGlobalVar);
-  app.put(`${adminApiPrefix}/global-vars`, setGlobalVar);
-  app.patch(`${adminApiPrefix}/global-vars`, setGlobalVar);
   app.purge(`${adminApiPrefix}/global-vars`, purgeGlobalVars);
   app.post(`${adminApiPrefix}/global-vars/purge`, purgeGlobalVars);
 };

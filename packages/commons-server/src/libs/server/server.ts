@@ -245,7 +245,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           this.generateDatabuckets(this.environment);
 
           // reset global variables
-          this.globalVariables = {};
+          this.purgeGlobalVariables();
         }
       },
       this.setGlobalVariables,
