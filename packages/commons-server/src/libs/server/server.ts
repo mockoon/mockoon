@@ -760,7 +760,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           setTimeout(() => {
             fetch(url, {
-              method: cb.method,
+              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              method: cb.method.toUpperCase(),
               headers: sendingHeaders.headers,
               body: isBodySupportingMethod(cb.method) ? content : undefined
             })
@@ -901,7 +902,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           setTimeout(() => {
             fetch(url, {
-              method: callback.method,
+              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              method: callback.method.toUpperCase(),
               body: form,
               headers: sendingHeaders.headers
             })
@@ -948,7 +950,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           setTimeout(() => {
             fetch(url, {
-              method: callback.method,
+              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              method: callback.method.toUpperCase(),
               headers: sendingHeaders.headers,
               body: fileContent
             })
