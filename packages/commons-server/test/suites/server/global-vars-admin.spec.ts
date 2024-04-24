@@ -54,6 +54,40 @@ describe('Admin API Endpoints', () => {
       `{"message":"Global variable ${key} has been set to ${value}."}`
     );
   });
+  it('should set global variable on POST to /mockoon-admin/global-vars', async () => {
+    const key = 'exampleKey';
+    const value = 'exampleValue';
+    const response = await fetch(
+      `http://localhost:${environment.port}/mockoon-admin/global-vars`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value })
+      }
+    );
+    const body = await response.text();
+    strictEqual(
+      body,
+      `{"message":"Global variable ${key} has been set to ${value}."}`
+    );
+  });
+  it('should set global variable on POST to /mockoon-admin/global-vars', async () => {
+    const key = 'exampleKey';
+    const value = 'exampleValue';
+    const response = await fetch(
+      `http://localhost:${environment.port}/mockoon-admin/global-vars`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value })
+      }
+    );
+    const body = await response.text();
+    strictEqual(
+      body,
+      `{"message":"Global variable ${key} has been set to ${value}."}`
+    );
+  });
 
   it('should purge the state when POST request is made to /mockoon-admin/state/purge', async () => {
     const response = await fetch(
