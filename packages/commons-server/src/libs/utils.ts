@@ -253,21 +253,6 @@ export const resolvePathFromEnvironment = (
 };
 
 /**
- * Check that at least one item of the array is included in the provided string
- *
- * @param array
- * @param str
- * @returns
- */
-export const stringIncludesArrayItems = (
-  array: (string | RegExp)[],
-  str: string
-): boolean =>
-  array.some((item) =>
-    item instanceof RegExp ? item.test(str) : str.includes(item)
-  );
-
-/**
  * Convert an object path (for the object-path lib) containing escaped dots '\.'
  * to an array of strings to allow fetching properties containing dots.
  *

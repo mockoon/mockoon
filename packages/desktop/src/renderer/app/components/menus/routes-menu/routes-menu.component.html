@@ -40,31 +40,10 @@
         </div>
 
         <div class="flex-grow-1">
-          <div class="input-group" *ngIf="os$ | async as os">
-            <input
-              type="text"
-              class="form-control"
-              id="route-filter"
-              placeholder="Filter"
-              [formControl]="routesFilter"
-              [ngbTooltip]="
-                'Filter routes (' +
-                (os === 'darwin' ? 'Cmd' : 'Ctrl') +
-                '+Shift+F)'
-              "
-              [appFocusOnEvent]="focusableInputs.ROUTE_FILTER"
-            />
-            <button
-              *ngIf="routesFilter.value.length > 0"
-              type="button"
-              id="route-filter-clear"
-              (click)="clearFilter()"
-              class="btn btn-custom"
-              ngbTooltip="Clear filter"
-            >
-              <app-svg icon="clear"></app-svg>
-            </button>
-          </div>
+          <app-filter
+            filterName="routes"
+            [focusableInput]="focusableInputs.ROUTE_FILTER"
+          ></app-filter>
         </div>
       </div>
     </div>

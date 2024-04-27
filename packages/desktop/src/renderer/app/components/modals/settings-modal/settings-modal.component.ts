@@ -81,7 +81,6 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
     this.settingsForm = this.formBuilder.group({
       truncateRouteName: [SettingsDefault.truncateRouteName],
       maxLogsPerEnvironment: [SettingsDefault.maxLogsPerEnvironment],
-      logSizeLimit: [SettingsDefault.logSizeLimit],
       fakerLocale: [SettingsDefault.fakerLocale],
       fakerSeed: [SettingsDefault.fakerSeed],
       fileWatcherEnabled: [SettingsDefault.fileWatcherEnabled],
@@ -124,7 +123,6 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
             {
               truncateRouteName: settings.truncateRouteName,
               maxLogsPerEnvironment: settings.maxLogsPerEnvironment,
-              logSizeLimit: settings.logSizeLimit,
               fakerLocale: settings.fakerLocale,
               fakerSeed: settings.fakerSeed,
               fileWatcherEnabled: settings.fileWatcherEnabled,

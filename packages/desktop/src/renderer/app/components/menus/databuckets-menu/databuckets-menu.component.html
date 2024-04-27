@@ -12,31 +12,10 @@
           </a>
         </li>
         <li class="nav-item flex-grow-1">
-          <div class="input-group" *ngIf="os$ | async as os">
-            <input
-              type="text"
-              class="form-control"
-              id="databucket-filter"
-              placeholder="Filter"
-              [formControl]="databucketsFilter"
-              [ngbTooltip]="
-                'Filter databuckets (' +
-                (os === 'darwin' ? 'Cmd' : 'Ctrl') +
-                '+Shift+F)'
-              "
-              [appFocusOnEvent]="focusableInputs.DATABUCKET_FILTER"
-            />
-            <button
-              *ngIf="databucketsFilter.value.length > 0"
-              type="button"
-              id="databucket-filter-clear"
-              (click)="clearFilter()"
-              class="btn btn-custom"
-              ngbTooltip="Clear filter"
-            >
-              <app-svg icon="clear"></app-svg>
-            </button>
-          </div>
+          <app-filter
+            filterName="databuckets"
+            [focusableInput]="focusableInputs.DATABUCKET_FILTER"
+          ></app-filter>
         </li>
       </ul>
     </div>

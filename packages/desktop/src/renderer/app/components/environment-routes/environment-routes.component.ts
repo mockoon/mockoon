@@ -14,6 +14,7 @@ import {
   INDENT_SIZE,
   Methods,
   MimeTypesWithTemplating,
+  ParsedJSONBodyMimeTypes,
   ReorderAction,
   ReorderableContainers,
   ResponseMode,
@@ -22,7 +23,8 @@ import {
   RouteResponse,
   RouteResponseDefault,
   RulesDisablingResponseModes,
-  RulesNotUsingDefaultResponse
+  RulesNotUsingDefaultResponse,
+  stringIncludesArrayItems
 } from '@mockoon/commons';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, combineLatest, from, merge } from 'rxjs';
@@ -446,6 +448,28 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Open file in Default Editor
+   */
+  public openFile(filePath: string, activeEnvironmentUuid: string) {
+    const environmentPath = this.store.getEnvironmentPath(
+      activeEnvironmentUuid
+    );
+
+    MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+  }
+
+  /**
+   * Show file in Finder / Explorer
+   */
+  public showFile(filePath: string, activeEnvironmentUuid: string) {
+    const environmentPath = this.store.getEnvironmentPath(
+      activeEnvironmentUuid
+    );
+
+    MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
+  }
+
+  /**
    * If the body is set and the Content-Type is application/json, then prettify the JSON.
    */
   public formatBody() {
@@ -460,7 +484,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       activeRouteResponse
     );
 
-    if (contentType.includes('application/json')) {
+    if (stringIncludesArrayItems(ParsedJSONBodyMimeTypes, contentType)) {
       try {
         this.activeRouteResponseForm
           .get('body')

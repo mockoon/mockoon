@@ -50,7 +50,6 @@ export class TelemetryService {
 
   constructor(
     private remoteConfigService: RemoteConfigService,
-    private http: HttpClient,
     private localStorageService: LocalStorageService,
     private store: Store,
     private httpClient: HttpClient
@@ -168,7 +167,7 @@ export class TelemetryService {
         switchMap((country) =>
           country
             ? of(country)
-            : this.http
+            : this.httpClient
                 .get(geoipEndpoint)
                 .pipe(
                   map(

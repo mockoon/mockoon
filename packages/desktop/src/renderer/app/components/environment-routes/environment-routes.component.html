@@ -562,7 +562,6 @@
                           class="h-100"
                           [options]="bodyEditorConfig?.options"
                           [mode]="bodyEditorConfig?.mode"
-                          [theme]="bodyEditorConfig?.theme"
                           [uuid]="data.activeRouteResponse?.uuid"
                           formControlName="body"
                         >
@@ -603,13 +602,52 @@
                     >
                       <app-svg icon="clear"></app-svg>
                     </button>
-                    <button
-                      class="btn btn-link"
-                      (click)="browseFiles()"
-                      ngbTooltip="Browse"
-                    >
-                      <app-svg icon="find_in_page"></app-svg>
-                    </button>
+
+                    <!-- File options dropdown -->
+                    <div class="d-flex align-items-center">
+                      <div ngbDropdown id="file-options-dropdown">
+                        <button
+                          class="btn btn-link btn-icon dropdown-toggle dropdown-toggle-icon dropdown-toggle-no-caret"
+                          type="button"
+                          ngbDropdownToggle
+                        >
+                          <app-svg icon="more_vert"></app-svg>
+                        </button>
+                        <div class="dropdown-menu" ngbDropdownMenu>
+                          <button
+                            class="btn dropdown-item"
+                            (click)="browseFiles()"
+                          >
+                            <app-svg icon="find_in_page" class="pe-2"></app-svg>
+                            Browse
+                          </button>
+                          <button
+                            class="btn dropdown-item"
+                            (click)="
+                              showFile(
+                                data.activeRouteResponse?.filePath,
+                                activeEnvironment.uuid
+                              )
+                            "
+                          >
+                            <app-svg icon="folder" class="pe-2"></app-svg>
+                            Show file in explorer/finder
+                          </button>
+                          <button
+                            class="btn dropdown-item"
+                            (click)="
+                              openFile(
+                                data.activeRouteResponse?.filePath,
+                                activeEnvironment.uuid
+                              )
+                            "
+                          >
+                            <app-svg icon="file_open" class="pe-2"></app-svg>
+                            Open file in editor
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div
@@ -793,6 +831,42 @@
                 class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link"
                 (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)"
               >
+                <span
+                  *ngIf="
+                    activeRouteResponseLastLog.response.isInvalidJson ||
+                    activeRouteResponseLastLog.request.isInvalidJson
+                  "
+                  class="text-warning"
+                  [ngbTooltip]="tooltiptmp"
+                  tooltipClass="text-start"
+                >
+                  <app-svg icon="warning"></app-svg>
+                </span>
+                <ng-template #tooltiptmp>
+                  <div class="text-left">
+                    One of the last transaction's JSON body was invalid:
+                    <strong>
+                      {{
+                        activeRouteResponseLastLog.request.isInvalidJson
+                          ? 'request'
+                          : ''
+                      }}
+                    </strong>
+                    {{
+                      activeRouteResponseLastLog.response.isInvalidJson &&
+                      activeRouteResponseLastLog.request.isInvalidJson
+                        ? ' and '
+                        : ''
+                    }}
+                    <strong>
+                      {{
+                        activeRouteResponseLastLog.response.isInvalidJson
+                          ? 'response'
+                          : ''
+                      }}
+                    </strong>
+                  </div>
+                </ng-template>
                 Last log
               </button>
             </div>

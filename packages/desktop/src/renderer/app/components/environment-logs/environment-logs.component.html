@@ -1,9 +1,14 @@
 <ng-container
   *ngIf="{
     environmentLogs: environmentLogs$ | async,
+    environmentLogsCount: environmentLogsCount$ | async,
     activeEnvironmentUUID: activeEnvironmentUUID$ | async,
     logsRecording: logsRecording$ | async,
-    settings: settings$ | async
+    settings: settings$ | async,
+    editorConfigs: editorConfigs$ | async,
+    activeEnvironmentLogsTab: activeEnvironmentLogsTab$ | async,
+    selectedLog: activeEnvironmentLog$ | async,
+    clearEnvironmentLogsRequested: clearEnvironmentLogsRequested$ | async
   } as data"
 >
   <div class="environment-logs-header d-flex justify-content-between">
@@ -31,453 +36,463 @@
     </div>
     <div>
       <button
-        *ngIf="data.environmentLogs?.length"
         type="button"
         id="clear-logs"
         class="btn btn-link btn-icon ps-2 {{
-          (clearEnvironmentLogsRequested$ | async).enabled ? 'text-danger' : ''
+          data.clearEnvironmentLogsRequested?.enabled ? 'text-danger' : ''
         }}"
         [ngbTooltip]="
-          (clearEnvironmentLogsRequested$ | async).enabled
-            ? 'Confirm'
-            : 'Clear logs'
+          data.clearEnvironmentLogsRequested?.enabled ? 'Confirm' : 'Clear logs'
         "
         (click)="clearEnvironmentLogs()"
+        [disabled]="data.environmentLogsCount === 0"
       >
         <app-svg icon="delete"></app-svg>
       </button>
     </div>
   </div>
-  <div
-    class="environment-logs flex-fill mh0"
-    [ngClass]="{ 'd-flex': data.environmentLogs?.length }"
-  >
-    <ng-container *ngIf="data.environmentLogs?.length; else emptyLogsTemplate">
-      <div class="h-100 environment-logs-column">
-        <ul class="nav flex-column menu-list h-100">
-          <li class="nav-item" *ngFor="let log of data.environmentLogs">
-            <a
-              class="nav-link"
-              [ngClass]="{
-                active: log.UUID === (activeEnvironmentLogUUID$ | async)
-              }"
-              (click)="selectLog(log.UUID)"
-            >
-              <div class="d-flex flex-column">
-                <div class="d-flex">
+  <div class="environment-logs flex-fill d-flex mh0">
+    <div class="environment-logs-column d-flex flex-column">
+      <app-filter
+        filterName="logs"
+        [focusableInput]="focusableInputs.LOGS_FILTER"
+        classes="mb-1"
+      ></app-filter>
+      <ul
+        *ngIf="data.environmentLogs?.length"
+        class="nav flex-column menu-list"
+      >
+        <li class="nav-item" *ngFor="let log of data.environmentLogs">
+          <a
+            class="nav-link"
+            [ngClass]="{
+              active: log.UUID === data.selectedLog?.UUID
+            }"
+            (click)="selectLog(log.UUID)"
+          >
+            <div class="d-flex flex-column">
+              <div class="d-flex">
+                <div>
+                  <span
+                    class="badge badge-default ms-0 me-3 route-badge-{{
+                      log.method | lowercase
+                    }} route-method"
+                    >{{ log.method | uppercase }}</span
+                  >
+                </div>
+                <div
+                  class="route"
+                  [ngClass]="{
+                    'text-truncate': data.settings.truncateRouteName,
+                    'text-break': !data.settings.truncateRouteName
+                  }"
+                >
+                  {{ log.url }}
+                </div>
+                <div class="ms-auto ps-1 d-flex">
+                  <div>
+                    <button
+                      type="button"
+                      class="btn btn-link btn-icon btn-mock"
+                      (click)="
+                        createRouteFromLog(data.activeEnvironmentUUID, log.UUID)
+                      "
+                    >
+                      <app-svg
+                        icon="control_point_duplicate"
+                        ngbTooltip="Mock"
+                      ></app-svg>
+                    </button>
+                  </div>
                   <div>
                     <span
-                      class="badge badge-default ms-0 me-3 route-badge-{{
-                        log.method | lowercase
-                      }} route-method"
-                      >{{ log.method | uppercase }}</span
+                      *ngIf="log.route && !log.proxied"
+                      class="float-end text-success logs-metadata"
                     >
+                      <app-svg
+                        icon="check"
+                        ngbTooltip="Request caught"
+                      ></app-svg>
+                    </span>
                   </div>
-                  <div
-                    class="route"
-                    [ngClass]="{
-                      'text-truncate': data.settings.truncateRouteName,
-                      'text-break': !data.settings.truncateRouteName
-                    }"
-                  >
-                    {{ log.url }}
-                  </div>
-                  <div class="ms-auto ps-1 d-flex">
-                    <div>
-                      <button
-                        type="button"
-                        class="btn btn-link btn-icon btn-mock"
-                        (click)="
-                          createRouteFromLog(
-                            data.activeEnvironmentUUID,
-                            log.UUID
-                          )
-                        "
-                      >
-                        <app-svg
-                          icon="control_point_duplicate"
-                          ngbTooltip="Mock"
-                        ></app-svg>
-                      </button>
-                    </div>
-                    <div>
-                      <span
-                        *ngIf="log.route && !log.proxied"
-                        class="float-end text-success logs-metadata"
-                      >
-                        <app-svg
-                          icon="check"
-                          ngbTooltip="Request caught"
-                        ></app-svg>
-                      </span>
-                    </div>
-                    <div>
-                      <span
-                        *ngIf="log.proxied"
-                        class="float-end text-primary logs-metadata"
-                      >
-                        <app-svg
-                          icon="security"
-                          ngbTooltip="Request proxied"
-                        ></app-svg>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="d-flex align-items-center">
-                  <div class="nav-link-subtitle text-truncate">
-                    {{ log.timestamp | date: 'yyyy-MM-dd HH:mm:ss:SSS' }}
-                  </div>
-                  <div class="d-flex ms-auto nav-link-subtitle">
+                  <div>
                     <span
-                      class="mt-0 badge badge-default response-badge-{{
-                        log.response.status.toString().slice(0, 1).concat('xx')
-                      }}"
-                      >{{ log.response.status }}</span
+                      *ngIf="log.proxied"
+                      class="float-end text-primary logs-metadata"
                     >
+                      <app-svg
+                        icon="security"
+                        ngbTooltip="Request proxied"
+                      ></app-svg>
+                    </span>
                   </div>
                 </div>
               </div>
-            </a>
-          </li>
-        </ul>
-        <div
-          appResizeColumn
-          type="secondary"
-          [minWidth]="menuSize"
-          [maxWidthFactor]="0.2"
-          class="resize-column"
-        ></div>
-      </div>
-
-      <div class="col h-100 environment-logs-column">
-        <div
-          *ngIf="activeEnvironmentLog$ | async as selectedLog"
-          class="environment-logs-content d-flex flex-column h-100"
-        >
-          <ng-container
-            *ngIf="
-              activeEnvironmentLogsTab$ | async as activeEnvironmentLogsTab
-            "
-          >
-            <ul class="nav nav-tabs">
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  [ngClass]="{
-                    active: activeEnvironmentLogsTab === 'REQUEST'
-                  }"
-                  (click)="setActiveTab('REQUEST')"
-                  >Request <app-svg icon="call_received"></app-svg
-                ></a>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  [ngClass]="{
-                    active: activeEnvironmentLogsTab === 'RESPONSE'
-                  }"
-                  (click)="setActiveTab('RESPONSE')"
-                  >Response <app-svg icon="call_made"></app-svg>
-                </a>
-              </li>
-            </ul>
-
-            <div class="environment-logs-content-container">
-              <div
-                *ngIf="activeEnvironmentLogsTab === 'REQUEST'"
-                class="environment-logs-content-request p-2"
-              >
-                <div
-                  class="environment-logs-content-title"
-                  (click)="
-                    collapseStates['request.general'] =
-                      !collapseStates['request.general']
-                  "
-                >
-                  <app-svg
-                    [icon]="
-                      collapseStates['request.general']
-                        ? 'unfold_more'
-                        : 'unfold_less'
-                    "
-                  ></app-svg>
-
-                  General
+              <div class="d-flex align-items-center">
+                <div class="nav-link-subtitle text-truncate">
+                  {{ log.timestamp | date: dateFormat }}
                 </div>
-                <div [ngbCollapse]="collapseStates['request.general']">
-                  <div class="environment-logs-content-item">
-                    <strong>Request URL:</strong> {{ selectedLog.url }}
-                  </div>
-                  <div class="environment-logs-content-item">
-                    <strong>Method:</strong>
-                    {{ selectedLog.method | uppercase }}
-                  </div>
-                  <div
-                    *ngIf="selectedLog.route && !selectedLog.proxied"
-                    class="environment-logs-content-item"
+                <div class="d-flex ms-auto nav-link-subtitle">
+                  <span
+                    class="mt-0 badge badge-default response-badge-{{
+                      log.response.status.toString().slice(0, 1).concat('xx')
+                    }}"
+                    >{{ log.response.status }}</span
                   >
-                    <strong>Caught by route:</strong> {{ selectedLog.route }}
-                  </div>
-                </div>
-
-                <!-- Headers -->
-                <div
-                  class="environment-logs-content-title"
-                  (click)="
-                    collapseStates['request.headers'] =
-                      !collapseStates['request.headers']
-                  "
-                >
-                  <app-svg
-                    [icon]="
-                      selectedLog?.request?.headers.length &&
-                      collapseStates['request.headers']
-                        ? 'unfold_more'
-                        : 'unfold_less'
-                    "
-                  ></app-svg>
-
-                  Headers ({{ selectedLog?.request?.headers?.length }})
-                </div>
-                <div [ngbCollapse]="collapseStates['request.headers']">
-                  <div
-                    class="environment-logs-content-item"
-                    *ngFor="let header of selectedLog?.request?.headers"
-                  >
-                    <strong>{{ header.key | titlecase }}:</strong>
-                    {{ header.value }}
-                  </div>
-                </div>
-
-                <!-- Route params -->
-                <div
-                  class="environment-logs-content-title"
-                  (click)="
-                    collapseStates['request.routeParams'] =
-                      !collapseStates['request.routeParams']
-                  "
-                >
-                  <app-svg
-                    [icon]="
-                      selectedLog?.request?.params.length &&
-                      collapseStates['request.routeParams']
-                        ? 'unfold_more'
-                        : 'unfold_less'
-                    "
-                  ></app-svg>
-
-                  Route params ({{ selectedLog?.request?.params?.length }})
-                </div>
-                <div [ngbCollapse]="collapseStates['request.routeParams']">
-                  <div
-                    class="environment-logs-content-item"
-                    *ngFor="let param of selectedLog?.request?.params"
-                  >
-                    <strong>{{ param.name }}:</strong> {{ param.value }}
-                  </div>
-                </div>
-
-                <!-- Query params -->
-                <div
-                  class="environment-logs-content-title"
-                  (click)="
-                    collapseStates['request.queryParams'] =
-                      !collapseStates['request.queryParams']
-                  "
-                >
-                  <app-svg
-                    [icon]="
-                      selectedLog?.request?.queryParams.length &&
-                      collapseStates['request.queryParams']
-                        ? 'unfold_more'
-                        : 'unfold_less'
-                    "
-                  ></app-svg>
-
-                  Query params ({{
-                    selectedLog?.request?.queryParams?.length || 'none'
-                  }})
-                </div>
-                <div [ngbCollapse]="collapseStates['request.queryParams']">
-                  <div
-                    *ngIf="selectedLog?.request?.query"
-                    class="environment-logs-content-item"
-                  >
-                    <strong>Raw query string:</strong>
-                    {{ selectedLog.request.query }}
-                  </div>
-
-                  <div
-                    class="environment-logs-content-item"
-                    *ngFor="let queryParam of selectedLog?.request?.queryParams"
-                  >
-                    <strong>{{ queryParam.name }}:</strong>
-                    {{ queryParam.value }}
-                  </div>
-                </div>
-
-                <!-- Body -->
-                <div class="environment-logs-content-title d-flex">
-                  <div
-                    (click)="
-                      collapseStates['request.body'] =
-                        !collapseStates['request.body']
-                    "
-                  >
-                    <app-svg
-                      [icon]="
-                        selectedLog?.request?.body &&
-                        collapseStates['request.body']
-                          ? 'unfold_more'
-                          : 'unfold_less'
-                      "
-                    ></app-svg>
-
-                    Body ({{ !selectedLog?.request?.body ? 'none' : 'raw' }})
-                  </div>
-                  <div class="ms-auto">
-                    <span
-                      *ngIf="selectedLog?.request?.truncatedBody"
-                      class="btn btn-link btn-icon text-primary p-0 environment-logs-open-request-body"
-                      (click)="viewBodyInEditor(selectedLog.request, 'request')"
-                      >View full body in editor</span
-                    >
-                  </div>
-                </div>
-                <div [ngbCollapse]="collapseStates['request.body']">
-                  <div class="environment-logs-content-item pre">
-                    {{ selectedLog?.request?.truncatedBody }}
-                  </div>
-                </div>
-              </div>
-
-              <div
-                *ngIf="
-                  activeEnvironmentLogsTab === 'RESPONSE' &&
-                  selectedLog.response
-                "
-                class="environment-logs-content-response p-2"
-              >
-                <!-- General Response -->
-                <div
-                  class="environment-logs-content-title"
-                  (click)="
-                    collapseStates['response.general'] =
-                      !collapseStates['response.general']
-                  "
-                >
-                  <app-svg
-                    [icon]="
-                      collapseStates['response.general']
-                        ? 'unfold_more'
-                        : 'unfold_less'
-                    "
-                  ></app-svg>
-
-                  General
-                </div>
-                <div [ngbCollapse]="collapseStates['response.general']">
-                  <div class="environment-logs-content-item">
-                    <strong>Status:</strong>
-                    {{
-                      selectedLog.response
-                        ? selectedLog.response.status +
-                          ' - ' +
-                          selectedLog.response.statusMessage
-                        : ''
-                    }}
-                  </div>
-                </div>
-
-                <!-- Response Headers -->
-                <div
-                  class="environment-logs-content-title"
-                  (click)="
-                    collapseStates['response.headers'] =
-                      !collapseStates['response.headers']
-                  "
-                >
-                  <app-svg
-                    [icon]="
-                      selectedLog.response?.headers.length &&
-                      collapseStates['response.headers']
-                        ? 'unfold_more'
-                        : 'unfold_less'
-                    "
-                  ></app-svg>
-
-                  Headers ({{ selectedLog?.response?.headers?.length }})
-                </div>
-                <div [ngbCollapse]="collapseStates['response.headers']">
-                  <div
-                    class="environment-logs-content-item"
-                    *ngFor="let header of selectedLog?.response?.headers"
-                  >
-                    <strong>{{ header.key | titlecase }}:</strong>
-                    {{ header.value }}
-                  </div>
-                </div>
-
-                <!-- Response Body -->
-                <div class="environment-logs-content-title d-flex">
-                  <div
-                    (click)="
-                      collapseStates['response.body'] =
-                        !collapseStates['response.body']
-                    "
-                  >
-                    <app-svg
-                      [icon]="
-                        selectedLog.response?.body &&
-                        collapseStates['response.body']
-                          ? 'unfold_more'
-                          : 'unfold_less'
-                      "
-                    ></app-svg>
-
-                    Body ({{
-                      !selectedLog.response?.bodyState
-                        ? 'none'
-                        : selectedLog.response?.bodyState
-                    }})
-                  </div>
-                  <div *ngIf="!selectedLog.response.binaryBody" class="ms-auto">
-                    <span
-                      *ngIf="selectedLog?.response?.truncatedBody"
-                      class="btn btn-link btn-icon text-primary p-0 environment-logs-open-response-body"
-                      (click)="
-                        viewBodyInEditor(selectedLog.response, 'response')
-                      "
-                      >View full body in editor</span
-                    >
-                  </div>
-                </div>
-                <div [ngbCollapse]="collapseStates['response.body']">
-                  <div
-                    *ngIf="!selectedLog.response.binaryBody"
-                    class="environment-logs-content-item pre"
-                  >
-                    {{ selectedLog.response?.truncatedBody }}
-                  </div>
-                  <div
-                    *ngIf="selectedLog.response.binaryBody"
-                    class="environment-logs-content-item"
-                  >
-                    <p class="message mt-4">
-                      Binary content - No preview available
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
-          </ng-container>
+          </a>
+        </li>
+        <div
+          *ngIf="
+            data.environmentLogs?.length >= data.settings?.maxLogsPerEnvironment
+          "
+          class="message message-sm m-2"
+        >
+          <button
+            type="button"
+            class="btn btn-link btn-xs btn-icon text-primary"
+            (click)="openSettings()"
+          >
+            Increase logs size
+          </button>
+        </div>
+      </ul>
+      <div
+        appResizeColumn
+        type="secondary"
+        [minWidth]="menuSize"
+        [maxWidthFactor]="0.2"
+        class="resize-column"
+      ></div>
+    </div>
+
+    <div class="environment-logs-column flex-fill">
+      <div class="environment-logs-content d-flex flex-column h-100">
+        <ul *ngIf="data.selectedLog" class="nav nav-tabs">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [ngClass]="{
+                active: data.activeEnvironmentLogsTab === 'REQUEST'
+              }"
+              (click)="setActiveTab('REQUEST')"
+              >Request <app-svg icon="call_received"></app-svg
+            ></a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [ngClass]="{
+                active: data.activeEnvironmentLogsTab === 'RESPONSE'
+              }"
+              (click)="setActiveTab('RESPONSE')"
+              >Response <app-svg icon="call_made"></app-svg>
+            </a>
+          </li>
+        </ul>
+
+        <div
+          *ngIf="data.selectedLog; else emptyLogsTemplate"
+          class="environment-logs-content-container"
+        >
+          <div
+            *ngIf="data.activeEnvironmentLogsTab === 'REQUEST'"
+            class="environment-logs-content-request p-2"
+          >
+            <div
+              class="environment-logs-content-title"
+              (click)="
+                collapseStates['request.general'] =
+                  !collapseStates['request.general']
+              "
+            >
+              <app-svg
+                [icon]="
+                  collapseStates['request.general']
+                    ? 'unfold_more'
+                    : 'unfold_less'
+                "
+              ></app-svg>
+
+              General
+            </div>
+            <div [ngbCollapse]="collapseStates['request.general']">
+              <div class="environment-logs-content-item">
+                <strong>Request URL:</strong> {{ data.selectedLog.url }}
+              </div>
+              <div class="environment-logs-content-item">
+                <strong>Method:</strong>
+                {{ data.selectedLog.method | uppercase }}
+              </div>
+              <div
+                *ngIf="data.selectedLog.route && !data.selectedLog.proxied"
+                class="environment-logs-content-item"
+              >
+                <strong>Caught by route:</strong> {{ data.selectedLog.route }}
+              </div>
+            </div>
+
+            <!-- Headers -->
+            <div
+              class="environment-logs-content-title"
+              (click)="
+                collapseStates['request.headers'] =
+                  !collapseStates['request.headers']
+              "
+            >
+              <app-svg
+                [icon]="
+                  data.selectedLog?.request?.headers.length &&
+                  collapseStates['request.headers']
+                    ? 'unfold_more'
+                    : 'unfold_less'
+                "
+              ></app-svg>
+
+              Headers ({{ data.selectedLog?.request?.headers?.length }})
+            </div>
+            <div [ngbCollapse]="collapseStates['request.headers']">
+              <div
+                class="environment-logs-content-item"
+                *ngFor="let header of data.selectedLog?.request?.headers"
+              >
+                <strong>{{ header.key | titlecase }}:</strong>
+                {{ header.value }}
+              </div>
+            </div>
+
+            <!-- Route params -->
+            <div
+              class="environment-logs-content-title"
+              (click)="
+                collapseStates['request.routeParams'] =
+                  !collapseStates['request.routeParams']
+              "
+            >
+              <app-svg
+                [icon]="
+                  data.selectedLog?.request?.params.length &&
+                  collapseStates['request.routeParams']
+                    ? 'unfold_more'
+                    : 'unfold_less'
+                "
+              ></app-svg>
+
+              Route params ({{ data.selectedLog?.request?.params?.length }})
+            </div>
+            <div [ngbCollapse]="collapseStates['request.routeParams']">
+              <div
+                class="environment-logs-content-item"
+                *ngFor="let param of data.selectedLog?.request?.params"
+              >
+                <strong>{{ param.name }}:</strong> {{ param.value }}
+              </div>
+            </div>
+
+            <!-- Query params -->
+            <div
+              class="environment-logs-content-title"
+              (click)="
+                collapseStates['request.queryParams'] =
+                  !collapseStates['request.queryParams']
+              "
+            >
+              <app-svg
+                [icon]="
+                  data.selectedLog?.request?.queryParams.length &&
+                  collapseStates['request.queryParams']
+                    ? 'unfold_more'
+                    : 'unfold_less'
+                "
+              ></app-svg>
+
+              Query params ({{
+                data.selectedLog?.request?.queryParams?.length || 'none'
+              }})
+            </div>
+            <div [ngbCollapse]="collapseStates['request.queryParams']">
+              <div
+                *ngIf="data.selectedLog?.request?.query"
+                class="environment-logs-content-item"
+              >
+                <strong>Raw query string:</strong>
+                {{ data.selectedLog.request.query }}
+              </div>
+
+              <div
+                class="environment-logs-content-item"
+                *ngFor="
+                  let queryParam of data.selectedLog?.request?.queryParams
+                "
+              >
+                <strong>{{ queryParam.name }}:</strong>
+                {{ queryParam.value }}
+              </div>
+            </div>
+
+            <!-- Body -->
+            <div
+              class="environment-logs-content-title d-flex"
+              (click)="
+                collapseStates['request.body'] = !collapseStates['request.body']
+              "
+            >
+              <app-svg
+                [icon]="
+                  data.selectedLog?.request?.body &&
+                  collapseStates['request.body']
+                    ? 'unfold_more'
+                    : 'unfold_less'
+                "
+              ></app-svg>
+
+              Body {{ !data.selectedLog?.request?.body ? '(none)' : '' }}
+            </div>
+            <div [ngbCollapse]="collapseStates['request.body']">
+              <div class="environment-logs-content-item">
+                <app-editor
+                  style="height: 60vh"
+                  [options]="data.editorConfigs?.request?.options"
+                  [mode]="data.editorConfigs?.request?.mode"
+                  [readOnly]="true"
+                  [uuid]="data.selectedLog?.UUID + '-request'"
+                  [text]="data.selectedLog?.request?.body"
+                >
+                </app-editor>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              data.activeEnvironmentLogsTab === 'RESPONSE' &&
+              data.selectedLog.response
+            "
+            class="environment-logs-content-response p-2"
+          >
+            <!-- General Response -->
+            <div
+              class="environment-logs-content-title"
+              (click)="
+                collapseStates['response.general'] =
+                  !collapseStates['response.general']
+              "
+            >
+              <app-svg
+                [icon]="
+                  collapseStates['response.general']
+                    ? 'unfold_more'
+                    : 'unfold_less'
+                "
+              ></app-svg>
+
+              General
+            </div>
+            <div [ngbCollapse]="collapseStates['response.general']">
+              <div class="environment-logs-content-item">
+                <strong>Status:</strong>
+                {{
+                  data.selectedLog.response
+                    ? data.selectedLog.response.status +
+                      ' - ' +
+                      data.selectedLog.response.statusMessage
+                    : ''
+                }}
+              </div>
+            </div>
+
+            <!-- Response Headers -->
+            <div
+              class="environment-logs-content-title"
+              (click)="
+                collapseStates['response.headers'] =
+                  !collapseStates['response.headers']
+              "
+            >
+              <app-svg
+                [icon]="
+                  data.selectedLog.response?.headers.length &&
+                  collapseStates['response.headers']
+                    ? 'unfold_more'
+                    : 'unfold_less'
+                "
+              ></app-svg>
+
+              Headers ({{ data.selectedLog?.response?.headers?.length }})
+            </div>
+            <div [ngbCollapse]="collapseStates['response.headers']">
+              <div
+                class="environment-logs-content-item"
+                *ngFor="let header of data.selectedLog?.response?.headers"
+              >
+                <strong>{{ header.key | titlecase }}:</strong>
+                {{ header.value }}
+              </div>
+            </div>
+
+            <!-- Response Body -->
+            <div
+              class="environment-logs-content-title"
+              (click)="
+                collapseStates['response.body'] =
+                  !collapseStates['response.body']
+              "
+            >
+              <app-svg
+                [icon]="
+                  data.selectedLog.response?.body &&
+                  collapseStates['response.body']
+                    ? 'unfold_more'
+                    : 'unfold_less'
+                "
+              ></app-svg>
+
+              Body
+              {{ data.selectedLog.response?.unzipped ? '(unzipped)' : '' }}
+            </div>
+            <div [ngbCollapse]="collapseStates['response.body']">
+              <div
+                *ngIf="
+                  data.selectedLog && !data.selectedLog.response.binaryBody
+                "
+                class="environment-logs-content-item"
+              >
+                <app-editor
+                  style="height: 60vh"
+                  [options]="data.editorConfigs?.response?.options"
+                  [mode]="data.editorConfigs?.response?.mode"
+                  [readOnly]="true"
+                  [uuid]="data.selectedLog?.UUID + '-response'"
+                  [text]="data.selectedLog?.response?.body"
+                >
+                </app-editor>
+              </div>
+              <div
+                *ngIf="data.selectedLog?.response.binaryBody"
+                class="environment-logs-content-item"
+              >
+                <p class="message mt-4">
+                  Binary content - No preview available
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
-</ng-container>
 
-<ng-template #emptyLogsTemplate>
-  <p class="message mt-4">No records yet</p>
-</ng-template>
+  <ng-template #emptyLogsTemplate>
+    <p *ngIf="data.environmentLogs.length === 0" class="message mt-4">
+      No logs found
+    </p>
+    <p
+      *ngIf="data.environmentLogs.length > 0 && !data.selectedLog"
+      class="message mt-4"
+    >
+      No log selected
+    </p>
+  </ng-template>
+</ng-container>

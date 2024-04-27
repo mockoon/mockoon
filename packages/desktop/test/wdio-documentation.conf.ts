@@ -29,10 +29,27 @@ const config: Partial<Options.Testrunner> = {
       const appSettings: Settings = JSON.parse(
         await fs.readFile('./tmp/storage/settings.json', 'utf-8')
       );
-      appSettings.mainMenuSize = 150;
+
       await fs.writeFile(
         './tmp/storage/settings.json',
-        JSON.stringify(appSettings)
+        JSON.stringify({
+          welcomeShown: true,
+          bannerDismissed: [],
+          maxLogsPerEnvironment: 50,
+          truncateRouteName: true,
+          mainMenuSize: 150,
+          secondaryMenuSize: 200,
+          fakerLocale: 'en',
+          fakerSeed: null,
+          lastChangelog: '9999.9.9',
+          environments: [],
+          enableTelemetry: true,
+          storagePrettyPrint: true,
+          startEnvironmentsOnLoad: false,
+          logTransactions: false,
+          disabledRoutes: {},
+          collapsedFolders: {}
+        })
       );
     }
   ]

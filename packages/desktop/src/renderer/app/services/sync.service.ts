@@ -113,6 +113,8 @@ export class SyncService extends Logger {
 
                 return;
               }
+
+              this.socket.auth = { ...this.socket.auth, token: null };
               this.socket.disconnect();
             })
           )

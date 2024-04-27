@@ -53,32 +53,10 @@
         <ng-container *ngIf="data.templates; else noTemplates">
           <div class="col-4 me-2 h-100 d-flex flex-column">
             <div class="mb-2">
-              <div class="input-group" *ngIf="os$ | async as os">
-                <input
-                  ngbAutofocus
-                  type="text"
-                  class="form-control"
-                  id="templates-filter"
-                  placeholder="Filter"
-                  [formControl]="templatesFilter"
-                  [ngbTooltip]="
-                    'Filter templates (' +
-                    (os === 'darwin' ? 'Cmd' : 'Ctrl') +
-                    '+Shift+F)'
-                  "
-                  [appFocusOnEvent]="focusableInputs.TEMPLATES_FILTER"
-                />
-                <button
-                  *ngIf="templatesFilter.value.length > 0"
-                  type="button"
-                  id="templates-filter-clear"
-                  (click)="clearFilter()"
-                  class="btn btn-custom"
-                  ngbTooltip="Clear filter"
-                >
-                  <app-svg icon="clear"></app-svg>
-                </button>
-              </div>
+              <app-filter
+                filterName="templates"
+                [focusableInput]="focusableInputs.TEMPLATES_FILTER"
+              ></app-filter>
             </div>
             <div class="list-group list-group-flush h-100 overflow-auto">
               <button
@@ -103,7 +81,6 @@
               [text]="data.activeTemplate?.content"
               [options]="defaultEditorOptions.options"
               [mode]="data.activeTemplate?.type"
-              [theme]="defaultEditorOptions.theme"
               uuid="templatePreview"
             ></app-editor>
             <p
@@ -171,7 +148,6 @@
           [formControl]="generatedTemplateBody"
           [options]="defaultEditorOptions.options"
           [mode]="defaultEditorOptions.mode"
-          [theme]="defaultEditorOptions.theme"
           uuid="templateGenPreview"
         ></app-editor>
         <p class="px-2 pt-2 mb-0 text-muted text-center">
@@ -220,7 +196,6 @@
               [formControl]="demoGeneratedTemplateBody"
               [options]="defaultEditorOptions.options"
               [mode]="defaultEditorOptions.mode"
-              [theme]="defaultEditorOptions.theme"
               uuid="demoTemplateGenPreview"
             ></app-editor>
           </div>

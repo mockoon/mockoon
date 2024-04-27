@@ -19,7 +19,7 @@ class Databuckets {
   }
 
   public get filter() {
-    return $('input[id="databucket-filter"]');
+    return $('input[id="databuckets-filter"]');
   }
 
   public get idElement() {

@@ -34,7 +34,7 @@ ace.define(
         border: 1px solid #4b4e55;
       }
       .ace-editor-theme .ace_marker-layer .ace_active-line {
-        background: #252830;
+        background: #21232a;
       }
       .ace-editor-theme .ace_gutter-active-line {
         background-color: #252830;

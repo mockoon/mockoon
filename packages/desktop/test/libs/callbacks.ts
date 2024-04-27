@@ -25,7 +25,7 @@ class Callbacks {
   }
 
   public get filter() {
-    return $('input[id="callback-filter"]');
+    return $('input[id="callbacks-filter"]');
   }
 
   public get idElement() {

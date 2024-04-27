@@ -59,13 +59,6 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/localazy.png">
       <img src="https://mockoon.com/images/sponsors/light/localazy.png" alt="Localazy logo" />
       </picture>
-  </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="https://www.peakcrypto.com/">
-      <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/peakcrypto.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/peakcrypto.png">
-      <img src="https://mockoon.com/images/sponsors/light/peakcrypto.png" alt="Peakcrypto logo" />
-      </picture>
   </a>
 </div>
 
@@ -73,7 +66,7 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">  
   <a href="https://www.emqx.io/">  
-      <img src="https://mockoon.com/images/sponsors/emqx.png" alt="Peakcrypto logo" />
+      <img src="https://mockoon.com/images/sponsors/emqx.png" alt="emqx logo" />
   </a>
 </div>
 
@@ -118,6 +111,7 @@ Please check our [dedicated documentation](https://github.com/mockoon/mockoon/bl
 
 With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
 
+- 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/docs/latest/mockoon-cloud/data-synchronization-team-collaboration/)
 - 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
 - 📃 Access to dozens of [ready to use JSON templates](https://mockoon.com/templates/).
 - 💬 Priority support and training.
@@ -130,7 +124,7 @@ Upgrade today and take your API development to the next level.
 
 ## Mockoon's documentation
 
-You will find Mockoon's [documentation](https://mockoon.com/docs/latest) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
+You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
 
 ## Changelogs
 

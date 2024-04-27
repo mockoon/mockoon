@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/commons-server",
   "description": "Mockoon's commons server library. Used in Mockoon desktop application and CLI.",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "guillaume@1kb.software",
@@ -34,7 +34,7 @@
   "dependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@faker-js/faker": "8.4.1",
-    "@mockoon/commons": "7.0.0",
+    "@mockoon/commons": "8.0.0",
     "append-field": "1.0.0",
     "busboy": "1.6.0",
     "cookie-parser": "1.4.6",

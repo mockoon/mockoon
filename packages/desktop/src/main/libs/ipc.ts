@@ -16,7 +16,8 @@ import { lookup as mimeTypeLookup } from 'mime-types';
 import {
   format as pathFormat,
   join as pathJoin,
-  parse as pathParse
+  parse as pathParse,
+  resolve as pathResolve
 } from 'path';
 import {
   IPCMainHandlerChannels,
@@ -68,6 +69,24 @@ const getDialogDefaultPath = () => {
   return getDataPath();
 };
 
+/**
+ * Build a full file path by combining an environment path to which a file is reletively located and a file path
+ *
+ * @param filePath
+ * @param relativeToFile
+ * @returns
+ */
+const buildFilePath = (filePath: string, relativeToFile: string): string => {
+  let relativeDir = '';
+
+  // if a relative path (mostly a path to an env data file) is provided, extract the directory
+  if (relativeToFile) {
+    relativeDir = pathParse(relativeToFile).dir;
+  }
+
+  return pathResolve(relativeDir, filePath);
+};
+
 export const initIPCListeners = (mainWindow: BrowserWindow) => {
   // Quit requested by renderer (when waiting for save to finish)
   ipcMain.on('APP_QUIT', () => {
@@ -94,8 +113,8 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     }
   });
 
-  ipcMain.on('APP_SHOW_FILE', (event, path) => {
-    shell.showItemInFolder(path);
+  ipcMain.on('APP_SHOW_FILE', (event, filePath, relativeToFile) => {
+    shell.showItemInFolder(buildFilePath(filePath, relativeToFile));
   });
 
   ipcMain.on('APP_SHOW_FOLDER', (event, name) => {
@@ -270,6 +289,19 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   ipcMain.handle('APP_STOP_SERVER', (event, environmentUUID: string) => {
     ServerInstance.stop(environmentUUID);
   });
+
+  ipcMain.on(
+    'APP_OPEN_FILE',
+    async (event, filePath: string, relativeToFile: string) => {
+      const result = await shell.openPath(
+        buildFilePath(filePath, relativeToFile)
+      );
+
+      if (result) {
+        logError(`Failed to open file in default editor: ${result}`);
+      }
+    }
+  );
 };
 
 /**

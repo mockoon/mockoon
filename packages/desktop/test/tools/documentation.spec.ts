@@ -449,37 +449,6 @@ const documentationTopics: {
       },
       {
         tasks: async () => {
-          await environmentsLogs.switchTab('REQUEST');
-        },
-        get screenshotTarget() {
-          return environmentsLogs.container;
-        },
-        get highlightedTarget() {
-          return environmentsLogs.viewBodyEditor;
-        },
-        highlight: true,
-        highlightGaps: { top: 0, right: 5, bottom: 0, left: 5 },
-        screenshotPosition: { top: 0, right: 0 },
-        screeenshotGaps: { left: 50, bottom: -300 },
-        fileName: 'logs-view-body.png'
-      },
-      {
-        tasks: async () => {
-          await environmentsLogs.clickOpenBodyInEditorButton('request');
-          await browser.pause(500);
-        },
-        get highlightedTarget() {
-          return modals.content;
-        },
-        highlight: false,
-        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: {},
-        screeenshotGaps: { top: 30, right: 30, bottom: 30, left: 30 },
-        fileName: 'logs-view-body-modal.png'
-      },
-      {
-        tasks: async () => {
-          await modals.close();
           await http.assertCall({
             method: 'GET',
             path: '/newroute'

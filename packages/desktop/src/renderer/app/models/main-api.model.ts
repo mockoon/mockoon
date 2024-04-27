@@ -79,9 +79,11 @@ export interface MainAPIModel {
   send(channel: 'APP_UPDATE_MENU_STATE', state: MenuStateUpdatePayload): void;
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
   send(channel: 'APP_QUIT' | 'APP_HIDE_WINDOW' | 'APP_APPLY_UPDATE'): void;
+  send(channel: 'APP_OPEN_EXTERNAL_LINK', url: string): void;
   send(
-    channel: 'APP_OPEN_EXTERNAL_LINK' | 'APP_SHOW_FILE',
-    urlOrPath: string
+    channel: 'APP_SHOW_FILE' | 'APP_OPEN_FILE',
+    path: string,
+    relativeToFile?: string
   ): void;
   send(
     channel: 'APP_SHOW_FOLDER',

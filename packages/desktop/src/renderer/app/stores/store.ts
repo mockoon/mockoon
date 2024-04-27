@@ -60,7 +60,8 @@ export class Store {
       routes: '',
       databuckets: '',
       templates: '',
-      callbacks: ''
+      callbacks: '',
+      logs: ''
     },
     user: null,
     callbackSettings: {
@@ -157,6 +158,26 @@ export class Store {
   }
 
   /**
+   * Select active environment log
+   */
+  public selectActiveEnvironmentLog(): Observable<EnvironmentLog> {
+    return this.store$
+      .asObservable()
+      .pipe(
+        map((store) =>
+          store.environmentsLogs[store.activeEnvironmentUUID] &&
+          store.environmentsLogs[store.activeEnvironmentUUID].length > 0
+            ? store.environmentsLogs[store.activeEnvironmentUUID].find(
+                (environmentLog) =>
+                  environmentLog.UUID ===
+                  store.activeEnvironmentLogsUUID[store.activeEnvironmentUUID]
+              )
+            : null
+        )
+      );
+  }
+
+  /**
    * Select active environment logs
    */
   public selectActiveEnvironmentLogs(): Observable<EnvironmentLog[]> {
@@ -164,20 +185,6 @@ export class Store {
       .asObservable()
       .pipe(
         map((store) => store.environmentsLogs[store.activeEnvironmentUUID])
-      );
-  }
-
-  /**
-   * Select active environment log UUID for selected environment
-   */
-  public selectActiveEnvironmentLogUUID(): Observable<string> {
-    return this.store$
-      .asObservable()
-      .pipe(
-        map(
-          (store) =>
-            store.activeEnvironmentLogsUUID[store.activeEnvironmentUUID]
-        )
       );
   }
 

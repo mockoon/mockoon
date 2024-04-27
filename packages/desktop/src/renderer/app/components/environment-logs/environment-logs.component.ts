@@ -1,15 +1,22 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
 import { Observable } from 'rxjs';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
 import {
-  EnvironmentLog,
-  EnvironmentLogRequest,
-  EnvironmentLogResponse
-} from 'src/renderer/app/models/environment-logs.model';
+  combineLatestWith,
+  distinctUntilChanged,
+  filter,
+  map
+} from 'rxjs/operators';
+import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
+import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import {
+  GetEditorModeFromContentType,
+  textFilter
+} from 'src/renderer/app/libs/utils.lib';
+import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model';
-import { DataService } from 'src/renderer/app/services/data.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -42,8 +49,8 @@ export class EnvironmentLogsComponent implements OnInit {
   public environmentLogs$: Observable<EnvironmentLog[]>;
   public activeEnvironmentLogsTab$: Observable<EnvironmentLogsTabsNameType>;
   public activeEnvironmentUUID$: Observable<string>;
-  public activeEnvironmentLogUUID$: Observable<string>;
   public activeEnvironmentLog$: Observable<EnvironmentLog>;
+  public environmentLogsCount$: Observable<number>;
   public settings$: Observable<Settings>;
   public collapseStates: CollapseStates = {
     'request.general': false,
@@ -58,42 +65,48 @@ export class EnvironmentLogsComponent implements OnInit {
   public menuSize = Config.defaultSecondaryMenuSize;
   public clearEnvironmentLogsRequested$ = new TimedBoolean();
   public logsRecording$ = this.eventsService.logsRecording$;
+  public editorConfigs$: Observable<{
+    request: typeof defaultEditorOptions;
+    response: typeof defaultEditorOptions;
+  }>;
+  public logsFilter$: Observable<string>;
+  public dateFormat = 'yyyy-MM-dd HH:mm:ss:SSS';
+  public focusableInputs = FocusableInputs;
 
   constructor(
     private store: Store,
     private environmentsService: EnvironmentsService,
-    private dataService: DataService,
     private eventsService: EventsService,
-    private uiService: UIService
+    private uiService: UIService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit() {
+    this.logsFilter$ = this.store.selectFilter('logs');
     this.settings$ = this.store.select('settings');
     this.activeEnvironmentUUID$ = this.store.select('activeEnvironmentUUID');
-    this.environmentLogs$ = this.store.selectActiveEnvironmentLogs();
-
-    this.activeEnvironmentLogUUID$ = this.environmentLogs$.pipe(
-      mergeMap(() => this.store.selectActiveEnvironmentLogUUID())
+    this.environmentLogsCount$ = this.store
+      .selectActiveEnvironmentLogs()
+      .pipe(map((logs) => logs.length));
+    this.environmentLogs$ = this.store.selectActiveEnvironmentLogs().pipe(
+      combineLatestWith(this.logsFilter$),
+      map(([environmentLogs, search]) =>
+        !search
+          ? environmentLogs
+          : environmentLogs.filter((log) =>
+              textFilter(
+                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestamp, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+                search
+              )
+            )
+      )
     );
 
-    this.activeEnvironmentLog$ = this.activeEnvironmentLogUUID$.pipe(
-      withLatestFrom(this.environmentLogs$),
-      map(([activeEnvironmentLogUUID, environmentLogs]) =>
-        environmentLogs.find(
-          (environmentLog) => environmentLog.UUID === activeEnvironmentLogUUID
-        )
-      ),
+    this.activeEnvironmentLog$ = this.store.selectActiveEnvironmentLog().pipe(
+      distinctUntilChanged(),
       map((environmentLog) => {
         if (environmentLog) {
-          if (environmentLog.request.body) {
-            environmentLog.request.truncatedBody =
-              this.dataService.truncateBody(environmentLog.request.body);
-          }
-
           if (environmentLog.response.body) {
-            environmentLog.response.truncatedBody =
-              this.dataService.truncateBody(environmentLog.response.body);
-
             const contentEncoding = environmentLog.response.headers.find(
               (header) => header.key.toLowerCase() === 'content-encoding'
             )?.value;
@@ -103,14 +116,62 @@ export class EnvironmentLogsComponent implements OnInit {
               contentEncoding === 'br' ||
               contentEncoding === 'deflate'
             ) {
-              environmentLog.response.bodyState = 'unzipped';
-            } else {
-              environmentLog.response.bodyState = 'raw';
+              environmentLog.response.unzipped = true;
             }
           }
         }
 
         return environmentLog;
+      })
+    );
+
+    this.editorConfigs$ = this.activeEnvironmentLog$.pipe(
+      filter((activeEnvironmentLog) => !!activeEnvironmentLog),
+      map((activeEnvironmentLog) => {
+        const responseContentTypeHeader = GetContentType(
+          activeEnvironmentLog.response.headers
+        );
+        const requestContentTypeHeader = GetContentType(
+          activeEnvironmentLog.request.headers
+        );
+        const baseEditorConfig = this.store.get('bodyEditorConfig');
+
+        const responseEditorMode = responseContentTypeHeader
+          ? GetEditorModeFromContentType(responseContentTypeHeader)
+          : 'text';
+
+        const requestEditorMode = requestContentTypeHeader
+          ? GetEditorModeFromContentType(requestContentTypeHeader)
+          : 'text';
+
+        return {
+          request: {
+            ...baseEditorConfig,
+            options: {
+              ...baseEditorConfig.options,
+              // enable JSON validation
+              useWorker: isContentTypeApplicationJson(
+                activeEnvironmentLog.request.headers
+              )
+                ? true
+                : false
+            },
+            mode: requestEditorMode
+          },
+          response: {
+            ...baseEditorConfig,
+            options: {
+              ...baseEditorConfig.options,
+              // enable JSON validation
+              useWorker: isContentTypeApplicationJson(
+                activeEnvironmentLog.response.headers
+              )
+                ? true
+                : false
+            },
+            mode: responseEditorMode
+          }
+        };
       })
     );
 
@@ -150,32 +211,6 @@ export class EnvironmentLogsComponent implements OnInit {
   }
 
   /**
-   * Open editor modal to view the body
-   */
-  public viewBodyInEditor(
-    logResponseOrRequest: EnvironmentLogResponse | EnvironmentLogRequest,
-    location: 'request' | 'response'
-  ) {
-    const contentTypeHeader = logResponseOrRequest.headers.find(
-      (header) => header.key.toLowerCase() === 'content-type'
-    );
-    const editorMode =
-      contentTypeHeader && contentTypeHeader.value
-        ? GetEditorModeFromContentType(contentTypeHeader.value)
-        : 'text';
-
-    this.eventsService.editorModalPayload$.next({
-      title: `${location} body`,
-      content: logResponseOrRequest.body,
-      editorConfig: {
-        mode: editorMode
-      }
-    });
-
-    this.uiService.openModal('editor');
-  }
-
-  /**
    * Clear logs for active environment
    */
   public clearEnvironmentLogs() {
@@ -198,5 +233,9 @@ export class EnvironmentLogsComponent implements OnInit {
    */
   public stopRecording(environmentUuid: string) {
     this.environmentsService.stopRecording(environmentUuid);
+  }
+
+  public openSettings() {
+    this.uiService.openModal('settings');
   }
 }
