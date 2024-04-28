@@ -6,7 +6,6 @@ import {
   CORSHeaders,
   defaultEnvironmentVariablesPrefix,
   Environment,
-  FakerAvailableLocales,
   FileExtensionsWithTemplating,
   GetContentType,
   GetRouteResponseContentType,
@@ -47,6 +46,7 @@ import { format } from 'util';
 import { xml2js } from 'xml-js';
 import { ServerMessages } from '../../constants/server-messages.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
+import { ServerOptions } from '../../models/server.model';
 import { SetFakerLocale, SetFakerSeed } from '../faker';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
@@ -76,53 +76,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private requestNumbers: Record<string, number> = {};
   // templating global variables
   private globalVariables: Record<string, any> = {};
-  private options: {
-    /**
-     * Directory where to find the environment file.
-     */
-    environmentDirectory?: string;
-
-    /**
-     * List of routes uuids to disable.
-     * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
-     */
-    disabledRoutes?: string[];
-
-    /**
-     * Method used by the library to refresh the environment information
-     */
-    refreshEnvironmentFunction?: (
-      environmentUUID: string
-    ) => Environment | null;
-
-    /**
-     * Faker options: seed and locale
-     */
-    fakerOptions?: {
-      // Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation.)
-      locale?: FakerAvailableLocales;
-      // Number for the Faker.js seed (e.g. 1234)
-      seed?: number;
-    };
-
-    /**
-     * Environment variables prefix
-     */
-    envVarsPrefix: string;
-
-    /**
-     * Enable the admin API
-     * https://mockoon.com/docs/latest/admin-api/overview/
-     */
-    enableAdminApi: boolean;
-  } = {
+  private options: ServerOptions = {
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
-    enableAdminApi: true
+    enableAdminApi: true,
+    disableTls: false
   };
 
   constructor(
     private environment: Environment,
-    options: Partial<MockoonServer['options']> = {}
+    options: Partial<ServerOptions> = {}
   ) {
     super();
 
@@ -140,7 +102,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const requestListener = this.createRequestListener();
 
     // create https or http server instance
-    if (this.environment.tlsOptions.enabled) {
+    if (this.environment.tlsOptions.enabled && !this.options.disableTls) {
       try {
         this.tlsOptions = this.buildTLSOptions(this.environment);
 

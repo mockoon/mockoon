@@ -142,14 +142,15 @@ After deploying to Netlify, any request starting with `/api/*` (e.g. `https://AP
 
 The `MockoonServerless` class accepts an optional `options` object as a second parameter. The following options are available:
 
-| Option name           | Type       | Default value | Description                                                                                                                           |
-| --------------------- | ---------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `logTransaction`      | `boolean`  | `false`       | [Enable full transaction logging](#transaction-logging) (see below).                                                                  |
-| `disabledRoutes`      | `string[]` | `[]`          | Disable route(s) by UUID(s) or keyword(s) in route path (see [below](#fakerjs-options)).                                              |
-| `fakerOptions.locale` | `string`   | `[]`          | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)                                                             |
-| `fakerOptions.seed`   | `number`   | `[]`          | Number for the Faker.js seed (e.g. 1234)                                                                                              |
-| `envVarsPrefix`       | `string`   | `MOCKOON_`    | [Environment variables prefix](https://mockoon.com/docs/latest/variables/environment-variables/). Pass an empty string to disable it. |
-| `enableAdminApi`      | `boolean`  | `true`        | Enable (default) or disable the [Admin API](https://mockoon.com/docs/latest/admin-api/overview/).                                     |
+| Option name           | Type       | Default value | Description                                                                                                                                                  |
+| --------------------- | ---------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `logTransaction`      | `boolean`  | `false`       | [Enable full transaction logging](#transaction-logging) (see below).                                                                                         |
+| `disabledRoutes`      | `string[]` | `[]`          | Disable route(s) by UUID(s) or keyword(s) in route path (see [below](#fakerjs-options)).                                                                     |
+| `fakerOptions.locale` | `string`   | `[]`          | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)                                                                                    |
+| `fakerOptions.seed`   | `number`   | `[]`          | Number for the Faker.js seed (e.g. 1234)                                                                                                                     |
+| `envVarsPrefix`       | `string`   | `MOCKOON_`    | [Environment variables prefix](https://mockoon.com/docs/latest/variables/environment-variables/). Pass an empty string to disable it.                        |
+| `enableAdminApi`      | `boolean`  | `true`        | Enable (default) or disable the [Admin API](https://mockoon.com/docs/latest/admin-api/overview/).                                                            |
+| `disableTls`          | `boolean`  | `false`       | Disable TLS. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/). |
 
 Example:
 
@@ -163,7 +164,8 @@ const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
     seed: 1234
   },
   envVarsPrefix: 'CUSTOM_PREFIX_',
-  enableAdminApi: false
+  enableAdminApi: false,
+  disableTls: true
 });
 ```
 

@@ -1,10 +1,10 @@
 import {
   Environment,
-  FakerAvailableLocales,
   defaultEnvironmentVariablesPrefix
 } from '@mockoon/commons';
 import {
   MockoonServer,
+  ServerOptions,
   createLoggerInstance,
   listenServerEvents
 } from '@mockoon/commons-server';
@@ -12,45 +12,27 @@ import { RequestListener } from 'http';
 import ServerlessHttp from 'serverless-http';
 
 export class MockoonServerless {
+  private options: ServerOptions & { logTransaction: boolean } = {
+    logTransaction: false,
+    disabledRoutes: [],
+    fakerOptions: {},
+    envVarsPrefix: defaultEnvironmentVariablesPrefix,
+    enableAdminApi: true,
+    disableTls: false
+  };
+
   constructor(
     private environment: Environment,
-    private options: {
-      logTransaction?: boolean;
-      /**
-       * List of routes uuids to disable.
-       * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
-       */
-      disabledRoutes?: string[];
-      /**
-       * Faker options: seed and locale
-       */
-      fakerOptions?: {
-        // Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation.)
-        locale?: FakerAvailableLocales;
-        // Number for the Faker.js seed (e.g. 1234)
-        seed?: number;
-      };
-
-      /**
-       * Environment variables prefix
-       */
-      envVarsPrefix: string;
-
-      /**
-       * Enable or disable the admin API
-       */
-      enableAdminApi?: boolean;
-    } = {
-      logTransaction: false,
-      disabledRoutes: [],
-      fakerOptions: {},
-      envVarsPrefix: defaultEnvironmentVariablesPrefix,
-      enableAdminApi: true
-    }
+    options: Partial<ServerOptions>
   ) {
     if (!environment) {
       throw new Error('No environment data provided');
     }
+
+    this.options = {
+      ...this.options,
+      ...options
+    };
   }
 
   /**
@@ -65,7 +47,8 @@ export class MockoonServerless {
       disabledRoutes: this.options.disabledRoutes,
       fakerOptions: this.options.fakerOptions,
       envVarsPrefix: this.options.envVarsPrefix,
-      enableAdminApi: this.options.enableAdminApi
+      enableAdminApi: this.options.enableAdminApi,
+      disableTls: this.options.disableTls
     });
     listenServerEvents(
       server,

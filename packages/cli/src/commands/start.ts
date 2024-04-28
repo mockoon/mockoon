@@ -8,6 +8,7 @@ import {
 import {
   MockoonServer,
   ServerMessages,
+  ServerOptions,
   createLoggerInstance,
   listenServerEvents
 } from '@mockoon/commons-server';
@@ -83,6 +84,11 @@ export default class Start extends Command {
       description:
         'Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)',
       default: false
+    }),
+    'disable-tls': Flags.boolean({
+      description:
+        'Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).',
+      default: false
     })
   };
 
@@ -113,7 +119,7 @@ export default class Start extends Command {
       for (const environmentInfo of parsedEnvironments) {
         this.createServer({
           environment: environmentInfo.environment,
-          environmentDir: getDirname(environmentInfo.originalPath) || '',
+          environmentDirectory: getDirname(environmentInfo.originalPath) || '',
           logTransaction: userFlags['log-transaction'],
           fileTransportOptions: userFlags['disable-log-to-file']
             ? null
@@ -131,7 +137,8 @@ export default class Start extends Command {
             seed: userFlags['faker-seed']
           },
           envVarsPrefix: userFlags['env-vars-prefix'],
-          enableAdminApi: !userFlags['disable-admin-api']
+          enableAdminApi: !userFlags['disable-admin-api'],
+          disableTls: userFlags['disable-tls']
         });
       }
     } catch (error: any) {
@@ -139,26 +146,21 @@ export default class Start extends Command {
     }
   }
 
-  private createServer = (parameters: {
-    environment: Environment;
-    environmentDir: string;
-    disabledRoutes?: string[];
-    logTransaction?: boolean;
-    fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
-    fakerOptions?: {
-      locale?: FakerAvailableLocales;
-      seed?: number | undefined;
-    };
-    envVarsPrefix: string;
-    enableAdminApi: boolean;
-  }) => {
+  private createServer = (
+    parameters: ServerOptions & {
+      environment: Environment;
+      logTransaction?: boolean;
+      fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
+    }
+  ) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
     const server = new MockoonServer(parameters.environment, {
-      environmentDirectory: parameters.environmentDir,
+      environmentDirectory: parameters.environmentDirectory,
       disabledRoutes: parameters.disabledRoutes,
       fakerOptions: parameters.fakerOptions,
       envVarsPrefix: parameters.envVarsPrefix,
-      enableAdminApi: parameters.enableAdminApi
+      enableAdminApi: parameters.enableAdminApi,
+      disableTls: parameters.disableTls
     });
 
     listenServerEvents(

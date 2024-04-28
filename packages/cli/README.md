@@ -136,6 +136,7 @@ OPTIONS
   -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
   -x, --env-vars-prefix       Prefix for environment variables (default: 'MOCKOON_')
       --disable-admin-api     Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
+      --disable-tls           Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)
   -h, --help                  Show CLI help
 
 EXAMPLES
