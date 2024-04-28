@@ -3,7 +3,8 @@ export const ServerMessages = {
   PORT_INVALID: 'Port %d is invalid or access is denied',
   HOSTNAME_UNKNOWN: 'Unknown hostname/address provided: %s',
   HOSTNAME_UNAVAILABLE: 'Provided hostname/address is not available: %s',
-  REQUEST_BODY_PARSE: 'Error while parsing entering body: %s',
+  REQUEST_BODY_PARSE:
+    'Error while trying to parse request body with compatible Content-Type (JSON, XML, form-data): %s',
   ROUTE_CREATION_ERROR: 'Error while creating route: %s',
   ROUTE_CREATION_ERROR_REGEX:
     'Error while creating route, regex path is invalid: %s',

@@ -828,7 +828,7 @@
               class="pe-0 py-2"
             >
               <button
-                class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link"
+                class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link d-flex align-items-center"
                 (click)="goToRouteResponseLog(activeRouteResponseLastLog.UUID)"
               >
                 <span
@@ -836,13 +836,13 @@
                     activeRouteResponseLastLog.response.isInvalidJson ||
                     activeRouteResponseLastLog.request.isInvalidJson
                   "
-                  class="text-warning"
-                  [ngbTooltip]="tooltiptmp"
+                  class="text-warning me-2"
+                  [ngbTooltip]="lastLogTooltip"
                   tooltipClass="text-start"
                 >
                   <app-svg icon="warning"></app-svg>
                 </span>
-                <ng-template #tooltiptmp>
+                <ng-template #lastLogTooltip>
                   <div class="text-left">
                     One of the last transaction's JSON body was invalid:
                     <strong>
@@ -867,7 +867,7 @@
                     </strong>
                   </div>
                 </ng-template>
-                Last log
+                <span>Last log</span>
               </button>
             </div>
           </div>

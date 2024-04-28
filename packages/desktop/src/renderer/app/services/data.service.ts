@@ -78,10 +78,7 @@ export class DataService extends Logger {
     let responseBody = transaction.response.body;
     let requestBody = transaction.request.body;
 
-    if (
-      responseBody &&
-      isContentTypeApplicationJson(transaction.response.headers)
-    ) {
+    if (isContentTypeApplicationJson(transaction.response.headers)) {
       try {
         responseBody = JSON.stringify(
           JSON.parse(transaction.response.body),
@@ -93,15 +90,12 @@ export class DataService extends Logger {
       }
     }
 
-    if (
-      requestBody &&
-      isContentTypeApplicationJson(transaction.request.headers)
-    ) {
+    if (isContentTypeApplicationJson(transaction.request.headers)) {
       try {
         requestBody = JSON.stringify(
           JSON.parse(transaction.request.body),
           null,
-          2
+          INDENT_SIZE
         );
       } catch (error) {
         isReqJsonInvalid = true;
