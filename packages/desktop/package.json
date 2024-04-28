@@ -65,7 +65,7 @@
     "winston": "3.13.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "17.3.2",
+    "@angular-devkit/build-angular": "17.3.6",
     "@angular-eslint/builder": "17.3.0",
     "@angular-eslint/eslint-plugin": "17.3.0",
     "@angular-eslint/eslint-plugin-template": "17.3.0",
@@ -105,7 +105,7 @@
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-jsdoc": "48.2.1",
     "eslint-plugin-prefer-arrow": "1.2.3",
-    "firebase": "10.9.0",
+    "firebase": "10.11.1",
     "glob": "10.3.10",
     "joi": "17.12.2",
     "ngx-markdown": "17.1.1",
