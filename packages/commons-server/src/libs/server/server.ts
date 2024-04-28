@@ -198,6 +198,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
+   * Set a global variable
+   */
+  public setGlobalVariables = (key: string, value: any): void => {
+    this.globalVariables[key] = value;
+  };
+
+  /**
+   * Resets the global variables
+   */
+  public purgeGlobalVariables = (): void => {
+    this.globalVariables = {};
+  };
+
+  /**
    * Create a request listener
    */
   public createRequestListener(): RequestListener {
@@ -214,26 +228,34 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
+    app.use(this.parseBody); // This middleware is required to parse the body for createAdminEndpoint requests
 
     // admin endpoint must be created before all other routes to avoid conflicts
-    createAdminEndpoint(app, {
-      statePurgeCallback: () => {
-        // reset request numbers
-        Object.keys(this.requestNumbers).forEach((routeUUID) => {
-          this.requestNumbers[routeUUID] = 1;
-        });
+    createAdminEndpoint(
+      app,
+      {
+        statePurgeCallback: () => {
+          // reset request numbers
+          Object.keys(this.requestNumbers).forEach((routeUUID) => {
+            this.requestNumbers[routeUUID] = 1;
+          });
 
-        // reset databuckets
-        this.processedDatabuckets = [];
-        this.generateDatabuckets(this.environment);
-      }
-    });
+          // reset databuckets
+          this.processedDatabuckets = [];
+          this.generateDatabuckets(this.environment);
+
+          // reset global variables
+          this.purgeGlobalVariables();
+        }
+      },
+      this.setGlobalVariables,
+      this.purgeGlobalVariables
+    );
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
     app.use(this.deduplicateRequestSlashes);
     app.use(cookieParser());
-    app.use(this.parseBody);
     app.use(this.logRequest);
     app.use(this.setResponseHeaders);
 
@@ -306,6 +328,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param response
    * @param next
    */
+
   private parseBody = (
     request: Request,
     response: Response,
