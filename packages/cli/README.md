@@ -135,6 +135,7 @@ OPTIONS
   -e, --disable-routes        Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash)
   -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
   -x, --env-vars-prefix       Prefix for environment variables (default: 'MOCKOON_')
+      --disable-admin-api     Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
   -h, --help                  Show CLI help
 
 EXAMPLES

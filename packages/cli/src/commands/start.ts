@@ -78,6 +78,11 @@ export default class Start extends Command {
       description: `Prefix of environment variables available at runtime (default: "${defaultEnvironmentVariablesPrefix}")`,
       multiple: false,
       default: defaultEnvironmentVariablesPrefix
+    }),
+    'disable-admin-api': Flags.boolean({
+      description:
+        'Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)',
+      default: false
     })
   };
 
@@ -125,7 +130,8 @@ export default class Start extends Command {
             locale: userFlags['faker-locale'] as FakerAvailableLocales,
             seed: userFlags['faker-seed']
           },
-          envVarsPrefix: userFlags['env-vars-prefix']
+          envVarsPrefix: userFlags['env-vars-prefix'],
+          enableAdminApi: !userFlags['disable-admin-api']
         });
       }
     } catch (error: any) {
@@ -144,13 +150,15 @@ export default class Start extends Command {
       seed?: number | undefined;
     };
     envVarsPrefix: string;
+    enableAdminApi: boolean;
   }) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
     const server = new MockoonServer(parameters.environment, {
       environmentDirectory: parameters.environmentDir,
       disabledRoutes: parameters.disabledRoutes,
       fakerOptions: parameters.fakerOptions,
-      envVarsPrefix: parameters.envVarsPrefix
+      envVarsPrefix: parameters.envVarsPrefix,
+      enableAdminApi: parameters.enableAdminApi
     });
 
     listenServerEvents(

@@ -27,6 +27,7 @@ const createStateEndpoints = (
   const stateEndpoint = `${adminApiPrefix}/state`;
   const purgeHandler = (req, res) => {
     statePurgeCallback();
+
     res.send({
       response: 'State purged successfully'
     });

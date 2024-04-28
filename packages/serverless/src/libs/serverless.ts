@@ -35,11 +35,17 @@ export class MockoonServerless {
        * Environment variables prefix
        */
       envVarsPrefix: string;
+
+      /**
+       * Enable or disable the admin API
+       */
+      enableAdminApi?: boolean;
     } = {
       logTransaction: false,
       disabledRoutes: [],
       fakerOptions: {},
-      envVarsPrefix: defaultEnvironmentVariablesPrefix
+      envVarsPrefix: defaultEnvironmentVariablesPrefix,
+      enableAdminApi: true
     }
   ) {
     if (!environment) {
@@ -58,7 +64,8 @@ export class MockoonServerless {
     const server = new MockoonServer(this.environment, {
       disabledRoutes: this.options.disabledRoutes,
       fakerOptions: this.options.fakerOptions,
-      envVarsPrefix: this.options.envVarsPrefix
+      envVarsPrefix: this.options.envVarsPrefix,
+      enableAdminApi: this.options.enableAdminApi
     });
     listenServerEvents(
       server,

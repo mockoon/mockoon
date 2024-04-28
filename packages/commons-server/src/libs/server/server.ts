@@ -76,45 +76,61 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private requestNumbers: Record<string, number> = {};
   // templating global variables
   private globalVariables: Record<string, any> = {};
+  private options: {
+    /**
+     * Directory where to find the environment file.
+     */
+    environmentDirectory?: string;
+
+    /**
+     * List of routes uuids to disable.
+     * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
+     */
+    disabledRoutes?: string[];
+
+    /**
+     * Method used by the library to refresh the environment information
+     */
+    refreshEnvironmentFunction?: (
+      environmentUUID: string
+    ) => Environment | null;
+
+    /**
+     * Faker options: seed and locale
+     */
+    fakerOptions?: {
+      // Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation.)
+      locale?: FakerAvailableLocales;
+      // Number for the Faker.js seed (e.g. 1234)
+      seed?: number;
+    };
+
+    /**
+     * Environment variables prefix
+     */
+    envVarsPrefix: string;
+
+    /**
+     * Enable the admin API
+     * https://mockoon.com/docs/latest/admin-api/overview/
+     */
+    enableAdminApi: boolean;
+  } = {
+    envVarsPrefix: defaultEnvironmentVariablesPrefix,
+    enableAdminApi: true
+  };
 
   constructor(
     private environment: Environment,
-    private options: {
-      /**
-       * Directory where to find the environment file.
-       */
-      environmentDirectory?: string;
-
-      /**
-       * List of routes uuids to disable.
-       * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
-       */
-      disabledRoutes?: string[];
-
-      /**
-       * Method used by the library to refresh the environment information
-       */
-      refreshEnvironmentFunction?: (
-        environmentUUID: string
-      ) => Environment | null;
-
-      /**
-       * Faker options: seed and locale
-       */
-      fakerOptions?: {
-        // Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation.)
-        locale?: FakerAvailableLocales;
-        // Number for the Faker.js seed (e.g. 1234)
-        seed?: number;
-      };
-
-      /**
-       * Environment variables prefix
-       */
-      envVarsPrefix: string;
-    } = { envVarsPrefix: defaultEnvironmentVariablesPrefix }
+    options: Partial<MockoonServer['options']> = {}
   ) {
     super();
+
+    this.options = {
+      ...this.options,
+      ...options,
+      envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix
+    };
   }
 
   /**
@@ -228,29 +244,33 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
-    app.use(this.parseBody); // This middleware is required to parse the body for createAdminEndpoint requests
 
-    // admin endpoint must be created before all other routes to avoid conflicts
-    createAdminEndpoint(
-      app,
-      {
-        statePurgeCallback: () => {
-          // reset request numbers
-          Object.keys(this.requestNumbers).forEach((routeUUID) => {
-            this.requestNumbers[routeUUID] = 1;
-          });
+    // This middleware is required to parse the body for createAdminEndpoint requests
+    app.use(this.parseBody);
 
-          // reset databuckets
-          this.processedDatabuckets = [];
-          this.generateDatabuckets(this.environment);
+    if (this.options.enableAdminApi) {
+      // admin endpoint must be created before all other routes to avoid conflicts
+      createAdminEndpoint(
+        app,
+        {
+          statePurgeCallback: () => {
+            // reset request numbers
+            Object.keys(this.requestNumbers).forEach((routeUUID) => {
+              this.requestNumbers[routeUUID] = 1;
+            });
 
-          // reset global variables
-          this.purgeGlobalVariables();
-        }
-      },
-      this.setGlobalVariables,
-      this.purgeGlobalVariables
-    );
+            // reset databuckets
+            this.processedDatabuckets = [];
+            this.generateDatabuckets(this.environment);
+
+            // reset global variables
+            this.purgeGlobalVariables();
+          }
+        },
+        this.setGlobalVariables,
+        this.purgeGlobalVariables
+      );
+    }
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
