@@ -210,6 +210,64 @@
       ],
       "responseMode": null,
       "type": "http"
+    },
+    {
+      "uuid": "cab652d8-ca19-4d1d-9ab4-81c0f954d8fa",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "set-global-var",
+      "responses": [
+        {
+          "uuid": "8c93fcc0-f4c1-4047-bcee-fd7f8ff6ea5f",
+          "body": "{{setGlobalVar 'test' 'value1'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "", "value": "" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
+      "uuid": "8d332421-d48f-4561-8100-a7fc2cc43828",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "get-global-var",
+      "responses": [
+        {
+          "uuid": "3c619b8f-dc39-46ad-b33f-c71c1c8316f3",
+          "body": "{{getGlobalVar 'test'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "", "value": "" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
     }
   ],
   "proxyMode": false,
@@ -263,6 +321,14 @@
     {
       "type": "route",
       "uuid": "6c82f28e-f2c0-4752-a081-6e1bec5fd6ee"
+    },
+    {
+      "type": "route",
+      "uuid": "cab652d8-ca19-4d1d-9ab4-81c0f954d8fa"
+    },
+    {
+      "type": "route",
+      "uuid": "8d332421-d48f-4561-8100-a7fc2cc43828"
     }
   ]
 }

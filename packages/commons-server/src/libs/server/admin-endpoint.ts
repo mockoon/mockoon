@@ -2,9 +2,11 @@ import { Express } from 'express';
 const adminApiPrefix = '/mockoon-admin';
 
 /**
- * Expose two endpoints to purge the state
+ * Admin API endpoints:
+ *
  * PURGE /mockoon-admin/state
  * POST /mockoon-admin/state/purge
+ *
  * POST /mockoon-admin/global-vars
  * PUT /mockoon-admin/global-vars
  * PATCH /mockoon-admin/global-vars
@@ -26,16 +28,17 @@ const createStateEndpoints = (
   const purgeHandler = (req, res) => {
     statePurgeCallback();
     res.send({
-      response: 'State purged successfully.'
+      response: 'State purged successfully'
     });
   };
+
   const setGlobalVar = (req, res) => {
     try {
       const { key, value } = req.body; // Destructure key and value from req.body
       if (key && value) {
         setGlobalVariables(key, value); // Set global variables
         res.send({
-          message: `Global variable ${key} has been set to ${value}.`
+          message: `Global variable ${key} has been set to ${value}`
         });
       } else {
         throw new Error('Key or value missing from request'); // Throw error if key or value are missing
@@ -44,16 +47,18 @@ const createStateEndpoints = (
       res.status(400).send({ message: 'Invalid JSON or missing key/value' });
     }
   };
+
   const purgeGlobalVars = (req, res) => {
     try {
       purgeGlobalVariables();
       res.send({
-        message: 'Global variables have been purged.'
+        message: 'Global variables have been purged'
       });
     } catch (err) {
       res.status(500).send({ message: 'Failed to purge global variables' });
     }
   };
+
   app.purge(stateEndpoint, purgeHandler);
   app.post(`${stateEndpoint}/purge`, purgeHandler);
   app.post(`${adminApiPrefix}/global-vars`, setGlobalVar);
@@ -68,7 +73,7 @@ const createStateEndpoints = (
  *
  * @param app
  * @param { statePurgeCallback }
- * @param setGlibalVariables
+ * @param setGlobalVariables
  * @param purgeGlobalVariables
  */
 export const createAdminEndpoint = (
@@ -83,6 +88,7 @@ export const createAdminEndpoint = (
         "Welcome to Mockoon's admin API. Check the documentation at https://mockoon.com/docs/latest/admin-api/overview/ for more information."
     });
   });
+
   createStateEndpoints(
     app,
     statePurgeCallback,
