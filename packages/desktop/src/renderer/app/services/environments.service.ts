@@ -725,9 +725,9 @@ export class EnvironmentsService extends Logger {
     return this.dialogsService
       .showOpenDialog('Open environment JSON file', 'json')
       .pipe(
-        filter((filePath) => !!filePath),
-        switchMap((filePath) =>
-          this.storageService.loadEnvironment(filePath).pipe(
+        filter((filePaths) => !!filePaths),
+        switchMap((filePaths) =>
+          this.storageService.loadEnvironment(filePaths[0]).pipe(
             switchMap((environment) => {
               if (
                 getEnvironmentByteSize(environment) > user.cloudSyncSizeQuota
@@ -883,36 +883,42 @@ export class EnvironmentsService extends Logger {
    */
   public openEnvironment(): Observable<Environment> {
     return this.dialogsService
-      .showOpenDialog('Open environment JSON file', 'json')
+      .showOpenDialog('Open environment JSON file', 'json', true, true)
       .pipe(
-        filter((filePath) => {
-          if (!filePath) {
+        filter((filePaths) => {
+          if (!filePaths) {
             return false;
           }
 
           // set environment as active if already opened
-          const openedEnvironment = this.store
-            .get('settings')
-            .environments.find(
-              (environmentItem) => environmentItem.path === filePath
-            );
+          if (filePaths.length === 1) {
+            const openedEnvironment = this.store
+              .get('settings')
+              .environments.find(
+                (environmentItem) => environmentItem.path === filePaths[0]
+              );
 
-          if (openedEnvironment !== undefined) {
-            this.store.update(
-              setActiveEnvironmentAction(openedEnvironment.uuid)
-            );
+            if (openedEnvironment !== undefined) {
+              this.store.update(
+                setActiveEnvironmentAction(openedEnvironment.uuid)
+              );
 
-            return false;
+              return false;
+            }
           }
 
           return true;
         }),
-        switchMap((filePath) =>
-          this.storageService.loadEnvironment(filePath).pipe(
-            switchMap((environment) => this.verifyData(environment)),
-            tap((environment) => {
-              this.validateAndAddToStore(environment, filePath);
-            })
+        switchMap((filePaths) =>
+          concat(
+            ...filePaths.map((filePath) =>
+              this.storageService.loadEnvironment(filePath).pipe(
+                switchMap((environment) => this.verifyData(environment)),
+                tap((environment) => {
+                  this.validateAndAddToStore(environment, filePath);
+                })
+              )
+            )
           )
         )
       );

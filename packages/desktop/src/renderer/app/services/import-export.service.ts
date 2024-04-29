@@ -29,12 +29,12 @@ export class ImportExportService extends Logger {
     return this.dialogsService
       .showOpenDialog('Import OpenAPI specification file', 'openapi', false)
       .pipe(
-        switchMap((filePath) => {
-          if (filePath) {
+        switchMap((filePaths) => {
+          if (filePaths) {
             return from(
               MainAPI.invoke(
                 'APP_OPENAPI_CONVERT_FROM',
-                filePath,
+                filePaths[0],
                 this.dataService.getNewEnvironmentPort()
               )
             );

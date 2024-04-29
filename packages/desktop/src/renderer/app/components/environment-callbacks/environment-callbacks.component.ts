@@ -211,9 +211,9 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     this.dialogsService
       .showOpenDialog('Choose a file', null, false)
       .pipe(
-        tap((filePath) => {
-          if (filePath) {
-            this.activeCallbackForm.get('filePath').setValue(filePath);
+        tap((filePaths) => {
+          if (filePaths[0]) {
+            this.activeCallbackForm.get('filePath').setValue(filePaths[0]);
           }
         })
       )
