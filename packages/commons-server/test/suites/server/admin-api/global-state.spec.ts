@@ -41,7 +41,7 @@ describe('Admin API: global state', () => {
       method: 'PURGE'
     });
     const body = await response.text();
-    strictEqual(body, '{"response":"State purged successfully"}');
+    strictEqual(body, '{"response":"Server state has been purged"}');
 
     strictEqual(await (await fetch(`${url}/get-global-var`)).text(), '');
   });

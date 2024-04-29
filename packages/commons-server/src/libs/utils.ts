@@ -177,7 +177,8 @@ export function CreateTransaction(
     },
     routeResponseUUID: response.routeResponseUUID,
     routeUUID: response.routeUUID,
-    proxied: request.proxied || false
+    proxied: request.proxied || false,
+    timestampMs: Date.now()
   };
 }
 

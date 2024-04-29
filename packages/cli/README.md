@@ -137,6 +137,7 @@ OPTIONS
   -x, --env-vars-prefix       Prefix for environment variables (default: 'MOCKOON_')
       --disable-admin-api     Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
       --disable-tls           Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)
+      --max-transaction-logs  Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)
   -h, --help                  Show CLI help
 
 EXAMPLES
@@ -146,6 +147,12 @@ EXAMPLES
   $ mockoon-cli start --data ~/data.json --log-transaction
   $ mockoon-cli start --data ~/data.json --disable-routes route1 route2
 ```
+
+#### Admin API
+
+Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable the admin API with the `--disable-admin-api` flag.
+
+> 💡 To learn more about the admin API, check the [documentation](https://mockoon.com/docs/latest/admin-api/overview/).
 
 #### Faker.js options
 
@@ -393,7 +400,7 @@ Example:
 }
 ```
 
-The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L33-L53).
+The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L27-L47).
 
 ### Disable logging
 

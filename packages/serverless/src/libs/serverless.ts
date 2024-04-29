@@ -1,10 +1,11 @@
 import {
   Environment,
-  defaultEnvironmentVariablesPrefix
+  ServerOptions,
+  defaultEnvironmentVariablesPrefix,
+  defaultMaxTransactionLogs
 } from '@mockoon/commons';
 import {
   MockoonServer,
-  ServerOptions,
   createLoggerInstance,
   listenServerEvents
 } from '@mockoon/commons-server';
@@ -18,7 +19,8 @@ export class MockoonServerless {
     fakerOptions: {},
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
-    disableTls: false
+    disableTls: false,
+    maxTransactionLogs: defaultMaxTransactionLogs
   };
 
   constructor(
@@ -48,7 +50,8 @@ export class MockoonServerless {
       fakerOptions: this.options.fakerOptions,
       envVarsPrefix: this.options.envVarsPrefix,
       enableAdminApi: this.options.enableAdminApi,
-      disableTls: this.options.disableTls
+      disableTls: this.options.disableTls,
+      maxTransactionLogs: this.options.maxTransactionLogs
     });
     listenServerEvents(
       server,

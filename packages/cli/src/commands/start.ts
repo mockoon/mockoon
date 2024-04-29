@@ -3,12 +3,13 @@ import {
   FakerAvailableLocales,
   FakerAvailableLocalesList,
   ServerErrorCodes,
-  defaultEnvironmentVariablesPrefix
+  ServerOptions,
+  defaultEnvironmentVariablesPrefix,
+  defaultMaxTransactionLogs
 } from '@mockoon/commons';
 import {
   MockoonServer,
   ServerMessages,
-  ServerOptions,
   createLoggerInstance,
   listenServerEvents
 } from '@mockoon/commons-server';
@@ -89,6 +90,10 @@ export default class Start extends Command {
       description:
         'Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).',
       default: false
+    }),
+    'max-transaction-logs': Flags.integer({
+      description: `Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: ${defaultMaxTransactionLogs}).`,
+      default: defaultMaxTransactionLogs
     })
   };
 
@@ -138,7 +143,8 @@ export default class Start extends Command {
           },
           envVarsPrefix: userFlags['env-vars-prefix'],
           enableAdminApi: !userFlags['disable-admin-api'],
-          disableTls: userFlags['disable-tls']
+          disableTls: userFlags['disable-tls'],
+          maxTransactionLogs: userFlags['max-transaction-logs']
         });
       }
     } catch (error: any) {
@@ -160,7 +166,8 @@ export default class Start extends Command {
       fakerOptions: parameters.fakerOptions,
       envVarsPrefix: parameters.envVarsPrefix,
       enableAdminApi: parameters.enableAdminApi,
-      disableTls: parameters.disableTls
+      disableTls: parameters.disableTls,
+      maxTransactionLogs: parameters.maxTransactionLogs
     });
 
     listenServerEvents(

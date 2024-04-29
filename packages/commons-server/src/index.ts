@@ -6,4 +6,3 @@ export * from './libs/server/events-listeners';
 export * from './libs/server/server';
 export * from './libs/template-parser';
 export * from './libs/utils';
-export * from './models/server.model';

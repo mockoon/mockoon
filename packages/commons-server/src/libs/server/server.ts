@@ -5,6 +5,7 @@ import {
   CallbackInvocation,
   CORSHeaders,
   defaultEnvironmentVariablesPrefix,
+  defaultMaxTransactionLogs,
   Environment,
   FileExtensionsWithTemplating,
   GetContentType,
@@ -20,7 +21,9 @@ import {
   RouteType,
   ServerErrorCodes,
   ServerEvents,
-  stringIncludesArrayItems
+  ServerOptions,
+  stringIncludesArrayItems,
+  Transaction
 } from '@mockoon/commons';
 import appendField from 'append-field';
 import busboy from 'busboy';
@@ -46,7 +49,6 @@ import { format } from 'util';
 import { xml2js } from 'xml-js';
 import { ServerMessages } from '../../constants/server-messages.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
-import { ServerOptions } from '../../models/server.model';
 import { SetFakerLocale, SetFakerSeed } from '../faker';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
@@ -60,7 +62,7 @@ import {
   resolvePathFromEnvironment,
   routesFromFolder
 } from '../utils';
-import { createAdminEndpoint } from './admin-endpoint';
+import { createAdminEndpoint } from './admin-api';
 import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
 
 /**
@@ -79,8 +81,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private options: ServerOptions = {
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
-    disableTls: false
+    disableTls: false,
+    maxTransactionLogs: defaultMaxTransactionLogs
   };
+  private transactionLogs: Transaction[] = [];
 
   constructor(
     private environment: Environment,
@@ -212,26 +216,29 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     if (this.options.enableAdminApi) {
       // admin endpoint must be created before all other routes to avoid conflicts
-      createAdminEndpoint(
-        app,
-        {
-          statePurgeCallback: () => {
-            // reset request numbers
-            Object.keys(this.requestNumbers).forEach((routeUUID) => {
-              this.requestNumbers[routeUUID] = 1;
-            });
+      createAdminEndpoint(app, {
+        statePurgeCallback: () => {
+          // reset request numbers
+          Object.keys(this.requestNumbers).forEach((routeUUID) => {
+            this.requestNumbers[routeUUID] = 1;
+          });
 
-            // reset databuckets
-            this.processedDatabuckets = [];
-            this.generateDatabuckets(this.environment);
+          // reset databuckets
+          this.processedDatabuckets = [];
+          this.generateDatabuckets(this.environment);
 
-            // reset global variables
-            this.purgeGlobalVariables();
-          }
+          // reset global variables
+          this.purgeGlobalVariables();
+
+          this.transactionLogs = [];
         },
-        this.setGlobalVariables,
-        this.purgeGlobalVariables
-      );
+        setGlobalVariables: this.setGlobalVariables,
+        purgeGlobalVariables: this.purgeGlobalVariables,
+        getLogs: () => this.transactionLogs,
+        purgeLogs: () => {
+          this.transactionLogs = [];
+        }
+      });
     }
 
     app.use(this.emitEvent);
@@ -409,6 +416,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) => {
     response.on('close', () => {
       this.emit('transaction-complete', CreateTransaction(request, response));
+
+      // store the transaction logs at beginning of the array
+      this.transactionLogs.unshift(CreateTransaction(request, response));
+
+      // keep only the last n transactions
+      if (this.transactionLogs.length > this.options.maxTransactionLogs) {
+        this.transactionLogs.pop();
+      }
+      if (this.transactionLogs.length > this.options.maxTransactionLogs) {
+        this.transactionLogs = this.transactionLogs.slice(
+          0,
+          this.options.maxTransactionLogs
+        );
+      }
     });
 
     next();

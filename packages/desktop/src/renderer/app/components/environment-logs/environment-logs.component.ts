@@ -95,7 +95,7 @@ export class EnvironmentLogsComponent implements OnInit {
           ? environmentLogs
           : environmentLogs.filter((log) =>
               textFilter(
-                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestamp, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
                 search
               )
             )

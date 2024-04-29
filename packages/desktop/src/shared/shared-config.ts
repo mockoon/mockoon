@@ -1,3 +1,5 @@
+import { defaultMaxTransactionLogs } from '@mockoon/commons';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const appVersion: string = require('../../package.json').version;
 
@@ -42,7 +44,7 @@ export const SharedConfig = (options: {
     accountURL: `${options.websiteURL}account/subscription/`,
     proPlansURL: `${options.websiteURL}pro/`,
     maxTemplatePromptLength: 500,
-    defaultMaxLogsPerEnvironment: 50,
+    defaultMaxLogsPerEnvironment: defaultMaxTransactionLogs,
     defaultMainMenuSize: 100,
     defaultSecondaryMenuSize: 200,
     storageSaveDelay: 1000, // ms

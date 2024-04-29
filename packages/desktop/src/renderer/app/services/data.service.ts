@@ -106,7 +106,7 @@ export class DataService extends Logger {
       UUID: generateUUID(),
       routeUUID: transaction.routeUUID,
       routeResponseUUID: transaction.routeResponseUUID,
-      timestamp: new Date(),
+      timestampMs: transaction.timestampMs,
       method: transaction.request.method as EnvironmentLog['method'],
       route: transaction.request.route,
       url: transaction.request.urlPath,

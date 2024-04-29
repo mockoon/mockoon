@@ -151,6 +151,7 @@ The `MockoonServerless` class accepts an optional `options` object as a second p
 | `envVarsPrefix`       | `string`   | `MOCKOON_`    | [Environment variables prefix](https://mockoon.com/docs/latest/variables/environment-variables/). Pass an empty string to disable it.                        |
 | `enableAdminApi`      | `boolean`  | `true`        | Enable (default) or disable the [Admin API](https://mockoon.com/docs/latest/admin-api/overview/).                                                            |
 | `disableTls`          | `boolean`  | `false`       | Disable TLS. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/). |
+| `maxTransactionLogs`  | `number`   | `100`         | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100).                                                         |
 
 Example:
 
@@ -168,6 +169,12 @@ const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
   disableTls: true
 });
 ```
+
+#### Admin API
+
+Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable the admin API with the `enableAdminApi` option.
+
+> 💡 To learn more about the admin API, check the [documentation](https://mockoon.com/docs/latest/admin-api/overview/).
 
 #### Faker.js options
 
@@ -230,7 +237,7 @@ const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
 });
 ```
 
-The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L33-L53).
+The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L27-L47).
 
 ## Disabling routes
 
