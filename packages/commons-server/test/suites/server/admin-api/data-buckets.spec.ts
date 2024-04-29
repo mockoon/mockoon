@@ -1,11 +1,10 @@
 import { Environment } from '@mockoon/commons';
 import { strictEqual } from 'assert';
-import { after, before, it } from 'mocha';
-import fetch from 'node-fetch';
+import { after, before, describe, it } from 'mocha';
 import { MockoonServer } from '../../../../src';
 import { getEnvironment } from '../../../libs/environment';
 
-describe('Admin API: global state', () => {
+describe('Admin API: global vars', () => {
   let environment: Environment;
   let server: MockoonServer;
   const port = 3010;
@@ -30,22 +29,19 @@ describe('Admin API: global state', () => {
     server.stop();
   });
 
-  it('should set global variable using a GET endpoint from the mock', async () => {
-    await fetch(`${url}/set-global-var`);
-
-    strictEqual(await (await fetch(`${url}/get-global-var`)).text(), 'value1');
+  it('should get data bucket value', async () => {
+    strictEqual(await (await fetch(`${url}/data-bucket`)).text(), 'true');
   });
 
-  it('should purge the state when PURGE request is made to /mockoon-admin/state', async () => {
-    const response = await fetch(`${url}/mockoon-admin/state`, {
-      method: 'PURGE'
-    });
-    const body = await response.text();
-    strictEqual(
-      body,
-      '{"response":"Server has been reset to its initial state"}'
-    );
+  it('should set data bucket value and check again', async () => {
+    await fetch(`${url}/data-bucket`, { method: 'POST', body: 'false' });
 
-    strictEqual(await (await fetch(`${url}/get-global-var`)).text(), '');
+    strictEqual(await (await fetch(`${url}/data-bucket`)).text(), 'false');
+  });
+
+  it('should reset data bucket state using admin api', async () => {
+    await fetch(`${url}/mockoon-admin/data-buckets/purge`, { method: 'POST' });
+
+    strictEqual(await (await fetch(`${url}/data-bucket`)).text(), 'true');
   });
 });

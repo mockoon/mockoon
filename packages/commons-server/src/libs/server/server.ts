@@ -180,20 +180,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
-   * Set a global variable
-   */
-  public setGlobalVariables = (key: string, value: any): void => {
-    this.globalVariables[key] = value;
-  };
-
-  /**
-   * Resets the global variables
-   */
-  public purgeGlobalVariables = (): void => {
-    this.globalVariables = {};
-  };
-
-  /**
    * Create a request listener
    */
   public createRequestListener(): RequestListener {
@@ -222,18 +208,17 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           Object.keys(this.requestNumbers).forEach((routeUUID) => {
             this.requestNumbers[routeUUID] = 1;
           });
-
-          // reset databuckets
+        },
+        setGlobalVariables: (key: string, value: any) => {
+          this.globalVariables[key] = value;
+        },
+        purgeGlobalVariables: () => {
+          this.globalVariables = {};
+        },
+        purgeDataBuckets: () => {
           this.processedDatabuckets = [];
           this.generateDatabuckets(this.environment);
-
-          // reset global variables
-          this.purgeGlobalVariables();
-
-          this.transactionLogs = [];
         },
-        setGlobalVariables: this.setGlobalVariables,
-        purgeGlobalVariables: this.purgeGlobalVariables,
         getLogs: () => this.transactionLogs,
         purgeLogs: () => {
           this.transactionLogs = [];

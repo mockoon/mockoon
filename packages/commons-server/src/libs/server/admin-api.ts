@@ -14,6 +14,9 @@ import { Express, Request, Response } from 'express';
  * PURGE /mockoon-admin/global-vars
  * POST /mockoon-admin/global-vars/purge
  *
+ * PURGE /mockoon-admin/data-buckets
+ * POST /mockoon-admin/data-buckets/purge
+ *
  * GET /mockoon-admin/logs
  * PURGE /mockoon-admin/logs
  * POST /mockoon-admin/logs/purge
@@ -25,12 +28,14 @@ export const createAdminEndpoint = (
     statePurgeCallback,
     setGlobalVariables,
     purgeGlobalVariables,
+    purgeDataBuckets,
     getLogs,
     purgeLogs
   }: {
     statePurgeCallback: () => void;
     setGlobalVariables: (key: string, value: any) => void;
     purgeGlobalVariables: () => void;
+    purgeDataBuckets: () => void;
     getLogs: () => Transaction[];
     purgeLogs: () => void;
   }
@@ -48,12 +53,16 @@ export const createAdminEndpoint = (
   const purgeHandler = (req, res) => {
     statePurgeCallback();
 
+    purgeDataBuckets();
+    purgeGlobalVariables();
+    purgeLogs();
+
     res.send({
-      response: 'Server state has been purged'
+      response: 'Server has been reset to its initial state'
     });
   };
 
-  const setGlobalVar = (req, res) => {
+  const setGlobalVarHandler = (req, res) => {
     try {
       const { key, value } = req.body; // Destructure key and value from req.body
       if (key && value) {
@@ -69,7 +78,7 @@ export const createAdminEndpoint = (
     }
   };
 
-  const purgeGlobalVars = (req, res) => {
+  const purgeGlobalVarsHandler = (req, res) => {
     try {
       purgeGlobalVariables();
       res.send({
@@ -77,6 +86,17 @@ export const createAdminEndpoint = (
       });
     } catch (err) {
       res.status(500).send({ message: 'Failed to purge global variables' });
+    }
+  };
+
+  const purgeDataBucketsHandler = (req, res) => {
+    try {
+      purgeDataBuckets();
+      res.send({
+        message: 'Data buckets have been reset to their initial state'
+      });
+    } catch (err) {
+      res.status(500).send({ message: 'Failed to reset the data buckets' });
     }
   };
 
@@ -109,9 +129,12 @@ export const createAdminEndpoint = (
   app.post(`${adminApiPrefix}/logs/purge`, purgeLogsHandler);
   app.purge(`${adminApiPrefix}/logs`, purgeLogsHandler);
 
-  app.post(`${adminApiPrefix}/global-vars`, setGlobalVar);
-  app.put(`${adminApiPrefix}/global-vars`, setGlobalVar);
-  app.patch(`${adminApiPrefix}/global-vars`, setGlobalVar);
-  app.purge(`${adminApiPrefix}/global-vars`, purgeGlobalVars);
-  app.post(`${adminApiPrefix}/global-vars/purge`, purgeGlobalVars);
+  app.post(`${adminApiPrefix}/global-vars`, setGlobalVarHandler);
+  app.put(`${adminApiPrefix}/global-vars`, setGlobalVarHandler);
+  app.patch(`${adminApiPrefix}/global-vars`, setGlobalVarHandler);
+  app.purge(`${adminApiPrefix}/global-vars`, purgeGlobalVarsHandler);
+  app.post(`${adminApiPrefix}/global-vars/purge`, purgeGlobalVarsHandler);
+
+  app.purge(`${adminApiPrefix}/data-buckets`, purgeDataBucketsHandler);
+  app.post(`${adminApiPrefix}/data-buckets/purge`, purgeDataBucketsHandler);
 };
