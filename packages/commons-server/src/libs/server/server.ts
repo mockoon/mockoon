@@ -1481,6 +1481,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   private buildTLSOptions(environment: Environment): SecureContextOptions {
     let tlsOptions: SecureContextOptions = {};
+    const processTemplating = (content: string) =>
+      TemplateParser({
+        content,
+        shouldOmitDataHelper: false,
+        environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
     if (
       environment.tlsOptions?.pfxPath ||
@@ -1492,7 +1501,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       ) {
         tlsOptions.pfx = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.pfxPath,
+            processTemplating(environment.tlsOptions?.pfxPath),
             this.options.environmentDirectory
           )
         );
@@ -1503,13 +1512,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       ) {
         tlsOptions.cert = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.certPath,
+            processTemplating(environment.tlsOptions?.certPath),
             this.options.environmentDirectory
           )
         );
         tlsOptions.key = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.keyPath,
+            processTemplating(environment.tlsOptions?.keyPath),
             this.options.environmentDirectory
           )
         );
@@ -1518,14 +1527,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       if (environment.tlsOptions?.caPath) {
         tlsOptions.ca = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.caPath,
+            processTemplating(environment.tlsOptions?.caPath),
             this.options.environmentDirectory
           )
         );
       }
 
       if (environment.tlsOptions?.passphrase) {
-        tlsOptions.passphrase = environment.tlsOptions?.passphrase;
+        tlsOptions.passphrase = processTemplating(
+          environment.tlsOptions?.passphrase
+        );
       }
     } else {
       tlsOptions = { ...DefaultTLSOptions };
