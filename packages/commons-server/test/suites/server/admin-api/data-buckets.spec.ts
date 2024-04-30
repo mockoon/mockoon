@@ -4,7 +4,7 @@ import { after, before, describe, it } from 'mocha';
 import { MockoonServer } from '../../../../src';
 import { getEnvironment } from '../../../libs/environment';
 
-describe('Admin API: global vars', () => {
+describe('Admin API: data buckets', () => {
   let environment: Environment;
   let server: MockoonServer;
   const port = 3010;

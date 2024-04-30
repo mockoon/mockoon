@@ -299,6 +299,40 @@
       "type": "http"
     },
     {
+      "uuid": "c406bb7c-2e37-4c8c-9a18-ae6381ddb9f3",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "get-env-var",
+      "responses": [
+        {
+          "uuid": "5a2c5b0d-c60f-4bc7-b57c-a501522bbaf2",
+          "body": "{{getEnvVar 'MOCKOON_TEST_VAR'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
       "uuid": "3485b92c-4ce4-4921-b9f3-9e0eaa8ba867",
       "type": "crud",
       "documentation": "",
@@ -395,6 +429,10 @@
     {
       "type": "route",
       "uuid": "8d332421-d48f-4561-8100-a7fc2cc43828"
+    },
+    {
+      "type": "route",
+      "uuid": "c406bb7c-2e37-4c8c-9a18-ae6381ddb9f3"
     },
     {
       "type": "route",

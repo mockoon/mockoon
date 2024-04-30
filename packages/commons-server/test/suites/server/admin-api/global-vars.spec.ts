@@ -47,7 +47,7 @@ describe('Admin API: global vars', () => {
     const body = await response.text();
     strictEqual(
       body,
-      `{"message":"Global variable ${key} has been set to ${value}"}`
+      `{"message":"Global variable '${key}' has been set to '${value}'"}`
     );
 
     strictEqual(await (await fetch(`${url}/get-global-var`)).text(), 'value2');
@@ -64,7 +64,7 @@ describe('Admin API: global vars', () => {
     const body = await response.text();
     strictEqual(
       body,
-      `{"message":"Global variable ${key} has been set to ${value}"}`
+      `{"message":"Global variable '${key}' has been set to '${value}'"}`
     );
 
     strictEqual(await (await fetch(`${url}/get-global-var`)).text(), 'value3');
@@ -81,7 +81,7 @@ describe('Admin API: global vars', () => {
     const body = await response.text();
     strictEqual(
       body,
-      `{"message":"Global variable ${key} has been set to ${value}"}`
+      `{"message":"Global variable '${key}' has been set to '${value}'"}`
     );
     strictEqual(await (await fetch(`${url}/get-global-var`)).text(), 'value4');
   });

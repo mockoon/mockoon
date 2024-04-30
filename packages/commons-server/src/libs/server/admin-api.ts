@@ -8,6 +8,10 @@ import { Express, Request, Response } from 'express';
  * PURGE /mockoon-admin/state
  * POST /mockoon-admin/state/purge
  *
+ * POST /mockoon-admin/env-vars
+ * PUT /mockoon-admin/env-vars
+ * PATCH /mockoon-admin/env-vars
+ *
  * POST /mockoon-admin/global-vars
  * PUT /mockoon-admin/global-vars
  * PATCH /mockoon-admin/global-vars
@@ -62,16 +66,33 @@ export const createAdminEndpoint = (
     });
   };
 
-  const setGlobalVarHandler = (req, res) => {
+  const setEnvVarHandler = (req, res) => {
     try {
-      const { key, value } = req.body; // Destructure key and value from req.body
-      if (key && value) {
-        setGlobalVariables(key, value); // Set global variables
+      const { key, value } = req.body;
+      if (key !== undefined && value !== undefined) {
+        process.env[key] = value;
+
         res.send({
-          message: `Global variable ${key} has been set to ${value}`
+          message: `Environment variable '${key}' has been set to '${value}'`
         });
       } else {
-        throw new Error('Key or value missing from request'); // Throw error if key or value are missing
+        throw new Error('Key or value missing from request');
+      }
+    } catch (err) {
+      res.status(400).send({ message: 'Invalid JSON or missing key/value' });
+    }
+  };
+
+  const setGlobalVarHandler = (req, res) => {
+    try {
+      const { key, value } = req.body;
+      if (key !== undefined && value !== undefined) {
+        setGlobalVariables(key, value);
+        res.send({
+          message: `Global variable '${key}' has been set to '${value}'`
+        });
+      } else {
+        throw new Error('Key or value missing from request');
       }
     } catch (err) {
       res.status(400).send({ message: 'Invalid JSON or missing key/value' });
@@ -128,6 +149,10 @@ export const createAdminEndpoint = (
   app.get(`${adminApiPrefix}/logs`, getLogsHandler);
   app.post(`${adminApiPrefix}/logs/purge`, purgeLogsHandler);
   app.purge(`${adminApiPrefix}/logs`, purgeLogsHandler);
+
+  app.post(`${adminApiPrefix}/env-vars`, setEnvVarHandler);
+  app.put(`${adminApiPrefix}/env-vars`, setEnvVarHandler);
+  app.patch(`${adminApiPrefix}/env-vars`, setEnvVarHandler);
 
   app.post(`${adminApiPrefix}/global-vars`, setGlobalVarHandler);
   app.put(`${adminApiPrefix}/global-vars`, setGlobalVarHandler);
