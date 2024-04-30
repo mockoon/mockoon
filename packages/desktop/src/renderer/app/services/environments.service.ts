@@ -885,42 +885,40 @@ export class EnvironmentsService extends Logger {
     return this.dialogsService
       .showOpenDialog('Open environment JSON file', 'json', true, true)
       .pipe(
-        filter((filePaths) => {
+        switchMap((filePaths) => {
           if (!filePaths) {
-            return false;
+            return EMPTY;
           }
+          const environments = this.store.get('settings').environments;
 
-          // set environment as active if already opened
-          if (filePaths.length === 1) {
-            const openedEnvironment = this.store
-              .get('settings')
-              .environments.find(
-                (environmentItem) => environmentItem.path === filePaths[0]
+          const observables: Observable<Environment>[] = [];
+
+          filePaths.forEach((filePath) => {
+            const openedEnvironment = environments.find(
+              (environmentItem) => environmentItem.path === filePath
+            );
+
+            if (openedEnvironment === undefined) {
+              observables.push(
+                this.storageService.loadEnvironment(filePath).pipe(
+                  switchMap((environment) => this.verifyData(environment)),
+                  tap((environment) => {
+                    this.validateAndAddToStore(environment, filePath);
+                  })
+                )
               );
-
-            if (openedEnvironment !== undefined) {
+            } else if (
+              openedEnvironment !== undefined &&
+              filePaths.length === 1
+            ) {
               this.store.update(
                 setActiveEnvironmentAction(openedEnvironment.uuid)
               );
-
-              return false;
             }
-          }
+          });
 
-          return true;
-        }),
-        switchMap((filePaths) =>
-          concat(
-            ...filePaths.map((filePath) =>
-              this.storageService.loadEnvironment(filePath).pipe(
-                switchMap((environment) => this.verifyData(environment)),
-                tap((environment) => {
-                  this.validateAndAddToStore(environment, filePath);
-                })
-              )
-            )
-          )
-        )
+          return concat(...observables);
+        })
       );
   }
 
