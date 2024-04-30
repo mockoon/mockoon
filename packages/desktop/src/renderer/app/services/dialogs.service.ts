@@ -70,14 +70,14 @@ export class DialogsService {
     saveWorkingDir = true,
     multiple = false
   ): Observable<string[] | null> {
-    const options: OpenDialogOptions = { title };
+    const options: OpenDialogOptions = { title, properties: ['openFile'] };
 
     if (filterName) {
       options.filters = this.filters[filterName];
     }
 
     if (multiple) {
-      options.properties = ['multiSelections'];
+      options.properties.push('multiSelections');
     }
 
     return from(MainAPI.invoke('APP_SHOW_OPEN_DIALOG', options)).pipe(
