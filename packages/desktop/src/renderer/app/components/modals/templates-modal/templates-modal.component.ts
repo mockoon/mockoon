@@ -1,10 +1,4 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -13,9 +7,14 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 import { Template, TemplateListItem, User } from '@mockoon/cloud';
-import { RandomInt } from '@mockoon/commons';
+import {
+  BuildHTTPRoute,
+  RandomInt,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
@@ -58,16 +57,11 @@ import { Config } from 'src/renderer/config';
   styleUrls: ['./templates-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('fade-1', [
+    trigger('fade', [
       transition(':enter', [
         style({ opacity: 0 }),
         animate('1s ease-in', style({ opacity: 1 }))
       ])
-    ]),
-    trigger('fade-2', [
-      state('false', style({ opacity: 0 })),
-      state('true', style({ opacity: 1 })),
-      transition('false=>true', [animate('1s ease-in')])
     ])
   ]
 })
@@ -81,56 +75,21 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   public templatesFilter$: Observable<string>;
   public demo$: Observable<any>;
   public user$: Observable<User>;
+  public lastGeneratedEndpoint$ = this.templatesService.lastGeneratedEndpoint$;
   public generatingTemplate$ = this.templatesService.generatingTemplate$;
+  public generatingEndpoint$ = this.templatesService.generatingEndpoint$;
   public templatesFilter = new UntypedFormControl('');
-  public prompt = new UntypedFormControl('');
+  public promptTemplate = new UntypedFormControl('');
+  public promptEndpoint = new UntypedFormControl('');
+  public templatingToggle = new FormControl<boolean>(true);
   public demoPrompt = new UntypedFormControl('');
   public generatedTemplateBody = new UntypedFormControl('');
-  public demoGeneratedTemplateBody = new UntypedFormControl('');
-  public generateOptions = this.formBuilder.group({
-    json: true,
-    list: true,
-    templating: true
-  });
+  public demoEndpoint$ = new BehaviorSubject<(typeof demoTemplates)[0]>(null);
   public proPlansURL = Config.proPlansURL;
-  public maxTemplatePromptLength = Config.maxTemplatePromptLength;
-  public toggles = [
-    {
-      name: 'json',
-      items: [
-        {
-          value: 'json',
-          label: 'JSON',
-          tooltip: 'Generate valid JSON'
-        }
-      ]
-    },
-    {
-      name: 'list',
-      items: [
-        {
-          value: 'list',
-          label: 'Array',
-          tooltip: 'Generate an array of items'
-        }
-      ]
-    },
-    {
-      name: 'templating',
-      items: [
-        {
-          value: 'templating',
-          label: 'templating',
-          tooltip:
-            "Generate dynamic content with templating helpers (e.g. {{faker 'person.firstName' }})"
-        }
-      ]
-    }
-  ];
+  public maxPromptLength = Config.maxPromptLength;
   public defaultEditorOptions = defaultEditorOptions;
   public focusableInputs = FocusableInputs;
   public open = false;
-  public demoRuns = 0;
   private isFirstDemo = true;
   private destroy$ = new Subject<void>();
 
@@ -139,7 +98,6 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     private templatesService: TemplatesService,
     private environmentsService: EnvironmentsService,
     private store: Store,
-    private formBuilder: UntypedFormBuilder,
     private uiService: UIService,
     @Inject(DOCUMENT) private document: Document
   ) {}
@@ -151,7 +109,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
       .pipe(
         withLatestFrom(this.user$),
         switchMap(([tab, user]) => {
-          if (tab === 'GENERATE' && (!user || user.plan === 'FREE')) {
+          if (tab === 'GENERATE_TEMPLATE' && (!user || user.plan === 'FREE')) {
             return this.buildDemoAnimation();
           } else {
             return of(true).pipe(
@@ -173,12 +131,20 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
           if (this.templatesService.generatingTemplate$.value === 'DONE') {
             this.templatesService.generatingTemplate$.next('NONE');
           }
+
+          if (this.templatesService.generatingEndpoint$.value === 'DONE') {
+            this.templatesService.generatingEndpoint$.next('NONE');
+          }
         })
       ),
       modal.hidden.pipe(
         tap(() => {
           if (this.templatesService.generatingTemplate$.value === 'DONE') {
             this.templatesService.generatingTemplate$.next('NONE');
+          }
+
+          if (this.templatesService.generatingEndpoint$.value === 'DONE') {
+            this.templatesService.generatingEndpoint$.next('NONE');
           }
           this.resetAnimation();
         })
@@ -209,7 +175,12 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     );
 
     // set back the prompt/template if we open/close the modal during a generation
-    this.prompt.setValue(this.templatesService.lastPrompt$.value);
+    this.promptTemplate.setValue(
+      this.templatesService.lastTemplatePrompt$.value
+    );
+    this.promptEndpoint.setValue(
+      this.templatesService.lastEndpointPrompt$.value
+    );
     this.templatesService.lastGeneratedTemplate$
       .pipe(
         tap((template) => {
@@ -225,9 +196,9 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  public generate() {
+  public generateTemplate() {
     if (
-      !this.prompt.value ||
+      !this.promptTemplate.value ||
       this.templatesService.generatingTemplate$.value === 'INPROGRESS'
     ) {
       return;
@@ -235,14 +206,24 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
 
     this.templatesService
       .generateTemplate(
-        this.prompt.value,
-        this.toggles.reduce((options, toggle) => {
-          if (this.generateOptions.get(toggle.name).value === true) {
-            options.push(toggle.name);
-          }
+        this.promptTemplate.value,
+        this.templatingToggle.value ? ['templating'] : []
+      )
+      .subscribe();
+  }
 
-          return options;
-        }, [])
+  public generateEndpoint() {
+    if (
+      !this.promptEndpoint.value ||
+      this.templatesService.generatingEndpoint$.value === 'INPROGRESS'
+    ) {
+      return;
+    }
+
+    this.templatesService
+      .generateEndpoint(
+        this.promptEndpoint.value,
+        this.templatingToggle.value ? ['templating'] : []
       )
       .subscribe();
   }
@@ -280,13 +261,15 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
           value: activeTemplate.content
         }
       };
-    } else if (activeTemplateTab === 'GENERATE') {
-      const slugPrompt = this.prompt.value.replace(/\s/g, '-').toLowerCase();
+    } else if (activeTemplateTab === 'GENERATE_TEMPLATE') {
+      const slugPrompt = this.promptTemplate.value
+        .replace(/\s/g, '-')
+        .toLowerCase();
 
       options = {
         endpoint: slugPrompt,
         dataBucket: {
-          name: this.templatesService.lastPrompt$.value,
+          name: this.templatesService.lastTemplatePrompt$.value,
           value: this.templatesService.lastGeneratedTemplate$.value
         }
       };
@@ -300,20 +283,39 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     activeTemplateTab: TemplatesTabsName,
     activeTemplate: Template
   ) {
-    let options: Parameters<EnvironmentsService['addHTTPRoute']>[1];
+    let options: Parameters<typeof BuildHTTPRoute>[1];
 
     if (activeTemplateTab === 'LIST') {
       options = {
         endpoint: activeTemplate.slug,
         body: activeTemplate.content
       };
-    } else if (activeTemplateTab === 'GENERATE') {
+    } else if (activeTemplateTab === 'GENERATE_TEMPLATE') {
       options = {
-        endpoint: this.prompt.value.replace(/\s/g, '-').toLowerCase(),
+        endpoint: this.promptTemplate.value.replace(/\s/g, '-').toLowerCase(),
         body: this.templatesService.lastGeneratedTemplate$.value
       };
     }
-    this.environmentsService.addHTTPRoute('root', options);
+    this.environmentsService.addHTTPRoute(
+      'root',
+      BuildHTTPRoute(true, options)
+    );
+    this.modalService.dismissAll();
+  }
+
+  public createEndpoint() {
+    let newRoute: Route = BuildHTTPRoute(true);
+    newRoute = {
+      ...newRoute,
+      ...this.templatesService.lastGeneratedEndpoint$.value,
+      responses: [
+        {
+          ...newRoute.responses[0],
+          ...this.templatesService.lastGeneratedEndpoint$.value.responses[0]
+        } as RouteResponse
+      ]
+    };
+    this.environmentsService.addHTTPRoute('root', newRoute);
     this.modalService.dismissAll();
   }
 
@@ -323,13 +325,12 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
 
   private resetAnimationFields() {
     this.demoPrompt.setValue('');
-    this.demoGeneratedTemplateBody.setValue('');
+    this.demoEndpoint$.next(null);
   }
 
   private resetAnimation() {
     this.resetAnimationFields();
     this.isDemoLoading$.next(false);
-    this.demoRuns = 0;
     this.isFirstDemo = true;
   }
 
@@ -371,8 +372,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
           delay(1000),
           tap(() => {
             this.isDemoLoading$.next(false);
-            this.demoRuns++;
-            this.demoGeneratedTemplateBody.setValue(items[index].value);
+            this.demoEndpoint$.next(items[index]);
             this.isFirstDemo = false;
             index++;
             if (index === demoTemplates.length) {

@@ -6,10 +6,14 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { UIState } from 'src/renderer/app/models/store.model';
+import {
+  TemplatesTabsName,
+  UIState
+} from 'src/renderer/app/models/store.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { TemplatesService } from 'src/renderer/app/services/templates.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { setActiveTemplatesTabAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -26,6 +30,7 @@ export class FooterComponent implements OnInit {
   public platform$ = from(MainAPI.invoke('APP_GET_PLATFORM'));
   public uiState$: Observable<UIState>;
   public generatingTemplate$ = this.templateService.generatingTemplate$;
+  public generatingEndpoint$ = this.templateService.generatingEndpoint$;
   public releaseUrl = Config.releasePublicURL;
 
   constructor(
@@ -47,7 +52,8 @@ export class FooterComponent implements OnInit {
     MainAPI.send('APP_APPLY_UPDATE');
   }
 
-  public openTemplateModal() {
+  public openTemplateModal(tab: TemplatesTabsName) {
+    this.store.update(setActiveTemplatesTabAction(tab));
     this.uiService.openModal('templates');
   }
 }

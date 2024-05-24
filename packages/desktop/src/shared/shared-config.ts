@@ -43,7 +43,7 @@ export const SharedConfig = (options: {
     signupURL: `${options.websiteURL}signup/?inapp=true`,
     accountURL: `${options.websiteURL}account/subscription/`,
     proPlansURL: `${options.websiteURL}pro/`,
-    maxTemplatePromptLength: 500,
+    maxPromptLength: 500,
     defaultMaxLogsPerEnvironment: defaultMaxTransactionLogs,
     defaultMainMenuSize: 100,
     defaultSecondaryMenuSize: 200,

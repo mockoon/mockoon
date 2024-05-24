@@ -253,3 +253,18 @@ pre {
     border-radius: none;
   }
 }
+
+fieldset {
+  border: 1px solid $gray-700;
+  padding: 0.5rem;
+  margin: 0;
+
+  legend {
+    color: $gray-800;
+    float: none;
+    width: auto;
+    font-style: italic;
+    padding: 0 0.5rem;
+    margin: 0;
+  }
+}

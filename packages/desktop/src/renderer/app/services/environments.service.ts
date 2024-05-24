@@ -1038,23 +1038,14 @@ export class EnvironmentsService extends Logger {
   /**
    * Add a new HTTP route and save it in the store
    */
-  public addHTTPRoute(
-    folderId: string | 'root',
-    options: {
-      endpoint: typeof RouteDefault.endpoint;
-      body: typeof RouteResponseDefault.body;
-    } = {
-      endpoint: RouteDefault.endpoint,
-      body: RouteResponseDefault.body
-    }
-  ) {
+  public addHTTPRoute(folderId: string | 'root', route?: Route) {
     const activeEnvironment = this.store.getActiveEnvironment();
 
     if (activeEnvironment) {
       this.store.update(
         addRouteAction(
           activeEnvironment.uuid,
-          BuildHTTPRoute(true, options),
+          route ? route : BuildHTTPRoute(true),
           folderId,
           true
         )
