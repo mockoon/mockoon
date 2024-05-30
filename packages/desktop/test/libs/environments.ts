@@ -151,23 +151,23 @@ class Environments {
   }
 
   public async assertMenuProxyIconVisible(reverse = false): Promise<void> {
-    expect(
+    const condition = expect(
       await $(
-        `${this.activeMenuEntrySelector} app-svg[icon="security"]${
-          reverse ? '.invisible' : '.visible'
-        }`
+        `${this.activeMenuEntrySelector} app-svg[icon="security"]`
       ).isExisting()
-    ).toEqual(true);
+    );
+
+    condition.toEqual(reverse ? false : true);
   }
 
   public async assertMenuRecordingIconVisible(reverse = false): Promise<void> {
-    expect(
+    const condition = expect(
       await $(
-        `${this.activeMenuEntrySelector} app-svg[icon="record"]${
-          reverse ? '.invisible' : '.visible'
-        }`
+        `${this.activeMenuEntrySelector} app-svg[icon="record"]`
       ).isExisting()
-    ).toEqual(true);
+    );
+
+    condition.toEqual(reverse ? false : true);
   }
 
   public async assertNeedsRestart() {

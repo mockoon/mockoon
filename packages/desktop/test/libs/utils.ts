@@ -69,6 +69,19 @@ class Utils {
     expect(await element.getValue()).toEqual(value);
   }
 
+  public async assertDisabled(
+    element: ChainablePromiseElement<WebdriverIO.Element>,
+    reverse = false
+  ): Promise<void> {
+    const disabledAttr = await element.getAttribute('disabled');
+
+    if (reverse) {
+      expect(disabledAttr).not.toEqual(true);
+    } else {
+      expect(disabledAttr).toEqual(true);
+    }
+  }
+
   public async assertHasClass(
     element: ChainablePromiseElement<WebdriverIO.Element>,
     className: string,
@@ -195,7 +208,7 @@ class Utils {
     await $(`${parentSelector} .dropdown-toggle`).click();
 
     const itemSelector = `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`;
-    await this.assertHasClass($(itemSelector), 'disabled', reverse);
+    await this.assertDisabled($(itemSelector), reverse);
 
     await this.clickOutside();
   }
