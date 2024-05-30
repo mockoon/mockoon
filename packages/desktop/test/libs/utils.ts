@@ -43,6 +43,10 @@ export enum DropdownMenuFolderActions {
   DELETE = 5
 }
 
+export enum DropdownMenuLogsActions {
+  MOCK = 1
+}
+
 class Utils {
   public async clearElementValue(
     element: ChainablePromiseElement<WebdriverIO.Element>
@@ -76,9 +80,9 @@ class Utils {
     const disabledAttr = await element.getAttribute('disabled');
 
     if (reverse) {
-      expect(disabledAttr).not.toEqual(true);
+      expect(disabledAttr).not.toEqual('true');
     } else {
-      expect(disabledAttr).toEqual(true);
+      expect(disabledAttr).toEqual('true');
     }
   }
 
@@ -169,6 +173,7 @@ class Utils {
       | DropdownMenuCallbackActions
       | DropdownMenuRouteActions
       | DropdownMenuFolderActions
+      | DropdownMenuLogsActions
   ) {
     return $(
       `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`
@@ -182,7 +187,8 @@ class Utils {
       | DropdownMenuDatabucketActions
       | DropdownMenuCallbackActions
       | DropdownMenuRouteActions
-      | DropdownMenuFolderActions,
+      | DropdownMenuFolderActions
+      | DropdownMenuLogsActions,
     confirm = false
   ): Promise<void> {
     await $(`${parentSelector} .dropdown-toggle`).click();
@@ -202,7 +208,8 @@ class Utils {
       | DropdownMenuDatabucketActions
       | DropdownMenuCallbackActions
       | DropdownMenuRouteActions
-      | DropdownMenuFolderActions,
+      | DropdownMenuFolderActions
+      | DropdownMenuLogsActions,
     reverse = false
   ): Promise<void> {
     await $(`${parentSelector} .dropdown-toggle`).click();

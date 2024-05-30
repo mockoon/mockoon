@@ -16,7 +16,8 @@ import routes, { RoutesMenuActions } from '../libs/routes';
 import settings from '../libs/settings';
 import utils, {
   DropdownMenuEnvironmentActions,
-  DropdownMenuFolderActions
+  DropdownMenuFolderActions,
+  DropdownMenuLogsActions
 } from '../libs/utils';
 
 /**
@@ -472,12 +473,16 @@ const documentationTopics: {
     folder: 'logging-and-recording/auto-mocking-and-recording',
     screenshots: [
       {
-        tasks: async () => {},
+        tasks: async () => {
+          await utils.dropdownMenuOpen(
+            '.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(2) .nav-link'
+          );
+        },
         get screenshotTarget() {
           return environmentsLogs.container;
         },
         get highlightedTarget() {
-          return environmentsLogs.getMockBtn(2);
+          return utils.dropdownMenuGetItemRef(DropdownMenuLogsActions.MOCK);
         },
         highlight: true,
         highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
@@ -762,7 +767,6 @@ const documentationTopics: {
         },
         get highlightedTarget() {
           return utils.dropdownMenuGetItemRef(
-            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
             DropdownMenuEnvironmentActions.SHOW_FOLDER
           );
         },
@@ -1247,7 +1251,6 @@ const documentationTopics: {
         },
         get highlightedTarget() {
           return utils.dropdownMenuGetItemRef(
-            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
             DropdownMenuEnvironmentActions.SHOW_FOLDER
           );
         },
@@ -1268,7 +1271,6 @@ const documentationTopics: {
         },
         get highlightedTarget() {
           return utils.dropdownMenuGetItemRef(
-            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
             DropdownMenuEnvironmentActions.MOVE_FOLDER
           );
         },
@@ -1358,7 +1360,6 @@ const documentationTopics: {
         },
         get highlightedTarget() {
           return utils.dropdownMenuGetItemRef(
-            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
             DropdownMenuEnvironmentActions.COPY_JSON
           );
         },

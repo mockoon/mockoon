@@ -81,7 +81,10 @@
                 {{ log.url }}
               </div>
               <div class="nav-link-subtitle mt-1 d-flex align-items-center">
-                <span class="color-method-{{ log.method | lowercase }} me-2"
+                <span
+                  class="color-method-{{
+                    log.method | lowercase
+                  }} me-2 route-method"
                   >{{ log.method | uppercase }}
                 </span>
                 <span

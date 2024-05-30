@@ -145,7 +145,7 @@ describe('Environment logs', () => {
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
         await environmentsLogs.assertLogItem(
-          'Status: 200 OK',
+          'Status: 200  OK',
           'response',
           2,
           1
@@ -196,7 +196,7 @@ describe('Environment logs', () => {
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
         await environmentsLogs.assertLogItem(
-          'Status: 404 Not Found',
+          'Status: 404  Not Found',
           'response',
           2,
           1
@@ -268,7 +268,7 @@ describe('Environment logs', () => {
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
         await environmentsLogs.assertLogItem(
-          'Status: 200 OK',
+          'Status: 200  OK',
           'response',
           2,
           1
@@ -334,7 +334,7 @@ describe('Environment logs', () => {
     it('should assert presence on log page and verify selected entry', async () => {
       await navigation.switchView('ENV_LOGS');
       await environmentsLogs.assertActiveLogEntry(2);
-      await environmentsLogs.assertLogItem('Status: 200 OK', 'response', 2, 1);
+      await environmentsLogs.assertLogItem('Status: 200  OK', 'response', 2, 1);
       await environmentsLogs.assertLogBody('responsebody', 'response');
     });
   });
