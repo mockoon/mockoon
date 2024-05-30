@@ -79,7 +79,7 @@ class Utils {
   ): Promise<void> {
     const disabledAttr = await element.getAttribute('disabled');
 
-    expect(disabledAttr).toEqual(reverse ? 'false' : 'true');
+    expect(disabledAttr).toEqual(reverse ? null : 'true');
   }
 
   public async assertHasClass(
@@ -187,7 +187,9 @@ class Utils {
       | DropdownMenuLogsActions,
     confirm = false
   ): Promise<void> {
-    await $(`${parentSelector} .dropdown-toggle`).click();
+    if (open) {
+      await $(`${parentSelector} .dropdown-toggle`).click();
+    }
 
     const itemSelector = `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`;
     await $(itemSelector).click();
