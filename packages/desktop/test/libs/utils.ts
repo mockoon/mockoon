@@ -79,11 +79,7 @@ class Utils {
   ): Promise<void> {
     const disabledAttr = await element.getAttribute('disabled');
 
-    if (reverse) {
-      expect(disabledAttr).not.toEqual('true');
-    } else {
-      expect(disabledAttr).toEqual('true');
-    }
+    expect(disabledAttr).toEqual(reverse ? 'false' : 'true');
   }
 
   public async assertHasClass(

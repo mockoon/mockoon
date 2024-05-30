@@ -20,7 +20,7 @@ class Databuckets {
   }
 
   public get idElement() {
-    return $('.environment-databuckets-footer div');
+    return $('.environment-databuckets-footer button');
   }
 
   public get addBtn() {

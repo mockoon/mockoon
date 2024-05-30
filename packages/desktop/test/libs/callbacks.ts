@@ -27,10 +27,6 @@ class Callbacks {
     return $('input[id="callbacks-filter"]');
   }
 
-  public get idElement() {
-    return $('.environment-callbacks-footer div');
-  }
-
   public get addBtn() {
     return $('.callbacks-menu div:first-of-type button');
   }

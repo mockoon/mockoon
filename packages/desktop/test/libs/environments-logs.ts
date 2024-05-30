@@ -53,7 +53,7 @@ class EnvironmentsLogs {
   public async assertLogMenu(logIndex: number, method: string, path?: string) {
     const menuItemSelector = `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link`;
     const methodSelector = `${menuItemSelector} .route-method`;
-    const pathSelector = `${menuItemSelector} .route`;
+    const pathSelector = `${menuItemSelector} .nav-link-label`;
 
     await $(menuItemSelector).waitForExist();
     await utils.assertElementText($(methodSelector), method);
