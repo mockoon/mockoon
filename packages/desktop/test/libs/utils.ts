@@ -149,7 +149,6 @@ class Utils {
   }
 
   public dropdownMenuGetItemRef(
-    parentSelector: string,
     itemIndex:
       | DropdownMenuEnvironmentActions
       | DropdownMenuDatabucketActions
@@ -158,7 +157,7 @@ class Utils {
       | DropdownMenuFolderActions
   ) {
     return $(
-      `${parentSelector} .dropdown-menu .dropdown-item:nth-child(${itemIndex})`
+      `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`
     );
   }
 
@@ -174,7 +173,7 @@ class Utils {
   ): Promise<void> {
     await $(`${parentSelector} .dropdown-toggle`).click();
 
-    const itemSelector = `${parentSelector} .dropdown-menu .dropdown-item:nth-child(${itemIndex})`;
+    const itemSelector = `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`;
     await $(itemSelector).click();
 
     if (confirm) {
@@ -194,7 +193,7 @@ class Utils {
   ): Promise<void> {
     await $(`${parentSelector} .dropdown-toggle`).click();
 
-    const itemSelector = `${parentSelector} .dropdown-menu .dropdown-item:nth-child(${itemIndex})`;
+    const itemSelector = `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`;
     await this.assertHasClass($(itemSelector), 'disabled', reverse);
 
     await this.clickOutside();
