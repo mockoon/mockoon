@@ -170,6 +170,14 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       }
     },
     {
+      label: 'Toggle direct child routes',
+      icon: 'power_settings_new',
+      twoSteps: false,
+      action: ({ folderUuid }: folderDropdownMenuPayload) => {
+        this.environmentsService.toggleFolder(folderUuid);
+      }
+    },
+    {
       label: 'Delete folder',
       icon: 'delete',
       twoSteps: true,
