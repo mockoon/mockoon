@@ -42,7 +42,7 @@ import {
   Settings
 } from 'src/shared/models/settings.model';
 
-type contextMenuPayload = { environmentUuid: string; syncStatus: boolean };
+type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
 
 @Component({
   selector: 'app-environments-menu',
@@ -86,7 +86,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       twoSteps: false,
       disabled$: () =>
         this.store.select('sync').pipe(map((sync) => !sync.status)),
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.duplicateToCloud(environmentUuid).subscribe();
       }
     },
@@ -94,7 +94,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       label: 'Duplicate to local',
       icon: 'content_copy',
       twoSteps: false,
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService
           .duplicateEnvironment(environmentUuid)
           .subscribe();
@@ -104,7 +104,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       label: 'Copy configuration to clipboard (JSON)',
       icon: 'assignment',
       twoSteps: false,
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.copyEnvironmentToClipboard(environmentUuid);
       }
     }
@@ -115,7 +115,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       label: 'Show data file in explorer/finder',
       icon: 'folder',
       twoSteps: false,
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.showEnvironmentFileInFolder(environmentUuid);
       }
     },
@@ -123,7 +123,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       label: 'Move data file to folder',
       icon: 'folder_move',
       twoSteps: false,
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService
           .moveEnvironmentFileToFolder(environmentUuid)
           .subscribe();
@@ -133,7 +133,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       label: 'Close environment',
       icon: 'close',
       twoSteps: false,
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.closeEnvironment(environmentUuid).subscribe();
       }
     }
@@ -144,7 +144,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       label: 'Show local backup data file in explorer/finder',
       icon: 'folder',
       twoSteps: false,
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.showEnvironmentFileInFolder(environmentUuid);
       }
     },
@@ -154,7 +154,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       twoSteps: false,
       disabled$: () =>
         this.store.select('sync').pipe(map((sync) => !sync.status)),
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService
           .convertCloudToLocal(environmentUuid)
           .subscribe();
@@ -166,7 +166,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       twoSteps: false,
       disabled$: () =>
         this.store.select('sync').pipe(map((sync) => !sync.status)),
-      action: ({ environmentUuid }: contextMenuPayload) => {
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.deleteFromCloud(environmentUuid).subscribe();
       }
     }

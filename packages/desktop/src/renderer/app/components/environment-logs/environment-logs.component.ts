@@ -75,7 +75,7 @@ export class EnvironmentLogsComponent implements OnInit {
   public logsFilter$: Observable<string>;
   public dateFormat = 'yyyy-MM-dd HH:mm:ss:SSS';
   public focusableInputs = FocusableInputs;
-  public contextMenuItems: DropdownMenuComponent['items'] = [
+  public dropdownMenuItems: DropdownMenuComponent['items'] = [
     {
       label: 'Create mock endpoint',
       icon: 'control_point_duplicate',

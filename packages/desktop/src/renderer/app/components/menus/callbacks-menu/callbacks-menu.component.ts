@@ -19,7 +19,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
 
-type contextMenuPayload = { callbackUuid: string };
+type dropdownMenuPayload = { callbackUuid: string };
 
 @Component({
   selector: 'app-callbacks-menu',
@@ -35,12 +35,12 @@ export class CallbacksMenuComponent implements OnInit {
   public focusableInputs = FocusableInputs;
   public menuSize = Config.defaultSecondaryMenuSize;
   public trackByUuid = trackByUuid;
-  public contextMenuItems: DropdownMenuComponent['items'] = [
+  public dropdownMenuItems: DropdownMenuComponent['items'] = [
     {
       label: 'Duplicate',
       icon: 'content_copy',
       twoSteps: false,
-      action: ({ callbackUuid }: contextMenuPayload) => {
+      action: ({ callbackUuid }: dropdownMenuPayload) => {
         this.environmentsService.duplicateCallback(callbackUuid);
       }
     },
@@ -52,7 +52,7 @@ export class CallbacksMenuComponent implements OnInit {
         this.store
           .select('environments')
           .pipe(map((environments) => environments.length < 2)),
-      action: ({ callbackUuid }: contextMenuPayload) => {
+      action: ({ callbackUuid }: dropdownMenuPayload) => {
         this.environmentsService.startEntityDuplicationToAnotherEnvironment(
           callbackUuid,
           'callback'
@@ -65,7 +65,7 @@ export class CallbacksMenuComponent implements OnInit {
       twoSteps: true,
       confirmIcon: 'error',
       confirmLabel: 'Confirm deletion',
-      action: ({ callbackUuid }: contextMenuPayload) => {
+      action: ({ callbackUuid }: dropdownMenuPayload) => {
         this.environmentsService.removeCallback(callbackUuid);
       }
     }

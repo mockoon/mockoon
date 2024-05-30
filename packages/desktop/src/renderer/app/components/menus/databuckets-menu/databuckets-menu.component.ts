@@ -21,7 +21,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
 
-type contextMenuPayload = { databucketUuid: string };
+type dropdownMenuPayload = { databucketUuid: string };
 
 @Component({
   selector: 'app-databuckets-menu',
@@ -38,12 +38,12 @@ export class DatabucketsMenuComponent implements OnInit {
   public focusableInputs = FocusableInputs;
   public menuSize = Config.defaultSecondaryMenuSize;
   public trackByUuid = trackByUuid;
-  public contextMenuItems: DropdownMenuComponent['items'] = [
+  public dropdownMenuItems: DropdownMenuComponent['items'] = [
     {
       label: 'Duplicate',
       icon: 'content_copy',
       twoSteps: false,
-      action: ({ databucketUuid }: contextMenuPayload) => {
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
         this.environmentsService.duplicateDatabucket(databucketUuid);
       }
     },
@@ -55,7 +55,7 @@ export class DatabucketsMenuComponent implements OnInit {
         this.store
           .select('environments')
           .pipe(map((environments) => environments.length < 2)),
-      action: ({ databucketUuid }: contextMenuPayload) => {
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
         this.environmentsService.startEntityDuplicationToAnotherEnvironment(
           databucketUuid,
           'databucket'
@@ -66,7 +66,7 @@ export class DatabucketsMenuComponent implements OnInit {
       label: 'Copy ID to clipboard',
       icon: 'assignment',
       twoSteps: false,
-      action: ({ databucketUuid }: contextMenuPayload) => {
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
         const databucket = this.store.getDatabucketByUUID(databucketUuid);
 
         MainAPI.send('APP_WRITE_CLIPBOARD', databucket.id);
@@ -78,7 +78,7 @@ export class DatabucketsMenuComponent implements OnInit {
       twoSteps: true,
       confirmIcon: 'error',
       confirmLabel: 'Confirm deletion',
-      action: ({ databucketUuid }: contextMenuPayload) => {
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
         this.environmentsService.removeDatabucket(databucketUuid);
       }
     }

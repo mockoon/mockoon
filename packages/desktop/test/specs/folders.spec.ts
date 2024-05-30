@@ -121,8 +121,11 @@ describe('Folders', () => {
 
   it('should toggle all the routes inside the folder', async () => {
     await environments.open('basic-folder-2-routes');
-    await contextMenu.open('routes', 1);
-    await contextMenu.getItem(4).click();
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuFolderActions.TOGGLE_FOLDER
+    );
+
     await $(
       '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled'
     ).waitForExist();
