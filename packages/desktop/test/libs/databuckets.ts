@@ -24,7 +24,7 @@ class Databuckets {
   }
 
   public get addBtn() {
-    return $('.databuckets-menu .nav:first-of-type .nav-item .nav-link');
+    return $('.databuckets-menu div:first-of-type button');
   }
 
   public async select(databucketIndex: number): Promise<void> {

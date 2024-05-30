@@ -32,7 +32,7 @@ class Callbacks {
   }
 
   public get addBtn() {
-    return $('.callbacks-menu .nav:first-of-type .nav-item .nav-link');
+    return $('.callbacks-menu div:first-of-type button');
   }
 
   public get attachCallbackBtn() {
