@@ -2,10 +2,6 @@ import { BodyTypes } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { ChainablePromiseElement } from 'webdriverio';
 import callbacks from '../libs/callbacks';
-import contextMenu, {
-  ContextMenuEnvironmentActions,
-  ContextMenuFolderActions
-} from '../libs/context-menu';
 import databuckets from '../libs/databuckets';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
@@ -18,7 +14,10 @@ import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes, { RoutesMenuActions } from '../libs/routes';
 import settings from '../libs/settings';
-import utils from '../libs/utils';
+import utils, {
+  DropdownMenuEnvironmentActions,
+  DropdownMenuFolderActions
+} from '../libs/utils';
 
 /**
  * Spec file used to generate documentation screenshots
@@ -754,10 +753,18 @@ const documentationTopics: {
       {
         tasks: async () => {
           await navigation.switchView('ENV_ROUTES');
-          await contextMenu.open('environments', 1);
+          await utils.dropdownMenuOpen(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`
+          );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(3);
+          return utils.dropdownMenuGetItemRef(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
+            DropdownMenuEnvironmentActions.SHOW_FOLDER
+          );
         },
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
@@ -1231,13 +1238,18 @@ const documentationTopics: {
         tasks: async () => {
           await modals.close();
           await navigation.switchView('ENV_ROUTES');
-          await contextMenu.open('environments', 1);
+          await utils.dropdownMenuOpen(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`
+          );
         },
         postTasks: async () => {
-          await contextMenu.close();
+          await utils.dropdownMenuClose();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(ContextMenuEnvironmentActions.SHOW_FOLDER);
+          return utils.dropdownMenuGetItemRef(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
+            DropdownMenuEnvironmentActions.SHOW_FOLDER
+          );
         },
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
@@ -1247,13 +1259,18 @@ const documentationTopics: {
       },
       {
         tasks: async () => {
-          await contextMenu.open('environments', 1);
+          await utils.dropdownMenuOpen(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`
+          );
         },
         postTasks: async () => {
-          await contextMenu.close();
+          await utils.dropdownMenuClose();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(ContextMenuEnvironmentActions.MOVE_FOLDER);
+          return utils.dropdownMenuGetItemRef(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
+            DropdownMenuEnvironmentActions.MOVE_FOLDER
+          );
         },
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
@@ -1332,13 +1349,18 @@ const documentationTopics: {
         tasks: async () => {
           await navigation.switchView('ENV_ROUTES');
           await routes.select(1);
-          await contextMenu.open('environments', 1);
+          await utils.dropdownMenuOpen(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`
+          );
         },
         postTasks: async () => {
-          await contextMenu.close();
+          await utils.dropdownMenuClose();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(ContextMenuEnvironmentActions.COPY_JSON);
+          return utils.dropdownMenuGetItemRef(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
+            DropdownMenuEnvironmentActions.COPY_JSON
+          );
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
@@ -1354,7 +1376,6 @@ const documentationTopics: {
     screenshots: [
       {
         tasks: async () => {
-          await contextMenu.open('environments', 1);
           await environments.close(1);
           await environments.open('empty');
           await navigation.switchView('ENV_SETTINGS');
@@ -1363,35 +1384,27 @@ const documentationTopics: {
           await routes.addFolder();
           await (await routes.getMenuItemEditable(1)).click();
           await routes.setMenuItemEditableText(1, 'Users');
-          await contextMenu.open('routes', 1);
-          await contextMenu.click(
-            'routes',
-            1,
-            ContextMenuFolderActions.ADD_HTTP
+          await utils.dropdownMenuClick(
+            `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+            DropdownMenuFolderActions.ADD_HTTP
           );
           await routes.pathInput.setValue('/users');
-          await contextMenu.open('routes', 1);
-          await contextMenu.click(
-            'routes',
-            1,
-            ContextMenuFolderActions.ADD_HTTP
+          await utils.dropdownMenuClick(
+            `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+            DropdownMenuFolderActions.ADD_HTTP
           );
           await routes.pathInput.setValue('/users/:id');
           await routes.addFolder();
           await (await routes.getMenuItemEditable(4)).click();
           await routes.setMenuItemEditableText(4, 'Invoices');
-          await contextMenu.open('routes', 4);
-          await contextMenu.click(
-            'routes',
-            4,
-            ContextMenuFolderActions.ADD_HTTP
+          await utils.dropdownMenuClick(
+            `.routes-menu .nav-item:nth-child(${4}) .nav-link`,
+            DropdownMenuFolderActions.ADD_HTTP
           );
           await routes.pathInput.setValue('/invoices');
-          await contextMenu.open('routes', 4);
-          await contextMenu.click(
-            'routes',
-            4,
-            ContextMenuFolderActions.ADD_HTTP
+          await utils.dropdownMenuClick(
+            `.routes-menu .nav-item:nth-child(${4}) .nav-link`,
+            DropdownMenuFolderActions.ADD_HTTP
           );
           await routes.pathInput.setValue('/invoices/:id');
         },
@@ -1424,7 +1437,7 @@ const documentationTopics: {
           await routes.openAddMenu();
         },
         postTasks: async () => {
-          await contextMenu.close();
+          await utils.clickOutside();
         },
         get screenshotTarget() {
           return routes.addMenu;

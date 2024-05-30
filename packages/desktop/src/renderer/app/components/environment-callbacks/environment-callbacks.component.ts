@@ -70,31 +70,30 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public httpMethod = Methods;
   public bodySupportingMethods = [Methods.post, Methods.put, Methods.patch];
   public callbackMethods: DropdownItems<Methods> = [
-    { value: Methods.get, label: 'GET', classes: 'route-badge-get-text' },
-    { value: Methods.post, label: 'POST', classes: 'route-badge-post-text' },
-    { value: Methods.put, label: 'PUT', classes: 'route-badge-put-text' },
+    { value: Methods.get, label: 'GET', classes: 'color-method-get' },
+    { value: Methods.post, label: 'POST', classes: 'color-method-post' },
+    { value: Methods.put, label: 'PUT', classes: 'color-method-put' },
     {
       value: Methods.patch,
       label: 'PATCH',
-      classes: 'route-badge-patch-text'
+      classes: 'color-method-patch'
     },
     {
       value: Methods.delete,
       label: 'DELETE',
-      classes: 'route-badge-delete-text'
+      classes: 'color-method-delete'
     },
     {
       value: Methods.head,
       label: 'HEAD',
-      classes: 'route-badge-head-text'
+      classes: 'color-method-head'
     },
     {
       value: Methods.options,
       label: 'OPTIONS',
-      classes: 'route-badge-options-text'
+      classes: 'color-method-options'
     }
   ];
-
   public bodyType: ToggleItems = [
     {
       value: 'INLINE',

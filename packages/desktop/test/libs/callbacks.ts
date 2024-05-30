@@ -1,5 +1,4 @@
-import contextMenu, { ContextMenuCallbackActions } from '../libs/context-menu';
-import utils from '../libs/utils';
+import utils, { DropdownMenuCallbackActions } from '../libs/utils';
 
 class Callbacks {
   public get nameInput() {
@@ -183,26 +182,24 @@ class Callbacks {
   }
 
   public async duplicate(index: number) {
-    await contextMenu.click(
-      'callbacks',
-      index,
-      ContextMenuCallbackActions.DUPLICATE
+    await utils.dropdownMenuClick(
+      `.callbacks-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuCallbackActions.DUPLICATE
     );
   }
 
   public async duplicateToEnv(index: number) {
-    await contextMenu.click(
-      'callbacks',
-      index,
-      ContextMenuCallbackActions.DUPLICATE_TO_ENV
+    await utils.dropdownMenuClick(
+      `.callbacks-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuCallbackActions.DUPLICATE_TO_ENV
     );
   }
 
   public async remove(index: number) {
-    await contextMenu.clickAndConfirm(
-      'callbacks',
-      index,
-      ContextMenuCallbackActions.DELETE
+    await utils.dropdownMenuClick(
+      `.callbacks-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuCallbackActions.DELETE,
+      true
     );
   }
 

@@ -26,13 +26,9 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
-import {
-  CloudEnvironmentsContextMenu,
-  EnvironmentsContextMenu
-} from 'src/renderer/app/components/context-menu/context-menus';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { trackById, trackByUuid } from 'src/renderer/app/libs/utils.lib';
-import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -45,6 +41,8 @@ import {
   EnvironmentsCategories,
   Settings
 } from 'src/shared/models/settings.model';
+
+type contextMenuPayload = { environmentUuid: string; syncStatus: boolean };
 
 @Component({
   selector: 'app-environments-menu',
@@ -81,6 +79,98 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     OFFLINE_WARNING_GROUP:
       'Concurrent offline editing may result in conflicts. In case of conflict, you will be prompted to choose between the local or remote version. Click to learn more.'
   };
+  public commonDropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Duplicate to the cloud',
+      icon: 'cloud',
+      twoSteps: false,
+      disabled$: () =>
+        this.store.select('sync').pipe(map((sync) => !sync.status)),
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService.duplicateToCloud(environmentUuid).subscribe();
+      }
+    },
+    {
+      label: 'Duplicate to local',
+      icon: 'content_copy',
+      twoSteps: false,
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService
+          .duplicateEnvironment(environmentUuid)
+          .subscribe();
+      }
+    },
+    {
+      label: 'Copy configuration to clipboard (JSON)',
+      icon: 'assignment',
+      twoSteps: false,
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService.copyEnvironmentToClipboard(environmentUuid);
+      }
+    }
+  ];
+  public environmentsDropdownMenuItems: DropdownMenuComponent['items'] = [
+    ...this.commonDropdownMenuItems,
+    {
+      label: 'Show data file in explorer/finder',
+      icon: 'folder',
+      twoSteps: false,
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService.showEnvironmentFileInFolder(environmentUuid);
+      }
+    },
+    {
+      label: 'Move data file to folder',
+      icon: 'folder_move',
+      twoSteps: false,
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService
+          .moveEnvironmentFileToFolder(environmentUuid)
+          .subscribe();
+      }
+    },
+    {
+      label: 'Close environment',
+      icon: 'close',
+      twoSteps: false,
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService.closeEnvironment(environmentUuid).subscribe();
+      }
+    }
+  ];
+  public cloudEnvironmentsDropdownMenuItems: DropdownMenuComponent['items'] = [
+    ...this.commonDropdownMenuItems,
+    {
+      label: 'Show local backup data file in explorer/finder',
+      icon: 'folder',
+      twoSteps: false,
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService.showEnvironmentFileInFolder(environmentUuid);
+      }
+    },
+    {
+      label: 'Delete from cloud and convert to local',
+      icon: 'cloud_remove',
+      twoSteps: false,
+      disabled$: () =>
+        this.store.select('sync').pipe(map((sync) => !sync.status)),
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService
+          .convertCloudToLocal(environmentUuid)
+          .subscribe();
+      }
+    },
+    {
+      label: 'Delete from cloud and close',
+      icon: 'cloud_remove',
+      twoSteps: false,
+      disabled$: () =>
+        this.store.select('sync').pipe(map((sync) => !sync.status)),
+      action: ({ environmentUuid }: contextMenuPayload) => {
+        this.environmentsService.deleteFromCloud(environmentUuid).subscribe();
+      }
+    }
+  ];
   private userAndSync$ = combineLatest([
     this.store.select('user').pipe(distinctUntilChanged()),
     this.store.select('sync').pipe(distinctUntilChanged())
@@ -328,35 +418,6 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
    */
   public selectEnvironment(environmentUUID: string) {
     this.environmentsService.setActiveEnvironment(environmentUUID);
-  }
-
-  /**
-   * Show and position the context menu
-   *
-   * @param event - click event
-   */
-  public openContextMenu(
-    cloud: boolean,
-    environmentUUID: string,
-    event: MouseEvent
-  ) {
-    // if right click display context menu
-    if (event && event.button === 2) {
-      const menu: ContextMenuEvent = {
-        event,
-        items: cloud
-          ? CloudEnvironmentsContextMenu(
-              environmentUUID,
-              this.store.get('sync').status
-            )
-          : EnvironmentsContextMenu(
-              environmentUUID,
-              this.store.get('sync').status
-            )
-      };
-
-      this.eventsService.contextMenuEvents.next(menu);
-    }
   }
 
   public cloudReconnect() {

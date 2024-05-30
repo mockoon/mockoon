@@ -48,12 +48,13 @@
         <div
           class="d-flex justify-content-between align-items-center environment-databuckets-footer px-2"
         >
-          <div
-            class="py-2 d-inline-block"
-            ngbTooltip="Data ID (can be used within data and dataRaw templating helpers)"
+          <button
+            class="btn btn-link btn-icon ps-0"
+            ngbTooltip="Data ID (can be used within data and dataRaw templating helpers). Click to copy."
+            (click)="copyToClipboard(activeDatabucket.id)"
           >
-            <small class="ps-0"> Unique ID: {{ activeDatabucket.id }}</small>
-          </div>
+            <small class="p-0"> Unique ID: {{ activeDatabucket.id }}</small>
+          </button>
         </div>
       </ng-container>
     </ng-container>

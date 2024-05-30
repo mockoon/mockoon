@@ -1,9 +1,6 @@
 import { resolve } from 'path';
-import contextMenu, {
-  ContextMenuEnvironmentActions
-} from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
-import utils from '../libs/utils';
+import utils, { DropdownMenuEnvironmentActions } from '../libs/utils';
 
 class Environments {
   private activeMenuEntrySelector =
@@ -88,19 +85,18 @@ class Environments {
   }
 
   public async close(index: number): Promise<void> {
-    await contextMenu.click(
-      'environments',
-      index,
-      ContextMenuEnvironmentActions.CLOSE
+    await utils.dropdownMenuClick(
+      `.environments-menu div:first-of-type .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuEnvironmentActions.CLOSE
     );
+
     await browser.pause(500);
   }
 
   public async duplicate(index: number) {
-    await contextMenu.click(
-      'environments',
-      index,
-      ContextMenuEnvironmentActions.DUPLICATE
+    await utils.dropdownMenuClick(
+      `.environments-menu div:first-of-type .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuEnvironmentActions.DUPLICATE
     );
   }
 

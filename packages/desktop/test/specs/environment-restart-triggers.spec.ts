@@ -1,7 +1,6 @@
-import contextMenu, { ContextMenuRouteActions } from '../libs/context-menu';
 import environments from '../libs/environments';
 import routes from '../libs/routes';
-import utils from '../libs/utils';
+import utils, { DropdownMenuRouteActions } from '../libs/utils';
 
 describe('Environment "restart needed" indicator', () => {
   it('should open and start the environment', async () => {
@@ -17,10 +16,10 @@ describe('Environment "restart needed" indicator', () => {
   });
 
   it('should remove a route and check that a restart is needed', async () => {
-    await contextMenu.clickAndConfirm(
-      'routes',
-      1,
-      ContextMenuRouteActions.DELETE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuRouteActions.DELETE,
+      true
     );
 
     await environments.assertNeedsRestart();

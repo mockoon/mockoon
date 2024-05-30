@@ -1,9 +1,9 @@
-import contextMenu, { ContextMenuRouteActions } from '../libs/context-menu';
 import environments from '../libs/environments';
 import headersUtils from '../libs/headers-utils';
 import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
+import utils, { DropdownMenuRouteActions } from '../libs/utils';
 
 describe('Duplicate a route to an environment', async () => {
   it('should open the environment', async () => {
@@ -11,21 +11,26 @@ describe('Duplicate a route to an environment', async () => {
   });
 
   it('should assert that menu entry is disabled when only one environment present', async () => {
-    await contextMenu.assertEntryDisabled('routes', 3, 2);
+    await utils.dropdownMenuAssertDisabled(
+      `.routes-menu .nav-item:nth-child(${3}) .nav-link`,
+      DropdownMenuRouteActions.DUPLICATE_TO_ENV
+    );
   });
 
   it('should add a new environment and assert that menu entry is enabled', async () => {
     await environments.add('new-env-test');
     await environments.select(1);
-
-    await contextMenu.assertEntryDisabled('routes', 3, 2, true);
+    await utils.dropdownMenuAssertDisabled(
+      `.routes-menu .nav-item:nth-child(${3}) .nav-link`,
+      DropdownMenuRouteActions.DUPLICATE_TO_ENV,
+      true
+    );
   });
 
   it("should open duplication modal and verify selected route's information on modal", async () => {
-    await contextMenu.click(
-      'routes',
-      3,
-      ContextMenuRouteActions.DUPLICATE_TO_ENV
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${3}) .nav-link`,
+      DropdownMenuRouteActions.DUPLICATE_TO_ENV
     );
 
     await modals.assertExists();

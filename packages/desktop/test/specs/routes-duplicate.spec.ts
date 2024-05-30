@@ -1,6 +1,6 @@
-import contextMenu, { ContextMenuRouteActions } from '../libs/context-menu';
 import environments from '../libs/environments';
 import routes from '../libs/routes';
+import utils, { DropdownMenuRouteActions } from '../libs/utils';
 
 describe('Duplicate a route', () => {
   it('should open the environment', async () => {
@@ -12,7 +12,10 @@ describe('Duplicate a route', () => {
   });
 
   it('should duplicate first route ', async () => {
-    await contextMenu.click('routes', 1, ContextMenuRouteActions.DUPLICATE);
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuRouteActions.DUPLICATE
+    );
     await routes.assertCount(4);
   });
 

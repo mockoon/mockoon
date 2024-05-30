@@ -1,7 +1,4 @@
-import contextMenu, {
-  ContextMenuDatabucketActions
-} from '../libs/context-menu';
-import utils from '../libs/utils';
+import utils, { DropdownMenuDatabucketActions } from '../libs/utils';
 
 class Databuckets {
   public get nameInput() {
@@ -41,34 +38,31 @@ class Databuckets {
   }
 
   public async duplicate(index: number) {
-    await contextMenu.click(
-      'databuckets',
-      index,
-      ContextMenuDatabucketActions.DUPLICATE
+    await utils.dropdownMenuClick(
+      `.databuckets-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuDatabucketActions.DUPLICATE
     );
   }
 
   public async duplicateToEnv(index: number) {
-    await contextMenu.click(
-      'databuckets',
-      index,
-      ContextMenuDatabucketActions.DUPLICATE_TO_ENV
+    await utils.dropdownMenuClick(
+      `.databuckets-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuDatabucketActions.DUPLICATE_TO_ENV
     );
   }
 
   public async copyID(index: number) {
-    await contextMenu.click(
-      'databuckets',
-      index,
-      ContextMenuDatabucketActions.COPY_ID
+    await utils.dropdownMenuClick(
+      `.databuckets-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuDatabucketActions.COPY_ID
     );
   }
 
   public async remove(index: number) {
-    await contextMenu.clickAndConfirm(
-      'databuckets',
-      index,
-      ContextMenuDatabucketActions.DELETE
+    await utils.dropdownMenuClick(
+      `.databuckets-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuDatabucketActions.DELETE,
+      true
     );
   }
 

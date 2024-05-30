@@ -64,83 +64,59 @@
       >
         <li class="nav-item" *ngFor="let log of data.environmentLogs">
           <a
-            class="nav-link"
+            class="nav-link d-flex pe-0 hover-parent"
             [ngClass]="{
               active: log.UUID === data.selectedLog?.UUID
             }"
             (click)="selectLog(log.UUID)"
           >
-            <div class="d-flex flex-column">
-              <div class="d-flex">
-                <div>
-                  <span
-                    class="badge badge-default ms-0 me-3 route-badge-{{
-                      log.method | lowercase
-                    }} route-method"
-                    >{{ log.method | uppercase }}</span
-                  >
-                </div>
-                <div
-                  class="route"
-                  [ngClass]="{
-                    'text-truncate': data.settings.truncateRouteName,
-                    'text-break': !data.settings.truncateRouteName
-                  }"
+            <div class="d-flex flex-column mw0">
+              <div
+                class="nav-link-label"
+                [ngClass]="{
+                  'text-truncate': data.settings.truncateRouteName,
+                  'text-break': !data.settings.truncateRouteName
+                }"
+              >
+                {{ log.url }}
+              </div>
+              <div class="nav-link-subtitle mt-1 d-flex align-items-center">
+                <span class="color-method-{{ log.method | lowercase }} me-2"
+                  >{{ log.method | uppercase }}
+                </span>
+                <span
+                  class="color-status-{{
+                    log.response.status.toString().slice(0, 1).concat('xx')
+                  }} me-2"
+                  >{{ log.response.status }}
+                </span>
+                <app-svg
+                  *ngIf="log.route && !log.proxied"
+                  class="text-success me-2 logs-metadata"
+                  icon="check"
+                  size="12"
+                  ngbTooltip="Request caught"
+                ></app-svg>
+                <app-svg
+                  *ngIf="log.proxied"
+                  class="text-primary logs-metadata me-2"
+                  icon="security"
+                  size="12"
+                  ngbTooltip="Request proxied"
+                ></app-svg>
+                <span class="text-truncate">
+                  {{ log.timestampMs | date: dateFormat }}</span
                 >
-                  {{ log.url }}
-                </div>
-                <div class="ms-auto ps-1 d-flex">
-                  <div>
-                    <button
-                      type="button"
-                      class="btn btn-link btn-icon btn-mock"
-                      (click)="
-                        createRouteFromLog(data.activeEnvironmentUUID, log.UUID)
-                      "
-                    >
-                      <app-svg
-                        icon="control_point_duplicate"
-                        ngbTooltip="Mock"
-                      ></app-svg>
-                    </button>
-                  </div>
-                  <div>
-                    <span
-                      *ngIf="log.route && !log.proxied"
-                      class="float-end text-success logs-metadata"
-                    >
-                      <app-svg
-                        icon="check"
-                        ngbTooltip="Request caught"
-                      ></app-svg>
-                    </span>
-                  </div>
-                  <div>
-                    <span
-                      *ngIf="log.proxied"
-                      class="float-end text-primary logs-metadata"
-                    >
-                      <app-svg
-                        icon="security"
-                        ngbTooltip="Request proxied"
-                      ></app-svg>
-                    </span>
-                  </div>
-                </div>
               </div>
-              <div class="d-flex align-items-center">
-                <div class="nav-link-subtitle text-truncate">
-                  {{ log.timestampMs | date: dateFormat }}
-                </div>
-                <div class="d-flex ms-auto nav-link-subtitle">
-                  <span
-                    class="mt-0 badge badge-default response-badge-{{
-                      log.response.status.toString().slice(0, 1).concat('xx')
-                    }}"
-                    >{{ log.response.status }}</span
-                  >
-                </div>
-              </div>
+            </div>
+            <div class="ms-auto ps-2 d-flex align-items-start">
+              <app-dropdown-menu
+                [idPrefix]="'logs-' + log.UUID"
+                [items]="contextMenuItems"
+                [payload]="{ logUuid: log.UUID }"
+                [iconFaded]="true"
+                [noYPadding]="true"
+              ></app-dropdown-menu>
             </div>
           </a>
         </li>
@@ -223,8 +199,14 @@
                 <strong>Request URL:</strong> {{ data.selectedLog.url }}
               </div>
               <div class="environment-logs-content-item">
-                <strong>Method:</strong>
-                {{ data.selectedLog.method | uppercase }}
+                <strong>Method:&nbsp;</strong>
+                <span
+                  class="color-method-{{
+                    data.selectedLog.method | lowercase
+                  }} me-2"
+                >
+                  {{ data.selectedLog.method | uppercase }}
+                </span>
               </div>
               <div
                 *ngIf="data.selectedLog.route && !data.selectedLog.proxied"
@@ -392,14 +374,17 @@
             </div>
             <div [ngbCollapse]="collapseStates['response.general']">
               <div class="environment-logs-content-item">
-                <strong>Status:</strong>
-                {{
-                  data.selectedLog.response
-                    ? data.selectedLog.response.status +
-                      ' - ' +
-                      data.selectedLog.response.statusMessage
-                    : ''
-                }}
+                <strong>Status:&nbsp;</strong>
+                <span
+                  class="color-status-{{
+                    data.selectedLog.response.status
+                      .toString()
+                      .slice(0, 1)
+                      .concat('xx')
+                  }}"
+                  >{{ data.selectedLog.response.status }}</span
+                >&nbsp;
+                <span>{{ data.selectedLog.response.statusMessage }}</span>
               </div>
             </div>
 

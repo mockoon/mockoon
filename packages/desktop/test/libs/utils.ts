@@ -4,6 +4,44 @@ import { SharedConfig } from '../../src/shared/shared-config';
 
 const Config = SharedConfig({ apiURL: '', websiteURL: '' });
 
+export enum DropdownMenuEnvironmentActions {
+  DUPLICATE_TO_CLOUD = 1,
+  DUPLICATE = 2,
+  COPY_JSON = 3,
+  SHOW_FOLDER = 4,
+  MOVE_FOLDER = 5,
+  CLOSE = 6
+}
+
+export enum DropdownMenuDatabucketActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  COPY_ID = 3,
+  DELETE = 4
+}
+
+export enum DropdownMenuCallbackActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  DELETE = 3
+}
+
+export enum DropdownMenuRouteActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  COPY_JSON = 3,
+  COPY_PATH = 4,
+  TOGGLE = 5,
+  DELETE = 6
+}
+
+export enum DropdownMenuFolderActions {
+  ADD_CRUD = 1,
+  ADD_HTTP = 2,
+  ADD_FOLDER = 3,
+  DELETE = 4
+}
+
 class Utils {
   public async clearElementValue(
     element: ChainablePromiseElement<WebdriverIO.Element>
@@ -102,6 +140,66 @@ class Utils {
     expect((await elements).length).toEqual(expected);
   }
 
+  public async dropdownMenuOpen(parentSelector: string): Promise<void> {
+    await $(`${parentSelector} .dropdown-toggle`).click();
+  }
+
+  public async dropdownMenuClose(): Promise<void> {
+    await this.clickOutside();
+  }
+
+  public dropdownMenuGetItemRef(
+    parentSelector: string,
+    itemIndex:
+      | DropdownMenuEnvironmentActions
+      | DropdownMenuDatabucketActions
+      | DropdownMenuCallbackActions
+      | DropdownMenuRouteActions
+      | DropdownMenuFolderActions
+  ) {
+    return $(
+      `${parentSelector} .dropdown-menu .dropdown-item:nth-child(${itemIndex})`
+    );
+  }
+
+  public async dropdownMenuClick(
+    parentSelector: string,
+    itemIndex:
+      | DropdownMenuEnvironmentActions
+      | DropdownMenuDatabucketActions
+      | DropdownMenuCallbackActions
+      | DropdownMenuRouteActions
+      | DropdownMenuFolderActions,
+    confirm = false
+  ): Promise<void> {
+    await $(`${parentSelector} .dropdown-toggle`).click();
+
+    const itemSelector = `${parentSelector} .dropdown-menu .dropdown-item:nth-child(${itemIndex})`;
+    await $(itemSelector).click();
+
+    if (confirm) {
+      await $(itemSelector).click();
+    }
+  }
+
+  public async dropdownMenuAssertDisabled(
+    parentSelector: string,
+    itemIndex:
+      | DropdownMenuEnvironmentActions
+      | DropdownMenuDatabucketActions
+      | DropdownMenuCallbackActions
+      | DropdownMenuRouteActions
+      | DropdownMenuFolderActions,
+    reverse = false
+  ): Promise<void> {
+    await $(`${parentSelector} .dropdown-toggle`).click();
+
+    const itemSelector = `${parentSelector} .dropdown-menu .dropdown-item:nth-child(${itemIndex})`;
+    await this.assertHasClass($(itemSelector), 'disabled', reverse);
+
+    await this.clickOutside();
+  }
+
   public async openDropdown(dropdownId: string): Promise<void> {
     await $(`#${dropdownId}-dropdown`).click();
   }
@@ -190,7 +288,10 @@ class Utils {
   }
 
   public async closeTooltip() {
-    // close tooltips
+    await this.clickOutside();
+  }
+
+  public async clickOutside() {
     await $('body').click({ x: 0, y: 0 });
   }
 }

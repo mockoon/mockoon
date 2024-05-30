@@ -91,7 +91,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     {
       value: Methods.all,
       label: 'All methods',
-      classes: 'route-badge-all-text'
+      classes: 'color-method-all'
     },
     {
       label: 'HTTP',
@@ -100,37 +100,37 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     {
       value: Methods.get,
       label: 'GET',
-      classes: 'route-badge-get-text'
+      classes: 'color-method-get'
     },
     {
       value: Methods.post,
       label: 'POST',
-      classes: 'route-badge-post-text'
+      classes: 'color-method-post'
     },
     {
       value: Methods.put,
       label: 'PUT',
-      classes: 'route-badge-put-text'
+      classes: 'color-method-put'
     },
     {
       value: Methods.patch,
       label: 'PATCH',
-      classes: 'route-badge-patch-text'
+      classes: 'color-method-patch'
     },
     {
       value: Methods.delete,
       label: 'DELETE',
-      classes: 'route-badge-delete-text'
+      classes: 'color-method-delete'
     },
     {
       value: Methods.head,
       label: 'HEAD',
-      classes: 'route-badge-head-text'
+      classes: 'color-method-head'
     },
     {
       value: Methods.options,
       label: 'OPTIONS',
-      classes: 'route-badge-options-text'
+      classes: 'color-method-options'
     },
     {
       label: 'WebDAV',
@@ -139,37 +139,37 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     {
       value: Methods.propfind,
       label: 'PROPFIND',
-      classes: 'route-badge-propfind-text'
+      classes: 'color-method-propfind'
     },
     {
       value: Methods.proppatch,
       label: 'PROPPATCH',
-      classes: 'route-badge-proppatch-text'
+      classes: 'color-method-proppatch'
     },
     {
       value: Methods.move,
       label: 'MOVE',
-      classes: 'route-badge-move-text'
+      classes: 'color-method-move'
     },
     {
       value: Methods.copy,
       label: 'COPY',
-      classes: 'route-badge-copy-text'
+      classes: 'color-method-copy'
     },
     {
       value: Methods.mkcol,
       label: 'MKCOL',
-      classes: 'route-badge-mkcol-text'
+      classes: 'color-method-mkcol'
     },
     {
       value: Methods.lock,
       label: 'LOCK',
-      classes: 'route-badge-lock-text'
+      classes: 'color-method-lock'
     },
     {
       value: Methods.unlock,
       label: 'UNLOCK',
-      classes: 'route-badge-unlock-text'
+      classes: 'color-method-unlock'
     }
   ];
   public responseModes: ToggleItems = [

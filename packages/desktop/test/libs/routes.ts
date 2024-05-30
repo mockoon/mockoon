@@ -1,10 +1,9 @@
 import { BodyTypes, LogicalOperators, ResponseRule } from '@mockoon/commons';
 import { TabsNameType } from '../../src/renderer/app/models/store.model';
-import contextMenu, {
-  ContextMenuFolderActions,
-  ContextMenuRouteActions
-} from '../libs/context-menu';
-import utils from '../libs/utils';
+import utils, {
+  DropdownMenuFolderActions,
+  DropdownMenuRouteActions
+} from '../libs/utils';
 
 export enum RoutesMenuActions {
   OPEN_TEMPLATES = 1,
@@ -288,18 +287,18 @@ class Routes {
   }
 
   public async remove(index: number) {
-    await contextMenu.clickAndConfirm(
-      'routes',
-      index,
-      ContextMenuRouteActions.DELETE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuRouteActions.DELETE,
+      true
     );
   }
 
   public async removeFolder(index: number) {
-    await contextMenu.clickAndConfirm(
-      'routes',
-      index,
-      ContextMenuFolderActions.DELETE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuFolderActions.DELETE,
+      true
     );
   }
 
@@ -381,10 +380,9 @@ class Routes {
   }
 
   public async toggleDisable(routeIndex: number) {
-    await contextMenu.click(
-      'routes',
-      routeIndex,
-      ContextMenuRouteActions.TOGGLE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${routeIndex}) .nav-link`,
+      DropdownMenuRouteActions.TOGGLE
     );
   }
 

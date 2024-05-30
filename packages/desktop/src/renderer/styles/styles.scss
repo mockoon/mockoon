@@ -65,6 +65,20 @@ input,
   }
 }
 
+.hover-parent {
+  *.hover-fade {
+    transition: opacity 100ms;
+    opacity: 0.2;
+  }
+
+  &.active,
+  &:hover {
+    *.hover-fade {
+      opacity: 1;
+    }
+  }
+}
+
 .main-content {
   background-color: darken($gray-900, 2%);
 }
@@ -77,11 +91,6 @@ input,
 // avoid list style when dragging (item is created outside of a .nav)
 .nav-item {
   list-style: none;
-}
-
-.nav-link-subtitle {
-  color: $gray-500;
-  font-size: $small-font-size;
 }
 
 .scroll-content {
@@ -105,8 +114,8 @@ input,
   cursor: text !important;
 }
 
-// route badges (methods)
-$route-badges: ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
+// route method colors
+$method-colors: ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
   ('get', lighten($blue, 10%)), ('put', lighten($orange, 10%)),
   ('post', lighten($green, 10%)), ('delete', lighten($red, 17%)),
   ('head', lighten($purple, 25%)), ('patch', $yellow),
@@ -116,27 +125,19 @@ $route-badges: ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
   ('copy', lighten($custom-gray, 45%)), ('move', lighten($custom-gray, 45%)),
   ('lock', lighten($custom-gray, 45%)), ('unlock', lighten($custom-gray, 45%)),
   ('mkcol', lighten($custom-gray, 45%));
-@each $method in $route-badges {
-  .route-badge-#{nth($method, 1)} {
-    background-color: #{nth($method, 2)};
-    color: darken($gray-900, 10%);
-  }
-  .route-badge-#{nth($method, 1)}-text {
+@each $method in $method-colors {
+  .color-method-#{nth($method, 1)} {
     color: #{nth($method, 2)};
   }
 }
 
-// response badges (status codes)
-$response-badges: ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
-  ('5xx', lighten($red, 17%)), ('3xx', lighten($purple, 25%)),
-  ('1xx', lighten($custom-gray, 45%));
-@each $status in $response-badges {
-  .response-badge-#{nth($status, 1)} {
-    background-color: #{nth($status, 2)};
-    color: darken($gray-900, 10%);
-  }
-  .response-badge-#{nth($status, 1)}-text {
-    color: #{nth($status, 2)};
+// status code colors
+$status-code-colors: ('4xx', lighten($orange, 10%)),
+  ('2xx', lighten($green, 10%)), ('5xx', lighten($red, 17%)),
+  ('3xx', lighten($purple, 25%)), ('1xx', lighten($custom-gray, 45%));
+@each $status-color in $status-code-colors {
+  .color-status-#{nth($status-color, 1)} {
+    color: #{nth($status-color, 2)};
   }
 }
 
