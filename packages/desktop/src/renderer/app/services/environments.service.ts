@@ -974,6 +974,21 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Enable and disable routes in a folder
+   */
+  public toggleFolder(folderId: string | 'root') {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const selectedFolder = activeEnvironment.folders.find(
+      (folder) => folder.uuid === folderId
+    );
+    for (const child of selectedFolder.children) {
+      if (child.type === 'route') {
+        this.toggleRoute(child.uuid);
+      }
+    }
+  }
+
+  /**
    * Update a folder and save it in the store
    */
   public updateFolder(folderUuid: string, folderProperties: Partial<Folder>) {

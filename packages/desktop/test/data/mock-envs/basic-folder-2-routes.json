@@ -1,0 +1,124 @@
+{
+  "uuid": "c8cdc030-344f-452f-aec4-56ded95b440c",
+  "lastMigration": 32,
+  "name": "Basic folder 2 routes",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3003,
+  "hostname": "",
+  "folders": [
+    {
+      "uuid": "1a84ec8b-0179-437c-954d-1fe0ca5e08fc",
+      "name": "New folder",
+      "children": [
+        {
+          "type": "route",
+          "uuid": "8745c4cf-88bd-4960-8353-858ae80623a5"
+        },
+        {
+          "type": "route",
+          "uuid": "7cad788c-433f-404e-bd0f-ca0bef288492"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "uuid": "8745c4cf-88bd-4960-8353-858ae80623a5",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "test1",
+      "responses": [
+        {
+          "uuid": "6e9b4207-1aa4-4103-a051-9f50bb9a5b45",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "7cad788c-433f-404e-bd0f-ca0bef288492",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "test2",
+      "responses": [
+        {
+          "uuid": "637e0e82-682a-4735-8f82-384d340a33a4",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "folder",
+      "uuid": "1a84ec8b-0179-437c-954d-1fe0ca5e08fc"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
