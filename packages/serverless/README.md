@@ -142,16 +142,16 @@ After deploying to Netlify, any request starting with `/api/*` (e.g. `https://AP
 
 The `MockoonServerless` class accepts an optional `options` object as a second parameter. The following options are available:
 
-| Option name           | Type       | Default value | Description                                                                                                                                                  |
-| --------------------- | ---------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `logTransaction`      | `boolean`  | `false`       | [Enable full transaction logging](#transaction-logging) (see below).                                                                                         |
-| `disabledRoutes`      | `string[]` | `[]`          | Disable route(s) by UUID(s) or keyword(s) in route path (see [below](#fakerjs-options)).                                                                     |
-| `fakerOptions.locale` | `string`   | `[]`          | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)                                                                                    |
-| `fakerOptions.seed`   | `number`   | `[]`          | Number for the Faker.js seed (e.g. 1234)                                                                                                                     |
-| `envVarsPrefix`       | `string`   | `MOCKOON_`    | [Environment variables prefix](https://mockoon.com/docs/latest/variables/environment-variables/). Pass an empty string to disable it.                        |
-| `enableAdminApi`      | `boolean`  | `true`        | Enable (default) or disable the [Admin API](https://mockoon.com/docs/latest/admin-api/overview/).                                                            |
-| `disableTls`          | `boolean`  | `false`       | Disable TLS. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/). |
-| `maxTransactionLogs`  | `number`   | `100`         | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100).                                                         |
+| Option name           | Type       | Default value | Description                                                                                                                                                            |
+| --------------------- | ---------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `logTransaction`      | `boolean`  | `false`       | [Enable full transaction logging](#transaction-logging) (see below).                                                                                                   |
+| `disabledRoutes`      | `string[]` | `[]`          | Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name (see [below](#disabling-routes)). |
+| `fakerOptions.locale` | `string`   | `[]`          | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see [below](#fakerjs-options).)                                                                          |
+| `fakerOptions.seed`   | `number`   | `[]`          | Number for the Faker.js seed (e.g. 1234)                                                                                                                               |
+| `envVarsPrefix`       | `string`   | `MOCKOON_`    | [Environment variables prefix](https://mockoon.com/docs/latest/variables/environment-variables/). Pass an empty string to disable it.                                  |
+| `enableAdminApi`      | `boolean`  | `true`        | Enable (default) or disable the [Admin API](https://mockoon.com/docs/latest/admin-api/overview/).                                                                      |
+| `disableTls`          | `boolean`  | `false`       | Disable TLS. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).           |
+| `maxTransactionLogs`  | `number`   | `100`         | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100).                                                                   |
 
 Example:
 
@@ -241,7 +241,11 @@ The `transaction` model can be found [here](https://github.com/mockoon/mockoon/b
 
 ## Disabling routes
 
-When using the `disabledRoutes` option, you can disable routes by UUID(s) or keyword(s) in route path. This is the counterpart of the "Toggle route" feature in the desktop application (right-click on a route -> "Toggle route").
+You can disable routes at runtime by providing their UUIDs or a keyword present in the route's path (do not include a leading slash). You can also disable all the routes present in a folder (including subfolders) by adding a keyword present in a folder name.
+
+This is the counterpart of the "Toggle route" feature in the desktop application (right-click on a route -> "Toggle route").
+
+For example, to disable all routes in a folder named `folder1`, and all routes having "users" in their paths, you can provide the following array `['folder1', 'users']`.
 
 ## Serverless package limitations
 

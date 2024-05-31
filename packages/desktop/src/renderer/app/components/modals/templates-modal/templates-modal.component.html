@@ -200,7 +200,7 @@
             <div [ngClass]="{ 'opacity-25': !data.lastGeneratedEndpoint }">
               <div class="d-flex align-items-center mb-2">
                 <span
-                  class="badge badge-default route-badge-{{
+                  class="color-method-{{
                     !data.lastGeneratedEndpoint?.method
                       ? 'all'
                       : data.lastGeneratedEndpoint?.method
@@ -276,7 +276,7 @@
               <div [ngClass]="{ 'opacity-25': !data.demoEndpoint }">
                 <div class="d-flex align-items-center mb-2">
                   <span
-                    class="badge badge-default route-badge-{{
+                    class="color-method-{{
                       !data.demoEndpoint?.method
                         ? 'all'
                         : data.demoEndpoint?.method

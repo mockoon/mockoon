@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 import callbacks from '../libs/callbacks';
-import contextMenu, { ContextMenuCallbackActions } from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
@@ -12,7 +11,7 @@ import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import settings from '../libs/settings';
-import utils from '../libs/utils';
+import utils, { DropdownMenuCallbackActions } from '../libs/utils';
 
 const env1FilePath = './tmp/storage/callbacks.json';
 
@@ -30,7 +29,7 @@ describe('Callbacks navigation and deletion', () => {
     await navigation.assertHeaderValue('ENV_CALLBACKS', 'Callbacks 3');
   });
 
-  it('should delete the single callback and verify the header count and message', async () => {
+  it('should delete the last callback and verify the header count and message', async () => {
     await callbacks.remove(3);
     await callbacks.assertCount(2);
     await navigation.assertHeaderValue('ENV_CALLBACKS', 'Callbacks 2');
@@ -179,7 +178,10 @@ describe('Callback duplication', () => {
 
 describe('Callback duplication to another envionment', () => {
   it('assert the context menu entry is disabled when there is only one env', async () => {
-    await contextMenu.assertEntryDisabled('callbacks', 1, 2);
+    await utils.dropdownMenuAssertDisabled(
+      '.callbacks-menu .nav-item:nth-child(1) .nav-link',
+      DropdownMenuCallbackActions.DUPLICATE_TO_ENV
+    );
   });
 
   it("should open duplication modal and verify selected callbacks's information on modal", async () => {
@@ -279,10 +281,9 @@ describe('Callback filter', () => {
     await browser.pause(100);
     await callbacks.assertCount(1);
 
-    await contextMenu.click(
-      'callbacks',
-      1,
-      ContextMenuCallbackActions.DUPLICATE_TO_ENV
+    await utils.dropdownMenuClick(
+      `.callbacks-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuCallbackActions.DUPLICATE_TO_ENV
     );
     await $(
       '.modal-content .modal-body .list-group .list-group-item:first-child'

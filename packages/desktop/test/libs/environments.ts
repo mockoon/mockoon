@@ -1,9 +1,6 @@
 import { resolve } from 'path';
-import contextMenu, {
-  ContextMenuEnvironmentActions
-} from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
-import utils from '../libs/utils';
+import utils, { DropdownMenuEnvironmentActions } from '../libs/utils';
 
 class Environments {
   private activeMenuEntrySelector =
@@ -88,19 +85,18 @@ class Environments {
   }
 
   public async close(index: number): Promise<void> {
-    await contextMenu.click(
-      'environments',
-      index,
-      ContextMenuEnvironmentActions.CLOSE
+    await utils.dropdownMenuClick(
+      `.environments-menu div:first-of-type .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuEnvironmentActions.CLOSE
     );
+
     await browser.pause(500);
   }
 
   public async duplicate(index: number) {
-    await contextMenu.click(
-      'environments',
-      index,
-      ContextMenuEnvironmentActions.DUPLICATE
+    await utils.dropdownMenuClick(
+      `.environments-menu div:first-of-type .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuEnvironmentActions.DUPLICATE
     );
   }
 
@@ -155,23 +151,23 @@ class Environments {
   }
 
   public async assertMenuProxyIconVisible(reverse = false): Promise<void> {
-    expect(
+    const condition = expect(
       await $(
-        `${this.activeMenuEntrySelector} app-svg[icon="security"]${
-          reverse ? '.invisible' : '.visible'
-        }`
+        `${this.activeMenuEntrySelector} app-svg[icon="security"]`
       ).isExisting()
-    ).toEqual(true);
+    );
+
+    condition.toEqual(reverse ? false : true);
   }
 
   public async assertMenuRecordingIconVisible(reverse = false): Promise<void> {
-    expect(
+    const condition = expect(
       await $(
-        `${this.activeMenuEntrySelector} app-svg[icon="record"]${
-          reverse ? '.invisible' : '.visible'
-        }`
+        `${this.activeMenuEntrySelector} app-svg[icon="record"]`
       ).isExisting()
-    ).toEqual(true);
+    );
+
+    condition.toEqual(reverse ? false : true);
   }
 
   public async assertNeedsRestart() {

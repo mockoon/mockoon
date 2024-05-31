@@ -1,8 +1,7 @@
-import contextMenu, { ContextMenuRouteActions } from '../libs/context-menu';
 import environments from '../libs/environments';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
-import utils from '../libs/utils';
+import utils, { DropdownMenuRouteActions } from '../libs/utils';
 
 describe('Create and delete routes', () => {
   it('should open the environment', async () => {
@@ -19,31 +18,32 @@ describe('Create and delete routes', () => {
   });
 
   it('should remove 3 routes over 4', async () => {
-    await contextMenu.clickAndConfirm(
-      'routes',
-      1,
-      ContextMenuRouteActions.DELETE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuRouteActions.DELETE,
+      true
     );
-    await contextMenu.clickAndConfirm(
-      'routes',
-      1,
-      ContextMenuRouteActions.DELETE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuRouteActions.DELETE,
+      true
     );
-    await contextMenu.clickAndConfirm(
-      'routes',
-      1,
-      ContextMenuRouteActions.DELETE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuRouteActions.DELETE,
+      true
     );
 
     await routes.assertCount(1);
   });
 
   it('should display a message when no route is present', async () => {
-    await contextMenu.clickAndConfirm(
-      'routes',
-      1,
-      ContextMenuRouteActions.DELETE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuRouteActions.DELETE,
+      true
     );
+
     await routes.assertCount(0);
     await navigation.assertHeaderValue('ENV_ROUTES', 'Routes');
 

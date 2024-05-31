@@ -1,8 +1,5 @@
 import { resolve } from 'path';
 import clipboard from '../libs/clipboard';
-import contextMenu, {
-  ContextMenuDatabucketActions
-} from '../libs/context-menu';
 import databuckets from '../libs/databuckets';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
@@ -12,7 +9,7 @@ import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import settings from '../libs/settings';
-import utils from '../libs/utils';
+import utils, { DropdownMenuDatabucketActions } from '../libs/utils';
 
 describe('Databuckets navigation and deletion', () => {
   it('should open and start the environment', async () => {
@@ -97,7 +94,10 @@ describe('Databucket duplication', () => {
 
 describe('Databucket duplication to another envionment', () => {
   it('assert the context menu entry is disabled when there is only one env', async () => {
-    await contextMenu.assertEntryDisabled('databuckets', 1, 2);
+    await utils.dropdownMenuAssertDisabled(
+      '.databuckets-menu .nav-item:nth-child(1) .nav-link',
+      DropdownMenuDatabucketActions.DUPLICATE_TO_ENV
+    );
   });
 
   it("should open duplication modal and verify selected databucket's information on modal", async () => {
@@ -198,11 +198,11 @@ describe('Databucket filter', () => {
     await browser.pause(100);
     await databuckets.assertCount(1);
 
-    await contextMenu.click(
-      'databuckets',
-      1,
-      ContextMenuDatabucketActions.DUPLICATE_TO_ENV
+    await utils.dropdownMenuClick(
+      `.databuckets-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuDatabucketActions.DUPLICATE_TO_ENV
     );
+
     await $(
       '.modal-content .modal-body .list-group .list-group-item:first-child'
     ).click();

@@ -23,8 +23,8 @@ import { browserLocalPersistence, connectAuthEmulator } from 'firebase/auth';
 import { MARKED_OPTIONS, MarkdownModule } from 'ngx-markdown';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { BannerComponent } from 'src/renderer/app/components/banner/banner.component';
-import { ContextMenuComponent } from 'src/renderer/app/components/context-menu/context-menu.component';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { EnvironmentCallbacksComponent } from 'src/renderer/app/components/environment-callbacks/environment-callbacks.component';
@@ -86,7 +86,6 @@ import { AppComponent } from './app.component';
     DraggableDirective,
     DropzoneDirective,
     ScrollWhenActiveDirective,
-    ContextMenuComponent,
     CommandPaletteModalComponent,
     AuthModalComponent,
     WelcomeModalComponent,
@@ -118,7 +117,8 @@ import { AppComponent } from './app.component';
     SvgComponent,
     EditableElementComponent,
     TourComponent,
-    FilterComponent
+    FilterComponent,
+    DropdownMenuComponent
   ],
   imports: [
     BrowserAnimationsModule,

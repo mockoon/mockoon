@@ -60,7 +60,7 @@ export default class Start extends Command {
     'disable-routes': Flags.string({
       char: 'e',
       description:
-        "Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash)",
+        "Disable route(s) by UUID or keyword present in the route's path or keyword present in a folder name (do not include a leading slash)",
       multiple: true,
       default: []
     }),
