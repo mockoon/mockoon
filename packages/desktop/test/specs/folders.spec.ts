@@ -114,8 +114,7 @@ describe('Folders', () => {
   it('should not be able to delete non empty folder', async () => {
     await utils.dropdownMenuAssertDisabled(
       `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
-      DropdownMenuFolderActions.DELETE,
-      true
+      DropdownMenuFolderActions.DELETE
     );
   });
 
