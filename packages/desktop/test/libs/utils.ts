@@ -187,9 +187,7 @@ class Utils {
       | DropdownMenuLogsActions,
     confirm = false
   ): Promise<void> {
-    if (open) {
-      await $(`${parentSelector} .dropdown-toggle`).click();
-    }
+    await $(`${parentSelector} .dropdown-toggle`).click();
 
     const itemSelector = `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`;
     await $(itemSelector).click();
