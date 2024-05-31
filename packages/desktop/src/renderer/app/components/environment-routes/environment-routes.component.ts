@@ -38,6 +38,7 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { StatusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
@@ -60,6 +61,8 @@ import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
+
+type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
 
 @Component({
   selector: 'app-environment-routes',
@@ -215,12 +218,52 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     RulesDisablingResponseModes;
   public rulesNotUsingDefaultResponse: ResponseMode[] =
     RulesNotUsingDefaultResponse;
-
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;
   public focusableInputs = FocusableInputs;
   public Infinity = Infinity;
   public texts = Texts;
+  public fileDropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Browse',
+      icon: 'find_in_page',
+      twoSteps: false,
+      action: () => {
+        this.dialogsService
+          .showOpenDialog('Choose a file', null, false)
+          .pipe(
+            tap((filePaths) => {
+              if (filePaths[0]) {
+                this.activeRouteResponseForm
+                  .get('filePath')
+                  .setValue(filePaths[0]);
+              }
+            })
+          )
+          .subscribe();
+      }
+    },
+    {
+      label: 'Show file in explorer/finder',
+      icon: 'folder',
+      twoSteps: false,
+      action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
+        const environmentPath = this.store.getEnvironmentPath(environmentUuid);
+
+        MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
+      }
+    },
+    {
+      label: 'Open file in editor',
+      icon: 'file_open',
+      twoSteps: false,
+      action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
+        const environmentPath = this.store.getEnvironmentPath(environmentUuid);
+
+        MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+      }
+    }
+  ];
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -429,44 +472,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     }
 
     return false;
-  }
-
-  /**
-   * Open file browsing dialog
-   */
-  public browseFiles() {
-    this.dialogsService
-      .showOpenDialog('Choose a file', null, false)
-      .pipe(
-        tap((filePaths) => {
-          if (filePaths[0]) {
-            this.activeRouteResponseForm.get('filePath').setValue(filePaths[0]);
-          }
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * Open file in Default Editor
-   */
-  public openFile(filePath: string, activeEnvironmentUuid: string) {
-    const environmentPath = this.store.getEnvironmentPath(
-      activeEnvironmentUuid
-    );
-
-    MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
-  }
-
-  /**
-   * Show file in Finder / Explorer
-   */
-  public showFile(filePath: string, activeEnvironmentUuid: string) {
-    const environmentPath = this.store.getEnvironmentPath(
-      activeEnvironmentUuid
-    );
-
-    MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
   }
 
   /**

@@ -165,9 +165,11 @@ You can access environment variables in your routes' responses by using the [`{{
 
 You can customize the prefix with the `--env-vars-prefix` flag. For example, if you set `--env-vars-prefix CUSTOM_PREFIX_`, you will be able to access the environment variable `CUSTOM_PREFIX_MY_VARIABLE` in your routes' responses. To disable the prefix, set it to an empty string: `--env-vars-prefix ''` or `--env-vars-prefix=`.
 
-#### Disable routes
+#### Disabling routes
 
 You can disable routes at runtime by providing their UUIDs or a keyword present in the route's path (do not include a leading slash). You can also disable all the routes present in a folder (including subfolders) by adding a keyword present in a folder name.
+
+This is the counterpart of the "Toggle route" feature in the desktop application (right-click on a route -> "Toggle route").
 
 For example, to disable all routes in a folder named `folder1`, and all routes having "users" in their paths, you can use `--disable-routes folder1 users`.
 

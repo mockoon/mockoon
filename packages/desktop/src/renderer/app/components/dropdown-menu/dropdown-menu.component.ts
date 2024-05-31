@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 
 /**
  * Add a dropdown menu, with a three dots vertical icon.
@@ -40,6 +41,9 @@ export class DropdownMenuComponent {
 
   @Input({ required: true })
   public idPrefix: string;
+
+  @Input()
+  public icon: SvgComponent['icon'] = 'more_vert';
 
   @Input()
   public iconFaded = false;
