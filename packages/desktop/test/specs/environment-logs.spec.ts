@@ -316,12 +316,14 @@ describe('Environment logs', () => {
     it('should switch to second route response and verify that "view last body sent" link is displayed', async () => {
       await routes.openRouteResponseMenu();
       await routes.selectRouteResponse(2);
+      await browser.pause(100);
       await environmentsLogs.assertViewBodyLogButtonPresence();
     });
 
     it('should switch to third route response and verify that "view last body sent" link is not displayed', async () => {
       await routes.openRouteResponseMenu();
       await routes.selectRouteResponse(3);
+      await browser.pause(100);
       await environmentsLogs.assertViewBodyLogButtonPresence(true);
     });
 
