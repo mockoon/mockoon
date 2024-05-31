@@ -79,6 +79,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   // templating global variables
   private globalVariables: Record<string, any> = {};
   private options: ServerOptions = {
+    disabledRoutes: [],
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
     disableTls: false,
@@ -454,7 +455,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const routes = routesFromFolder(
       this.environment.rootChildren,
       this.environment.folders,
-      this.environment.routes
+      this.environment.routes,
+      this.options.disabledRoutes
     );
 
     routes.forEach((declaredRoute: Route) => {
@@ -463,34 +465,26 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         declaredRoute.endpoint
       );
 
-      if (
-        !this.options.disabledRoutes?.some(
-          (disabledRoute) =>
-            declaredRoute.uuid === disabledRoute ||
-            routePath.includes(disabledRoute)
-        )
-      ) {
-        try {
-          this.requestNumbers[declaredRoute.uuid] = 1;
+      try {
+        this.requestNumbers[declaredRoute.uuid] = 1;
 
-          if (declaredRoute.type === RouteType.CRUD) {
-            this.createCRUDRoute(server, declaredRoute, routePath);
-          } else {
-            this.createRESTRoute(server, declaredRoute, routePath);
-          }
-        } catch (error: any) {
-          let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
-
-          // if invalid regex defined
-          if (error.message.indexOf('Invalid regular expression') > -1) {
-            errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR_REGEX;
-          }
-
-          this.emit('error', errorCode, error, {
-            routePath: declaredRoute.endpoint,
-            routeUUID: declaredRoute.uuid
-          });
+        if (declaredRoute.type === RouteType.CRUD) {
+          this.createCRUDRoute(server, declaredRoute, routePath);
+        } else {
+          this.createRESTRoute(server, declaredRoute, routePath);
         }
+      } catch (error: any) {
+        let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
+
+        // if invalid regex defined
+        if (error.message.indexOf('Invalid regular expression') > -1) {
+          errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR_REGEX;
+        }
+
+        this.emit('error', errorCode, error, {
+          routePath: declaredRoute.endpoint,
+          routeUUID: declaredRoute.uuid
+        });
       }
     });
   }

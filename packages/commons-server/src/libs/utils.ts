@@ -287,22 +287,29 @@ export const convertPathToArray = (str: string): string | string[] => {
 /**
  * List routes in the order they appear in a folder children array (can be called recursively)
  *
+ * If exclude is provided, it will exclude the routes with the provided UUIDs, or the routes in the provided folders by keyword in the folder name
+ *
  * @param folderChildren
  * @param allFolders
  * @param allRoutes
+ * @param exclude
  * @returns
  */
 export const routesFromFolder = (
   folderChildren: FolderChild[],
   allFolders: Folder[],
-  allRoutes: Route[]
+  allRoutes: Route[],
+  exclude: string[] = []
 ): Route[] => {
   const routesList: Route[] = [];
 
   folderChildren.forEach((folderChild) => {
     if (folderChild.type === 'route') {
       const foundRoute = allRoutes.find(
-        (route) => route.uuid === folderChild.uuid
+        (route) =>
+          route.uuid === folderChild.uuid &&
+          !exclude.includes(route.uuid) &&
+          !exclude.includes(route.endpoint)
       );
 
       if (foundRoute) {
@@ -310,12 +317,18 @@ export const routesFromFolder = (
       }
     } else {
       const subFolder = allFolders.find(
-        (folder) => folder.uuid === folderChild.uuid
+        (folder) =>
+          folder.uuid === folderChild.uuid && !exclude.includes(folder.name)
       );
 
       if (subFolder) {
         routesList.push(
-          ...routesFromFolder(subFolder.children, allFolders, allRoutes)
+          ...routesFromFolder(
+            subFolder.children,
+            allFolders,
+            allRoutes,
+            exclude
+          )
         );
       }
     }

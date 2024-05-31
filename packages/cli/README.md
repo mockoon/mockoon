@@ -132,7 +132,7 @@ OPTIONS
   -s, --faker-seed            Number for the Faker.js seed (e.g. 1234)
   -t, --log-transaction       Log the full HTTP transaction (request and response)
   -X, --disable-log-to-file   Disable logging to file
-  -e, --disable-routes        Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash)
+  -e, --disable-routes        Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name
   -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
   -x, --env-vars-prefix       Prefix for environment variables (default: 'MOCKOON_')
       --disable-admin-api     Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
@@ -145,7 +145,7 @@ EXAMPLES
   $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1
   $ mockoon-cli start --data https://file-server/data.json
   $ mockoon-cli start --data ~/data.json --log-transaction
-  $ mockoon-cli start --data ~/data.json --disable-routes route1 route2
+  $ mockoon-cli start --data ~/data.json --disable-routes route1 route2 folder1
 ```
 
 #### Admin API
@@ -164,6 +164,12 @@ Each running mock API has an admin API enabled by default and available at `/moc
 You can access environment variables in your routes' responses by using the [`{{getEnvVar 'VARIABLE_NAME'}}` templating helper](https://mockoon.com/docs/latest/variables/environment-variables/). By default, only the environment variables prefixed with `MOCKOON_` are available, for example, `MOCKOON_MY_VARIABLE`.
 
 You can customize the prefix with the `--env-vars-prefix` flag. For example, if you set `--env-vars-prefix CUSTOM_PREFIX_`, you will be able to access the environment variable `CUSTOM_PREFIX_MY_VARIABLE` in your routes' responses. To disable the prefix, set it to an empty string: `--env-vars-prefix ''` or `--env-vars-prefix=`.
+
+#### Disable routes
+
+You can disable routes at runtime by providing their UUIDs or a keyword present in the route's path (do not include a leading slash). You can also disable all the routes present in a folder (including subfolders) by adding a keyword present in a folder name.
+
+For example, to disable all routes in a folder named `folder1`, and all routes having "users" in their paths, you can use `--disable-routes folder1 users`.
 
 ### Dockerize command
 
