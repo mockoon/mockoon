@@ -41,10 +41,14 @@ export class ApiService extends Logger {
       this.zone.run(async () => {
         switch (action) {
           case 'NEW_ENVIRONMENT':
-            this.environmentsService.addEnvironment().subscribe();
+            this.environmentsService
+              .addEnvironment({ setActive: true })
+              .subscribe();
             break;
           case 'NEW_CLOUD_ENVIRONMENT':
-            this.environmentsService.addCloudEnvironment().subscribe();
+            this.environmentsService
+              .addCloudEnvironment(null, true)
+              .subscribe();
             break;
           case 'NEW_ENVIRONMENT_CLIPBOARD':
             this.environmentsService.newEnvironmentFromClipboard().subscribe();

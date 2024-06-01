@@ -186,17 +186,20 @@ export class EnvironmentsService extends Logger {
 
           const defaultEnvironment = BuildDemoEnvironment();
 
-          return of([
-            {
-              environment: defaultEnvironment,
-              environmentDescriptor: {
-                uuid: defaultEnvironment.uuid,
-                path: demoFilePath,
-                cloud: false,
-                lastServerHash: null
+          return of({
+            settings,
+            environmentsData: [
+              {
+                environment: defaultEnvironment,
+                environmentDescriptor: {
+                  uuid: defaultEnvironment.uuid,
+                  path: demoFilePath,
+                  cloud: false,
+                  lastServerHash: null
+                } as EnvironmentDescriptor
               }
-            }
-          ]);
+            ]
+          });
         }
 
         return forkJoin(
@@ -214,17 +217,18 @@ export class EnvironmentsService extends Logger {
                 )
               )
           )
-        );
+        ).pipe(map((environmentsData) => ({ settings, environmentsData })));
       }),
       // filter empty environments (file not found) and environments migrated with more recent app version
-      map((environmentsData) =>
-        environmentsData.filter(
+      map(({ settings, environmentsData }) => ({
+        settings,
+        environmentsData: environmentsData.filter(
           (environmentData) =>
             !!environmentData &&
             environmentData.environment.lastMigration <= HighestMigrationId
         )
-      ),
-      tap((environmentsData) => {
+      })),
+      tap(({ settings, environmentsData }) => {
         environmentsData.forEach((environmentData) => {
           environmentData.environment =
             this.dataService.migrateAndValidateEnvironment(
@@ -232,13 +236,18 @@ export class EnvironmentsService extends Logger {
             );
 
           this.store.update(
-            addEnvironmentAction(
-              environmentData.environment,
-              // keep the first environment as active during load
-              { activeEnvironment: environmentsData[0].environment }
-            )
+            addEnvironmentAction(environmentData.environment, {
+              setActive: false
+            })
           );
         });
+
+        this.store.update(
+          setActiveEnvironmentAction(
+            settings.activeEnvironmentUuid ??
+              environmentsData[0].environment.uuid
+          )
+        );
 
         this.store.update(
           updateSettingsAction({
@@ -249,8 +258,6 @@ export class EnvironmentsService extends Logger {
             }))
           })
         );
-
-        const settings = this.store.get('settings');
 
         if (settings.startEnvironmentsOnLoad) {
           this.toggleAllEnvironments();
@@ -465,6 +472,7 @@ export class EnvironmentsService extends Logger {
       insertAfterIndex?: number;
       promptSave?: boolean;
       cloud?: boolean;
+      setActive?: boolean;
     },
     storeUpdateOptions = { force: false, emit: true }
   ) {
@@ -473,7 +481,8 @@ export class EnvironmentsService extends Logger {
         environment: null,
         insertAfterIndex: null,
         promptSave: true,
-        cloud: false
+        cloud: false,
+        setActive: false
       },
       ...options
     };
@@ -548,6 +557,7 @@ export class EnvironmentsService extends Logger {
             filePath,
             insertAfterIndex: options.insertAfterIndex,
             cloud: options.cloud,
+            setActive: options.setActive,
             hash
           }),
           storeUpdateOptions.force,
@@ -573,7 +583,10 @@ export class EnvironmentsService extends Logger {
         const migratedEnvironment =
           this.dataService.migrateAndValidateEnvironment(environment);
 
-        return this.addEnvironment({ environment: migratedEnvironment });
+        return this.addEnvironment({
+          environment: migratedEnvironment,
+          setActive: true
+        });
       }),
       catchError((error) => {
         this.logMessage('error', 'NEW_ENVIRONMENT_CLIPBOARD_ERROR', {
@@ -641,7 +654,8 @@ export class EnvironmentsService extends Logger {
 
       return this.addEnvironment({
         environment: newEnvironment,
-        insertAfterIndex: environmentToDuplicateindex
+        insertAfterIndex: environmentToDuplicateindex,
+        setActive: true
       });
     }
 
@@ -657,6 +671,7 @@ export class EnvironmentsService extends Logger {
    */
   public addCloudEnvironment(
     environment?: Environment,
+    setActive = false,
     storeUpdateOptions = { force: false, emit: true }
   ) {
     const user = this.store.get('user');
@@ -696,7 +711,8 @@ export class EnvironmentsService extends Logger {
       {
         environment,
         promptSave: false,
-        cloud: true
+        cloud: true,
+        setActive
       },
       storeUpdateOptions
     );
@@ -743,7 +759,9 @@ export class EnvironmentsService extends Logger {
             }),
             switchMap((environment) => this.verifyData(environment)),
             map((environment) => this.validateEnvironment(environment)),
-            switchMap((environment) => this.addCloudEnvironment(environment))
+            switchMap((environment) =>
+              this.addCloudEnvironment(environment, true)
+            )
           )
         )
       );
@@ -768,7 +786,7 @@ export class EnvironmentsService extends Logger {
 
     newEnvironment = this.dataService.deduplicateUUIDs(newEnvironment, true);
 
-    return this.addCloudEnvironment(newEnvironment);
+    return this.addCloudEnvironment(newEnvironment, true);
   }
 
   public environmentIsCloud(environmentUuid: string) {
@@ -903,7 +921,17 @@ export class EnvironmentsService extends Logger {
                 this.storageService.loadEnvironment(filePath).pipe(
                   switchMap((environment) => this.verifyData(environment)),
                   tap((environment) => {
-                    this.validateAndAddToStore(environment, filePath);
+                    const validatedEnvironment =
+                      this.dataService.migrateAndValidateEnvironment(
+                        environment
+                      );
+
+                    this.store.update(
+                      addEnvironmentAction(validatedEnvironment, {
+                        filePath,
+                        setActive: true
+                      })
+                    );
                   })
                 )
               );
@@ -1180,6 +1208,7 @@ export class EnvironmentsService extends Logger {
           return EMPTY;
         } else {
           return this.addEnvironment({
+            setActive: true,
             environment: {
               ...BuildEnvironment({
                 hasDefaultHeader: true,
@@ -2167,23 +2196,6 @@ export class EnvironmentsService extends Logger {
     }
 
     return of(environment);
-  }
-
-  /**
-   * Validate/migrate and add the environment to the store.
-   *
-   * @param environment
-   * @param filePath
-   */
-  private validateAndAddToStore(environment: Environment, filePath: string) {
-    const validatedEnvironment =
-      this.dataService.migrateAndValidateEnvironment(environment);
-
-    this.store.update(
-      addEnvironmentAction(validatedEnvironment, {
-        filePath
-      })
-    );
   }
 
   /**

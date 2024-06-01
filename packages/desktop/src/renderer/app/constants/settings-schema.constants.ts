@@ -31,7 +31,8 @@ export const SettingsDefault: Settings = {
     local: false,
     cloud: false
   },
-  envVarsPrefix: defaultEnvironmentVariablesPrefix
+  envVarsPrefix: defaultEnvironmentVariablesPrefix,
+  activeEnvironmentUuid: null
 };
 
 export const SettingsSchema = Joi.object<Settings, true>({
@@ -128,6 +129,11 @@ export const SettingsSchema = Joi.object<Settings, true>({
   envVarsPrefix: Joi.string()
     .allow('')
     .failover(SettingsDefault.envVarsPrefix)
+    .required(),
+  activeEnvironmentUuid: Joi.string()
+    .uuid()
+    .allow(null)
+    .failover(SettingsDefault.activeEnvironmentUuid)
     .required()
 })
   .failover(SettingsDefault)

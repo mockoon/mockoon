@@ -319,7 +319,7 @@ export const reorderCallbacksAction = (
  * @param environment - environment to add
  * @param options.filePath - update the filepath
  * @param options.insertIndex - insert at index, default to end of list
- * @param options.activeEnvironment - if provided, keep another environment active instead of the one being added
+ * @param options.setActive - if provided, set the new environment as active
  * @param options.cloud - indicates if the environment is added to the cloud
  * @param options.hash - hash of the environment file, if cloud is true
  */
@@ -328,7 +328,7 @@ export const addEnvironmentAction = (
   options?: {
     filePath?: string;
     insertAfterIndex?: number;
-    activeEnvironment?: Environment;
+    setActive?: boolean;
     cloud?: boolean;
     hash?: string;
   }
