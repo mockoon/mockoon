@@ -242,12 +242,16 @@ export class EnvironmentsService extends Logger {
           );
         });
 
-        this.store.update(
-          setActiveEnvironmentAction(
-            settings.activeEnvironmentUuid ??
-              environmentsData[0].environment.uuid
-          )
-        );
+        const activeEnvironmentUuid =
+          settings.activeEnvironmentUuid ??
+          environmentsData[0]?.environment.uuid;
+
+        if (
+          activeEnvironmentUuid &&
+          activeEnvironmentUuid !== settings.activeEnvironmentUuid
+        ) {
+          this.store.update(setActiveEnvironmentAction(activeEnvironmentUuid));
+        }
 
         this.store.update(
           updateSettingsAction({

@@ -128,7 +128,7 @@ You can also run a single test file with the following commands (from the monore
 
 All tests will also be run on each commit or pull request in the CI environment. You can perfectly rely on the CI to check if your changes are breaking the tests or not.
 
-> ℹ️ Note: Since update v7.0.0 where dependencies were update (especially Webdriverio and Electron 29), running the desktop test against an unpackaged version of the application using the `node_modules` binary (e.g. `node_modules/.bin/electron app=dist/app.js`) is not working anymore.
+> ℹ️ Note: Since update v7.0.0 where dependencies were updated (especially Webdriverio and Electron 29), running the desktop tests against an unpackaged version of the application using the `node_modules` binary (e.g. `node_modules/.bin/electron app=dist/app.js`) is not working anymore.
 
 ## Open a pull request
 
