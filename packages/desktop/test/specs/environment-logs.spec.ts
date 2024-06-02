@@ -298,6 +298,7 @@ describe('Environment logs', () => {
   describe('Verify "view last body sent" link behavior', () => {
     it('should reload and start the first environment', async () => {
       await browser.reloadSession();
+      await browser.pause(2000);
       await environments.start();
     });
 
