@@ -392,7 +392,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
    * Create a new environment. Append at the end of the list.
    */
   public addLocalEnvironment() {
-    this.environmentsService.addEnvironment().subscribe();
+    this.environmentsService.addEnvironment({ setActive: true }).subscribe();
   }
 
   /**
@@ -406,7 +406,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
    * Create a new cloud environment. Append at the end of the cloud list.
    */
   public addCloudEnvironment() {
-    this.environmentsService.addCloudEnvironment().subscribe();
+    this.environmentsService.addCloudEnvironment(null, true).subscribe();
   }
 
   public addCloudEnvironmentFromLocalFile() {

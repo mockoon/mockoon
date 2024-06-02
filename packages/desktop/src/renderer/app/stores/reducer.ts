@@ -170,6 +170,10 @@ export const environmentReducer = (
             databuckets: '',
             callbacks: '',
             logs: ''
+          },
+          settings: {
+            ...state.settings,
+            activeEnvironmentUuid: action.environmentUUID
           }
         };
         break;
@@ -419,9 +423,6 @@ export const environmentReducer = (
 
     case ActionTypes.ADD_ENVIRONMENT: {
       const newEnvironment: Environment = action.environment;
-      const activeEnvironment: Environment = action.activeEnvironment
-        ? action.activeEnvironment
-        : newEnvironment;
       const environments = [...state.environments];
 
       if (action.insertAfterIndex != null) {
@@ -457,24 +458,28 @@ export const environmentReducer = (
         }
       }
 
-      const {
-        routeUUID: activeRouteUUID,
-        routeResponseUUID: activeRouteResponseUUID
-      } = getFirstRouteAndResponseUUIDs(activeEnvironment);
+      const activeUuids: Partial<StoreType> = {};
+
+      if (action.setActive) {
+        const { routeUUID, routeResponseUUID } =
+          getFirstRouteAndResponseUUIDs(newEnvironment);
+
+        activeUuids.activeEnvironmentUUID = newEnvironment.uuid;
+        activeUuids.activeRouteUUID = routeUUID;
+        activeUuids.activeRouteResponseUUID = routeResponseUUID;
+        activeUuids.activeDatabucketUUID = newEnvironment.data.length
+          ? newEnvironment.data[0].uuid
+          : null;
+        activeUuids.activeCallbackUUID = newEnvironment.callbacks.length
+          ? newEnvironment.callbacks[0].uuid
+          : null;
+      }
 
       newState = {
         ...state,
-        activeEnvironmentUUID: activeEnvironment.uuid,
-        activeRouteUUID,
-        activeRouteResponseUUID,
+        ...activeUuids,
         activeTab: 'RESPONSE',
         activeView: 'ENV_ROUTES',
-        activeDatabucketUUID: activeEnvironment.data.length
-          ? activeEnvironment.data[0].uuid
-          : null,
-        activeCallbackUUID: activeEnvironment.callbacks.length
-          ? activeEnvironment.callbacks[0].uuid
-          : null,
         environments,
         environmentsStatus: {
           ...state.environmentsStatus,

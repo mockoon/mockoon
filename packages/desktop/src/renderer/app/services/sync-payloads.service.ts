@@ -351,7 +351,7 @@ export class SyncPayloadsService {
         this.environmentsService
           .addCloudEnvironment(
             syncAction.environment,
-
+            false,
             // do not emit, to avoid triggering a cloud sync again
             {
               force: true,

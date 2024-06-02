@@ -520,7 +520,9 @@ export class CommandPaletteService {
         label: 'Create a New Local Environment',
         shortcut$: this.ctrlOrCmd$(['N']),
         action: () => {
-          this.environmentsService.addEnvironment().subscribe();
+          this.environmentsService
+            .addEnvironment({ setActive: true })
+            .subscribe();
         },
         score: 1,
         enabled: true
