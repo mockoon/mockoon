@@ -246,10 +246,7 @@ export class EnvironmentsService extends Logger {
           settings.activeEnvironmentUuid ??
           environmentsData[0]?.environment.uuid;
 
-        if (
-          activeEnvironmentUuid &&
-          activeEnvironmentUuid !== settings.activeEnvironmentUuid
-        ) {
+        if (activeEnvironmentUuid) {
           this.store.update(setActiveEnvironmentAction(activeEnvironmentUuid));
         }
 
