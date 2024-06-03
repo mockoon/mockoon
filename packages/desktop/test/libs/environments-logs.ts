@@ -16,7 +16,7 @@ class EnvironmentsLogs {
 
   public getMetadataIcon(logIndex: number) {
     return $(
-      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link div div:first-of-type div:nth-of-type(3) .logs-metadata`
+      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link-subtitle .logs-metadata`
     );
   }
 

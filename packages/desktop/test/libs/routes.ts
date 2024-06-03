@@ -148,8 +148,12 @@ class Routes {
     return $('.modal-content #templates-generate-button');
   }
 
+  public get endpointGenerateBtn() {
+    return $('.modal-content #templates-endpoint-generate-button');
+  }
+
   public get templateGenerateOptions() {
-    return $('.modal-content #templates-generate-options');
+    return $('.modal-content #templates-generate-option');
   }
 
   public get templatePromptInput() {
@@ -160,7 +164,7 @@ class Routes {
     return $(this.activeMenuEntrySelector);
   }
 
-  public getTemplateTab(index: 1 | 2) {
+  public getTemplateTab(index: 1 | 2 | 3) {
     return $(`.modal-content .nav .nav-item:nth-child(${index}) .nav-link`);
   }
 
@@ -282,7 +286,7 @@ class Routes {
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(4)').click();
   }
 
-  public async selectTemplateTab(index: 1 | 2): Promise<void> {
+  public async selectTemplateTab(index: 1 | 2 | 3): Promise<void> {
     await this.getTemplateTab(index).click();
   }
 
@@ -344,6 +348,10 @@ class Routes {
 
   public async clickTemplateGenerate() {
     await this.templateGenerateBtn.click();
+  }
+
+  public async clickEndpointGenerate() {
+    await this.endpointGenerateBtn.click();
   }
 
   public async setPath(text: string) {

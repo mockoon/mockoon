@@ -17,7 +17,8 @@ import settings from '../libs/settings';
 import utils, {
   DropdownMenuEnvironmentActions,
   DropdownMenuFolderActions,
-  DropdownMenuLogsActions
+  DropdownMenuLogsActions,
+  DropdownMenuRouteActions
 } from '../libs/utils';
 
 /**
@@ -212,6 +213,28 @@ const documentationTopics: {
     enabled: true,
     folder: 'api-endpoints/routing',
     screenshots: [
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_ROUTES');
+          await utils.dropdownMenuOpen(
+            '.routes-menu .nav-item:nth-child(1) .nav-link'
+          );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
+        },
+        get screenshotTarget() {
+          return utils.dropdownMenuGetItemRef(DropdownMenuRouteActions.TOGGLE);
+        },
+        get highlightedTarget() {
+          return utils.dropdownMenuGetItemRef(DropdownMenuRouteActions.TOGGLE);
+        },
+        highlight: true,
+        highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
+        screenshotPosition: { top: 0, left: 0 },
+        screeenshotGaps: { right: 50, bottom: 50 },
+        fileName: 'route-menu-disable-route.png'
+      },
       {
         tasks: async () => {
           await navigation.switchView('ENV_ROUTES');
@@ -461,7 +484,7 @@ const documentationTopics: {
           return environmentsLogs.getMetadataIcon(1);
         },
         highlight: true,
-        highlightGaps: { left: 5, right: 5, bottom: 60, top: 5 },
+        highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
         screenshotPosition: { top: 0, right: 0 },
         screeenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-metadata.png'
@@ -477,6 +500,9 @@ const documentationTopics: {
           await utils.dropdownMenuOpen(
             '.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(2) .nav-link'
           );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
         },
         get screenshotTarget() {
           return environmentsLogs.container;
@@ -1567,7 +1593,7 @@ const documentationTopics: {
         highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: {},
         screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
-        fileName: 'ai-assistant-template-generate-options.png'
+        fileName: 'ai-assistant-template-generate-option.png'
       },
       {
         tasks: async () => {
@@ -1591,6 +1617,56 @@ const documentationTopics: {
           // account for openai api call
           await browser.pause(20000);
         },
+        get highlightedTarget() {
+          return $('.modal-footer .ms-auto button:last-of-type');
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'templates-generate-get-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.selectTemplateTab(3);
+        },
+        get highlightedTarget() {
+          return routes.getTemplateTab(3);
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'ai-assistant-generate-endpoint-tab.png'
+      },
+      {
+        tasks: async () => {
+          await routes.setTemplatePrompt('Get a list of users');
+        },
+        get highlightedTarget() {
+          return routes.endpointGenerateBtn;
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'ai-assistant-generate-endpoint-button.png'
+      },
+      {
+        tasks: async () => {
+          await routes.clickEndpointGenerate();
+          // account for openai api call
+          await browser.pause(20000);
+        },
         postTasks: async () => {
           await modals.close();
         },
@@ -1604,7 +1680,7 @@ const documentationTopics: {
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: {},
         screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
-        fileName: 'templates-generate-get-route.png'
+        fileName: 'ai-assistant-generate-endpoint-create-button.png'
       }
     ]
   },
