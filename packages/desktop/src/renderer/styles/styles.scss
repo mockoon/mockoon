@@ -209,10 +209,10 @@ $status-code-colors: ('4xx', lighten($orange, 10%)),
   top: 0;
   cursor: col-resize;
 
-  &:hover {
+  &:hover,
+  &.dragging {
     animation-name: fadeIn;
-    animation-duration: 0.75s;
-    animation-delay: 0.25s;
+    animation-duration: 100ms;
     animation-fill-mode: forwards;
   }
 }

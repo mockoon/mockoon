@@ -34,7 +34,7 @@ export class ResizeColumnDirective implements AfterViewInit {
   // Event removers for mousemove / mouseup events to body
   private mouseMoveRemover: () => any;
   private mouseUpRemover: () => any;
-  private pressed: boolean;
+  private dragging: boolean;
   // The x point where the mousedown event occurred
   private startX: number;
   private settingProperties: { [key in ColumnType]: string } = {
@@ -53,7 +53,8 @@ export class ResizeColumnDirective implements AfterViewInit {
 
   @HostListener('mousedown', ['$event'])
   public onMouseDown(event) {
-    this.pressed = true;
+    this.dragging = true;
+    this.elementRef.nativeElement.classList.add('dragging');
     this.startX = event.x;
 
     this.registerListeners();
@@ -101,8 +102,9 @@ export class ResizeColumnDirective implements AfterViewInit {
   }
 
   private handleMouseUp() {
-    if (this.pressed) {
-      this.pressed = false;
+    if (this.dragging) {
+      this.dragging = false;
+      this.elementRef.nativeElement.classList.remove('dragging');
     }
 
     this.mouseMoveRemover();
@@ -112,7 +114,7 @@ export class ResizeColumnDirective implements AfterViewInit {
   }
 
   private handleMouseMoveEvent(event) {
-    if (this.pressed) {
+    if (this.dragging) {
       this.currentWidth = this.currentWidth + (event.x - this.startX);
       this.resize();
 
