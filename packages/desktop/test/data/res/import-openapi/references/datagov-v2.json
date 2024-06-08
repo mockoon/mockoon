@@ -1,6 +1,6 @@
 {
   "uuid": "65af608b-313f-4ee8-ab60-a6e9384ec41c",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Regulations.gov",
   "endpointPrefix": "regulations/v3",
   "latency": 0,
@@ -88,7 +88,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "e561fe1a-0347-490e-9766-e5eb5bdcceb9",
@@ -170,7 +172,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "2fc642b3-82dc-4406-8beb-6e13e6632a2f",
@@ -252,7 +256,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -283,18 +289,8 @@
   },
   "cors": true,
   "headers": [],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
   "callbacks": []
 }

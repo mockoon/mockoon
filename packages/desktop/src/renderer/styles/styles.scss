@@ -124,7 +124,7 @@ $method-colors: ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
   ('proppatch', lighten($custom-gray, 45%)),
   ('copy', lighten($custom-gray, 45%)), ('move', lighten($custom-gray, 45%)),
   ('lock', lighten($custom-gray, 45%)), ('unlock', lighten($custom-gray, 45%)),
-  ('mkcol', lighten($custom-gray, 45%));
+  ('mkcol', lighten($custom-gray, 45%)), ('ws', lighten($indigo, 20%));
 @each $method in $method-colors {
   .color-method-#{nth($method, 1)} {
     color: #{nth($method, 2)};

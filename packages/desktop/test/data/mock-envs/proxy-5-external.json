@@ -1,6 +1,6 @@
 {
   "uuid": "2fdc0fe1-66ed-44af-a268-eb73a72f5910",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Proxy external",
   "endpointPrefix": "",
   "latency": 0,
@@ -33,7 +33,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,

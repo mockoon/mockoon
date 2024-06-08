@@ -101,6 +101,9 @@ export class SvgComponent {
     | 'cloud_add'
     | 'cloud_remove'
     | 'computer'
+    | 'websocket'
+    | 'broadcast'
+    | 'events'
     | string;
 
   constructor() {}

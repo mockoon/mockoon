@@ -1,5 +1,5 @@
 import { ServerErrorCodes } from '../enums/errors.enum';
-import { InvokedCallback, Transaction } from './server.model';
+import { InFlightRequest, InvokedCallback, Transaction } from './server.model';
 
 export type ServerEvents = {
   error: (
@@ -16,4 +16,15 @@ export type ServerEvents = {
   'entering-request': () => void;
   'callback-invoked': (callback: InvokedCallback) => void;
   'transaction-complete': (transaction: Transaction) => void;
+
+  /**
+   * Web socket related events
+   */
+  'ws-new-connection': (request: InFlightRequest) => void;
+  'ws-closed': (
+    request: InFlightRequest,
+    wsCode: number,
+    reason?: string | null
+  ) => void;
+  'ws-message-received': (request: InFlightRequest, message: string) => void;
 };
