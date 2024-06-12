@@ -41,4 +41,5 @@ export type Settings = {
     [key in EnvironmentsCategories]: boolean;
   };
   envVarsPrefix: string;
+  activeEnvironmentUuid: string | null;
 };

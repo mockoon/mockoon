@@ -42,12 +42,20 @@ describe('TLS', () => {
     await http.assertCallWithPort(getCallMockoonCert, 3000);
   });
 
-  it('should add a custom certificate', async () => {
+  it('should add a custom certificate and use templating', async () => {
     await navigation.switchView('ENV_SETTINGS');
-
-    await environmentsSettings.setSettingValue('certPath', './domain.crt');
-    await environmentsSettings.setSettingValue('keyPath', './domain.key');
-    await environmentsSettings.setSettingValue('passphrase', '123456');
+    await environmentsSettings.setSettingValue(
+      'certPath',
+      '{{getEnvVar "TLS_TEST_CERT_PATH"}}'
+    );
+    await environmentsSettings.setSettingValue(
+      'keyPath',
+      '{{getEnvVar "TLS_TEST_KEY_PATH"}}'
+    );
+    await environmentsSettings.setSettingValue(
+      'passphrase',
+      '{{getEnvVar "TLS_TEST_PASSPHRASE"}}'
+    );
     await environments.restart();
   });
 

@@ -5,8 +5,8 @@ import {
   CallbackInvocation,
   CORSHeaders,
   defaultEnvironmentVariablesPrefix,
+  defaultMaxTransactionLogs,
   Environment,
-  FakerAvailableLocales,
   FileExtensionsWithTemplating,
   GetContentType,
   GetRouteResponseContentType,
@@ -21,7 +21,9 @@ import {
   RouteType,
   ServerErrorCodes,
   ServerEvents,
-  stringIncludesArrayItems
+  ServerOptions,
+  stringIncludesArrayItems,
+  Transaction
 } from '@mockoon/commons';
 import appendField from 'append-field';
 import busboy from 'busboy';
@@ -60,7 +62,7 @@ import {
   resolvePathFromEnvironment,
   routesFromFolder
 } from '../utils';
-import { createAdminEndpoint } from './admin-endpoint';
+import { createAdminEndpoint } from './admin-api';
 import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
 
 /**
@@ -76,45 +78,26 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private requestNumbers: Record<string, number> = {};
   // templating global variables
   private globalVariables: Record<string, any> = {};
+  private options: ServerOptions = {
+    disabledRoutes: [],
+    envVarsPrefix: defaultEnvironmentVariablesPrefix,
+    enableAdminApi: true,
+    disableTls: false,
+    maxTransactionLogs: defaultMaxTransactionLogs
+  };
+  private transactionLogs: Transaction[] = [];
 
   constructor(
     private environment: Environment,
-    private options: {
-      /**
-       * Directory where to find the environment file.
-       */
-      environmentDirectory?: string;
-
-      /**
-       * List of routes uuids to disable.
-       * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
-       */
-      disabledRoutes?: string[];
-
-      /**
-       * Method used by the library to refresh the environment information
-       */
-      refreshEnvironmentFunction?: (
-        environmentUUID: string
-      ) => Environment | null;
-
-      /**
-       * Faker options: seed and locale
-       */
-      fakerOptions?: {
-        // Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation.)
-        locale?: FakerAvailableLocales;
-        // Number for the Faker.js seed (e.g. 1234)
-        seed?: number;
-      };
-
-      /**
-       * Environment variables prefix
-       */
-      envVarsPrefix: string;
-    } = { envVarsPrefix: defaultEnvironmentVariablesPrefix }
+    options: Partial<ServerOptions> = {}
   ) {
     super();
+
+    this.options = {
+      ...this.options,
+      ...options,
+      envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix
+    };
   }
 
   /**
@@ -124,7 +107,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const requestListener = this.createRequestListener();
 
     // create https or http server instance
-    if (this.environment.tlsOptions.enabled) {
+    if (this.environment.tlsOptions.enabled && !this.options.disableTls) {
       try {
         this.tlsOptions = this.buildTLSOptions(this.environment);
 
@@ -215,25 +198,39 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     this.generateDatabuckets(this.environment);
 
-    // admin endpoint must be created before all other routes to avoid conflicts
-    createAdminEndpoint(app, {
-      statePurgeCallback: () => {
-        // reset request numbers
-        Object.keys(this.requestNumbers).forEach((routeUUID) => {
-          this.requestNumbers[routeUUID] = 1;
-        });
+    // This middleware is required to parse the body for createAdminEndpoint requests
+    app.use(this.parseBody);
 
-        // reset databuckets
-        this.processedDatabuckets = [];
-        this.generateDatabuckets(this.environment);
-      }
-    });
+    if (this.options.enableAdminApi) {
+      // admin endpoint must be created before all other routes to avoid conflicts
+      createAdminEndpoint(app, {
+        statePurgeCallback: () => {
+          // reset request numbers
+          Object.keys(this.requestNumbers).forEach((routeUUID) => {
+            this.requestNumbers[routeUUID] = 1;
+          });
+        },
+        setGlobalVariables: (key: string, value: any) => {
+          this.globalVariables[key] = value;
+        },
+        purgeGlobalVariables: () => {
+          this.globalVariables = {};
+        },
+        purgeDataBuckets: () => {
+          this.processedDatabuckets = [];
+          this.generateDatabuckets(this.environment);
+        },
+        getLogs: () => this.transactionLogs,
+        purgeLogs: () => {
+          this.transactionLogs = [];
+        }
+      });
+    }
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
     app.use(this.deduplicateRequestSlashes);
     app.use(cookieParser());
-    app.use(this.parseBody);
     app.use(this.logRequest);
     app.use(this.setResponseHeaders);
 
@@ -299,6 +296,78 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
+   * Process the raw body and parse it if needed
+   *
+   * @param request
+   * @param next
+   * @param rawBody
+   * @param requestContentType
+   */
+  private processRawBody(request, next, rawBody, requestContentType) {
+    request.rawBody = Buffer.concat(rawBody);
+    request.stringBody = request.rawBody.toString('utf8');
+
+    try {
+      if (requestContentType) {
+        if (
+          stringIncludesArrayItems(ParsedJSONBodyMimeTypes, requestContentType)
+        ) {
+          request.body = JSON.parse(request.stringBody);
+          next();
+        } else if (
+          requestContentType.includes('application/x-www-form-urlencoded')
+        ) {
+          request.body = qsParse(request.stringBody, {
+            depth: 10
+          });
+          next();
+        } else if (requestContentType.includes('multipart/form-data')) {
+          const busboyParse = busboy({
+            headers: request.headers,
+            limits: { fieldNameSize: 1000, files: 0 }
+          });
+
+          busboyParse.on('field', (name, value, info) => {
+            if (request.body === undefined) {
+              request.body = {};
+            }
+
+            if (name != null && !info.nameTruncated && !info.valueTruncated) {
+              appendField(request.body, name, value);
+            }
+          });
+
+          busboyParse.on('error', (error: any) => {
+            this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
+            // we want to continue answering the call despite the parsing errors
+            next();
+          });
+
+          busboyParse.on('finish', () => {
+            next();
+          });
+
+          busboyParse.end(request.rawBody);
+        } else if (
+          stringIncludesArrayItems(ParsedXMLBodyMimeTypes, requestContentType)
+        ) {
+          request.body = xml2js(request.stringBody, {
+            compact: true
+          });
+          next();
+        } else {
+          next();
+        }
+      } else {
+        next();
+      }
+    } catch (error: any) {
+      this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
+      next();
+    }
+  }
+
+  /**
    * ### Middleware ###
    * Parse entering request body
    *
@@ -306,6 +375,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param response
    * @param next
    */
+
   private parseBody = (
     request: Request,
     response: Response,
@@ -315,78 +385,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const requestContentType: string | undefined =
       request.header('Content-Type');
 
-    const rawBody: Buffer[] = [];
+    // body was already parsed (e.g. by firebase), 'data' event will not be emitted
+    if (!!request.body) {
+      this.processRawBody(request, next, [request.rawBody], requestContentType);
+    } else {
+      const rawBody: Buffer[] = [];
 
-    request.on('data', (chunk) => {
-      rawBody.push(Buffer.from(chunk, 'binary'));
-    });
+      request.on('data', (chunk) => {
+        rawBody.push(Buffer.from(chunk, 'binary'));
+      });
 
-    request.on('end', () => {
-      request.rawBody = Buffer.concat(rawBody);
-      request.stringBody = request.rawBody.toString('utf8');
-
-      try {
-        if (requestContentType) {
-          if (
-            stringIncludesArrayItems(
-              ParsedJSONBodyMimeTypes,
-              requestContentType
-            )
-          ) {
-            request.body = JSON.parse(request.stringBody);
-            next();
-          } else if (
-            requestContentType.includes('application/x-www-form-urlencoded')
-          ) {
-            request.body = qsParse(request.stringBody, {
-              depth: 10
-            });
-            next();
-          } else if (requestContentType.includes('multipart/form-data')) {
-            const busboyParse = busboy({
-              headers: request.headers,
-              limits: { fieldNameSize: 1000, files: 0 }
-            });
-
-            busboyParse.on('field', (name, value, info) => {
-              if (request.body === undefined) {
-                request.body = {};
-              }
-
-              if (name != null && !info.nameTruncated && !info.valueTruncated) {
-                appendField(request.body, name, value);
-              }
-            });
-
-            busboyParse.on('error', (error: any) => {
-              this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
-              // we want to continue answering the call despite the parsing errors
-              next();
-            });
-
-            busboyParse.on('finish', () => {
-              next();
-            });
-
-            busboyParse.end(request.rawBody);
-          } else if (
-            stringIncludesArrayItems(ParsedXMLBodyMimeTypes, requestContentType)
-          ) {
-            request.body = xml2js(request.stringBody, {
-              compact: true
-            });
-            next();
-          } else {
-            next();
-          }
-        } else {
-          next();
-        }
-      } catch (error: any) {
-        this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
-        next();
-      }
-    });
+      request.on('end', () => {
+        this.processRawBody(request, next, rawBody, requestContentType);
+      });
+    }
   };
 
   /**
@@ -404,6 +416,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) => {
     response.on('close', () => {
       this.emit('transaction-complete', CreateTransaction(request, response));
+
+      // store the transaction logs at beginning of the array
+      this.transactionLogs.unshift(CreateTransaction(request, response));
+
+      // keep only the last n transactions
+      if (this.transactionLogs.length > this.options.maxTransactionLogs) {
+        this.transactionLogs.pop();
+      }
+      if (this.transactionLogs.length > this.options.maxTransactionLogs) {
+        this.transactionLogs = this.transactionLogs.slice(
+          0,
+          this.options.maxTransactionLogs
+        );
+      }
     });
 
     next();
@@ -443,7 +469,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const routes = routesFromFolder(
       this.environment.rootChildren,
       this.environment.folders,
-      this.environment.routes
+      this.environment.routes,
+      this.options.disabledRoutes
     );
 
     routes.forEach((declaredRoute: Route) => {
@@ -452,34 +479,26 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         declaredRoute.endpoint
       );
 
-      if (
-        !this.options.disabledRoutes?.some(
-          (disabledRoute) =>
-            declaredRoute.uuid === disabledRoute ||
-            routePath.includes(disabledRoute)
-        )
-      ) {
-        try {
-          this.requestNumbers[declaredRoute.uuid] = 1;
+      try {
+        this.requestNumbers[declaredRoute.uuid] = 1;
 
-          if (declaredRoute.type === RouteType.CRUD) {
-            this.createCRUDRoute(server, declaredRoute, routePath);
-          } else {
-            this.createRESTRoute(server, declaredRoute, routePath);
-          }
-        } catch (error: any) {
-          let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
-
-          // if invalid regex defined
-          if (error.message.indexOf('Invalid regular expression') > -1) {
-            errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR_REGEX;
-          }
-
-          this.emit('error', errorCode, error, {
-            routePath: declaredRoute.endpoint,
-            routeUUID: declaredRoute.uuid
-          });
+        if (declaredRoute.type === RouteType.CRUD) {
+          this.createCRUDRoute(server, declaredRoute, routePath);
+        } else {
+          this.createRESTRoute(server, declaredRoute, routePath);
         }
+      } catch (error: any) {
+        let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
+
+        // if invalid regex defined
+        if (error.message.indexOf('Invalid regular expression') > -1) {
+          errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR_REGEX;
+        }
+
+        this.emit('error', errorCode, error, {
+          routePath: declaredRoute.endpoint,
+          routeUUID: declaredRoute.uuid
+        });
       }
     });
   }
@@ -1476,6 +1495,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   private buildTLSOptions(environment: Environment): SecureContextOptions {
     let tlsOptions: SecureContextOptions = {};
+    const processTemplating = (content: string) =>
+      TemplateParser({
+        content,
+        shouldOmitDataHelper: false,
+        environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
     if (
       environment.tlsOptions?.pfxPath ||
@@ -1487,7 +1515,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       ) {
         tlsOptions.pfx = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.pfxPath,
+            processTemplating(environment.tlsOptions?.pfxPath),
             this.options.environmentDirectory
           )
         );
@@ -1498,13 +1526,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       ) {
         tlsOptions.cert = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.certPath,
+            processTemplating(environment.tlsOptions?.certPath),
             this.options.environmentDirectory
           )
         );
         tlsOptions.key = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.keyPath,
+            processTemplating(environment.tlsOptions?.keyPath),
             this.options.environmentDirectory
           )
         );
@@ -1513,14 +1541,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       if (environment.tlsOptions?.caPath) {
         tlsOptions.ca = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.caPath,
+            processTemplating(environment.tlsOptions?.caPath),
             this.options.environmentDirectory
           )
         );
       }
 
       if (environment.tlsOptions?.passphrase) {
-        tlsOptions.passphrase = environment.tlsOptions?.passphrase;
+        tlsOptions.passphrase = processTemplating(
+          environment.tlsOptions?.passphrase
+        );
       }
     } else {
       tlsOptions = { ...DefaultTLSOptions };

@@ -27,11 +27,20 @@
   }
 }
 .nav.flex-column {
+  .nav-link .nav-link-subtitle {
+    color: $gray-500;
+    font-size: $sub-sup-font-size;
+  }
+
   .nav-link.active,
   .nav-item.show .nav-link {
     color: $gray-100;
     box-shadow: inset 2px 0 0 0 $blue;
     background-color: $component-active-bg;
+
+    .nav-link-subtitle {
+      color: $gray-100;
+    }
   }
   .nav-link.route-disabled,
   .nav-item.show .nav-link {
@@ -251,5 +260,20 @@ pre {
     background-color: transparent;
     padding: 0;
     border-radius: none;
+  }
+}
+
+fieldset {
+  border: 1px solid $gray-700;
+  padding: 0.5rem;
+  margin: 0;
+
+  legend {
+    color: $gray-800;
+    float: none;
+    width: auto;
+    font-style: italic;
+    padding: 0 0.5rem;
+    margin: 0;
   }
 }

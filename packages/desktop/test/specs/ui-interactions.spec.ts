@@ -1,4 +1,3 @@
-import contextMenu from '../libs/context-menu';
 import environments from '../libs/environments';
 import environmentsSettings from '../libs/environments-settings';
 import file from '../libs/file';
@@ -20,8 +19,6 @@ describe('UI interactions', () => {
 
       await environments.assertMenuHTTPSIconPresent();
       await environments.assertMenuProxyIconVisible();
-      await contextMenu.open('environments');
-      await contextMenu.close();
     });
   });
 

@@ -1,44 +1,47 @@
-<ng-container *ngIf="{ activeEnvironment: activeEnvironment$ | async } as data">
+<ng-container
+  *ngIf="{
+    activeEnvironment: activeEnvironment$ | async,
+    activeCallback: activeCallback$ | async,
+    activeTab: activeTab$ | async,
+    activeSpecTab: activeSpecTab$ | async,
+    activeCallbackFileMimeType: activeCallbackFileMimeType$ | async,
+    databuckets: databuckets$ | async,
+    activeCallbackUsages: activeCallbackUsages$ | async,
+    bodyEditorConfig: bodyEditorConfig$ | async,
+    hasCallbacks: hasCallbacks$ | async
+  } as data"
+>
   <div class="d-flex h-100">
     <app-callbacks-menu class="h-100"></app-callbacks-menu>
 
     <div class="d-flex flex-column flex-fill mh0">
-      <ng-container
-        *ngIf="activeCallback$ | async as activeCallback; else noActiveCallback"
-      >
-        <ng-container *ngIf="activeTab$ | async as activeTab">
-          <div class="callback-tabs d-flex mt-2 ms-2">
-            <ul class="nav nav-tabs flex-fill">
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  [ngClass]="{ active: activeTab === 'SPEC' }"
-                  (click)="setActiveTab('SPEC')"
-                  >Definition</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link d-flex align-items-center"
-                  [ngClass]="{ active: activeTab === 'USAGE' }"
-                  (click)="setActiveTab('USAGE')"
-                >
-                  Usage
-                  <span
-                    *ngIf="
-                      activeCallbackUsages$ | async as activeCallbackUsages
-                    "
-                    class="badge badge-hollow font-weight-bold ms-2"
-                  >
-                    {{ activeCallbackUsages?.length }}
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </ng-container>
+      <ng-container *ngIf="data.activeCallback; else noActiveCallback">
+        <div class="callback-tabs d-flex mt-2 ms-2">
+          <ul class="nav nav-tabs flex-fill">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [ngClass]="{ active: data.activeTab === 'SPEC' }"
+                (click)="setActiveTab('SPEC')"
+                >Definition</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link d-flex align-items-center"
+                [ngClass]="{ active: data.activeTab === 'USAGE' }"
+                (click)="setActiveTab('USAGE')"
+              >
+                Usage
+                <span class="badge badge-hollow font-weight-bold ms-2">
+                  {{ data.activeCallbackUsages?.length }}
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
         <ng-container
-          *ngIf="(activeTab$ | async) === 'SPEC'"
+          *ngIf="data.activeTab === 'SPEC'"
           [formGroup]="activeCallbackForm"
         >
           <!-- Name -->
@@ -81,30 +84,28 @@
             </div>
           </div>
 
-          <ng-container *ngIf="activeSpecTab$ | async as activeSpecTab">
-            <div class="callback-spec-tabs d-flex mt-2 ms-2">
-              <ul class="nav nav-tabs flex-fill">
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    [ngClass]="{ active: activeSpecTab === 'BODY' }"
-                    (click)="setActiveSpecTab('BODY')"
-                    >Body</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    [ngClass]="{ active: activeSpecTab === 'HEADERS' }"
-                    (click)="setActiveSpecTab('HEADERS')"
-                    >Headers</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </ng-container>
+          <div class="callback-spec-tabs d-flex mt-2 ms-2">
+            <ul class="nav nav-tabs flex-fill">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [ngClass]="{ active: data.activeSpecTab === 'BODY' }"
+                  (click)="setActiveSpecTab('BODY')"
+                  >Body</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [ngClass]="{ active: data.activeSpecTab === 'HEADERS' }"
+                  (click)="setActiveSpecTab('HEADERS')"
+                  >Headers</a
+                >
+              </li>
+            </ul>
+          </div>
 
-          <ng-container *ngIf="(activeSpecTab$ | async) === 'HEADERS'">
+          <ng-container *ngIf="data.activeSpecTab === 'HEADERS'">
             <!-- Headers -->
             <div
               class="flex-fill scroll-content mt-3 mx-2"
@@ -123,11 +124,12 @@
           </ng-container>
 
           <!-- Editor -->
-          <ng-container *ngIf="(activeSpecTab$ | async) === 'BODY'">
+          <ng-container *ngIf="data.activeSpecTab === 'BODY'">
             <div
               class="d-flex flex-fill flex-column h-100 px-2 py-2 notsupporting-callback-body"
               *ngIf="
-                bodySupportingMethods.indexOf(activeCallback.method) === -1
+                bodySupportingMethods.indexOf(data.activeCallback?.method) ===
+                -1
               "
             >
               <p class="message mt-4">
@@ -136,7 +138,9 @@
             </div>
             <div
               class="d-flex flex-fill flex-column h-100 callback-body-spec"
-              *ngIf="bodySupportingMethods.indexOf(activeCallback.method) >= 0"
+              *ngIf="
+                bodySupportingMethods.indexOf(data.activeCallback?.method) >= 0
+              "
             >
               <div class="pt-5 pb-4 d-flex justify-content-center">
                 <app-toggle
@@ -148,23 +152,20 @@
                 ></app-toggle>
               </div>
 
-              <ng-container *ngIf="activeCallback.bodyType === 'INLINE'">
-                <div
-                  class="flex-fill mt-2 mb-3 px-2"
-                  *ngIf="bodyEditorConfig$ | async as bodyEditorConfig"
-                >
+              <ng-container *ngIf="data.activeCallback?.bodyType === 'INLINE'">
+                <div class="flex-fill mt-2 mb-3 px-2">
                   <app-editor
                     class="h-100"
-                    [options]="bodyEditorConfig?.options"
+                    [options]="data.bodyEditorConfig?.options"
                     mode="json"
-                    [uuid]="activeCallback.uuid"
+                    [uuid]="data.activeCallback?.uuid"
                     formControlName="body"
                   >
                   </app-editor>
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="activeCallback.bodyType === 'FILE'">
+              <ng-container *ngIf="data.activeCallback?.bodyType === 'FILE'">
                 <div class="input-group px-2">
                   <input
                     type="text"
@@ -173,7 +174,7 @@
                     placeholder="Relative or absolute path"
                   />
                   <button
-                    *ngIf="activeCallback.filePath"
+                    *ngIf="data.activeCallback?.filePath"
                     type="button"
                     (click)="activeCallbackForm.get('filePath').setValue('')"
                     class="btn btn-custom"
@@ -183,54 +184,19 @@
                   </button>
                   <!-- File options dropdown -->
                   <div class="d-flex align-items-center">
-                    <div ngbDropdown id="file-options-dropdown">
-                      <button
-                        class="btn btn-link btn-icon dropdown-toggle dropdown-toggle-icon dropdown-toggle-no-caret"
-                        type="button"
-                        ngbDropdownToggle
-                      >
-                        <app-svg icon="more_vert"></app-svg>
-                      </button>
-
-                      <div class="dropdown-menu" ngbDropdownMenu>
-                        <button
-                          class="btn dropdown-item"
-                          (click)="browseFiles()"
-                        >
-                          <app-svg icon="find_in_page" class="pe-2"></app-svg>
-                          Browse
-                        </button>
-                        <button
-                          class="btn dropdown-item"
-                          (click)="
-                            showFile(
-                              activeCallback.filePath,
-                              data.activeEnvironment?.uuid
-                            )
-                          "
-                        >
-                          <app-svg icon="folder" class="pe-2"></app-svg>
-                          Show file in explorer/finder
-                        </button>
-                        <button
-                          class="btn dropdown-item"
-                          (click)="
-                            openFile(
-                              activeCallback.filePath,
-                              data.activeEnvironment?.uuid
-                            )
-                          "
-                        >
-                          <app-svg icon="file_open" class="pe-2"></app-svg>
-                          Open file in editor
-                        </button>
-                      </div>
-                    </div>
+                    <app-dropdown-menu
+                      idPrefix="file-options"
+                      [items]="fileDropdownMenuItems"
+                      [payload]="{
+                        filePath: data.activeCallback?.filePath,
+                        environmentUuid: data.activeEnvironment?.uuid
+                      }"
+                    ></app-dropdown-menu>
                   </div>
                 </div>
 
                 <div
-                  *ngIf="activeCallback.filePath"
+                  *ngIf="data.activeCallback?.filePath"
                   class="d-flex justify-content-between mt-2 px-2"
                 >
                   <div class="form-check">
@@ -246,12 +212,9 @@
                   </div>
                   <small>
                     Detected MIME type:
+                    {{ data.activeCallbackFileMimeType?.mimeType || 'unknown' }}
                     {{
-                      (activeCallbackFileMimeType$ | async)?.mimeType ||
-                        'unknown'
-                    }}
-                    {{
-                      (activeCallbackFileMimeType$ | async)?.supportsTemplating
+                      data.activeCallbackFileMimeType?.supportsTemplating
                         ? ' - Supports templating'
                         : ''
                     }}
@@ -259,12 +222,14 @@
                 </div>
               </ng-container>
 
-              <ng-container *ngIf="activeCallback.bodyType === 'DATABUCKET'">
+              <ng-container
+                *ngIf="data.activeCallback?.bodyType === 'DATABUCKET'"
+              >
                 <div class="environment-callbacks-databucket px-2">
                   <app-custom-select
                     formControlName="databucketID"
                     [enableCustomInput]="false"
-                    [items]="databuckets$ | async"
+                    [items]="data.databuckets"
                     dropdownId="databuckets"
                     emptyListMessage="No databucket defined"
                     placeholder="Select a databucket"
@@ -276,30 +241,31 @@
             </div>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="(activeTab$ | async) === 'USAGE'">
-          <div
-            *ngIf="activeCallbackUsages$ | async as activeCallbackUsages"
-            class="scroll-content"
-          >
+        <ng-container *ngIf="data.activeTab === 'USAGE'">
+          <div class="scroll-content">
             <div
-              *ngIf="activeCallbackUsages.length === 0"
+              *ngIf="data.activeCallbackUsages?.length === 0"
               class="d-flex flex-column px-2 py-2"
             >
               <p class="message mt-4">No usage found for this callback</p>
             </div>
             <div
-              *ngFor="let act of activeCallbackUsages"
+              *ngFor="let activeCallbackUsage of data.activeCallbackUsages"
               class="d-flex flex-column align-items-start px-3 py-2 callback-usage-item"
             >
               <div class="py-2 badge badge-custom callback-usage-route-item">
-                {{ act.label }}
+                {{ activeCallbackUsage.label }}
               </div>
               <a
-                *ngFor="let rs of act.responses"
+                *ngFor="
+                  let activeCallbackResponse of activeCallbackUsage.responses
+                "
                 class="nav-link text-primary mx-4 py-0 callback-usage-response-item"
-                (click)="navigateToRoute(act, rs)"
+                (click)="
+                  navigateToRoute(activeCallbackUsage, activeCallbackResponse)
+                "
               >
-                {{ rs.label }}
+                {{ activeCallbackResponse.label }}
               </a>
             </div>
           </div>
@@ -310,11 +276,7 @@
 
   <ng-template #noActiveCallback>
     <p class="message mt-4">
-      {{
-        (hasCallbacks$ | async)
-          ? 'No callback selected'
-          : 'No callbacks defined'
-      }}
+      {{ data.hasCallbacks ? 'No callback selected' : 'No callbacks defined' }}
     </p>
   </ng-template>
 </ng-container>

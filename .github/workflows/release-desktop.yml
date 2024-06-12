@@ -40,9 +40,10 @@ jobs:
           codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac/Mockoon.app
           codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac-arm64/Mockoon.app
           codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac-universal/Mockoon.app
-      - name: Get universal binary shasum
+      - name: Get dmg binaries shasum
         run: |
-          shasum -a 256 ./packages/desktop/packages/mockoon.setup.*.universal.dmg
+          shasum -a 256 ./packages/desktop/packages/mockoon.setup.*.arm64.dmg
+          shasum -a 256 ./packages/desktop/packages/mockoon.setup.*.x64.dmg
       - name: Upload macOS dmg
         uses: actions/upload-artifact@v4
         with:

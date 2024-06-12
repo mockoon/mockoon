@@ -67,16 +67,20 @@ export class DialogsService {
   public showOpenDialog(
     title: string,
     filterName?: 'json' | 'openapi',
-    saveWorkingDir = true
-  ): Observable<string | null> {
-    const options: OpenDialogOptions = { title };
+    saveWorkingDir = true,
+    multiple = false
+  ): Observable<string[] | null> {
+    const options: OpenDialogOptions = { title, properties: ['openFile'] };
 
     if (filterName) {
       options.filters = this.filters[filterName];
     }
 
+    if (multiple) {
+      options.properties.push('multiSelections');
+    }
+
     return from(MainAPI.invoke('APP_SHOW_OPEN_DIALOG', options)).pipe(
-      // Get the directory
       switchMap((dialogResult) => {
         if (
           dialogResult.canceled ||
@@ -86,6 +90,7 @@ export class DialogsService {
           return of(null);
         }
 
+        // Get the directory
         return from(
           MainAPI.invoke('APP_GET_BASE_PATH', dialogResult.filePaths[0])
         ).pipe(
@@ -96,7 +101,7 @@ export class DialogsService {
               );
             }
           }),
-          map(() => dialogResult.filePaths[0])
+          map(() => dialogResult.filePaths)
         );
       })
     );

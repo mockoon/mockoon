@@ -11,4 +11,5 @@ export type Template = {
 
 export type TemplateListItem = Omit<Template, 'content' | 'type' | 'source'>;
 
-export type TemplateGenerateOptions = ('templating' | 'json' | 'list')[];
+// <8.2.0 there was two more options: 'array' and 'json'. JSON is now the default and array is deducted from the user prompt
+export type TemplateGenerateOptions = 'templating'[];

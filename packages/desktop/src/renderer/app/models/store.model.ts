@@ -35,7 +35,10 @@ export type CallbackSettings = {
 
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 
-export type TemplatesTabsName = 'LIST' | 'GENERATE';
+export type TemplatesTabsName =
+  | 'LIST'
+  | 'GENERATE_TEMPLATE'
+  | 'GENERATE_ENDPOINT';
 
 export type EnvironmentStatus = {
   running: boolean;

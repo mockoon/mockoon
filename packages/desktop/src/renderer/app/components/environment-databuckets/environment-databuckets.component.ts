@@ -7,6 +7,7 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DataBucket, DataBucketDefault } from '@mockoon/commons';
 import { Observable, Subject, filter, map, merge, takeUntil, tap } from 'rxjs';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -48,6 +49,10 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.unsubscribe();
+  }
+
+  public copyToClipboard(databucketId: string) {
+    MainAPI.send('APP_WRITE_CLIPBOARD', databucketId);
   }
 
   private initForms() {

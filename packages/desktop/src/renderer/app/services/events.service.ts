@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { Transaction } from '@mockoon/commons';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { ConfirmModalPayload } from 'src/renderer/app/models/ui.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
-  public contextMenuEvents = new Subject<ContextMenuEvent>();
   public confirmModalPayload$ = new BehaviorSubject<ConfirmModalPayload>(null);
   public focusInput: Subject<FocusableInputs> = new Subject();
   public updateAvailable$: BehaviorSubject<string | null> = new BehaviorSubject(

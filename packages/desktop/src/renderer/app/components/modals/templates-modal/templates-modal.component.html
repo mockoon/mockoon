@@ -5,17 +5,25 @@
     activeTemplate: activeTemplate$ | async,
     activeTemplatesTab: activeTemplatesTab$ | async,
     activeTemplateListItem: activeTemplateListItem$ | async,
-    generatingTemplate: generatingTemplate$ | async
+    generatingTemplate: generatingTemplate$ | async,
+    generatingEndpoint: generatingEndpoint$ | async,
+    lastGeneratedEndpoint: lastGeneratedEndpoint$ | async,
+    demoEndpoint: demoEndpoint$ | async
   } as data"
 >
   <ng-container
     *ngIf="{
       isFree: !data.user || data.user.plan === 'FREE',
       isPro: data.user && data.user.plan !== 'FREE',
-      canGenerate:
-        prompt.value &&
+      canGenerateTemplate:
+        promptTemplate.value &&
         (data.generatingTemplate === 'NONE' ||
           data.generatingTemplate === 'DONE') &&
+        data.user?.templatesQuotaUsed < data.user?.templatesQuota,
+      canGenerateEndpoint:
+        promptEndpoint.value &&
+        (data.generatingEndpoint === 'NONE' ||
+          data.generatingEndpoint === 'DONE') &&
         data.user?.templatesQuotaUsed < data.user?.templatesQuota
     } as flags"
   >
@@ -26,19 +34,33 @@
             class="nav-link"
             [ngClass]="{ active: data.activeTemplatesTab === 'LIST' }"
             (click)="setActiveTab('LIST')"
-            >Templates</a
           >
+            JSON Templates
+          </a>
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
             [ngClass]="{
-              active: data.activeTemplatesTab === 'GENERATE'
+              active: data.activeTemplatesTab === 'GENERATE_TEMPLATE'
             }"
-            (click)="setActiveTab('GENERATE')"
+            (click)="setActiveTab('GENERATE_TEMPLATE')"
           >
             <app-svg icon="magic" class="me-2 text-warning"></app-svg>
-            Generate
+            <!-- Display specific title for demo -->
+            {{ flags.isFree ? 'AI assistants' : 'Generate JSON templates' }}
+          </a>
+        </li>
+        <li *ngIf="flags.isPro" class="nav-item">
+          <a
+            class="nav-link"
+            [ngClass]="{
+              active: data.activeTemplatesTab === 'GENERATE_ENDPOINT'
+            }"
+            (click)="setActiveTab('GENERATE_ENDPOINT')"
+          >
+            <app-svg icon="magic" class="me-2 text-warning"></app-svg>
+            Generate HTTP endpoints
           </a>
         </li>
       </ul>
@@ -97,76 +119,135 @@
       </div>
 
       <!-- Generate tab when user is connected and PRO -->
-      <div
-        *ngIf="data.activeTemplatesTab === 'GENERATE' && flags.isPro"
-        class="d-flex flex-column h-100"
-      >
-        <div class="input-group mb-2">
-          <input
-            type="text"
-            class="form-control"
-            [maxlength]="maxTemplatePromptLength"
-            [formControl]="prompt"
-            placeholder='Prompt, e.g. "invoices", "customers", "HTML error page", etc.'
-            (keydown.enter)="flags.canGenerate && generate()"
-          />
-          <button
-            id="templates-generate-button"
-            type="button"
-            class="btn btn-secondary"
-            (click)="generate()"
-            [disabled]="!flags.canGenerate"
-          >
-            Generate
-          </button>
-          <div
-            *ngIf="data.generatingTemplate === 'INPROGRESS'"
-            class="input-group-text"
-          >
-            <app-svg icon="spinner"></app-svg>
+      @if (data.activeTemplatesTab === 'GENERATE_TEMPLATE' && flags.isPro) {
+        <div class="d-flex flex-column h-100">
+          <div class="input-group mb-2">
+            <input
+              type="text"
+              class="form-control"
+              [maxlength]="maxPromptLength"
+              [formControl]="promptTemplate"
+              placeholder='Prompt, e.g. "invoices", "customers", "bird species" etc.'
+              (keydown.enter)="flags.canGenerateTemplate && generateTemplate()"
+            />
+            <ng-container
+              [ngTemplateOutlet]="templatingCheckbox"
+            ></ng-container>
+            <button
+              id="templates-generate-button"
+              type="button"
+              class="btn btn-secondary"
+              (click)="generateTemplate()"
+              [disabled]="!flags.canGenerateTemplate"
+            >
+              Generate
+            </button>
+            <div
+              *ngIf="data.generatingTemplate === 'INPROGRESS'"
+              class="input-group-text"
+            >
+              <app-svg icon="spinner"></app-svg>
+            </div>
           </div>
-        </div>
-        <div
-          id="templates-generate-options"
-          class="mb-4 d-flex align-items-center"
-          [formGroup]="generateOptions"
-        >
-          <ng-container *ngFor="let toggle of toggles">
-            <app-toggle
-              class="me-1"
-              prefix="generate-options-{{ toggle.name }}"
-              [formControlName]="toggle.name"
-              [items]="toggle.items"
-              [uncheckable]="true"
-            ></app-toggle>
-          </ng-container>
-          <p class="mb-0 ms-auto text-muted">
-            Best results with short prompts (less than 10 words)
+          <app-editor
+            [formControl]="generatedTemplateBody"
+            [options]="defaultEditorOptions.options"
+            [mode]="defaultEditorOptions.mode"
+            uuid="templateGenPreview"
+          ></app-editor>
+          <p class="px-2 pt-2 mb-0 text-muted text-center">
+            Depending on its length, template generation may take time. You can
+            safely close this modal and return later to view the result.
           </p>
         </div>
-        <app-editor
-          [formControl]="generatedTemplateBody"
-          [options]="defaultEditorOptions.options"
-          [mode]="defaultEditorOptions.mode"
-          uuid="templateGenPreview"
-        ></app-editor>
-        <p class="px-2 pt-2 mb-0 text-muted text-center">
-          Depending on its length, template generation may take up to a minute.
-          You can safely close this modal and return later to view the result.
-        </p>
-      </div>
+      }
+
+      <!-- Generate endpoint tab when user is connected and PRO -->
+      @if (data.activeTemplatesTab === 'GENERATE_ENDPOINT' && flags.isPro) {
+        <div class="d-flex flex-column h-100">
+          <div class="input-group mb-2">
+            <input
+              type="text"
+              class="form-control"
+              [maxlength]="maxPromptLength"
+              [formControl]="promptEndpoint"
+              placeholder='Prompt, e.g. "add a new invoice", "delete a contact", "get all movies", etc.'
+              (keydown.enter)="flags.canGenerateEndpoint && generateEndpoint()"
+            />
+            <ng-container
+              [ngTemplateOutlet]="templatingCheckbox"
+            ></ng-container>
+            <button
+              id="templates-endpoint-generate-button"
+              type="button"
+              class="btn btn-secondary"
+              (click)="generateEndpoint()"
+              [disabled]="!flags.canGenerateEndpoint"
+            >
+              Generate
+            </button>
+            <div
+              *ngIf="data.generatingEndpoint === 'INPROGRESS'"
+              class="input-group-text"
+            >
+              <app-svg icon="spinner"></app-svg>
+            </div>
+          </div>
+
+          <fieldset class="flex-fill d-flex flex-column">
+            <legend>Endpoint preview</legend>
+
+            <div [ngClass]="{ 'opacity-25': !data.lastGeneratedEndpoint }">
+              <div class="d-flex align-items-center mb-2">
+                <span
+                  class="color-method-{{
+                    !data.lastGeneratedEndpoint?.method
+                      ? 'all'
+                      : data.lastGeneratedEndpoint?.method
+                  }} me-2"
+                  >{{
+                    !data.lastGeneratedEndpoint?.method
+                      ? 'method'
+                      : (data.lastGeneratedEndpoint?.method | uppercase)
+                  }}
+                </span>
+                <span
+                  >/{{
+                    !data.lastGeneratedEndpoint?.endpoint
+                      ? 'path'
+                      : data.lastGeneratedEndpoint?.endpoint
+                  }}</span
+                >
+              </div>
+              <div class="mb-2">
+                <span class="fst-italic">Description:</span>
+                {{ data.lastGeneratedEndpoint?.documentation }}
+              </div>
+              <div class="mb-2 fst-italic">Response body:</div>
+            </div>
+
+            <app-editor
+              [ngClass]="{ 'opacity-25': !data.lastGeneratedEndpoint }"
+              [options]="defaultEditorOptions.options"
+              [mode]="defaultEditorOptions.mode"
+              uuid="endpointGenPreview"
+              [value]="data.lastGeneratedEndpoint?.responses[0]?.body"
+            ></app-editor>
+          </fieldset>
+          <p class="px-2 pt-2 mb-0 text-muted text-center">
+            Depending on its length, endpoint generation may take time. You can
+            safely close this modal and return later to view the result.
+          </p>
+        </div>
+      }
 
       <!-- Demo generate tab when no user or FREE plan -->
       <div
-        *ngIf="data.activeTemplatesTab === 'GENERATE' && flags.isFree"
+        *ngIf="data.activeTemplatesTab === 'GENERATE_TEMPLATE' && flags.isFree"
         class="d-flex h-100 no-interact justify-content-center"
       >
-        <div class="d-flex flex-column h-100">
-          <h1 class="text-center mt-4 mb-5 text-shadow">AI assistant</h1>
-          <div
-            @fade-1
-            class="d-flex flex-column h-100 p-4 rounded bg-dark mb-5"
-          >
+        <div @fade class="d-flex flex-column h-100">
+          <div class="d-flex flex-column h-100 p-4 rounded bg-dark">
             <div class="d-flex align-items-center mb-4">
               <div class="input-group shadow border-radius">
                 <input
@@ -188,21 +269,56 @@
                 <app-svg icon="spinner"></app-svg>
               </div>
             </div>
-            <app-editor
-              class="shadow"
-              [readOnly]="true"
-              [hideCursor]="true"
-              tabindex="-1"
-              [formControl]="demoGeneratedTemplateBody"
-              [options]="defaultEditorOptions.options"
-              [mode]="defaultEditorOptions.mode"
-              uuid="demoTemplateGenPreview"
-            ></app-editor>
+
+            <fieldset class="flex-fill d-flex flex-column">
+              <legend>Endpoint preview</legend>
+
+              <div [ngClass]="{ 'opacity-25': !data.demoEndpoint }">
+                <div class="d-flex align-items-center mb-2">
+                  <span
+                    class="color-method-{{
+                      !data.demoEndpoint?.method
+                        ? 'all'
+                        : data.demoEndpoint?.method
+                    }} me-2"
+                    >{{
+                      !data.demoEndpoint?.method
+                        ? 'method'
+                        : (data.demoEndpoint?.method | uppercase)
+                    }}
+                  </span>
+                  <span
+                    >/{{
+                      !data.demoEndpoint?.endpoint
+                        ? 'path'
+                        : data.demoEndpoint?.endpoint
+                    }}</span
+                  >
+                </div>
+                <div class="mb-2">
+                  <span class="fst-italic">Description:</span>
+                  {{ data.demoEndpoint?.documentation }}
+                </div>
+                <div class="mb-2 fst-italic">Response body:</div>
+              </div>
+
+              <app-editor
+                [ngClass]="{ 'opacity-25': !data.demoEndpoint }"
+                class="shadow"
+                [readOnly]="true"
+                [hideCursor]="true"
+                tabindex="-1"
+                [value]="data.demoEndpoint?.body"
+                [options]="defaultEditorOptions.options"
+                [mode]="defaultEditorOptions.mode"
+                uuid="demoTemplateGenPreview"
+              ></app-editor>
+            </fieldset>
           </div>
-          <div [@fade-2]="demoRuns >= 2" class="mt-auto">
+          <div class="mt-auto">
             <h4 class="text-center my-4 text-shadow w-75 mx-auto">
-              Generate your own templates using our AI assistant and prototype
-              faster than ever
+              Generate your own templates and endpoints using our AI assistants
+              and prototype faster than ever
             </h4>
           </div>
         </div>
@@ -211,7 +327,11 @@
 
     <div class="modal-footer justify-content-space-between">
       <div
-        *ngIf="flags.isPro && data.activeTemplatesTab === 'GENERATE'"
+        *ngIf="
+          flags.isPro &&
+          (data.activeTemplatesTab === 'GENERATE_TEMPLATE' ||
+            data.activeTemplatesTab === 'GENERATE_ENDPOINT')
+        "
         class="col-6 d-flex align-items-center"
       >
         <p
@@ -248,7 +368,7 @@
         <ng-container
           *ngIf="
             data.activeTemplatesTab === 'LIST' ||
-            (data.activeTemplatesTab === 'GENERATE' && flags.isPro)
+            (data.activeTemplatesTab === 'GENERATE_TEMPLATE' && flags.isPro)
           "
         >
           <button
@@ -260,7 +380,7 @@
             "
             ngbTooltip="Automatically creates a CRUD route and a data bucket from the template"
           >
-            <app-svg icon="endpoints" class="me-1"></app-svg>CRUD + data
+            <app-svg icon="endpoints" class="me-1"></app-svg>Create CRUD
           </button>
           <button
             *ngIf="data.templates"
@@ -271,11 +391,29 @@
             "
             ngbTooltip="Automatically creates an HTTP GET route with the chosen template as the response body"
           >
-            <app-svg icon="endpoint" class="me-1"></app-svg>GET route
+            <app-svg icon="endpoint" class="me-1"></app-svg>Create GET route
+          </button>
+        </ng-container>
+        <!-- Display creation CTA for endpoint generation -->
+        <ng-container
+          *ngIf="data.activeTemplatesTab === 'GENERATE_ENDPOINT' && flags.isPro"
+        >
+          <button
+            type="button"
+            class="btn btn-primary ms-2"
+            (click)="createEndpoint()"
+            ngbTooltip="Automatically creates an HTTP route with the generated data"
+            [disabled]="!data.lastGeneratedEndpoint"
+          >
+            <app-svg icon="endpoint" class="me-1"></app-svg>Create HTTP route
           </button>
         </ng-container>
         <a
-          *ngIf="flags.isFree && data.activeTemplatesTab === 'GENERATE'"
+          *ngIf="
+            flags.isFree &&
+            (data.activeTemplatesTab === 'GENERATE_TEMPLATE' ||
+              data.activeTemplatesTab === 'GENERATE_ENDPOINT')
+          "
           class="btn btn-warning ms-2"
           href="{{ proPlansURL }}"
           target="_blank"
@@ -289,4 +427,20 @@
 
 <ng-template #noTemplates>
   <p class="message">Templates could not be loaded</p>
+</ng-template>
+
+<ng-template #templatingCheckbox>
+  <app-toggle
+    id="templates-generate-option"
+    class="mx-2"
+    [uncheckable]="true"
+    [formControl]="templatingToggle"
+    prefix="templatingToggle"
+    [items]="[
+      {
+        icon: 'data',
+        tooltip: 'Use templating helpers (e.g. {{ faker person.firstname}} )'
+      }
+    ]"
+  ></app-toggle>
 </ng-template>

@@ -3,7 +3,9 @@ import {
   FakerAvailableLocales,
   FakerAvailableLocalesList,
   ServerErrorCodes,
-  defaultEnvironmentVariablesPrefix
+  ServerOptions,
+  defaultEnvironmentVariablesPrefix,
+  defaultMaxTransactionLogs
 } from '@mockoon/commons';
 import {
   MockoonServer,
@@ -58,7 +60,7 @@ export default class Start extends Command {
     'disable-routes': Flags.string({
       char: 'e',
       description:
-        "Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash)",
+        "Disable route(s) by UUID or keyword present in the route's path or keyword present in a folder name (do not include a leading slash)",
       multiple: true,
       default: []
     }),
@@ -78,6 +80,20 @@ export default class Start extends Command {
       description: `Prefix of environment variables available at runtime (default: "${defaultEnvironmentVariablesPrefix}")`,
       multiple: false,
       default: defaultEnvironmentVariablesPrefix
+    }),
+    'disable-admin-api': Flags.boolean({
+      description:
+        'Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)',
+      default: false
+    }),
+    'disable-tls': Flags.boolean({
+      description:
+        'Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).',
+      default: false
+    }),
+    'max-transaction-logs': Flags.integer({
+      description: `Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: ${defaultMaxTransactionLogs}).`,
+      default: defaultMaxTransactionLogs
     })
   };
 
@@ -108,7 +124,7 @@ export default class Start extends Command {
       for (const environmentInfo of parsedEnvironments) {
         this.createServer({
           environment: environmentInfo.environment,
-          environmentDir: getDirname(environmentInfo.originalPath) || '',
+          environmentDirectory: getDirname(environmentInfo.originalPath) || '',
           logTransaction: userFlags['log-transaction'],
           fileTransportOptions: userFlags['disable-log-to-file']
             ? null
@@ -125,7 +141,10 @@ export default class Start extends Command {
             locale: userFlags['faker-locale'] as FakerAvailableLocales,
             seed: userFlags['faker-seed']
           },
-          envVarsPrefix: userFlags['env-vars-prefix']
+          envVarsPrefix: userFlags['env-vars-prefix'],
+          enableAdminApi: !userFlags['disable-admin-api'],
+          disableTls: userFlags['disable-tls'],
+          maxTransactionLogs: userFlags['max-transaction-logs']
         });
       }
     } catch (error: any) {
@@ -133,24 +152,22 @@ export default class Start extends Command {
     }
   }
 
-  private createServer = (parameters: {
-    environment: Environment;
-    environmentDir: string;
-    disabledRoutes?: string[];
-    logTransaction?: boolean;
-    fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
-    fakerOptions?: {
-      locale?: FakerAvailableLocales;
-      seed?: number | undefined;
-    };
-    envVarsPrefix: string;
-  }) => {
+  private createServer = (
+    parameters: ServerOptions & {
+      environment: Environment;
+      logTransaction?: boolean;
+      fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
+    }
+  ) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
     const server = new MockoonServer(parameters.environment, {
-      environmentDirectory: parameters.environmentDir,
+      environmentDirectory: parameters.environmentDirectory,
       disabledRoutes: parameters.disabledRoutes,
       fakerOptions: parameters.fakerOptions,
-      envVarsPrefix: parameters.envVarsPrefix
+      envVarsPrefix: parameters.envVarsPrefix,
+      enableAdminApi: parameters.enableAdminApi,
+      disableTls: parameters.disableTls,
+      maxTransactionLogs: parameters.maxTransactionLogs
     });
 
     listenServerEvents(

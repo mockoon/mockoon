@@ -1,7 +1,8 @@
 import {
   Environment,
-  FakerAvailableLocales,
-  defaultEnvironmentVariablesPrefix
+  ServerOptions,
+  defaultEnvironmentVariablesPrefix,
+  defaultMaxTransactionLogs
 } from '@mockoon/commons';
 import {
   MockoonServer,
@@ -12,39 +13,28 @@ import { RequestListener } from 'http';
 import ServerlessHttp from 'serverless-http';
 
 export class MockoonServerless {
+  private options: ServerOptions & { logTransaction: boolean } = {
+    logTransaction: false,
+    disabledRoutes: [],
+    fakerOptions: {},
+    envVarsPrefix: defaultEnvironmentVariablesPrefix,
+    enableAdminApi: true,
+    disableTls: false,
+    maxTransactionLogs: defaultMaxTransactionLogs
+  };
+
   constructor(
     private environment: Environment,
-    private options: {
-      logTransaction?: boolean;
-      /**
-       * List of routes uuids to disable.
-       * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
-       */
-      disabledRoutes?: string[];
-      /**
-       * Faker options: seed and locale
-       */
-      fakerOptions?: {
-        // Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation.)
-        locale?: FakerAvailableLocales;
-        // Number for the Faker.js seed (e.g. 1234)
-        seed?: number;
-      };
-
-      /**
-       * Environment variables prefix
-       */
-      envVarsPrefix: string;
-    } = {
-      logTransaction: false,
-      disabledRoutes: [],
-      fakerOptions: {},
-      envVarsPrefix: defaultEnvironmentVariablesPrefix
-    }
+    options: Partial<ServerOptions>
   ) {
     if (!environment) {
       throw new Error('No environment data provided');
     }
+
+    this.options = {
+      ...this.options,
+      ...options
+    };
   }
 
   /**
@@ -58,7 +48,10 @@ export class MockoonServerless {
     const server = new MockoonServer(this.environment, {
       disabledRoutes: this.options.disabledRoutes,
       fakerOptions: this.options.fakerOptions,
-      envVarsPrefix: this.options.envVarsPrefix
+      envVarsPrefix: this.options.envVarsPrefix,
+      enableAdminApi: this.options.enableAdminApi,
+      disableTls: this.options.disableTls,
+      maxTransactionLogs: this.options.maxTransactionLogs
     });
     listenServerEvents(
       server,

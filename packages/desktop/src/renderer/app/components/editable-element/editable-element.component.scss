@@ -1,3 +1,8 @@
+:host {
+  // ensure that the element is taking up the full width of the parent
+  width: 100%;
+}
+
 .invisible-input {
   color: inherit;
   background-color: transparent;

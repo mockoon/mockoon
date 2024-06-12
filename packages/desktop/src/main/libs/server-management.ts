@@ -48,7 +48,8 @@ export class ServerInstance {
         seed: getSettings().fakerSeed,
         locale: getSettings().fakerLocale
       },
-      envVarsPrefix: getSettings().envVarsPrefix
+      envVarsPrefix: getSettings().envVarsPrefix,
+      maxTransactionLogs: getSettings().maxLogsPerEnvironment
     });
 
     listenServerEvents(

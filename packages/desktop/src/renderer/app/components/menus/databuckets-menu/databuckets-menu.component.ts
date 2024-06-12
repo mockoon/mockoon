@@ -12,15 +12,16 @@ import {
   filter,
   map
 } from 'rxjs/operators';
-import { DatabucketsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
-import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
+
+type dropdownMenuPayload = { databucketUuid: string };
 
 @Component({
   selector: 'app-databuckets-menu',
@@ -37,11 +38,55 @@ export class DatabucketsMenuComponent implements OnInit {
   public focusableInputs = FocusableInputs;
   public menuSize = Config.defaultSecondaryMenuSize;
   public trackByUuid = trackByUuid;
+  public dropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Duplicate',
+      icon: 'content_copy',
+      twoSteps: false,
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
+        this.environmentsService.duplicateDatabucket(databucketUuid);
+      }
+    },
+    {
+      label: 'Duplicate to environment',
+      icon: 'input',
+      twoSteps: false,
+      disabled$: () =>
+        this.store
+          .select('environments')
+          .pipe(map((environments) => environments.length < 2)),
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
+        this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+          databucketUuid,
+          'databucket'
+        );
+      }
+    },
+    {
+      label: 'Copy ID to clipboard',
+      icon: 'assignment',
+      twoSteps: false,
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
+        const databucket = this.store.getDatabucketByUUID(databucketUuid);
+
+        MainAPI.send('APP_WRITE_CLIPBOARD', databucket.id);
+      }
+    },
+    {
+      label: 'Delete',
+      icon: 'delete',
+      twoSteps: true,
+      confirmIcon: 'error',
+      confirmLabel: 'Confirm deletion',
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
+        this.environmentsService.removeDatabucket(databucketUuid);
+      }
+    }
+  ];
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private store: Store,
-    private eventsService: EventsService
+    private store: Store
   ) {}
 
   ngOnInit() {
@@ -91,25 +136,5 @@ export class DatabucketsMenuComponent implements OnInit {
    */
   public selectDatabucket(databucketUUID: string) {
     this.environmentsService.setActiveDatabucket(databucketUUID);
-  }
-
-  /**
-   * Show and position the context menu
-   *
-   * @param event - click event
-   */
-  public openContextMenu(databucketUUID: string, event: MouseEvent) {
-    // if right click display context menu
-    if (event && event.button === 2) {
-      const menu: ContextMenuEvent = {
-        event,
-        items: DatabucketsContextMenu(
-          databucketUUID,
-          this.store.get('environments')
-        )
-      };
-
-      this.eventsService.contextMenuEvents.next(menu);
-    }
   }
 }

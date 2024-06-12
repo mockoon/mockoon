@@ -1,11 +1,10 @@
-import contextMenu, {
-  ContextMenuFolderActions,
-  ContextMenuRouteActions
-} from '../libs/context-menu';
 import environments from '../libs/environments';
 import file from '../libs/file';
 import routes from '../libs/routes';
-import utils from '../libs/utils';
+import utils, {
+  DropdownMenuFolderActions,
+  DropdownMenuRouteActions
+} from '../libs/utils';
 
 describe('Folders', () => {
   it('should open the environment', async () => {
@@ -47,19 +46,20 @@ describe('Folders', () => {
   });
 
   it('should delete folder', async () => {
-    await contextMenu.open('routes', 1);
-    await contextMenu.clickAndConfirm(
-      'routes',
-      1,
-      ContextMenuFolderActions.DELETE
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuFolderActions.DELETE,
+      true
     );
     await routes.assertCount(0);
   });
 
   it('should create a folder in a folder', async () => {
     await routes.addFolder();
-    await contextMenu.open('routes', 1);
-    await contextMenu.click('routes', 1, ContextMenuFolderActions.ADD_FOLDER);
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuFolderActions.ADD_FOLDER
+    );
 
     await routes.assertCount(3);
     await routes.assertMenuEntryText(1, 'New folder');
@@ -68,8 +68,10 @@ describe('Folders', () => {
   });
 
   it('should create a route in a subfolder', async () => {
-    await contextMenu.open('routes', 2);
-    await contextMenu.click('routes', 2, ContextMenuFolderActions.ADD_HTTP);
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${2}) .nav-link`,
+      DropdownMenuFolderActions.ADD_HTTP
+    );
     await routes.pathInput.setValue('/subroute');
     await routes.assertCount(3);
     await routes.assertMenuEntryText(3, '/subroute');
@@ -98,8 +100,10 @@ describe('Folders', () => {
   });
 
   it('should duplicate the route in the subfolder', async () => {
-    await contextMenu.open('routes', 3);
-    await contextMenu.click('routes', 3, ContextMenuRouteActions.DUPLICATE);
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${3}) .nav-link`,
+      DropdownMenuRouteActions.DUPLICATE
+    );
     await routes.pathInput.setValue('/subroute2');
     await routes.assertCount(5);
     await routes.assertMenuEntryText(4, '/subroute2');
@@ -108,11 +112,32 @@ describe('Folders', () => {
   });
 
   it('should not be able to delete non empty folder', async () => {
-    await contextMenu.assertEntryEnabled(
-      'routes',
-      1,
-      ContextMenuFolderActions.DELETE,
-      false
+    await utils.dropdownMenuAssertDisabled(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuFolderActions.DELETE
+    );
+  });
+
+  it('should toggle all the routes inside the folder', async () => {
+    await environments.open('basic-folder-2-routes');
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuFolderActions.TOGGLE_FOLDER
+    );
+
+    await $(
+      '.routes-menu .menu-list .nav-item .nav-link.active.route-disabled'
+    ).waitForExist();
+    await utils.waitForAutosave();
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      ['disabledRoutes.c8cdc030-344f-452f-aec4-56ded95b440c.0'],
+      ['8745c4cf-88bd-4960-8353-858ae80623a5']
+    );
+    await file.verifyObjectPropertyInFile(
+      './tmp/storage/settings.json',
+      ['disabledRoutes.c8cdc030-344f-452f-aec4-56ded95b440c.1'],
+      ['7cad788c-433f-404e-bd0f-ca0bef288492']
     );
   });
 });

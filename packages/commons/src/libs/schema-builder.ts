@@ -1,3 +1,4 @@
+import { CORSHeaders } from '../constants/common.constants';
 import {
   CallbackDefault,
   DataBucketDefault,
@@ -195,7 +196,7 @@ export const BuildEnvironment = (
     port: params.port !== undefined ? params.port : EnvironmentDefault.port,
     routes: params.hasDefaultRoute ? [newRoute] : [],
     headers: params.hasDefaultHeader
-      ? [BuildHeader('Content-Type', 'application/json')]
+      ? [BuildHeader('Content-Type', 'application/json'), ...CORSHeaders]
       : [],
     proxyReqHeaders: [BuildHeader()],
     proxyResHeaders: [BuildHeader()],
@@ -231,30 +232,6 @@ export const BuildDemoEnvironment = (): Environment => {
       }
     ],
     routes: [
-      /*  {
-        ...newRoutes[0],
-        method: Methods.all,
-        endpoint: '*',
-        documentation: 'Global rules',
-        responseMode: ResponseMode.FALLBACK,
-        responses: [
-          {
-            ...BuildRouteResponse(),
-            label: "Requires the presence of an 'Authorization' header",
-            body: '{\n  "error": "Unauthorized"\n}',
-            statusCode: 401,
-            rules: [
-              {
-                target: 'header',
-                modifier: 'Authorization',
-                operator: 'null',
-                invert: false,
-                value: ''
-              }
-            ]
-          }
-        ]
-      }, */
       {
         ...newRoutes[0],
         endpoint: 'users',

@@ -1,0 +1,57 @@
+<ng-container
+  *ngIf="{
+    confirmRequested: confirmRequested$ | async
+  } as data"
+  ><div
+    ngbDropdown
+    autoClose="outside"
+    (openChange)="onChange($event)"
+    #dropdownInstance="ngbDropdown"
+    [id]="idPrefix + '-dropdown'"
+  >
+    <button
+      class="btn btn-link btn-icon dropdown-toggle dropdown-toggle-icon dropdown-toggle-no-caret"
+      [ngClass]="{ 'hover-fade': iconFaded, 'py-0': noYPadding }"
+      type="button"
+      ngbDropdownToggle
+      (click)="$event.stopPropagation()"
+    >
+      <app-svg [icon]="icon"></app-svg>
+    </button>
+    <div
+      class="dropdown-menu"
+      [id]="idPrefix + '-dropdown-menu'"
+      ngbDropdownMenu
+    >
+      @for (item of items; track $index) {
+        <ng-container
+          *ngIf="{
+            disabled: item.disabled$ && item.disabled$(payload) | async,
+            needConfirm: item.twoSteps && data.confirmRequested.enabled
+          } as flags"
+        >
+          <button
+            class="btn dropdown-item"
+            [ngClass]="{
+              'text-danger': flags.needConfirm
+            }"
+            (click)="itemClicked(item, dropdownInstance)"
+            [disabled]="flags.disabled"
+          >
+            <app-svg
+              [icon]="flags.needConfirm ? item.confirmIcon : item.icon"
+              class="pe-2"
+            ></app-svg
+            >{{
+              flags.needConfirm
+                ? item.confirmLabel
+                : flags.disabled
+                  ? item.disabledLabel || item.label
+                  : item.label
+            }}
+          </button>
+        </ng-container>
+      }
+    </div>
+  </div>
+</ng-container>

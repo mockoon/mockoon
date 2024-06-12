@@ -9,6 +9,7 @@ import {
   map
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
@@ -38,6 +39,8 @@ type CollapseStates = {
   'response.headers': boolean;
   'response.body': boolean;
 };
+
+type logsDropdownMenuPayload = { logUuid: string };
 
 @Component({
   selector: 'app-environment-logs',
@@ -72,6 +75,20 @@ export class EnvironmentLogsComponent implements OnInit {
   public logsFilter$: Observable<string>;
   public dateFormat = 'yyyy-MM-dd HH:mm:ss:SSS';
   public focusableInputs = FocusableInputs;
+  public dropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Create mock endpoint',
+      icon: 'control_point_duplicate',
+      twoSteps: false,
+      action: ({ logUuid }: logsDropdownMenuPayload) => {
+        this.environmentsService.createRouteFromLog(
+          this.store.get('activeEnvironmentUUID'),
+          logUuid,
+          true
+        );
+      }
+    }
+  ];
 
   constructor(
     private store: Store,
@@ -95,7 +112,7 @@ export class EnvironmentLogsComponent implements OnInit {
           ? environmentLogs
           : environmentLogs.filter((log) =>
               textFilter(
-                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestamp, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
                 search
               )
             )
@@ -199,15 +216,6 @@ export class EnvironmentLogsComponent implements OnInit {
    */
   public setActiveTab(tabName: EnvironmentLogsTabsNameType) {
     this.environmentsService.setActiveEnvironmentLogTab(tabName);
-  }
-
-  /**
-   * Call the environment service to create a route from the logs
-   *
-   * @param logUUID
-   */
-  public createRouteFromLog(environmentUUID: string, logUUID: string) {
-    this.environmentsService.createRouteFromLog(environmentUUID, logUUID, true);
   }
 
   /**

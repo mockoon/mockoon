@@ -16,7 +16,7 @@
 
 Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, free and open-source.
 
-It's a desktop application and a [CLI](https://mockoon.com/cli/) that help you work faster with APIs by mocking them. Integrate third-party APIs quicker, improve your integration tests, speed up your development, etc.
+It's a desktop application and a [CLI](https://mockoon.com/cli/) that helps you work faster with APIs by mocking them. Integrate third-party APIs quicker, improve your integration tests, speed up your development, etc.
 
 ➡️ [Download](https://mockoon.com/download/)
 
@@ -28,13 +28,13 @@ It's a desktop application and a [CLI](https://mockoon.com/cli/) that help you w
 
 Mockoon offers many features:
 
-- unlimited number of mock local servers and routes
+- Unlimited number of mock local servers and routes
 - CLI to run your mock in headless environments, CI, etc.
-- complete control on routes definition: HTTP methods and statuses, regex paths, file serving, custom headers, etc.
+- Complete control on routes definition: HTTP methods and statuses, regex paths, file serving, custom headers, etc.
 - OpenAPI compatibility
 - Record/logs of all entering and forwarded requests
 - JSON templating
-- proxy forwarding mode
+- Proxy forwarding mode
 - HTTPS support
 
 You can check the [complete list](https://mockoon.com/features/) on the website.
@@ -113,7 +113,7 @@ With advanced features for solo developers and teams, Mockoon Pro supercharges y
 
 - 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/docs/latest/mockoon-cloud/data-synchronization-team-collaboration/)
 - 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
-- 📃 Access to dozens of [ready to use JSON templates](https://mockoon.com/templates/).
+- 📃 Access to dozens of [ready-to-use JSON templates](https://mockoon.com/templates/).
 - 💬 Priority support and training.
 
 Upgrade today and take your API development to the next level.
@@ -132,7 +132,7 @@ You will find Mockoon applications [changelogs](https://mockoon.com/releases/) o
 
 ## Support/feedback
 
-You can discuss all things related to Mockoon, and ask for help, on the [official community](https://github.com/mockoon/mockoon/discussions). It's also a good place to discuss bugs and feature requests before opening an issue on this repository. For more chat-like discussions, you can also join our [Discord server](https://discord.gg/FtJjkejKGp).
+You can discuss all things related to Mockoon and ask for help on the [official community](https://github.com/mockoon/mockoon/discussions). It's also a good place to discuss bugs and feature requests before opening an issue on this repository. For more chat-like discussions, you can also join our [Discord server](https://discord.gg/FtJjkejKGp).
 
 ## Contributing
 

@@ -1,62 +1,89 @@
-<div class="footer d-flex">
-  <div class="d-flex me-auto">
-    <div
-      class="footer-item with-border-end d-flex align-items-center px-2"
-      *ngIf="updateAvailable$ | async as updateVersion"
-    >
-      <p class="mb-0">
-        <app-svg icon="update"></app-svg> Update available
-        <a href="{{ releaseUrl + updateVersion + '/' }}" target="_blank"
-          >View changelog</a
-        >
-      </p>
-      <button
-        class="btn btn-custom btn-xs ms-2 text-success"
-        (click)="applyUpdate()"
+<ng-container
+  *ngIf="{
+    generatingTemplate: generatingTemplate$ | async,
+    generatingEndpoint: generatingEndpoint$ | async
+  } as data"
+>
+  <div class="footer d-flex">
+    <div class="d-flex me-auto">
+      <div
+        class="footer-item with-border-end d-flex align-items-center px-2"
+        *ngIf="updateAvailable$ | async as updateVersion"
       >
-        {{ (platform$ | async) === 'win32' ? 'Install' : 'Download' }}
-      </button>
-    </div>
+        <p class="mb-0">
+          <app-svg icon="update"></app-svg> Update available
+          <a href="{{ releaseUrl + updateVersion + '/' }}" target="_blank"
+            >View changelog</a
+          >
+        </p>
+        <button
+          class="btn btn-custom btn-xs ms-2 text-success"
+          (click)="applyUpdate()"
+        >
+          {{ (platform$ | async) === 'win32' ? 'Install' : 'Download' }}
+        </button>
+      </div>
 
-    <div class="footer-item">
-      <app-banner></app-banner>
-    </div>
-  </div>
-
-  <ng-container *ngIf="uiState$ | async as uiState">
-    <div
-      *ngIf="uiState.closing || uiState.saving"
-      class="footer-item with-border-start d-flex align-items-center px-2"
-    >
-      <div class="footer-save animation-flash">
-        <app-svg icon="save" class="me-1"></app-svg>
-        <ng-container *ngIf="uiState.closing">Shutting down...</ng-container>
-        <ng-container *ngIf="uiState.saving">Saving...</ng-container>
+      <div class="footer-item">
+        <app-banner></app-banner>
       </div>
     </div>
-  </ng-container>
 
-  <ng-container *ngIf="generatingTemplate$ | async as generatingTemplate">
+    <ng-container *ngIf="uiState$ | async as uiState">
+      <div
+        *ngIf="uiState.closing || uiState.saving"
+        class="footer-item with-border-start d-flex align-items-center px-2"
+      >
+        <div class="footer-save animation-flash">
+          <app-svg icon="save" class="me-1"></app-svg>
+          <ng-container *ngIf="uiState.closing">Shutting down...</ng-container>
+          <ng-container *ngIf="uiState.saving">Saving...</ng-container>
+        </div>
+      </div>
+    </ng-container>
+
     <div
-      *ngIf="generatingTemplate !== 'NONE'"
+      *ngIf="data.generatingTemplate !== 'NONE'"
       class="footer-item with-border-start d-flex align-items-center px-2"
     >
       <button
-        *ngIf="generatingTemplate === 'DONE'"
+        *ngIf="data.generatingTemplate === 'DONE'"
         class="btn btn-custom btn-xs text-success"
-        (click)="openTemplateModal()"
+        (click)="openTemplateModal('GENERATE_TEMPLATE')"
       >
         <app-svg icon="magic" size="12" class="me-1"></app-svg>
         Template generated
       </button>
       <button
-        *ngIf="generatingTemplate === 'INPROGRESS'"
+        *ngIf="data.generatingTemplate === 'INPROGRESS'"
         class="btn btn-custom btn-xs text-warning"
-        (click)="openTemplateModal()"
+        (click)="openTemplateModal('GENERATE_TEMPLATE')"
       >
         <app-svg icon="spinner" size="12" class="me-1"></app-svg>
         Generating template
       </button>
     </div>
-  </ng-container>
-</div>
+
+    <div
+      *ngIf="data.generatingEndpoint !== 'NONE'"
+      class="footer-item with-border-start d-flex align-items-center px-2"
+    >
+      <button
+        *ngIf="data.generatingEndpoint === 'DONE'"
+        class="btn btn-custom btn-xs text-success"
+        (click)="openTemplateModal('GENERATE_ENDPOINT')"
+      >
+        <app-svg icon="magic" size="12" class="me-1"></app-svg>
+        Endpoint generated
+      </button>
+      <button
+        *ngIf="data.generatingEndpoint === 'INPROGRESS'"
+        class="btn btn-custom btn-xs text-warning"
+        (click)="openTemplateModal('GENERATE_ENDPOINT')"
+      >
+        <app-svg icon="spinner" size="12" class="me-1"></app-svg>
+        Generating endpoint
+      </button>
+    </div>
+  </div>
+</ng-container>

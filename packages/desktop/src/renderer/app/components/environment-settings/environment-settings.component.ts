@@ -61,11 +61,11 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
     this.dialogsService
       .showOpenDialog('Choose a file', null, false)
       .pipe(
-        tap((filePath) => {
-          if (filePath) {
+        tap((filePaths) => {
+          if (filePaths[0]) {
             this.activeEnvironmentForm
               .get(['tlsOptions', target])
-              .setValue(filePath);
+              .setValue(filePaths[0]);
           }
         })
       )

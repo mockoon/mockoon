@@ -27,6 +27,7 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
@@ -43,6 +44,8 @@ import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
+
+type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
 
 @Component({
   selector: 'app-environment-callbacks',
@@ -70,31 +73,30 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public httpMethod = Methods;
   public bodySupportingMethods = [Methods.post, Methods.put, Methods.patch];
   public callbackMethods: DropdownItems<Methods> = [
-    { value: Methods.get, label: 'GET', classes: 'route-badge-get-text' },
-    { value: Methods.post, label: 'POST', classes: 'route-badge-post-text' },
-    { value: Methods.put, label: 'PUT', classes: 'route-badge-put-text' },
+    { value: Methods.get, label: 'GET', classes: 'color-method-get' },
+    { value: Methods.post, label: 'POST', classes: 'color-method-post' },
+    { value: Methods.put, label: 'PUT', classes: 'color-method-put' },
     {
       value: Methods.patch,
       label: 'PATCH',
-      classes: 'route-badge-patch-text'
+      classes: 'color-method-patch'
     },
     {
       value: Methods.delete,
       label: 'DELETE',
-      classes: 'route-badge-delete-text'
+      classes: 'color-method-delete'
     },
     {
       value: Methods.head,
       label: 'HEAD',
-      classes: 'route-badge-head-text'
+      classes: 'color-method-head'
     },
     {
       value: Methods.options,
       label: 'OPTIONS',
-      classes: 'route-badge-options-text'
+      classes: 'color-method-options'
     }
   ];
-
   public bodyType: ToggleItems = [
     {
       value: 'INLINE',
@@ -107,6 +109,45 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     {
       value: 'DATABUCKET',
       label: 'Data'
+    }
+  ];
+  public fileDropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Browse',
+      icon: 'find_in_page',
+      twoSteps: false,
+      action: () => {
+        this.dialogsService
+          .showOpenDialog('Choose a file', null, false)
+          .pipe(
+            tap((filePaths) => {
+              if (filePaths[0]) {
+                this.activeCallbackForm.get('filePath').setValue(filePaths[0]);
+              }
+            })
+          )
+          .subscribe();
+      }
+    },
+    {
+      label: 'Show file in explorer/finder',
+      icon: 'folder',
+      twoSteps: false,
+      action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
+        const environmentPath = this.store.getEnvironmentPath(environmentUuid);
+
+        MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+      }
+    },
+    {
+      label: 'Open file in editor',
+      icon: 'file_open',
+      twoSteps: false,
+      action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
+        const environmentPath = this.store.getEnvironmentPath(environmentUuid);
+
+        MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+      }
     }
   ];
   private destroy$ = new Subject<void>();
@@ -202,44 +243,6 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.unsubscribe();
-  }
-
-  /**
-   * Open file browsing dialog
-   */
-  public browseFiles() {
-    this.dialogsService
-      .showOpenDialog('Choose a file', null, false)
-      .pipe(
-        tap((filePath) => {
-          if (filePath) {
-            this.activeCallbackForm.get('filePath').setValue(filePath);
-          }
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * Open file in Default Editor
-   */
-  public openFile(filePath: string, activeEnvironmentUuid: string) {
-    const environmentPath = this.store.getEnvironmentPath(
-      activeEnvironmentUuid
-    );
-
-    MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
-  }
-
-  /**
-   * Show file in Finder / Explorer
-   */
-  public showFile(filePath: string, activeEnvironmentUuid: string) {
-    const environmentPath = this.store.getEnvironmentPath(
-      activeEnvironmentUuid
-    );
-
-    MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
   }
 
   /**

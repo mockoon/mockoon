@@ -38,6 +38,7 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { StatusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
@@ -60,6 +61,8 @@ import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
+
+type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
 
 @Component({
   selector: 'app-environment-routes',
@@ -91,7 +94,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     {
       value: Methods.all,
       label: 'All methods',
-      classes: 'route-badge-all-text'
+      classes: 'color-method-all'
     },
     {
       label: 'HTTP',
@@ -100,37 +103,37 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     {
       value: Methods.get,
       label: 'GET',
-      classes: 'route-badge-get-text'
+      classes: 'color-method-get'
     },
     {
       value: Methods.post,
       label: 'POST',
-      classes: 'route-badge-post-text'
+      classes: 'color-method-post'
     },
     {
       value: Methods.put,
       label: 'PUT',
-      classes: 'route-badge-put-text'
+      classes: 'color-method-put'
     },
     {
       value: Methods.patch,
       label: 'PATCH',
-      classes: 'route-badge-patch-text'
+      classes: 'color-method-patch'
     },
     {
       value: Methods.delete,
       label: 'DELETE',
-      classes: 'route-badge-delete-text'
+      classes: 'color-method-delete'
     },
     {
       value: Methods.head,
       label: 'HEAD',
-      classes: 'route-badge-head-text'
+      classes: 'color-method-head'
     },
     {
       value: Methods.options,
       label: 'OPTIONS',
-      classes: 'route-badge-options-text'
+      classes: 'color-method-options'
     },
     {
       label: 'WebDAV',
@@ -139,37 +142,37 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     {
       value: Methods.propfind,
       label: 'PROPFIND',
-      classes: 'route-badge-propfind-text'
+      classes: 'color-method-propfind'
     },
     {
       value: Methods.proppatch,
       label: 'PROPPATCH',
-      classes: 'route-badge-proppatch-text'
+      classes: 'color-method-proppatch'
     },
     {
       value: Methods.move,
       label: 'MOVE',
-      classes: 'route-badge-move-text'
+      classes: 'color-method-move'
     },
     {
       value: Methods.copy,
       label: 'COPY',
-      classes: 'route-badge-copy-text'
+      classes: 'color-method-copy'
     },
     {
       value: Methods.mkcol,
       label: 'MKCOL',
-      classes: 'route-badge-mkcol-text'
+      classes: 'color-method-mkcol'
     },
     {
       value: Methods.lock,
       label: 'LOCK',
-      classes: 'route-badge-lock-text'
+      classes: 'color-method-lock'
     },
     {
       value: Methods.unlock,
       label: 'UNLOCK',
-      classes: 'route-badge-unlock-text'
+      classes: 'color-method-unlock'
     }
   ];
   public responseModes: ToggleItems = [
@@ -215,12 +218,52 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     RulesDisablingResponseModes;
   public rulesNotUsingDefaultResponse: ResponseMode[] =
     RulesNotUsingDefaultResponse;
-
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;
   public focusableInputs = FocusableInputs;
   public Infinity = Infinity;
   public texts = Texts;
+  public fileDropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Browse',
+      icon: 'find_in_page',
+      twoSteps: false,
+      action: () => {
+        this.dialogsService
+          .showOpenDialog('Choose a file', null, false)
+          .pipe(
+            tap((filePaths) => {
+              if (filePaths[0]) {
+                this.activeRouteResponseForm
+                  .get('filePath')
+                  .setValue(filePaths[0]);
+              }
+            })
+          )
+          .subscribe();
+      }
+    },
+    {
+      label: 'Show file in explorer/finder',
+      icon: 'folder',
+      twoSteps: false,
+      action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
+        const environmentPath = this.store.getEnvironmentPath(environmentUuid);
+
+        MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
+      }
+    },
+    {
+      label: 'Open file in editor',
+      icon: 'file_open',
+      twoSteps: false,
+      action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
+        const environmentPath = this.store.getEnvironmentPath(environmentUuid);
+
+        MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+      }
+    }
+  ];
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -429,44 +472,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     }
 
     return false;
-  }
-
-  /**
-   * Open file browsing dialog
-   */
-  public browseFiles() {
-    this.dialogsService
-      .showOpenDialog('Choose a file', null, false)
-      .pipe(
-        tap((filePath) => {
-          if (filePath) {
-            this.activeRouteResponseForm.get('filePath').setValue(filePath);
-          }
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * Open file in Default Editor
-   */
-  public openFile(filePath: string, activeEnvironmentUuid: string) {
-    const environmentPath = this.store.getEnvironmentPath(
-      activeEnvironmentUuid
-    );
-
-    MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
-  }
-
-  /**
-   * Show file in Finder / Explorer
-   */
-  public showFile(filePath: string, activeEnvironmentUuid: string) {
-    const environmentPath = this.store.getEnvironmentPath(
-      activeEnvironmentUuid
-    );
-
-    MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
   }
 
   /**

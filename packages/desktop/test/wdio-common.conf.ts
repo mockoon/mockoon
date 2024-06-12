@@ -20,5 +20,10 @@ export const config: Partial<Options.Testrunner> = {
   mochaOpts: {
     ui: 'bdd',
     timeout: 60000
+  },
+  runnerEnv: {
+    MOCKOON_TLS_TEST_CERT_PATH: './domain.crt',
+    MOCKOON_TLS_TEST_KEY_PATH: './domain.key',
+    MOCKOON_TLS_TEST_PASSPHRASE: '123456'
   }
 };

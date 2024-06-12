@@ -14,5 +14,14 @@
   "startEnvironmentsOnLoad": false,
   "logTransactions": false,
   "disabledRoutes": {},
-  "collapsedFolders": {}
+  "collapsedFolders": {},
+  "fileWatcherEnabled": "disabled",
+  "dialogWorkingDir": "",
+  "environmentsCategoriesOrder": ["local", "cloud"],
+  "environmentsCategoriesCollapsed": {
+    "local": false,
+    "cloud": false
+  },
+  "envVarsPrefix": "MOCKOON_",
+  "activeEnvironmentUuid": null
 }

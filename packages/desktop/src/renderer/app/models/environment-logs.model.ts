@@ -25,7 +25,7 @@ export type EnvironmentLog = {
   UUID: string;
   routeUUID: string;
   routeResponseUUID: string;
-  timestamp: Date;
+  timestampMs: number;
   // full URL called
   url: string;
   // internal route matched

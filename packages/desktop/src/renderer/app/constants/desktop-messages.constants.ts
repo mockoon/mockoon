@@ -84,16 +84,6 @@ export const DesktopMessages: {
     log: false,
     toastType: 'error'
   }),
-  REQUEST_BODY_PARSE: (messageParams) => {
-    const message = `Error while parsing entering body: ${messageParams.error.message}`;
-
-    return {
-      message,
-      showToast: true,
-      log: false,
-      toastType: 'error'
-    };
-  },
   ROUTE_CREATION_ERROR: (messageParams) => ({
     message: `Error while creating the route: ${messageParams.error.message}`,
     log: false,
