@@ -385,8 +385,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const requestContentType: string | undefined =
       request.header('Content-Type');
 
-    // body was already parsed (e.g. by firebase), 'data' event will not be emitted
-    if (!!request.body) {
+    // body was already parsed (e.g. by firebase), 'data' event will not be emitted (⚠️ request.body will always be an empty object in Firebase Functions, we have to check rawBody too)
+    if (!!request.body && request.rawBody) {
       this.processRawBody(request, next, [request.rawBody], requestContentType);
     } else {
       const rawBody: Buffer[] = [];
