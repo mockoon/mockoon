@@ -23,7 +23,7 @@ const filter = function (...args) {
       if (typeof payload === 'object') {
         const keys = Object.keys(condition);
 
-        return keys.every((k) => payload[k] === condition[k]);
+        return keys.every((k) => validate(payload[k], condition[k]));
       }
 
       return false;
