@@ -20,7 +20,8 @@ export class MockoonServerless {
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
     disableTls: false,
-    maxTransactionLogs: defaultMaxTransactionLogs
+    maxTransactionLogs: defaultMaxTransactionLogs,
+    enableRandomLatency: false
   };
 
   constructor(
@@ -51,7 +52,8 @@ export class MockoonServerless {
       envVarsPrefix: this.options.envVarsPrefix,
       enableAdminApi: this.options.enableAdminApi,
       disableTls: this.options.disableTls,
-      maxTransactionLogs: this.options.maxTransactionLogs
+      maxTransactionLogs: this.options.maxTransactionLogs,
+      enableRandomLatency: this.options.enableRandomLatency
     });
     listenServerEvents(
       server,

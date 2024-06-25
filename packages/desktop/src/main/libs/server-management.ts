@@ -49,7 +49,8 @@ export class ServerInstance {
         locale: getSettings().fakerLocale
       },
       envVarsPrefix: getSettings().envVarsPrefix,
-      maxTransactionLogs: getSettings().maxLogsPerEnvironment
+      maxTransactionLogs: getSettings().maxLogsPerEnvironment,
+      enableRandomLatency: getSettings().enableRandomLatency
     });
 
     listenServerEvents(

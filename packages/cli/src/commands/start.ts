@@ -29,7 +29,8 @@ export default class Start extends Command {
     '$ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1',
     '$ mockoon-cli start --data https://file-server/data.json',
     '$ mockoon-cli start --data ~/data.json --log-transaction',
-    '$ mockoon-cli start --data ~/data.json --disable-routes route1 route2'
+    '$ mockoon-cli start --data ~/data.json --disable-routes route1 route2',
+    '$ mockoon-cli start --data ~/data.json --enable-random-latency'
   ];
 
   public static flags = {
@@ -94,6 +95,11 @@ export default class Start extends Command {
     'max-transaction-logs': Flags.integer({
       description: `Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: ${defaultMaxTransactionLogs}).`,
       default: defaultMaxTransactionLogs
+    }),
+    'enable-random-latency': Flags.boolean({
+      description:
+        'Enable random latency from 0 to value specified in the route settings',
+      default: false
     })
   };
 
@@ -144,7 +150,8 @@ export default class Start extends Command {
           envVarsPrefix: userFlags['env-vars-prefix'],
           enableAdminApi: !userFlags['disable-admin-api'],
           disableTls: userFlags['disable-tls'],
-          maxTransactionLogs: userFlags['max-transaction-logs']
+          maxTransactionLogs: userFlags['max-transaction-logs'],
+          enableRandomLatency: userFlags['enable-random-latency']
         });
       }
     } catch (error: any) {
@@ -167,7 +174,8 @@ export default class Start extends Command {
       envVarsPrefix: parameters.envVarsPrefix,
       enableAdminApi: parameters.enableAdminApi,
       disableTls: parameters.disableTls,
-      maxTransactionLogs: parameters.maxTransactionLogs
+      maxTransactionLogs: parameters.maxTransactionLogs,
+      enableRandomLatency: parameters.enableRandomLatency
     });
 
     listenServerEvents(

@@ -231,3 +231,12 @@ export const isContentTypeApplicationJson = (headers: Header[]) => {
     ? stringIncludesArrayItems(ParsedJSONBodyMimeTypes, contentType)
     : false;
 };
+
+/**
+ * Get latency value (ms) depending on whether it should be randomized or not
+ *
+ * @param latency
+ * @param enableRandomLatency
+ */
+export const getLatency = (latency: number, enableRandomLatency: boolean) =>
+  enableRandomLatency ? RandomInt(0, latency) : latency;
