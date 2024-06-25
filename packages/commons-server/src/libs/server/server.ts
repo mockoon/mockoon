@@ -16,6 +16,7 @@ import {
   ParsedJSONBodyMimeTypes,
   ParsedXMLBodyMimeTypes,
   ProcessedDatabucket,
+  RandomInt,
   Route,
   RouteResponse,
   RouteType,
@@ -83,7 +84,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
     disableTls: false,
-    maxTransactionLogs: defaultMaxTransactionLogs
+    maxTransactionLogs: defaultMaxTransactionLogs,
+    enableRandomLatency: false
   };
   private transactionLogs: Transaction[] = [];
 
@@ -272,9 +274,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     response: Response,
     next: NextFunction
   ) => {
+    const latency = this.options.enableRandomLatency
+      ? RandomInt(0, this.environment.latency)
+      : this.environment.latency;
+
     this.refreshEnvironment();
 
-    setTimeout(next, this.environment.latency);
+    setTimeout(next, latency);
   };
 
   /**

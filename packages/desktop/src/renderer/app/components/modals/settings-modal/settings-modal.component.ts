@@ -88,7 +88,8 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
       enableTelemetry: [SettingsDefault.enableTelemetry],
       startEnvironmentsOnLoad: [SettingsDefault.startEnvironmentsOnLoad],
       logTransactions: [SettingsDefault.logTransactions],
-      envVarsPrefix: [SettingsDefault.envVarsPrefix]
+      envVarsPrefix: [SettingsDefault.envVarsPrefix],
+      enableRandomLatency: [SettingsDefault.enableRandomLatency]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -130,7 +131,8 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
               enableTelemetry: settings.enableTelemetry,
               startEnvironmentsOnLoad: settings.startEnvironmentsOnLoad,
               logTransactions: settings.logTransactions,
-              envVarsPrefix: settings.envVarsPrefix
+              envVarsPrefix: settings.envVarsPrefix,
+              enableRandomLatency: settings.enableRandomLatency
             },
             { emitEvent: false }
           );
