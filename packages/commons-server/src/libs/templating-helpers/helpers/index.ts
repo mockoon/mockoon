@@ -70,10 +70,13 @@ import parseInt from './parseInt';
 import phone from './phone';
 import postcode from './postcode';
 import repeat from './repeat';
+import reverse from './reverse';
 import round from './round';
 import setVar from './setVar';
 import slice from './slice';
 import someOf from './someOf';
+import sort from './sort';
+import sortBy from './sortBy';
 import split from './split';
 import street from './street';
 import stringify from './stringify';
@@ -146,10 +149,13 @@ export const Helpers = {
   phone,
   postcode,
   repeat,
+  reverse,
   round,
   setVar,
   slice,
   someOf,
+  sort,
+  sortBy,
   split,
   street,
   stringify,
