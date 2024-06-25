@@ -32,7 +32,8 @@ export const SettingsDefault: Settings = {
     cloud: false
   },
   envVarsPrefix: defaultEnvironmentVariablesPrefix,
-  activeEnvironmentUuid: null
+  activeEnvironmentUuid: null,
+  enableRandomLatency: false
 };
 
 export const SettingsSchema = Joi.object<Settings, true>({
@@ -134,6 +135,9 @@ export const SettingsSchema = Joi.object<Settings, true>({
     .uuid()
     .allow(null)
     .failover(SettingsDefault.activeEnvironmentUuid)
+    .required(),
+  enableRandomLatency: Joi.boolean()
+    .failover(SettingsDefault.enableRandomLatency)
     .required()
 })
   .failover(SettingsDefault)
