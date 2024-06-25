@@ -89,6 +89,17 @@ export class ServerService extends Logger {
           this.telemetryService.sendEvent();
           break;
 
+        case 'ws-new-connection':
+          if (data.inflightRequest) {
+            this.zone.run(() => {
+              this.eventsService.serverTransaction$.next({
+                environmentUUID,
+                inflightRequest: data.inflightRequest
+              });
+            });
+          }
+          break;
+
         case 'transaction-complete':
           if (data.transaction) {
             this.zone.run(() => {

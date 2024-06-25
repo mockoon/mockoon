@@ -1,6 +1,6 @@
 {
   "uuid": "9b0b72a7-3338-4599-985a-d4474edb712b",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "YouTube Analytics",
   "endpointPrefix": "",
   "latency": 0,
@@ -40,7 +40,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "c340eed3-6388-4c2c-8ea5-da13d5e1e40c",
@@ -74,7 +76,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "e0544247-afb9-4fd5-b30f-c06d84be9916",
@@ -108,7 +112,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "6ca2b88d-5d9c-4408-bd5d-56a1dab42b26",
@@ -142,7 +148,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "8f0f6be8-0aeb-4330-ab62-8bfca24573d1",
@@ -176,7 +184,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "3b195fe9-d975-4c99-8820-b07b6b6f3b46",
@@ -210,7 +220,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "066b3729-9917-4d0e-a832-913b24c9e45e",
@@ -244,7 +256,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "94058f03-284e-43d5-a90a-1e2b1eb74180",
@@ -278,7 +292,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -329,18 +345,8 @@
   },
   "cors": true,
   "headers": [],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
   "callbacks": []
 }

@@ -954,7 +954,12 @@ export const environmentReducer = (
     }
 
     case ActionTypes.UPDATE_ROUTE: {
-      const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method'];
+      const propertiesNeedingRestart: (keyof Route)[] = [
+        'endpoint',
+        'method',
+        'streamingMode',
+        'streamingInterval'
+      ];
 
       newState = {
         ...state,

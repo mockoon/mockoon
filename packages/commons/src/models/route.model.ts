@@ -39,6 +39,11 @@ export enum ResponseMode {
   FALLBACK = 'FALLBACK'
 }
 
+export enum StreamingMode {
+  UNICAST = 'UNICAST',
+  BROADCAST = 'BROADCAST'
+}
+
 export const RulesDisablingResponseModes: ResponseMode[] = [
   ResponseMode.RANDOM,
   ResponseMode.SEQUENTIAL,
@@ -79,7 +84,8 @@ export type ResponseRuleTargets =
 
 export enum RouteType {
   HTTP = 'http',
-  CRUD = 'crud'
+  CRUD = 'crud',
+  WS = 'ws'
 }
 
 export type Route = {
@@ -90,6 +96,9 @@ export type Route = {
   endpoint: string;
   responses: RouteResponse[];
   responseMode: ResponseMode | null;
+  // used in websocket routes
+  streamingMode: StreamingMode | null;
+  streamingInterval: number;
 };
 
 export type Header = { key: string; value: string };

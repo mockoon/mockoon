@@ -645,6 +645,20 @@ export const Migrations: {
 
       return PostMigrationActionCollapsedFolders(collapsedFoldersUuids);
     }
+  },
+  /**
+   * WebSockets
+   */
+  {
+    id: 33,
+    migrationFunction: (environment: Environment) => {
+      if (environment.routes) {
+        environment.routes.forEach((route) => {
+          route.streamingMode = RouteDefault.streamingMode;
+          route.streamingInterval = RouteDefault.streamingInterval;
+        });
+      }
+    }
   }
 ];
 

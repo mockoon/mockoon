@@ -1,6 +1,7 @@
 import {
   Environment,
   Environments,
+  InFlightRequest,
   ServerErrorCodes,
   ServerEvents,
   Transaction
@@ -105,6 +106,7 @@ export interface MainAPIModel {
         errorCode?: ServerErrorCodes;
         originalError?: Error;
         transaction?: Transaction;
+        inflightRequest?: InFlightRequest;
       }
     ) => void
   ): void;

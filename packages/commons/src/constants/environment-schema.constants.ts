@@ -16,7 +16,8 @@ import {
   ResponseRule,
   Route,
   RouteResponse,
-  RouteType
+  RouteType,
+  StreamingMode
 } from '../models/route.model';
 import { GenerateUniqueID, generateUUID } from '../utils/utils';
 
@@ -70,7 +71,9 @@ export const RouteDefault: Route = {
   method: Methods.get,
   endpoint: '',
   responses: [],
-  responseMode: null
+  responseMode: null,
+  streamingMode: null,
+  streamingInterval: 0
 };
 
 export const RouteResponseDefault: RouteResponse = {
@@ -358,7 +361,7 @@ export const FolderSchema = Joi.object<Folder, true>({
 export const RouteSchema = Joi.object<Route, true>({
   uuid: UUIDSchema,
   type: Joi.string()
-    .valid(RouteType.HTTP, RouteType.CRUD)
+    .valid(RouteType.HTTP, RouteType.CRUD, RouteType.WS)
     .failover(RouteDefault.type)
     .required(),
   documentation: Joi.string()
@@ -400,6 +403,15 @@ export const RouteSchema = Joi.object<Route, true>({
       ResponseMode.FALLBACK
     )
     .failover(RouteDefault.responseMode)
+    .required(),
+  streamingMode: Joi.string()
+    .allow(null)
+    .valid(StreamingMode.UNICAST, StreamingMode.BROADCAST)
+    .failover(RouteDefault.streamingMode)
+    .required(),
+  streamingInterval: Joi.number()
+    .min(0)
+    .failover(RouteDefault.streamingInterval)
     .required()
 });
 

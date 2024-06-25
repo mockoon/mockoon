@@ -1,6 +1,6 @@
 {
   "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -33,7 +33,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "101957a1-2557-41ff-a42c-00af00f7ad66",
@@ -62,7 +64,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "c2f80546-b6ea-44bd-9748-9dd923653f3a",
@@ -91,7 +95,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "493365b8-7f69-434b-adca-e6092a17c1dc",
@@ -120,7 +126,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,

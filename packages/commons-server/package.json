@@ -50,6 +50,7 @@
     "range-parser": "1.2.1",
     "typed-emitter": "2.1.0",
     "winston": "3.13.0",
+    "ws": "8.14.2",
     "xml-js": "1.6.11"
   },
   "devDependencies": {

@@ -21,5 +21,9 @@ export const ServerMessages = {
   SERVER_STOPPED: 'Server stopped',
   SERVER_CREATING_PROXY: 'Creating proxy to %s',
   CALLBACK_FILE_ERROR: 'Error while attaching file to callback request: %s',
-  CALLBACK_ERROR: 'Error while executing callback: %s'
+  CALLBACK_ERROR: 'Error while executing callback: %s',
+
+  WS_UNKNOWN_ROUTE: 'No matching route found for websocket! %s',
+  WS_UNSUPPORTED_CONTENT: 'Unsupported content recieved from websocket! %s',
+  WS_SERVING_ERROR: 'Web socket serving error! %s'
 };

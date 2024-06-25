@@ -123,7 +123,7 @@ export class EnvironmentLogsComponent implements OnInit {
       distinctUntilChanged(),
       map((environmentLog) => {
         if (environmentLog) {
-          if (environmentLog.response.body) {
+          if (environmentLog.response?.body) {
             const contentEncoding = environmentLog.response.headers.find(
               (header) => header.key.toLowerCase() === 'content-encoding'
             )?.value;

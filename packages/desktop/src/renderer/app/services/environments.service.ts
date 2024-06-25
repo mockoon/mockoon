@@ -14,6 +14,7 @@ import {
   BuildHTTPRoute,
   BuildHeader,
   BuildRouteResponse,
+  BuildWebSocketRoute,
   Callback,
   CloneCallback,
   CloneDataBucket,
@@ -74,6 +75,7 @@ import {
   CallbackUsage
 } from 'src/renderer/app/models/callback.model';
 import { DataSubject } from 'src/renderer/app/models/data.model';
+import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
 import {
   EnvironmentLogsTabsNameType,
@@ -1103,6 +1105,37 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Add a new HTTP route and save it in the store
+   */
+  public addWebSocketRoute(
+    folderId: string | 'root',
+    options: {
+      endpoint: typeof RouteDefault.endpoint;
+      body: typeof RouteResponseDefault.body;
+    } = {
+      endpoint: RouteDefault.endpoint,
+      body: RouteResponseDefault.body
+    }
+  ) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (activeEnvironment) {
+      this.store.update(
+        addRouteAction(
+          activeEnvironment.uuid,
+          BuildWebSocketRoute(true, options),
+          folderId,
+          true
+        )
+      );
+
+      setTimeout(() => {
+        this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
+      }, 0);
+    }
+  }
+
+  /**
    * Add a new CRUD route and save it in the store
    */
   public addCRUDRoute(
@@ -1456,7 +1489,8 @@ export class EnvironmentsService extends Logger {
 
     // we shouldn't be able to remove the last route response
     if (
-      (activeRoute.type === RouteType.HTTP &&
+      ((activeRoute.type === RouteType.HTTP ||
+        activeRoute.type === RouteType.WS) &&
         activeRoute.responses.length > 1) ||
       (activeRoute.type === RouteType.CRUD &&
         !activeRouteResponse.default &&
@@ -1880,6 +1914,7 @@ export class EnvironmentsService extends Logger {
       let routeResponse: RouteResponse;
       const prefix = targetEnvironment.endpointPrefix;
       let endpoint = log.url.slice(1); // Remove the initial slash '/'
+      const routeType = log.protocol === 'ws' ? RouteType.WS : RouteType.HTTP;
       if (prefix && endpoint.startsWith(prefix)) {
         endpoint = endpoint.slice(prefix.length + 1); // Remove the prefix and the slash
       }
@@ -1894,7 +1929,7 @@ export class EnvironmentsService extends Logger {
         environmentHasRoute(targetEnvironment, {
           endpoint,
           method: log.method,
-          type: RouteType.HTTP
+          type: routeType
         })
       ) {
         return;
@@ -1933,7 +1968,9 @@ export class EnvironmentsService extends Logger {
       }
 
       const newRoute: Route = {
-        ...BuildHTTPRoute(),
+        ...(routeType === RouteType.WS
+          ? BuildWebSocketRoute()
+          : BuildHTTPRoute()),
         method: log.method,
         endpoint,
         responses: [routeResponse]
@@ -2088,7 +2125,18 @@ export class EnvironmentsService extends Logger {
   public listenServerTransactions() {
     return this.eventsService.serverTransaction$.pipe(
       tap((data) => {
-        const formattedLog = this.dataService.formatLog(data.transaction);
+        let formattedLog: EnvironmentLog;
+        if (data.transaction) {
+          formattedLog = this.dataService.formatLog(data.transaction);
+        } else if (data.inflightRequest) {
+          formattedLog = this.dataService.formatLogFromInFlightRequest(
+            data.inflightRequest
+          );
+        }
+
+        if (!formattedLog) {
+          return;
+        }
 
         this.store.update(logRequestAction(data.environmentUUID, formattedLog));
 
