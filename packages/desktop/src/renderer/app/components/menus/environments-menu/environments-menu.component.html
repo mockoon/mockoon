@@ -10,7 +10,8 @@
     categories: categories$ | async,
     sync: sync$ | async,
     syncAlert: syncAlert$ | async,
-    settings: settings$ | async
+    settings: settings$ | async,
+    instances: instances$ | async
   } as data"
 >
   <div
@@ -205,9 +206,26 @@
 
             <div class="nav-link-subtitle mt-1 d-flex align-items-center">
               <app-svg
+                *ngIf="data.instances[environment.uuid]"
+                class="me-2"
+                [ngClass]="{
+                  'text-success':
+                    data.instances[environment.uuid]?.status === 'RUNNING',
+                  'text-danger':
+                    data.instances[environment.uuid]?.status === 'STOPPED'
+                }"
+                icon="record"
+                size="12"
+                [ngbTooltip]="
+                  data.instances[environment.uuid]?.status === 'RUNNING'
+                    ? 'Instance running'
+                    : 'Instance stopped'
+                "
+              ></app-svg>
+              <app-svg
                 *ngIf="environment.tlsOptions.enabled"
                 class="text-warning me-2"
-                icon="https"
+                icon="lock"
                 size="12"
                 ngbTooltip="TLS enabled"
               ></app-svg>

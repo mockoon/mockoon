@@ -7,6 +7,8 @@ export type User = {
   plan: Plans;
   teamId: string;
   teamRole: TeamRoles;
+  deployInstancesQuota: number;
+  deployInstancesQuotaUsed: number;
   cloudSyncItemsQuota: number;
   cloudSyncItemsQuotaUsed: number;
   cloudSyncSizeQuota: number;

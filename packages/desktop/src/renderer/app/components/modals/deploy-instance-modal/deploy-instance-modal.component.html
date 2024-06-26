@@ -1,0 +1,111 @@
+<ng-container
+  *ngIf="{
+    user: user$ | async,
+    payload: payload$ | async,
+    deployInProgress: deployInProgress$ | async,
+    instance: instance$ | async
+  } as data"
+>
+  <div class="modal-header">
+    <h3 class="modal-title">
+      Deploy "{{ data.payload?.environmentName }}"
+      <br />
+      @if (data.instance) {
+        <small class="text-success h6"
+          ><app-svg icon="check" class="me-2"></app-svg>Instance deployed
+          successfully!</small
+        >
+      } @else {
+        <small class="text-muted h6">Configure your cloud instance:</small>
+      }
+    </h3>
+  </div>
+
+  <div class="modal-body">
+    @if (!data.instance) {
+      <div [formGroup]="optionsForm">
+        <div class="d-flex align-items-center">
+          <div class="me-2">Instance visibility:</div>
+          <app-toggle
+            prefix="instance-visibility"
+            formControlName="visibility"
+            [items]="rulesOperators"
+            [uncheckable]="false"
+          ></app-toggle>
+          <div class="ms-2">
+            <app-svg
+              icon="info"
+              ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible by you and your team members using a token."
+            ></app-svg>
+          </div>
+        </div>
+      </div>
+    } @else if (data.instance) {
+      <div class="d-flex align-items-center">
+        <span class="text-muted">Instance URL:</span>
+        <a href="{{ data.instance.url }}" target="_blank" class="ms-2">{{
+          data.instance.url
+        }}</a>
+        <button
+          class="btn btn-link btn-icon"
+          ngbTooltip="Click to copy"
+          (click)="copyToClipboard(data.instance.url)"
+        >
+          <app-svg icon="assignment"></app-svg>
+        </button>
+      </div>
+    }
+  </div>
+  <div class="modal-footer justify-content-space-between">
+    <div
+      *ngIf="data.user && data.user.plan !== 'FREE'"
+      class="col-6 d-flex align-items-center"
+    >
+      <p
+        class="mb-0"
+        [ngClass]="{
+          'text-warning':
+            data.user?.deployInstancesQuotaUsed >=
+            data.user?.deployInstancesQuota
+        }"
+      >
+        Quota used ({{ data.user?.deployInstancesQuotaUsed }}/{{
+          data.user?.deployInstancesQuota
+        }})
+      </p>
+      <button
+        type="button"
+        class="btn btn-link btn-icon text-primary ps-2"
+        (click)="account()"
+      >
+        My account
+        <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
+      </button>
+    </div>
+    <div class="ms-auto">
+      @if (data.deployInProgress) {
+        <div class="d-inline-block me-2">
+          <app-svg icon="spinner"></app-svg>
+        </div>
+      }
+      @if (!data.instance) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="deploy(data.user)"
+          [disabled]="data.deployInProgress"
+        >
+          Deploy
+        </button>
+      }
+
+      <button
+        type="button"
+        class="btn btn-secondary modal-close ms-2"
+        (click)="close()"
+      >
+        {{ data.instance ? 'Close' : 'Cancel' }}
+      </button>
+    </div>
+  </div>
+</ng-container>

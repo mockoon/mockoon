@@ -73,7 +73,8 @@ export class Store {
       presence: null,
       offlineReason: null,
       alert: null
-    }
+    },
+    deployInstances: []
   });
   /**
    * Emits latest store action

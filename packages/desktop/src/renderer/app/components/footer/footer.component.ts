@@ -32,6 +32,7 @@ export class FooterComponent implements OnInit {
   public generatingTemplate$ = this.templateService.generatingTemplate$;
   public generatingEndpoint$ = this.templateService.generatingEndpoint$;
   public releaseUrl = Config.releasePublicURL;
+  public deployInstances$ = this.store.select('deployInstances');
 
   constructor(
     private store: Store,
@@ -55,5 +56,9 @@ export class FooterComponent implements OnInit {
   public openTemplateModal(tab: TemplatesTabsName) {
     this.store.update(setActiveTemplatesTabAction(tab));
     this.uiService.openModal('templates');
+  }
+
+  public openManageInstancesModal() {
+    this.uiService.openModal('manageInstances');
   }
 }

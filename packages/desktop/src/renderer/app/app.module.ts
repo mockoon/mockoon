@@ -46,7 +46,9 @@ import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-moda
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
+import { DeployInstanceModalComponent } from 'src/renderer/app/components/modals/deploy-instance-modal/deploy-instance-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
+import { ManageInstancesModalComponent } from 'src/renderer/app/components/modals/manage-instances-modal/manage-instances-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
@@ -118,7 +120,9 @@ import { AppComponent } from './app.component';
     EditableElementComponent,
     TourComponent,
     FilterComponent,
-    DropdownMenuComponent
+    DropdownMenuComponent,
+    DeployInstanceModalComponent,
+    ManageInstancesModalComponent
   ],
   imports: [
     BrowserAnimationsModule,

@@ -9,6 +9,7 @@ import {
   EnvironmentStatus,
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
+import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
@@ -58,7 +59,8 @@ export class HeaderComponent implements OnInit {
     private remoteConfigService: RemoteConfigService,
     private uiService: UIService,
     private syncService: SyncService,
-    private toastsService: ToastsService
+    private toastsService: ToastsService,
+    private deployService: DeployService
   ) {}
 
   ngOnInit() {
@@ -174,7 +176,8 @@ export class HeaderComponent implements OnInit {
   public refreshAccount() {
     forkJoin([
       this.userService.getUserInfo(),
-      this.remoteConfigService.fetchConfig()
+      this.remoteConfigService.fetchConfig(),
+      this.deployService.getInstances()
     ])
       .pipe(catchError(() => EMPTY))
       .subscribe(() => {

@@ -13,6 +13,7 @@ import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { ApiService } from 'src/renderer/app/services/api.service';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
+import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
@@ -50,7 +51,8 @@ export class AppComponent extends Logger implements OnInit {
     private title: Title,
     private tourService: TourService,
     private remoteConfigService: RemoteConfigService,
-    private syncService: SyncService
+    private syncService: SyncService,
+    private deployService: DeployService
   ) {
     super('[RENDERER][COMPONENT][APP] ', toastService);
 
@@ -93,6 +95,7 @@ export class AppComponent extends Logger implements OnInit {
     this.remoteConfigService.init().subscribe();
     this.userService.init().subscribe();
     this.syncService.init().subscribe();
+    this.deployService.init().subscribe();
     this.apiService.init();
 
     this.logMessage('info', 'INITIALIZING_APP');

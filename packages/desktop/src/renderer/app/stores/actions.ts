@@ -1,4 +1,4 @@
-import { User } from '@mockoon/cloud';
+import { DeployInstance, User } from '@mockoon/cloud';
 import {
   Callback,
   DataBucket,
@@ -35,6 +35,7 @@ export const enum ActionTypes {
   CONVERT_ENVIRONMENT_TO_LOCAL = 'CONVERT_ENVIRONMENT_TO_LOCAL',
   UPDATE_USER = 'UPDATE_USER',
   UPDATE_SYNC = 'UPDATE_SYNC',
+  UPDATE_DEPLOY_INSTANCES = 'UPDATE_DEPLOY_INSTANCES',
   SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
   SET_ACTIVE_TAB_IN_CALLBACK = 'SET_ACTIVE_TAB_IN_CALLBACK',
   SET_ACTIVE_VIEW = 'SET_ACTIVE_VIEW',
@@ -122,6 +123,17 @@ export const updateSyncAction = (properties: Partial<StoreType['sync']>) =>
   ({
     type: ActionTypes.UPDATE_SYNC,
     properties
+  }) as const;
+
+/**
+ * Update the cloud sync information
+ *
+ * @param properties - cloud sync status properties to update
+ */
+export const updateDeployInstancesAction = (instances: DeployInstance[]) =>
+  ({
+    type: ActionTypes.UPDATE_DEPLOY_INSTANCES,
+    instances
   }) as const;
 
 /**
@@ -924,6 +936,7 @@ export type Actions =
   | ReturnType<typeof convertEnvironmentToLocalAction>
   | ReturnType<typeof updateUserAction>
   | ReturnType<typeof updateSyncAction>
+  | ReturnType<typeof updateDeployInstancesAction>
   | ReturnType<typeof setActiveTabAction>
   | ReturnType<typeof setActiveTabInCallbackViewAction>
   | ReturnType<typeof setActiveViewAction>

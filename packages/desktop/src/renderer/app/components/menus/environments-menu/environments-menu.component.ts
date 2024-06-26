@@ -101,6 +101,16 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       }
     },
     {
+      label: 'Deploy to the cloud',
+      icon: 'backup',
+      twoSteps: false,
+      disabled$: () =>
+        this.store.select('user').pipe(map((user) => user?.plan === 'FREE')),
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
+        this.environmentsService.deployToCloud(environmentUuid);
+      }
+    },
+    {
       label: 'Copy configuration to clipboard (JSON)',
       icon: 'assignment',
       twoSteps: false,
@@ -171,6 +181,15 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       }
     }
   ];
+  public instances$ = this.store.select('deployInstances').pipe(
+    map((deployInstances) =>
+      deployInstances.reduce((instances, instance) => {
+        instances[instance.environmentUuid] = instance;
+
+        return instances;
+      }, {})
+    )
+  );
   private userAndSync$ = combineLatest([
     this.store.select('user').pipe(distinctUntilChanged()),
     this.store.select('sync').pipe(distinctUntilChanged())

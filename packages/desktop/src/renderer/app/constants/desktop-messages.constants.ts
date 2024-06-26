@@ -299,14 +299,20 @@ export const DesktopMessages: {
     toastType: 'success',
     showToast: true
   }),
-  CLOUD_QUOTA_EXCEEDED: (messageParams) => ({
-    message: `Your cloud account has exceeded its quota (${messageParams.quota}). Please upgrade your plan or delete environments to free up space.`,
+  CLOUD_SYNC_QUOTA_EXCEEDED: (messageParams) => ({
+    message: `Your cloud account has exceeded its synchronization quota (${messageParams.quota}). Please upgrade your plan or delete environments to free up space.`,
     log: false,
     toastType: 'warning',
     showToast: true
   }),
   CLOUD_ENVIRONMENT_TOO_LARGE: (messageParams) => ({
     message: `Your environment is too large to be saved on the cloud (max size: ${messageParams.maxSize / 1e6}MB). Please reduce its size.`,
+    log: false,
+    toastType: 'warning',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_QUOTA_EXCEEDED: (messageParams) => ({
+    message: `Your cloud account has exceeded its deployments quota (${messageParams.quota}). Please upgrade your plan or delete deployments.`,
     log: false,
     toastType: 'warning',
     showToast: true
