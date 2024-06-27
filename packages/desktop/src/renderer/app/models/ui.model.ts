@@ -24,8 +24,3 @@ export type ConfirmModalPayload = {
   list$?: Observable<string[]>;
   confirmed$: Subject<boolean>;
 };
-
-export type DeployModalPayload = {
-  environmentUuid: string;
-  environmentName: string;
-};

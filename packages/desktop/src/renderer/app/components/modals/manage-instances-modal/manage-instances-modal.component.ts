@@ -19,6 +19,7 @@ type dropdownMenuPayload = { environmentUuid: string };
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ManageInstancesModalComponent extends Logger implements OnInit {
+  public environmentUuid$ = this.uiService.getModalPayload$('manageInstances');
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
   public instances$ = this.store.select('deployInstances');
   public environmentList$: Observable<{ [environmentUuid in string]: true }>;
@@ -28,7 +29,9 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
       label: 'Re-deploy',
       icon: 'refresh',
       twoSteps: false,
-      action: ({ environmentUuid }: dropdownMenuPayload) => {}
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
+        this.uiService.openModal('deploy', environmentUuid);
+      }
     },
     {
       label: 'Delete',

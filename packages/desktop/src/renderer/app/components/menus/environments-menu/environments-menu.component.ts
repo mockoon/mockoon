@@ -107,7 +107,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       disabled$: () =>
         this.store.select('user').pipe(map((user) => user?.plan === 'FREE')),
       action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService.deployToCloud(environmentUuid);
+        this.uiService.openModal('deploy', environmentUuid);
       }
     },
     {

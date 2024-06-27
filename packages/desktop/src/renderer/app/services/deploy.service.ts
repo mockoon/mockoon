@@ -80,9 +80,11 @@ export class DeployService extends Logger {
    */
   public deploy(
     environmentUuid: string,
-    options: Pick<DeployInstance, 'visibility'>
+    options: Pick<DeployInstance, 'visibility'>,
+    redeploy = false
   ) {
     const environment = this.store.getEnvironmentByUUID(environmentUuid);
+    const instances = this.store.get('deployInstances');
 
     return forkJoin([
       this.userService.getIdToken(),
@@ -97,7 +99,11 @@ export class DeployService extends Logger {
         if (
           user &&
           user.plan !== Plans.FREE &&
-          user.deployInstancesQuotaUsed < user.deployInstancesQuota
+          // can deploy if the user has not reached the quota or if the environment is already deployed (redeploy)
+          (user.deployInstancesQuotaUsed < user.deployInstancesQuota ||
+            !!instances.find(
+              (instance) => instance.environmentUuid === environmentUuid
+            ))
         ) {
           return this.httpClient.post<DeployInstance>(
             `${deployUrl}/deployments`,
@@ -116,19 +122,33 @@ export class DeployService extends Logger {
         return EMPTY;
       }),
       tap((instance) => {
-        this.store.update(
-          updateDeployInstancesAction([
-            ...this.store.get('deployInstances'),
-            instance
-          ])
-        );
+        if (redeploy) {
+          this.store.update(
+            updateDeployInstancesAction([
+              ...this.store.get('deployInstances').map((oldInstance) => {
+                if (oldInstance.environmentUuid === environmentUuid) {
+                  return { ...oldInstance, ...instance };
+                }
 
-        this.store.update(
-          updateUserAction({
-            deployInstancesQuotaUsed:
-              this.store.get('user').deployInstancesQuotaUsed + 1
-          })
-        );
+                return oldInstance;
+              })
+            ])
+          );
+        } else {
+          this.store.update(
+            updateDeployInstancesAction([
+              instance,
+              ...this.store.get('deployInstances')
+            ])
+          );
+
+          this.store.update(
+            updateUserAction({
+              deployInstancesQuotaUsed:
+                this.store.get('user').deployInstancesQuotaUsed + 1
+            })
+          );
+        }
       })
     );
   }

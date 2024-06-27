@@ -3,11 +3,20 @@
     user: user$ | async,
     instances: instances$ | async,
     environmentList: environmentList$ | async,
-    taskInProgress: taskInProgress$ | async
+    taskInProgress: taskInProgress$ | async,
+    environmentUuid: environmentUuid$ | async
   } as data"
 >
-  <div class="modal-header">
+  <div class="modal-header align-items-center">
     <h3 class="modal-title">Manage your instances</h3>
+    @if (data.environmentUuid) {
+      <div class="ms-auto" [appHideAfter]="3000">
+        <small class="text-success h6">
+          <app-svg icon="check" class="me-2"></app-svg>Instance deployed
+          successfully!
+        </small>
+      </div>
+    }
   </div>
 
   <div class="modal-body p-0">
@@ -24,7 +33,13 @@
       </thead>
       <tbody>
         @for (instance of data.instances; track $index) {
-          <tr class="hover-parent">
+          <tr
+            class="hover-parent"
+            [ngClass]="{
+              'animation-fast-highlight':
+                data.environmentUuid === instance.environmentUuid
+            }"
+          >
             <!-- align padding with modal body -->
             <td class="ps-3">
               @if (instance.status === 'RUNNING') {
@@ -58,13 +73,13 @@
               <a href="{{ instance.url }}" target="_blank">{{
                 instance.url
               }}</a>
-              <button
-                class="btn btn-link btn-icon"
+
+              <app-svg
+                icon="assignment"
                 ngbTooltip="Click to copy"
+                class="ms-2 cursor-pointer"
                 (click)="copyToClipboard(instance.url)"
-              >
-                <app-svg icon="assignment"></app-svg>
-              </button>
+              ></app-svg>
             </td>
             <td>
               @if (instance.visibility === 'PUBLIC') {

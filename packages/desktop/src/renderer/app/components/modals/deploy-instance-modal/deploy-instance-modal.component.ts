@@ -1,25 +1,20 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { DeployInstance, DeployInstanceVisibility, User } from '@mockoon/cloud';
+import { DeployInstanceVisibility, User } from '@mockoon/cloud';
+import { Environment } from '@mockoon/commons';
 import {
   BehaviorSubject,
   EMPTY,
   Observable,
-  Subscription,
   catchError,
+  map,
+  switchMap,
   tap
 } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
-import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -30,13 +25,9 @@ import { Config } from 'src/renderer/config';
   templateUrl: './deploy-instance-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeployInstanceModalComponent
-  extends Logger
-  implements OnInit, OnDestroy
-{
-  public payload$ = this.eventsService.deployModalPayload$;
+export class DeployInstanceModalComponent extends Logger implements OnInit {
   public deployInProgress$ = new BehaviorSubject<boolean>(false);
-  public instance$ = new BehaviorSubject<DeployInstance>(null);
+  public instanceExists$: Observable<boolean>;
   public user$: Observable<User>;
   public optionsForm = this.formBuilder.group({
     visibility: this.formBuilder.control<DeployInstanceVisibility>(
@@ -44,23 +35,22 @@ export class DeployInstanceModalComponent
       Validators.required
     )
   });
-  public rulesOperators: ToggleItems = [
+  public visibilityToggle: ToggleItems = [
     {
       value: DeployInstanceVisibility.PRIVATE,
-      label: 'PRIVATE'
+      label: 'private'
     },
     {
       value: DeployInstanceVisibility.PUBLIC,
-      label: 'PUBLIC'
+      label: 'public'
     }
   ];
-  private payloadSubscription: Subscription;
+  public environment$: Observable<Environment>;
+  private environmentUuid$ = this.uiService.getModalPayload$('deploy');
 
   constructor(
     private uiService: UIService,
     private store: Store,
-    private environmentsService: EnvironmentsService,
-    private eventsService: EventsService,
     private deployService: DeployService,
     protected toastService: ToastsService,
     private formBuilder: FormBuilder
@@ -69,20 +59,47 @@ export class DeployInstanceModalComponent
   }
 
   ngOnInit() {
-    this.payloadSubscription = this.payload$.subscribe();
+    this.environment$ = this.environmentUuid$.pipe(
+      map((environmentUuid) => this.store.getEnvironmentByUUID(environmentUuid))
+    );
     this.user$ = this.store.select('user');
-  }
+    this.instanceExists$ = this.environmentUuid$.pipe(
+      switchMap((environmentUuid) =>
+        this.store
+          .select('deployInstances')
+          .pipe(map((instances) => ({ environmentUuid, instances })))
+      ),
+      map(({ environmentUuid, instances }) => {
+        const existingInstance = instances.find(
+          (instance) => instance.environmentUuid === environmentUuid
+        );
 
-  ngOnDestroy() {
-    this.payloadSubscription.unsubscribe();
+        if (existingInstance) {
+          this.optionsForm.patchValue({
+            visibility: existingInstance.visibility
+          });
+        }
+
+        return !!existingInstance;
+      })
+    );
   }
 
   public close() {
     this.uiService.closeModal('deploy', false);
   }
 
-  public deploy(user: User) {
-    if (user.deployInstancesQuotaUsed >= user.deployInstancesQuota) {
+  public deploy(user: User, environmentUuid: string) {
+    const instances = this.store.get('deployInstances');
+    const existingInstance = instances.find(
+      (instance) => instance.environmentUuid === environmentUuid
+    );
+
+    // can deploy if the user has not reached the quota or if the environment is already deployed (redeploy)
+    if (
+      user.deployInstancesQuotaUsed >= user.deployInstancesQuota &&
+      !existingInstance
+    ) {
       this.logMessage('error', 'CLOUD_DEPLOY_QUOTA_EXCEEDED', {
         quota: user.deployInstancesQuota
       });
@@ -94,15 +111,17 @@ export class DeployInstanceModalComponent
 
     this.deployService
       .deploy(
-        this.payload$.value.environmentUuid,
-        this.optionsForm.getRawValue()
+        environmentUuid,
+        this.optionsForm.getRawValue(),
+        !!existingInstance
       )
       .pipe(
         tap((newInstance) => {
           this.deployInProgress$.next(false);
 
           if (newInstance) {
-            this.instance$.next(newInstance);
+            this.uiService.closeModal('deploy', false);
+            this.uiService.openModal('manageInstances', environmentUuid);
           }
         }),
         catchError(() => {

@@ -61,6 +61,7 @@ import { TourComponent } from 'src/renderer/app/components/tour/tour.component';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
+import { HideAfterDirective } from 'src/renderer/app/directives/hide-after.directive';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
@@ -88,6 +89,7 @@ import { AppComponent } from './app.component';
     DraggableDirective,
     DropzoneDirective,
     ScrollWhenActiveDirective,
+    HideAfterDirective,
     CommandPaletteModalComponent,
     AuthModalComponent,
     WelcomeModalComponent,

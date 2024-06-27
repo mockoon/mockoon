@@ -859,25 +859,6 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Deploy an environment to the cloud
-   *
-   * @param environmentUuid
-   * @returns
-   */
-  public deployToCloud(environmentUuid: string) {
-    const environment = this.store.getEnvironmentByUUID(environmentUuid);
-
-    if (environment) {
-      this.eventsService.deployModalPayload$.next({
-        environmentUuid: environment.uuid,
-        environmentName: environment.name
-      });
-
-      this.uiService.openModal('deploy');
-    }
-  }
-
-  /**
    * Convert all the cloud environments to local ones based on the current cloud environments list
    *
    * @param currentCloudEnvironmentUuids

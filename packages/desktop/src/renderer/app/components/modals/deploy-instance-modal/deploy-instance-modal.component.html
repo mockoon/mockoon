@@ -1,60 +1,39 @@
 <ng-container
   *ngIf="{
     user: user$ | async,
-    payload: payload$ | async,
     deployInProgress: deployInProgress$ | async,
-    instance: instance$ | async
+    environment: environment$ | async,
+    instanceExists: instanceExists$ | async
   } as data"
 >
   <div class="modal-header">
     <h3 class="modal-title">
-      Deploy "{{ data.payload?.environmentName }}"
+      {{ data.instanceExists ? 'Re-deploy' : 'Deploy' }} "{{
+        data.environment?.name
+      }}"
       <br />
-      @if (data.instance) {
-        <small class="text-success h6"
-          ><app-svg icon="check" class="me-2"></app-svg>Instance deployed
-          successfully!</small
-        >
-      } @else {
-        <small class="text-muted h6">Configure your cloud instance:</small>
-      }
+      <small class="text-muted h6">Configure your cloud instance:</small>
     </h3>
   </div>
 
   <div class="modal-body">
-    @if (!data.instance) {
-      <div [formGroup]="optionsForm">
-        <div class="d-flex align-items-center">
-          <div class="me-2">Instance visibility:</div>
-          <app-toggle
-            prefix="instance-visibility"
-            formControlName="visibility"
-            [items]="rulesOperators"
-            [uncheckable]="false"
-          ></app-toggle>
-          <div class="ms-2">
-            <app-svg
-              icon="info"
-              ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible by you and your team members using a token."
-            ></app-svg>
-          </div>
+    <div [formGroup]="optionsForm">
+      <div class="d-flex align-items-center">
+        <div class="me-2">Instance visibility:</div>
+        <app-toggle
+          prefix="instance-visibility"
+          formControlName="visibility"
+          [items]="visibilityToggle"
+          [uncheckable]="false"
+        ></app-toggle>
+        <div class="ms-2">
+          <app-svg
+            icon="info"
+            ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible by you and your team members using a token."
+          ></app-svg>
         </div>
       </div>
-    } @else if (data.instance) {
-      <div class="d-flex align-items-center">
-        <span class="text-muted">Instance URL:</span>
-        <a href="{{ data.instance.url }}" target="_blank" class="ms-2">{{
-          data.instance.url
-        }}</a>
-        <button
-          class="btn btn-link btn-icon"
-          ngbTooltip="Click to copy"
-          (click)="copyToClipboard(data.instance.url)"
-        >
-          <app-svg icon="assignment"></app-svg>
-        </button>
-      </div>
-    }
+    </div>
   </div>
   <div class="modal-footer justify-content-space-between">
     <div
@@ -88,23 +67,22 @@
           <app-svg icon="spinner"></app-svg>
         </div>
       }
-      @if (!data.instance) {
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="deploy(data.user)"
-          [disabled]="data.deployInProgress"
-        >
-          Deploy
-        </button>
-      }
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="deploy(data.user, data.environment.uuid)"
+        [disabled]="data.deployInProgress"
+      >
+        {{ data.instanceExists ? 'Re-deploy' : 'Deploy' }}
+      </button>
 
       <button
         type="button"
         class="btn btn-secondary modal-close ms-2"
         (click)="close()"
       >
-        {{ data.instance ? 'Close' : 'Cancel' }}
+        Cancel
       </button>
     </div>
   </div>
