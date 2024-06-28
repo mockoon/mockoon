@@ -7,6 +7,7 @@ import {
   filter,
   first,
   forkJoin,
+  of,
   switchMap,
   tap
 } from 'rxjs';
@@ -53,21 +54,21 @@ export class DeployService extends Logger {
       this.userService.getIdToken()
     ]).pipe(
       switchMap(([user, token]) => {
-        if (user.plan !== Plans.FREE) {
-          return this.httpClient.get<DeployInstance[]>(
-            `${Config.apiURL}deployments`,
-            {
+        if (user?.plan !== Plans.FREE) {
+          return this.httpClient
+            .get<DeployInstance[]>(`${Config.apiURL}deployments`, {
               headers: {
                 Authorization: `Bearer ${token}`
               }
-            }
-          );
+            })
+            .pipe(
+              tap((instances: DeployInstance[]) => {
+                this.store.update(updateDeployInstancesAction([...instances]));
+              })
+            );
         }
 
-        return EMPTY;
-      }),
-      tap((instances: DeployInstance[]) => {
-        this.store.update(updateDeployInstancesAction([...instances]));
+        return of([]);
       }),
       catchError(() => EMPTY)
     );

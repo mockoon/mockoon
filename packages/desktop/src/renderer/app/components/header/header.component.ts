@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { User } from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
 import { EMPTY, Observable, forkJoin, from } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
@@ -176,10 +176,12 @@ export class HeaderComponent implements OnInit {
   public refreshAccount() {
     forkJoin([
       this.userService.getUserInfo(),
-      this.remoteConfigService.fetchConfig(),
-      this.deployService.getInstances()
+      this.remoteConfigService.fetchConfig()
     ])
-      .pipe(catchError(() => EMPTY))
+      .pipe(
+        switchMap(() => this.deployService.getInstances()),
+        catchError(() => EMPTY)
+      )
       .subscribe(() => {
         this.toastsService.addToast('success', 'Account information refreshed');
       });

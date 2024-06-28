@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { User } from '@mockoon/cloud';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
@@ -23,12 +22,29 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
   public instances$ = this.store.select('deployInstances');
   public environmentList$: Observable<{ [environmentUuid in string]: true }>;
-  public user$: Observable<User>;
+  public user$ = this.store.select('user');
+  public isCloudEnabled$ = this.user$.pipe(
+    map((user) => user && user.plan !== 'FREE')
+  );
+  public proPlansURL = Config.proPlansURL;
   public instancesDropdownMenuItems: DropdownMenuComponent['items'] = [
     {
       label: 'Re-deploy',
       icon: 'refresh',
       twoSteps: false,
+      // entry disabled if environment is closed
+      disabled$: ({ environmentUuid }: dropdownMenuPayload) =>
+        this.store
+          .select('environments')
+          .pipe(
+            map(
+              (environments) =>
+                !environments.find(
+                  (environment) => environment.uuid === environmentUuid
+                )
+            )
+          ),
+      disabledLabel: 'Re-deploy (environment is closed)',
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.uiService.openModal('deploy', environmentUuid);
       }
@@ -60,7 +76,6 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
   }
 
   ngOnInit() {
-    this.user$ = this.store.select('user');
     this.environmentList$ = this.store.select('environments').pipe(
       map((environments) => {
         return environments.reduce((environmentList, environment) => {
@@ -83,8 +98,8 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
     MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.accountURL);
   }
 
-  public copyToClipboard(url: string) {
-    MainAPI.send('APP_WRITE_CLIPBOARD', url);
+  public copyToClipboard(text: string) {
+    MainAPI.send('APP_WRITE_CLIPBOARD', text);
   }
 
   public navigateToEnvironment(environmentUuid: string, event: MouseEvent) {

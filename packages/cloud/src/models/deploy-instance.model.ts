@@ -14,4 +14,5 @@ export type DeployInstance = {
   visibility: DeployInstanceVisibility;
   status: DeployInstanceStatus;
   name: string;
+  apiKey: string | null;
 };

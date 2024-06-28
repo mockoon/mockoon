@@ -2,7 +2,8 @@
   *ngIf="{
     generatingTemplate: generatingTemplate$ | async,
     generatingEndpoint: generatingEndpoint$ | async,
-    deployInstances: deployInstances$ | async
+    deployInstances: deployInstances$ | async,
+    isConnected: isConnected$ | async
   } as data"
 >
   <div class="footer d-flex">
@@ -88,7 +89,7 @@
     </div>
 
     <div
-      *ngIf="data.deployInstances.length > 0"
+      *ngIf="data.isConnected"
       class="footer-item with-border-start d-flex align-items-center px-2"
     >
       <button

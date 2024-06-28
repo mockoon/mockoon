@@ -4,7 +4,8 @@
     instances: instances$ | async,
     environmentList: environmentList$ | async,
     taskInProgress: taskInProgress$ | async,
-    environmentUuid: environmentUuid$ | async
+    environmentUuid: environmentUuid$ | async,
+    isCloudEnabled: isCloudEnabled$ | async
   } as data"
 >
   <div class="modal-header align-items-center">
@@ -74,18 +75,31 @@
                 instance.url
               }}</a>
 
-              <app-svg
-                icon="assignment"
+              <button
+                type="button"
+                class="btn btn-sm btn-link btn-icon p-0 ms-2"
                 ngbTooltip="Click to copy"
-                class="ms-2 cursor-pointer"
                 (click)="copyToClipboard(instance.url)"
-              ></app-svg>
+              >
+                <app-svg icon="assignment"></app-svg>
+              </button>
             </td>
             <td>
               @if (instance.visibility === 'PUBLIC') {
                 <app-svg icon="public" class="me-2"></app-svg>Public
               } @else {
                 <app-svg icon="lock" class="me-2"></app-svg>Private
+              }
+
+              @if (instance.apiKey) {
+                <button
+                  type="button"
+                  class="btn btn-sm btn-link btn-icon p-0 ms-2"
+                  ngbTooltip="Click to copy API key"
+                  (click)="copyToClipboard(instance.apiKey)"
+                >
+                  <app-svg icon="assignment"></app-svg>
+                </button>
               }
             </td>
             <td>
@@ -102,7 +116,13 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="5" class="text-center">No instances deployed</td>
+            <td colspan="5" class="text-center text-muted">
+              No instances deployed.
+              @if (!data.isCloudEnabled) {
+                <a [href]="proPlansURL" target="_blank">Upgrade to Pro</a> to
+                deploy cloud environments
+              }
+            </td>
           </tr>
         }
       </tbody>

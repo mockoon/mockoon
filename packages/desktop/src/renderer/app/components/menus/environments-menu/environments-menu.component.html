@@ -7,6 +7,7 @@
     activeEnvironment: activeEnvironment$ | async,
     environmentsStatus: environmentsStatus$ | async,
     isCloudEnabled: (isCloudEnabled$ | async),
+    isConnected: isConnected$ | async,
     categories: categories$ | async,
     sync: sync$ | async,
     syncAlert: syncAlert$ | async,
@@ -135,9 +136,11 @@
             *ngIf="category.id === 'cloud' && !data.isCloudEnabled"
             class="message message-sm m-2"
           >
-            <a href="#" (click)="login($event)">Log in</a> or
+            @if (!data.isConnected) {
+              <a href="#" (click)="login($event)">Log in</a> or
+            }
             <a [href]="proPlansURL" target="_blank">Upgrade to Pro</a> to create
-            cloud environments
+            and deploy cloud environments
           </div>
         </ng-container>
       </div>
