@@ -1,5 +1,6 @@
 import {
   Callback,
+  Cookie,
   Folder,
   FolderChild,
   Header,
@@ -42,6 +43,68 @@ const TransformHeaders = (
     return newHeaders;
   }, []);
 
+const TransformRequestCookies = (cookies: any): Cookie[] =>
+  Object.keys(cookies).reduce<Cookie[]>((newCookies, name) => {
+    const value: string = cookies[name];
+
+    newCookies.push({ name, value });
+
+    return newCookies;
+  }, []);
+
+const TransformResponseCookies = (
+  header: string | number | string[] | undefined
+): Cookie[] => {
+  let cookieHeaders: string[];
+
+  if (header === undefined) {
+    cookieHeaders = [];
+  } else if (typeof header === 'number' || typeof header === 'string') {
+    cookieHeaders = [String(header)];
+  } else {
+    cookieHeaders = header;
+  }
+
+  const cookies: Cookie[] = [];
+
+  cookieHeaders.forEach((cookieHeader) => {
+    const [cookieValue, ...options] = cookieHeader.split('; ');
+    const [name, value] = cookieValue.split('=');
+    const cookie: Cookie = { name, value };
+
+    options.forEach((option) => {
+      const [key, val] = option.split('=');
+      switch (key.toLowerCase()) {
+        case 'expires':
+          cookie.expires = val;
+          break;
+        case 'max-age':
+          cookie.maxAge = parseInt(val, 10);
+          break;
+        case 'domain':
+          cookie.domain = val;
+          break;
+        case 'path':
+          cookie.path = val;
+          break;
+        case 'secure':
+          cookie.secure = true;
+          break;
+        case 'httponly':
+          cookie.httpOnly = true;
+          break;
+        case 'samesite':
+          cookie.sameSite = val;
+          break;
+      }
+    });
+
+    cookies.push(cookie);
+  });
+
+  return cookies;
+};
+
 /**
  * Sort by ascending order
  *
@@ -49,7 +112,9 @@ const TransformHeaders = (
  * @param b
  */
 const AscSort = (a, b) => {
-  if (a.key < b.key) {
+  const field = a.name !== undefined ? 'name' : 'key';
+
+  if (a[field] < b[field]) {
     return -1;
   } else {
     return 1;
@@ -157,6 +222,8 @@ export function CreateTransaction(
     request: {
       method: request.method.toLowerCase() as keyof typeof Methods,
       urlPath: requestUrl.pathname,
+      fullUrl: request.fullUrl,
+      proxyUrl: request.proxyUrl,
       route: request.route ? request.route.path : null,
       params: request.params
         ? Object.keys(request.params).map((paramName) => ({
@@ -167,13 +234,20 @@ export function CreateTransaction(
       query: requestUrl ? queryString : null,
       queryParams: request.query,
       body: request.stringBody,
-      headers: TransformHeaders(request.headers).sort(AscSort)
+      headers: TransformHeaders(request.headers).sort(AscSort),
+      httpVersion: 'HTTP/' + request.httpVersion,
+      mimeType: request.headers['content-type'],
+      cookies: TransformRequestCookies(request.cookies).sort(AscSort),
+      startedAt: request.startedAt
     },
     response: {
       statusCode: response.statusCode,
       statusMessage: response.statusMessage,
       headers: TransformHeaders(response.getHeaders()).sort(AscSort),
-      body: DecompressBody(response)
+      body: DecompressBody(response),
+      cookies: TransformResponseCookies(response.getHeader('set-cookie')).sort(
+        AscSort
+      )
     },
     routeResponseUUID: response.routeResponseUUID,
     routeUUID: response.routeUUID,

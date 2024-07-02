@@ -5,6 +5,9 @@ declare namespace Express {
     body: any;
     rawBody: Buffer;
     stringBody: string;
+    startedAt: Date;
+    fullUrl: string;
+    proxyUrl?: string;
   }
   export interface Response {
     body: any;

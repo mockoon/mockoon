@@ -1,6 +1,6 @@
 import { Environment } from './environment.model';
 import { FakerAvailableLocales } from './faker.model';
-import { Header, Methods } from './route.model';
+import { Cookie, Header, Methods } from './route.model';
 
 export type ProcessedDatabucket = {
   id: string;
@@ -31,6 +31,8 @@ export type Transaction = {
     method: keyof typeof Methods;
     // url path without query string (e.g. /users/1)
     urlPath: string | null;
+    fullUrl: string;
+    proxyUrl?: string;
     // route path as defined in the environment (e.g. /users/:id)
     route: string | null;
     params: { name: string; value: string }[];
@@ -38,12 +40,17 @@ export type Transaction = {
     queryParams: any;
     body: any;
     headers: Header[];
+    httpVersion: string;
+    mimeType?: string;
+    cookies: Cookie[];
+    startedAt: Date;
   };
   response: {
     statusCode: number;
     statusMessage: string;
     headers: Header[];
     body: string;
+    cookies: Cookie[];
   };
   proxied: boolean;
   // environment's route UUID to which the transaction belongs
