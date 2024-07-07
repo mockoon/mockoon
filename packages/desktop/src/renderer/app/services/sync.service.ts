@@ -634,7 +634,7 @@ export class SyncService extends Logger {
       }
 
       if (acknowledgment.error === SyncErrors.QUOTA_EXCEEDED) {
-        this.logMessage('error', 'CLOUD_QUOTA_EXCEEDED', {
+        this.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
           quota: this.store.get('user').cloudSyncItemsQuota
         });
       } else if (acknowledgment.error === SyncErrors.ENVIRONMENT_TOO_LARGE) {

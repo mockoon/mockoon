@@ -7,7 +7,6 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { ConfirmModalPayload } from 'src/renderer/app/models/ui.model';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 
 @Component({
@@ -19,13 +18,10 @@ export class ConfirmModalComponent implements OnInit, OnDestroy {
   public confirmModalPayload$: Observable<ConfirmModalPayload>;
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private uiService: UIService,
-    private eventsService: EventsService
-  ) {}
+  constructor(private uiService: UIService) {}
 
   ngOnInit() {
-    this.confirmModalPayload$ = this.eventsService.confirmModalPayload$.pipe(
+    this.confirmModalPayload$ = this.uiService.getModalPayload$('confirm').pipe(
       tap((confirmModalPayload) => {
         this.uiService
           .getModalInstance('confirm')

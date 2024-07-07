@@ -10,48 +10,68 @@
     [id]="idPrefix + '-dropdown'"
   >
     <button
-      class="btn btn-link btn-icon dropdown-toggle dropdown-toggle-icon dropdown-toggle-no-caret"
-      [ngClass]="{ 'hover-fade': iconFaded, 'py-0': noYPadding }"
+      class="btn dropdown-toggle"
+      [ngClass]="{
+        'btn-custom': label,
+        'btn-link': icon,
+        'btn-icon': icon,
+        'dropdown-toggle-icon': icon,
+        'dropdown-toggle-no-caret': icon,
+        'hover-fade': iconFaded,
+        'py-0': noYPadding
+      }"
       type="button"
       ngbDropdownToggle
       (click)="$event.stopPropagation()"
     >
-      <app-svg [icon]="icon"></app-svg>
+      @if (icon) {
+        <app-svg [icon]="icon"></app-svg>
+      }
+      @if (label) {
+        <div class="dropdown-toggle-label">{{ label }}</div>
+      }
     </button>
     <div
       class="dropdown-menu"
       [id]="idPrefix + '-dropdown-menu'"
       ngbDropdownMenu
     >
-      @for (item of items; track $index) {
-        <ng-container
-          *ngIf="{
-            disabled: item.disabled$ && item.disabled$(payload) | async,
-            needConfirm: item.twoSteps && data.confirmRequested.enabled
-          } as flags"
-        >
-          <button
-            class="btn dropdown-item"
-            [ngClass]="{
-              'text-danger': flags.needConfirm
-            }"
-            (click)="itemClicked(item, dropdownInstance)"
-            [disabled]="flags.disabled"
+      <div class="dropdown-menu-content">
+        @for (item of items; track $index) {
+          <ng-container
+            *ngIf="{
+              disabled: item.disabled$ && item.disabled$(payload) | async,
+              needConfirm: item.twoSteps && data.confirmRequested.enabled
+            } as flags"
           >
-            <app-svg
-              [icon]="flags.needConfirm ? item.confirmIcon : item.icon"
-              class="pe-2"
-            ></app-svg
-            >{{
-              flags.needConfirm
-                ? item.confirmLabel
-                : flags.disabled
-                  ? item.disabledLabel || item.label
-                  : item.label
-            }}
-          </button>
-        </ng-container>
-      }
+            <button
+              class="btn dropdown-item d-flex"
+              [ngClass]="{
+                'text-danger': flags.needConfirm
+              }"
+              (click)="itemClicked(item, dropdownInstance)"
+              [disabled]="flags.disabled"
+            >
+              <span class="text-truncate">
+                @if (item.icon) {
+                  <app-svg
+                    [icon]="flags.needConfirm ? item.confirmIcon : item.icon"
+                    class="pe-2"
+                  >
+                  </app-svg>
+                }
+                {{
+                  flags.needConfirm
+                    ? item.confirmLabel
+                    : flags.disabled
+                      ? item.disabledLabel || item.label
+                      : item.label
+                }}
+              </span>
+            </button>
+          </ng-container>
+        }
+      </div>
     </div>
   </div>
 </ng-container>

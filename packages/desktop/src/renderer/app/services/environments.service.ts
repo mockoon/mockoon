@@ -683,7 +683,7 @@ export class EnvironmentsService extends Logger {
       );
 
     if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
-      this.logMessage('error', 'CLOUD_QUOTA_EXCEEDED', {
+      this.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
       });
 
@@ -732,7 +732,7 @@ export class EnvironmentsService extends Logger {
       );
 
     if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
-      this.logMessage('error', 'CLOUD_QUOTA_EXCEEDED', {
+      this.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
       });
 
