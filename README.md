@@ -111,6 +111,7 @@ Please check our [dedicated documentation](https://github.com/mockoon/mockoon/bl
 
 With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
 
+- ☁️ [cloud deployments](https://mockoon.com/docs/latest/mockoon-cloud/api-mock-cloud-deployments/)
 - 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/docs/latest/mockoon-cloud/data-synchronization-team-collaboration/)
 - 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
 - 📃 Access to dozens of [ready-to-use JSON templates](https://mockoon.com/templates/).
