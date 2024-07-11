@@ -349,7 +349,7 @@ export class DataService extends Logger {
         pages: this.formatHARPages(environmentLogs),
         entries: environmentLogs.map((environmentLog) => {
           const time =
-            environmentLog.timestamp.getTime() -
+            environmentLog.timestampMs -
             environmentLog.request.startedAt.getTime();
 
           return {
@@ -479,8 +479,8 @@ export class DataService extends Logger {
     environmentLogs.forEach((environmentLog) => {
       if (
         !routes.has(environmentLog.routeUUID) ||
-        routes.get(environmentLog.routeUUID).timestamp >
-          environmentLog.timestamp
+        routes.get(environmentLog.routeUUID).timestampMs >
+          environmentLog.timestampMs
       ) {
         routes.set(environmentLog.routeUUID, environmentLog);
       }

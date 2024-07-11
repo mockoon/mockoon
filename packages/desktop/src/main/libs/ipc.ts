@@ -246,8 +246,15 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     (event, filePath: string) => pathParse(filePath).dir
   );
 
-  ipcMain.handle('APP_REPLACE_FILEPATH_EXTENSION', (event, filePath: string) =>
-    pathFormat({ ...pathParse(filePath), base: '', ext: '.json' })
+  ipcMain.handle(
+    'APP_REPLACE_FILEPATH_EXTENSION',
+    (event, filePath: string, extension: string = 'json') => {
+      return pathFormat({
+        ...pathParse(filePath),
+        base: '',
+        ext: `.${extension}`
+      });
+    }
   );
 
   ipcMain.handle('APP_GET_MIME_TYPE', (event, filePath) =>

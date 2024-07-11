@@ -115,6 +115,11 @@ export class ImportExportService extends Logger {
   public exportLogs(logUuid?: string) {
     const activeEnvironment = this.store.getActiveEnvironment();
     const environmentsLogs = this.store.get('environmentsLogs');
+
+    if (!activeEnvironment || !environmentsLogs) {
+      return EMPTY;
+    }
+
     const har: HAR = this.dataService.formatHAR(
       logUuid === undefined
         ? environmentsLogs[activeEnvironment.uuid]
@@ -125,31 +130,31 @@ export class ImportExportService extends Logger {
           ]
     );
 
-    return this.dialogsService.showSaveDialog('Export HAR', false).pipe(
-      switchMap((filePath) =>
-        from(
-          MainAPI.invoke(
-            'APP_WRITE_FILE',
-            filePath,
-            JSON.stringify(har, null, 2)
-          )
-        ).pipe(
-          tap(() => {
-            this.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
-              environmentName: activeEnvironment.name
-            });
-          })
-        )
-      ),
-      catchError((error) => {
-        this.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
-          error,
-          environmentName: activeEnvironment.name,
-          environmentUUID: activeEnvironment.uuid
-        });
+    return this.dialogsService
+      .showSaveDialog('Export HAR', false, undefined, 'har')
+      .pipe(
+        switchMap((filePath) => {
+          if (filePath) {
+            return from(
+              MainAPI.invoke(
+                'APP_WRITE_FILE',
+                filePath,
+                JSON.stringify(har, null, 2)
+              )
+            ).pipe(
+              tap(() => {
+                this.logMessage('info', 'HAR_EXPORT_SUCCESS');
+              })
+            );
+          }
 
-        return EMPTY;
-      })
-    );
+          return EMPTY;
+        }),
+        catchError((error) => {
+          this.logMessage('error', 'HAR_EXPORT_ERROR', { error });
+
+          return EMPTY;
+        })
+      );
   }
 }
