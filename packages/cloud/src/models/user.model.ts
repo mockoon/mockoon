@@ -16,6 +16,7 @@ export type User = {
   templatesQuotaUsed: number;
   nextQuotaResetOn: number;
   subscription: {
+    trial?: boolean;
     provider?: 'stripe' | 'paddle' | 'free';
     frequency?: Frequency;
     createdOn: number;
