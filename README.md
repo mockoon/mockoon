@@ -6,9 +6,7 @@
   <a href="https://mockoon.com/"><img src="https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6"/></a>
   <a href="https://mockoon.com/newsletter/"><img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/></a>
   <a href="https://twitter.com/GetMockoon"><img src="https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2"/></a>
-  <a href="https://discord.gg/FtJjkejKGp"><img src="https://img.shields.io/badge/Discord-go-blue.svg?style=flat-square&colorA=6c84d9&colorB=1da1f2"/></a>
-  <a href="https://repo-rater.eddiehub.io/rate?owner=mockoon&name=mockoon"><img src="https://repo-rater.eddiehub.io/api/badge?owner=mockoon&name=mockoon"/></a>
-  
+  <a href="https://mockoon.com/discord/"><img src="https://img.shields.io/badge/Discord-go-blue.svg?style=flat-square&colorA=6c84d9&colorB=1da1f2"/></a>  
   <br>
   <br>
   <h1>Mockoon: awesome API mocking</h1>
@@ -107,9 +105,9 @@ Mockoon's Serverless [NPM package](https://www.npmjs.com/package/@mockoon/server
 
 Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/serverless/README.md) to learn how to use it.
 
-## Subscribe to Mockoon Pro
+## Subscribe to Mockoon Cloud
 
-With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
+With advanced features for solo developers and teams, Mockoon Cloud supercharges your API development:
 
 - ☁️ [cloud deployments](https://mockoon.com/docs/latest/mockoon-cloud/api-mock-cloud-deployments/)
 - 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/docs/latest/mockoon-cloud/data-synchronization-team-collaboration/)
@@ -120,7 +118,7 @@ With advanced features for solo developers and teams, Mockoon Pro supercharges y
 Upgrade today and take your API development to the next level.
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png?" width="250" alt="pro button" /></a>
+<a href="https://mockoon.com/cloud/"><img src="https://mockoon.com/images/cloud-btn.png?" width="250" alt="cloud button" /></a>
 </div>
 
 ## Mockoon's documentation

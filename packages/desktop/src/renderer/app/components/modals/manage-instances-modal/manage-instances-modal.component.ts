@@ -41,7 +41,7 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
         }))
       )
     );
-  public proPlansURL = Config.proPlansURL;
+  public cloudPlansURL = Config.cloudPlansURL;
   public instancesDropdownMenuItems: DropdownMenuComponent['items'] = [
     {
       label: 'Re-deploy',

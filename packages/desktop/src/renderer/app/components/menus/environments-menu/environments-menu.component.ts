@@ -64,7 +64,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public user$ = this.store.select('user');
   public sync$ = this.store.select('sync');
   public categories$: Observable<typeof this.categories>;
-  public proPlansURL = Config.proPlansURL;
+  public cloudPlansURL = Config.cloudPlansURL;
   public isCloudEnabled$: Observable<boolean>;
   public isConnected$ = this.user$.pipe(map((user) => !!user));
   public syncAlert$: Observable<string>;
