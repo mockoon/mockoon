@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/cloud",
   "description": "Mockoon's cloud sync library. Used in Mockoon desktop application and backend.",
-  "version": "8.2.0",
+  "version": "8.3.0",
   "author": {
     "name": "Guillaume Monnet",
     "email": "guillaume@1kb.software",
@@ -29,7 +29,7 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "@mockoon/commons": "8.2.0"
+    "@mockoon/commons": "8.3.0"
   },
   "devDependencies": {
     "@types/chai": "4.3.14",

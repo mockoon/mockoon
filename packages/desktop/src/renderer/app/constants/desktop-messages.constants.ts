@@ -299,8 +299,8 @@ export const DesktopMessages: {
     toastType: 'success',
     showToast: true
   }),
-  CLOUD_QUOTA_EXCEEDED: (messageParams) => ({
-    message: `Your cloud account has exceeded its quota (${messageParams.quota}). Please upgrade your plan or delete environments to free up space.`,
+  CLOUD_SYNC_QUOTA_EXCEEDED: (messageParams) => ({
+    message: `Your cloud account has exceeded its synchronization quota (${messageParams.quota}). Please upgrade your plan or delete environments to free up space.`,
     log: false,
     toastType: 'warning',
     showToast: true
@@ -309,6 +309,31 @@ export const DesktopMessages: {
     message: `Your environment is too large to be saved on the cloud (max size: ${messageParams.maxSize / 1e6}MB). Please reduce its size.`,
     log: false,
     toastType: 'warning',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_QUOTA_EXCEEDED: (messageParams) => ({
+    message: `Your cloud account has exceeded its deployments quota (${messageParams.quota}). Please upgrade your plan or delete deployments.`,
+    log: false,
+    toastType: 'warning',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_START_ERROR: () => ({
+    message: 'Error while starting the instance. Please try again later.',
+    log: true,
+    toastType: 'error',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_START_TOO_BIG_ERROR: () => ({
+    message:
+      'Error while starting the instance. The environment is too large to be deployed. Please reduce its size and try again.',
+    log: true,
+    toastType: 'error',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_STOP_ERROR: () => ({
+    message: 'Error while stopping the instance. Please try again later.',
+    log: true,
+    toastType: 'error',
     showToast: true
   })
 };

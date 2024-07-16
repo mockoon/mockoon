@@ -7,6 +7,8 @@ export type User = {
   plan: Plans;
   teamId: string;
   teamRole: TeamRoles;
+  deployInstancesQuota: number;
+  deployInstancesQuotaUsed: number;
   cloudSyncItemsQuota: number;
   cloudSyncItemsQuotaUsed: number;
   cloudSyncSizeQuota: number;
@@ -14,12 +16,14 @@ export type User = {
   templatesQuotaUsed: number;
   nextQuotaResetOn: number;
   subscription: {
-    provider?: 'stripe' | 'paddle';
+    trial?: boolean;
+    provider?: 'stripe' | 'paddle' | 'free';
     frequency?: Frequency;
     createdOn: number;
     renewOn: number;
     portalEnabled?: boolean;
     cancellationScheduled?: boolean;
     pastDue?: boolean;
+    subscriptionId: string;
   };
 };

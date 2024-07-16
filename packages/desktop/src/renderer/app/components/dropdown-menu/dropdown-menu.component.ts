@@ -36,12 +36,17 @@ export class DropdownMenuComponent {
   /**
    * Payload provided by the parent, to be sent to the action functions
    */
-  @Input({ required: true })
-  public payload: any;
+  @Input()
+  public payload: any = null;
 
   @Input({ required: true })
   public idPrefix: string;
 
+  // label to display as the dropdown button
+  @Input()
+  public label: string = null;
+
+  // set to null to use default caret
   @Input()
   public icon: SvgComponent['icon'] = 'more_vert';
 
@@ -52,6 +57,7 @@ export class DropdownMenuComponent {
   public noYPadding = false;
 
   public confirmRequested$ = new TimedBoolean();
+  public window = window;
 
   /**
    * Reset the confirm step on close

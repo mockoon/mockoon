@@ -85,7 +85,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   public demoPrompt = new UntypedFormControl('');
   public generatedTemplateBody = new UntypedFormControl('');
   public demoEndpoint$ = new BehaviorSubject<(typeof demoTemplates)[0]>(null);
-  public proPlansURL = Config.proPlansURL;
+  public cloudPlansURL = Config.cloudPlansURL;
   public maxPromptLength = Config.maxPromptLength;
   public defaultEditorOptions = defaultEditorOptions;
   public focusableInputs = FocusableInputs;

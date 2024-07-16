@@ -254,19 +254,43 @@ Due to the stateless nature of cloud functions, some of Mockoon's features will 
 - the [data buckets](https://mockoon.com/docs/latest/data-buckets/overview/) will not be persisting and be regenerated during each call.
 - the [rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/#1-target) based on the request number will not work as this counter will be reset during each call.
 
+## Mockoon's documentation
+
+You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) on the official website.
+
+## Sponsors
+
+Mockoon is an open-source project built by volunteer maintainers. If you like our application, please consider sponsoring us and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
+
+<div align="center">
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png" width="250" alt="sponsor button" /></a>
+</div>
+
+## Subscribe to Mockoon Cloud
+
+With advanced features for solo developers and teams, Mockoon Cloud supercharges your API development:
+
+- ☁️ [cloud deployments](https://mockoon.com/docs/latest/mockoon-cloud/api-mock-cloud-deployments/)
+- 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/docs/latest/mockoon-cloud/data-synchronization-team-collaboration/)
+- 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
+- 📃 Access to dozens of [ready-to-use JSON templates](https://mockoon.com/templates/).
+- 💬 Priority support and training.
+
+Upgrade today and take your API development to the next level.
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://mockoon.com/cloud/"><img src="https://mockoon.com/images/cloud-btn.png?" width="250" alt="cloud button" /></a>
+</div>
+
 ## Support/feedback
 
-You can discuss all things related to Mockoon, and ask for help, on the [official community](https://github.com/mockoon/mockoon/discussions). It's also a good place to discuss bugs and feature requests before opening an issue on this repository. For more chat-like discussions, you can also join our [Discord server](https://discord.gg/FtJjkejKGp).
+You can discuss all things related to Mockoon's CLI, and ask for help, on the [official community](https://github.com/mockoon/mockoon/discussions). It's also a good place to discuss bugs and feature requests before opening an issue on this repository. For more chat-like discussions, you can also join our [Discord server](https://discord.gg/FtJjkejKGp).
 
 ## Contributing
 
 If you are interested in contributing to Mockoon, please take a look at the [contributing guidelines](https://github.com/mockoon/mockoon/blob/main/CONTRIBUTING.md).
 
 Please also take a look at our [Code of Conduct](https://github.com/mockoon/mockoon/blob/main/CODE_OF_CONDUCT.md).
-
-## Documentation
-
-You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) on the official website. It covers Mockoon's most complex features. Feel free to contribute or ask for new topics to be covered.
 
 ## Roadmap
 

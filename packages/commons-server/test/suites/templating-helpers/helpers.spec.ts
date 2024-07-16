@@ -2948,5 +2948,190 @@ describe('Template parser', () => {
         JSON.stringify([{ b: 'b1', a: 'a1' }, 3], null, 2)
       );
     });
+
+    it('should return correctly sorted array of numbers in ascending order', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{ sort (array 41 10 99)}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '10,41,99');
+    });
+  });
+
+  it('should return correctly sorted array of numbers in descending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: '{{ sort (array 41 10 99) "desc"}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(parseResult, '99,41,10');
+  });
+
+  it('should return correctly sorted array of strings in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: '{{ sort (array "foo" "bar" "baz")}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(parseResult, 'bar,baz,foo');
+  });
+
+  it('should return correctly sorted array of strings in descending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: '{{ sort (array "foo" "bar" "baz") "desc"}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(parseResult, 'foo,baz,bar');
+  });
+
+  it('should return correctly sorted array of object with numberic values in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content:
+        '{{{ stringify (sortBy (array (object key1=10 key2=20) (object key1=30 key2=30) (object key1=15 key2=25)) "key1") }}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(
+      parseResult,
+      `[
+  {
+    "key2": 20,
+    "key1": 10
+  },
+  {
+    "key2": 25,
+    "key1": 15
+  },
+  {
+    "key2": 30,
+    "key1": 30
+  }
+]`
+    );
+  });
+
+  it('should return correctly sorted array of object with numberic values in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content:
+        '{{{ stringify (sortBy (array (object key1=10 key2=20) (object key1=30 key2=30) (object key1=15 key2=25)) "key1" "desc") }}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(
+      parseResult,
+      `[
+  {
+    "key2": 30,
+    "key1": 30
+  },
+  {
+    "key2": 25,
+    "key1": 15
+  },
+  {
+    "key2": 20,
+    "key1": 10
+  }
+]`
+    );
+  });
+
+  it('should return correctly sorted array of object with string values in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content:
+        '{{{ stringify (sortBy (array (object key1="foo" key2=20) (object key1="bar" key2=30) (object key1="baz" key2=25)) "key1") }}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(
+      parseResult,
+      `[
+  {
+    "key2": 30,
+    "key1": "bar"
+  },
+  {
+    "key2": 25,
+    "key1": "baz"
+  },
+  {
+    "key2": 20,
+    "key1": "foo"
+  }
+]`
+    );
+  });
+
+  it('should return correctly sorted array of object with string values in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content:
+        '{{{ stringify (sortBy (array (object key1="foo" key2=20) (object key1="bar" key2=30) (object key1="baz" key2=25)) "key1" "desc") }}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(
+      parseResult,
+      `[
+  {
+    "key2": 20,
+    "key1": "foo"
+  },
+  {
+    "key2": 25,
+    "key1": "baz"
+  },
+  {
+    "key2": 30,
+    "key1": "bar"
+  }
+]`
+    );
+  });
+
+  it('should return reversed array of numbers in descending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: '{{ sort (array 41 10 99) "desc"}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(parseResult, '99,41,10');
   });
 });
