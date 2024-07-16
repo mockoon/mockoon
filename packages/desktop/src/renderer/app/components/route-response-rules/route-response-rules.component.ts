@@ -65,7 +65,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { value: 'regex', label: 'regex' },
     { value: 'regex_i', label: 'regex (i)' },
     { value: 'null', label: 'null' },
-    { value: 'empty_array', label: 'empty array' }
+    { value: 'empty_array', label: 'empty array' },
+    { value: 'array_includes', label: 'array includes' }
   ];
   public modifierPlaceholders: Record<ResponseRuleTargets, string> = {
     body: 'JSONPath or object path (empty for full body)',
