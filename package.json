@@ -29,37 +29,53 @@
     "format:write": "lerna exec -- prettier \"{src,test}/**/*.{ts,js,scss,html}\" --no-error-on-unmatched-pattern --write",
     "set-versions": "lerna version --exact --no-push --no-git-tag-version",
     "publish": "lerna publish --yes --no-verify-access from-package",
-    "build:commons": "lerna run --stream --scope @mockoon/commons build",
-    "build:commons-server": "lerna run --stream --scope @mockoon/commons-server build",
-    "build:cloud": "lerna run --stream --scope @mockoon/cloud build",
-    "build:cloud:watch": "lerna run --stream --scope @mockoon/cloud build:watch",
-    "build:libs": "lerna run --stream --scope @mockoon/commons build && lerna run --scope @mockoon/commons-server build && lerna run --scope @mockoon/cloud build",
-    "build:libs:watch": "concurrently \"lerna run --stream --scope @mockoon/commons build:watch\" \"lerna run --scope @mockoon/commons-server build:watch\" \"lerna run --scope @mockoon/cloud build:watch\"",
-    "build:serverless": "lerna run --stream --scope @mockoon/serverless build",
-    "build:cli": "lerna run --stream --scope @mockoon/cli build",
-    "build:desktop:dev:watch": "lerna run --stream --scope @mockoon/desktop build:watch:all",
-    "build:desktop:dev": "lerna run --stream --scope @mockoon/desktop build:dev:all",
-    "build:desktop:ci": "lerna run --stream --scope @mockoon/desktop build:ci:all",
-    "build:desktop:prod": "lerna run --stream --scope @mockoon/desktop build:prod:all",
-    "start:desktop:dev": "lerna run --stream --scope @mockoon/desktop start",
-    "start:desktop:dev:2": "lerna run --stream --scope @mockoon/desktop start:2",
-    "start:desktop:dev:3": "lerna run --stream --scope @mockoon/desktop start:3",
-    "test:commons": "lerna run --stream --scope @mockoon/commons test",
-    "test:commons-server": "lerna run --stream --scope @mockoon/commons-server test",
-    "test:libs": "lerna run --stream --scope @mockoon/commons test && lerna run --scope @mockoon/commons-server test",
-    "test:serverless": "lerna run --stream --scope @mockoon/serverless test",
-    "test:cli": "lerna run --stream --scope @mockoon/cli test",
-    "test:desktop:win": "lerna run --stream --scope @mockoon/desktop test:win",
-    "test:desktop:mac": "lerna run --stream --scope @mockoon/desktop test:mac",
-    "test:desktop:linux": "lerna run --stream --scope @mockoon/desktop test:linux",
-    "package:desktop:win": "lerna run --stream --scope @mockoon/desktop package:win",
-    "package:desktop:win:appx": "lerna run --stream --scope @mockoon/desktop package:win:appx",
-    "package:desktop:mac": "lerna run --stream --scope @mockoon/desktop package:mac",
-    "package:desktop:linux": "lerna run --stream --scope @mockoon/desktop package:linux",
-    "package:desktop:test:win": "lerna run --stream --scope @mockoon/desktop package:test:win",
-    "package:desktop:test:mac": "lerna run --stream --scope @mockoon/desktop package:test:mac",
-    "package:desktop:test:linux": "lerna run --stream --scope @mockoon/desktop package:test:linux",
-    "documentation:desktop": "lerna run --stream --scope @mockoon/desktop documentation"
+    "build": {
+      "commons": "lerna run --stream --scope @mockoon/commons build",
+      "commons-server": "lerna run --stream --scope @mockoon/commons-server build",
+      "cloud": "lerna run --stream --scope @mockoon/cloud build",
+      "cloud:watch": "lerna run --stream --scope @mockoon/cloud build:watch",
+      "libs": "lerna run --stream --scope @mockoon/commons build && lerna run --scope @mockoon/commons-server build && lerna run --scope @mockoon/cloud build",
+      "libs:watch": "concurrently \"lerna run --stream --scope @mockoon/commons build:watch\" \"lerna run --scope @mockoon/commons-server build:watch\" \"lerna run --scope @mockoon/cloud build:watch\"",
+      "serverless": "lerna run --stream --scope @mockoon/serverless build",
+      "cli": "lerna run --stream --scope @mockoon/cli build",
+      "desktop": {
+        "dev:watch": "lerna run --stream --scope @mockoon/desktop build:watch:all",
+        "dev": "lerna run --stream --scope @mockoon/desktop build:dev:all",
+        "ci": "lerna run --stream --scope @mockoon/desktop build:ci:all",
+        "prod": "lerna run --stream --scope @mockoon/desktop build:prod:all",
+        "start": "lerna run --stream --scope @mockoon/desktop start",
+        "start:2": "lerna run --stream --scope @mockoon/desktop start:2",
+        "start:3": "lerna run --stream --scope @mockoon/desktop start:3"
+      }
+    },
+    "test": {
+      "commons": "lerna run --stream --scope @mockoon/commons test",
+      "commons-server": "lerna run --stream --scope @mockoon/commons-server test",
+      "libs": "lerna run --stream --scope @mockoon/commons test && lerna run --scope @mockoon/commons-server test",
+      "serverless": "lerna run --stream --scope @mockoon/serverless test",
+      "cli": "lerna run --stream --scope @mockoon/cli test",
+      "desktop": {
+        "win": "lerna run --stream --scope @mockoon/desktop test:win",
+        "mac": "lerna run --stream --scope @mockoon/desktop test:mac",
+        "linux": "lerna run --stream --scope @mockoon/desktop test:linux"
+      }
+    },
+    "package": {
+      "desktop": {
+        "win": "lerna run --stream --scope @mockoon/desktop package:win",
+        "win:appx": "lerna run --stream --scope @mockoon/desktop package:win:appx",
+        "mac": "lerna run --stream --scope @mockoon/desktop package:mac",
+        "linux": "lerna run --stream --scope @mockoon/desktop package:linux",
+        "test": {
+          "win": "lerna run --stream --scope @mockoon/desktop package:test:win",
+          "mac": "lerna run --stream --scope @mockoon/desktop package:test:mac",
+          "linux": "lerna run --stream --scope @mockoon/desktop package:test:linux"
+        }
+      }
+    },
+    "documentation": {
+      "desktop": "lerna run --stream --scope @mockoon/desktop documentation"
+    }
   },
   "devDependencies": {
     "concurrently": "8.2.2",
