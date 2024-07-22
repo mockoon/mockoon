@@ -34,105 +34,111 @@
         </tr>
       </thead>
       <tbody>
-        @for (instance of data.instances; track $index) {
-          <tr
-            class="hover-parent"
-            [ngClass]="{
-              'animation-fast-highlight':
-                data.environmentUuid === instance.environmentUuid
-            }"
-          >
-            <!-- align padding with modal body -->
-            <td class="ps-3">
-              @if (instance.status === 'RUNNING') {
-                <app-svg
-                  icon="record"
-                  class="text-success"
-                  ngbTooltip="Running"
-                ></app-svg>
-              } @else {
-                <app-svg
-                  icon="record"
-                  class="text-danger"
-                  ngbTooltip="Stopped"
-                ></app-svg>
-              }
-            </td>
-            <td>
-              @if (data.environmentList[instance.environmentUuid]) {
-                <a
-                  href=""
-                  (click)="
-                    navigateToEnvironment(instance.environmentUuid, $event)
-                  "
-                  >{{ instance.name }}</a
-                >
-              } @else {
-                <span class="text-muted">{{ instance.name }}</span>
-              }
-            </td>
-            <td>
-              <a href="{{ instance.url }}" target="_blank">{{
-                instance.url
-              }}</a>
+        @if (data.isCloudEnabled) {
+          @for (instance of data.instances; track $index) {
+            <tr
+              class="hover-parent"
+              [ngClass]="{
+                'animation-fast-highlight':
+                  data.environmentUuid === instance.environmentUuid
+              }"
+            >
+              <!-- align padding with modal body -->
+              <td class="ps-3">
+                @if (instance.status === 'RUNNING') {
+                  <app-svg
+                    icon="record"
+                    class="text-success"
+                    ngbTooltip="Running"
+                  ></app-svg>
+                } @else {
+                  <app-svg
+                    icon="record"
+                    class="text-danger"
+                    ngbTooltip="Stopped"
+                  ></app-svg>
+                }
+              </td>
+              <td>
+                @if (data.environmentList[instance.environmentUuid]) {
+                  <a
+                    href=""
+                    (click)="
+                      navigateToEnvironment(instance.environmentUuid, $event)
+                    "
+                    >{{ instance.name }}</a
+                  >
+                } @else {
+                  <span class="text-muted">{{ instance.name }}</span>
+                }
+              </td>
+              <td>
+                <a href="{{ instance.url }}" target="_blank">{{
+                  instance.url
+                }}</a>
 
-              <button
-                type="button"
-                class="btn btn-sm btn-link btn-icon p-0 ms-2"
-                ngbTooltip="Click to copy"
-                (click)="copyToClipboard(instance.url)"
-              >
-                <app-svg icon="assignment"></app-svg>
-              </button>
-            </td>
-            <td>
-              @if (instance.visibility === 'PUBLIC') {
-                <app-svg icon="public" class="me-2"></app-svg>Public
-              } @else {
-                <app-svg icon="lock" class="me-2"></app-svg>Private
-              }
-
-              @if (instance.apiKey) {
                 <button
                   type="button"
                   class="btn btn-sm btn-link btn-icon p-0 ms-2"
-                  ngbTooltip="Click to copy the API key. The API key must be used in the Authorization header to access the API."
-                  (click)="copyToClipboard(instance.apiKey)"
+                  ngbTooltip="Click to copy"
+                  (click)="copyToClipboard(instance.url)"
                 >
                   <app-svg icon="assignment"></app-svg>
                 </button>
-              }
-            </td>
-            <td>
-              <app-dropdown-menu
-                [idPrefix]="'instances-' + instance.environmentUuid"
-                [items]="instancesDropdownMenuItems"
-                [payload]="{
-                  environmentUuid: instance.environmentUuid
-                }"
-                [iconFaded]="true"
-                [noYPadding]="true"
-              ></app-dropdown-menu>
-            </td>
-          </tr>
-        } @empty {
+              </td>
+              <td>
+                @if (instance.visibility === 'PUBLIC') {
+                  <app-svg icon="public" class="me-2"></app-svg>Public
+                } @else {
+                  <app-svg icon="lock" class="me-2"></app-svg>Private
+                }
+
+                @if (instance.apiKey) {
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-link btn-icon p-0 ms-2"
+                    ngbTooltip="Click to copy the API key. The API key must be used in the Authorization header to access the API."
+                    (click)="copyToClipboard(instance.apiKey)"
+                  >
+                    <app-svg icon="assignment"></app-svg>
+                  </button>
+                }
+              </td>
+              <td>
+                <app-dropdown-menu
+                  [idPrefix]="'instances-' + instance.environmentUuid"
+                  [items]="instancesDropdownMenuItems"
+                  [payload]="{
+                    environmentUuid: instance.environmentUuid
+                  }"
+                  [iconFaded]="true"
+                  [noYPadding]="true"
+                ></app-dropdown-menu>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="text-center text-muted">
+                <div class="d-flex align-items-center justify-content-center">
+                  <div class="me-2">No instances deployed.</div>
+                  <app-dropdown-menu
+                    class="col-3"
+                    idPrefix="deploy-env-list"
+                    [items]="data.deployEnvList"
+                    [icon]="null"
+                    label="Deploy environment"
+                  ></app-dropdown-menu>
+                </div>
+
+                @if (!data.isCloudEnabled) {}
+              </td>
+            </tr>
+          }
+        } @else {
           <tr>
             <td colspan="5" class="text-center text-muted">
-              <div class="d-flex align-items-center justify-content-center">
-                <div class="me-2">No instances deployed.</div>
-                <app-dropdown-menu
-                  class="col-3"
-                  idPrefix="deploy-env-list"
-                  [items]="data.deployEnvList"
-                  [icon]="null"
-                  label="Deploy environment"
-                ></app-dropdown-menu>
-              </div>
-
-              @if (!data.isCloudEnabled) {
-                <a [href]="cloudPlansURL" target="_blank">Upgrade to Pro</a> to
-                deploy cloud environments.
-              }
+              <a [href]="cloudPlansURL" target="_blank">Upgrade to Pro</a> to
+              deploy cloud environments.
             </td>
           </tr>
         }
