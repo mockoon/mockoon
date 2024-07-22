@@ -3,6 +3,7 @@ import { EMPTY, from } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { HAR } from 'src/renderer/app/models/environment-logs.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -105,6 +106,52 @@ export class ImportExportService extends Logger {
             environmentName: activeEnvironment.name,
             environmentUUID: activeEnvironment.uuid
           });
+
+          return EMPTY;
+        })
+      );
+  }
+
+  public exportLogs(logUuid?: string) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const environmentsLogs = this.store.get('environmentsLogs');
+
+    if (!activeEnvironment || !environmentsLogs) {
+      return EMPTY;
+    }
+
+    const har: HAR = this.dataService.formatHAR(
+      logUuid === undefined
+        ? environmentsLogs[activeEnvironment.uuid]
+        : [
+            environmentsLogs[activeEnvironment.uuid].find(
+              (environmentLog) => environmentLog.UUID === logUuid
+            )
+          ]
+    );
+
+    return this.dialogsService
+      .showSaveDialog('Export HAR', false, undefined, 'har')
+      .pipe(
+        switchMap((filePath) => {
+          if (filePath) {
+            return from(
+              MainAPI.invoke(
+                'APP_WRITE_FILE',
+                filePath,
+                JSON.stringify(har, null, 2)
+              )
+            ).pipe(
+              tap(() => {
+                this.logMessage('info', 'HAR_EXPORT_SUCCESS');
+              })
+            );
+          }
+
+          return EMPTY;
+        }),
+        catchError((error) => {
+          this.logMessage('error', 'HAR_EXPORT_ERROR', { error });
 
           return EMPTY;
         })

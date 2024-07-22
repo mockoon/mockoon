@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import {
   BINARY_BODY,
   Callback,
+  Cookie,
   DataBucket,
   Environment,
   EnvironmentSchema,
   GenerateUniqueID,
   generateUUID,
+  Header,
   HighestMigrationId,
   INDENT_SIZE,
   isContentTypeApplicationJson,
@@ -15,11 +17,20 @@ import {
   Transaction
 } from '@mockoon/commons';
 import { Logger } from 'src/renderer/app/classes/logger';
-import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
+import {
+  EnvironmentLog,
+  EnvironmentLogRequest,
+  HAR,
+  HARCookie,
+  HARPage,
+  HARParam,
+  HARPostData
+} from 'src/renderer/app/models/environment-logs.model';
 import { MigrationService } from 'src/renderer/app/services/migration.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class DataService extends Logger {
@@ -110,13 +121,19 @@ export class DataService extends Logger {
       method: transaction.request.method as EnvironmentLog['method'],
       route: transaction.request.route,
       url: transaction.request.urlPath,
+      fullUrl: transaction.request.fullUrl,
+      proxyUrl: transaction.request.proxyUrl,
       request: {
         params: transaction.request.params,
         query: transaction.request.query,
         queryParams: this.formatQueryParams(transaction.request.queryParams),
         body: requestBody,
         headers: transaction.request.headers,
-        isInvalidJson: isReqJsonInvalid
+        isInvalidJson: isReqJsonInvalid,
+        httpVersion: transaction.request.httpVersion,
+        mimeType: transaction.request.mimeType,
+        cookies: transaction.request.cookies,
+        startedAt: transaction.request.startedAt
       },
       proxied: transaction.proxied,
       response: {
@@ -125,7 +142,8 @@ export class DataService extends Logger {
         headers: transaction.response.headers,
         body: responseBody,
         binaryBody: transaction.response.body === BINARY_BODY,
-        isInvalidJson: isResJsonInvalid
+        isInvalidJson: isResJsonInvalid,
+        cookies: transaction.response.cookies
       }
     };
   }
@@ -320,6 +338,65 @@ export class DataService extends Logger {
     return route;
   }
 
+  public formatHAR(environmentLogs: EnvironmentLog[]): HAR {
+    return {
+      log: {
+        version: 1.2,
+        creator: {
+          name: 'Mockoon',
+          version: Config.appVersion
+        },
+        pages: this.formatHARPages(environmentLogs),
+        entries: environmentLogs.map((environmentLog) => {
+          const time =
+            environmentLog.timestampMs -
+            environmentLog.request.startedAt.getTime();
+
+          return {
+            pageref: environmentLog.routeUUID,
+            startedDateTime: environmentLog.request.startedAt.toISOString(),
+            time,
+            request: {
+              method: environmentLog.method.toUpperCase(),
+              url: environmentLog.fullUrl,
+              httpVersion: environmentLog.request.httpVersion,
+              cookies: this.formatHARCookies(environmentLog.request.cookies),
+              headers: this.formatHARHeaders(environmentLog.request.headers),
+              queryString: environmentLog.request.queryParams,
+              postData: this.formatHARPostData(environmentLog.request),
+              headersSize: -1,
+              bodySize: environmentLog.request.body.length
+            },
+            response: {
+              status: environmentLog.response.status,
+              statusText: environmentLog.response.statusMessage,
+              httpVersion: environmentLog.request.httpVersion,
+              cookies: this.formatHARCookies(environmentLog.response.cookies),
+              headers: this.formatHARHeaders(environmentLog.response.headers),
+              content: {
+                size: environmentLog.response.body.length,
+                mimeType: 'application/json',
+                text:
+                  environmentLog.response.body.length > 0
+                    ? environmentLog.response.body
+                    : undefined
+              },
+              redirectURL: environmentLog.proxyUrl ?? '',
+              headersSize: -1,
+              bodySize: -1
+            },
+            cache: {},
+            timings: {
+              send: 0,
+              wait: time,
+              receive: 0
+            }
+          };
+        })
+      }
+    };
+  }
+
   /**
    * Format query string parameters to return tuples of name-value
    * Name is the path to the query string param element that can be used to
@@ -391,5 +468,78 @@ export class DataService extends Logger {
     environment.folders.forEach((folder) => {
       folder.children = this.replaceObjectsUUID(folder.children, renewedUUIDs);
     });
+  }
+
+  private formatHARPages(environmentLogs: EnvironmentLog[]): HARPage[] {
+    const routes: Map<string, EnvironmentLog> = new Map<
+      string,
+      EnvironmentLog
+    >();
+
+    environmentLogs.forEach((environmentLog) => {
+      if (
+        !routes.has(environmentLog.routeUUID) ||
+        routes.get(environmentLog.routeUUID).timestampMs >
+          environmentLog.timestampMs
+      ) {
+        routes.set(environmentLog.routeUUID, environmentLog);
+      }
+    });
+
+    return Array.from(routes.values()).map((environmentLog) => ({
+      startedDateTime: environmentLog.request.startedAt.toISOString(),
+      id: environmentLog.routeUUID,
+      title: environmentLog.route,
+      pageTimings: {}
+    }));
+  }
+
+  private formatHARHeaders(headers: Header[]): any[] {
+    return (
+      headers?.map((header) => ({
+        name: header.key,
+        value: header.value
+      })) ?? []
+    );
+  }
+
+  private formatHARCookies(cookies: Cookie[]): HARCookie[] {
+    return (
+      cookies?.map((cookie) => ({
+        name: cookie.name,
+        value: cookie.value,
+        path: cookie.path,
+        domain: cookie.domain,
+        expires:
+          cookie.expires !== undefined
+            ? new Date(cookie.expires).toISOString()
+            : undefined,
+        httpOnly: cookie.httpOnly,
+        secure: cookie.secure
+      })) ?? []
+    );
+  }
+
+  private formatHARPostData(request: EnvironmentLogRequest): HARPostData {
+    if (request.body.length === 0) {
+      return undefined;
+    }
+
+    const params: HARParam[] = [];
+
+    if (request.mimeType === 'application/x-www-form-urlencoded') {
+      const bodyParams = request.body.split('&');
+
+      bodyParams.forEach((bodyParam) => {
+        const [name, value] = bodyParam.split('=');
+        params.push({ name, value });
+      });
+    }
+
+    return {
+      mimeType: request.mimeType ?? 'text/plain',
+      params: params.length > 0 ? params : undefined,
+      text: params.length === 0 ? request.body : undefined
+    };
   }
 }

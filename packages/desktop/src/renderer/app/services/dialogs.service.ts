@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OpenDialogOptions } from 'electron';
+import { OpenDialogOptions, SaveDialogOptions } from 'electron';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -11,8 +11,15 @@ import { Store } from 'src/renderer/app/stores/store';
 })
 export class DialogsService {
   private filters = {
-    openapi: [{ name: 'OpenAPI v2/v3', extensions: ['yml', 'yaml', 'json'] }],
-    json: [{ name: 'JSON', extensions: ['json'] }]
+    openapi: [
+      {
+        name: 'OpenAPI v2/v3',
+        extensions: ['yml', 'yaml', 'json'],
+        defaultExtension: 'json'
+      }
+    ],
+    json: [{ name: 'JSON', extensions: ['json'], defaultExtension: 'json' }],
+    har: [{ name: 'HAR', extensions: ['har'], defaultExtension: 'har' }]
   };
 
   constructor(private store: Store) {}
@@ -23,15 +30,17 @@ export class DialogsService {
   public showSaveDialog(
     title: string,
     saveWorkingDir = true,
-    defaultPath?: string
+    defaultPath?: string,
+    filterName: 'json' | 'har' = 'json'
   ): Observable<string | null> {
-    return from(
-      MainAPI.invoke('APP_SHOW_SAVE_DIALOG', {
-        filters: this.filters.json,
-        title,
-        defaultPath
-      })
-    ).pipe(
+    const filter = this.filters[filterName];
+    const options: SaveDialogOptions = {
+      filters: filter,
+      title,
+      defaultPath
+    };
+
+    return from(MainAPI.invoke('APP_SHOW_SAVE_DIALOG', options)).pipe(
       // Get the directory
       switchMap((dialogResult) => {
         if (dialogResult.canceled) {
@@ -52,7 +61,8 @@ export class DialogsService {
             from(
               MainAPI.invoke(
                 'APP_REPLACE_FILEPATH_EXTENSION',
-                dialogResult.filePath
+                dialogResult.filePath,
+                filter[0].defaultExtension
               )
             )
           )

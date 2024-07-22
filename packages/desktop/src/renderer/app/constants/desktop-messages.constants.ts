@@ -335,5 +335,17 @@ export const DesktopMessages: {
     log: true,
     toastType: 'error',
     showToast: true
+  }),
+  HAR_EXPORT_SUCCESS: () => ({
+    message: 'Logs have been successfully exported',
+    log: false,
+    showToast: true,
+    toastType: 'success'
+  }),
+  HAR_EXPORT_ERROR: (messageParams) => ({
+    message: `Error while exporting logs to HAR format: ${messageParams.error.message}`,
+    log: false,
+    showToast: true,
+    toastType: 'error'
   })
 };

@@ -15,6 +15,7 @@ import { ApiService } from 'src/renderer/app/services/api.service';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
@@ -48,6 +49,7 @@ export class AppComponent extends Logger implements OnInit {
     private settingsService: SettingsService,
     private appQuitService: AppQuitService,
     private userService: UserService,
+    private importExportService: ImportExportService,
     private title: Title,
     private tourService: TourService,
     private remoteConfigService: RemoteConfigService,

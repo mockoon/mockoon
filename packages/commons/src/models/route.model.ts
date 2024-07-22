@@ -94,6 +94,18 @@ export type Route = {
 
 export type Header = { key: string; value: string };
 
+export type Cookie = {
+  name: string;
+  value: string;
+  expires?: string;
+  maxAge?: number;
+  domain?: string;
+  path?: string;
+  secure?: boolean;
+  httpOnly?: boolean;
+  sameSite?: string;
+};
+
 export enum Methods {
   all = 'all',
   get = 'get',

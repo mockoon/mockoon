@@ -20,6 +20,7 @@ import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   clearLogsAction,
@@ -87,12 +88,21 @@ export class EnvironmentLogsComponent implements OnInit {
           true
         );
       }
+    },
+    {
+      label: 'Export HAR',
+      icon: 'save',
+      twoSteps: false,
+      action: ({ logUuid }: logsDropdownMenuPayload) => {
+        this.exportHAR(logUuid);
+      }
     }
   ];
 
   constructor(
     private store: Store,
     private environmentsService: EnvironmentsService,
+    private importExportService: ImportExportService,
     private eventsService: EventsService,
     private uiService: UIService,
     private datePipe: DatePipe
@@ -112,7 +122,12 @@ export class EnvironmentLogsComponent implements OnInit {
           ? environmentLogs
           : environmentLogs.filter((log) =>
               textFilter(
-                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+                `${log.method} ${log.url} ${log.response.status} ${
+                  log.response.statusMessage
+                } ${log.request.query} ${this.datePipe.transform(
+                  log.timestampMs,
+                  this.dateFormat
+                )} ${log.proxied ? 'proxied' : ''}`,
                 search
               )
             )
@@ -245,5 +260,9 @@ export class EnvironmentLogsComponent implements OnInit {
 
   public openSettings() {
     this.uiService.openModal('settings');
+  }
+
+  public exportHAR(logUuid?: string) {
+    this.importExportService.exportLogs(logUuid).subscribe();
   }
 }

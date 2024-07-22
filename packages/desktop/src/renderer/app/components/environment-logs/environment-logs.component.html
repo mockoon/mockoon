@@ -37,6 +37,16 @@
     <div>
       <button
         type="button"
+        id="export-har"
+        class="btn btn-link btn-icon ps-2"
+        ngbTooltip="Export HAR"
+        (click)="exportHAR()"
+        [disabled]="data.environmentLogsCount === 0"
+      >
+        <app-svg icon="save"></app-svg>
+      </button>
+      <button
+        type="button"
         id="clear-logs"
         class="btn btn-link btn-icon ps-2 {{
           data.clearEnvironmentLogsRequested?.enabled ? 'text-danger' : ''
