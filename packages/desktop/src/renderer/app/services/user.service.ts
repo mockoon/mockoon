@@ -18,8 +18,11 @@ import {
   tap,
   throwError
 } from 'rxjs';
-import { updateUserAction } from 'src/renderer/app/stores/actions';
-import { Store } from 'src/renderer/app/stores/store';
+import {
+  updateDeployInstancesAction,
+  updateUserAction
+} from 'src/renderer/app/stores/actions';
+import { Store, storeDefaultState } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
@@ -99,7 +102,12 @@ export class UserService {
 
   public logout() {
     return from(this.auth.signOut()).pipe(
-      tap(() => this.store.update(updateUserAction(null)))
+      tap(() => {
+        this.store.update(
+          updateDeployInstancesAction(storeDefaultState.deployInstances)
+        );
+        this.store.update(updateUserAction(storeDefaultState.user));
+      })
     );
   }
 }
