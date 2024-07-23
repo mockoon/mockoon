@@ -11,10 +11,10 @@ import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import { ApiService } from 'src/renderer/app/services/api.service';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
@@ -44,7 +44,7 @@ export class AppComponent extends Logger implements OnInit {
     private store: Store,
     protected toastService: ToastsService,
     private uiService: UIService,
-    private apiService: ApiService,
+    private mainApiService: MainApiService,
     private settingsService: SettingsService,
     private appQuitService: AppQuitService,
     private userService: UserService,
@@ -96,7 +96,7 @@ export class AppComponent extends Logger implements OnInit {
     this.userService.init().subscribe();
     this.syncService.init().subscribe();
     this.deployService.init().subscribe();
-    this.apiService.init();
+    this.mainApiService.init();
 
     this.logMessage('info', 'INITIALIZING_APP');
 

@@ -66,7 +66,6 @@ import { Config } from 'src/renderer/config';
   ]
 })
 export class TemplatesModalComponent implements OnInit, OnDestroy {
-  public loginURL = Config.loginURL;
   public isDemoLoading$ = new BehaviorSubject<boolean>(false);
   public activeTemplateListItem$ = new BehaviorSubject<TemplateListItem>(null);
   public activeTemplate$: Observable<Template>;

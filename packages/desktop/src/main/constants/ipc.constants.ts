@@ -10,7 +10,9 @@ export const IPCMainListenerChannels = [
   'APP_OPEN_FILE',
   'APP_SHOW_FILE',
   'APP_SHOW_FOLDER',
-  'APP_ZOOM'
+  'APP_ZOOM',
+  'APP_AUTH',
+  'APP_AUTH_STOP_SERVER'
 ];
 
 export const IPCMainHandlerChannels = [
@@ -43,6 +45,7 @@ export const IPCRendererHandlerChannels = [
   'APP_MENU',
   'APP_SERVER_EVENT',
   'APP_UPDATE_AVAILABLE',
+  'APP_AUTH_CALLBACK',
   'APP_CUSTOM_PROTOCOL',
   'APP_FILE_EXTERNAL_CHANGE'
 ];

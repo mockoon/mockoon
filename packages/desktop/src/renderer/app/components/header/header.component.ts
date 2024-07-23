@@ -141,19 +141,12 @@ export class HeaderComponent implements OnInit {
     this.environmentsService.toggleEnvironment();
   }
 
-  /**
-   * Open the login page in the default browser
-   */
   public login() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.loginURL);
-    this.uiService.openModal('auth');
+    this.userService.startLoginFlow();
   }
 
-  /**
-   * Open the signup page in the default browser
-   */
   public signup() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.signupURL);
+    this.userService.startSignupFlow();
   }
 
   /**

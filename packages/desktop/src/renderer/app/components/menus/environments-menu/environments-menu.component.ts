@@ -35,6 +35,7 @@ import { EventsService } from 'src/renderer/app/services/events.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import {
@@ -221,7 +222,8 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private settingsService: SettingsService,
     private syncsService: SyncService,
-    private uiService: UIService
+    private uiService: UIService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -458,8 +460,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public login(event: MouseEvent) {
     event.preventDefault();
 
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.loginURL);
-    this.uiService.openModal('auth');
+    this.userService.startLoginFlow();
   }
 
   /**
