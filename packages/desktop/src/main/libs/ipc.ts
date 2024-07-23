@@ -49,6 +49,7 @@ import {
   EnvironmentDescriptor,
   Settings
 } from 'src/shared/models/settings.model';
+import { startAuthCallbackServer, stopAuthCallbackServer } from './auth';
 
 declare const IS_TESTING: boolean;
 
@@ -119,6 +120,14 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.on('APP_SHOW_FOLDER', (event, name) => {
     showFolderInExplorer(name);
+  });
+
+  ipcMain.on('APP_AUTH', (event, page) => {
+    startAuthCallbackServer(page);
+  });
+
+  ipcMain.on('APP_AUTH_STOP_SERVER', () => {
+    stopAuthCallbackServer();
   });
 
   ipcMain.on('APP_OPEN_EXTERNAL_LINK', (event, url) => {

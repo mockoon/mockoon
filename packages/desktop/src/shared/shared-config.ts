@@ -39,8 +39,10 @@ export const SharedConfig = (options: {
       cloudSync:
         docsURL + 'mockoon-cloud/data-synchronization-team-collaboration/'
     },
-    loginURL: `${options.websiteURL}login/?inapp=true`,
-    signupURL: `${options.websiteURL}signup/?inapp=true`,
+    // should not be used directly. Instead use the flow methods in the user service
+    loginURL: `${options.websiteURL}login/`,
+    // should not be used directly. Instead use the flow methods in the user service
+    signupURL: `${options.websiteURL}signup/`,
     accountURL: `${options.websiteURL}account/subscription/`,
     cloudPlansURL: `${options.websiteURL}cloud/`,
     maxPromptLength: 500,

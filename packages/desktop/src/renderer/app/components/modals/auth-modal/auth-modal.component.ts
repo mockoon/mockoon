@@ -10,6 +10,7 @@ import {
   EMPTY,
   Subject,
   catchError,
+  debounceTime,
   delay,
   filter,
   mergeMap,
@@ -18,7 +19,6 @@ import {
 } from 'rxjs';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
-import { Config } from 'src/renderer/config';
 
 @Component({
   selector: 'app-auth-modal',
@@ -26,7 +26,6 @@ import { Config } from 'src/renderer/config';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthModalComponent implements OnInit, OnDestroy {
-  public loginURL = Config.loginURL;
   public isLoading$ = new BehaviorSubject<boolean>(false);
   public isSuccess$ = new BehaviorSubject<boolean>(false);
   public tokenControl = new UntypedFormControl('');
@@ -40,6 +39,7 @@ export class AuthModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.tokenControl.valueChanges
       .pipe(
+        debounceTime(500),
         filter((token) => !!token),
         tap(() => {
           this.tokenControl.setErrors(null);
