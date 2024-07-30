@@ -47,15 +47,15 @@
   "dependencies": {
     "@mockoon/commons": "8.3.0",
     "@mockoon/commons-server": "8.3.0",
-    "@oclif/core": "3.26.4",
-    "@oclif/plugin-help": "6.0.21",
+    "@oclif/core": "3.27.0",
+    "@oclif/plugin-help": "6.2.7",
     "jsonfile": "6.1.0",
     "mkdirp": "3.0.1",
     "mustache": "4.2.0",
     "tslib": "2.6.2"
   },
   "devDependencies": {
-    "@oclif/test": "3.2.11",
+    "@oclif/test": "3.2.15",
     "@types/jsonfile": "6.1.4",
     "@types/mocha": "10.0.6",
     "@types/mustache": "4.2.5",
@@ -67,7 +67,7 @@
     "eslint-config-oclif-typescript": "3.1.7",
     "eslint-plugin-jsdoc": "48.2.3",
     "mocha": "10.4.0",
-    "oclif": "4.9.0",
+    "oclif": "4.14.12",
     "ts-mocha": "10.0.0",
     "typescript": "5.4.5"
   },
