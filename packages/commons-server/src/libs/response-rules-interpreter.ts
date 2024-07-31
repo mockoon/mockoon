@@ -125,20 +125,22 @@ export class ResponseRulesInterpreter {
 
     let value: any;
 
+    const parsedRuleModifier = this.templateParse(rule.modifier ?? '');
+
     if (rule.target === 'request_number') {
       value = requestNumber;
     } else if (rule.target === 'cookie') {
-      if (!rule.modifier) {
+      if (!parsedRuleModifier) {
         return false;
       }
-      value = this.request.cookies?.[rule.modifier];
+      value = this.request.cookies?.[parsedRuleModifier];
     } else if (rule.target === 'header') {
-      value = this.request.header(rule.modifier);
+      value = this.request.header(parsedRuleModifier);
     } else {
-      if (rule.modifier) {
+      if (parsedRuleModifier) {
         value = getValueFromPath(
           this.targets[rule.target],
-          rule.modifier,
+          parsedRuleModifier,
           undefined
         );
       } else if (rule.target === 'body') {
@@ -146,11 +148,11 @@ export class ResponseRulesInterpreter {
       }
     }
 
-    if (rule.operator === 'null' && rule.modifier) {
+    if (rule.operator === 'null' && parsedRuleModifier) {
       return value === null || value === undefined;
     }
 
-    if (rule.operator === 'empty_array' && rule.modifier) {
+    if (rule.operator === 'empty_array' && parsedRuleModifier) {
       return Array.isArray(value) && value.length < 1;
     }
 
@@ -168,7 +170,7 @@ export class ResponseRulesInterpreter {
       rule.value = '';
     }
 
-    const parsedRuleValue = this.parseValue(rule.value);
+    const parsedRuleValue = this.templateParse(rule.value);
 
     let regex: RegExp;
 
@@ -226,8 +228,9 @@ export class ResponseRulesInterpreter {
    * @param value the value to parse
    * @returns the parsed value or the unparsed input value if parsing fails
    */
-  private parseValue(value: string): string {
+  private templateParse(value: string): string {
     let parsedValue: string;
+
     try {
       parsedValue = TemplateParser({
         shouldOmitDataHelper: false,
