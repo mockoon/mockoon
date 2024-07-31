@@ -9,8 +9,9 @@ type SettingNames =
   | 'settings-log-max-count'
   | 'settings-enable-telemetry'
   | 'settings-faker-locale'
-  | 'start-environments-on-load'
-  | 'settings-env-vars-prefix';
+  | 'settings-start-environments-on-load'
+  | 'settings-env-vars-prefix'
+  | 'settings-enable-random-latency';
 
 class Settings {
   public get fileWatchingInputGroup() {
