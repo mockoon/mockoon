@@ -1888,7 +1888,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'tommy',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1930,7 +1930,7 @@ describe('Response rules interpreter', () => {
         },
         cookies: {
           login: 'notvalue'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1974,7 +1974,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'tommy',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -2018,7 +2018,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'cola',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -2061,7 +2061,7 @@ describe('Response rules interpreter', () => {
         },
         cookies: {
           login: ''
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -2187,7 +2187,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'cola',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -2231,7 +2231,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'cola',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -3736,5 +3736,47 @@ describe('Response rules interpreter', () => {
 
       strictEqual(routeResponse, null);
     });
+  });
+
+  it('should return response if rules fulfilled using modifier templating support', () => {
+    const request: Request = {
+      header: function (headerName: string) {
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+
+        return headers[headerName];
+      },
+      body: { testprop: 'testvalue' }
+    } as Request;
+
+    const routeResponse = new ResponseRulesInterpreter(
+      [
+        { ...routeResponseTemplate, body: 'default', default: true },
+        {
+          ...routeResponseTemplate,
+          body: 'response1',
+          rules: [
+            {
+              target: 'body',
+              modifier: '{{data "bodypropname"}}',
+              value: 'testvalue',
+              operator: 'equals',
+              invert: false
+            }
+          ],
+          rulesOperator: 'OR',
+          default: false
+        }
+      ],
+      request,
+      null,
+      EnvironmentDefault,
+      [{ id: 'abcd', name: 'bodypropname', value: 'testprop', parsed: true }],
+      {},
+      ''
+    ).chooseResponse(1);
+
+    strictEqual(routeResponse?.body, 'response1');
   });
 });
