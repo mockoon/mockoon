@@ -481,6 +481,8 @@ export const environmentReducer = (
         activeUuids.activeCallbackUUID = newEnvironment.callbacks.length
           ? newEnvironment.callbacks[0].uuid
           : null;
+
+        newSettings.activeEnvironmentUuid = newEnvironment.uuid;
       }
 
       newState = {
