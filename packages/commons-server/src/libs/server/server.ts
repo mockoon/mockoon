@@ -9,6 +9,7 @@ import {
   Environment,
   FileExtensionsWithTemplating,
   GetContentType,
+  getLatency,
   GetRouteResponseContentType,
   Header,
   IsValidURL,
@@ -83,7 +84,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
     disableTls: false,
-    maxTransactionLogs: defaultMaxTransactionLogs
+    maxTransactionLogs: defaultMaxTransactionLogs,
+    enableRandomLatency: false
   };
   private transactionLogs: Transaction[] = [];
 
@@ -274,7 +276,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) => {
     this.refreshEnvironment();
 
-    setTimeout(next, this.environment.latency);
+    setTimeout(
+      next,
+      getLatency(this.environment.latency, this.options.enableRandomLatency)
+    );
   };
 
   /**
@@ -581,6 +586,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         response.routeResponseUUID = enabledRouteResponse.uuid;
       }
 
+      const latency = getLatency(
+        enabledRouteResponse.latency,
+        this.options.enableRandomLatency
+      );
+
       // add route latency if any
       setTimeout(() => {
         const contentType = GetRouteResponseContentType(
@@ -666,7 +676,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             templateParse
           );
         }
-      }, enabledRouteResponse.latency);
+      }, latency);
     };
   }
 
