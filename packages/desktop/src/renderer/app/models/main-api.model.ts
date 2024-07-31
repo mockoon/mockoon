@@ -79,6 +79,8 @@ export interface MainAPIModel {
   send(channel: 'APP_UPDATE_MENU_STATE', state: MenuStateUpdatePayload): void;
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
   send(channel: 'APP_QUIT' | 'APP_HIDE_WINDOW' | 'APP_APPLY_UPDATE'): void;
+  send(channel: 'APP_AUTH', page: 'login' | 'signup'): void;
+  send(channel: 'APP_AUTH_STOP_SERVER'): void;
   send(channel: 'APP_OPEN_EXTERNAL_LINK', url: string): void;
   send(
     channel: 'APP_SHOW_FILE' | 'APP_OPEN_FILE',
@@ -112,6 +114,10 @@ export interface MainAPIModel {
   receive(
     channel: 'APP_UPDATE_AVAILABLE',
     listener: (version: string) => void
+  ): void;
+  receive(
+    channel: 'APP_AUTH_CALLBACK',
+    listener: (token: string) => void
   ): void;
   receive(
     channel: 'APP_CUSTOM_PROTOCOL',

@@ -31,51 +31,53 @@ import {
 import { ActionTypes, Actions } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
 
+export const storeDefaultState: StoreType = {
+  activeView: 'ENV_ROUTES',
+  activeTab: 'RESPONSE',
+  activeEnvironmentLogsTab: 'REQUEST',
+  activeTemplatesTab: 'LIST',
+  activeEnvironmentLogsUUID: {},
+  activeEnvironmentUUID: null,
+  activeRouteUUID: null,
+  activeDatabucketUUID: null,
+  activeCallbackUUID: null,
+  activeRouteResponseUUID: null,
+  environments: [],
+  environmentsStatus: {},
+  bodyEditorConfig: defaultEditorOptions,
+  duplicatedRoutes: {},
+  environmentsLogs: {},
+  toasts: [],
+  uiState: {
+    closing: false,
+    saving: false
+  },
+  settings: null,
+  duplicateEntityToAnotherEnvironment: { moving: false },
+  filters: {
+    routes: '',
+    databuckets: '',
+    templates: '',
+    callbacks: '',
+    logs: ''
+  },
+  user: null,
+  callbackSettings: {
+    activeTab: 'SPEC',
+    activeSpecTab: 'BODY'
+  },
+  sync: {
+    status: false,
+    presence: null,
+    offlineReason: null,
+    alert: null
+  },
+  deployInstances: []
+};
+
 @Injectable({ providedIn: 'root' })
 export class Store {
-  private store$ = new BehaviorSubject<StoreType>({
-    activeView: 'ENV_ROUTES',
-    activeTab: 'RESPONSE',
-    activeEnvironmentLogsTab: 'REQUEST',
-    activeTemplatesTab: 'LIST',
-    activeEnvironmentLogsUUID: {},
-    activeEnvironmentUUID: null,
-    activeRouteUUID: null,
-    activeDatabucketUUID: null,
-    activeCallbackUUID: null,
-    activeRouteResponseUUID: null,
-    environments: [],
-    environmentsStatus: {},
-    bodyEditorConfig: defaultEditorOptions,
-    duplicatedRoutes: {},
-    environmentsLogs: {},
-    toasts: [],
-    uiState: {
-      closing: false,
-      saving: false
-    },
-    settings: null,
-    duplicateEntityToAnotherEnvironment: { moving: false },
-    filters: {
-      routes: '',
-      databuckets: '',
-      templates: '',
-      callbacks: '',
-      logs: ''
-    },
-    user: null,
-    callbackSettings: {
-      activeTab: 'SPEC',
-      activeSpecTab: 'BODY'
-    },
-    sync: {
-      status: false,
-      presence: null,
-      offlineReason: null,
-      alert: null
-    },
-    deployInstances: []
-  });
+  private store$ = new BehaviorSubject<StoreType>(storeDefaultState);
   /**
    * Emits latest store action
    * Most views are updating the store by themselves and only listen for UUID changes to update their view. Sometimes, a view update is needed when the store is updated by another view, or when the store is updated by an external source (liek file monitoring).

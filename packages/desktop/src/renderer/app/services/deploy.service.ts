@@ -55,20 +55,20 @@ export class DeployService extends Logger {
     ]).pipe(
       switchMap(([user, token]) => {
         if (user?.plan !== Plans.FREE) {
-          return this.httpClient
-            .get<DeployInstance[]>(`${Config.apiURL}deployments`, {
+          return this.httpClient.get<DeployInstance[]>(
+            `${Config.apiURL}deployments`,
+            {
               headers: {
                 Authorization: `Bearer ${token}`
               }
-            })
-            .pipe(
-              tap((instances: DeployInstance[]) => {
-                this.store.update(updateDeployInstancesAction([...instances]));
-              })
-            );
+            }
+          );
         }
 
         return of([]);
+      }),
+      tap((instances: DeployInstance[]) => {
+        this.store.update(updateDeployInstancesAction([...instances]));
       }),
       catchError(() => EMPTY)
     );
