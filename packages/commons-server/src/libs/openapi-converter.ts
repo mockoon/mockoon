@@ -428,23 +428,25 @@ export class OpenAPIConverter {
       routeContentTypeHeader.value = contentTypes[0];
     }
 
-    if (responseHeaders) {
+    if (responseHeaders != null) {
       return [
         routeContentTypeHeader,
         ...Object.keys(responseHeaders).map((headerName) => {
           let headerValue = '';
 
-          if ('example' in responseHeaders[headerName]) {
-            headerValue = responseHeaders[headerName]['example'];
-          } else if ('examples' in responseHeaders[headerName]) {
-            headerValue =
-              responseHeaders[headerName]['examples'][
-                Object.keys(responseHeaders[headerName]['examples'])[0]
-              ]['value'];
-          } else if ('schema' in responseHeaders[headerName]) {
-            headerValue = this.generateSchema(
-              responseHeaders[headerName]['schema']
-            );
+          if (responseHeaders[headerName] != null) {
+            if (responseHeaders[headerName]['example'] != null) {
+              headerValue = responseHeaders[headerName]['example'];
+            } else if (responseHeaders[headerName]['examples'] != null) {
+              headerValue =
+                responseHeaders[headerName]['examples'][
+                  Object.keys(responseHeaders[headerName]['examples'])[0]
+                ]['value'];
+            } else if (responseHeaders[headerName]['schema'] != null) {
+              headerValue = this.generateSchema(
+                responseHeaders[headerName]['schema']
+              );
+            }
           }
 
           return BuildHeader(headerName, headerValue);
