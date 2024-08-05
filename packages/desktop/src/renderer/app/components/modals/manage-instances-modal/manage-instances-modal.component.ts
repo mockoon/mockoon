@@ -112,6 +112,8 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
         }, {});
       })
     );
+
+    this.deployService.getInstances().subscribe();
   }
 
   public close() {
