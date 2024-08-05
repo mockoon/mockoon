@@ -121,7 +121,10 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
 
           if (newInstance) {
             this.uiService.closeModal('deploy', false);
-            this.uiService.openModal('manageInstances', environmentUuid);
+            this.uiService.openModal('manageInstances', {
+              environmentUuid,
+              refresh: false
+            });
           }
         }),
         catchError((error) => {

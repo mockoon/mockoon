@@ -18,7 +18,7 @@ type dropdownMenuPayload = { environmentUuid: string };
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ManageInstancesModalComponent extends Logger implements OnInit {
-  public environmentUuid$ = this.uiService.getModalPayload$('manageInstances');
+  public payload$ = this.uiService.getModalPayload$('manageInstances');
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
   public instances$ = this.store.select('deployInstances');
   public environmentList$: Observable<{ [environmentUuid in string]: true }>;
@@ -113,7 +113,9 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
       })
     );
 
-    this.deployService.getInstances().subscribe();
+    if (this.payload$.getValue()?.refresh) {
+      this.deployService.getInstances().subscribe();
+    }
   }
 
   public close() {

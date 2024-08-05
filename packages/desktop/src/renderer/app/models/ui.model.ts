@@ -24,3 +24,8 @@ export type ConfirmModalPayload = {
   list$?: Observable<string[]>;
   confirmed$: Subject<boolean>;
 };
+
+export type ManageInstancesModalPayload = {
+  environmentUuid?: string;
+  refresh: boolean;
+};
