@@ -57,7 +57,8 @@ export type ResponseRuleOperators =
   | 'regex'
   | 'regex_i'
   | 'null'
-  | 'empty_array';
+  | 'empty_array'
+  | 'array_includes';
 
 export type ResponseRule = {
   target: ResponseRuleTargets;

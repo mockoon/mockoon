@@ -172,6 +172,10 @@ export class ResponseRulesInterpreter {
 
     const parsedRuleValue = this.templateParse(rule.value);
 
+    if (rule.operator === 'array_includes' && rule.modifier) {
+      return Array.isArray(value) && value.includes(parsedRuleValue);
+    }
+
     let regex: RegExp;
 
     if (rule.operator.includes('regex')) {

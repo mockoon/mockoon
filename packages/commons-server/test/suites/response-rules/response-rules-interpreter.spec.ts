@@ -3282,6 +3282,47 @@ describe('Response rules interpreter', () => {
 
       strictEqual(routeResponse?.body, 'value');
     });
+
+    it('should return response if operator is "array_includes" and array contains value', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          property: ['value1', 'value2']
+        },
+        query: { prop: undefined, examples: [] } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: 'property',
+                value: 'value1',
+                operator: 'array_includes',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        request,
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+
+      strictEqual(routeResponse?.body, 'response1');
+    });
   });
 
   describe('Complex rules (AND/OR)', () => {
