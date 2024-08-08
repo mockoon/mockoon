@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
-import { EMPTY, combineLatest } from 'rxjs';
-import { catchError, distinctUntilChanged, tap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -14,7 +14,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
-export class ApiService extends Logger {
+export class MainApiService extends Logger {
   constructor(
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
@@ -33,6 +33,11 @@ export class ApiService extends Logger {
     MainAPI.receive('APP_UPDATE_AVAILABLE', (version) => {
       this.zone.run(() => {
         this.eventsService.updateAvailable$.next(version);
+      });
+    });
+    MainAPI.receive('APP_AUTH_CALLBACK', (token) => {
+      this.zone.run(() => {
+        this.userService.authCallbackHandler(token).subscribe();
       });
     });
 
@@ -110,20 +115,7 @@ export class ApiService extends Logger {
       this.zone.run(() => {
         switch (action) {
           case 'auth':
-            this.userService
-              .authWithToken(parameters.token)
-              .pipe(
-                tap(() => {
-                  this.uiService.closeModal('auth');
-                  this.logMessage('info', 'LOGIN_SUCCESS');
-                }),
-                catchError(() => {
-                  this.logMessage('error', 'LOGIN_ERROR');
-
-                  return EMPTY;
-                })
-              )
-              .subscribe();
+            this.userService.authCallbackHandler(parameters.token).subscribe();
             break;
           case 'load-environment':
             this.environmentsService

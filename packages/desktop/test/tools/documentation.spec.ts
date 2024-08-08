@@ -1220,7 +1220,7 @@ const documentationTopics: {
             target: 'header',
             value: "{{data 'token'}}",
             invert: false,
-            modifier: 'Authorization',
+            modifier: "{{data 'headerName'}}",
             operator: 'equals'
           });
         },
@@ -1233,7 +1233,7 @@ const documentationTopics: {
         highlight: false,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 50, left: 40, bottom: 80 },
+        screeenshotGaps: { top: 60, left: 40, bottom: 60 },
         fileName: 'template-helper-response-rule-value.png'
       }
     ]

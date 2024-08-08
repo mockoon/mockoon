@@ -1,22 +1,31 @@
 import { Injectable } from '@angular/core';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, first } from 'rxjs';
+import {
+  NgbModal,
+  NgbModalOptions,
+  NgbModalRef
+} from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-modal/auth-modal.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
+import { DeployInstanceModalComponent } from 'src/renderer/app/components/modals/deploy-instance-modal/deploy-instance-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
+import { ManageInstancesModalComponent } from 'src/renderer/app/components/modals/manage-instances-modal/manage-instances-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { UIState } from 'src/renderer/app/models/store.model';
-import { ConfirmModalPayload } from 'src/renderer/app/models/ui.model';
+import {
+  ConfirmModalPayload,
+  ManageInstancesModalPayload
+} from 'src/renderer/app/models/ui.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
-const commonConfigs = {
+const commonConfigs: { [key in string]: NgbModalOptions } = {
   small: {
     size: 'sm'
   },
@@ -31,9 +40,39 @@ const commonConfigs = {
   }
 };
 
+type ModalNames =
+  | 'commandPalette'
+  | 'settings'
+  | 'changelog'
+  | 'templates'
+  | 'duplicate_to_environment'
+  | 'welcome'
+  | 'auth'
+  | 'confirm'
+  | 'deploy'
+  | 'manageInstances';
+type ModalWithPayload = Extract<
+  ModalNames,
+  'deploy' | 'manageInstances' | 'confirm'
+>;
+type ModalWithoutPayload = Exclude<
+  ModalNames,
+  'deploy' | 'manageInstances' | 'confirm'
+>;
+
 @Injectable({ providedIn: 'root' })
 export class UIService {
-  private modals = {
+  private modalsPayloads = {
+    deploy: new BehaviorSubject<string>(null),
+    manageInstances: new BehaviorSubject<ManageInstancesModalPayload>(null),
+    confirm: new BehaviorSubject<ConfirmModalPayload>(null)
+  };
+  private modals: {
+    [key in ModalNames]: {
+      component: any;
+      options: NgbModalOptions;
+    };
+  } = {
     commandPalette: {
       component: CommandPaletteModalComponent,
       options: {
@@ -72,19 +111,28 @@ export class UIService {
     confirm: {
       component: ConfirmModalComponent,
       options: commonConfigs.medium
+    },
+    deploy: {
+      component: DeployInstanceModalComponent,
+      options: commonConfigs.large
+    },
+    manageInstances: {
+      component: ManageInstancesModalComponent,
+      options: commonConfigs.large
     }
   };
-  private modalsInstances: { [key in keyof typeof this.modals]: NgbModalRef } =
-    {
-      commandPalette: null,
-      settings: null,
-      changelog: null,
-      templates: null,
-      duplicate_to_environment: null,
-      welcome: null,
-      auth: null,
-      confirm: null
-    };
+  private modalsInstances: { [key in ModalNames]: NgbModalRef } = {
+    commandPalette: null,
+    settings: null,
+    changelog: null,
+    templates: null,
+    duplicate_to_environment: null,
+    welcome: null,
+    auth: null,
+    confirm: null,
+    deploy: null,
+    manageInstances: null
+  };
 
   constructor(
     private store: Store,
@@ -121,21 +169,41 @@ export class UIService {
     this.eventsService.focusInput.next(input);
   }
 
+  public getModalPayload$<T extends ModalWithPayload>(
+    modalName: T
+  ): (typeof this.modalsPayloads)[T] {
+    return this.modalsPayloads[modalName];
+  }
+
   /**
-   * Open a modal
+   * Open a modal.
+   * Some modals require a payload to be passed.
    *
    * @param modalName
    */
-  public openModal(modalName: keyof typeof this.modals) {
+
+  public openModal(modalName: 'confirm', payload: ConfirmModalPayload): void;
+  public openModal(modalName: 'deploy', payload: string): void;
+  public openModal(
+    modalName: 'manageInstances',
+    payload: ManageInstancesModalPayload
+  ): void;
+  public openModal(modalName: ModalWithoutPayload): void;
+  public openModal(
+    modalName: ModalNames,
+    payload?: string | ConfirmModalPayload | ManageInstancesModalPayload | never
+  ): void {
     if (this.modalsInstances[modalName]) {
       return;
     }
 
-    Object.keys(this.modalsInstances).forEach(
-      (modal: keyof typeof this.modals) => {
-        this.closeModal(modal);
-      }
-    );
+    if (payload !== undefined) {
+      this.modalsPayloads[modalName].next(payload);
+    }
+
+    Object.keys(this.modalsInstances).forEach((modal: ModalNames) => {
+      this.closeModal(modal);
+    });
 
     this.modalsInstances[modalName] = this.ngbModal.open(
       this.modals[modalName].component,
@@ -147,13 +215,15 @@ export class UIService {
     });
   }
 
-  public closeModal(modalName: keyof typeof this.modals, reason?: any) {
+  public closeModal(modalName: ModalNames, reason?: any) {
     if (this.modalsInstances[modalName]) {
       this.modalsInstances[modalName].close(reason);
+
+      this.modalsPayloads[modalName]?.next(null);
     }
   }
 
-  public dismissModal(modalName: keyof typeof this.modals, reason?: any) {
+  public dismissModal(modalName: ModalNames, reason?: any) {
     if (this.modalsInstances[modalName]) {
       this.modalsInstances[modalName].dismiss(reason);
     }
@@ -164,7 +234,7 @@ export class UIService {
    *
    * @param modalName
    */
-  public getModalInstance(modalName: keyof typeof this.modals) {
+  public getModalInstance(modalName: ModalNames) {
     return this.modalsInstances[modalName];
   }
 
@@ -176,14 +246,12 @@ export class UIService {
   ): Observable<boolean> {
     const confirmed$ = new Subject<boolean>();
 
-    this.eventsService.confirmModalPayload$.next({ ...payload, confirmed$ });
-
-    this.openModal('confirm');
+    this.openModal('confirm', { ...payload, confirmed$ });
 
     /**
      * Complete the Subject using first() as we only need the first value.
-     * Not completing the Subject can cause multiple successives modals to be ignored when
-     * used in combination with concat for example.
+     * Not completing the Subject can cause multiple successives modals to be ignored
+     * when used in combination with concat for example.
      */
     return confirmed$.pipe(first());
   }

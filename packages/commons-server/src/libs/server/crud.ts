@@ -4,6 +4,7 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { Request, Response } from 'express';
+import { get as getPath } from 'object-path';
 import { applyFilter, parseFilters } from '../filters';
 import { dedupSlashes, fullTextSearch } from '../utils';
 
@@ -40,11 +41,11 @@ const findItemIndex = (
 ) =>
   databucketValue.findIndex((value: any, index: number) => {
     if (typeof value === 'object' && value !== null) {
-      if (value[routeCrudKey] == null) {
+      if (getPath(value, routeCrudKey) == null) {
         return false;
       }
 
-      return value[routeCrudKey].toString() === request.params.id;
+      return getPath(value, routeCrudKey).toString() === request.params.id;
     } else {
       let indexParam = parseInt(request.params.id, 10);
       indexParam = isNaN(indexParam) ? 0 : indexParam;
@@ -198,6 +199,7 @@ export const databucketActions = (
 
     case 'getbyId': {
       if (Array.isArray(databucket.value)) {
+        console.log(routeCrudKey);
         const foundIndex = findItemIndex(
           databucket.value,
           request,
@@ -217,11 +219,34 @@ export const databucketActions = (
 
     case 'create': {
       if (Array.isArray(databucket.value)) {
-        if (typeof requestBody === 'object' && requestBody != null) {
-          requestBody = {
-            [routeCrudKey]: generateUUID(),
-            ...requestBody
-          };
+        // add missing id if not present, support nested objects (e.g. 'data.id')
+        if (
+          typeof requestBody === 'object' &&
+          requestBody != null &&
+          getPath(requestBody, routeCrudKey) === undefined
+        ) {
+          const props = routeCrudKey.split('.');
+
+          if (props.length === 1) {
+            requestBody = {
+              [routeCrudKey]: generateUUID(),
+              ...requestBody
+            };
+          } else {
+            let tempObject = requestBody;
+
+            for (let propsIndex = 0; propsIndex < props.length; propsIndex++) {
+              if (propsIndex === props.length - 1) {
+                tempObject[props[propsIndex]] = generateUUID();
+              } else {
+                if (tempObject[props[propsIndex]] === undefined) {
+                  tempObject[props[propsIndex]] = {};
+                }
+              }
+
+              tempObject = tempObject[props[propsIndex]];
+            }
+          }
         }
 
         databucket.value.push(requestBody);

@@ -42,4 +42,5 @@ export type Settings = {
   };
   envVarsPrefix: string;
   activeEnvironmentUuid: string | null;
+  enableRandomLatency: boolean;
 };

@@ -52,10 +52,10 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;
   public responseRuleTargets: DropdownItems<ResponseRuleTargets> = [
     { value: 'body', label: 'Body' },
-    { value: 'query', label: 'Query string' },
+    { value: 'query', label: 'Query parameter' },
     { value: 'header', label: 'Header' },
     { value: 'cookie', label: 'Cookie' },
-    { value: 'params', label: 'Route params' },
+    { value: 'params', label: 'Route parameter' },
     { value: 'global_var', label: 'Global variable' },
     { value: 'data_bucket', label: 'Data bucket' },
     { value: 'request_number', label: 'Request number (starting at 1)' }
@@ -72,7 +72,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   ];
   public modifierPlaceholders: Record<ResponseRuleTargets, string> = {
     body: 'JSONPath or object path (empty for full body)',
-    query: 'JSONPath or object path',
+    query: 'Parameter name, JSONPath or object path',
     header: 'Header name',
     cookie: 'Cookie name',
     params: 'Route parameter name',

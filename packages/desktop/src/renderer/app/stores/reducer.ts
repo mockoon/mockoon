@@ -91,6 +91,14 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.UPDATE_DEPLOY_INSTANCES: {
+      newState = {
+        ...state,
+        deployInstances: [...action.instances]
+      };
+      break;
+    }
+
     case ActionTypes.SET_ACTIVE_TAB: {
       newState = {
         ...state,
@@ -473,6 +481,8 @@ export const environmentReducer = (
         activeUuids.activeCallbackUUID = newEnvironment.callbacks.length
           ? newEnvironment.callbacks[0].uuid
           : null;
+
+        newSettings.activeEnvironmentUuid = newEnvironment.uuid;
       }
 
       newState = {

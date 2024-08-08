@@ -35,6 +35,7 @@ import { EventsService } from 'src/renderer/app/services/events.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import {
@@ -64,8 +65,9 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public user$ = this.store.select('user');
   public sync$ = this.store.select('sync');
   public categories$: Observable<typeof this.categories>;
-  public proPlansURL = Config.proPlansURL;
+  public cloudPlansURL = Config.cloudPlansURL;
   public isCloudEnabled$: Observable<boolean>;
+  public isConnected$ = this.user$.pipe(map((user) => !!user));
   public syncAlert$: Observable<string>;
   public trackByUuid = trackByUuid;
   public trackById = trackById;
@@ -98,6 +100,18 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.environmentsService
           .duplicateEnvironment(environmentUuid)
           .subscribe();
+      }
+    },
+    {
+      label: 'Deploy to the cloud',
+      icon: 'backup',
+      twoSteps: false,
+      disabled$: () =>
+        this.store
+          .select('user')
+          .pipe(map((user) => !user || user?.plan === 'FREE')),
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
+        this.uiService.openModal('deploy', environmentUuid);
       }
     },
     {
@@ -171,6 +185,15 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       }
     }
   ];
+  public instances$ = this.store.select('deployInstances').pipe(
+    map((deployInstances) =>
+      deployInstances.reduce((instances, instance) => {
+        instances[instance.environmentUuid] = instance;
+
+        return instances;
+      }, {})
+    )
+  );
   private userAndSync$ = combineLatest([
     this.store.select('user').pipe(distinctUntilChanged()),
     this.store.select('sync').pipe(distinctUntilChanged())
@@ -199,7 +222,8 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private settingsService: SettingsService,
     private syncsService: SyncService,
-    private uiService: UIService
+    private uiService: UIService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -436,8 +460,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public login(event: MouseEvent) {
     event.preventDefault();
 
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.loginURL);
-    this.uiService.openModal('auth');
+    this.userService.startLoginFlow();
   }
 
   /**

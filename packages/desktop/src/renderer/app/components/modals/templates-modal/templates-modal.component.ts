@@ -66,7 +66,6 @@ import { Config } from 'src/renderer/config';
   ]
 })
 export class TemplatesModalComponent implements OnInit, OnDestroy {
-  public loginURL = Config.loginURL;
   public isDemoLoading$ = new BehaviorSubject<boolean>(false);
   public activeTemplateListItem$ = new BehaviorSubject<TemplateListItem>(null);
   public activeTemplate$: Observable<Template>;
@@ -85,7 +84,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   public demoPrompt = new UntypedFormControl('');
   public generatedTemplateBody = new UntypedFormControl('');
   public demoEndpoint$ = new BehaviorSubject<(typeof demoTemplates)[0]>(null);
-  public proPlansURL = Config.proPlansURL;
+  public cloudPlansURL = Config.cloudPlansURL;
   public maxPromptLength = Config.maxPromptLength;
   public defaultEditorOptions = defaultEditorOptions;
   public focusableInputs = FocusableInputs;

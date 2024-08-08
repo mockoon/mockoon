@@ -125,20 +125,21 @@ USAGE
   $ mockoon-cli start
 
 OPTIONS
-  -d, --data                  [required] Path(s) or URL(s) to your Mockoon file(s)
-  -p, --port                  Override environment(s) port(s)
-  -l, --hostname              Override default listening hostname(s)
-  -c, --faker-locale          Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)
-  -s, --faker-seed            Number for the Faker.js seed (e.g. 1234)
-  -t, --log-transaction       Log the full HTTP transaction (request and response)
-  -X, --disable-log-to-file   Disable logging to file
-  -e, --disable-routes        Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name
-  -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
-  -x, --env-vars-prefix       Prefix for environment variables (default: 'MOCKOON_')
-      --disable-admin-api     Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
-      --disable-tls           Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)
-      --max-transaction-logs  Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)
-  -h, --help                  Show CLI help
+  -d, --data                   [required] Path(s) or URL(s) to your Mockoon file(s)
+  -p, --port                   Override environment(s) port(s)
+  -l, --hostname               Override default listening hostname(s)
+  -c, --faker-locale           Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)
+  -s, --faker-seed             Number for the Faker.js seed (e.g. 1234)
+  -t, --log-transaction        Log the full HTTP transaction (request and response)
+  -X, --disable-log-to-file    Disable logging to file
+  -e, --disable-routes         Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name
+  -r, --repair                 If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
+  -x, --env-vars-prefix        Prefix for environment variables (default: 'MOCKOON_')
+      --disable-admin-api      Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
+      --disable-tls            Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)
+      --max-transaction-logs   Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)
+      --enable-random-latency  Randomize global and responses latencies between 0 and the specified value (default: false)
+  -h, --help                   Show CLI help
 
 EXAMPLES
   $ mockoon-cli start --data ~/data.json
@@ -459,7 +460,7 @@ You can also disable file logging by using th `--disable-log-to-file` flag. This
 
 ## Mockoon's documentation
 
-You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) on the official website. It covers the most complex features.
+You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) on the official website.
 
 ## Sponsors
 
@@ -469,19 +470,20 @@ Mockoon is an open-source project built by volunteer maintainers. If you like ou
 <a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
-## Subscribe to Mockoon Pro
+## Subscribe to Mockoon Cloud
 
-With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
+With advanced features for solo developers and teams, Mockoon Cloud supercharges your API development:
 
+- ☁️ [cloud deployments](https://mockoon.com/docs/latest/mockoon-cloud/api-mock-cloud-deployments/)
 - 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/docs/latest/mockoon-cloud/data-synchronization-team-collaboration/)
 - 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
-- 📃 Access to dozens of [ready to use JSON templates](https://mockoon.com/templates/).
+- 📃 Access to dozens of [ready-to-use JSON templates](https://mockoon.com/templates/).
 - 💬 Priority support and training.
 
 Upgrade today and take your API development to the next level.
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png?" width="250" alt="pro button" /></a>
+<a href="https://mockoon.com/cloud/"><img src="https://mockoon.com/images/cloud-btn.png?" width="250" alt="cloud button" /></a>
 </div>
 
 ## Support/feedback

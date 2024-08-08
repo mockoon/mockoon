@@ -1,4 +1,4 @@
-import { SyncPresence, User } from '@mockoon/cloud';
+import { DeployInstance, SyncPresence, User } from '@mockoon/cloud';
 import { Environments } from '@mockoon/commons';
 import {
   CallbackSpecTabNameType,
@@ -98,4 +98,5 @@ export type StoreType = {
     offlineReason: string | null;
     alert: string | null;
   };
+  deployInstances: DeployInstance[];
 };

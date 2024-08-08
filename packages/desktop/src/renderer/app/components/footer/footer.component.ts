@@ -4,7 +4,7 @@ import {
   Input,
   OnInit
 } from '@angular/core';
-import { BehaviorSubject, Observable, from } from 'rxjs';
+import { BehaviorSubject, Observable, from, map } from 'rxjs';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import {
   TemplatesTabsName,
@@ -32,6 +32,8 @@ export class FooterComponent implements OnInit {
   public generatingTemplate$ = this.templateService.generatingTemplate$;
   public generatingEndpoint$ = this.templateService.generatingEndpoint$;
   public releaseUrl = Config.releasePublicURL;
+  public deployInstances$ = this.store.select('deployInstances');
+  public isConnected$ = this.store.select('user').pipe(map((user) => !!user));
 
   constructor(
     private store: Store,
@@ -55,5 +57,9 @@ export class FooterComponent implements OnInit {
   public openTemplateModal(tab: TemplatesTabsName) {
     this.store.update(setActiveTemplatesTabAction(tab));
     this.uiService.openModal('templates');
+  }
+
+  public openManageInstancesModal() {
+    this.uiService.openModal('manageInstances', { refresh: true });
   }
 }

@@ -181,6 +181,65 @@
       </div>
     </div>
 
+    <app-title-separator
+      heading="Environments options"
+      icon="misc"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="settings-start-environments-on-load"
+              formControlName="startEnvironmentsOnLoad"
+            />
+            <label
+              class="form-check-label"
+              for="settings-start-environments-on-load"
+            >
+              Start all environments on application startup
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group align-items-center">
+          <div class="form-check mb-0">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="settings-enable-random-latency"
+              formControlName="enableRandomLatency"
+            />
+            <label
+              class="form-check-label"
+              for="settings-enable-random-latency"
+            >
+              Randomize latencies
+            </label>
+          </div>
+          <div class="input-group-text">
+            <app-svg icon="info" [ngbTooltip]="latencyTooltip"></app-svg>
+            <ng-template #latencyTooltip>
+              <div>
+                Randomize global and responses latencies between 0 and the
+                specified value
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires application restart to take effect
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <app-title-separator heading="Storage" icon="save"></app-title-separator>
 
     <div class="ps-4">
@@ -213,8 +272,8 @@
             id="settings-storage-pretty-print"
             formControlName="storagePrettyPrint"
           />
-          <label class="form-check-label" for="settings-storage-pretty-print"
-            >Pretty print JSON storage files (settings and environments)</label
+          <label class="form-check-label" for="settings-storage-pretty-print">
+            Pretty print JSON storage files (settings and environments)</label
           >
         </div>
       </div>
@@ -255,29 +314,6 @@
                 ⚠️ Requires application restart to take effect
               </div>
             </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <app-title-separator
-      heading="Environments auto start"
-      icon="play_arrow"
-    ></app-title-separator>
-
-    <div class="ps-4">
-      <div class="mb-3">
-        <div class="input-group">
-          <div class="form-check">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="start-environments-on-load"
-              formControlName="startEnvironmentsOnLoad"
-            />
-            <label class="form-check-label" for="start-environments-on-load"
-              >Start all environments on application startup
-            </label>
           </div>
         </div>
       </div>

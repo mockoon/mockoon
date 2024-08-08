@@ -7,6 +7,7 @@ import {
   Environment,
   FileExtensionsWithTemplating,
   GetContentType,
+  getLatency,
   GetRouteResponseContentType,
   Header,
   IsValidURL,
@@ -102,7 +103,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
     disableTls: false,
-    maxTransactionLogs: defaultMaxTransactionLogs
+    maxTransactionLogs: defaultMaxTransactionLogs,
+    enableRandomLatency: false
   };
   private transactionLogs: Transaction[] = [];
 
@@ -316,7 +318,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) => {
     this.refreshEnvironment();
 
-    setTimeout(next, this.environment.latency);
+    setTimeout(
+      next,
+      getLatency(this.environment.latency, this.options.enableRandomLatency)
+    );
   };
 
   /**
@@ -427,8 +432,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const requestContentType: string | undefined =
       request.header('Content-Type');
 
-    // body was already parsed (e.g. by firebase), 'data' event will not be emitted
-    if (!!request.body) {
+    // body was already parsed (e.g. by firebase), 'data' event will not be emitted (⚠️ request.body will always be an empty object in Firebase Functions, we have to check rawBody too)
+    if (!!request.body && request.rawBody) {
       this.processRawBody(request, next, [request.rawBody], requestContentType);
     } else {
       const rawBody: Buffer[] = [];
@@ -1081,6 +1086,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         response.routeResponseUUID = enabledRouteResponse.uuid;
       }
 
+      const latency = getLatency(
+        enabledRouteResponse.latency,
+        this.options.enableRandomLatency
+      );
+
       // add route latency if any
       setTimeout(() => {
         const contentType = GetRouteResponseContentType(
@@ -1166,7 +1176,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             templateParse
           );
         }
-      }, enabledRouteResponse.latency);
+      }, latency);
     };
   }
 

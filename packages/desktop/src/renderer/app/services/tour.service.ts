@@ -25,7 +25,7 @@ export class TourService {
       id: 'tour-environments-menu',
       title: 'Environments list',
       content:
-        'This is the list of your <strong>environments or mock APIs</strong>. Each local environment is a separate file on your computer and runs on a different localhost port (e.g. <code>http://localhost:3000</code>).<br/>You can also create <strong>cloud environments</strong> by subscribing to Mockoon Pro.',
+        'This is the list of your <strong>environments or mock APIs</strong>. Each local environment is a separate file on your computer and runs on a different localhost port (e.g. <code>http://localhost:3000</code>).<br/>You can also create <strong>cloud environments</strong> by subscribing to Mockoon Cloud.',
       placement: 'right',
       links: [
         {

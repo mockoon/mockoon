@@ -1,0 +1,190 @@
+<ng-container
+  *ngIf="{
+    user: user$ | async,
+    instances: instances$ | async,
+    environmentList: environmentList$ | async,
+    taskInProgress: taskInProgress$ | async,
+    payload: payload$ | async,
+    isCloudEnabled: isCloudEnabled$ | async,
+    deployEnvList: deployEnvList$ | async
+  } as data"
+>
+  <div class="modal-header align-items-center">
+    <h3 class="modal-title">Manage your instances</h3>
+    @if (data.payload?.environmentUuid) {
+      <div class="ms-auto" [appHideAfter]="3000">
+        <small class="text-success h6">
+          <app-svg icon="check" class="me-2"></app-svg>Instance deployed
+          successfully!
+        </small>
+      </div>
+    }
+  </div>
+
+  <div class="modal-body p-0">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <!-- align padding with modal body -->
+          <th scope="col" class="ps-3">Status</th>
+          <th scope="col">Environment name</th>
+          <th scope="col">URL</th>
+          <th scope="col">Visibility</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (data.isCloudEnabled) {
+          @for (instance of data.instances; track $index) {
+            <tr
+              class="hover-parent"
+              [ngClass]="{
+                'animation-fast-highlight':
+                  data.payload?.environmentUuid === instance.environmentUuid
+              }"
+            >
+              <!-- align padding with modal body -->
+              <td class="ps-3">
+                @if (instance.status === 'RUNNING') {
+                  <app-svg
+                    icon="record"
+                    class="text-success"
+                    ngbTooltip="Running"
+                  ></app-svg>
+                } @else {
+                  <app-svg
+                    icon="record"
+                    class="text-danger"
+                    ngbTooltip="Stopped"
+                  ></app-svg>
+                }
+              </td>
+              <td>
+                @if (data.environmentList[instance.environmentUuid]) {
+                  <a
+                    href=""
+                    (click)="
+                      navigateToEnvironment(instance.environmentUuid, $event)
+                    "
+                    >{{ instance.name }}</a
+                  >
+                } @else {
+                  <span class="text-muted">{{ instance.name }}</span>
+                }
+              </td>
+              <td>
+                <a href="{{ instance.url }}" target="_blank">{{
+                  instance.url
+                }}</a>
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-link btn-icon p-0 ms-2"
+                  ngbTooltip="Click to copy"
+                  (click)="copyToClipboard(instance.url)"
+                >
+                  <app-svg icon="assignment"></app-svg>
+                </button>
+              </td>
+              <td>
+                @if (instance.visibility === 'PUBLIC') {
+                  <app-svg icon="public" class="me-2"></app-svg>Public
+                } @else {
+                  <app-svg icon="lock" class="me-2"></app-svg>Private
+                }
+
+                @if (instance.apiKey) {
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-link btn-icon p-0 ms-2"
+                    ngbTooltip="Click to copy the API key. The API key must be used in the Authorization header to access the API."
+                    (click)="copyToClipboard(instance.apiKey)"
+                  >
+                    <app-svg icon="assignment"></app-svg>
+                  </button>
+                }
+              </td>
+              <td>
+                <app-dropdown-menu
+                  [idPrefix]="'instances-' + instance.environmentUuid"
+                  [items]="instancesDropdownMenuItems"
+                  [payload]="{
+                    environmentUuid: instance.environmentUuid
+                  }"
+                  [iconFaded]="true"
+                  [noYPadding]="true"
+                ></app-dropdown-menu>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="text-center text-muted">
+                <div class="d-flex align-items-center justify-content-center">
+                  <div class="me-2">No instances deployed.</div>
+                  <app-dropdown-menu
+                    class="col-3"
+                    idPrefix="deploy-env-list"
+                    [items]="data.deployEnvList"
+                    [icon]="null"
+                    label="Deploy environment"
+                  ></app-dropdown-menu>
+                </div>
+
+                @if (!data.isCloudEnabled) {}
+              </td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="5" class="text-center text-muted">
+              <a [href]="cloudPlansURL" target="_blank">Upgrade to Pro</a> to
+              deploy cloud environments.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-footer justify-content-space-between border-top-0">
+    <div
+      *ngIf="data.user && data.user.plan !== 'FREE'"
+      class="col-6 d-flex align-items-center"
+    >
+      <p
+        class="mb-0"
+        [ngClass]="{
+          'text-warning':
+            data.user?.deployInstancesQuotaUsed >=
+            data.user?.deployInstancesQuota
+        }"
+      >
+        Quota used ({{ data.user?.deployInstancesQuotaUsed }}/{{
+          data.user?.deployInstancesQuota
+        }})
+      </p>
+      <button
+        type="button"
+        class="btn btn-link btn-icon text-primary ps-2"
+        (click)="account()"
+      >
+        My account
+        <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
+      </button>
+    </div>
+    <div class="ms-auto">
+      @if (data.taskInProgress) {
+        <div class="d-inline-block me-2">
+          <app-svg icon="spinner"></app-svg>
+        </div>
+      }
+      <button
+        type="button"
+        class="btn btn-secondary modal-close ms-2"
+        (click)="close()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-container>

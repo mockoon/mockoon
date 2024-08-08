@@ -49,6 +49,7 @@ import ipv4 from './ipv4';
 import ipv6 from './ipv6';
 import join from './join';
 import jsonParse from './json-parse';
+import { jwtHeader, jwtPayload } from './jwt';
 import lastName from './lastName';
 import lat from './lat';
 import len from './len';
@@ -70,10 +71,13 @@ import parseInt from './parseInt';
 import phone from './phone';
 import postcode from './postcode';
 import repeat from './repeat';
+import reverse from './reverse';
 import round from './round';
 import setVar from './setVar';
 import slice from './slice';
 import someOf from './someOf';
+import sort from './sort';
+import sortBy from './sortBy';
 import split from './split';
 import street from './street';
 import stringify from './stringify';
@@ -125,6 +129,9 @@ export const Helpers = {
   ipv4,
   ipv6,
   join,
+  jsonParse,
+  jwtHeader,
+  jwtPayload,
   lastName,
   lat,
   len,
@@ -146,14 +153,16 @@ export const Helpers = {
   phone,
   postcode,
   repeat,
+  reverse,
   round,
   setVar,
   slice,
   someOf,
+  sort,
+  sortBy,
   split,
   street,
   stringify,
-  jsonParse,
   substr,
   subtract,
   switch: switchFunc,

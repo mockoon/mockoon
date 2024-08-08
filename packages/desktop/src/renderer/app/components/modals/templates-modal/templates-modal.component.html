@@ -14,7 +14,7 @@
   <ng-container
     *ngIf="{
       isFree: !data.user || data.user.plan === 'FREE',
-      isPro: data.user && data.user.plan !== 'FREE',
+      isPaid: data.user && data.user.plan !== 'FREE',
       canGenerateTemplate:
         promptTemplate.value &&
         (data.generatingTemplate === 'NONE' ||
@@ -51,7 +51,7 @@
             {{ flags.isFree ? 'AI assistants' : 'Generate JSON templates' }}
           </a>
         </li>
-        <li *ngIf="flags.isPro" class="nav-item">
+        <li *ngIf="flags.isPaid" class="nav-item">
           <a
             class="nav-link"
             [ngClass]="{
@@ -118,8 +118,8 @@
         </ng-container>
       </div>
 
-      <!-- Generate tab when user is connected and PRO -->
-      @if (data.activeTemplatesTab === 'GENERATE_TEMPLATE' && flags.isPro) {
+      <!-- Generate tab when user is connected and paid -->
+      @if (data.activeTemplatesTab === 'GENERATE_TEMPLATE' && flags.isPaid) {
         <div class="d-flex flex-column h-100">
           <div class="input-group mb-2">
             <input
@@ -162,8 +162,8 @@
         </div>
       }
 
-      <!-- Generate endpoint tab when user is connected and PRO -->
-      @if (data.activeTemplatesTab === 'GENERATE_ENDPOINT' && flags.isPro) {
+      <!-- Generate endpoint tab when user is connected and paid -->
+      @if (data.activeTemplatesTab === 'GENERATE_ENDPOINT' && flags.isPaid) {
         <div class="d-flex flex-column h-100">
           <div class="input-group mb-2">
             <input
@@ -328,7 +328,7 @@
     <div class="modal-footer justify-content-space-between">
       <div
         *ngIf="
-          flags.isPro &&
+          flags.isPaid &&
           (data.activeTemplatesTab === 'GENERATE_TEMPLATE' ||
             data.activeTemplatesTab === 'GENERATE_ENDPOINT')
         "
@@ -368,7 +368,7 @@
         <ng-container
           *ngIf="
             data.activeTemplatesTab === 'LIST' ||
-            (data.activeTemplatesTab === 'GENERATE_TEMPLATE' && flags.isPro)
+            (data.activeTemplatesTab === 'GENERATE_TEMPLATE' && flags.isPaid)
           "
         >
           <button
@@ -396,7 +396,9 @@
         </ng-container>
         <!-- Display creation CTA for endpoint generation -->
         <ng-container
-          *ngIf="data.activeTemplatesTab === 'GENERATE_ENDPOINT' && flags.isPro"
+          *ngIf="
+            data.activeTemplatesTab === 'GENERATE_ENDPOINT' && flags.isPaid
+          "
         >
           <button
             type="button"
@@ -415,10 +417,10 @@
               data.activeTemplatesTab === 'GENERATE_ENDPOINT')
           "
           class="btn btn-warning ms-2"
-          href="{{ proPlansURL }}"
+          href="{{ cloudPlansURL }}"
           target="_blank"
         >
-          Discover our PRO plans
+          Discover our Cloud plans
         </a>
       </div>
     </div>

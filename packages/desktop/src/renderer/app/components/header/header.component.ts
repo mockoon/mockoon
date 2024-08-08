@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { User } from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
 import { EMPTY, Observable, forkJoin, from } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
+import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
@@ -58,7 +59,8 @@ export class HeaderComponent implements OnInit {
     private remoteConfigService: RemoteConfigService,
     private uiService: UIService,
     private syncService: SyncService,
-    private toastsService: ToastsService
+    private toastsService: ToastsService,
+    private deployService: DeployService
   ) {}
 
   ngOnInit() {
@@ -139,19 +141,12 @@ export class HeaderComponent implements OnInit {
     this.environmentsService.toggleEnvironment();
   }
 
-  /**
-   * Open the login page in the default browser
-   */
   public login() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.loginURL);
-    this.uiService.openModal('auth');
+    this.userService.startLoginFlow();
   }
 
-  /**
-   * Open the signup page in the default browser
-   */
   public signup() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.signupURL);
+    this.userService.startSignupFlow();
   }
 
   /**
@@ -176,7 +171,10 @@ export class HeaderComponent implements OnInit {
       this.userService.getUserInfo(),
       this.remoteConfigService.fetchConfig()
     ])
-      .pipe(catchError(() => EMPTY))
+      .pipe(
+        switchMap(() => this.deployService.getInstances()),
+        catchError(() => EMPTY)
+      )
       .subscribe(() => {
         this.toastsService.addToast('success', 'Account information refreshed');
       });

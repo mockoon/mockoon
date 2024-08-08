@@ -1648,6 +1648,106 @@ const jsonArrayTestGroups: HttpCall[][] = [
         }
       }
     }
+  ],
+  [
+    {
+      description: 'Nested key bucket - get',
+      path: '/nestedkey',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"sub":{"myid":"1"},"prop":"test1"},{"sub":{"myid":"2"},"prop":"test2"}]',
+        headers: {
+          'content-type': 'application/json'
+        }
+      }
+    },
+    {
+      description: 'Nested key bucket - getById',
+      path: '/nestedkey/1',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '{"sub":{"myid":"1"},"prop":"test1"}',
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Nested key bucket - deleteById',
+      path: '/nestedkey/1',
+      method: 'DELETE',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Nested key bucket - get all after delete',
+      path: '/nestedkey',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"sub":{"myid":"2"},"prop":"test2"}]',
+        headers: {
+          'content-type': 'application/json'
+        }
+      }
+    },
+    {
+      description: 'Nested key bucket - updateMergeById',
+      path: '/nestedkey/2',
+      method: 'PATCH',
+      body: '{"newprop":"test3"}',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Nested key bucket - get after update',
+      path: '/nestedkey/2',
+      method: 'PATCH',
+      body: '{"sub":{"myid":"1"},"prop":"test1","newprop":"test3"}',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Nested key bucket - post',
+      path: '/nestedkey',
+      method: 'POST',
+      body: '{"sub":{"myid":"5"},"prop":"test5"}',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201
+      }
+    },
+    {
+      description: 'Nested key bucket - get after post',
+      path: '/nestedkey/5',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '{"sub":{"myid":"5"},"prop":"test5"}',
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Nested key bucket - post (missing key)',
+      path: '/nestedkey',
+      method: 'POST',
+      // wrong key name
+      body: '{"sub":{"id":"6"},"prop":"test6"}',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: new RegExp(
+          /\{"sub"\:\{"id"\:"6"\,"myid"\:"[a-f0-9\-]{36}"\}\,"prop"\:"test6"\}/i
+        ),
+        headers: { 'content-type': 'application/json' }
+      }
+    }
   ]
 ];
 
@@ -1707,6 +1807,12 @@ describe('CRUD endpoints', () => {
     await routes.setPath('search');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(5);
+
+    await routes.addCRUDRoute();
+    await routes.setPath('nestedkey');
+    await routes.openDataBucketMenu();
+    await routes.selectDataBucket(6);
+    await routes.setCrudKey('sub.myid');
   });
 
   it('should start the environment', async () => {

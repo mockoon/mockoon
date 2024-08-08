@@ -127,4 +127,9 @@ export type ServerOptions = {
    * Can be configured when using serverless (same option) or CLI `--max-transaction-logs`
    */
   maxTransactionLogs: number;
+
+  /**
+   * Enable random latency from 0 to value specified in the route settings.                                                                                                 |
+   */
+  enableRandomLatency: boolean;
 };

@@ -133,17 +133,19 @@ export class ResponseRulesInterpreter {
 
     let value: any;
 
+    const parsedRuleModifier = this.templateParse(rule.modifier ?? '');
+
     if (rule.target === 'request_number') {
       value = requestNumber;
     } else if (rule.target === 'cookie') {
-      if (!rule.modifier) {
+      if (!parsedRuleModifier) {
         return false;
       }
-      value = this.request.cookies?.[rule.modifier];
+      value = this.request.cookies?.[parsedRuleModifier];
     } else if (rule.target === 'header') {
-      value = this.request.header(rule.modifier);
+      value = this.request.header(parsedRuleModifier);
     } else {
-      if (rule.modifier) {
+      if (parsedRuleModifier) {
         value = this.targets.bodyRaw;
 
         let target = this.targets[rule.target];
@@ -157,17 +159,17 @@ export class ResponseRulesInterpreter {
               : target;
         }
 
-        value = getValueFromPath(target, rule.modifier, undefined);
+        value = getValueFromPath(target, parsedRuleModifier, undefined);
       } else if (rule.target === 'body') {
         value = requestMessage || this.targets.bodyRaw;
       }
     }
 
-    if (rule.operator === 'null' && rule.modifier) {
+    if (rule.operator === 'null' && parsedRuleModifier) {
       return value === null || value === undefined;
     }
 
-    if (rule.operator === 'empty_array' && rule.modifier) {
+    if (rule.operator === 'empty_array' && parsedRuleModifier) {
       return Array.isArray(value) && value.length < 1;
     }
 
@@ -185,7 +187,7 @@ export class ResponseRulesInterpreter {
       rule.value = '';
     }
 
-    const parsedRuleValue = this.parseValue(rule.value, requestMessage);
+    const parsedRuleValue = this.templateParse(rule.value, requestMessage);
 
     let regex: RegExp;
 
@@ -244,8 +246,9 @@ export class ResponseRulesInterpreter {
    * @param requestMessage the message sent by client. Only defined for websockets. For http requests, this is undefined.
    * @returns the parsed value or the unparsed input value if parsing fails
    */
-  private parseValue(value: string, requestMessage?: string): string {
+  private templateParse(value: string, requestMessage?: string): string {
     let parsedValue: string;
+
     try {
       parsedValue = TemplateParser({
         shouldOmitDataHelper: false,

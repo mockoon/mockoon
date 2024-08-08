@@ -244,12 +244,28 @@ export class EnvironmentsService extends Logger {
           );
         });
 
-        const activeEnvironmentUuid =
-          settings.activeEnvironmentUuid ??
-          environmentsData[0]?.environment.uuid;
+        // verify that the saved active environment is still in the list
+        const savedActiveEnvironmentExists =
+          environmentsData.find(
+            (environmentData) =>
+              environmentData.environment.uuid ===
+              settings.activeEnvironmentUuid
+          ) !== undefined;
+        let activeEnvironmentUuid = settings.activeEnvironmentUuid;
 
-        if (activeEnvironmentUuid) {
-          this.store.update(setActiveEnvironmentAction(activeEnvironmentUuid));
+        if (savedActiveEnvironmentExists) {
+          this.store.update(
+            setActiveEnvironmentAction(settings.activeEnvironmentUuid)
+          );
+        } else if (
+          !savedActiveEnvironmentExists &&
+          environmentsData.length > 0
+        ) {
+          this.store.update(
+            setActiveEnvironmentAction(environmentsData[0].environment.uuid)
+          );
+
+          activeEnvironmentUuid = environmentsData[0].environment.uuid;
         }
 
         this.store.update(
@@ -258,7 +274,8 @@ export class EnvironmentsService extends Logger {
               ...environmentData.environmentDescriptor,
               // update the environment UUID if it changed during migration/UUIDdeduplication
               uuid: environmentData.environment.uuid
-            }))
+            })),
+            activeEnvironmentUuid
           })
         );
 
@@ -685,7 +702,7 @@ export class EnvironmentsService extends Logger {
       );
 
     if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
-      this.logMessage('error', 'CLOUD_QUOTA_EXCEEDED', {
+      this.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
       });
 
@@ -734,7 +751,7 @@ export class EnvironmentsService extends Logger {
       );
 
     if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
-      this.logMessage('error', 'CLOUD_QUOTA_EXCEEDED', {
+      this.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
       });
 

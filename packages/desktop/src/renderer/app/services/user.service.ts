@@ -18,19 +18,30 @@ import {
   tap,
   throwError
 } from 'rxjs';
-import { updateUserAction } from 'src/renderer/app/stores/actions';
-import { Store } from 'src/renderer/app/stores/store';
+import { Logger } from 'src/renderer/app/classes/logger';
+import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
+import {
+  updateDeployInstancesAction,
+  updateUserAction
+} from 'src/renderer/app/stores/actions';
+import { Store, storeDefaultState } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
+export class UserService extends Logger {
   private auth: Auth = inject(Auth);
   private idToken$ = idToken(this.auth);
 
   constructor(
     private httpClient: HttpClient,
-    private store: Store
-  ) {}
+    private store: Store,
+    private uiService: UIService,
+    protected toastsService: ToastsService
+  ) {
+    super('[RENDERER][SERVICE][USER] ', toastsService);
+  }
 
   /**
    * Monitor auth token state and update the store
@@ -97,9 +108,58 @@ export class UserService {
     return from(this.auth.currentUser.getIdToken(true));
   }
 
+  /**
+   * Start the login flow
+   * Open the auth modal and send the APP_AUTH event to the main process
+   */
+  public startLoginFlow() {
+    this.uiService.openModal('auth');
+    MainAPI.send('APP_AUTH', 'login');
+  }
+
+  /**
+   * Start the signup flow
+   * Open the auth modal and send the APP_AUTH event to the main process
+   */
+  public startSignupFlow() {
+    this.uiService.openModal('auth');
+    MainAPI.send('APP_AUTH', 'signup');
+  }
+
+  public stopAuthFlow() {
+    MainAPI.send('APP_AUTH_STOP_SERVER');
+  }
+
+  /**
+   * Process the auth callback token and display a toast
+   *
+   * @param token
+   * @returns
+   */
+  public authCallbackHandler(token: string) {
+    return this.authWithToken(token).pipe(
+      tap(() => {
+        this.uiService.closeModal('auth');
+        this.logMessage('info', 'LOGIN_SUCCESS');
+
+        this.stopAuthFlow();
+      }),
+      catchError(() => {
+        this.logMessage('error', 'LOGIN_ERROR');
+
+        return EMPTY;
+      })
+    );
+  }
+
   public logout() {
     return from(this.auth.signOut()).pipe(
-      tap(() => this.store.update(updateUserAction(null)))
+      tap(() => {
+        this.store.update(
+          updateDeployInstancesAction(storeDefaultState.deployInstances)
+        );
+        this.store.update(updateUserAction(storeDefaultState.user));
+      })
     );
   }
 }

@@ -2948,5 +2948,338 @@ describe('Template parser', () => {
         JSON.stringify([{ b: 'b1', a: 'a1' }, 3], null, 2)
       );
     });
+
+    it('should return correctly sorted array of numbers in ascending order', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{ sort (array 41 10 99)}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '10,41,99');
+    });
+  });
+
+  it('should return correctly sorted array of numbers in descending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: '{{ sort (array 41 10 99) "desc"}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(parseResult, '99,41,10');
+  });
+
+  it('should return correctly sorted array of strings in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: '{{ sort (array "foo" "bar" "baz")}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(parseResult, 'bar,baz,foo');
+  });
+
+  it('should return correctly sorted array of strings in descending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: '{{ sort (array "foo" "bar" "baz") "desc"}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(parseResult, 'foo,baz,bar');
+  });
+
+  it('should return correctly sorted array of object with numberic values in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content:
+        '{{{ stringify (sortBy (array (object key1=10 key2=20) (object key1=30 key2=30) (object key1=15 key2=25)) "key1") }}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(
+      parseResult,
+      `[
+  {
+    "key2": 20,
+    "key1": 10
+  },
+  {
+    "key2": 25,
+    "key1": 15
+  },
+  {
+    "key2": 30,
+    "key1": 30
+  }
+]`
+    );
+  });
+
+  it('should return correctly sorted array of object with numberic values in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content:
+        '{{{ stringify (sortBy (array (object key1=10 key2=20) (object key1=30 key2=30) (object key1=15 key2=25)) "key1" "desc") }}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(
+      parseResult,
+      `[
+  {
+    "key2": 30,
+    "key1": 30
+  },
+  {
+    "key2": 25,
+    "key1": 15
+  },
+  {
+    "key2": 20,
+    "key1": 10
+  }
+]`
+    );
+  });
+
+  it('should return correctly sorted array of object with string values in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content:
+        '{{{ stringify (sortBy (array (object key1="foo" key2=20) (object key1="bar" key2=30) (object key1="baz" key2=25)) "key1") }}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(
+      parseResult,
+      `[
+  {
+    "key2": 30,
+    "key1": "bar"
+  },
+  {
+    "key2": 25,
+    "key1": "baz"
+  },
+  {
+    "key2": 20,
+    "key1": "foo"
+  }
+]`
+    );
+  });
+
+  it('should return correctly sorted array of object with string values in ascending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content:
+        '{{{ stringify (sortBy (array (object key1="foo" key2=20) (object key1="bar" key2=30) (object key1="baz" key2=25)) "key1" "desc") }}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(
+      parseResult,
+      `[
+  {
+    "key2": 20,
+    "key1": "foo"
+  },
+  {
+    "key2": 25,
+    "key1": "baz"
+  },
+  {
+    "key2": 30,
+    "key1": "bar"
+  }
+]`
+    );
+  });
+
+  it('should return reversed array of numbers in descending order', () => {
+    const parseResult = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: '{{ sort (array 41 10 99) "desc"}}',
+      environment: {} as any,
+      processedDatabuckets: [],
+      globalVariables: {},
+      request: {} as any,
+      envVarsPrefix: ''
+    });
+    strictEqual(parseResult, '99,41,10');
+  });
+});
+
+describe('Helper: jwt', () => {
+  const jwt =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
+  describe('jwtPayload', () => {
+    it('should return nothing when jwt is missing', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{ jwtPayload }}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+
+    it('should return full payload object when no key', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{{ stringify (jwtPayload '${jwt}') }}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(
+        parseResult,
+        '{\n  "sub": "1234567890",\n  "name": "John Doe",\n  "iat": 1516239022\n}'
+      );
+    });
+
+    it('should return sub key when key provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{jwtPayload '${jwt}' 'sub'}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '1234567890');
+    });
+
+    it('should get params from safestring', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{jwtPayload (queryParam "jwt") (queryParam "key")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { jwt, key: 'sub' } } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '1234567890');
+    });
+
+    it('should automatically get rid of "Bearer "', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{jwtPayload (header "Authorization") (queryParam "key")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          get: () => `Bearer ${jwt}`,
+          query: { key: 'sub' }
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '1234567890');
+    });
+  });
+
+  describe('jwtHeader', () => {
+    it('should return nothing when jwt is missing', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{ jwtHeader }}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+
+    it('should return full payload object when no key', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{{ stringify (jwtHeader '${jwt}') }}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '{\n  "alg": "HS256",\n  "typ": "JWT"\n}');
+    });
+
+    it('should return alg key when key provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{jwtHeader '${jwt}' 'alg'}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'HS256');
+    });
+
+    it('should get params from safestring', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{jwtHeader (queryParam "jwt") (queryParam "key")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { jwt, key: 'alg' } } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'HS256');
+    });
+
+    it('should automatically get rid of "Bearer "', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{jwtHeader (header "Authorization") (queryParam "key")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          get: () => `Bearer ${jwt}`,
+          query: { key: 'alg' }
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'HS256');
+    });
   });
 });

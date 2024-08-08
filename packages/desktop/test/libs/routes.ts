@@ -363,6 +363,10 @@ class Routes {
     await utils.setElementValue(this.pathInput, text);
   }
 
+  public async setCrudKey(text: string) {
+    await utils.setElementValue(this.idPropertyDataBucketSelect, text);
+  }
+
   public async assertCountRouteResponses(expected: number) {
     await utils.countElements(
       $$('.route-responses-dropdown-menu .dropdown-item'),

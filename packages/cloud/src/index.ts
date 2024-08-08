@@ -2,6 +2,7 @@ export * from './constants/sync.constants';
 export * from './libs/sync-updates';
 export * from './libs/sync-utils';
 export * from './models/cloud-info.model';
+export * from './models/deploy-instance.model';
 export * from './models/plans.model';
 export * from './models/remote-config.model';
 export * from './models/sync.model';
