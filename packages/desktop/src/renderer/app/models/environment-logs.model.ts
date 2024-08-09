@@ -34,7 +34,7 @@ export type EnvironmentLog = {
   method: keyof typeof Methods;
   proxied: boolean;
   request: EnvironmentLogRequest;
-  response?: EnvironmentLogResponse;
+  response: EnvironmentLogResponse;
 };
 
 export type ActiveEnvironmentsLogUUIDs = {

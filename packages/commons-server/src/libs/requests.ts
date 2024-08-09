@@ -36,6 +36,31 @@ const toString = (data?: any): string | undefined => {
   return data + '';
 };
 
+const parseCookies = (req: IncomingMessage): any => {
+  const obj = {};
+  const cookieHeader = req.headers?.cookie;
+  if (!cookieHeader) {
+    return obj;
+  }
+
+  cookieHeader.split(';').forEach((cookie) => {
+    const [name, ...rest] = cookie.split('=');
+    if (!name) {
+      return;
+    }
+
+    const value = rest.join('=').trim();
+    if (!value) {
+      // skip pairs with empty values
+      return;
+    }
+
+    obj[name.trim()] = decodeURIComponent(value);
+  });
+
+  return obj;
+};
+
 /**
  * Creates a common ServerRequest instance from Express request.
  * To pass into helper classes, this common server request is required.
@@ -77,7 +102,7 @@ export const fromWsRequest = (
 
   return {
     body: structuredMessage || req.body,
-    cookies: null,
+    cookies: parseCookies(req),
     header: (name: string) => req.headers && req.headers[name],
     get: (headerName: string) => req.headers && req.headers[headerName],
     hostname: req.headers && req.headers['host'],

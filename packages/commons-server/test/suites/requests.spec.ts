@@ -169,10 +169,17 @@ describe('Requests', () => {
       strictEqual(result.ip, '192.168.1.1');
     });
 
-    it('should cookies will always be null', () => {
-      const req = {} as IncomingMessage;
+    it('should cookies be not empty, if it is given in header', () => {
+      const req = {
+        headers: {
+          cookie: 'a=1;b=hello%20this%20is%20%2521%3D4'
+        }
+      } as IncomingMessage;
       const result = fromWsRequest(req);
-      strictEqual(result.cookies, null);
+      deepStrictEqual(result.cookies, {
+        a: '1',
+        b: 'hello this is %21=4'
+      });
     });
   });
 
@@ -232,6 +239,7 @@ describe('Requests', () => {
       const req = fromWsRequest({
         url: 'api/path1/test?q=1&p=abc',
         body: { a: 1, text: 'hello' },
+        stringBody: JSON.stringify({ a: 1, text: 'hello' }),
         headers: {
           'content-type': 'application/json'
         } as NodeJS.Dict<string | string[]>

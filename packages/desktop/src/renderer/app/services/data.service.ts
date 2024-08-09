@@ -92,6 +92,15 @@ export class DataService extends Logger {
         params: request.request.params || [],
         queryParams: request.request.queryParams || []
       },
+      response: {
+        // we will set a default response of 101 until we figure it out how to capture responses and show them.
+        status: 101,
+        statusMessage: 'Switching Protocols',
+        headers: [],
+        body: '{}',
+        binaryBody: false,
+        isInvalidJson: false
+      },
       proxied: false
     };
   }
