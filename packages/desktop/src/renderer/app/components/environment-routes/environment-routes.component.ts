@@ -24,6 +24,7 @@ import {
   RouteResponseDefault,
   RulesDisablingResponseModes,
   RulesNotUsingDefaultResponse,
+  StreamingMode,
   stringIncludesArrayItems
 } from '@mockoon/commons';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
@@ -197,6 +198,22 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       icon: 'low_priority',
       tooltip:
         'Fallback response mode (does not return the default response if none of the rules match, will jump to the next route or use the proxy if configured)'
+    }
+  ];
+  // disables fallback mode for websockets.
+  public responseModesForWs: ToggleItems = this.responseModes.filter(
+    (m) => m.value !== ResponseMode.FALLBACK
+  );
+  public streamingModes: ToggleItems = [
+    {
+      value: StreamingMode.UNICAST,
+      icon: 'events',
+      tooltip: 'One-to-one streaming'
+    },
+    {
+      value: StreamingMode.BROADCAST,
+      icon: 'broadcast',
+      tooltip: 'Broadcast streaming'
     }
   ];
   public bodyType: ToggleItems = [
@@ -532,7 +549,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       documentation: [RouteDefault.documentation],
       method: [RouteDefault.method],
       endpoint: [RouteDefault.endpoint],
-      responseMode: [RouteDefault.responseMode]
+      responseMode: [RouteDefault.responseMode],
+      streamingMode: [RouteDefault.streamingMode],
+      streamingInterval: [RouteDefault.streamingInterval]
     });
 
     this.defaultResponseTooltip$ = this.activeRouteForm
@@ -619,7 +638,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             documentation: activeRoute.documentation,
             method: activeRoute.method,
             endpoint: activeRoute.endpoint,
-            responseMode: activeRoute.responseMode
+            responseMode: activeRoute.responseMode,
+            streamingMode: activeRoute.streamingMode,
+            streamingInterval: activeRoute.streamingInterval
           },
           { emitEvent: false }
         );

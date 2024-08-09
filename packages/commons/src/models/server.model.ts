@@ -24,6 +24,31 @@ export type InvokedCallback = {
 };
 
 /**
+ * Represents an in-flight request.
+ * WebSockets requests or any other long-living
+ * connections can be considered as in-flight requests.
+ */
+export type InFlightRequest = {
+  request: {
+    method: keyof typeof Methods;
+    urlPath: string | null;
+    route: string | null;
+    params?: { name: string; value: string }[];
+    query?: string | null;
+    queryParams?: any;
+    body?: any;
+    headers?: Header[];
+  };
+  completed?: boolean;
+  status?: {
+    code?: any;
+    message?: string;
+  };
+  requestId: string;
+  routeUUID: string;
+};
+
+/**
  * Transaction object containing req/res information after response is closed
  */
 export type Transaction = {

@@ -24,8 +24,9 @@ export type EnvironmentLogResponse = {
 export type EnvironmentLog = {
   UUID: string;
   routeUUID: string;
-  routeResponseUUID: string;
+  routeResponseUUID?: string;
   timestampMs: number;
+  protocol: 'http' | 'ws';
   // full URL called
   url: string;
   // internal route matched

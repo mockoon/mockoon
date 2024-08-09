@@ -103,6 +103,9 @@ export class SvgComponent {
     | 'cloud_remove'
     | 'backup' // cloud upload: cloud with arrow pointing up
     | 'computer'
+    | 'websocket'
+    | 'broadcast'
+    | 'events'
     | 'public'
     | string;
 

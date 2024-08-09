@@ -6,13 +6,14 @@ import {
   Environment,
   EnvironmentSchema,
   GenerateUniqueID,
-  generateUUID,
   HighestMigrationId,
   INDENT_SIZE,
-  isContentTypeApplicationJson,
-  repairRefs,
+  InFlightRequest,
   Route,
-  Transaction
+  Transaction,
+  generateUUID,
+  isContentTypeApplicationJson,
+  repairRefs
 } from '@mockoon/commons';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
@@ -68,6 +69,43 @@ export class DataService extends Logger {
   }
 
   /**
+   * Creates a new environment log record from given inflight request.
+   *
+   * @param request
+   */
+  public formatLogFromInFlightRequest(
+    request: InFlightRequest
+  ): EnvironmentLog {
+    return {
+      UUID: request.requestId,
+      routeUUID: request.routeUUID,
+      timestampMs: Date.now(),
+      method: request.request.method as EnvironmentLog['method'],
+      url: request.request.urlPath,
+      route: request.request.route,
+      protocol: 'ws',
+      request: {
+        isInvalidJson: false, // TODO Isuru
+        query: request.request.query,
+        body: request.request.body,
+        headers: request.request.headers,
+        params: request.request.params || [],
+        queryParams: request.request.queryParams || []
+      },
+      response: {
+        // we will set a default response of 101 until we figure it out how to capture responses and show them.
+        status: 101,
+        statusMessage: 'Switching Protocols',
+        headers: [],
+        body: '{}',
+        binaryBody: false,
+        isInvalidJson: false
+      },
+      proxied: false
+    };
+  }
+
+  /**
    * Format request/response to EnvironmentLog to be consumed by the UI
    *
    * @param response
@@ -110,6 +148,7 @@ export class DataService extends Logger {
       method: transaction.request.method as EnvironmentLog['method'],
       route: transaction.request.route,
       url: transaction.request.urlPath,
+      protocol: 'http',
       request: {
         params: transaction.request.params,
         query: transaction.request.query,

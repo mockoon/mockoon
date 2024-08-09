@@ -9,10 +9,10 @@ import {
   RouteResponse,
   stringIncludesArrayItems
 } from '@mockoon/commons';
-import { Request } from 'express';
 import { ParsedQs } from 'qs';
+import { ServerRequest, fromServerRequest } from './requests';
 import { TemplateParser } from './template-parser';
-import { getValueFromPath } from './utils';
+import { getValueFromPath, parseRequestMessage } from './utils';
 
 /**
  * Interpretor for the route response rules.
@@ -33,7 +33,7 @@ export class ResponseRulesInterpreter {
 
   constructor(
     private routeResponses: RouteResponse[],
-    private request: Request,
+    private request: ServerRequest,
     private responseMode: Route['responseMode'],
     private environment: Environment,
     private processedDatabuckets: ProcessedDatabucket[],
@@ -47,7 +47,10 @@ export class ResponseRulesInterpreter {
    * Choose the route response depending on the first fulfilled rule.
    * If no rule has been fulfilled get the first route response.
    */
-  public chooseResponse(requestNumber: number): RouteResponse | null {
+  public chooseResponse(
+    requestNumber: number,
+    requestMessage?: string
+  ): RouteResponse | null {
     // if no rules were fulfilled find the default one, or first one if no default
     const defaultResponse =
       this.routeResponses.find((routeResponse) => routeResponse.default) ||
@@ -73,10 +76,10 @@ export class ResponseRulesInterpreter {
 
         return routeResponse.rulesOperator === 'AND'
           ? routeResponse.rules.every((rule) =>
-              this.isValid(rule, requestNumber)
+              this.isValid(rule, requestNumber, requestMessage)
             )
           : routeResponse.rules.some((rule) =>
-              this.isValid(rule, requestNumber)
+              this.isValid(rule, requestNumber, requestMessage)
             );
       });
 
@@ -102,8 +105,12 @@ export class ResponseRulesInterpreter {
    * @param requestNumber
    * @returns
    */
-  private isValid(rule: ResponseRule, requestNumber: number) {
-    let isValid = this.isValidRule(rule, requestNumber);
+  private isValid(
+    rule: ResponseRule,
+    requestNumber: number,
+    requestMessage?: string
+  ) {
+    let isValid = this.isValidRule(rule, requestNumber, requestMessage);
 
     if (rule.invert) {
       isValid = !isValid;
@@ -117,7 +124,8 @@ export class ResponseRulesInterpreter {
    */
   private isValidRule = (
     rule: ResponseRule,
-    requestNumber: number
+    requestNumber: number,
+    requestMessage?: string
   ): boolean => {
     if (!rule.target) {
       return false;
@@ -138,13 +146,22 @@ export class ResponseRulesInterpreter {
       value = this.request.header(parsedRuleModifier);
     } else {
       if (parsedRuleModifier) {
-        value = getValueFromPath(
-          this.targets[rule.target],
-          parsedRuleModifier,
-          undefined
-        );
-      } else if (rule.target === 'body') {
         value = this.targets.bodyRaw;
+
+        let target = this.targets[rule.target];
+
+        // if a requestMessage is provided, we parse it based on the information
+        // in the original request.
+        if (requestMessage) {
+          target =
+            rule.target === 'body'
+              ? parseRequestMessage(requestMessage || '', this.request)
+              : target;
+        }
+
+        value = getValueFromPath(target, parsedRuleModifier, undefined);
+      } else if (rule.target === 'body') {
+        value = requestMessage || this.targets.bodyRaw;
       }
     }
 
@@ -170,7 +187,7 @@ export class ResponseRulesInterpreter {
       rule.value = '';
     }
 
-    const parsedRuleValue = this.templateParse(rule.value);
+    const parsedRuleValue = this.templateParse(rule.value, requestMessage);
 
     let regex: RegExp;
 
@@ -226,9 +243,10 @@ export class ResponseRulesInterpreter {
    * Parse the value using the template parser allowing data helpers.
    *
    * @param value the value to parse
+   * @param requestMessage the message sent by client. Only defined for websockets. For http requests, this is undefined.
    * @returns the parsed value or the unparsed input value if parsing fails
    */
-  private templateParse(value: string): string {
+  private templateParse(value: string, requestMessage?: string): string {
     let parsedValue: string;
 
     try {
@@ -238,7 +256,9 @@ export class ResponseRulesInterpreter {
         environment: this.environment,
         processedDatabuckets: this.processedDatabuckets,
         globalVariables: this.globalVariables,
-        request: this.request,
+        request: requestMessage
+          ? fromServerRequest(this.request, requestMessage)
+          : this.request,
         envVarsPrefix: this.envVarsPrefix
       });
     } catch (error) {

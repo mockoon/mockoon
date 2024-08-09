@@ -1,6 +1,6 @@
 {
   "uuid": "a7186111-8f6f-45f0-aeb0-75fe40892d31",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Demo API",
   "endpointPrefix": "",
   "latency": 0,
@@ -60,7 +60,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "752ef797-b94a-4151-8a58-b9331e20542a",
@@ -89,7 +91,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "2e102f5b-451b-4a6f-b908-48313918a414",
@@ -118,7 +122,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "11d2325b-ef62-4c56-a66d-887f75538abd",
@@ -147,7 +153,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "a19d8512-b4db-4d28-8dba-ef52327da26c",
@@ -176,7 +184,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,

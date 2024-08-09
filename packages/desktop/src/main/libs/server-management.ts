@@ -1,4 +1,9 @@
-import { Environment, Environments, Transaction } from '@mockoon/commons';
+import {
+  Environment,
+  Environments,
+  InFlightRequest,
+  Transaction
+} from '@mockoon/commons';
 import { MockoonServer, listenServerEvents } from '@mockoon/commons-server';
 import { dirname } from 'path';
 import { mainLogger } from 'src/main/libs/logs';
@@ -92,6 +97,17 @@ export class ServerInstance {
           'APP_SERVER_EVENT',
           this.environment.uuid,
           'entering-request'
+        );
+      }
+    });
+
+    server.on('ws-new-connection', (request: InFlightRequest) => {
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          this.environment.uuid,
+          'ws-new-connection',
+          { inflightRequest: request }
         );
       }
     });

@@ -298,6 +298,13 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Create a new route in the current environment. Append at the end of the list
+   */
+  public addWebSocketRoute() {
+    this.environmentsService.addWebSocketRoute('root');
+  }
+
+  /**
    * Create a new folder in the current environment
    */
   public addFolder() {

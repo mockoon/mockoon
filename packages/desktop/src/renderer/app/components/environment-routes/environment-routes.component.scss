@@ -10,6 +10,11 @@
   grid-template-columns: min-content auto min-content;
 }
 
+.route-path-grid-ws {
+  display: grid;
+  grid-template-columns: min-content auto min-content;
+}
+
 #route-responses-buttons {
   display: grid;
   grid-template-columns: min-content auto min-content;
@@ -23,6 +28,11 @@
 .route-responses-crud {
   display: grid;
   grid-template-columns: 8fr 2fr min-content 2fr;
+}
+
+.route-responses-ws {
+  display: grid;
+  grid-template-columns: min-content 12fr;
 }
 
 .route-responses-databucket {

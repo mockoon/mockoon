@@ -1,6 +1,6 @@
 import { Environment } from '@mockoon/commons';
-import { Request } from 'express';
 import { SafeString } from 'handlebars';
+import { ServerRequest } from '../requests';
 import { fromSafeString, getValueFromPath } from '../utils';
 
 export const requestHelperNames: (keyof ReturnType<typeof RequestHelpers>)[] = [
@@ -18,7 +18,7 @@ export const requestHelperNames: (keyof ReturnType<typeof RequestHelpers>)[] = [
 ];
 
 export const RequestHelpers = function (
-  request: Request,
+  request: ServerRequest,
   environment: Environment
 ) {
   return {

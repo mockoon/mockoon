@@ -1,6 +1,6 @@
 {
   "uuid": "2721eb99-7031-40ae-8725-0c37edc3976a",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Swagger Petstore",
   "endpointPrefix": "v1",
   "latency": 0,
@@ -57,7 +57,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "094031a7-93fc-4659-82b4-58c8c9de10b0",
@@ -105,7 +107,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "4b9356a9-d656-4ea8-acf3-c254fb9d6616",
@@ -153,7 +157,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
