@@ -82,6 +82,14 @@
               </div>
               <div class="nav-link-subtitle mt-1 d-flex align-items-center">
                 <span
+                  *ngIf="log.protocol === 'ws'"
+                  class="color-method-{{
+                    log.protocol | lowercase
+                  }} me-2 route-method"
+                  >{{ log.protocol | uppercase }}
+                </span>
+                <span
+                  *ngIf="log.protocol !== 'ws'"
                   class="color-method-{{
                     log.method | lowercase
                   }} me-2 route-method"
@@ -89,9 +97,9 @@
                 </span>
                 <span
                   class="color-status-{{
-                    log.response.status.toString().slice(0, 1).concat('xx')
+                    log.response?.status.toString().slice(0, 1).concat('xx')
                   }} me-2"
-                  >{{ log.response.status }}
+                  >{{ log.response?.status }}
                 </span>
                 <app-svg
                   *ngIf="log.route && !log.proxied"
@@ -204,7 +212,23 @@
               <div class="environment-logs-content-item">
                 <strong>Request URL:</strong> {{ data.selectedLog.url }}
               </div>
-              <div class="environment-logs-content-item">
+              <div
+                *ngIf="data.selectedLog.protocol === 'ws'"
+                class="environment-logs-content-item"
+              >
+                <strong>Protocol:&nbsp;</strong>
+                <span
+                  class="color-method-{{
+                    data.selectedLog.protocol | lowercase
+                  }} me-2"
+                >
+                  {{ data.selectedLog.protocol | uppercase }}
+                </span>
+              </div>
+              <div
+                *ngIf="data.selectedLog.protocol !== 'ws'"
+                class="environment-logs-content-item"
+              >
                 <strong>Method:&nbsp;</strong>
                 <span
                   class="color-method-{{
@@ -388,9 +412,17 @@
                       .slice(0, 1)
                       .concat('xx')
                   }}"
-                  >{{ data.selectedLog.response.status }}</span
+                  >{{
+                    data.selectedLog.response
+                      ? data.selectedLog.response.status
+                      : ''
+                  }}</span
                 >&nbsp;
-                <span>{{ data.selectedLog.response.statusMessage }}</span>
+                <span>{{
+                  data.selectedLog.response
+                    ? data.selectedLog.response.statusMessage
+                    : ''
+                }}</span>
               </div>
             </div>
 
@@ -446,7 +478,7 @@
             <div [ngbCollapse]="collapseStates['response.body']">
               <div
                 *ngIf="
-                  data.selectedLog && !data.selectedLog.response.binaryBody
+                  data.selectedLog && !data.selectedLog.response?.binaryBody
                 "
                 class="environment-logs-content-item"
               >
@@ -461,7 +493,7 @@
                 </app-editor>
               </div>
               <div
-                *ngIf="data.selectedLog?.response.binaryBody"
+                *ngIf="data.selectedLog?.response?.binaryBody"
                 class="environment-logs-content-item"
               >
                 <p class="message mt-4">

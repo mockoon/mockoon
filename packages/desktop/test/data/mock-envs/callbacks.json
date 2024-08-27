@@ -1,6 +1,6 @@
 {
   "uuid": "8a3cc37b-0993-463b-9f30-b306a13e50de",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "callbacks",
   "endpointPrefix": "",
   "latency": 0,
@@ -33,7 +33,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511",
@@ -62,7 +64,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "cf3b141e-ddc7-41e3-89b9-8ef6a0e64400",
@@ -91,7 +95,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
