@@ -1457,6 +1457,51 @@ const documentationTopics: {
   },
   {
     enabled: true,
+    folder: 'api-endpoints/http-routes',
+    screenshots: [
+      {
+        tasks: async () => {
+          await routes.openAddMenu();
+        },
+        postTasks: async () => {
+          await utils.clickOutside();
+        },
+        get screenshotTarget() {
+          return routes.addMenu;
+        },
+        get highlightedTarget() {
+          return routes.getAddMenuEntry(RoutesMenuActions.ADD_HTTP_ROUTE);
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 150, bottom: 100 },
+        fileName: 'add-http-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.addHTTPRoute();
+          await routes.setPath('endpoint');
+        },
+        postTasks: async () => {
+          await routes.remove(1);
+        },
+        get screenshotTarget() {
+          return routes.pathInput;
+        },
+        get highlightedTarget() {
+          return routes.pathInput;
+        },
+        highlight: false,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 100, bottom: 400 },
+        fileName: 'new-http-route.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
     folder: 'api-endpoints/crud-routes',
     screenshots: [
       {
