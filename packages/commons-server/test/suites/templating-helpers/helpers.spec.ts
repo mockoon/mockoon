@@ -2532,6 +2532,28 @@ describe('Template parser', () => {
 }`
       );
     });
+
+    it('should output objects as string, and support safestrings', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{"result": {{{stringify (data \'data\')}}} }',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            id: 'abcd',
+            name: 'data',
+            parsed: true,
+            value: {
+              myarr: [1, 2, 3]
+            }
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '{"result": "{\\"myarr\\":[1,2,3]}" }');
+    });
   });
 
   describe('Helper: jsonParse', () => {
