@@ -12,9 +12,13 @@
   <h1>Mockoon: awesome API mocking</h1>
 </div>
 
-Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, free and open-source.
+Mockoon is the easiest and quickest way to design and run mock APIs. No remote deployment, no account required, free and open-source.
 
-It's a desktop application and a [CLI](https://mockoon.com/cli/) that helps you work faster with APIs by mocking them. Integrate third-party APIs quicker, improve your integration tests, speed up your development, etc.
+It combines a [desktop application](https://mockoon.com/download/) to design and run mock servers locally, and a [CLI](https://mockoon.com/cli/) to self-host your fake APIs. A [cloud](#subscribe-to-mockoon-cloud) is also available to collaborate with your team, keep your data in sync, and deploy your mock APIs. 
+
+API mocking helps you speed up development and third-party API integration by reducing dependency on external services and their limitations: rate limits, costs, availability, etc. 
+It also allows you to test your applications in a controlled environment with predictable responses, status codes, and latencies, and easily simulate edge cases and error scenarios.
+Finally, you can onboard new team members faster by providing them with a consistent and reliable environment to test and develop their applications.
 
 ➡️ [Download](https://mockoon.com/download/)
 
