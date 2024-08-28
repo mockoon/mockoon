@@ -86,8 +86,9 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     empty_array: ''
   };
   public operatorDisablingForTargets = {
-    request_number: ['null', 'empty_array'],
-    cookie: ['empty_array']
+    request_number: ['null', 'empty_array', 'array_includes'],
+    cookie: ['empty_array'],
+    params: ['empty_array', 'array_includes']
   };
   public rulesOperators: ToggleItems = [
     {
