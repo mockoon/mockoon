@@ -172,7 +172,8 @@ export class ResponseRulesInterpreter {
 
     if (rule.operator === 'array_includes' && rule.modifier) {
       return (
-        Array.isArray(value) && value.some((val) => val === parsedRuleValue)
+        Array.isArray(value) &&
+        value.some((val) => String(val) === parsedRuleValue)
       );
     }
 
