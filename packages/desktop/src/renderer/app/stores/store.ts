@@ -184,11 +184,10 @@ export class Store {
    * Select active environment logs
    */
   public selectActiveEnvironmentLogs(): Observable<EnvironmentLog[]> {
-    return this.store$
-      .asObservable()
-      .pipe(
-        map((store) => store.environmentsLogs[store.activeEnvironmentUUID])
-      );
+    return this.store$.asObservable().pipe(
+      map((store) => store.environmentsLogs[store.activeEnvironmentUUID]),
+      distinctUntilChanged()
+    );
   }
 
   /**

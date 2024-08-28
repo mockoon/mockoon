@@ -281,9 +281,14 @@ class Routes {
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(3)').click();
   }
 
-  public async addFolder(): Promise<void> {
+  public async addWebSocket(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(4)').click();
+  }
+
+  public async addFolder(): Promise<void> {
+    await $('#routes-add-dropdown .dropdown-toggle').click();
+    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(5)').click();
   }
 
   public async selectTemplateTab(index: 1 | 2 | 3): Promise<void> {
@@ -356,6 +361,10 @@ class Routes {
 
   public async setPath(text: string) {
     await utils.setElementValue(this.pathInput, text);
+  }
+
+  public async setCrudKey(text: string) {
+    await utils.setElementValue(this.idPropertyDataBucketSelect, text);
   }
 
   public async assertCountRouteResponses(expected: number) {

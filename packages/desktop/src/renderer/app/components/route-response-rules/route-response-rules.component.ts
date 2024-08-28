@@ -52,24 +52,28 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;
   public responseRuleTargets: DropdownItems<ResponseRuleTargets> = [
     { value: 'body', label: 'Body' },
-    { value: 'query', label: 'Query string' },
+    { value: 'query', label: 'Query parameter' },
     { value: 'header', label: 'Header' },
     { value: 'cookie', label: 'Cookie' },
-    { value: 'params', label: 'Route params' },
+    { value: 'params', label: 'Route parameter' },
     { value: 'global_var', label: 'Global variable' },
     { value: 'data_bucket', label: 'Data bucket' },
     { value: 'request_number', label: 'Request number (starting at 1)' }
   ];
+  public webSocketResponseRuleTargets = this.responseRuleTargets.filter(
+    (rt) => !['cookie', 'params'].includes(rt.value)
+  );
   public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
     { value: 'equals', label: 'equals' },
     { value: 'regex', label: 'regex' },
     { value: 'regex_i', label: 'regex (i)' },
     { value: 'null', label: 'null' },
-    { value: 'empty_array', label: 'empty array' }
+    { value: 'empty_array', label: 'empty array' },
+    { value: 'array_includes', label: 'array includes' }
   ];
   public modifierPlaceholders: Record<ResponseRuleTargets, string> = {
     body: 'JSONPath or object path (empty for full body)',
-    query: 'JSONPath or object path',
+    query: 'Parameter name, JSONPath or object path',
     header: 'Header name',
     cookie: 'Cookie name',
     params: 'Route parameter name',
@@ -85,8 +89,9 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     empty_array: ''
   };
   public operatorDisablingForTargets = {
-    request_number: ['null', 'empty_array'],
-    cookie: ['empty_array']
+    request_number: ['null', 'empty_array', 'array_includes'],
+    cookie: ['empty_array'],
+    params: ['empty_array', 'array_includes']
   };
   public rulesOperators: ToggleItems = [
     {

@@ -37,6 +37,9 @@
           <button class="btn dropdown-item" (click)="addHTTPRoute()">
             <app-svg icon="endpoint" class="me-1"></app-svg> HTTP route
           </button>
+          <button class="btn dropdown-item" (click)="addWebSocketRoute()">
+            <app-svg icon="websocket" class="me-1"></app-svg> WebSocket
+          </button>
           <button class="btn dropdown-item" (click)="addFolder()">
             <app-svg icon="folder" class="me-1"></app-svg> Folder
           </button>
@@ -258,9 +261,19 @@
           <div class="nav-link-subtitle mt-1 d-flex align-items-center">
             <span
               class="color-method-{{
-                route.type === 'crud' ? 'crud' : route.method
+                route.type === 'crud'
+                  ? 'crud'
+                  : route.type === 'ws'
+                    ? 'ws'
+                    : route.method
               }} me-2"
-              >{{ route.type === 'crud' ? 'CRUD' : (route.method | uppercase) }}
+              >{{
+                route.type === 'crud'
+                  ? 'CRUD'
+                  : route.type === 'ws'
+                    ? 'WS'
+                    : (route.method | uppercase)
+              }}
             </span>
 
             <app-svg

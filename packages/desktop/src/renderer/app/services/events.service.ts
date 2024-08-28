@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Transaction } from '@mockoon/commons';
+import { InFlightRequest, Transaction } from '@mockoon/commons';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 
@@ -14,7 +14,8 @@ export class EventsService {
     new BehaviorSubject({});
   public serverTransaction$: Subject<{
     environmentUUID: string;
-    transaction: Transaction;
+    transaction?: Transaction;
+    inflightRequest?: InFlightRequest;
   }> = new Subject();
 
   constructor() {}

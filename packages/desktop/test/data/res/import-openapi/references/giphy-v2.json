@@ -1,6 +1,6 @@
 {
   "uuid": "73f6896b-fcc8-4f45-a8fc-02c51de5667b",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Giphy",
   "endpointPrefix": "v1",
   "latency": 0,
@@ -136,7 +136,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "c208df9f-93f6-44e5-9a12-2c154a37d80e",
@@ -266,7 +268,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "932b9326-a045-4f34-83bf-2b7bc64902f5",
@@ -396,7 +400,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "9a0f7c49-34b6-499f-aa3b-e86f617e0933",
@@ -526,7 +532,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "ef3fef99-fbb1-4996-844f-8865e1877da1",
@@ -656,7 +664,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "bf013e95-1089-4f16-a28f-ca15a05c6725",
@@ -786,7 +796,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "1a573b0b-9f90-475d-a50d-d9322ee3ed12",
@@ -916,7 +928,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "2179029b-1428-43e2-80a5-899ec83bbb72",
@@ -1046,7 +1060,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "c19812ab-65bc-44bf-ab2a-6e0f87aea4aa",
@@ -1176,7 +1192,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "cd3b7f3f-c66a-4782-b614-3ac9876dc2b5",
@@ -1306,7 +1324,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -1365,18 +1385,8 @@
   },
   "cors": true,
   "headers": [],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
   "callbacks": []
 }

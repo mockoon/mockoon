@@ -31,6 +31,7 @@ export class SvgComponent {
   public size = '16';
   @Input()
   public icon:
+    | 'misc'
     | 'list'
     | 'record'
     | 'dots'
@@ -102,6 +103,9 @@ export class SvgComponent {
     | 'cloud_remove'
     | 'backup' // cloud upload: cloud with arrow pointing up
     | 'computer'
+    | 'websocket'
+    | 'broadcast'
+    | 'events'
     | 'public'
     | string;
 

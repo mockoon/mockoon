@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "CRUD",
   "endpointPrefix": "",
   "latency": 0,
@@ -33,7 +33,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "348cb6b6-340f-409e-bba8-97eefabb0a3c",
@@ -62,7 +64,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "0bb3cb2b-6484-4d6f-a444-7273ce3c0d00",
@@ -91,7 +95,9 @@
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
@@ -146,6 +152,13 @@
       "name": "search",
       "documentation": "",
       "value": "[\n  {\n    \"id\": 1,\n    \"username\": \"peter\",\n    \"age\": 30,\n    \"address\": { \"city\": \"New York\" },\n    \"hobbies\": [\"reading\", \"swimming\"]\n  },\n  {\n    \"id\": 2,\n    \"username\": \"alberto\",\n    \"age\": 35,\n    \"address\": { \"city\": \"Los Angeles\" },\n    \"hobbies\": [\"dancing\", \"coding\"]\n  },\n  {\n    \"id\": 3,\n    \"username\": \"marta\",\n    \"age\": 25,\n    \"address\": { \"city\": \"Chicago\" },\n    \"hobbies\": [\"reading\", \"dancing\"]\n  },\n  {\n    \"id\": 4,\n    \"username\": \"mary\",\n    \"age\": 40,\n    \"address\": { \"city\": \"San Francisco\" },\n    \"hobbies\": [\"swimming\", \"coding\"]\n  },\n  {\n    \"id\": 5,\n    \"username\": \"john\",\n    \"age\": 30,\n    \"address\": { \"city\": \"New York\" },\n    \"hobbies\": [\"reading\", \"swimming\"]\n  },\n  {\n    \"id\": 6,\n    \"username\": \"douglas\",\n    \"age\": 35,\n    \"address\": { \"city\": \"Los Angeles\" },\n    \"hobbies\": [\"dancing\", \"coding\"]\n  },\n  {\n    \"id\": 7,\n    \"username\": \"paul\",\n    \"age\": 25,\n    \"address\": { \"city\": \"Chicago\" },\n    \"hobbies\": [\"reading\", \"dancing\"]\n  },\n  {\n    \"id\": 8,\n    \"username\": \"paula\",\n    \"age\": 40,\n    \"address\": { \"city\": \"San Francisco\" },\n    \"hobbies\": [\"swimming\", \"coding\"]\n  },\n  {\n    \"id\": 9,\n    \"username\": \"theresa\",\n    \"age\": 30,\n    \"address\": { \"city\": \"New York\" },\n    \"hobbies\": [\"reading\", \"swimming\"]\n  },\n  {\n    \"id\": 10,\n    \"username\": \"cinderella\",\n    \"age\": 35,\n    \"address\": { \"city\": \"Los Angeles\" },\n    \"hobbies\": [\"dancing\", \"coding\"]\n  },\n  {\n    \"id\": 11,\n    \"username\": \"laura\",\n    \"age\": 25,\n    \"address\": { \"city\": \"Chicago\" },\n    \"hobbies\": [\"reading\", \"dancing\"]\n  }\n]"
+    },
+    {
+      "uuid": "edace0cf-78e0-4b56-a050-d3ab345f368b",
+      "id": "abc6",
+      "name": "nestedkey",
+      "documentation": "",
+      "value": "[\n  {\n    \"sub\": {\n      \"myid\": \"1\"\n    },\n    \"prop\": \"test1\"\n  },  \n  {\n    \"sub\": {\n      \"myid\": \"2\"\n    },\n    \"prop\": \"test2\"\n  }\n]"
     }
   ],
   "folders": [],

@@ -1,6 +1,6 @@
 {
   "uuid": "67e48408-106e-42cb-92cd-eeaae0e65f03",
-  "lastMigration": 32,
+  "lastMigration": 33,
   "name": "Swagger Petstore v2",
   "endpointPrefix": "v2",
   "latency": 0,
@@ -40,7 +40,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "8441824e-bab5-4c4c-9447-c39aa6504134",
@@ -122,7 +124,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "ba0543cf-3c35-4734-b958-7679c3ea0e91",
@@ -180,7 +184,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "114d5709-6d8d-488d-9dc1-5356cf1e99e6",
@@ -238,7 +244,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "c01e6ca7-ea99-42dc-bc62-03b5cdc22b7d",
@@ -320,7 +328,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "a65603f9-3dec-48cd-ad3f-5e9108d09ede",
@@ -354,7 +364,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "c6c76ac7-2769-41ae-a36a-fb1aaf601b00",
@@ -412,7 +424,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "8e9265f4-fba6-4a20-88d2-627d7c6e32ca",
@@ -446,7 +460,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "4df6ab12-2efd-475c-9ae8-89b3562a06aa",
@@ -480,7 +496,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "cbfb4da0-4ebc-45fa-ba4a-a315bcd0ec0c",
@@ -538,7 +556,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "33ffefad-719b-466f-987c-f6453cbf7630",
@@ -620,7 +640,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "fee5a395-dbfd-4698-8bb4-463f39d272f5",
@@ -678,7 +700,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "fdaaa8c9-d313-469f-b437-67b8b127f2af",
@@ -712,7 +736,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "d54f45cc-281d-4afb-8bfc-49b1f622d1e3",
@@ -746,7 +772,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "70708d4e-36c0-40b3-a300-8c9a62f008fc",
@@ -780,7 +808,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "899d25d1-44e4-4018-be48-ce6b47e23bef",
@@ -846,7 +876,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "8733b035-d298-480a-b73a-b93691905030",
@@ -880,7 +912,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "8b56023c-39be-478a-b6db-0d45a0ebeb14",
@@ -962,7 +996,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "ae552d05-a8d9-48f7-941f-c7bdca11c9a9",
@@ -1020,7 +1056,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "ae3f80fc-4cd9-4229-a572-a480ba3649dc",
@@ -1078,7 +1116,9 @@
           "callbacks": []
         }
       ],
-      "responseMode": null
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
@@ -1177,18 +1217,8 @@
   },
   "cors": true,
   "headers": [],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
   "callbacks": []
 }

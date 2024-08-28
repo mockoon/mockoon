@@ -60,6 +60,6 @@ export class FooterComponent implements OnInit {
   }
 
   public openManageInstancesModal() {
-    this.uiService.openModal('manageInstances');
+    this.uiService.openModal('manageInstances', { refresh: true });
   }
 }

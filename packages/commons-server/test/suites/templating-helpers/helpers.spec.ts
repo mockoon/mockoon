@@ -2532,6 +2532,28 @@ describe('Template parser', () => {
 }`
       );
     });
+
+    it('should output objects as string, and support safestrings', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{"result": {{{stringify (data \'data\')}}} }',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            id: 'abcd',
+            name: 'data',
+            parsed: true,
+            value: {
+              myarr: [1, 2, 3]
+            }
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '{"result": "{\\"myarr\\":[1,2,3]}" }');
+    });
   });
 
   describe('Helper: jsonParse', () => {
@@ -3133,5 +3155,153 @@ describe('Template parser', () => {
       envVarsPrefix: ''
     });
     strictEqual(parseResult, '99,41,10');
+  });
+});
+
+describe('Helper: jwt', () => {
+  const jwt =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
+  describe('jwtPayload', () => {
+    it('should return nothing when jwt is missing', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{ jwtPayload }}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+
+    it('should return full payload object when no key', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{{ stringify (jwtPayload '${jwt}') }}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(
+        parseResult,
+        '{\n  "sub": "1234567890",\n  "name": "John Doe",\n  "iat": 1516239022\n}'
+      );
+    });
+
+    it('should return sub key when key provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{jwtPayload '${jwt}' 'sub'}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '1234567890');
+    });
+
+    it('should get params from safestring', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{jwtPayload (queryParam "jwt") (queryParam "key")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { jwt, key: 'sub' } } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '1234567890');
+    });
+
+    it('should automatically get rid of "Bearer "', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{jwtPayload (header "Authorization") (queryParam "key")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          get: () => `Bearer ${jwt}`,
+          query: { key: 'sub' }
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '1234567890');
+    });
+  });
+
+  describe('jwtHeader', () => {
+    it('should return nothing when jwt is missing', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{ jwtHeader }}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+
+    it('should return full payload object when no key', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{{ stringify (jwtHeader '${jwt}') }}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '{\n  "alg": "HS256",\n  "typ": "JWT"\n}');
+    });
+
+    it('should return alg key when key provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{jwtHeader '${jwt}' 'alg'}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'HS256');
+    });
+
+    it('should get params from safestring', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{jwtHeader (queryParam "jwt") (queryParam "key")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { jwt, key: 'alg' } } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'HS256');
+    });
+
+    it('should automatically get rid of "Bearer "', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{jwtHeader (header "Authorization") (queryParam "key")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          get: () => `Bearer ${jwt}`,
+          query: { key: 'alg' }
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'HS256');
+    });
   });
 });

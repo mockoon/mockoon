@@ -481,6 +481,8 @@ export const environmentReducer = (
         activeUuids.activeCallbackUUID = newEnvironment.callbacks.length
           ? newEnvironment.callbacks[0].uuid
           : null;
+
+        newSettings.activeEnvironmentUuid = newEnvironment.uuid;
       }
 
       newState = {
@@ -962,7 +964,12 @@ export const environmentReducer = (
     }
 
     case ActionTypes.UPDATE_ROUTE: {
-      const propertiesNeedingRestart: (keyof Route)[] = ['endpoint', 'method'];
+      const propertiesNeedingRestart: (keyof Route)[] = [
+        'endpoint',
+        'method',
+        'streamingMode',
+        'streamingInterval'
+      ];
 
       newState = {
         ...state,

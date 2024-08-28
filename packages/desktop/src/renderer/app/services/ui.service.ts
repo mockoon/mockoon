@@ -17,7 +17,10 @@ import { TemplatesModalComponent } from 'src/renderer/app/components/modals/temp
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { UIState } from 'src/renderer/app/models/store.model';
-import { ConfirmModalPayload } from 'src/renderer/app/models/ui.model';
+import {
+  ConfirmModalPayload,
+  ManageInstancesModalPayload
+} from 'src/renderer/app/models/ui.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -61,7 +64,7 @@ type ModalWithoutPayload = Exclude<
 export class UIService {
   private modalsPayloads = {
     deploy: new BehaviorSubject<string>(null),
-    manageInstances: new BehaviorSubject<string>(null),
+    manageInstances: new BehaviorSubject<ManageInstancesModalPayload>(null),
     confirm: new BehaviorSubject<ConfirmModalPayload>(null)
   };
   private modals: {
@@ -181,11 +184,14 @@ export class UIService {
 
   public openModal(modalName: 'confirm', payload: ConfirmModalPayload): void;
   public openModal(modalName: 'deploy', payload: string): void;
-  public openModal(modalName: 'manageInstances', payload?: string): void;
+  public openModal(
+    modalName: 'manageInstances',
+    payload: ManageInstancesModalPayload
+  ): void;
   public openModal(modalName: ModalWithoutPayload): void;
   public openModal(
     modalName: ModalNames,
-    payload?: string | ConfirmModalPayload | never
+    payload?: string | ConfirmModalPayload | ManageInstancesModalPayload | never
   ): void {
     if (this.modalsInstances[modalName]) {
       return;

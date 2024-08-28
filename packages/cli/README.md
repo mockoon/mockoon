@@ -125,20 +125,21 @@ USAGE
   $ mockoon-cli start
 
 OPTIONS
-  -d, --data                  [required] Path(s) or URL(s) to your Mockoon file(s)
-  -p, --port                  Override environment(s) port(s)
-  -l, --hostname              Override default listening hostname(s)
-  -c, --faker-locale          Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)
-  -s, --faker-seed            Number for the Faker.js seed (e.g. 1234)
-  -t, --log-transaction       Log the full HTTP transaction (request and response)
-  -X, --disable-log-to-file   Disable logging to file
-  -e, --disable-routes        Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name
-  -r, --repair                If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
-  -x, --env-vars-prefix       Prefix for environment variables (default: 'MOCKOON_')
-      --disable-admin-api     Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
-      --disable-tls           Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)
-      --max-transaction-logs  Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)
-  -h, --help                  Show CLI help
+  -d, --data                   [required] Path(s) or URL(s) to your Mockoon file(s)
+  -p, --port                   Override environment(s) port(s)
+  -l, --hostname               Override default listening hostname(s)
+  -c, --faker-locale           Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)
+  -s, --faker-seed             Number for the Faker.js seed (e.g. 1234)
+  -t, --log-transaction        Log the full HTTP transaction (request and response)
+  -X, --disable-log-to-file    Disable logging to file
+  -e, --disable-routes         Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name
+  -r, --repair                 If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
+  -x, --env-vars-prefix        Prefix for environment variables (default: 'MOCKOON_')
+      --disable-admin-api      Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
+      --disable-tls            Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)
+      --max-transaction-logs   Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)
+      --enable-random-latency  Randomize global and responses latencies between 0 and the specified value (default: false)
+  -h, --help                   Show CLI help
 
 EXAMPLES
   $ mockoon-cli start --data ~/data.json

@@ -1,7 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
-import { Observable } from 'rxjs';
+import { formatDistanceToNow } from 'date-fns';
+import { Observable, timer } from 'rxjs';
 import {
   combineLatestWith,
   distinctUntilChanged,
@@ -49,7 +50,9 @@ type logsDropdownMenuPayload = { logUuid: string };
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentLogsComponent implements OnInit {
-  public environmentLogs$: Observable<EnvironmentLog[]>;
+  public environmentLogs$: Observable<
+    (EnvironmentLog & { timeHuman$: Observable<string> })[]
+  >;
   public activeEnvironmentLogsTab$: Observable<EnvironmentLogsTabsNameType>;
   public activeEnvironmentUUID$: Observable<string>;
   public activeEnvironmentLog$: Observable<EnvironmentLog>;
@@ -116,6 +119,14 @@ export class EnvironmentLogsComponent implements OnInit {
                 search
               )
             )
+      ),
+      map((logs) =>
+        logs.map((log) => ({
+          ...log,
+          timeHuman$: timer(0, 60_000).pipe(
+            map(() => formatDistanceToNow(log.timestampMs, { addSuffix: true }))
+          )
+        }))
       )
     );
 
@@ -123,7 +134,7 @@ export class EnvironmentLogsComponent implements OnInit {
       distinctUntilChanged(),
       map((environmentLog) => {
         if (environmentLog) {
-          if (environmentLog.response.body) {
+          if (environmentLog.response?.body) {
             const contentEncoding = environmentLog.response.headers.find(
               (header) => header.key.toLowerCase() === 'content-encoding'
             )?.value;

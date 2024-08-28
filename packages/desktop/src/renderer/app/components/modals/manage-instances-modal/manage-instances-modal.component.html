@@ -4,14 +4,14 @@
     instances: instances$ | async,
     environmentList: environmentList$ | async,
     taskInProgress: taskInProgress$ | async,
-    environmentUuid: environmentUuid$ | async,
+    payload: payload$ | async,
     isCloudEnabled: isCloudEnabled$ | async,
     deployEnvList: deployEnvList$ | async
   } as data"
 >
   <div class="modal-header align-items-center">
     <h3 class="modal-title">Manage your instances</h3>
-    @if (data.environmentUuid) {
+    @if (data.payload?.environmentUuid) {
       <div class="ms-auto" [appHideAfter]="3000">
         <small class="text-success h6">
           <app-svg icon="check" class="me-2"></app-svg>Instance deployed
@@ -40,7 +40,7 @@
               class="hover-parent"
               [ngClass]="{
                 'animation-fast-highlight':
-                  data.environmentUuid === instance.environmentUuid
+                  data.payload?.environmentUuid === instance.environmentUuid
               }"
             >
               <!-- align padding with modal body -->

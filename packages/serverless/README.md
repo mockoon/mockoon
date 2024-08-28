@@ -152,6 +152,7 @@ The `MockoonServerless` class accepts an optional `options` object as a second p
 | `enableAdminApi`      | `boolean`  | `true`        | Enable (default) or disable the [Admin API](https://mockoon.com/docs/latest/admin-api/overview/).                                                                      |
 | `disableTls`          | `boolean`  | `false`       | Disable TLS. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).           |
 | `maxTransactionLogs`  | `number`   | `100`         | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100).                                                                   |
+| `enableRandomLatency` | `boolean`  | `false`       | Randomize global and responses latencies between 0 and the specified value (default: false).                                                                           |
 
 Example:
 
@@ -166,7 +167,8 @@ const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
   },
   envVarsPrefix: 'CUSTOM_PREFIX_',
   enableAdminApi: false,
-  disableTls: true
+  disableTls: true,
+  enableRandomLatency: false
 });
 ```
 
