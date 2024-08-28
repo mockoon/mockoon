@@ -68,7 +68,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { value: 'regex', label: 'regex' },
     { value: 'regex_i', label: 'regex (i)' },
     { value: 'null', label: 'null' },
-    { value: 'empty_array', label: 'empty array' }
+    { value: 'empty_array', label: 'empty array' },
+    { value: 'array_includes', label: 'array includes' }
   ];
   public modifierPlaceholders: Record<ResponseRuleTargets, string> = {
     body: 'JSONPath or object path (empty for full body)',
@@ -88,8 +89,9 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     empty_array: ''
   };
   public operatorDisablingForTargets = {
-    request_number: ['null', 'empty_array'],
-    cookie: ['empty_array']
+    request_number: ['null', 'empty_array', 'array_includes'],
+    cookie: ['empty_array'],
+    params: ['empty_array', 'array_includes']
   };
   public rulesOperators: ToggleItems = [
     {

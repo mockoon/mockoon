@@ -225,7 +225,14 @@ const RouteResponseRuleSchema = Joi.object<ResponseRule, true>({
   value: Joi.string().allow('').failover(ResponseRuleDefault.value).required(),
   invert: Joi.boolean().failover(ResponseRuleDefault.invert).required(),
   operator: Joi.string()
-    .valid('equals', 'regex', 'regex_i', 'null', 'empty_array')
+    .valid(
+      'equals',
+      'regex',
+      'regex_i',
+      'null',
+      'empty_array',
+      'array_includes'
+    )
     .failover(ResponseRuleDefault.operator)
     .required()
 });
