@@ -405,7 +405,7 @@
                     *ngIf="
                       rulesDisablingResponseModes.includes(
                         data.activeRoute?.responseMode
-                      ) || !!data.activeRoute.streamingMode
+                      ) || data.activeRoute.streamingMode === 'BROADCAST'
                     "
                     class="text-warning"
                     [ngbTooltip]="texts.DISABLED_RULES_WARNING"

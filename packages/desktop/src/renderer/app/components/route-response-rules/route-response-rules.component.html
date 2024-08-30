@@ -43,11 +43,7 @@
               class="overflow-hidden me-2"
               formControlName="target"
               [enableCustomInput]="false"
-              [items]="
-                activeRoute.type === 'ws'
-                  ? webSocketResponseRuleTargets
-                  : responseRuleTargets
-              "
+              [items]="responseRuleTargets"
               [dropdownId]="'rules' + ruleIndex + 'target'"
             ></app-custom-select>
 
