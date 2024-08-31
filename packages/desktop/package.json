@@ -118,7 +118,7 @@
     "tslib": "2.6.2",
     "typescript": "5.4.5",
     "wdio-electron-service": "6.6.1",
-    "webpack": "5.93.0",
+    "webpack": "5.94.0",
     "webpack-cli": "5.1.4",
     "webpack-node-externals": "3.0.0",
     "ws": "8.14.2",
