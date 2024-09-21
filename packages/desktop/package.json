@@ -65,7 +65,7 @@
     "winston": "3.13.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "17.3.6",
+    "@angular-devkit/build-angular": "17.3.9",
     "@angular-eslint/builder": "17.3.0",
     "@angular-eslint/eslint-plugin": "17.3.0",
     "@angular-eslint/eslint-plugin-template": "17.3.0",
@@ -118,10 +118,10 @@
     "tslib": "2.6.2",
     "typescript": "5.4.5",
     "wdio-electron-service": "6.6.1",
-    "webpack": "5.93.0",
+    "webpack": "5.94.0",
     "webpack-cli": "5.1.4",
     "webpack-node-externals": "3.0.0",
-    "ws": "8.14.2",
+    "ws": "8.17.1",
     "zone.js": "~0.14.4"
   },
   "browser": {
