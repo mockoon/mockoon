@@ -1,0 +1,20 @@
+.team-presence {
+  display: flex;
+  align-items: center;
+
+  & > * + *:not(.team-presence-more) {
+    margin-left: -8px;
+  }
+}
+.team-presence-user {
+  cursor: pointer;
+
+  &:hover {
+    z-index: 1;
+  }
+}
+
+.team-presence-more {
+  cursor: pointer;
+  font-weight: bold;
+}
