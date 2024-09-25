@@ -47,6 +47,7 @@ import indexOf from './indexOf';
 import int from './int';
 import ipv4 from './ipv4';
 import ipv6 from './ipv6';
+import isValidDate from './isValidDate';
 import join from './join';
 import jsonParse from './json-parse';
 import { jwtHeader, jwtPayload } from './jwt';
@@ -107,6 +108,7 @@ export const Helpers = {
   countryCode,
   date,
   dateFormat,
+  isValidDate,
   dateTimeShift,
   default: defaultFunc,
   divide,
