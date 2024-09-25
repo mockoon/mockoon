@@ -43,6 +43,7 @@ export enum SyncMessageTypes {
   ENV_LIST = 'EL',
   SYNC = 'S',
   PRESENCE = 'P',
+  USER_PRESENCE = 'UP',
   TIME = 'T',
   ALERT = 'A'
 }
@@ -60,9 +61,17 @@ export type DisconnectedPayload = {
   reason: string;
 };
 
+export type SyncUserPresence = {
+  uid?: string;
+  email?: string;
+  displayName?: string;
+  environmentUuid?: string;
+  cssColor?: string;
+};
+
 export type SyncPresence = {
   devices?: number;
-  users?: { email: string }[];
+  users?: SyncUserPresence[];
 };
 
 export enum SyncActionTypes {

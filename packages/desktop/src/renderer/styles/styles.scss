@@ -303,8 +303,8 @@ $status-code-colors: ('4xx', lighten($orange, 10%)),
   &::before {
     content: '';
     position: absolute;
-    bottom: -2px;
-    right: -2px;
+    bottom: 0;
+    right: 0;
     background-color: $green;
     display: block;
     width: 6px;
@@ -374,4 +374,8 @@ $status-code-colors: ('4xx', lighten($orange, 10%)),
 
 .text-break-all {
   word-break: break-all;
+}
+
+.svg-text-align svg {
+  vertical-align: baseline;
 }

@@ -12,6 +12,7 @@ import {
   SyncErrors,
   SyncMessageTypes,
   SyncPresence,
+  SyncUserPresence,
   UpdatesSyncActions,
   buildSyncActionKey,
   transformSyncAction,
@@ -189,6 +190,7 @@ export class SyncService extends Logger {
       this.onReceiveEnvironmentsList(socket),
       this.onReceiveSyncAction(socket),
       this.onPresenceUpdate(socket),
+      this.onUserPresenceUpdate(socket),
       this.onAlert(socket)
     );
   }
@@ -556,7 +558,54 @@ export class SyncService extends Logger {
   private onPresenceUpdate(socket: Socket) {
     return fromEvent<SyncPresence>(socket, SyncMessageTypes.PRESENCE).pipe(
       tap((presence) => {
+        if (presence.users !== undefined) {
+          // put current user first in the list
+          presence.users = presence.users.sort((user) =>
+            user.uid === this.store.get('user').uid ? -1 : 1
+          );
+        }
+
         this.store.update(updateSyncAction({ presence }));
+      })
+    );
+  }
+
+  /**
+   * Listen for partial user presence updates
+   *
+   * @param socket
+   * @returns
+   */
+  private onUserPresenceUpdate(socket: Socket) {
+    return fromEvent<SyncUserPresence>(
+      socket,
+      SyncMessageTypes.USER_PRESENCE
+    ).pipe(
+      tap((userPresence) => {
+        const currentPresence = this.store.get('sync').presence;
+        let presence: SyncPresence = currentPresence;
+
+        if (currentPresence.users !== undefined) {
+          presence = {
+            ...currentPresence,
+            users: currentPresence.users.map((user) => {
+              if (user.uid === userPresence.uid) {
+                return {
+                  ...user,
+                  ...userPresence
+                };
+              }
+
+              return user;
+            })
+          };
+        }
+
+        this.store.update(
+          updateSyncAction({
+            presence
+          })
+        );
       })
     );
   }

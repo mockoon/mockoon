@@ -12,7 +12,8 @@
     sync: sync$ | async,
     syncAlert: syncAlert$ | async,
     settings: settings$ | async,
-    instances: instances$ | async
+    instances: instances$ | async,
+    user: user$ | async
   } as data"
 >
   <div
@@ -45,10 +46,10 @@
         [dragId]="category.id"
         (dropped)="reorganizeEnvironmentsCategories($event)"
       >
-        <div class="text-truncate">
+        <div class="d-flex align-items-center mw0">
           <button
             type="button"
-            class="btn btn-link btn-icon p-0"
+            class="btn btn-link btn-icon btn-sm p-0"
             [ngClass]="category.iconClasses$ | async"
             (click)="cloudReconnect()"
           >
@@ -58,18 +59,20 @@
               class="pe-2"
             ></app-svg>
           </button>
-          {{ category.label }}
-          <span
-            *ngIf="category.id === 'cloud' && data?.syncAlert"
-            class="ms-2 text-warning"
-            [ngClass]="{
-              'cursor-pointer': data?.syncAlert.includes('OFFLINE_WARNING')
-            }"
-            [ngbTooltip]="alertLabels[data?.syncAlert]"
-            (click)="openSyncAlert(data?.syncAlert)"
-          >
-            <app-svg icon="warning"></app-svg>
-          </span>
+          <div class="text-truncate">
+            {{ category.label }}
+            <span
+              *ngIf="category.id === 'cloud' && data?.syncAlert"
+              class="ms-2 text-warning"
+              [ngClass]="{
+                'cursor-pointer': data?.syncAlert.includes('OFFLINE_WARNING')
+              }"
+              [ngbTooltip]="alertLabels[data?.syncAlert]"
+              (click)="openSyncAlert(data?.syncAlert)"
+            >
+              <app-svg icon="warning"></app-svg>
+            </span>
+          </div>
         </div>
         <div class="ms-auto d-flex align-items-center">
           <span
@@ -88,7 +91,7 @@
           ></ng-container>
           <button
             type="button"
-            class="btn btn-link btn-icon p-0"
+            class="btn btn-link btn-icon btn-sm"
             (click)="collapseCategory(category.id, category.collapsed)"
           >
             <app-svg
@@ -209,7 +212,9 @@
               ></app-editable-element>
             </div>
 
-            <div class="nav-link-subtitle mt-1 d-flex align-items-center">
+            <div
+              class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
+            >
               <app-svg
                 *ngIf="data.instances[environment.uuid]"
                 class="me-2"
@@ -255,7 +260,9 @@
               </span>
             </div>
           </div>
-          <div class="ms-auto d-flex align-items-start">
+          <div
+            class="ms-auto d-flex flex-column align-items-center justify-content-between"
+          >
             <app-dropdown-menu
               [idPrefix]="'environment-' + environment.uuid"
               [items]="
@@ -269,6 +276,15 @@
               [iconFaded]="true"
               [noYPadding]="true"
             ></app-dropdown-menu>
+            <app-team-presence
+              [presence]="data.sync?.presence"
+              [user]="data.user"
+              [displaySelf]="false"
+              filterBy="environmentUuid"
+              [filterContext]="environment.uuid"
+              size="16"
+              [showTooltipList]="false"
+            ></app-team-presence>
           </div>
         </a>
       </li>
