@@ -10,6 +10,7 @@ import { strictEqual } from 'assert';
 import { Request } from 'express';
 import QueryString from 'qs';
 import { xml2js } from 'xml-js';
+import { fromExpressRequest } from '../../../src/libs/requests';
 import { ResponseRulesInterpreter } from '../../../src/libs/response-rules-interpreter';
 
 const routeResponse403: RouteResponse = {
@@ -75,7 +76,7 @@ describe('Response rules interpreter', () => {
 
     const routeResponse = new ResponseRulesInterpreter(
       [routeResponse403, routeResponseTemplate],
-      request,
+      fromExpressRequest(request),
       null,
       EnvironmentDefault,
       [],
@@ -115,7 +116,7 @@ describe('Response rules interpreter', () => {
           body: 'invalid'
         }
       ],
-      request,
+      fromExpressRequest(request),
       null,
       EnvironmentDefault,
       [],
@@ -155,7 +156,7 @@ describe('Response rules interpreter', () => {
             body: 'query1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -194,7 +195,7 @@ describe('Response rules interpreter', () => {
             body: 'query1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -233,7 +234,7 @@ describe('Response rules interpreter', () => {
             body: 'query2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -272,7 +273,7 @@ describe('Response rules interpreter', () => {
             body: 'query3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -311,7 +312,7 @@ describe('Response rules interpreter', () => {
             body: 'query4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -350,7 +351,7 @@ describe('Response rules interpreter', () => {
             body: 'query5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -389,7 +390,7 @@ describe('Response rules interpreter', () => {
             body: 'query6'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -428,7 +429,7 @@ describe('Response rules interpreter', () => {
             body: 'query7'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -467,7 +468,7 @@ describe('Response rules interpreter', () => {
             body: 'query7'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -506,7 +507,7 @@ describe('Response rules interpreter', () => {
             body: 'query7'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -545,7 +546,7 @@ describe('Response rules interpreter', () => {
             body: 'query8'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -584,7 +585,7 @@ describe('Response rules interpreter', () => {
             body: 'query9'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -623,7 +624,7 @@ describe('Response rules interpreter', () => {
             body: 'query10'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [
@@ -669,7 +670,7 @@ describe('Response rules interpreter', () => {
             body: 'query11'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [
@@ -715,7 +716,7 @@ describe('Response rules interpreter', () => {
             body: 'value'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -756,7 +757,7 @@ describe('Response rules interpreter', () => {
             body: 'params1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -794,7 +795,7 @@ describe('Response rules interpreter', () => {
             body: 'params1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -832,7 +833,7 @@ describe('Response rules interpreter', () => {
             body: 'params2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -870,7 +871,7 @@ describe('Response rules interpreter', () => {
             body: 'params3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -908,7 +909,7 @@ describe('Response rules interpreter', () => {
             body: 'params4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -946,7 +947,7 @@ describe('Response rules interpreter', () => {
             body: 'params5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -985,7 +986,7 @@ describe('Response rules interpreter', () => {
             body: 'params6'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1023,7 +1024,7 @@ describe('Response rules interpreter', () => {
             body: 'globalvar1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1053,7 +1054,7 @@ describe('Response rules interpreter', () => {
             body: 'globalvar2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1083,7 +1084,7 @@ describe('Response rules interpreter', () => {
             body: 'globalvar3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1113,7 +1114,7 @@ describe('Response rules interpreter', () => {
             body: 'globalvar4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1143,7 +1144,7 @@ describe('Response rules interpreter', () => {
             body: 'globalvar5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1183,7 +1184,7 @@ describe('Response rules interpreter', () => {
             ]
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [
@@ -1213,7 +1214,7 @@ describe('Response rules interpreter', () => {
             ]
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [
@@ -1249,7 +1250,7 @@ describe('Response rules interpreter', () => {
             ]
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [
@@ -1298,7 +1299,7 @@ describe('Response rules interpreter', () => {
             body: 'request_number_1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1338,7 +1339,7 @@ describe('Response rules interpreter', () => {
             body: 'request_number_not_1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1378,7 +1379,7 @@ describe('Response rules interpreter', () => {
             body: 'request_number_1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1418,7 +1419,7 @@ describe('Response rules interpreter', () => {
             body: 'request_number_regex'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1458,7 +1459,7 @@ describe('Response rules interpreter', () => {
             body: 'request_number_regex'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1506,7 +1507,7 @@ describe('Response rules interpreter', () => {
             body: 'request_number_complex1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1562,7 +1563,7 @@ describe('Response rules interpreter', () => {
             body: 'request_number_4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         ResponseMode.SEQUENTIAL,
         EnvironmentDefault,
         [],
@@ -1618,7 +1619,7 @@ describe('Response rules interpreter', () => {
             default: true
           }
         ],
-        request,
+        fromExpressRequest(request),
         ResponseMode.DISABLE_RULES,
         EnvironmentDefault,
         [],
@@ -1663,7 +1664,7 @@ describe('Response rules interpreter', () => {
             body: 'header1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1703,7 +1704,7 @@ describe('Response rules interpreter', () => {
             body: 'header1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1743,7 +1744,7 @@ describe('Response rules interpreter', () => {
             body: 'header2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1783,7 +1784,7 @@ describe('Response rules interpreter', () => {
             body: 'header3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1823,7 +1824,7 @@ describe('Response rules interpreter', () => {
             body: 'header4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1863,7 +1864,7 @@ describe('Response rules interpreter', () => {
             body: 'header5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1871,6 +1872,150 @@ describe('Response rules interpreter', () => {
         ''
       ).chooseResponse(1);
       strictEqual(routeResponse?.body, 'unauthorized');
+    });
+  });
+
+  describe('Path rules', () => {
+    it('should return response if path equals value', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        url: '/test/1'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'path',
+                modifier: '',
+                value: '/test/1',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'path1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'path1');
+    });
+
+    it('should return response if path contains value (regex)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        url: '/test/2'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'path',
+                modifier: '',
+                value: '1|2',
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'path2'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'path2');
+    });
+  });
+
+  describe('Method rules', () => {
+    it('should return response if method equals value', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        method: 'GET'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'method',
+                modifier: '',
+                value: 'get',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'method1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'method1');
+    });
+
+    it('should return response if method contains value (regex)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        method: 'POST'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'method',
+                modifier: '',
+                value: '^p.*t$',
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'method2'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'method2');
     });
   });
 
@@ -1909,7 +2054,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1951,7 +2096,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -1995,7 +2140,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2039,7 +2184,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2082,7 +2227,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2123,7 +2268,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2164,7 +2309,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2208,7 +2353,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2252,7 +2397,7 @@ describe('Response rules interpreter', () => {
             body: 'cookie3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2297,7 +2442,7 @@ describe('Response rules interpreter', () => {
             body: 'body1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2337,7 +2482,7 @@ describe('Response rules interpreter', () => {
             body: 'body1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2377,7 +2522,7 @@ describe('Response rules interpreter', () => {
             body: 'body2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2417,7 +2562,7 @@ describe('Response rules interpreter', () => {
             body: 'body3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2457,7 +2602,7 @@ describe('Response rules interpreter', () => {
             body: 'body4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2497,7 +2642,7 @@ describe('Response rules interpreter', () => {
             body: 'body5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2537,7 +2682,7 @@ describe('Response rules interpreter', () => {
             body: 'body6'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2577,7 +2722,7 @@ describe('Response rules interpreter', () => {
             body: 'body7'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2617,7 +2762,7 @@ describe('Response rules interpreter', () => {
             body: 'body8'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2657,7 +2802,7 @@ describe('Response rules interpreter', () => {
             body: 'body9'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2697,7 +2842,7 @@ describe('Response rules interpreter', () => {
             body: 'body10'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2737,7 +2882,7 @@ describe('Response rules interpreter', () => {
             body: 'body11'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2777,7 +2922,7 @@ describe('Response rules interpreter', () => {
             body: 'body12'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2817,7 +2962,7 @@ describe('Response rules interpreter', () => {
             body: 'body13'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2857,7 +3002,7 @@ describe('Response rules interpreter', () => {
             body: 'body14'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2897,7 +3042,7 @@ describe('Response rules interpreter', () => {
             body: 'body15'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2937,7 +3082,7 @@ describe('Response rules interpreter', () => {
             body: 'body16'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -2977,7 +3122,7 @@ describe('Response rules interpreter', () => {
             body: 'body17'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3017,7 +3162,7 @@ describe('Response rules interpreter', () => {
             body: 'body19'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3057,7 +3202,7 @@ describe('Response rules interpreter', () => {
             body: 'body19'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3098,7 +3243,7 @@ describe('Response rules interpreter', () => {
             body: 'body20'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3139,7 +3284,7 @@ describe('Response rules interpreter', () => {
             body: 'body21'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3180,7 +3325,7 @@ describe('Response rules interpreter', () => {
             body: 'body21'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3235,7 +3380,7 @@ describe('Response rules interpreter', () => {
             body: 'body6'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3272,7 +3417,7 @@ describe('Response rules interpreter', () => {
             body: 'value'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3313,7 +3458,7 @@ describe('Response rules interpreter', () => {
             body: 'response1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3365,7 +3510,7 @@ describe('Response rules interpreter', () => {
             body: 'complex1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3414,7 +3559,7 @@ describe('Response rules interpreter', () => {
             body: 'complex1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3462,7 +3607,7 @@ describe('Response rules interpreter', () => {
             body: 'complex2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3511,7 +3656,7 @@ describe('Response rules interpreter', () => {
             body: 'complex3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3559,7 +3704,7 @@ describe('Response rules interpreter', () => {
             body: 'complex4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3611,7 +3756,7 @@ describe('Response rules interpreter', () => {
             body: 'response2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3636,7 +3781,7 @@ describe('Response rules interpreter', () => {
           routeResponse403,
           { ...routeResponseTemplate, body: 'content', default: true }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3679,7 +3824,7 @@ describe('Response rules interpreter', () => {
           },
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [],
@@ -3724,7 +3869,7 @@ describe('Response rules interpreter', () => {
           },
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
-        request,
+        fromExpressRequest(request),
         ResponseMode.FALLBACK,
         EnvironmentDefault,
         [],
@@ -3767,7 +3912,7 @@ describe('Response rules interpreter', () => {
           },
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
-        request,
+        fromExpressRequest(request),
         ResponseMode.FALLBACK,
         EnvironmentDefault,
         [],
@@ -3810,7 +3955,7 @@ describe('Response rules interpreter', () => {
           default: false
         }
       ],
-      request,
+      fromExpressRequest(request),
       null,
       EnvironmentDefault,
       [{ id: 'abcd', name: 'bodypropname', value: 'testprop', parsed: true }],

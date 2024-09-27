@@ -100,7 +100,7 @@ class Utils {
   public async setDropdownValue(dropdownId: string, index: number) {
     await $(`#${dropdownId}-dropdown .dropdown-toggle`).click();
     await $(
-      `#${dropdownId}-dropdown-menu .dropdown-item:nth-child(${index})`
+      `#${dropdownId}-dropdown-menu .dropdown-item:nth-of-type(${index})`
     ).click();
   }
 
