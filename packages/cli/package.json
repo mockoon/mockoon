@@ -46,7 +46,7 @@
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
     "@mockoon/commons": "8.4.0",
-    "@mockoon/commons-server": "8.4.0",
+    "@mockoon/commons-server": "8.4.1-alpha.1",
     "@oclif/core": "3.27.0",
     "@oclif/plugin-help": "6.2.7",
     "jsonfile": "6.1.0",
