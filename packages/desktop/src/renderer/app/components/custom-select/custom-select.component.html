@@ -63,28 +63,31 @@
         </div>
 
         <div class="dropdown-menu-content">
-          <ng-container *ngIf="data.filteredItems?.length > 0; else emptyList">
-            <ng-container *ngFor="let item of data.filteredItems">
-              <h6 *ngIf="item.category" class="dropdown-header">
-                {{ item.label }}
-              </h6>
+          @for (item of data.filteredItems; track $index) {
+            <h6 *ngIf="item.category" class="dropdown-header">
+              {{ item.label }}
+            </h6>
 
-              <button
-                *ngIf="!item.category"
-                #dropdownMenuItems
-                type="button"
-                class="btn dropdown-item d-flex"
-                ngbDropdownItem
-                (click)="setValue(item)"
-                (keydown)="itemKeydown(item, $event)"
-                [disabled]="disabledList?.includes(item.value)"
-              >
-                <span class="text-truncate" [ngClass]="item.classes">{{
-                  item.label
-                }}</span>
-              </button>
-            </ng-container>
-          </ng-container>
+            <button
+              *ngIf="!item.category"
+              #dropdownMenuItems
+              type="button"
+              class="btn dropdown-item d-flex"
+              [ngClass]="{ 'ps-4': hasCategory }"
+              ngbDropdownItem
+              (click)="setValue(item)"
+              (keydown)="itemKeydown(item, $event)"
+              [disabled]="disabledList?.includes(item.value)"
+            >
+              <span class="text-truncate" [ngClass]="item.classes">{{
+                item.label
+              }}</span>
+            </button>
+          } @empty {
+            <div class="message message-md text-start p-btn">
+              {{ emptyListMessage }}
+            </div>
+          }
         </div>
       </div>
     </div>
@@ -99,10 +102,4 @@
       <app-svg icon="clear"></app-svg>
     </button>
   </div>
-
-  <ng-template #emptyList>
-    <div class="message message-md text-start p-btn">
-      {{ emptyListMessage }}
-    </div>
-  </ng-template>
 </ng-container>

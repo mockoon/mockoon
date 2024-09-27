@@ -63,6 +63,8 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public unknownValueMessage = '';
   @Input()
   public clearable = false;
+  @Input()
+  public hasCategory = false;
   // List of disabled entries values if any
   @Input()
   public disabledList: (number | string)[] = null;
