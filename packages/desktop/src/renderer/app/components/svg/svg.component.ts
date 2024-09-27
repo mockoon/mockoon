@@ -27,7 +27,7 @@ import {
 export class SvgComponent {
   @Input()
   @HostBinding('style.font-size.px')
-  @HostBinding('style.line-height.px')
+  @HostBinding('style.height.px')
   public size = '16';
   @Input()
   public icon:
