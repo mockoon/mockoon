@@ -164,7 +164,10 @@ import { AppComponent } from './app.component';
 
       return functions;
     }),
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({
+      // enable the legacy disabled state handling (angular v15)
+      callSetDisabledState: 'whenDisabledForLegacyCode'
+    }),
     NgxMaskDirective
   ],
   providers: [
