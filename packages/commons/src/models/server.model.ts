@@ -132,4 +132,15 @@ export type ServerOptions = {
    * Enable random latency from 0 to value specified in the route settings.                                                                                                 |
    */
   enableRandomLatency: boolean;
+
+  /**
+   * Max file upload number (multipart/form-data).
+   * Set to 0 to disable file uploads. (busboy)
+   */
+  maxFileUploads?: number;
+
+  /**
+   * Max file upload size (multipart/form-data).
+   */
+  maxFileSize?: number;
 };
