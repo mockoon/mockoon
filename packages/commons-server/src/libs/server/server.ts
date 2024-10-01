@@ -7,7 +7,6 @@ import {
   Environment,
   FileExtensionsWithTemplating,
   GetContentType,
-  getLatency,
   GetRouteResponseContentType,
   Header,
   IsValidURL,
@@ -26,6 +25,7 @@ import {
   defaultEnvironmentVariablesPrefix,
   defaultMaxTransactionLogs,
   generateUUID,
+  getLatency,
   stringIncludesArrayItems
 } from '@mockoon/commons';
 import appendField from 'append-field';
@@ -50,6 +50,7 @@ import { lookup as mimeTypeLookup } from 'mime-types';
 import { basename, extname } from 'path';
 import { parse as qsParse } from 'qs';
 import rangeParser from 'range-parser';
+import { Readable } from 'stream';
 import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
 import { parse as parseUrl } from 'url';
@@ -104,7 +105,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     enableAdminApi: true,
     disableTls: false,
     maxTransactionLogs: defaultMaxTransactionLogs,
-    enableRandomLatency: false
+    enableRandomLatency: false,
+    maxFileUploads: 10,
+    maxFileSize: 10 * 1024 * 1024 // 10MB
   };
   private transactionLogs: Transaction[] = [];
 
@@ -371,7 +374,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         } else if (requestContentType.includes('multipart/form-data')) {
           const busboyParse = busboy({
             headers: request.headers,
-            limits: { fieldNameSize: 1000, files: 0 }
+            limits: {
+              fieldNameSize: 1000,
+              files: this.options.maxFileUploads,
+              fileSize: this.options.maxFileSize
+            }
           });
 
           busboyParse.on('field', (name, value, info) => {
@@ -383,6 +390,33 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               appendField(request.body, name, value);
             }
           });
+
+          busboyParse.on(
+            'file',
+            (
+              name: string,
+              stream: Readable,
+              info: { filename: string; encoding: string; mimeType: string }
+            ) => {
+              if (request.body === undefined) {
+                request.body = {};
+              }
+
+              const file = {
+                filename: info.filename,
+                mimetype: info.mimeType,
+                size: 0
+              };
+
+              stream.on('data', (data) => {
+                file.size += data.length;
+              });
+
+              stream.on('close', () => {
+                appendField(request.body, name, file);
+              });
+            }
+          );
 
           busboyParse.on('error', (error: any) => {
             this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
