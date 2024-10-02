@@ -113,6 +113,16 @@
             />
 
             <button
+              type="button"
+              ngbTooltip="toggle enable"
+              class="btn btn-link btn-icon"
+            >
+              <app-svg
+                icon="check"
+              />
+            </button>
+
+            <button
               *ngIf="deleteRuleRequested$ | async as deleteRuleRequested"
               type="button"
               class="btn btn-link btn-icon delete-rule"
