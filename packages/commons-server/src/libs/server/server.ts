@@ -2248,7 +2248,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private findDatabucketIdsInRules(response: RouteResponse): string[] {
     let dataBucketIds: string[] = [];
 
-    response.rules.forEach((rule) => {
+    response.Each((rule) => {
       const splitRules = rule.modifier.split('.');
       if (rule.target === 'data_bucket') {
         dataBucketIds = [

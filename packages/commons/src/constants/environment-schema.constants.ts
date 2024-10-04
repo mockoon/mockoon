@@ -127,7 +127,8 @@ export const ResponseRuleDefault: ResponseRule = {
   modifier: '',
   value: '',
   invert: false,
-  operator: 'equals'
+  operator: 'equals',
+  enabled: true
 };
 
 export const HeaderDefault: Header = {
@@ -236,7 +237,8 @@ const RouteResponseRuleSchema = Joi.object<ResponseRule, true>({
       'array_includes'
     )
     .failover(ResponseRuleDefault.operator)
-    .required()
+    .required(),
+  enabled: Joi.boolean().failover(ResponseRuleDefault.enabled).required() // Added the enabled field here
 });
 
 const CallbackSchema = Joi.object<Callback, true>({
@@ -329,9 +331,9 @@ const RouteResponseSchema = Joi.object<RouteResponse, true>({
     .failover(RouteResponseDefault.sendFileAsBody)
     .required(),
   rules: Joi.array()
-    .items(RouteResponseRuleSchema, Joi.any().strip())
-    .failover(RouteResponseDefault.rules)
-    .required(),
+  .items(RouteResponseRuleSchema, Joi.any().strip())
+  .failover(RouteResponseDefault.rules)
+  .required(),
   rulesOperator: Joi.string()
     .valid('OR', 'AND')
     .failover(RouteResponseDefault.rulesOperator)

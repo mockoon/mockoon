@@ -71,6 +71,7 @@ export type ResponseRule = {
   value: string;
   invert: boolean;
   operator: ResponseRuleOperators;
+  enabled?: boolean;
 };
 
 export type ResponseRuleTargets =

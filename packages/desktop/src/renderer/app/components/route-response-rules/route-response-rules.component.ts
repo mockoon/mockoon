@@ -169,7 +169,10 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
    * Add a new rule to the list if possible
    */
   public addRule() {
-    this.rules.push(this.formBuilder.group(BuildResponseRule()));
+    this.rules.push(this.formBuilder.group({
+      ...BuildResponseRule(),
+      enabled: true // Ensure 'enabled' field is present
+    }));
 
     this.ruleAdded.emit();
   }
@@ -212,7 +215,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     newRules.forEach((rule) => {
       this.rules.push(
         this.formBuilder.group({
-          ...rule
+          ...rule,
+          enabled: rule.enabled !== undefined ? rule.enabled : true  // Handle backward compatibility
         } as ResponseRule)
       );
     });
