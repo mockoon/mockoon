@@ -77,9 +77,11 @@ export type ResponseRuleTargets =
   | 'body'
   | 'query'
   | 'header'
-  | 'params'
-  | 'request_number'
   | 'cookie'
+  | 'params'
+  | 'path'
+  | 'method'
+  | 'request_number'
   | 'global_var'
   | 'data_bucket';
 

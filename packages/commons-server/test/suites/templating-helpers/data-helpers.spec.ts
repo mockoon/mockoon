@@ -636,6 +636,7 @@ describe('Data helpers', () => {
       });
       strictEqual(parseResult, 'string1string2');
     });
+
     it('should return the data matching jsonpath expression', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
@@ -672,6 +673,7 @@ describe('Data helpers', () => {
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
     });
+
     it('should return nothing if there are no properties matching jsonpath expression', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
@@ -692,6 +694,493 @@ describe('Data helpers', () => {
         envVarsPrefix: ''
       });
       strictEqual(parseResult, '');
+    });
+  });
+
+  describe('Helper: setData', () => {
+    it('should return nothing when given no arguments', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+
+    it('should return nothing if given a wrong databucket name', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "set" "wrongDatabucket"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 'value',
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+
+    it('should set by default when unknown operator is provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "unknown" "myData" "" "newValue"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 'value',
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'newValue');
+    });
+
+    it('should set the value (string) of a databucket (no path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "set" "myData" "" "newValue"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 'value',
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'newValue');
+    });
+
+    it('should set the value (array) of a databucket (no path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "set" "myData" "" (array "newValue")}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: undefined,
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '["newValue"]');
+    });
+
+    it('should set the value of a databucket (with path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "set" "myData" "path.to.value" "newValue"}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: 'oldValue' } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'newValue');
+    });
+
+    it('should push a value to an array (no path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "push" "myData" "" "newValue"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: ['first', 'second'],
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '["first","second","newValue"]');
+    });
+
+    it('should push a value to an array (with path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "push" "myData" "path.to.array" "newValue"}}{{data "myData" "path.to.array"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { array: ['first', 'second'] } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '["first","second","newValue"]');
+    });
+
+    it('should delete a property (no path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "del" "myData"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 'value',
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'undefined');
+    });
+
+    it('should delete a property (with path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "del" "myData" "path.to.value"}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: 'oldValue' } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+
+    it('should increment a property (no path) by one by default', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "inc" "myData"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 1,
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '2');
+    });
+
+    it('should increment a property (with path) by one by default', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "inc" "myData" "path.to.value"}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: 1 } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '2');
+    });
+
+    it('should increment a property (no path) by providing a string', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "inc" "myData" "" "2"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 1,
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '3');
+    });
+
+    it('should increment a property (no path) by providing a number', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "inc" "myData" "" 2}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 1,
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '3');
+    });
+
+    it('should increment a property (with path) by providing a string', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "inc" "myData" "path.to.value" "2"}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: 1 } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '3');
+    });
+
+    it('should increment a property (with path) by providing a number', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "inc" "myData" "path.to.value" 2}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: 1 } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '3');
+    });
+
+    it('should decrement a property (no path) by one by default', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "dec" "myData"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 5,
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '4');
+    });
+
+    it('should decrement a property (with path) by one by default', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "dec" "myData" "path.to.value"}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: 5 } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '4');
+    });
+
+    it('should decrement a property (no path) by providing a string', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "dec" "myData" "" "2"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 5,
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '3');
+    });
+
+    it('should decrement a property (no path) by providing a number', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "dec" "myData" "" 2}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: 5,
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '3');
+    });
+
+    it('should decrement a property (with path) by providing a string', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "dec" "myData" "path.to.value" "2"}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: 5 } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '3');
+    });
+
+    it('should decrement a property (with path) by providing a number', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "dec" "myData" "path.to.value" 2}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: 5 } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '3');
+    });
+
+    it('should invert a property (no path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "invert" "myData"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: true,
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'false');
+    });
+
+    it('should invert a property (with path)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "invert" "myData" "path.to.value"}}{{data "myData" "path.to.value"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { path: { to: { value: true } } },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'false');
     });
   });
 });

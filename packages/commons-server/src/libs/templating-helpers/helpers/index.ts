@@ -39,7 +39,6 @@ import floor from './floor';
 import getVar from './getVar';
 import gt from './gt';
 import gte from './gte';
-import guid from './guid';
 import helperMissing from './helperMissing';
 import hexColor from './hexColor';
 import includes from './includes';
@@ -90,6 +89,7 @@ import title from './title';
 import tld from './tld';
 import toFixed from './toFixed';
 import uppercase from './uppercase';
+import { guid, uuid } from './uuid';
 import zipcode from './zipcode';
 
 export const Helpers = {
@@ -123,6 +123,7 @@ export const Helpers = {
   gt,
   gte,
   guid,
+  uuid,
   helperMissing,
   hexColor,
   includes,

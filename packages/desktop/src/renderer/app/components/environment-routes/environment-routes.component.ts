@@ -98,10 +98,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       classes: 'color-method-all'
     },
     {
-      label: 'HTTP',
-      category: true
-    },
-    {
       value: Methods.get,
       label: 'GET',
       classes: 'color-method-get'
@@ -135,10 +131,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       value: Methods.options,
       label: 'OPTIONS',
       classes: 'color-method-options'
-    },
-    {
-      label: 'WebDAV',
-      category: true
     },
     {
       value: Methods.propfind,

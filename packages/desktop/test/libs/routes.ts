@@ -18,7 +18,9 @@ class Routes {
     header: 3,
     cookie: 4,
     params: 5,
-    request_number: 6
+    path: 6,
+    method: 7,
+    request_number: 8
   };
   private rulesOperatorsIndexes = {
     equals: 1,

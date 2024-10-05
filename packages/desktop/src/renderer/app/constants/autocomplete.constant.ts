@@ -18,6 +18,13 @@ export const helpersAutocompletions = [
   { caption: 'ip', value: '{{ip}}', meta: '' },
   { caption: 'method', value: '{{method}}', meta: '' },
   { caption: 'baseUrl', value: '{{baseUrl}}', meta: '' },
+  { caption: 'data', value: "{{data 'nameOrId' 'path'}}", meta: '' },
+  { caption: 'dataRaw', value: "{{dataRaw 'nameOrId' 'path'}}", meta: '' },
+  {
+    caption: 'setData',
+    value: "{{setData 'nameOrId' 'path' 'newValue' 'operator'}}",
+    meta: ''
+  },
   { caption: 'faker', value: "{{faker 'namespace.method'}}", meta: '' },
   { caption: 'repeat', value: '{{#repeat min max}}\n{{/repeat}}', meta: '' },
   {

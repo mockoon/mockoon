@@ -631,10 +631,10 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         headers: {
           'Content-Type': 'multipart/form-data; boundary=X-BOUNDARY'
         },
-        body: '--X-BOUNDARY\r\nContent-Disposition: form-data; name="var1"\r\n\r\nval1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv2\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="object[property]"\r\n\r\nobjv1\r\n--X-BOUNDARY--\r\n',
+        body: '--X-BOUNDARY\r\nContent-Disposition: form-data; name="file"; filename="filename.csv"\r\nContent-Type: text/csv\r\n\r\nfilecontent\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="var1"\r\n\r\nval1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv2\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="object[property]"\r\n\r\nobjv1\r\n--X-BOUNDARY--\r\n',
         testedResponse: {
           status: 200,
-          body: 'val1sv1,sv2objv1'
+          body: 'filename.csvtext/csv11-val1-sv1,sv2-objv1'
         }
       },
       {

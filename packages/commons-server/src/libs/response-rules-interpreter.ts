@@ -142,6 +142,10 @@ export class ResponseRulesInterpreter {
         return false;
       }
       value = this.request.cookies?.[parsedRuleModifier];
+    } else if (rule.target === 'path') {
+      value = this.targets.path;
+    } else if (rule.target === 'method') {
+      value = this.targets.method;
     } else if (rule.target === 'header') {
       value = this.request.header(parsedRuleModifier);
     } else {
@@ -165,6 +169,7 @@ export class ResponseRulesInterpreter {
       }
     }
 
+    // ⬇ "null" and "empty_array" operators need no value
     if (rule.operator === 'null' && parsedRuleModifier) {
       return value === null || value === undefined;
     }
@@ -172,6 +177,8 @@ export class ResponseRulesInterpreter {
     if (rule.operator === 'empty_array' && parsedRuleModifier) {
       return Array.isArray(value) && value.length < 1;
     }
+
+    // ⬇ all other operators need a value
 
     if (value === undefined) {
       return false;
@@ -242,7 +249,9 @@ export class ResponseRulesInterpreter {
       params: this.request.params,
       bodyRaw: this.request.stringBody,
       global_var: this.globalVariables,
-      data_bucket: dataBucketTargets
+      data_bucket: dataBucketTargets,
+      method: this.request.method?.toLowerCase(),
+      path: this.request.originalRequest.url
     };
   }
 

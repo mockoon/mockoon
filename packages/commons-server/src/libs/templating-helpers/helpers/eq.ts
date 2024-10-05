@@ -1,12 +1,13 @@
-const eq = function (val1: number | string, val2: number | string) {
-  const t1 = typeof val1;
-  const t2 = typeof val2;
+import { fromSafeString } from '../../utils';
 
-  if (t1 !== t2) {
+const eq = function (...args: any[]) {
+  const parameters = args.slice(0, -1);
+
+  if (parameters.length < 2) {
     return false;
   }
 
-  return val1 === val2;
+  return fromSafeString(parameters[0]) === fromSafeString(parameters[1]);
 };
 
 export default eq;

@@ -1,3 +1,5 @@
+import { fromSafeString } from '../../utils';
+
 const filter = function (...args) {
   const parameters = args.slice(0, -1);
 
@@ -23,7 +25,7 @@ const filter = function (...args) {
       if (typeof payload === 'object') {
         const keys = Object.keys(condition);
 
-        return keys.every((k) => payload[k] === condition[k]);
+        return keys.every((k) => payload[k] === fromSafeString(condition[k]));
       }
 
       return false;
