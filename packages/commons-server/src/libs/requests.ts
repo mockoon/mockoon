@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { IncomingMessage } from 'http';
 import { match } from 'path-to-regexp';
 
-import { Route } from '@mockoon/commons';
+import { CloneObject, Route } from '@mockoon/commons';
 import { parse as parseUrl } from 'url';
 import { parseRequestMessage, parseWebSocketMessage } from './utils';
 
@@ -125,8 +125,8 @@ export const fromWsRequest = (
       req.socket?.remoteAddress,
     method: req.method,
     originalRequest: req,
-    params: JSON.parse(JSON.stringify(pathParams)),
-    query: JSON.parse(JSON.stringify(location.query)),
+    params: CloneObject(pathParams),
+    query: CloneObject(location.query),
     stringBody: message || toString(req.body) || ''
   } as ServerRequest;
 };
