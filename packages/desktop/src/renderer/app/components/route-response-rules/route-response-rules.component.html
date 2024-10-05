@@ -43,11 +43,17 @@
               class="overflow-hidden me-2"
               formControlName="target"
               [enableCustomInput]="false"
-              [items]="responseRuleTargets"
+              [hasCategory]="true"
+              [items]="
+                activeRoute.type === 'ws'
+                  ? webSocketResponseRuleTargets
+                  : responseRuleTargets
+              "
               [dropdownId]="'rules' + ruleIndex + 'target'"
             ></app-custom-select>
 
             <div class="me-2">
+              <!-- the modifier is disabled for request number, method and path as there is nothing to "explore" (number/string values) -->
               <input
                 type="text"
                 class="form-control"
@@ -59,7 +65,9 @@
                 formControlName="modifier"
                 [attr.disabled]="
                   form.get(['rules', ruleIndex, 'target']).value ===
-                  'request_number'
+                    'request_number' ||
+                  form.get(['rules', ruleIndex, 'target']).value === 'path' ||
+                  form.get(['rules', ruleIndex, 'target']).value === 'method'
                     ? true
                     : null
                 "

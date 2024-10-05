@@ -39,7 +39,7 @@
     "busboy": "1.6.0",
     "cookie-parser": "1.4.6",
     "date-fns": "3.6.0",
-    "express": "4.19.2",
+    "express": "4.21.0",
     "handlebars": "4.7.8",
     "http-proxy-middleware": "2.0.6",
     "jsonpath-plus": "8.1.0",

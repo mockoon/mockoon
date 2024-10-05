@@ -51,14 +51,18 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   public form: UntypedFormGroup;
   public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;
   public responseRuleTargets: DropdownItems<ResponseRuleTargets> = [
+    { label: 'Request', category: true },
     { value: 'body', label: 'Body' },
     { value: 'query', label: 'Query parameter' },
     { value: 'header', label: 'Header' },
     { value: 'cookie', label: 'Cookie' },
     { value: 'params', label: 'Route parameter' },
+    { value: 'path', label: 'Path (starts with /)' },
+    { value: 'method', label: 'Method (lower case: get, post, ...)' },
+    { value: 'request_number', label: 'Number (starting at 1)' },
+    { label: 'Stateful sources', category: true },
     { value: 'global_var', label: 'Global variable' },
-    { value: 'data_bucket', label: 'Data bucket' },
-    { value: 'request_number', label: 'Request number (starting at 1)' }
+    { value: 'data_bucket', label: 'Data bucket' }
   ];
   public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
     { value: 'equals', label: 'equals' },
@@ -76,19 +80,24 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     params: 'Route parameter name',
     global_var: 'JSONPath or object path (start with var name)',
     data_bucket: 'JSONPath or object path (start with bucket name or ID)',
-    request_number: ''
+    request_number: '',
+    path: '',
+    method: ''
   };
-  public valuePlaceholders = {
+  public valuePlaceholders: { [key in ResponseRuleOperators]: string } = {
     equals: 'Value',
     regex: 'Regex (without /../)',
     regex_i: 'Regex (without /../i)',
     null: '',
-    empty_array: ''
+    empty_array: '',
+    array_includes: 'Value'
   };
   public operatorDisablingForTargets = {
     request_number: ['null', 'empty_array', 'array_includes'],
     cookie: ['empty_array'],
-    params: ['empty_array', 'array_includes']
+    params: ['empty_array', 'array_includes'],
+    path: ['null', 'empty_array', 'array_includes'],
+    method: ['null', 'empty_array', 'array_includes']
   };
   public rulesOperators: ToggleItems = [
     {

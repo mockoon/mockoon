@@ -528,6 +528,77 @@ describe('Template parser', () => {
     });
   });
 
+  describe('Helper: isValidDate', () => {
+    it('should return false if given the wrong amount of arguments', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{isValidDate}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'false');
+    });
+
+    it('should return true if a valid date string is provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{isValidDate '2022-01-01'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'true');
+    });
+
+    it('should return false if an invalid date string is provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{isValidDate '2022-01-50'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'false');
+    });
+
+    it('should return true if a valid date number (ms) is provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{isValidDate 1727272454000}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'true');
+    });
+
+    it('should return true if a valid date is provided through another helper (SafeString)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{isValidDate (queryParam "date")}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { query: { date: '2024-02-10' } } as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'true');
+    });
+  });
+
   describe('Helper: dateTimeShift', () => {
     it('should not throw an error when passed with invalid parameters.', () => {
       const parseResult = TemplateParser({

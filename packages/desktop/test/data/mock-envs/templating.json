@@ -947,7 +947,7 @@
       "responses": [
         {
           "uuid": "333eeac3-d2a8-4b43-b350-bcaea7d55f18",
-          "body": "{{bodyRaw 'var1'}}{{bodyRaw 'select'}}{{bodyRaw 'object.property'}}",
+          "body": "{{bodyRaw 'file.filename'}}{{bodyRaw 'file.mimetype'}}{{bodyRaw 'file.size'}}-{{bodyRaw 'var1'}}-{{bodyRaw 'select'}}-{{bodyRaw 'object.property'}}",
           "latency": 0,
           "statusCode": 200,
           "label": "",

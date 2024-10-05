@@ -55,6 +55,7 @@ import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcom
 import { RouteCallbacksComponent } from 'src/renderer/app/components/route-callbacks/route-callbacks.component';
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { TourComponent } from 'src/renderer/app/components/tour/tour.component';
@@ -124,7 +125,8 @@ import { AppComponent } from './app.component';
     FilterComponent,
     DropdownMenuComponent,
     DeployInstanceModalComponent,
-    ManageInstancesModalComponent
+    ManageInstancesModalComponent,
+    TeamPresenceComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -162,7 +164,10 @@ import { AppComponent } from './app.component';
 
       return functions;
     }),
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({
+      // enable the legacy disabled state handling (angular v15)
+      callSetDisabledState: 'whenDisabledForLegacyCode'
+    }),
     NgxMaskDirective
   ],
   providers: [

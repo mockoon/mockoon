@@ -77,6 +77,30 @@
     </ul>
 
     <div class="ms-auto d-flex align-items-center">
+      <!-- Display solo devices presence -->
+      <div
+        *ngIf="data.sync.status && data.sync.presence?.devices > 1"
+        ngbTooltip="{{ data.sync.presence.devices - 1 }} other {{
+          data.sync.presence.devices - 1 > 1 ? 'devices' : 'device'
+        }} connected"
+        class="badge badge-custom align-middle"
+      >
+        <app-svg icon="computer"></app-svg>
+        <span class="number-indicator">
+          {{ data.sync.presence.devices - 1 }}
+        </span>
+      </div>
+
+      <!-- Display team users presence -->
+      <app-team-presence
+        *ngIf="data.sync.presence?.users?.length > 0"
+        class="mx-2"
+        [presence]="data.sync?.presence"
+        [user]="data.user"
+        [displaySelf]="true"
+        [maxDisplayedUsers]="5"
+      ></app-team-presence>
+
       <div>
         <button
           type="button"
@@ -93,48 +117,6 @@
       </div>
     </div>
 
-    <!-- Display solo devices presence -->
-    <div
-      *ngIf="data.sync.status && data.sync.presence?.devices > 1"
-      ngbTooltip="{{ data.sync.presence.devices - 1 }} other {{
-        data.sync.presence.devices - 1 > 1 ? 'devices' : 'device'
-      }} connected"
-      class="badge badge-custom align-middle"
-    >
-      <app-svg icon="computer"></app-svg>
-      <span class="number-indicator">
-        {{ data.sync.presence.devices - 1 }}
-      </span>
-    </div>
-
-    <!-- Display team users presence -->
-    <div
-      *ngIf="data.sync.status && data.sync.presence?.users?.length > 1"
-      [ngbTooltip]="presenceTooltip"
-      class="badge badge-custom align-middle"
-    >
-      <app-svg icon="people"></app-svg>
-      <span class="number-indicator">
-        {{ data.sync.presence.users.length - 1 }}
-      </span>
-    </div>
-
-    <ng-template #presenceTooltip>
-      {{ data.sync.presence.users.length - 1 }} other
-      {{ data.sync.presence.users.length - 1 > 1 ? 'users' : 'user' }}
-      connected<br />
-
-      @for (
-        presenceUser of data.sync.presence.users;
-        track presenceUser.email
-      ) {
-        @if (presenceUser.email !== data.user.email) {
-          {{ presenceUser.email }}<br />
-        }
-      }
-      <span></span>
-    </ng-template>
-
     <div ngbDropdown placement="bottom-right" #dropdownElement>
       <button
         class="btn btn-link btn-icon dropdown-toggle dropdown-toggle-icon me-1"
@@ -146,7 +128,7 @@
         </span>
       </button>
       <div class="dropdown-menu" ngbDropdownMenu>
-        <ng-container *ngIf="!!data.user">
+        @if (data.user) {
           <div>
             <h6 class="dropdown-header d-flex flex-column">
               <div class="d-flex align-items-center">
@@ -165,8 +147,7 @@
             Refresh account information
           </button>
           <button class="btn dropdown-item" (click)="logout()">Log out</button>
-        </ng-container>
-        <ng-container *ngIf="!data.user">
+        } @else {
           <button class="btn dropdown-item" (click)="login()">
             Log in
             <app-svg icon="open_in_new" class="ps-2"></app-svg>
@@ -175,7 +156,7 @@
             Sign up
             <app-svg icon="open_in_new" class="ps-2"></app-svg>
           </button>
-        </ng-container>
+        }
 
         @if (isDev) {
           <!-- Debug menu -->

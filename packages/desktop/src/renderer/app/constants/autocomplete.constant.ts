@@ -18,6 +18,13 @@ export const helpersAutocompletions = [
   { caption: 'ip', value: '{{ip}}', meta: '' },
   { caption: 'method', value: '{{method}}', meta: '' },
   { caption: 'baseUrl', value: '{{baseUrl}}', meta: '' },
+  { caption: 'data', value: "{{data 'nameOrId' 'path'}}", meta: '' },
+  { caption: 'dataRaw', value: "{{dataRaw 'nameOrId' 'path'}}", meta: '' },
+  {
+    caption: 'setData',
+    value: "{{setData 'nameOrId' 'path' 'newValue' 'operator'}}",
+    meta: ''
+  },
   { caption: 'faker', value: "{{faker 'namespace.method'}}", meta: '' },
   { caption: 'repeat', value: '{{#repeat min max}}\n{{/repeat}}', meta: '' },
   {
@@ -27,6 +34,8 @@ export const helpersAutocompletions = [
     meta: ''
   },
   { caption: 'array', value: "{{array 'item1' 'item2' 'item3'}}", meta: '' },
+  { caption: 'sort', value: "{{sort (array ...) 'asc'}}", meta: '' },
+  { caption: 'sortBy', value: "{{sort (array ...) 'key' 'asc'}}", meta: '' },
   { caption: 'oneOf', value: '{{oneOf arr}}', meta: '' },
   { caption: 'someOf', value: '{{someOf arr}}', meta: '' },
   { caption: 'join', value: '{{join arr}}', meta: '' },
@@ -71,6 +80,8 @@ export const helpersAutocompletions = [
   { caption: 'stringify', value: '{{stringify value}}', meta: '' },
   { caption: 'jsonParse', value: "{{jsonParse 'JSON string'}}", meta: '' },
   { caption: 'concat', value: '{{concat value value}}', meta: '' },
+  { caption: 'jwtPayload', value: "{{jwtPayload token 'key'}}", meta: '' },
+  { caption: 'jwtHeader', value: "{{jwtHeader token 'key'}}", meta: '' },
   {
     caption: 'indexOf',
     value: '{{indexOf value search startIndex}}',
@@ -97,6 +108,11 @@ export const helpersAutocompletions = [
   {
     caption: 'dateFormat',
     value: "{{dateFormat 'date' 'format'}}",
+    meta: ''
+  },
+  {
+    caption: 'isValidDate',
+    value: "{{isValidDate 'date'}}",
     meta: ''
   },
   { caption: 'int', value: '{{int min max}}', meta: '' },

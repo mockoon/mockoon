@@ -401,17 +401,18 @@
                   class="nav-link d-flex align-items-center"
                   [ngClass]="{ active: data.activeTab === 'RULES' }"
                   (click)="setActiveTab('RULES')"
-                  ><span
+                >
+                  <app-svg
                     *ngIf="
                       rulesDisablingResponseModes.includes(
                         data.activeRoute?.responseMode
                       ) || data.activeRoute.streamingMode === 'BROADCAST'
                     "
-                    class="text-warning"
                     [ngbTooltip]="texts.DISABLED_RULES_WARNING"
                     id="disabled-rules-warning-icon"
-                    ><app-svg icon="warning" class="pe-1"></app-svg>
-                  </span>
+                    icon="warning"
+                    class="text-warning pe-2"
+                  ></app-svg>
                   Rules
                   <span
                     *ngIf="data.activeRouteResponse?.rules.length"
@@ -566,6 +567,7 @@
                     unknownValueMessage=" - Unknown"
                     [isNumber]="true"
                     [items]="statusCodes"
+                    [hasCategory]="true"
                     [validation]="statusCodeValidation"
                     dropdownId="status-code"
                   >
