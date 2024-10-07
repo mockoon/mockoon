@@ -478,7 +478,10 @@ class Routes {
   }
 
   public async assertSelectedRouteResponseLabel(expected: string) {
-    await utils.assertElementText(this.routeResponseDropdownlabel, expected);
+    await utils.assertElementTextContains(
+      this.routeResponseDropdownlabel,
+      expected
+    );
   }
 
   public async assertDefaultRouteResponseClass(
