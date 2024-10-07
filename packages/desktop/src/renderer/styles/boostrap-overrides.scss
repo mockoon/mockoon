@@ -105,6 +105,12 @@ label {
   }
 }
 
+// remove bootstrap fix for badges in buttons (it's not working when using flex)
+.btn .badge {
+  position: initial;
+  top: 0;
+}
+
 .btn.btn-icon {
   text-decoration: none;
 
