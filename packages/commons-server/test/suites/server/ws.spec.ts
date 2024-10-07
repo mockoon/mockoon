@@ -31,7 +31,12 @@ const EMPTY_SERVER_CTX = {
   envVarPrefix: ''
 } as ServerContext;
 
-const EMPTY_WS_REQUEST = fromWsRequest({} as IncomingMessage);
+const EMPTY_WS_REQUEST = fromWsRequest(
+  {} as IncomingMessage,
+  {
+    endpoint: 'api/path1/test'
+  } as Route
+);
 
 describe('Minimum Streaming Interval', () => {
   it('minimum interval should not lower than 10ms', () => {
