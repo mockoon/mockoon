@@ -4,9 +4,9 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { Request, Response } from 'express';
-import { get as getPath } from 'object-path';
+import { get as getPath, set as setPath } from 'object-path';
 import { applyFilter, parseFilters } from '../filters';
-import { dedupSlashes, fullTextSearch } from '../utils';
+import { convertPathToArray, dedupSlashes, fullTextSearch } from '../utils';
 
 export type CrudRouteIds =
   | 'get'
@@ -123,7 +123,7 @@ export const databucketActions = (
     response.set('Content-Type', 'application/json');
   }
 
-  let requestBody =
+  const requestBody =
     request.body !== undefined ? request.body : request.stringBody || {};
 
   let responseBody: any = {};
@@ -223,30 +223,24 @@ export const databucketActions = (
         if (
           typeof requestBody === 'object' &&
           requestBody != null &&
-          getPath(requestBody, routeCrudKey) === undefined
+          getPath(requestBody, convertPathToArray(routeCrudKey)) === undefined
         ) {
-          const props = routeCrudKey.split('.');
+          // get highest id in the array
+          const highestId = databucket.value.reduce((maxId, item) => {
+            const itemId = getPath(item, convertPathToArray(routeCrudKey));
 
-          if (props.length === 1) {
-            requestBody = {
-              [routeCrudKey]: generateUUID(),
-              ...requestBody
-            };
-          } else {
-            let tempObject = requestBody;
-
-            for (let propsIndex = 0; propsIndex < props.length; propsIndex++) {
-              if (propsIndex === props.length - 1) {
-                tempObject[props[propsIndex]] = generateUUID();
-              } else {
-                if (tempObject[props[propsIndex]] === undefined) {
-                  tempObject[props[propsIndex]] = {};
-                }
-              }
-
-              tempObject = tempObject[props[propsIndex]];
+            if (typeof itemId === 'number' && itemId > maxId) {
+              return itemId;
             }
-          }
+
+            return maxId;
+          }, null);
+
+          setPath(
+            requestBody,
+            convertPathToArray(routeCrudKey),
+            highestId !== null ? highestId + 1 : generateUUID()
+          );
         }
 
         databucket.value.push(requestBody);
