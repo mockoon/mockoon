@@ -2408,6 +2408,80 @@ describe('Response rules interpreter', () => {
     });
   });
 
+  describe('Custom templating rules', () => {
+    it('should return response if templating equals value (global var)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        url: '/test'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'templating',
+                modifier: '{{getGlobalVar "myVar"}}',
+                value: 'globalvar',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'templating1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          myVar: 'globalvar'
+        },
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'templating1');
+    });
+
+    it('should return response if templating equals value (jwt sub)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0IiwibmFtZSI6Ik1vY2sgT29uIiwiaWF0IjoxNzI0NTcwMzkxfQ.VB0POLK_cNMijO0tDinXN3Z9C2Zy3l0MPtBqs-af_48';
+        },
+        url: '/test'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'templating',
+                modifier: '{{jwtPayload (header "Authorization") "sub"}}',
+                value: '1234',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'templating2'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'templating2');
+    });
+  });
+
   describe('Body rules', () => {
     const xmlBody =
       '<?xml version="1.0" encoding="utf-8"?><user userId="1"><name>John</name></user>';
