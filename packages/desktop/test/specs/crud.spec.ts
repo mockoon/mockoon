@@ -12,7 +12,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"}]',
+        body: '[{"id":"abcd","name":"john"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -24,12 +24,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - getById',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'GET',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john"}',
+        body: '{"id":"abcd","name":"john"}',
         headers: { 'content-type': 'application/json' }
       }
     }
@@ -37,7 +37,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - getById: wrong id',
-      path: '/users/123',
+      path: '/users/abcde',
       method: 'GET',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -66,7 +66,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
+        body: /\[\{"id":"abcd","name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
         headers: {
           'content-type': 'application/json',
           'x-total-count': '2',
@@ -95,7 +95,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
+        body: /\[\{"id":"abcd","name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
         headers: {
           'content-type': 'application/json',
           'x-total-count': '2',
@@ -113,7 +113,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 201,
-        body: /\{"id":"[a-z0-9-]{36}","test":"hello"\}/,
+        body: /\{"test":"hello","id":"[a-z0-9-]{36}"\}/,
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -124,7 +124,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9-]{36}","test":"hello"\}\]/,
+        body: /\[\{"id":"abcd","name":"john"\},\{"test":"hello","id":"[a-z0-9-]{36}"\}\]/,
         headers: {
           'content-type': 'application/json',
           'x-total-count': '2',
@@ -153,7 +153,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},{"id":"idtest","test":"hello"}]',
+        body: '[{"id":"abcd","name":"john"},{"id":"idtest","test":"hello"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '2',
@@ -182,7 +182,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},"teststring"]',
+        body: '[{"id":"abcd","name":"john"},"teststring"]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '2',
@@ -211,7 +211,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},"test,string"]',
+        body: '[{"id":"abcd","name":"john"},"test,string"]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '2',
@@ -223,7 +223,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update: incorrect id',
-      path: '/users/123',
+      path: '/users/abcde',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -236,12 +236,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update: no body',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '{"id":1}',
+        body: '{"id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -252,7 +252,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1}]',
+        body: '[{"id":"abcd"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -264,13 +264,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update: empty object',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: {},
       testedResponse: {
         status: 200,
-        body: '{"id":1}',
+        body: '{"id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -281,7 +281,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1}]',
+        body: '[{"id":"abcd"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -293,13 +293,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update: object, new prop, no id',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: { test: 'hello' },
       testedResponse: {
         status: 200,
-        body: '{"id":1,"test":"hello"}',
+        body: '{"id":"abcd","test":"hello"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -310,7 +310,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"test":"hello"}]',
+        body: '[{"id":"abcd","test":"hello"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -322,13 +322,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update: object, new prop, id',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
-      body: { id: '123', test: 'hello' },
+      body: { id: 'efgh', test: 'hello' },
       testedResponse: {
         status: 200,
-        body: '{"id":"123","test":"hello"}',
+        body: '{"id":"efgh","test":"hello"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -339,7 +339,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":"123","test":"hello"}]',
+        body: '[{"id":"efgh","test":"hello"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -351,13 +351,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update: object, string',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: 'teststring',
       testedResponse: {
         status: 200,
-        body: '{"id":1}',
+        body: '{"id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -368,7 +368,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1}]',
+        body: '[{"id":"abcd"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -380,13 +380,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update: object, broken json',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: 'test,string',
       testedResponse: {
         status: 200,
-        body: '{"id":1}',
+        body: '{"id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -397,7 +397,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1}]',
+        body: '[{"id":"abcd"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -412,10 +412,10 @@ const jsonArrayTestGroups: HttpCall[][] = [
       path: '/users',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
-      body: [{ id: '123', test: 'hello' }],
+      body: [{ id: 'efgh', test: 'hello' }],
       testedResponse: {
         status: 200,
-        body: '[{"id":"123","test":"hello"}]',
+        body: '[{"id":"efgh","test":"hello"}]',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -426,7 +426,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":"123","test":"hello"}]',
+        body: '[{"id":"efgh","test":"hello"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -438,7 +438,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update (merge): incorrect id',
-      path: '/users/123',
+      path: '/users/abcde',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -451,13 +451,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update (merge): empty object body',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: {},
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john"}',
+        body: '{"id":"abcd","name":"john"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -468,7 +468,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"}]',
+        body: '[{"id":"abcd","name":"john"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -480,13 +480,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update (merge): object body',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: { test: 'hello' },
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john","test":"hello"}',
+        body: '{"id":"abcd","name":"john","test":"hello"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -497,7 +497,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john","test":"hello"}]',
+        body: '[{"id":"abcd","name":"john","test":"hello"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -509,13 +509,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update (merge): string',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: 'teststring',
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john"}',
+        body: '{"id":"abcd","name":"john"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -526,7 +526,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"}]',
+        body: '[{"id":"abcd","name":"john"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -538,13 +538,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update (merge): broken json',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: 'test,string',
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john"}',
+        body: '{"id":"abcd","name":"john"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -555,7 +555,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"}]',
+        body: '[{"id":"abcd","name":"john"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
@@ -566,14 +566,166 @@ const jsonArrayTestGroups: HttpCall[][] = [
   ],
   [
     {
+      description: 'Users bucket - numeric ids - create: object without id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { test: 'hello' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"test":"hello","id":6\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - get: after create',
+      path: '/users-numeric',
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200,
+        body: /\[\{"id":5,"name":"peter"\},\{"test":"hello","id":6\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - create: object with string id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { id: 'newid', test: 'hello2' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"id":\"newid\","test":"hello2"\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - get: after create',
+      path: '/users-numeric',
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200,
+        body: /\[\{"id":5,"name":"peter"\},\{"test":"hello","id":6\},\{"id":"newid","test":"hello2"\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '3',
+          'x-filtered-count': '3'
+        }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - create: object without id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { test: 'hello3' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"test":"hello3","id":7\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - delete item 1',
+      path: '/users-numeric/5',
+      method: 'DELETE',
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - delete item 2',
+      path: '/users-numeric/6',
+      method: 'DELETE',
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - delete item 3',
+      path: '/users-numeric/7',
+      method: 'DELETE',
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - delete item 4',
+      path: '/users-numeric/newid',
+      method: 'DELETE',
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - create: object without id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { test: 'hello1' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"test":"hello1","id":"[a-z0-9-]{36}"\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description:
+        'Users bucket - numeric ids - create: object with numeric id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { id: 3, test: 'hello2' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"id":3,"test":"hello2"\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - create: object without id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { test: 'hello3' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"test":"hello3","id":4\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - get: after create',
+      path: '/users-numeric',
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200,
+        body: /\[\{"test":"hello1","id":"[a-z0-9-]{36}"\},\{"id":3,"test":"hello2"\},\{"test":"hello3","id":4\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '3',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
       description: 'Users bucket - full update (merge)',
       path: '/users',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
-      body: [{ id: 2, test: 'hello' }],
+      body: [{ id: 'efgh', test: 'hello' }],
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},{"id":2,"test":"hello"}]',
+        body: '[{"id":"abcd","name":"john"},{"id":"efgh","test":"hello"}]',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -584,7 +736,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},{"id":2,"test":"hello"}]',
+        body: '[{"id":"abcd","name":"john"},{"id":"efgh","test":"hello"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '2',
@@ -596,7 +748,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - delete: incorrect id',
-      path: '/users/123',
+      path: '/users/abcde',
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -609,7 +761,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - delete',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -1789,29 +1941,34 @@ describe('CRUD endpoints', () => {
 
   it('should add more endpoints', async () => {
     await routes.addCRUDRoute();
-    await routes.setPath('pagination');
+    await routes.setPath('users-numeric');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(2);
 
     await routes.addCRUDRoute();
-    await routes.setPath('misc');
+    await routes.setPath('pagination');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(3);
 
     await routes.addCRUDRoute();
-    await routes.setPath('primitivearray');
+    await routes.setPath('misc');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(4);
 
     await routes.addCRUDRoute();
-    await routes.setPath('search');
+    await routes.setPath('primitivearray');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(5);
 
     await routes.addCRUDRoute();
-    await routes.setPath('nestedkey');
+    await routes.setPath('search');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(6);
+
+    await routes.addCRUDRoute();
+    await routes.setPath('nestedkey');
+    await routes.openDataBucketMenu();
+    await routes.selectDataBucket(7);
     await routes.setCrudKey('sub.myid');
   });
 

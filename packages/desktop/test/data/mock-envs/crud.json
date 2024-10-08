@@ -123,7 +123,14 @@
       "id": "abc1",
       "name": "users",
       "documentation": "",
-      "value": "[\n  {\n    \"id\":1,\n    \"name\":\"john\"\n  }\n]"
+      "value": "[\n  {\n    \"id\":\"abcd\",\n    \"name\":\"john\"\n  }\n]"
+    },
+    {
+      "uuid": "d65767a7-16e7-4786-bc13-10c0de899349",
+      "id": "abc7",
+      "name": "users-numeric",
+      "documentation": "",
+      "value": "[\n  {\n    \"id\":5,\n    \"name\":\"peter\"\n  }\n]"
     },
     {
       "uuid": "3bdc5c1f-73e0-4466-b8ed-3dffff7b4fd6",
