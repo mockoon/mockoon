@@ -299,7 +299,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       body: { test: 'hello' },
       testedResponse: {
         status: 200,
-        body: '{"id":"abcd","test":"hello"}',
+        body: '{"test":"hello","id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -310,7 +310,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":"abcd","test":"hello"}]',
+        body: '[{"test":"hello","id":"abcd"}]',
         headers: {
           'content-type': 'application/json',
           'x-total-count': '1',
