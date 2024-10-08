@@ -274,12 +274,29 @@ export const databucketActions = (
             typeof databucket.value[indexToModify] === 'object' &&
             databucket.value[indexToModify] != null
           ) {
+            const currentItemId = getPath(
+              databucket.value[indexToModify],
+              convertPathToArray(routeCrudKey)
+            );
+
             databucket.value[indexToModify] = {
-              id: databucket.value[indexToModify].id,
               ...(typeof requestBody === 'object' && requestBody != null
                 ? requestBody
                 : {})
             };
+
+            // restore the id if it was not provided in the request body
+            if (
+              getPath(requestBody, convertPathToArray(routeCrudKey)) ===
+              undefined
+            ) {
+              setPath(
+                databucket.value[indexToModify],
+                convertPathToArray(routeCrudKey),
+                currentItemId
+              );
+            }
+
             responseBody = databucket.value[indexToModify];
           } else {
             databucket.value[indexToModify] = requestBody;
