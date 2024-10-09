@@ -27,7 +27,10 @@ import { getValueFromPath, parseRequestMessage } from './utils';
 export class ResponseRulesInterpreter {
   private targets: {
     [key in
-      | Exclude<ResponseRuleTargets, 'header' | 'request_number' | 'cookie'>
+      | Exclude<
+          ResponseRuleTargets,
+          'header' | 'request_number' | 'cookie' | 'templating'
+        >
       | 'bodyRaw']: any;
   };
 
@@ -148,6 +151,8 @@ export class ResponseRulesInterpreter {
       value = this.targets.method;
     } else if (rule.target === 'header') {
       value = this.request.header(parsedRuleModifier);
+    } else if (rule.target === 'templating') {
+      value = parsedRuleModifier;
     } else {
       if (parsedRuleModifier) {
         value = this.targets.bodyRaw;

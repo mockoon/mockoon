@@ -1,3 +1,4 @@
+import { Route } from '@mockoon/commons';
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import { Request } from 'express';
 import { ParamsDictionary, Query } from 'express-serve-static-core';
@@ -41,7 +42,7 @@ describe('Requests', () => {
 
     it('should return cookies correctly', () => {
       const req = {
-        cookies: { 'session-id': 'abc' }
+        cookies: { 'session-id': 'abc' } as any
       } as Request;
       const result = fromExpressRequest(req);
       deepStrictEqual(result.cookies, { 'session-id': 'abc' });
@@ -107,9 +108,25 @@ describe('Requests', () => {
       const req = {
         url: 'api/path1/test?q=1&p=abc'
       } as IncomingMessage;
-      const result = fromWsRequest(req);
+
+      const result = fromWsRequest(req, {
+        endpoint: 'api/path1/test'
+      } as Route);
       deepStrictEqual(result.query, { q: '1', p: 'abc' });
       deepStrictEqual(result.params, {});
+      strictEqual(result.originalRequest, req);
+    });
+
+    it('should parse url path variables correctly from url', () => {
+      const req = {
+        url: '/api/path1/test?q=1&p=abc'
+      } as IncomingMessage;
+
+      const result = fromWsRequest(req, {
+        endpoint: 'api/:var1/:var2'
+      } as Route);
+      deepStrictEqual(result.query, { q: '1', p: 'abc' });
+      deepStrictEqual(result.params, { var1: 'path1', var2: 'test' });
       strictEqual(result.originalRequest, req);
     });
 
@@ -118,7 +135,9 @@ describe('Requests', () => {
         url: 'api/path1/test?q=1&p=abc',
         body: { a: 1, text: 'hello' }
       } as IncomingMessage;
-      const result = fromWsRequest(req);
+      const result = fromWsRequest(req, {
+        endpoint: 'api/path1/test'
+      } as Route);
       deepStrictEqual(result.body, { a: 1, text: 'hello' });
       strictEqual(result.stringBody, JSON.stringify({ a: 1, text: 'hello' }));
     });
@@ -133,6 +152,9 @@ describe('Requests', () => {
       } as IncomingMessage;
       const result = fromWsRequest(
         req,
+        {
+          endpoint: 'api/path1/test'
+        } as Route,
         JSON.stringify({ b: 2, hello: 'world' })
       );
       deepStrictEqual(result.body, { b: 2, hello: 'world' });
@@ -147,7 +169,9 @@ describe('Requests', () => {
           accept: 'text/html'
         } as NodeJS.Dict<string | string[]>
       } as IncomingMessage;
-      const result = fromWsRequest(req);
+      const result = fromWsRequest(req, {
+        endpoint: 'api/path1/test'
+      } as Route);
       strictEqual(result.header('content-type'), 'application/json');
       strictEqual(result.get('accept'), 'text/html');
       strictEqual(result.get('non-existence-header'), undefined);
@@ -164,7 +188,9 @@ describe('Requests', () => {
           'x-forwarded-for': '192.168.1.1'
         } as NodeJS.Dict<string | string[]>
       } as IncomingMessage;
-      const result = fromWsRequest(req);
+      const result = fromWsRequest(req, {
+        endpoint: 'api/path1/test'
+      } as Route);
       strictEqual(result.hostname, 'localhost');
       strictEqual(result.ip, '192.168.1.1');
     });
@@ -175,7 +201,9 @@ describe('Requests', () => {
           cookie: 'a=1;b=hello%20this%20is%20%2521%3D4'
         }
       } as IncomingMessage;
-      const result = fromWsRequest(req);
+      const result = fromWsRequest(req, {
+        endpoint: 'api/path1/test'
+      } as Route);
       deepStrictEqual(result.cookies, {
         a: '1',
         b: 'hello this is %21=4'
@@ -191,7 +219,9 @@ describe('Requests', () => {
           'content-type': 'application/json'
         } as NodeJS.Dict<string | string[]>
       } as IncomingMessage;
-      const req = fromWsRequest(originalReq);
+      const req = fromWsRequest(originalReq, {
+        endpoint: 'api/path1/test'
+      } as Route);
       const result = fromServerRequest(
         req,
         JSON.stringify({ b: 2, hello: 'world' })
@@ -201,12 +231,17 @@ describe('Requests', () => {
     });
 
     it('should return empty when no message or no body is specified', () => {
-      const req = fromWsRequest({
-        url: 'api/path1/test?q=1&p=abc',
-        headers: {
-          'content-type': 'application/json'
-        } as NodeJS.Dict<string | string[]>
-      } as IncomingMessage);
+      const req = fromWsRequest(
+        {
+          url: 'api/path1/test?q=1&p=abc',
+          headers: {
+            'content-type': 'application/json'
+          } as NodeJS.Dict<string | string[]>
+        } as IncomingMessage,
+        {
+          endpoint: 'api/path1/test'
+        } as Route
+      );
       const result = fromServerRequest(req);
 
       strictEqual(result.body, undefined);
@@ -214,13 +249,18 @@ describe('Requests', () => {
     });
 
     it('should update body and stringBody correctly when parsing from existing request', () => {
-      const req = fromWsRequest({
-        url: 'api/path1/test?q=1&p=abc',
-        body: { a: 1, text: 'hello' },
-        headers: {
-          'content-type': 'application/json'
-        } as NodeJS.Dict<string | string[]>
-      } as IncomingMessage);
+      const req = fromWsRequest(
+        {
+          url: 'api/path1/test?q=1&p=abc',
+          body: { a: 1, text: 'hello' },
+          headers: {
+            'content-type': 'application/json'
+          } as NodeJS.Dict<string | string[]>
+        } as IncomingMessage,
+        {
+          endpoint: 'api/path1/test'
+        } as Route
+      );
       const result = fromServerRequest(
         req,
         JSON.stringify({ b: 2, hello: 'world' })
@@ -236,14 +276,19 @@ describe('Requests', () => {
     });
 
     it('should fallback to original body and stringBody is message is not given', () => {
-      const req = fromWsRequest({
-        url: 'api/path1/test?q=1&p=abc',
-        body: { a: 1, text: 'hello' },
-        stringBody: JSON.stringify({ a: 1, text: 'hello' }),
-        headers: {
-          'content-type': 'application/json'
-        } as NodeJS.Dict<string | string[]>
-      } as IncomingMessage);
+      const req = fromWsRequest(
+        {
+          url: 'api/path1/test?q=1&p=abc',
+          body: { a: 1, text: 'hello' },
+          stringBody: JSON.stringify({ a: 1, text: 'hello' }),
+          headers: {
+            'content-type': 'application/json'
+          } as NodeJS.Dict<string | string[]>
+        } as IncomingMessage,
+        {
+          endpoint: 'api/path1/test'
+        } as Route
+      );
       const result = fromServerRequest(req);
 
       deepStrictEqual(result.body, { a: 1, text: 'hello' });

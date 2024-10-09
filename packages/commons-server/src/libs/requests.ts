@@ -1,6 +1,8 @@
 import { Request } from 'express';
 import { IncomingMessage } from 'http';
+import { match } from 'path-to-regexp';
 
+import { CloneObject, Route } from '@mockoon/commons';
 import { parse as parseUrl } from 'url';
 import { parseRequestMessage, parseWebSocketMessage } from './utils';
 
@@ -92,9 +94,21 @@ export const fromExpressRequest = (req: Request): ServerRequest =>
  */
 export const fromWsRequest = (
   req: IncomingMessage,
+  originalRoute: Route,
   message?: string
 ): ServerRequest => {
   const location = parseUrl(req.url || '', true);
+
+  let pathParams = {};
+  const urlPathMatchFn = match(
+    originalRoute.endpoint.startsWith('/')
+      ? originalRoute.endpoint
+      : '/' + originalRoute.endpoint
+  );
+  const result = urlPathMatchFn(location.pathname || '');
+  if (result) {
+    pathParams = result.params || {};
+  }
 
   const structuredMessage = message
     ? parseWebSocketMessage(message || '', req)
@@ -111,8 +125,8 @@ export const fromWsRequest = (
       req.socket?.remoteAddress,
     method: req.method,
     originalRequest: req,
-    params: {},
-    query: JSON.parse(JSON.stringify(location.query)),
+    params: CloneObject(pathParams),
+    query: CloneObject(location.query),
     stringBody: message || toString(req.body) || ''
   } as ServerRequest;
 };

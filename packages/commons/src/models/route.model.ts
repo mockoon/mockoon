@@ -83,7 +83,8 @@ export type ResponseRuleTargets =
   | 'method'
   | 'request_number'
   | 'global_var'
-  | 'data_bucket';
+  | 'data_bucket'
+  | 'templating';
 
 export enum RouteType {
   HTTP = 'http',

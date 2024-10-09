@@ -48,6 +48,7 @@ import {
 import killable from 'killable';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { basename, extname } from 'path';
+import { match } from 'path-to-regexp';
 import { parse as qsParse } from 'qs';
 import rangeParser from 'range-parser';
 import { Readable } from 'stream';
@@ -615,7 +616,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     wsRoutes.forEach((wsRoute) => {
       const webSocketServer = new WebSocket.Server({
         noServer: true,
-        path: `${envPath}/${wsRoute.endpoint}`
+        path: `${envPath}`
       });
 
       this.webSocketServers.push(webSocketServer);
@@ -625,10 +626,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.createWebSocketConnectionHandler(webSocketServer, wsRoute)
       );
 
+      const pathMatcherFn = match(
+        wsRoute.endpoint.startsWith('/')
+          ? wsRoute.endpoint
+          : '/' + wsRoute.endpoint
+      );
+
       this.serverInstance.on('upgrade', (req, socket, head) => {
-        //
         const urlParsed = parseUrl(req.url || '', true);
-        if (urlParsed.pathname === `${envPath}/${wsRoute.endpoint}`) {
+        if (pathMatcherFn(urlParsed.pathname || '')) {
           webSocketServer.handleUpgrade(req, socket, head, (client) => {
             webSocketServer.emit('connection', client, req);
           });
@@ -700,7 +706,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         );
       });
 
-      const serverRequest = fromWsRequest(request);
+      const serverRequest = fromWsRequest(request, route);
 
       // This is not waiting until a messge from client. But will push messages as a stream.
       if (route.streamingMode === StreamingMode.BROADCAST) {
@@ -822,7 +828,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     let content: any = enabledRouteResponse.body;
     let finalRequest = connectedRequest;
     if (!finalRequest) {
-      finalRequest = request ? fromWsRequest(request, data) : undefined;
+      finalRequest = request ? fromWsRequest(request, route, data) : undefined;
     }
 
     if (
@@ -971,7 +977,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const intervalRef = setInterval(() => {
       const enabledRouteResponse = new ResponseRulesInterpreter(
         route.responses,
-        fromWsRequest(request),
+        fromWsRequest(request, route),
         route.responseMode,
         this.environment,
         this.processedDatabuckets,
@@ -2180,7 +2186,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       new RegExp('data(?:Raw)? +[\'|"]{1}([^(\'|")]*)', 'g')
     );
 
-    return [...(matches || [])].map((match) => match[1]);
+    return [...(matches || [])].map((mtc) => mtc[1]);
   }
 
   /**

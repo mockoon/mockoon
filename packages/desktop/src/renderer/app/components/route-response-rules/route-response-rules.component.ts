@@ -62,11 +62,10 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { value: 'request_number', label: 'Number (starting at 1)' },
     { label: 'Stateful sources', category: true },
     { value: 'global_var', label: 'Global variable' },
-    { value: 'data_bucket', label: 'Data bucket' }
+    { value: 'data_bucket', label: 'Data bucket' },
+    { label: 'Misc', category: true },
+    { value: 'templating', label: 'Custom templating' }
   ];
-  public webSocketResponseRuleTargets = this.responseRuleTargets.filter(
-    (rt) => !['cookie', 'params'].includes(rt.value)
-  );
   public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
     { value: 'equals', label: 'equals' },
     { value: 'regex', label: 'regex' },
@@ -85,7 +84,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     data_bucket: 'JSONPath or object path (start with bucket name or ID)',
     request_number: '',
     path: '',
-    method: ''
+    method: '',
+    templating: 'Any templating expression (e.g. {{ helper }})'
   };
   public valuePlaceholders: { [key in ResponseRuleOperators]: string } = {
     equals: 'Value',
@@ -100,7 +100,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     cookie: ['empty_array'],
     params: ['empty_array', 'array_includes'],
     path: ['null', 'empty_array', 'array_includes'],
-    method: ['null', 'empty_array', 'array_includes']
+    method: ['null', 'empty_array', 'array_includes'],
+    templating: ['empty_array', 'array_includes']
   };
   public rulesOperators: ToggleItems = [
     {

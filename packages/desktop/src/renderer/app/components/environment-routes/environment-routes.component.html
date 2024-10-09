@@ -182,33 +182,44 @@
                   *ngIf="data.activeRouteResponse"
                   class="dropdown-toggle-label"
                 >
-                  <span *ngIf="data.activeRoute.type === 'ws'" class="pe-2"
-                    >Response {{ data.activeRouteResponseIndex + 1 }}
-                  </span>
-                  <span *ngIf="data.activeRoute?.type === 'http'" class="pe-2"
-                    >Response {{ data.activeRouteResponseIndex + 1 }} ({{
-                      data.activeRouteResponse?.statusCode
-                    }})
-                  </span>
-                  <span
-                    *ngIf="
-                      data.activeRoute?.type === 'crud' &&
-                      !data.activeRouteResponse?.default
-                    "
-                    class="pe-2"
-                    >Response {{ data.activeRouteResponseIndex }} ({{
-                      data.activeRouteResponse?.statusCode
-                    }})
-                  </span>
-                  <span
-                    *ngIf="
-                      data.activeRoute?.type === 'crud' &&
-                      data.activeRouteResponse?.default
-                    "
-                    class="pe-2"
-                    >CRUD operations
-                  </span>
-                  {{ data.activeRouteResponse?.label }}
+                  <div class="d-flex">
+                    <div class="text-truncate me-2">
+                      <span *ngIf="data.activeRoute.type === 'ws'" class="pe-2"
+                        >Response {{ data.activeRouteResponseIndex + 1 }}
+                      </span>
+                      <span
+                        *ngIf="data.activeRoute?.type === 'http'"
+                        class="pe-2"
+                        >Response {{ data.activeRouteResponseIndex + 1 }} ({{
+                          data.activeRouteResponse?.statusCode
+                        }})
+                      </span>
+                      <span
+                        *ngIf="
+                          data.activeRoute?.type === 'crud' &&
+                          !data.activeRouteResponse?.default
+                        "
+                        class="pe-2"
+                        >Response {{ data.activeRouteResponseIndex }} ({{
+                          data.activeRouteResponse?.statusCode
+                        }})
+                      </span>
+                      <span
+                        *ngIf="
+                          data.activeRoute?.type === 'crud' &&
+                          data.activeRouteResponse?.default
+                        "
+                        class="pe-2"
+                        >CRUD operations
+                      </span>
+                      {{ data.activeRouteResponse?.label }}
+                    </div>
+                    <div
+                      class="d-flex align-items-center badge badge-hollow fw-bold ms-auto"
+                    >
+                      {{ data.activeRoute?.responses.length }}
+                    </div>
+                  </div>
                 </div>
               </button>
 
@@ -406,7 +417,7 @@
                     *ngIf="
                       rulesDisablingResponseModes.includes(
                         data.activeRoute?.responseMode
-                      ) || !!data.activeRoute.streamingMode
+                      ) || data.activeRoute.streamingMode === 'BROADCAST'
                     "
                     [ngbTooltip]="texts.DISABLED_RULES_WARNING"
                     id="disabled-rules-warning-icon"

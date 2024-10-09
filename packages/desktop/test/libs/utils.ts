@@ -141,6 +141,13 @@ class Utils {
     );
   }
 
+  public async assertElementTextContains(
+    element: ChainablePromiseElement<WebdriverIO.Element>,
+    text: string
+  ): Promise<void> {
+    expect(await element.getText()).toContain(text);
+  }
+
   public async assertElementTextContain(
     element: ChainablePromiseElement<WebdriverIO.Element>,
     text: string
