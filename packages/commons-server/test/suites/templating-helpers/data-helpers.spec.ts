@@ -306,6 +306,28 @@ describe('Data helpers', () => {
       });
       strictEqual(parseResult, '');
     });
+    it('should return nothing if jsonpath filter expression is invalid', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{data "jsonPathDatabucket" \'$.phoneNumbers[0][((this.constructor.constructor("return this.process")()).mainModule.require("child_process").exec("calc").toString())]\'}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'jsonpathDatabucket',
+            id: 'de69',
+            value: {
+              data: 'value'
+            },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
   });
 
   describe('Helper: DataRaw', () => {
@@ -676,6 +698,28 @@ describe('Data helpers', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
         content: "{{dataRaw 'jsonpathDatabucket' '$.data1'}}",
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'jsonpathDatabucket',
+            id: 'de69',
+            value: {
+              data: 'value'
+            },
+            parsed: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+    it('should return nothing if jsonpath filter expression is invalid', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{dataRaw "jsonPathDatabucket" \'$.phoneNumbers[0][((this.constructor.constructor("return this.process")()).mainModule.require("child_process").exec("calc").toString())]\'}}',
         environment: {} as any,
         processedDatabuckets: [
           {

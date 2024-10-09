@@ -27,6 +27,33 @@ import { xml2js } from 'xml-js';
 import { brotliDecompressSync, inflateSync, unzipSync } from 'zlib';
 import { ServerRequest } from './requests';
 
+/* filterRE is used to match each individual filter expression */
+const FILTER_RE = new RegExp(
+  `^` +
+    // Group 1: Allow l.h.s names like - @price or @.group or @['Account Name'] or length-1 or @.match(/regex/)
+    // Keys with spaces are allowed
+    `(@{0,1}\\.{0,1}[_a-zA-Z0-9\\-\\[\\]\\.]*|@{0,1}\\['[_a-zA-Z0-9\\s]*'\\]|@[a-zA-Z0-9_\\s'\\-\\[\\]]*.match\\(.*\\))` +
+    `\\s*` + // ignore any whitespaces before the operator
+    // Group 2 (optional): Supported operators ===, !==, <, >, <=, >=
+    `(===|!==|<|<=|>|>=)?` +
+    `\\s*` + // ignore any whitespaces after the operator
+    // Group 3 (optional): Supported r.h.s - single/double quoted strings, numbers, boolean, undefined,
+    // reference to other properties like @. or $.
+    // Keys with spaces are allowed
+    `("[^"]*"|'[^']*'|[0-9.]+|@{0,1}\\$\{0,1}[\\.a-zA-Z0-9_\\[\\]\\s']*|true|false|undefined)?` +
+    `$`
+);
+
+/*
+ * groupRE is used to capture each individual filter in case && or || are being used
+ * Returns individual filter expression groups (value without ())
+ */
+const GROUP_RE = new RegExp(
+  `([^&\\|]+)` + // Match everything which is not & or |
+    `(?= && | \\|\\| |$)`, // Non capturing group matching ' && ' or ' || ' or EOL
+  'g'
+);
+
 /**
  * Transform http headers objects to Mockoon's Header key value object
  *
@@ -419,6 +446,37 @@ export const fullTextSearch = (object: unknown, query: string): boolean => {
 };
 
 /**
+ * Validates a given JSONPath string to check if the filter expressions are safe for evaluation.
+ * If no filter expression is found in the path, it returns the path as valid.
+ * If filter expressions are found, each one is checked against a regular expression to ensure it is safe.
+ * The function returns a boolean indicating whether the path is valid.
+ *
+ * @param {string} path - The JSONPath string to be validated.
+ * @returns {boolean} - whether JSONPath string is safe or not
+ */
+
+export const isSafeJSONPath = (path: string) => {
+  const hasFilter = (path.match(/\((.*)\)/) || [])[1];
+  if (!hasFilter) {
+    return true;
+  }
+  const filters = hasFilter.match(GROUP_RE);
+  if (!filters) {
+    return true;
+  }
+  let isValid = true;
+  // Recursively test each filter expression
+  for (let filter of filters) {
+    filter = filter.trim();
+    if (!FILTER_RE.test(filter)) {
+      isValid = false;
+    }
+  }
+
+  return isValid;
+};
+
+/**
  * Look for a value in an object or array using a path (dot notation or JSONPath).
  * If no path is provided, return the full data.
  * If the value is not found, return the default value.
@@ -442,7 +500,9 @@ export const getValueFromPath = (
 
     // Added wrap = false (Check https://github.com/mockoon/mockoon/issues/1297)
     if (path.startsWith('$')) {
-      foundValue = JSONPath({ json: data, path: path, wrap: false });
+      if (isSafeJSONPath(path)) {
+        foundValue = JSONPath({ json: data, path: path, wrap: false });
+      }
     } else {
       foundValue = objectGet(data, convertPathToArray(path));
     }
