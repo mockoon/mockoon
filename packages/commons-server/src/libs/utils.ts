@@ -29,19 +29,19 @@ import { ServerRequest } from './requests';
 
 /* filterRE is used to match each individual filter expression */
 const FILTER_RE = new RegExp(
-  `^` +
+  '^' +
     // Group 1: Allow l.h.s names like - @price or @.group or @['Account Name'] or length-1 or @.match(/regex/)
     // Keys with spaces are allowed
-    `(@{0,1}\\.{0,1}[_a-zA-Z0-9\\-\\[\\]\\.]*|@{0,1}\\['[_a-zA-Z0-9\\s]*'\\]|@[a-zA-Z0-9_\\s'\\-\\[\\]]*.match\\(.*\\))` +
-    `\\s*` + // ignore any whitespaces before the operator
+    "(@{0,1}\\.{0,1}[_a-zA-Z0-9\\-\\[\\]\\.]*|@{0,1}\\['[_a-zA-Z0-9\\s]*'\\]|@[a-zA-Z0-9_\\s'\\-\\[\\]]*.match\\(.*\\))" +
+    '\\s*' + // ignore any whitespaces before the operator
     // Group 2 (optional): Supported operators ===, !==, <, >, <=, >=
-    `(===|!==|<|<=|>|>=)?` +
-    `\\s*` + // ignore any whitespaces after the operator
+    '(===|!==|<|<=|>|>=)?' +
+    '\\s*' + // ignore any whitespaces after the operator
     // Group 3 (optional): Supported r.h.s - single/double quoted strings, numbers, boolean, undefined,
     // reference to other properties like @. or $.
     // Keys with spaces are allowed
-    `("[^"]*"|'[^']*'|[0-9.]+|@{0,1}\\$\{0,1}[\\.a-zA-Z0-9_\\[\\]\\s']*|true|false|undefined)?` +
-    `$`
+    "(\"[^\"]*\"|'[^']*'|[0-9.]+|@{0,1}\\${0,1}[\\.a-zA-Z0-9_\\[\\]\\s']*|true|false|undefined)?" +
+    '$'
 );
 
 /*
@@ -49,8 +49,8 @@ const FILTER_RE = new RegExp(
  * Returns individual filter expression groups (value without ())
  */
 const GROUP_RE = new RegExp(
-  `([^&\\|]+)` + // Match everything which is not & or |
-    `(?= && | \\|\\| |$)`, // Non capturing group matching ' && ' or ' || ' or EOL
+  '([^&\\|]+)' + // Match everything which is not & or |
+    '(?= && | \\|\\| |$)', // Non capturing group matching ' && ' or ' || ' or EOL
   'g'
 );
 
