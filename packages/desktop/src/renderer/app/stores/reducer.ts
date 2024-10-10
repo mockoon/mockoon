@@ -38,6 +38,7 @@ import {
   getBodyEditorMode,
   getFirstRouteAndResponseUUIDs,
   markEnvStatusRestart,
+  responseTabForcedNavigation,
   updateDuplicatedRoutes,
   updateEditorAutocomplete
 } from 'src/renderer/app/stores/reducer-utils';
@@ -848,7 +849,7 @@ export const environmentReducer = (
         return environment;
       });
 
-      // always focus the first route response if the active one  is removed (even with cloud sync)
+      // always focus the first route response if the active one is removed (even with cloud sync)
       const newRouteResponses = newEnvironment.routes.find(
         (route) => route.uuid === action.routeUuid
       ).responses;
@@ -857,7 +858,11 @@ export const environmentReducer = (
         ...state,
         activeRouteResponseUUID:
           newRouteResponses.length > 0 ? newRouteResponses[0].uuid : null,
-        environments: newEnvironments
+        environments: newEnvironments,
+        activeTab:
+          newRouteResponses.length > 0
+            ? responseTabForcedNavigation(state, newRouteResponses[0].uuid)
+            : 'RESPONSE'
       };
       break;
     }
@@ -1176,7 +1181,11 @@ export const environmentReducer = (
       if (action.routeResponseUUID !== state.activeRouteResponseUUID) {
         newState = {
           ...state,
-          activeRouteResponseUUID: action.routeResponseUUID
+          activeRouteResponseUUID: action.routeResponseUUID,
+          activeTab: responseTabForcedNavigation(
+            state,
+            action.routeResponseUUID
+          )
         };
         break;
       }

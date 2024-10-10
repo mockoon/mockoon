@@ -528,12 +528,16 @@
               <!-- http: status code + latency, crud: databucket id + latency (if default response), otherwise same as http -->
               <div class="mt-3 mx-2">
                 <div
-                  ngClass="route-responses-{{
-                    data.activeRoute?.type === 'crud' &&
-                    data.activeRouteResponse?.default
-                      ? 'crud'
-                      : data.activeRoute.type
-                  }}"
+                  [ngClass]="{
+                    'route-responses-http':
+                      data.activeRoute?.type === 'http' ||
+                      (data.activeRoute?.type === 'crud' &&
+                        !data.activeRouteResponse?.default),
+                    'route-responses-crud':
+                      data.activeRoute?.type === 'crud' &&
+                      data.activeRouteResponse?.default,
+                    'route-responses-ws': data.activeRoute?.type === 'ws'
+                  }"
                 >
                   <app-custom-select
                     *ngIf="
