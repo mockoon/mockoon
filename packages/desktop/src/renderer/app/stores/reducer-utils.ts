@@ -324,3 +324,39 @@ export const findRouteFolderHierarchy = (
 
   return [];
 };
+
+/**
+ * Check that we are not switching from a regular response to a CRUD
+ * operation response where some tabs are not available.
+ * If so, switch to the RESPONSE tab.
+ *
+ * @param state
+ * @param routeResponseUuid
+ * @returns
+ */
+export const responseTabForcedNavigation = (
+  state: StoreType,
+  routeResponseUuid: string
+) => {
+  let newActiveTab = state.activeTab;
+
+  const activeEnvironment = state.environments.find(
+    (environment) => environment.uuid === state.activeEnvironmentUUID
+  );
+  const activeRoute = activeEnvironment.routes.find(
+    (route) => route.uuid === state.activeRouteUUID
+  );
+  const activatedRouteResponse = activeRoute.responses.find(
+    (response) => response.uuid === routeResponseUuid
+  );
+
+  if (
+    activeRoute.type === 'crud' &&
+    activatedRouteResponse.default &&
+    !['RESPONSE', 'HEADERS'].includes(state.activeTab)
+  ) {
+    newActiveTab = 'RESPONSE';
+  }
+
+  return newActiveTab;
+};
