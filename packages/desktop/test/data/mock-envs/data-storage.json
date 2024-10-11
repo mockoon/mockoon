@@ -1,6 +1,6 @@
 {
   "uuid": "6d67bab2-886e-4635-9f9b-8bc1983c49c0",
-  "lastMigration": 28,
+  "lastMigration": 33,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -25,5 +25,6 @@
   },
   "data": [],
   "folders": [],
-  "rootChildren": []
+  "rootChildren": [],
+  "callbacks": []
 }

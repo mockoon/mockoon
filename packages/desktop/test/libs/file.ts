@@ -35,9 +35,19 @@ class File {
     return objectGetPath(content, objectPath);
   }
 
+  public async getObjectPropertiesInFile(
+    filePath: string,
+    objectPaths: string[]
+  ) {
+    const file = await fs.readFile(filePath);
+    const content: Environments = JSON.parse(file.toString());
+
+    return objectPaths.map((op) => objectGetPath(content, op));
+  }
+
   public async verifyObjectPropertyInFile(
     filePath: string,
-    objectPaths: string | string[],
+    objectPaths: string | string[] | string[][],
     values: any | any[],
     exists = false
   ) {
@@ -49,7 +59,7 @@ class File {
 
   public verifyObjectProperty(
     object: any,
-    objectPaths: string | string[],
+    objectPaths: string | string[] | string[][],
     values: any | any[],
     exists = false
   ) {

@@ -4,12 +4,12 @@ import { generateUUID } from '@mockoon/commons';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
 import {
   BehaviorSubject,
+  Observable,
+  Subject,
   combineLatest,
   from,
-  Observable,
   of,
   race,
-  Subject,
   timer
 } from 'rxjs';
 import {
@@ -50,7 +50,6 @@ export class TelemetryService {
 
   constructor(
     private remoteConfigService: RemoteConfigService,
-    private http: HttpClient,
     private localStorageService: LocalStorageService,
     private store: Store,
     private httpClient: HttpClient
@@ -108,7 +107,7 @@ export class TelemetryService {
           );
         }
       ),
-      switchMap((v) => {
+      switchMap(() => {
         const environments = this.store.get('environments');
 
         return this.httpClient
@@ -168,7 +167,7 @@ export class TelemetryService {
         switchMap((country) =>
           country
             ? of(country)
-            : this.http
+            : this.httpClient
                 .get(geoipEndpoint)
                 .pipe(
                   map(

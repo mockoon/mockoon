@@ -1,38 +1,27 @@
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { DataBucket, Environment } from '@mockoon/commons';
-import { from, Observable, Subject } from 'rxjs';
+  DataBucket,
+  Environment,
+  ReorderAction,
+  ReorderableContainers
+} from '@mockoon/commons';
+import { Observable } from 'rxjs';
 import {
-  debounceTime,
+  combineLatestWith,
   distinctUntilChanged,
   filter,
-  map,
-  takeUntil,
-  tap
+  map
 } from 'rxjs/operators';
-import { DatabucketsContextMenu } from 'src/renderer/app/components/context-menu/context-menus';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
-import {
-  DraggableContainers,
-  DropAction
-} from 'src/renderer/app/models/ui.model';
+import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
-import { UIService } from 'src/renderer/app/services/ui.service';
-import { updateFilterAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
+
+type dropdownMenuPayload = { databucketUuid: string };
 
 @Component({
   selector: 'app-databuckets-menu',
@@ -40,87 +29,98 @@ import { Settings } from 'src/shared/models/settings.model';
   styleUrls: ['./databuckets-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatabucketsMenuComponent implements OnInit, OnDestroy {
-  @ViewChild('databucketsMenu') private databucketsMenu: ElementRef;
+export class DatabucketsMenuComponent implements OnInit {
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public databucketList$: Observable<DataBucket[]>;
   public activeDatabucket$: Observable<DataBucket>;
   public databucketsFilter$: Observable<string>;
-  public databucketsFilter: FormControl;
   public focusableInputs = FocusableInputs;
-  public os$: Observable<string>;
   public menuSize = Config.defaultSecondaryMenuSize;
-  private destroy$ = new Subject<void>();
+  public trackByUuid = trackByUuid;
+  public dropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Duplicate',
+      icon: 'content_copy',
+      twoSteps: false,
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
+        this.environmentsService.duplicateDatabucket(databucketUuid);
+      }
+    },
+    {
+      label: 'Duplicate to environment',
+      icon: 'input',
+      twoSteps: false,
+      disabled$: () =>
+        this.store
+          .select('environments')
+          .pipe(map((environments) => environments.length < 2)),
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
+        this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+          databucketUuid,
+          'databucket'
+        );
+      }
+    },
+    {
+      label: 'Copy ID to clipboard',
+      icon: 'assignment',
+      twoSteps: false,
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
+        const databucket = this.store.getDatabucketByUUID(databucketUuid);
+
+        MainAPI.send('APP_WRITE_CLIPBOARD', databucket.id);
+      }
+    },
+    {
+      label: 'Delete',
+      icon: 'delete',
+      twoSteps: true,
+      confirmIcon: 'error',
+      confirmLabel: 'Confirm deletion',
+      action: ({ databucketUuid }: dropdownMenuPayload) => {
+        this.environmentsService.removeDatabucket(databucketUuid);
+      }
+    }
+  ];
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private store: Store,
-    private eventsService: EventsService,
-    private uiService: UIService,
-    private formBuilder: FormBuilder
+    private store: Store
   ) {}
 
-  @HostListener('keydown', ['$event'])
-  public escapeFilterInput(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.clearFilter();
-    }
-  }
-
   ngOnInit() {
-    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
-    this.databucketsFilter = this.formBuilder.control('');
-
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
     this.settings$ = this.store.select('settings');
-    this.databucketsFilter$ = this.store.selectFilter('databuckets').pipe(
-      tap((search) => {
-        this.databucketsFilter.patchValue(search, { emitEvent: false });
-      })
-    );
+    this.databucketsFilter$ = this.store.selectFilter('databuckets');
 
     this.databucketList$ = this.store.selectActiveEnvironment().pipe(
       filter((activeEnvironment) => !!activeEnvironment),
       distinctUntilChanged(),
-      map((activeEnvironment) => activeEnvironment.data)
-    );
-
-    this.uiService.scrollDatabucketsMenu
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((scrollDirection) => {
-        this.uiService.scroll(
-          this.databucketsMenu.nativeElement,
-          scrollDirection
-        );
-      });
-
-    this.databucketsFilter.valueChanges
-      .pipe(
-        debounceTime(10),
-        tap((search) =>
-          this.store.update(updateFilterAction('databuckets', search))
-        ),
-        takeUntil(this.destroy$)
+      combineLatestWith(this.databucketsFilter$),
+      map(([activeEnvironment, search]) =>
+        !search
+          ? activeEnvironment.data
+          : activeEnvironment.data.filter((databucket) =>
+              textFilter(
+                `${databucket.name} ${databucket.documentation}`,
+                search
+              )
+            )
       )
-      .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+    );
   }
 
   /**
    * Callback called when reordering databuckets
    *
-   * @param dropAction
+   * @param reorderAction
    */
-  public reorganizeDatabuckets(dropAction: DropAction) {
-    this.environmentsService.reorganizeItems(
-      dropAction,
-      DraggableContainers.DATABUCKETS
+  public reorganizeDatabuckets(reorderAction: ReorderAction) {
+    this.environmentsService.reorderItems(
+      reorderAction as ReorderAction<string>,
+      ReorderableContainers.DATABUCKETS
     );
   }
 
@@ -136,32 +136,5 @@ export class DatabucketsMenuComponent implements OnInit, OnDestroy {
    */
   public selectDatabucket(databucketUUID: string) {
     this.environmentsService.setActiveDatabucket(databucketUUID);
-  }
-
-  /**
-   * Show and position the context menu
-   *
-   * @param event - click event
-   */
-  public openContextMenu(databucketUUID: string, event: MouseEvent) {
-    // if right click display context menu
-    if (event && event.button === 2) {
-      const menu: ContextMenuEvent = {
-        event,
-        items: DatabucketsContextMenu(
-          databucketUUID,
-          this.store.get('environments')
-        )
-      };
-
-      this.eventsService.contextMenuEvents.next(menu);
-    }
-  }
-
-  /**
-   * Clear the databucket filter
-   */
-  public clearFilter() {
-    this.store.update(updateFilterAction('databuckets', ''));
   }
 }

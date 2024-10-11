@@ -1,6 +1,6 @@
 {
   "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
-  "lastMigration": 28,
+  "lastMigration": 33,
   "name": "uuid dedup load",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "get",
       "endpoint": "test",
       "documentation": "Test documentation",
-      "enabled": true,
       "responses": [
         {
           "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
@@ -29,18 +28,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
       "method": "get",
       "endpoint": "test2",
       "documentation": "Test documentation 2",
-      "enabled": true,
       "responses": [
         {
           "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
@@ -58,11 +59,14 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
@@ -94,7 +98,6 @@
     {
       "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a",
       "name": "New folder",
-      "collapsed": false,
       "children": [
         { "type": "route", "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a" }
       ]
@@ -102,5 +105,6 @@
   ],
   "rootChildren": [
     { "type": "route", "uuid": "a93e9c88-62f9-40a7-be4f-9645e1988d8a" }
-  ]
+  ],
+  "callbacks": []
 }

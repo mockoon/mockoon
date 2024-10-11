@@ -63,11 +63,6 @@ class Http {
           expect(response.body).toContain(
             (httpCall.testedResponse.body as { contains: string }).contains
           );
-        } else if (
-          propertyName === 'cert' &&
-          typeof httpCall.testedResponse.cert === 'object'
-        ) {
-          expect(response.cert).toMatchObject(httpCall.testedResponse.cert);
         } else {
           expect(response[propertyName]).toEqual(
             httpCall.testedResponse[propertyName]
@@ -88,7 +83,15 @@ class Http {
     protocol: 'http' | 'https';
     port: number;
     path: string;
-    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'DELETE';
+    method:
+      | 'GET'
+      | 'POST'
+      | 'PUT'
+      | 'PATCH'
+      | 'HEAD'
+      | 'OPTIONS'
+      | 'DELETE'
+      | 'PURGE';
     headers: { [key in string]: string | string[] | number };
     body: any;
     cookie: string;
@@ -129,17 +132,13 @@ class Http {
               status: response.statusCode,
               statusMessage: response.statusMessage,
               headers: response.headers,
-              body,
-              cert: (response?.connection as any).getPeerCertificate
-                ? (response?.connection as any).getPeerCertificate()
-                : null
+              body
             })
           );
         }
       );
 
       request.on('error', (err) => {
-        console.log(err);
         reject(err);
       });
       request.write(data);

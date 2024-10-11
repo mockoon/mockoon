@@ -1,215 +1,283 @@
 {
-  "uuid": "b8701e60-e7d4-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 28,
+  "uuid": "65af608b-313f-4ee8-ab60-a6e9384ec41c",
+  "lastMigration": 33,
   "name": "Regulations.gov",
   "endpointPrefix": "regulations/v3",
   "latency": 0,
   "port": 3000,
+  "hostname": "",
+  "folders": [],
   "routes": [
     {
-      "uuid": "b8701e64-e7d4-11ea-a5ec-979674ac1a4b",
+      "uuid": "986f0512-6f33-45a9-a7f1-48711c9301ca",
+      "type": "http",
       "documentation": "Returns Docket information",
       "method": "get",
       "endpoint": "docket.:response_format",
       "responses": [
         {
-          "uuid": "b8701e61-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "cd9d0828-10ba-4ff6-9f17-8d7059b073b3",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "No response was specified",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "b8701e62-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "4ddc0bbc-eba8-4555-81d5-0410341eecf2",
           "body": "",
           "latency": 0,
           "statusCode": 400,
           "label": "Bad request. The content is either empty or has been withdrawn.",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "b8701e63-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "29773473-3ac7-4f36-8035-f29eb825b40a",
           "body": "",
           "latency": 0,
           "statusCode": 404,
           "label": "File not found.",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "b8701e68-e7d4-11ea-a5ec-979674ac1a4b",
+      "uuid": "e561fe1a-0347-490e-9766-e5eb5bdcceb9",
+      "type": "http",
       "documentation": "Returns Document information",
       "method": "get",
       "endpoint": "document.:response_format",
       "responses": [
         {
-          "uuid": "b8701e65-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "8f4b1b87-b3df-4b56-b501-d08d9ca2035a",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "No response was specified",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "b8701e66-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "c9af1981-defc-4bad-9a45-9e8d48f7cf92",
           "body": "",
           "latency": 0,
           "statusCode": 400,
           "label": "Bad request. The document is only available for comment via Regulations.gov.",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "b8701e67-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "d364509c-8b64-4e54-89a9-faaceb9270c2",
           "body": "",
           "latency": 0,
           "statusCode": 404,
           "label": "File not found.",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "b8701e6c-e7d4-11ea-a5ec-979674ac1a4b",
+      "uuid": "2fc642b3-82dc-4406-8beb-6e13e6632a2f",
+      "type": "http",
       "documentation": "Search for Documents",
       "method": "get",
       "endpoint": "documents.:response_format",
       "responses": [
         {
-          "uuid": "b8701e69-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "a906c5a4-9071-4835-b66d-303d8bef97b4",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "No response was specified",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "b8701e6a-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "f0440536-4f12-40f2-b105-7c9cf1458fba",
           "body": "",
           "latency": 0,
           "statusCode": 400,
           "label": "Bad request. The document is only available for comment via Regulations.gov.",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "b8701e6b-e7d4-11ea-a5ec-979674ac1a4b",
+          "uuid": "4a218fc5-5310-4fe6-abed-c096566e5355",
           "body": "",
           "latency": 0,
           "statusCode": 404,
           "label": "File not found.",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "986f0512-6f33-45a9-a7f1-48711c9301ca"
+    },
+    {
+      "type": "route",
+      "uuid": "e561fe1a-0347-490e-9766-e5eb5bdcceb9"
+    },
+    {
+      "type": "route",
+      "uuid": "2fc642b3-82dc-4406-8beb-6e13e6632a2f"
     }
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "cors": true,
-  "headers": [],
-  "proxyReqHeaders": [{ "key": "", "value": "" }],
-  "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",
@@ -219,11 +287,10 @@
     "caPath": "",
     "passphrase": ""
   },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
-  "folders": [],
-  "rootChildren": [
-    { "type": "route", "uuid": "b8701e64-e7d4-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "b8701e68-e7d4-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "b8701e6c-e7d4-11ea-a5ec-979674ac1a4b" }
-  ]
+  "callbacks": []
 }

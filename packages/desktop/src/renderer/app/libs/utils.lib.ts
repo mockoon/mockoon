@@ -1,4 +1,10 @@
-import { Environment, Route, RouteType } from '@mockoon/commons';
+import {
+  Environment,
+  ParsedJSONBodyMimeTypes,
+  Route,
+  RouteType,
+  stringIncludesArrayItems
+} from '@mockoon/commons';
 import { EditorModes } from 'src/renderer/app/models/editor.model';
 
 export const ArrayContainsObjectKey = (
@@ -20,7 +26,7 @@ export const ArrayContainsObjectKey = (
 export const GetEditorModeFromContentType = (
   contentType: string
 ): EditorModes => {
-  if (contentType.includes('application/json')) {
+  if (stringIncludesArrayItems(ParsedJSONBodyMimeTypes, contentType)) {
     return 'json';
   } else if (
     contentType.includes('text/html') ||
@@ -88,17 +94,16 @@ export const HumanizeText = (text: string): string => {
  * @returns
  */
 export const BuildFullPath = (environment: Environment, route: Route) => {
-  let routeUrl =
-    (environment.tlsOptions.enabled ? 'https://' : 'http://') +
-    'localhost:' +
-    environment.port +
-    '/';
+  let routeUrl = `${environment.tlsOptions.enabled ? 'https://' : 'http://'}${
+    environment.hostname || 'localhost'
+  }:${environment.port}/`;
 
   if (environment.endpointPrefix) {
     routeUrl += environment.endpointPrefix + '/';
   }
 
-  routeUrl += route.endpoint;
+  // undo the regex escaping done in the route editor
+  routeUrl += route.endpoint.replace(/\\\(/g, '(').replace(/\\\)/g, ')');
 
   return routeUrl;
 };
@@ -137,3 +142,29 @@ export const environmentHasRoute = (
   route: Route | Pick<Route, 'type' | 'endpoint' | 'method'>
 ): boolean =>
   environment.routes.some((envRoute) => isRouteDuplicates(envRoute, route));
+
+export const trackByUuid = (item: any) => item.uuid;
+export const trackById = (item: any) => item.id;
+
+/**
+ * Check if a text contains all the words (separated by a space) in a search string
+ *
+ * @param text
+ * @param search
+ * @returns
+ */
+export const textFilter = (text: string, search: string) => {
+  return search
+    .split(' ')
+    .filter((searchWord) => !!searchWord)
+    .every(
+      (searchWord) =>
+        !!searchWord && text.toLowerCase().includes(searchWord.toLowerCase())
+    );
+};
+
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;

@@ -1,6 +1,6 @@
 {
   "uuid": "5867a05a-fa89-4a4e-9116-8743188a1c07",
-  "lastMigration": 28,
+  "lastMigration": 33,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "get",
       "endpoint": "headers",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "ed529d3c-c546-4939-b672-810e2d25427d",
@@ -29,18 +28,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "101957a1-2557-41ff-a42c-00af00f7ad66",
       "method": "get",
       "endpoint": "file",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "c8563856-fe44-4970-825e-58cb6f4e7ae9",
@@ -58,18 +59,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "c2f80546-b6ea-44bd-9748-9dd923653f3a",
       "method": "get",
       "endpoint": "file-noheader",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "d1454fdf-6bc3-420e-b255-2693b3ace28d",
@@ -87,18 +90,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "493365b8-7f69-434b-adca-e6092a17c1dc",
       "method": "get",
       "endpoint": "file-nomime",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "d1208679-4a8b-4d33-bd5b-ee8d6d3e0e8c",
@@ -116,11 +121,14 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
@@ -147,5 +155,6 @@
     { "type": "route", "uuid": "101957a1-2557-41ff-a42c-00af00f7ad66" },
     { "type": "route", "uuid": "c2f80546-b6ea-44bd-9748-9dd923653f3a" },
     { "type": "route", "uuid": "493365b8-7f69-434b-adca-e6092a17c1dc" }
-  ]
+  ],
+  "callbacks": []
 }

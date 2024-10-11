@@ -1,4 +1,3 @@
-import { ChainablePromiseElement } from 'webdriverio';
 import utils from '../libs/utils';
 
 type optionNames = 'proxyHost' | 'proxyMode' | 'proxyRemovePrefix';
@@ -7,7 +6,7 @@ type optionNames = 'proxyHost' | 'proxyMode' | 'proxyRemovePrefix';
  * Requires a switch to the proxy view
  */
 class EnvironmentsProxy {
-  public get headersContainer(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get headersContainer() {
     return $('.environment-proxy-headers');
   }
 
@@ -24,17 +23,13 @@ class EnvironmentsProxy {
     await utils.setElementValue(option, value);
   }
 
-  public getOptionCheckbox(
-    optionName: optionNames
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  public getOptionCheckbox(optionName: optionNames) {
     return $(
       `app-environment-proxy input[formcontrolname=${optionName}] + label`
     );
   }
 
-  private getOptionInput(
-    optionName: optionNames
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  private getOptionInput(optionName: optionNames) {
     return $(`app-environment-proxy input[formcontrolname=${optionName}]`);
   }
 }

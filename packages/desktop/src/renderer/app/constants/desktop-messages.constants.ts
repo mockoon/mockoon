@@ -72,7 +72,7 @@ export const DesktopMessages: {
     log: false,
     toastType: 'error'
   }),
-  HOSTNAME_UNAVAILABLE: (messageParams) => ({
+  HOSTNAME_UNAVAILABLE: () => ({
     message: 'Provided hostname/address is not available',
     showToast: true,
     log: false,
@@ -84,16 +84,6 @@ export const DesktopMessages: {
     log: false,
     toastType: 'error'
   }),
-  REQUEST_BODY_PARSE: (messageParams) => {
-    const message = `Error while parsing entering body: ${messageParams.error.message}`;
-
-    return {
-      message,
-      showToast: true,
-      log: false,
-      toastType: 'error'
-    };
-  },
   ROUTE_CREATION_ERROR: (messageParams) => ({
     message: `Error while creating the route: ${messageParams.error.message}`,
     log: false,
@@ -165,7 +155,6 @@ export const DesktopMessages: {
     logPayload: { environmentUUID: messageParams.environmentUUID },
     toastType: 'error'
   }),
-  // TODO ??
   COPY_ROUTE_CLIPBOARD: (messageParams) => ({
     message: `Copying route ${messageParams.routeUUID} to the clipboard`,
     log: true,
@@ -217,6 +206,14 @@ export const DesktopMessages: {
     message: 'First load, creating demo environment',
     log: true,
     showToast: false
+  }),
+  ENVIRONMENT_INVALID: () => ({
+    message: 'This content does not seem to be a valid Mockoon environment',
+    log: true,
+    loggerMessage:
+      'This content does not seem to be a valid Mockoon environment',
+    showToast: true,
+    toastType: 'warning'
   }),
   ENVIRONMENT_MORE_RECENT_VERSION: (messageParams) => ({
     message: `Environment "${
@@ -287,11 +284,56 @@ export const DesktopMessages: {
     showToast: true
   }),
   ENVIRONMENT_MOVED: (messageParams) => ({
-    message: `Environment ${messageParams.environmentUUID} was moved to the new location.`,
+    message: 'Environment was moved to the new location.',
     log: true,
     loggerMessage: 'Environment was moved to the new location.',
     logPayload: messageParams,
     toastType: 'success',
+    showToast: true
+  }),
+  CLOUD_ENVIRONMENT_CONVERTED: (messageParams) => ({
+    message: `Environment "${messageParams.name}" was not present on the server and was converted to a local environment.`,
+    log: true,
+    loggerMessage: `Environment "${messageParams.name}" was not present on the server and was converted to a local environment.`,
+    logPayload: messageParams,
+    toastType: 'success',
+    showToast: true
+  }),
+  CLOUD_SYNC_QUOTA_EXCEEDED: (messageParams) => ({
+    message: `Your cloud account has exceeded its synchronization quota (${messageParams.quota}). Please upgrade your plan or delete environments to free up space.`,
+    log: false,
+    toastType: 'warning',
+    showToast: true
+  }),
+  CLOUD_ENVIRONMENT_TOO_LARGE: (messageParams) => ({
+    message: `Your environment is too large to be saved on the cloud (max size: ${messageParams.maxSize / 1e6}MB). Please reduce its size.`,
+    log: false,
+    toastType: 'warning',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_QUOTA_EXCEEDED: (messageParams) => ({
+    message: `Your cloud account has exceeded its deployments quota (${messageParams.quota}). Please upgrade your plan or delete deployments.`,
+    log: false,
+    toastType: 'warning',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_START_ERROR: () => ({
+    message: 'Error while starting the instance. Please try again later.',
+    log: true,
+    toastType: 'error',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_START_TOO_BIG_ERROR: () => ({
+    message:
+      'Error while starting the instance. The environment is too large to be deployed. Please reduce its size and try again.',
+    log: true,
+    toastType: 'error',
+    showToast: true
+  }),
+  CLOUD_DEPLOY_STOP_ERROR: () => ({
+    message: 'Error while stopping the instance. Please try again later.',
+    log: true,
+    toastType: 'error',
     showToast: true
   })
 };

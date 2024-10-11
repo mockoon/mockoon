@@ -2,6 +2,8 @@ import {
   CloneObject,
   Environment,
   Header,
+  InFlightRequest,
+  InvokedCallback,
   Methods,
   Transaction
 } from '@mockoon/commons';
@@ -71,6 +73,11 @@ export const listenServerEvents = function (
       case 'ROUTE_FILE_SERVING_ERROR':
       case 'UNKNOWN_SERVER_ERROR':
       case 'HEADER_PARSING_ERROR':
+      case 'CALLBACK_ERROR':
+      case 'CALLBACK_FILE_ERROR':
+      case 'WS_SERVING_ERROR':
+      case 'WS_UNKNOWN_ROUTE':
+      case 'WS_UNSUPPORTED_CONTENT':
         message = format(ServerMessages[errorCode], error?.message || '');
         break;
       case 'CERT_FILE_NOT_FOUND':
@@ -119,4 +126,97 @@ export const listenServerEvents = function (
 
     logger.info('Transaction recorded', logMeta);
   });
+
+  server.on('callback-invoked', (callback: InvokedCallback) => {
+    const logMeta: { callback: InvokedCallback } = {
+      ...defaultLogMeta,
+      callbackName: callback.name,
+      callbackMethod: callback.method,
+      callbackUrl: callback.url,
+      callbackStatus: callback.status
+    };
+
+    if (logTransaction) {
+      const clonedCallback = CloneObject(callback) as InvokedCallback;
+      logMeta.callback = clonedCallback;
+      logMeta.callback.requestHeaders = logMeta.callback.requestHeaders.map(
+        filterAuthorizationHeaders
+      );
+      logMeta.callback.responseHeaders = logMeta.callback.responseHeaders.map(
+        filterAuthorizationHeaders
+      );
+    }
+    logger.info('Callback invoked', logMeta);
+  });
+
+  server.on('ws-new-connection', (inflightRequest: InFlightRequest) => {
+    const logMeta: { inflightRequest: InFlightRequest } = {
+      ...defaultLogMeta,
+      websocketId: inflightRequest.requestId,
+      url: inflightRequest.request.urlPath,
+      routeUUID: inflightRequest.routeUUID
+    };
+
+    if (logTransaction) {
+      logMeta.inflightRequest = CloneObject(inflightRequest) as InFlightRequest;
+      logMeta.inflightRequest.request.headers = logMeta.inflightRequest.request
+        ?.headers
+        ? logMeta.inflightRequest.request?.headers.map(
+            filterAuthorizationHeaders
+          )
+        : [];
+    }
+    logger.info('WebSocket New Connection', logMeta);
+  });
+
+  server.on(
+    'ws-message-received',
+    (inflightRequest: InFlightRequest, message: string) => {
+      const logMeta: { inflightRequest: InFlightRequest; messageData: string } =
+        {
+          ...defaultLogMeta,
+          websocketId: inflightRequest.requestId,
+          url: inflightRequest.request.urlPath,
+          routeUUID: inflightRequest.routeUUID
+        };
+
+      if (logTransaction) {
+        logMeta.inflightRequest = CloneObject(
+          inflightRequest
+        ) as InFlightRequest;
+        logMeta.messageData = message;
+        logMeta.inflightRequest.request.headers = logMeta.inflightRequest
+          .request?.headers
+          ? logMeta.inflightRequest.request?.headers.map(
+              filterAuthorizationHeaders
+            )
+          : [];
+      }
+      logger.info('WebSocket Message Recieved', logMeta);
+    }
+  );
+
+  server.on(
+    'ws-closed',
+    (request: InFlightRequest, code: number, reason?: string | null) => {
+      const logMeta: { inflightRequest: InFlightRequest } = {
+        ...defaultLogMeta,
+        websocketId: request.requestId,
+        code,
+        reason
+      };
+
+      if (logTransaction) {
+        logMeta.inflightRequest = CloneObject(request) as InFlightRequest;
+        logMeta.inflightRequest.request.headers = logMeta.inflightRequest
+          .request?.headers
+          ? logMeta.inflightRequest.request?.headers.map(
+              filterAuthorizationHeaders
+            )
+          : [];
+      }
+
+      logger.info('WebSocket Closed', logMeta);
+    }
+  );
 };

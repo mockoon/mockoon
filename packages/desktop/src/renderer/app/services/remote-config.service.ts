@@ -1,19 +1,26 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { RemoteConfigData } from '@mockoon/cloud';
+import { BehaviorSubject, EMPTY, Observable, from } from 'rxjs';
 import {
-  fetchAndActivate,
-  getValueChanges,
-  RemoteConfig
-} from '@angular/fire/remote-config';
-import { from, Observable } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { RemoteConfigData } from 'src/renderer/app/models/remote-config.model';
+  catchError,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  tap
+} from 'rxjs/operators';
+import { UserService } from 'src/renderer/app/services/user.service';
+import { Config } from 'src/renderer/config';
 import { environment } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RemoteConfigService {
-  private cache$: Observable<RemoteConfigData>;
+  private remoteConfig$ = new BehaviorSubject<RemoteConfigData>(null);
 
-  constructor(private firebaseRemoteConfig: RemoteConfig) {}
+  constructor(
+    private httpClient: HttpClient,
+    private userService: UserService
+  ) {}
 
   /**
    * Get a remote config specific property
@@ -23,30 +30,44 @@ export class RemoteConfigService {
   public get<T extends keyof RemoteConfigData>(
     path: T
   ): Observable<RemoteConfigData[T]> {
-    return this.getConfig().pipe(map((remoteConfig) => remoteConfig?.[path]));
+    return this.remoteConfig$.asObservable().pipe(
+      map((remoteConfig) => remoteConfig?.[path]),
+      distinctUntilChanged()
+    );
   }
 
   /**
-   * Handles caching the observable declaration and sharing the subscription.
-   * It will only call the remote config API once and share the subscription.
+   * Monitor auth state and update the store
    */
-  private getConfig() {
-    if (!this.cache$) {
-      this.cache$ = this.fetchConfig().pipe(shareReplay(1));
-    }
-
-    return this.cache$;
+  public init() {
+    return this.userService
+      .idTokenChanges()
+      .pipe(switchMap(() => this.fetchConfig()));
   }
 
   /**
-   * Fetch the remote config, filter per environment, convert to object
+   * Fetch the remote config
    */
-  private fetchConfig(): Observable<any> {
-    return from(fetchAndActivate(this.firebaseRemoteConfig)).pipe(
-      switchMap(() =>
-        getValueChanges(this.firebaseRemoteConfig, environment.remoteConfig)
-      ),
-      map((config) => JSON.parse(config.asString()))
+  public fetchConfig(): Observable<RemoteConfigData> {
+    return from(this.userService.getIdToken()).pipe(
+      switchMap((token) => {
+        const headers = token
+          ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
+          : undefined;
+
+        return this.httpClient
+          .post<RemoteConfigData>(
+            `${environment.apiURL}remoteconfig`,
+            { version: Config.appVersion },
+            {
+              headers
+            }
+          )
+          .pipe(catchError(() => EMPTY));
+      }),
+      tap((config) => {
+        this.remoteConfig$.next(config);
+      })
     );
   }
 }

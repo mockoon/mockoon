@@ -4,7 +4,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import {
   Environment,
   FileExtensionsWithTemplating,
@@ -14,13 +14,18 @@ import {
   INDENT_SIZE,
   Methods,
   MimeTypesWithTemplating,
+  ParsedJSONBodyMimeTypes,
+  ReorderAction,
+  ReorderableContainers,
   ResponseMode,
   Route,
   RouteDefault,
   RouteResponse,
   RouteResponseDefault,
   RulesDisablingResponseModes,
-  RulesNotUsingDefaultResponse
+  RulesNotUsingDefaultResponse,
+  StreamingMode,
+  stringIncludesArrayItems
 } from '@mockoon/commons';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, combineLatest, from, merge } from 'rxjs';
@@ -34,6 +39,7 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { StatusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
@@ -52,15 +58,12 @@ import {
   EnvironmentsStatuses,
   TabsNameType
 } from 'src/renderer/app/models/store.model';
-import {
-  DraggableContainers,
-  DropAction
-} from 'src/renderer/app/models/ui.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { setDefaultRouteResponseAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+
+type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
 
 @Component({
   selector: 'app-environment-routes',
@@ -84,88 +87,85 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeTab$: Observable<TabsNameType>;
   public deleteCurrentRouteResponseRequested$ = new TimedBoolean();
   public bodyEditorConfig$: Observable<any>;
-  public activeRouteForm: FormGroup;
-  public activeRouteResponseForm: FormGroup;
+  public activeRouteForm: UntypedFormGroup;
+  public activeRouteResponseForm: UntypedFormGroup;
   public scrollToBottom = this.uiService.scrollToBottom;
   public databuckets$: Observable<DropdownItems>;
   public methods: DropdownItems = [
     {
-      label: 'HTTP',
-      category: true
+      value: Methods.all,
+      label: 'All methods',
+      classes: 'color-method-all'
     },
     {
       value: Methods.get,
       label: 'GET',
-      classes: 'route-badge-get-text'
+      classes: 'color-method-get'
     },
     {
       value: Methods.post,
       label: 'POST',
-      classes: 'route-badge-post-text'
+      classes: 'color-method-post'
     },
     {
       value: Methods.put,
       label: 'PUT',
-      classes: 'route-badge-put-text'
+      classes: 'color-method-put'
     },
     {
       value: Methods.patch,
       label: 'PATCH',
-      classes: 'route-badge-patch-text'
+      classes: 'color-method-patch'
     },
     {
       value: Methods.delete,
       label: 'DELETE',
-      classes: 'route-badge-delete-text'
+      classes: 'color-method-delete'
     },
     {
       value: Methods.head,
       label: 'HEAD',
-      classes: 'route-badge-head-text'
+      classes: 'color-method-head'
     },
     {
       value: Methods.options,
       label: 'OPTIONS',
-      classes: 'route-badge-options-text'
-    },
-    {
-      label: 'WebDAV',
-      category: true
+      classes: 'color-method-options'
     },
     {
       value: Methods.propfind,
       label: 'PROPFIND',
-      classes: 'route-badge-propfind-text'
+      classes: 'color-method-propfind'
     },
     {
       value: Methods.proppatch,
       label: 'PROPPATCH',
-      classes: 'route-badge-proppatch-text'
+      classes: 'color-method-proppatch'
     },
     {
       value: Methods.move,
       label: 'MOVE',
-      classes: 'route-badge-move-text'
+      classes: 'color-method-move'
     },
     {
       value: Methods.copy,
       label: 'COPY',
-      classes: 'route-badge-copy-text'
+      classes: 'color-method-copy'
     },
     {
       value: Methods.mkcol,
       label: 'MKCOL',
-      classes: 'route-badge-mkcol-text'
+      classes: 'color-method-mkcol'
     },
     {
       value: Methods.lock,
       label: 'LOCK',
-      classes: 'route-badge-lock-text'
+      classes: 'color-method-lock'
     },
     {
       value: Methods.unlock,
       label: 'UNLOCK',
-      classes: 'route-badge-unlock-text'
+      classes: 'color-method-unlock'
     }
   ];
   public responseModes: ToggleItems = [
@@ -192,6 +192,22 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
         'Fallback response mode (does not return the default response if none of the rules match, will jump to the next route or use the proxy if configured)'
     }
   ];
+  // disables fallback mode for websockets.
+  public responseModesForWs: ToggleItems = this.responseModes.filter(
+    (m) => m.value !== ResponseMode.FALLBACK
+  );
+  public streamingModes: ToggleItems = [
+    {
+      value: StreamingMode.UNICAST,
+      icon: 'events',
+      tooltip: 'One-to-one streaming'
+    },
+    {
+      value: StreamingMode.BROADCAST,
+      icon: 'broadcast',
+      tooltip: 'Broadcast streaming'
+    }
+  ];
   public bodyType: ToggleItems = [
     {
       value: 'INLINE',
@@ -206,23 +222,63 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       label: 'Data'
     }
   ];
-
+  public window = window;
   public rulesDisablingResponseModes: ResponseMode[] =
     RulesDisablingResponseModes;
   public rulesNotUsingDefaultResponse: ResponseMode[] =
     RulesNotUsingDefaultResponse;
-
   public statusCodes = StatusCodes;
   public statusCodeValidation = StatusCodeValidation;
   public focusableInputs = FocusableInputs;
   public Infinity = Infinity;
   public texts = Texts;
+  public fileDropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Browse',
+      icon: 'find_in_page',
+      twoSteps: false,
+      action: () => {
+        this.dialogsService
+          .showOpenDialog('Choose a file', null, false)
+          .pipe(
+            tap((filePaths) => {
+              if (filePaths[0]) {
+                this.activeRouteResponseForm
+                  .get('filePath')
+                  .setValue(filePaths[0]);
+              }
+            })
+          )
+          .subscribe();
+      }
+    },
+    {
+      label: 'Show file in explorer/finder',
+      icon: 'folder',
+      twoSteps: false,
+      action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
+        const environmentPath = this.store.getEnvironmentPath(environmentUuid);
+
+        MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
+      }
+    },
+    {
+      label: 'Open file in editor',
+      icon: 'file_open',
+      twoSteps: false,
+      action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
+        const environmentPath = this.store.getEnvironmentPath(environmentUuid);
+
+        MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+      }
+    }
+  ];
   private destroy$ = new Subject<void>();
 
   constructor(
     private uiService: UIService,
     private store: Store,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private dialogsService: DialogsService,
     private environmentsService: EnvironmentsService
   ) {}
@@ -338,12 +394,12 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   /**
    * Callback called when reordering route responses
    *
-   * @param dropAction
+   * @param reorderAction
    */
-  public reorganizeRouteResponses(dropAction: DropAction) {
-    this.environmentsService.reorganizeItems(
-      dropAction,
-      DraggableContainers.ROUTE_RESPONSES
+  public reorderRouteResponses(reorderAction: ReorderAction) {
+    this.environmentsService.reorderItems(
+      reorderAction as ReorderAction<string>,
+      ReorderableContainers.ROUTE_RESPONSES
     );
   }
 
@@ -428,22 +484,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Open file browsing dialog
-   */
-  public browseFiles() {
-    this.dialogsService
-      .showOpenDialog('Choose a file', null, false)
-      .pipe(
-        tap((filePath) => {
-          if (filePath) {
-            this.activeRouteResponseForm.get('filePath').setValue(filePath);
-          }
-        })
-      )
-      .subscribe();
-  }
-
-  /**
    * If the body is set and the Content-Type is application/json, then prettify the JSON.
    */
   public formatBody() {
@@ -458,7 +498,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       activeRouteResponse
     );
 
-    if (contentType.includes('application/json')) {
+    if (stringIncludesArrayItems(ParsedJSONBodyMimeTypes, contentType)) {
       try {
         this.activeRouteResponseForm
           .get('body')
@@ -482,14 +522,14 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
    * @param event
    */
   public setDefaultRouteResponse(
-    routeResponseIndex: number | null,
+    routeResponseUuid: string | null,
     event: MouseEvent
   ) {
     // prevent dropdown item selection
     event.stopPropagation();
 
-    if (routeResponseIndex != null) {
-      this.store.update(setDefaultRouteResponseAction(routeResponseIndex));
+    if (routeResponseUuid != null) {
+      this.environmentsService.setDefaultRouteResponse(routeResponseUuid);
     }
   }
 
@@ -501,7 +541,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       documentation: [RouteDefault.documentation],
       method: [RouteDefault.method],
       endpoint: [RouteDefault.endpoint],
-      responseMode: [RouteDefault.responseMode]
+      responseMode: [RouteDefault.responseMode],
+      streamingMode: [RouteDefault.streamingMode],
+      streamingInterval: [RouteDefault.streamingInterval]
     });
 
     this.defaultResponseTooltip$ = this.activeRouteForm
@@ -588,7 +630,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
             documentation: activeRoute.documentation,
             method: activeRoute.method,
             endpoint: activeRoute.endpoint,
-            responseMode: activeRoute.responseMode
+            responseMode: activeRoute.responseMode,
+            streamingMode: activeRoute.streamingMode,
+            streamingInterval: activeRoute.streamingInterval
           },
           { emitEvent: false }
         );

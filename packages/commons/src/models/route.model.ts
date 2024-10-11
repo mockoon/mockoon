@@ -6,6 +6,11 @@ export enum BodyTypes {
   DATABUCKET = 'DATABUCKET'
 }
 
+export type CallbackInvocation = {
+  uuid: string;
+  latency: number;
+};
+
 export type RouteResponse = {
   uuid: string;
   rules: ResponseRule[];
@@ -21,8 +26,10 @@ export type RouteResponse = {
   sendFileAsBody: boolean;
   disableTemplating: boolean;
   fallbackTo404: boolean;
+  // default is always true for CRUD routes first response
   default: boolean;
   crudKey: string;
+  callbacks: CallbackInvocation[];
 };
 
 export enum ResponseMode {
@@ -30,6 +37,11 @@ export enum ResponseMode {
   SEQUENTIAL = 'SEQUENTIAL',
   DISABLE_RULES = 'DISABLE_RULES',
   FALLBACK = 'FALLBACK'
+}
+
+export enum StreamingMode {
+  UNICAST = 'UNICAST',
+  BROADCAST = 'BROADCAST'
 }
 
 export const RulesDisablingResponseModes: ResponseMode[] = [
@@ -50,7 +62,8 @@ export type ResponseRuleOperators =
   | 'regex'
   | 'regex_i'
   | 'null'
-  | 'empty_array';
+  | 'empty_array'
+  | 'array_includes';
 
 export type ResponseRule = {
   target: ResponseRuleTargets;
@@ -64,13 +77,19 @@ export type ResponseRuleTargets =
   | 'body'
   | 'query'
   | 'header'
+  | 'cookie'
   | 'params'
+  | 'path'
+  | 'method'
   | 'request_number'
-  | 'cookie';
+  | 'global_var'
+  | 'data_bucket'
+  | 'templating';
 
 export enum RouteType {
   HTTP = 'http',
-  CRUD = 'crud'
+  CRUD = 'crud',
+  WS = 'ws'
 }
 
 export type Route = {
@@ -80,13 +99,16 @@ export type Route = {
   method: keyof typeof Methods | '';
   endpoint: string;
   responses: RouteResponse[];
-  enabled: boolean;
   responseMode: ResponseMode | null;
+  // used in websocket routes
+  streamingMode: StreamingMode | null;
+  streamingInterval: number;
 };
 
 export type Header = { key: string; value: string };
 
 export enum Methods {
+  all = 'all',
   get = 'get',
   post = 'post',
   put = 'put',

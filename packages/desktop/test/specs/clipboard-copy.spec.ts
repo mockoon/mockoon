@@ -1,16 +1,15 @@
 import { Environment, Route } from '@mockoon/commons';
 import { resolve } from 'path';
 import clipboard from '../libs/clipboard';
-import contextMenu, {
-  ContextMenuEnvironmentActions,
-  ContextMenuRouteActions
-} from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import file from '../libs/file';
 import menu from '../libs/menu';
 import routes from '../libs/routes';
-import utils from '../libs/utils';
+import utils, {
+  DropdownMenuEnvironmentActions,
+  DropdownMenuRouteActions
+} from '../libs/utils';
 
 describe('Clipboard copy', () => {
   it('should open the environment with routes', async () => {
@@ -19,10 +18,9 @@ describe('Clipboard copy', () => {
 
   describe('Copy environment to the clipboard', () => {
     it('should copy the environment to clipboard', async () => {
-      await contextMenu.click(
-        'environments',
-        1,
-        ContextMenuEnvironmentActions.COPY_JSON
+      await utils.dropdownMenuClick(
+        `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`,
+        DropdownMenuEnvironmentActions.COPY_JSON
       );
 
       const clipboardContent = await clipboard.read();
@@ -54,7 +52,10 @@ describe('Clipboard copy', () => {
 
   describe('Copy route to the clipboard', () => {
     it('should copy route JSON to clipboard', async () => {
-      await contextMenu.click('routes', 1, ContextMenuRouteActions.COPY_JSON);
+      await utils.dropdownMenuClick(
+        `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+        DropdownMenuRouteActions.COPY_JSON
+      );
 
       const clipboardContent = await clipboard.read();
       const routeCopy: Route = JSON.parse(clipboardContent);
@@ -77,7 +78,7 @@ describe('Clipboard copy', () => {
       await environments.assertCount(1);
       await environments.assertActiveMenuEntryText('Env clipboard copy');
       await routes.assertCount(2);
-      await routes.assertActiveMenuEntryText('GET\n/answer');
+      await routes.assertActiveMenuEntryText('/answer\nGET');
 
       await environments.close(1);
     });
@@ -96,12 +97,14 @@ describe('Clipboard copy', () => {
         'New environment route clipboard'
       );
       await routes.assertCount(1);
-      await routes.assertActiveMenuEntryText('GET\n/answer');
+      await routes.assertActiveMenuEntryText('/answer\nGET');
     });
 
     it('should copy the full route path to the clipboard', async () => {
-      await contextMenu.click('routes', 1, ContextMenuRouteActions.COPY_PATH);
-
+      await utils.dropdownMenuClick(
+        `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+        DropdownMenuRouteActions.COPY_PATH
+      );
       const clipboardContent = await clipboard.read();
 
       expect(clipboardContent).toEqual('http://localhost:3000/answer');

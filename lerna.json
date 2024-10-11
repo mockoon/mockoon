@@ -2,9 +2,10 @@
   "packages": [
     "packages/commons",
     "packages/commons-server",
+    "packages/cloud",
     "packages/serverless",
     "packages/cli",
     "packages/desktop"
   ],
-  "version": "4.1.0"
+  "version": "8.4.0"
 }

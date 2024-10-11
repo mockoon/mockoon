@@ -14,6 +14,7 @@ const config = {
     'package.json',
     'dist/**/*',
     'node_modules',
+    'build-res/icon.ico',
     'build-res/icon_512x512x32.png'
   ],
   protocols: [

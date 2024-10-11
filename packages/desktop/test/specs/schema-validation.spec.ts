@@ -24,7 +24,6 @@ describe('Schema validation', () => {
     it('should prepare the broken settings', async () => {
       await file.editSettingsAndReload({
         welcomeShown: true,
-        logSizeLimit: 10000,
         maxLogsPerEnvironment: 50,
         truncateRouteName: true,
         mainMenuSize: 100,
@@ -93,7 +92,6 @@ describe('Schema validation', () => {
 
       expect(fileContent.name).toEqual(undefined);
       expect(fileContent.routes[0].responses[0].rulesOperator).toEqual('DUMMY');
-      expect(fileContent.routes[0].enabled).toEqual(null);
       expect(fileContent.routes[0].responses[0].statusCode).toEqual(99);
 
       // allow empty body
@@ -125,7 +123,6 @@ describe('Schema validation', () => {
 
       expect(fileContent.name).toEqual('New environment');
       expect(fileContent.routes[0].responses[0].rulesOperator).toEqual('OR');
-      expect(fileContent.routes[0].enabled).toEqual(true);
       expect(fileContent.routes[0].responses[0].statusCode).toEqual(200);
 
       // allow empty body
@@ -259,7 +256,6 @@ describe('Schema validation', () => {
       // verify that properties exists
       expect(validateUUID(envFileContent.uuid)).toEqual(true);
       expect(validateUUID(envFileContent.routes[0].uuid)).toEqual(true);
-      expect(envFileContent.routes[0].enabled).toEqual(true);
       expect(envFileContent.routes[0].responses[0].statusCode).toEqual(200);
     });
   });
@@ -272,11 +268,15 @@ describe('Schema validation', () => {
         environments: [
           {
             uuid: 'a93e9c88-62f9-40a7-be4f-9645e1988d8a',
-            path: resolve('./tmp/storage/schema-uuid-dedup-1.json')
+            path: resolve('./tmp/storage/schema-uuid-dedup-1.json'),
+            cloud: false,
+            lastServerHash: null
           },
           {
             uuid: 'a93e9c88-62f9-40a7-be4f-9645e1988d8a',
-            path: resolve('./tmp/storage/schema-uuid-dedup-2.json')
+            path: resolve('./tmp/storage/schema-uuid-dedup-2.json'),
+            cloud: false,
+            lastServerHash: null
           }
         ]
       });
@@ -381,6 +381,7 @@ describe('Schema validation', () => {
 
     it('should not open the file if cancel is clicked', async () => {
       await $('.modal-footer .btn:last-of-type').click();
+      await browser.pause(100);
       await environments.assertCount(0);
     });
 
@@ -389,6 +390,7 @@ describe('Schema validation', () => {
 
       await modals.assertTitle('Confirm opening');
       await $('.modal-footer .btn:first-of-type').click();
+      await browser.pause(100);
       await environments.assertCount(1);
       await environments.assertActiveMenuEntryText('missing identifier');
 

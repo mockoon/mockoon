@@ -1,252 +1,339 @@
 {
-  "uuid": "0c9cbbb0-e7d5-11ea-a5ec-979674ac1a4b",
-  "lastMigration": 28,
+  "uuid": "9b0b72a7-3338-4599-985a-d4474edb712b",
+  "lastMigration": 33,
   "name": "YouTube Analytics",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 3000,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
   "routes": [
     {
-      "uuid": "0c9cbbb2-e7d5-11ea-a5ec-979674ac1a4b",
+      "uuid": "b4962b35-923b-4ddd-bc07-9c3f69a9b42b",
+      "type": "http",
       "documentation": "Removes an item from a group.",
       "method": "delete",
       "endpoint": "v2/groupItems",
       "responses": [
         {
-          "uuid": "0c9cbbb1-e7d5-11ea-a5ec-979674ac1a4b",
+          "uuid": "0eb7d687-96ee-49a0-8a5e-0cf357aed1f1",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "Successful response",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "0c9cbbb4-e7d5-11ea-a5ec-979674ac1a4b",
+      "uuid": "c340eed3-6388-4c2c-8ea5-da13d5e1e40c",
+      "type": "http",
       "documentation": "Returns a collection of group items that match the API request parameters.",
       "method": "get",
       "endpoint": "v2/groupItems",
       "responses": [
         {
-          "uuid": "0c9cbbb3-e7d5-11ea-a5ec-979674ac1a4b",
+          "uuid": "571c2db8-bb82-4d1e-aaec-f68cbd6d6ca7",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "Successful response",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "0c9cbbb6-e7d5-11ea-a5ec-979674ac1a4b",
+      "uuid": "e0544247-afb9-4fd5-b30f-c06d84be9916",
+      "type": "http",
       "documentation": "Creates a group item.",
       "method": "post",
       "endpoint": "v2/groupItems",
       "responses": [
         {
-          "uuid": "0c9cbbb5-e7d5-11ea-a5ec-979674ac1a4b",
+          "uuid": "5a47b8bc-2303-4194-b259-b4f7ef5fde8b",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "Successful response",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "0c9cbbb8-e7d5-11ea-a5ec-979674ac1a4b",
+      "uuid": "6ca2b88d-5d9c-4408-bd5d-56a1dab42b26",
+      "type": "http",
       "documentation": "Deletes a group.",
       "method": "delete",
       "endpoint": "v2/groups",
       "responses": [
         {
-          "uuid": "0c9cbbb7-e7d5-11ea-a5ec-979674ac1a4b",
+          "uuid": "9f7c1e6b-c9b7-4048-b8af-468f694c003c",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "Successful response",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "0c9cbbba-e7d5-11ea-a5ec-979674ac1a4b",
+      "uuid": "8f0f6be8-0aeb-4330-ab62-8bfca24573d1",
+      "type": "http",
       "documentation": "Returns a collection of groups that match the API request parameters. For\nexample, you can retrieve all groups that the authenticated user owns,\nor you can retrieve one or more groups by their unique IDs.",
       "method": "get",
       "endpoint": "v2/groups",
       "responses": [
         {
-          "uuid": "0c9cbbb9-e7d5-11ea-a5ec-979674ac1a4b",
+          "uuid": "c4705684-9a07-4a1a-a1d7-bfc2a7caaee9",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "Successful response",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "0c9cbbbc-e7d5-11ea-a5ec-979674ac1a4b",
+      "uuid": "3b195fe9-d975-4c99-8820-b07b6b6f3b46",
+      "type": "http",
       "documentation": "Creates a group.",
       "method": "post",
       "endpoint": "v2/groups",
       "responses": [
         {
-          "uuid": "0c9cbbbb-e7d5-11ea-a5ec-979674ac1a4b",
+          "uuid": "c32bd508-c1bd-4caf-b4f9-287580378d38",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "Successful response",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "0c9cbbbe-e7d5-11ea-a5ec-979674ac1a4b",
+      "uuid": "066b3729-9917-4d0e-a832-913b24c9e45e",
+      "type": "http",
       "documentation": "Modifies a group. For example, you could change a group's title.",
       "method": "put",
       "endpoint": "v2/groups",
       "responses": [
         {
-          "uuid": "0c9cbbbd-e7d5-11ea-a5ec-979674ac1a4b",
+          "uuid": "529d5799-0dfa-4dcc-9cf0-3402a87a1d69",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "Successful response",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "0c9cbbc0-e7d5-11ea-a5ec-979674ac1a4b",
+      "uuid": "94058f03-284e-43d5-a90a-1e2b1eb74180",
+      "type": "http",
       "documentation": "Retrieve your YouTube Analytics reports.",
       "method": "get",
       "endpoint": "v2/reports",
       "responses": [
         {
-          "uuid": "0c9cbbbf-e7d5-11ea-a5ec-979674ac1a4b",
+          "uuid": "3046a077-2257-47d5-89bd-5a368515b412",
           "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "Successful response",
-          "headers": [{ "key": "Content-Type", "value": "*/*" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "*/*"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "b4962b35-923b-4ddd-bc07-9c3f69a9b42b"
+    },
+    {
+      "type": "route",
+      "uuid": "c340eed3-6388-4c2c-8ea5-da13d5e1e40c"
+    },
+    {
+      "type": "route",
+      "uuid": "e0544247-afb9-4fd5-b30f-c06d84be9916"
+    },
+    {
+      "type": "route",
+      "uuid": "6ca2b88d-5d9c-4408-bd5d-56a1dab42b26"
+    },
+    {
+      "type": "route",
+      "uuid": "8f0f6be8-0aeb-4330-ab62-8bfca24573d1"
+    },
+    {
+      "type": "route",
+      "uuid": "3b195fe9-d975-4c99-8820-b07b6b6f3b46"
+    },
+    {
+      "type": "route",
+      "uuid": "066b3729-9917-4d0e-a832-913b24c9e45e"
+    },
+    {
+      "type": "route",
+      "uuid": "94058f03-284e-43d5-a90a-1e2b1eb74180"
     }
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "cors": true,
-  "headers": [],
-  "proxyReqHeaders": [{ "key": "", "value": "" }],
-  "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",
@@ -256,16 +343,10 @@
     "caPath": "",
     "passphrase": ""
   },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
-  "folders": [],
-  "rootChildren": [
-    { "type": "route", "uuid": "0c9cbbb2-e7d5-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "0c9cbbb4-e7d5-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "0c9cbbb6-e7d5-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "0c9cbbb8-e7d5-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "0c9cbbba-e7d5-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "0c9cbbbc-e7d5-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "0c9cbbbe-e7d5-11ea-a5ec-979674ac1a4b" },
-    { "type": "route", "uuid": "0c9cbbc0-e7d5-11ea-a5ec-979674ac1a4b" }
-  ]
+  "callbacks": []
 }

@@ -1,0 +1,178 @@
+{
+  "uuid": "8a3cc37b-0993-463b-9f30-b306a13e50de",
+  "lastMigration": 33,
+  "name": "callbacks",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "inline",
+      "responses": [
+        {
+          "uuid": "aa1b9d75-8161-49bf-80d7-c7a50d341a15",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "callbacks": [],
+          "crudKey": "id"
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "file",
+      "responses": [
+        {
+          "uuid": "a6a47a6d-37df-49c9-816b-0b41c3501b73",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "../body-files/file1.txt",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "FILE",
+          "callbacks": [],
+          "crudKey": "id"
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "cf3b141e-ddc7-41e3-89b9-8ef6a0e64400",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "databucket",
+      "responses": [
+        {
+          "uuid": "8b98dfa6-a5b5-4d83-b129-5f86c9bfa317",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "abc1",
+          "bodyType": "DATABUCKET",
+          "callbacks": [],
+          "crudKey": "id"
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "cors": true,
+  "headers": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "data": [
+    {
+      "uuid": "cad3eee3-259f-4e28-b2ec-e7ff5e4879cf",
+      "id": "abc1",
+      "name": "Databucket",
+      "value": "hello"
+    }
+  ],
+  "callbacks": [
+    {
+      "uuid": "fa25abeb-29cd-4bc8-87b2-4cade442a27f",
+      "id": "cb1",
+      "name": "Callback POST",
+      "method": "post",
+      "uri": "https://reqbin.com/sample/post/json",
+      "body": "{\"response\": \"test post\",  \"status\": 0}",
+      "bodyType": "INLINE",
+      "sendFileAsBody": false,
+      "headers": [],
+      "databucketID": "",
+      "filePath": ""
+    },
+    {
+      "uuid": "7a1538b8-4690-4481-b372-6d26ec54cf77",
+      "id": "cb2",
+      "name": "Callback PUT",
+      "method": "put",
+      "uri": "https://reqbin.com/echo/put/json",
+      "body": "{\"response\": \"test put\",  \"status\": 0}",
+      "bodyType": "INLINE",
+      "sendFileAsBody": false,
+      "headers": [
+        { "key": "Content-Type", "value": "application/json" },
+        { "key": "X-Test-header", "value": "test-value" }
+      ],
+      "databucketID": "",
+      "filePath": ""
+    },
+    {
+      "uuid": "1dea9b11-d60a-4d33-89dc-e8e3f8b16d6b",
+      "id": "cb3",
+      "name": "Callback to Remove",
+      "method": "put",
+      "uri": "https://reqbin.com/echo/put/json",
+      "body": "{\"response\": \"test put\",  \"status\": 0}",
+      "bodyType": "INLINE",
+      "sendFileAsBody": false,
+      "headers": [],
+      "databucketID": "",
+      "filePath": ""
+    }
+  ],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c" },
+    { "type": "route", "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511" },
+    { "type": "route", "uuid": "cf3b141e-ddc7-41e3-89b9-8ef6a0e64400" }
+  ]
+}

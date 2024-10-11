@@ -1,12 +1,4 @@
 import { Observable, Subject } from 'rxjs';
-import { DropActionType } from 'src/renderer/app/enums/ui.enum';
-
-export enum DraggableContainers {
-  ENVIRONMENTS = 'ENVIRONMENTS',
-  ROUTES = 'ROUTES',
-  DATABUCKETS = 'DATABUCKETS',
-  ROUTE_RESPONSES = 'ROUTE_RESPONSES'
-}
 
 export type DragState = {
   // id of the dragged element (UUID or index)
@@ -20,12 +12,7 @@ export type DragState = {
   nativeElement: HTMLElement;
 };
 
-export enum ScrollDirection {
-  TOP = 'TOP',
-  BOTTOM = 'BOTTOM'
-}
-
-export type ConfirmModalEvent = {
+export type ConfirmModalPayload = {
   title: string;
   text: string;
   confirmButtonText?: string;
@@ -38,12 +25,7 @@ export type ConfirmModalEvent = {
   confirmed$: Subject<boolean>;
 };
 
-export type DropAction<T extends string | number = string | number> = {
-  sourceId: T;
-  sourceParentId: string | 'root';
-  targetId: T;
-  targetParentId: string | 'root';
-  dropActionType: DropActionType;
-  isSourceContainer: boolean;
-  isTargetContainer: boolean;
+export type ManageInstancesModalPayload = {
+  environmentUuid?: string;
+  refresh: boolean;
 };

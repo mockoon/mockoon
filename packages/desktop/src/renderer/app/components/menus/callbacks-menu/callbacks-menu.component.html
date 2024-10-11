@@ -1,0 +1,97 @@
+<ng-container
+  *ngIf="{
+    callbackList: callbackList$ | async,
+    settings: settings$ | async,
+    activeCallback: activeCallback$ | async
+  } as data"
+>
+  <div class="callbacks-menu d-flex flex-column h-100">
+    <div class="d-flex w-100 py-2 align-items-center">
+      <div>
+        <button
+          type="button"
+          class="btn btn-link"
+          (click)="addCallback()"
+          ngbTooltip="Add callback"
+        >
+          <app-svg icon="add_box"></app-svg>
+        </button>
+      </div>
+      <div class="flex-grow-1">
+        <app-filter
+          filterName="callbacks"
+          [focusableInput]="focusableInputs.CALLBACK_FILTER"
+        ></app-filter>
+      </div>
+    </div>
+
+    <ul *ngIf="data.callbackList" class="nav flex-column menu-list h-100">
+      <li
+        class="nav-item"
+        *ngFor="let callback of data.callbackList; trackBy: trackByUuid"
+        appDraggable
+        appDropzone
+        dragContainer="callbacks"
+        [dragEnabled]="true"
+        dragParentId="root"
+        [dragIsContainer]="false"
+        [dragId]="callback.uuid"
+        (dropped)="reorderCallbacks($event)"
+      >
+        <a
+          class="nav-link d-flex pe-0 hover-parent"
+          [ngClass]="{
+            active: data.activeCallback?.uuid === callback.uuid
+          }"
+          appScrollWhenActive
+          (click)="selectCallback(callback.uuid)"
+        >
+          <!-- mw0 is important for proper text truncation -->
+          <div class="d-flex flex-column mw0">
+            <div
+              *ngIf="data.settings"
+              class="nav-link-label callback-path"
+              [ngClass]="{
+                'text-truncate': data.settings.truncateRouteName,
+                'text-break': !data.settings.truncateRouteName
+              }"
+            >
+              {{ callback.name }}
+            </div>
+            <div
+              class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
+            >
+              <span class="color-method-{{ callback.method | lowercase }} me-2"
+                >{{ callback.method | uppercase }}
+              </span>
+              <span class="text-truncate">
+                {{
+                  callback.documentation ? callback.documentation : callback.uri
+                }}</span
+              >
+            </div>
+          </div>
+          <div class="ms-auto ps-2 d-flex align-items-start">
+            <app-dropdown-menu
+              [idPrefix]="'callback-' + callback.uuid"
+              [items]="dropdownMenuItems"
+              [payload]="{
+                callbackUuid: callback.uuid
+              }"
+              [iconFaded]="true"
+              [noYPadding]="true"
+            ></app-dropdown-menu>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <div
+      appResizeColumn
+      type="secondary"
+      [minWidth]="menuSize"
+      [maxWidthFactor]="0.25"
+      class="resize-column"
+    ></div>
+  </div>
+</ng-container>

@@ -1,18 +1,16 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   OnDestroy,
-  ViewChild
+  OnInit
 } from '@angular/core';
-import { DataBucket, Environment, Route } from '@mockoon/commons';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Callback, DataBucket, Environment, Route } from '@mockoon/commons';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DuplicateEntityToAnotherEnvironment } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import { cancelEntityDuplicationToAnotherEnvironmentAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -21,9 +19,7 @@ import { Store } from 'src/renderer/app/stores/store';
   templateUrl: './duplicate-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
-  @ViewChild('modal')
-  public modal: ElementRef;
+export class DuplicateModalComponent implements OnInit, OnDestroy {
   public environments$: Observable<Environment[]> = this.store
     .select('environments')
     .pipe(
@@ -52,7 +48,7 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
   private entityDuplicationSubscription: Subscription;
 
   constructor(
-    private modalService: NgbModal,
+    private uiService: UIService,
     private store: Store,
     private environmentsService: EnvironmentsService
   ) {}
@@ -61,12 +57,11 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
     return this.store.getActiveEnvironment();
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.entityDuplicationSubscription = this.entityDuplicationState$.subscribe(
       (state: DuplicateEntityToAnotherEnvironment) => {
         if (state.moving) {
           this.extractEntityToDuplicate(state);
-          this.openModal();
         }
       }
     );
@@ -76,9 +71,8 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
     this.entityDuplicationSubscription.unsubscribe();
   }
 
-  public closeModal() {
-    this.store.update(cancelEntityDuplicationToAnotherEnvironmentAction());
-    this.modalService.dismissAll(false);
+  public close() {
+    this.uiService.closeModal('duplicate_to_environment', false);
   }
 
   public chooseTargetEnvironment(
@@ -99,12 +93,15 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
         this.entityInformation.uuid,
         targetEnvironment.uuid
       );
+    } else if (entityInformation.subject === 'callback') {
+      this.environmentsService.duplicateCallbackInAnotherEnvironment(
+        this.entityInformation.uuid,
+        targetEnvironment.uuid
+      );
     }
-    this.closeModal();
-  }
 
-  private openModal() {
-    this.modalService.open(this.modal);
+    this.store.update(cancelEntityDuplicationToAnotherEnvironmentAction());
+    this.uiService.closeModal('duplicate_to_environment');
   }
 
   private extractEntityToDuplicate(state: DuplicateEntityToAnotherEnvironment) {
@@ -122,6 +119,15 @@ export class DuplicateModalComponent implements OnDestroy, AfterViewInit {
     } else if (state.subject === 'databucket') {
       const entityToDuplicate = this.activeEnvironment.data.find(
         (databucket: DataBucket) => databucket.uuid === state.subjectUUID
+      );
+      this.entityInformation = {
+        displayName: entityToDuplicate.name,
+        subject: state.subject,
+        uuid: entityToDuplicate.uuid
+      };
+    } else if (state.subject === 'callback') {
+      const entityToDuplicate = this.activeEnvironment.callbacks.find(
+        (cb: Callback) => cb.uuid === state.subjectUUID
       );
       this.entityInformation = {
         displayName: entityToDuplicate.name,

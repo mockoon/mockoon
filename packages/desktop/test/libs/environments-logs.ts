@@ -1,37 +1,22 @@
-import { ChainablePromiseElement } from 'webdriverio';
 import { EnvironmentLogsTabsNameType } from '../../src/renderer/app/models/store.model';
 import navigation from '../libs/navigation';
-import utils from '../libs/utils';
+import utils, { DropdownMenuLogsActions } from '../libs/utils';
 
 /**
  * Requires a switch to the settings view
  */
 class EnvironmentsLogs {
-  public get container(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get container() {
     return $('.environment-logs');
   }
 
-  public get viewBodyEditor(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('.environment-logs-open-request-body');
-  }
-
-  public get startRecordingBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get startRecordingBtn() {
     return $('.environment-logs-header button#start-recording');
   }
 
-  public getMetadataIcon(
-    logIndex: number
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  public getMetadataIcon(logIndex: number) {
     return $(
-      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link div div:first-of-type div:nth-of-type(3) .logs-metadata`
-    );
-  }
-
-  public getMockBtn(
-    logIndex: number
-  ): ChainablePromiseElement<WebdriverIO.Element> {
-    return $(
-      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .btn-mock`
+      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link-subtitle .logs-metadata`
     );
   }
 
@@ -68,7 +53,7 @@ class EnvironmentsLogs {
   public async assertLogMenu(logIndex: number, method: string, path?: string) {
     const menuItemSelector = `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link`;
     const methodSelector = `${menuItemSelector} .route-method`;
-    const pathSelector = `${menuItemSelector} .route`;
+    const pathSelector = `${menuItemSelector} .nav-link-label`;
 
     await $(menuItemSelector).waitForExist();
     await utils.assertElementText($(methodSelector), method);
@@ -102,16 +87,24 @@ class EnvironmentsLogs {
     await utils.assertElementText($(selector), text);
   }
 
+  public async assertLogBody(text: string, tab: 'request' | 'response') {
+    const selector = `.environment-logs-content-${tab} div:nth-child(${tab === 'request' ? '10' : '6'}) .ace_content`;
+
+    await $(selector).waitForExist();
+    await utils.assertElementText($(selector), text);
+  }
+
   public async assertLogItemTitle(
     text: string,
     tab: 'request' | 'response',
     sectionIndex: number
   ) {
-    const selector = `.environment-logs-content-${tab} div:nth-child(${sectionIndex}) div:first-child`;
+    const selector = `.environment-logs-content-${tab} > div:nth-child(${sectionIndex})`;
 
     await $(selector).waitForExist();
-    const elementText = await $(selector).getText();
-    expect(elementText).toContain(text);
+    const elementText = (await $(selector).getText()).trim();
+
+    expect(elementText).toEqual(text);
   }
 
   public async switchTab(tabName: EnvironmentLogsTabsNameType) {
@@ -126,7 +119,10 @@ class EnvironmentsLogs {
   }
 
   public async clickMockButton(logIndex: number) {
-    await this.getMockBtn(logIndex).click();
+    await utils.dropdownMenuClick(
+      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link`,
+      DropdownMenuLogsActions.MOCK
+    );
   }
 
   public async assertViewBodyLogButtonPresence(reverse = false) {
@@ -135,12 +131,6 @@ class EnvironmentsLogs {
 
   public async clickViewBodyLogButton() {
     await $('.view-body-link').click();
-  }
-
-  public async clickOpenBodyInEditorButton(tab: 'request' | 'response') {
-    await $(
-      `.environment-logs-content-${tab} .environment-logs-open-${tab}-body`
-    ).click();
   }
 
   public async startRecording() {

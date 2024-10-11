@@ -1,6 +1,6 @@
 {
   "uuid": "0119ee98-f608-4a6e-909f-d6700d1c196b",
-  "lastMigration": 28,
+  "lastMigration": 33,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "post",
       "endpoint": "bodyjson-rootlvl",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "f71dbb19-562f-4dee-8ee7-023038a45002",
@@ -29,18 +28,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "0b51d671-78fe-4e45-8535-d7077ea25935",
       "method": "post",
       "endpoint": "bodyjson-rootlvl-nodefault",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "d8b99c2a-e589-43e4-adda-6b7406d00e88",
@@ -58,18 +59,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "0b49eaa5-4f7f-4727-bf73-13e38ff0024f",
       "method": "post",
       "endpoint": "bodyjson-full-noparam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "fbc6c819-8040-4bfb-9f7c-b768b143f13f",
@@ -87,18 +90,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "ce4b4296-17cc-430d-af55-1bba17fe70a1",
       "method": "post",
       "endpoint": "bodyjson-full-emptyparam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "aa802b24-43f0-497c-9faa-5d9c56333eca",
@@ -116,18 +121,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "babc1039-6224-4a8a-965f-a7ef422dc8e2",
       "method": "post",
       "endpoint": "bodyjson",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "dc345573-e68c-4527-b077-595518ed31f9",
@@ -145,18 +152,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "15985d8b-3f0a-49d9-a6cf-3ee54121a19e",
       "method": "post",
       "endpoint": "bodyjson-path",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6b21bf09-23de-4d69-98a5-2947f3614873",
@@ -174,18 +183,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "05b7a580-bf3e-4b39-bc71-332719f842e0",
       "method": "post",
       "endpoint": "bodyform-rootlvl",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "889f0790-fd6f-484c-ad78-46be97df6f73",
@@ -203,18 +214,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "99bcd9cc-638c-455c-a1d0-2d03408e65b8",
       "method": "post",
       "endpoint": "bodyform-rootlvl-nodefault",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "e73a6950-6ba2-4530-bf3c-bf0936634d0a",
@@ -232,18 +245,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "afcc82aa-4ea0-4874-a520-6f5491ffef5a",
       "method": "post",
       "endpoint": "bodyform-full-noparam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "1381d775-087c-46b5-9889-ba4d8869c67d",
@@ -261,18 +276,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "ecd94987-73d0-490b-8476-3263d2e85e24",
       "method": "post",
       "endpoint": "bodyform-full-emptyparam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "da5c9637-be67-4ab9-9f42-16b803c7222b",
@@ -290,18 +307,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "3b040ecd-a637-491e-819e-de13cc375831",
       "method": "post",
       "endpoint": "bodyform",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "541beb00-e336-41da-8fae-bb23b0e4fcfd",
@@ -319,18 +338,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "646646ed-dcdc-449e-b2bc-c817605c9feb",
       "method": "post",
       "endpoint": "bodyform-path",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "964fe42b-d88c-489e-8a48-f2c38e8e625f",
@@ -348,18 +369,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "ad945bcc-5aa6-4023-97ca-69848c123ea0",
       "method": "get",
       "endpoint": "bad-helper",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "0b89ebfd-5ea9-4b2b-a739-5fc37d7bb9b5",
@@ -377,18 +400,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "d5bb6ebe-ae0a-4d25-be1c-145801cfb349",
       "method": "get",
       "endpoint": "templating-syntax-error-body",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "f5774351-e283-47db-9095-b107ebeba897",
@@ -406,18 +431,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "1a4cbe41-ef87-4f9b-8dd4-a3cf899b1e6e",
       "method": "get",
       "endpoint": "templating-syntax-error-header",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "0d027239-14fb-4f52-84c3-bd2f2adb25ce",
@@ -438,18 +465,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "47d09e53-e39d-41c8-ab47-1dee08a8a2d5",
       "method": "get",
       "endpoint": "templating-syntax-error-filepath",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "ca0b0463-144d-47e7-95b1-4dba404315af",
@@ -467,18 +496,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "054dec37-f089-4e92-8794-32b04eb6ac58",
       "method": "get",
       "endpoint": "templating-syntax-error-file",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6dcbd142-9042-474a-85e7-fe3867804953",
@@ -496,18 +527,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "16af46a7-9b69-4f6b-bd6d-0d3866d09482",
       "method": "get",
       "endpoint": "filepath",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "8d7df75e-68f0-4d64-bd4c-af3ad1827236",
@@ -525,18 +558,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "f87f17f2-8cb9-4f2d-9925-7b8b14edfb8c",
       "method": "get",
       "endpoint": "filepath-windows",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "d34f47ae-1343-4e9c-884e-59db780fb0fe",
@@ -554,18 +589,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "570e06b6-dac0-4229-b592-c369c0acfd92",
       "method": "get",
       "endpoint": "file-templating",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6dd9dc02-c6d1-4cb3-baf4-491289004eff",
@@ -583,18 +620,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "FILE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "d321789a-db2a-4cd5-a4d4-f10a7c18860b",
       "method": "get",
       "endpoint": "urlparam/:urlparam1",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "965142a3-1bb0-4fa9-a285-f6b15ec97fb6",
@@ -612,18 +651,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "ae5e2150-ebcd-484b-9bca-577f8fb79427",
       "method": "get",
       "endpoint": "queryparam-rootlvl-nodefault",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "8a703d55-19c9-4466-a639-4224dd2dd62e",
@@ -641,18 +682,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "cd11c23c-d2b8-47b5-b7fe-832d9f368e7d",
       "method": "get",
       "endpoint": "queryparam-rootlvl",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "b9c1ec69-8733-4d87-b202-7cb3cdf963a5",
@@ -670,18 +713,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "191326b6-86cf-4d2d-b9d0-7c7f36477068",
       "method": "get",
       "endpoint": "queryparam-rootlvl-arrayitem",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "7fade511-9126-4683-bebc-40eddc35225f",
@@ -699,18 +744,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "7aa9f6c7-9c41-4f79-a0dd-fb08092ddb2f",
       "method": "get",
       "endpoint": "queryparam-rootlvl-objectproperty",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "958d4d63-dd50-4d0a-86e2-02240aa93baf",
@@ -728,18 +775,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "d222954a-948a-4400-86c8-c55edd4b263b",
       "method": "get",
       "endpoint": "queryparam-rootlvl-array",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "35a46749-1de6-4113-b4d8-7e4e3d883cb4",
@@ -757,18 +806,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "00afbc63-059d-4d9b-bed8-f39f5014140e",
       "method": "get",
       "endpoint": "queryparam-rootlvl-object",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "633de1f1-2f4a-443e-b7bb-9035a894241a",
@@ -786,18 +837,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "a40b60eb-f791-4aff-af38-fe99ef37a400",
       "method": "get",
       "endpoint": "queryparam-multiple",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "9fcc2a9e-ec23-42e7-9ec6-44198a6837d4",
@@ -815,18 +868,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "2b2e4953-9f9d-4f9c-91bd-02972132e708",
       "method": "get",
       "endpoint": "queryparam-full-emptypath",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "f5b48e6a-6c11-49a4-981f-9c4115535b03",
@@ -844,18 +899,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "037afb95-11b6-4b7f-91d1-ad64030094c4",
       "method": "get",
       "endpoint": "queryparam-full-nopath",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "319a6738-86f1-47ac-b7b1-37ed832cee8a",
@@ -873,22 +930,24 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "c6900dcd-aeb7-43e9-a470-e3a2d6373687",
       "method": "post",
       "endpoint": "formdata",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "333eeac3-d2a8-4b43-b350-bcaea7d55f18",
-          "body": "{{bodyRaw 'var1'}}{{bodyRaw 'select'}}{{bodyRaw 'object.property'}}",
+          "body": "{{bodyRaw 'file.filename'}}{{bodyRaw 'file.mimetype'}}{{bodyRaw 'file.size'}}-{{bodyRaw 'var1'}}-{{bodyRaw 'select'}}-{{bodyRaw 'object.property'}}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -902,18 +961,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "9668ef0f-bfd3-4dc7-9942-efe324c5b5e1",
       "method": "get",
       "endpoint": "header",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "42a30ea7-2a9e-43d9-973b-fcbd63fb8f88",
@@ -931,18 +992,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "f41d404f-68ee-4df5-9b96-9394de52bf9d",
       "method": "get",
       "endpoint": "cookie",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "a7c54952-0aa7-4d07-82fa-ae451502767d",
@@ -960,18 +1023,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "42cfea8a-2e95-4286-9eec-3aad82e39c5d",
       "method": "get",
       "endpoint": "hostname",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "a5b1f4b2-46df-48df-ba28-e91862959012",
@@ -989,18 +1054,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "29bd91e1-b39b-4923-b1cb-ff4af7b83389",
       "method": "get",
       "endpoint": "ip",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "df5409e7-84cc-4606-8d8b-cbd330c153de",
@@ -1018,18 +1085,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "31bf072a-1770-443c-bc43-d20843378e9e",
       "method": "get",
       "endpoint": "method",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "07d06f07-a469-409b-84e0-0a8e5ede04ab",
@@ -1047,18 +1116,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "4ac60644-b7ce-4b67-a350-359a1be91b42",
       "method": "get",
       "endpoint": "oneof",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6666f159-74d7-4d1d-9f43-c70327e45990",
@@ -1076,18 +1147,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "cd81ccb9-23b6-4d4a-ae3c-77107c9e4072",
       "method": "get",
       "endpoint": "someof",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "317ab0f2-5cbf-41cb-8735-db474814823b",
@@ -1105,18 +1178,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "6873f30d-58e1-425a-a22f-334dbbb10e57",
       "method": "get",
       "endpoint": "someofarray",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6037b85b-606b-4368-9659-11527c922bac",
@@ -1134,18 +1209,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "fef44065-1a70-4fdd-8876-b32f0b5a088b",
       "method": "get",
       "endpoint": "now",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "2db126ab-7d19-4129-83fb-6e1be24cd0a0",
@@ -1163,18 +1240,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "deb123f8-8c31-4652-9399-a64ab69b75c1",
       "method": "get",
       "endpoint": "newline",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "30042a63-f29e-4e1e-b50e-9d157c447b7c",
@@ -1192,18 +1271,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "921c9906-ea2b-42fa-abe2-55f21200ad2e",
       "method": "get",
       "endpoint": "objectid",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "67d9190b-7312-4ad4-b8d4-c1cc7d66807c",
@@ -1221,18 +1302,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "51993754-4d1d-4723-902f-c3ebc8c86e24",
       "method": "get",
       "endpoint": "base64",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "66435b82-6bd0-401f-b973-7d4e056ac632",
@@ -1250,18 +1333,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "68303f6a-24f0-441c-b34a-a0af2329533a",
       "method": "get",
       "endpoint": "old.repeat",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "3c917484-bdd1-40c1-81a8-b36a314faf70",
@@ -1279,18 +1364,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "181a577f-74f8-42b5-b5d6-082ca6c7c078",
       "method": "get",
       "endpoint": "old.repeat.invalid",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "05929ae4-c74f-4023-bf38-18ad54804a68",
@@ -1308,18 +1395,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "3c11320c-f877-4d33-8c8b-cc00e39ebf48",
       "method": "get",
       "endpoint": "old.switch.urlParam/:param",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "fce44ac2-cfca-4722-930b-5cb0c85250b1",
@@ -1337,18 +1426,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "2788d9f7-4e73-4a50-9369-094614a7b954",
       "method": "get",
       "endpoint": "old.switch.urlParam.helper/:param",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "2dfefe9e-9ac7-44c0-b29a-41ce5af7d6b3",
@@ -1366,18 +1457,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "e15f86c5-038e-4556-aa66-b71e9a02128a",
       "method": "get",
       "endpoint": "old.switch.urlParam.multi/:param1/:param2",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "ec0f78e0-63e7-4efd-8a60-8ba69bff3d01",
@@ -1395,18 +1488,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "4baa34c8-097a-4841-a978-e15789f48480",
       "method": "get",
       "endpoint": "old.switch.queryParam",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "07db1e8c-01c9-4caf-afc2-ca4a52b41667",
@@ -1424,18 +1519,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "5c78c723-050e-40b9-b7e0-d216cd2738ff",
       "method": "get",
       "endpoint": "old.switch.body",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "31aecc90-b083-48fb-a3c3-281dd767b70d",
@@ -1453,18 +1550,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "0d190ff6-f23c-4f03-9d90-08a5542abe3e",
       "method": "get",
       "endpoint": "nameDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "b55224cb-d1e9-4836-ae34-04af05b697f5",
@@ -1482,18 +1581,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
       "method": "get",
       "endpoint": "emptyDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1511,18 +1612,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
       "method": "get",
       "endpoint": "stringDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1540,18 +1643,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
       "method": "get",
       "endpoint": "stringDatabucket2",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1569,18 +1674,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
       "method": "get",
       "endpoint": "numberDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1598,18 +1705,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b",
       "method": "get",
       "endpoint": "booleanDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "39195084-5d73-4996-b59c-97d39c5e0004",
@@ -1627,18 +1736,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "7a748b48-0ebb-4557-88f0-c44d50ae238c",
       "method": "get",
       "endpoint": "rqHelpersDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "e36c8eb6-8cdf-4c22-89ae-f3c292aeb953",
@@ -1656,18 +1767,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "0687ac28-bdd1-43f1-8dfe-0fd523a8c276",
       "method": "get",
       "endpoint": "pathDatabucket",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "802ddec6-8437-45e0-9084-37d405b37cab",
@@ -1685,7 +1798,95 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
+      "uuid": "5033832a-06cd-4936-969a-e6e634feddfc",
+      "method": "get",
+      "endpoint": "fakerseed",
+      "documentation": "",
+      "responses": [
+        {
+          "uuid": "d7626c42-5210-4116-b22c-74446fcc7d42",
+          "body": "{{faker 'location.zipCode'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
+      "uuid": "51cf840e-ab69-4162-829c-2dd01d0e62fb",
+      "method": "get",
+      "endpoint": "setglobalvar",
+      "documentation": "",
+      "responses": [
+        {
+          "uuid": "93be1c56-786c-4a3c-898d-34d1190f726b",
+          "body": "{{setGlobalVar 'testVar' 'value1'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http"
+    },
+    {
+      "uuid": "9a2ee9a3-fd1a-40da-9184-55a21bfca3dc",
+      "method": "get",
+      "endpoint": "getglobalvar",
+      "documentation": "",
+      "responses": [
+        {
+          "uuid": "914833be-c635-4bab-acc8-1d39b46a0b61",
+          "body": "{{getGlobalVar 'testVar'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "disableTemplating": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
@@ -1812,6 +2013,10 @@
     { "type": "route", "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b" },
     { "type": "route", "uuid": "770c0253-8cba-4f26-87f7-dd242346c61b" },
     { "type": "route", "uuid": "7a748b48-0ebb-4557-88f0-c44d50ae238c" },
-    { "type": "route", "uuid": "0687ac28-bdd1-43f1-8dfe-0fd523a8c276" }
-  ]
+    { "type": "route", "uuid": "0687ac28-bdd1-43f1-8dfe-0fd523a8c276" },
+    { "type": "route", "uuid": "5033832a-06cd-4936-969a-e6e634feddfc" },
+    { "type": "route", "uuid": "51cf840e-ab69-4162-829c-2dd01d0e62fb" },
+    { "type": "route", "uuid": "9a2ee9a3-fd1a-40da-9184-55a21bfca3dc" }
+  ],
+  "callbacks": []
 }

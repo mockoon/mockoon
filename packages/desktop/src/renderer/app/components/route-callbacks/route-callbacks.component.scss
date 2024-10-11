@@ -1,0 +1,6 @@
+@import 'src/renderer/styles/bootstrap-variables.scss';
+
+.callback-item {
+  display: grid;
+  grid-template-columns: 10fr min-content 2fr min-content min-content;
+}

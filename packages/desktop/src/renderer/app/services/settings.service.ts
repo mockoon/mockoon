@@ -1,64 +1,57 @@
 import { Injectable } from '@angular/core';
-import { IsEqual } from '@mockoon/commons';
-import { from, Observable, of } from 'rxjs';
+import {
+  Environment,
+  IsEqual,
+  ReorderAction,
+  moveItemAtTarget
+} from '@mockoon/commons';
+import { Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
-  map,
   mergeMap,
   pairwise,
-  switchMap,
   tap
 } from 'rxjs/operators';
+import { gt as semverGt } from 'semver';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { SettingsSchema } from 'src/renderer/app/constants/settings-schema.constants';
-import {
-  PreMigrationSettings,
-  SettingsProperties
-} from 'src/renderer/app/models/settings.model';
 import { StorageService } from 'src/renderer/app/services/storage.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/renderer/config';
 import {
-  EnvironmentDescriptor,
-  FileWatcherOptions
+  EnvironmentsCategories,
+  FileWatcherOptions,
+  Settings
 } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
-  public oldLastMigration: number;
-
   constructor(
     private store: Store,
     private storageService: StorageService,
-    private telemetryService: TelemetryService
+    private telemetryService: TelemetryService,
+    private uiService: UIService
   ) {}
 
   /**
-   * Monitor some settings to trigger behaviors in the main process
+   * Monitor some settings to trigger behaviors in the main process.
+   * Store will emit null first, then the saved settings.
    */
   public monitorSettings() {
     // switch Faker locale
     return this.store.select('settings').pipe(
-      filter((settings) => !!settings),
       pairwise(),
       tap(([previousSettings, currentSettings]) => {
         if (
-          previousSettings.fakerLocale !== currentSettings.fakerLocale ||
-          previousSettings.fakerSeed !== currentSettings.fakerSeed
-        ) {
-          MainAPI.send('APP_SET_FAKER_OPTIONS', {
-            locale: currentSettings.fakerLocale,
-            seed: currentSettings.fakerSeed
-          });
-        }
-
-        if (
-          previousSettings.fileWatcherEnabled !==
+          (!previousSettings && currentSettings) ||
+          (previousSettings.fileWatcherEnabled !==
             currentSettings.fileWatcherEnabled &&
-          currentSettings.fileWatcherEnabled === FileWatcherOptions.DISABLED
+            currentSettings.fileWatcherEnabled === FileWatcherOptions.DISABLED)
         ) {
           MainAPI.invoke('APP_UNWATCH_ALL_FILE');
         }
@@ -74,47 +67,25 @@ export class SettingsService {
    */
   public loadSettings(): Observable<any> {
     return this.storageService.loadSettings().pipe(
-      switchMap<
-        PreMigrationSettings,
-        Observable<{
-          settings: PreMigrationSettings;
-          environmentsList?: EnvironmentDescriptor[];
-        }>
-      >((settings) => {
-        // if we don't have an environments object in the settings we need to migrate to the new system
-        if (settings && !settings.environments) {
-          return from(MainAPI.invoke('APP_NEW_STORAGE_MIGRATION')).pipe(
-            map((environmentsList) => ({ environmentsList, settings }))
-          );
+      tap((settings: Settings) => {
+        if (!settings) {
+          this.telemetryService.setFirstSession();
         }
 
-        return of({ settings });
-      }),
-      tap(
-        (settingsData: {
-          settings: PreMigrationSettings;
-          environmentsList: EnvironmentDescriptor[];
-        }) => {
-          this.getOldSettings(settingsData.settings);
+        const validatedSchema = SettingsSchema.validate(settings);
+        this.updateSettings(validatedSchema.value);
+        settings = validatedSchema.value;
 
-          if (!settingsData.settings) {
-            this.telemetryService.setFirstSession();
-          }
+        if (semverGt(Config.appVersion, settings.lastChangelog)) {
+          this.uiService.openModal('changelog');
 
-          const validatedSchema = SettingsSchema.validate(
-            settingsData.settings
-          );
-
-          this.updateSettings(
-            settingsData.environmentsList
-              ? {
-                  ...validatedSchema.value,
-                  environments: settingsData.environmentsList
-                }
-              : validatedSchema.value
-          );
+          this.updateSettings({ lastChangelog: Config.appVersion });
         }
-      )
+
+        if (!settings.welcomeShown) {
+          this.uiService.openModal('welcome');
+        }
+      })
     );
   }
 
@@ -138,22 +109,84 @@ export class SettingsService {
   }
 
   /**
+   * Get the current settings
+   *
+   * @returns
+   */
+  public getSettings() {
+    return this.store.get('settings');
+  }
+
+  /**
    * Update the settings with new properties
    *
    * @param newProperties
    */
-  public updateSettings(newProperties: SettingsProperties) {
+  public updateSettings(newProperties: Partial<Settings>) {
     this.store.update(updateSettingsAction(newProperties));
   }
 
   /**
-   * Retrieve old settings and store them temporarily
+   * Remove disabled routes from settings when they are not existing anymore
    *
-   * @param settings
+   * @param environment
    */
-  private getOldSettings(settings: PreMigrationSettings) {
-    if (settings?.lastMigration) {
-      this.oldLastMigration = settings.lastMigration;
+  public cleanDisabledRoutes(environment: Environment) {
+    const environmentUuid = environment.uuid;
+    const routesUuids = environment.routes.map((route) => route.uuid);
+    const disabledRoutes = { ...this.store.get('settings').disabledRoutes };
+
+    if (disabledRoutes[environmentUuid]) {
+      const newDisabledRoutes = disabledRoutes[environmentUuid].filter(
+        (routeUuid) => routesUuids.includes(routeUuid)
+      );
+
+      if (disabledRoutes[environmentUuid].length !== newDisabledRoutes.length) {
+        disabledRoutes[environmentUuid] = newDisabledRoutes;
+        this.updateSettings({ disabledRoutes });
+      }
     }
+  }
+
+  /**
+   * Remove collapsed folders from settings when they are not existing anymore
+   *
+   * @param environment
+   */
+  public cleanCollapsedFolders(environment: Environment) {
+    const environmentUuid = environment.uuid;
+    const foldersUuids = environment.folders.map((folder) => folder.uuid);
+    const collapsedFolders = { ...this.store.get('settings').collapsedFolders };
+
+    if (collapsedFolders[environmentUuid]) {
+      const newCollapsedFolders = collapsedFolders[environmentUuid].filter(
+        (folderUuid) => foldersUuids.includes(folderUuid)
+      );
+
+      if (
+        collapsedFolders[environmentUuid].length !== newCollapsedFolders.length
+      ) {
+        collapsedFolders[environmentUuid] = newCollapsedFolders;
+        this.updateSettings({ collapsedFolders });
+      }
+    }
+  }
+
+  /**
+   * Reorganize environments categories
+   *
+   * @param reorderAction
+   */
+  public reorganizeEnvironmentsCategories(
+    reorderAction: ReorderAction<string>
+  ) {
+    this.updateSettings({
+      environmentsCategoriesOrder: moveItemAtTarget<EnvironmentsCategories>(
+        this.store.get('settings').environmentsCategoriesOrder,
+        reorderAction.reorderActionType,
+        reorderAction.sourceId as string,
+        reorderAction.targetId as string
+      )
+    });
   }
 }

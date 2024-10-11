@@ -1,4 +1,3 @@
-import { ChainablePromiseElement } from 'webdriverio';
 import utils from '../libs/utils';
 
 type SettingNames =
@@ -16,23 +15,27 @@ type SettingNames =
  * Requires a switch to the settings view
  */
 class EnvironmentsSettings {
-  public get certContainer(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get certContainer() {
     return $('app-environment-settings #tls-cert-container');
   }
 
-  public get hostname(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get hostname() {
     return $('app-environment-settings input[formcontrolname=hostname]');
   }
 
-  public get prefix(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get port() {
+    return $('app-environment-settings input[formcontrolname=port]');
+  }
+
+  public get prefix() {
     return $('app-environment-settings input[formcontrolname=endpointPrefix]');
   }
 
-  public get enableTLS(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get enableTLS() {
     return $('app-environment-settings label[for=env-settings-tls-enabled]');
   }
 
-  public get preflight(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get preflight() {
     return $('app-environment-settings label[for=env-settings-cors]');
   }
 
@@ -62,15 +65,11 @@ class EnvironmentsSettings {
     expect(await setting.getValue()).toEqual(value);
   }
 
-  private getSettingInput(
-    settingName: SettingNames
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  private getSettingInput(settingName: SettingNames) {
     return $(`app-environment-settings input[formcontrolname=${settingName}]`);
   }
 
-  private getSettingCheckbox(
-    settingName: SettingNames
-  ): ChainablePromiseElement<WebdriverIO.Element> {
+  private getSettingCheckbox(settingName: SettingNames) {
     return $(
       `app-environment-settings input[formcontrolname=${settingName}] + label`
     );

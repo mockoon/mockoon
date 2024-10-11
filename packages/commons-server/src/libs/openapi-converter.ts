@@ -61,7 +61,10 @@ export class OpenAPIConverter {
    *
    * @param environment
    */
-  public async convertToOpenAPIV3(environment: Environment) {
+  public async convertToOpenAPIV3(
+    environment: Environment,
+    prettify: boolean = false
+  ) {
     const routes = routesFromFolder(
       environment.rootChildren,
       environment.folders,
@@ -171,7 +174,7 @@ export class OpenAPIConverter {
     try {
       await openAPI.validate(openAPIEnvironment);
 
-      return JSON.stringify(openAPIEnvironment);
+      return JSON.stringify(openAPIEnvironment, null, prettify ? 2 : 0);
     } catch (error) {
       throw error;
     }
@@ -231,10 +234,20 @@ export class OpenAPIConverter {
     const server: OpenAPIV3.ServerObject[] | undefined = parsedAPI.servers;
 
     if (server?.[0]?.url) {
-      newEnvironment.endpointPrefix = RemoveLeadingSlash(
-        new URL(this.v3ParametersReplace(server[0].url, server[0].variables))
-          .pathname
-      );
+      const url = this.v3ParametersReplace(server[0].url, server[0].variables);
+
+      if (url.startsWith('/')) {
+        newEnvironment.endpointPrefix = RemoveLeadingSlash(url);
+      } else {
+        try {
+          const parsedUrl = new URL(url);
+          newEnvironment.endpointPrefix = RemoveLeadingSlash(
+            parsedUrl.pathname
+          );
+        } catch (error) {
+          // fail silently
+        }
+      }
     }
 
     newEnvironment.name = parsedAPI.info.title || 'OpenAPI import';
@@ -415,10 +428,29 @@ export class OpenAPIConverter {
       routeContentTypeHeader.value = contentTypes[0];
     }
 
-    if (responseHeaders) {
+    if (responseHeaders != null) {
       return [
         routeContentTypeHeader,
-        ...Object.keys(responseHeaders).map((header) => BuildHeader(header, ''))
+        ...Object.keys(responseHeaders).map((headerName) => {
+          let headerValue = '';
+
+          if (responseHeaders[headerName] != null) {
+            if (responseHeaders[headerName]['example'] != null) {
+              headerValue = responseHeaders[headerName]['example'];
+            } else if (responseHeaders[headerName]['examples'] != null) {
+              headerValue =
+                responseHeaders[headerName]['examples'][
+                  Object.keys(responseHeaders[headerName]['examples'])[0]
+                ]['value'];
+            } else if (responseHeaders[headerName]['schema'] != null) {
+              headerValue = this.generateSchema(
+                responseHeaders[headerName]['schema']
+              );
+            }
+          }
+
+          return BuildHeader(headerName, headerValue);
+        })
       ];
     }
 
@@ -511,15 +543,15 @@ export class OpenAPIConverter {
     schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject
   ) {
     const typeFactories = {
-      integer: () => "{{faker 'datatype.number'}}",
-      number: () => "{{faker 'datatype.number'}}",
-      number_float: () => "{{faker 'datatype.float'}}",
-      number_double: () => "{{faker 'datatype.float'}}",
+      integer: () => "{{faker 'number.int' max=99999}}",
+      number: () => "{{faker 'number.int' max=99999}}",
+      number_float: () => "{{faker 'number.float'}}",
+      number_double: () => "{{faker 'number.float'}}",
       string: () => '',
       string_date: () => "{{date '2019' (now) 'yyyy-MM-dd'}}",
       'string_date-time': () => "{{faker 'date.recent' 365}}",
       string_email: () => "{{faker 'internet.email'}}",
-      string_uuid: () => "{{faker 'datatype.uuid'}}",
+      string_uuid: () => "{{faker 'string.uuid'}}",
       boolean: () => "{{faker 'datatype.boolean'}}",
       array: (arraySchema) => {
         const newObject = this.generateSchema(arraySchema.items);
@@ -563,18 +595,17 @@ export class OpenAPIConverter {
         return schema.default;
       }
 
-      let schemaToBuild = schema;
+      const schemaToBuild = schema;
 
       // check if we have an array of schemas, and take first item
-      ['allOf', 'oneOf', 'anyOf'].forEach((propertyName) => {
+      for (const propertyName of ['allOf', 'oneOf', 'anyOf']) {
         if (
           schema.hasOwnProperty(propertyName) &&
           schema[propertyName].length > 0
         ) {
-          type = schema[propertyName][0].type;
-          schemaToBuild = schema[propertyName][0];
+          return this.generateSchema(schema[propertyName][0]);
         }
-      });
+      }
 
       // sometimes we have no type but only 'properties' (=object)
       if (
@@ -604,7 +635,7 @@ export class OpenAPIConverter {
    */
   private convertJSONSchemaPrimitives(jsonSchema: string) {
     return jsonSchema.replace(
-      /\"({{faker 'datatype\.(number|boolean|float)'}})\"/g,
+      /\"({{faker '(?:number\.int|number\.float|datatype\.boolean)'(?: max=99999)?}})\"/g,
       '$1'
     );
   }

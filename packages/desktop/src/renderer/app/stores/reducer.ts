@@ -1,26 +1,44 @@
 import {
   DataBucket,
   Environment,
-  Folder,
   FolderChild,
   Route,
-  RouteResponse
+  addCallbackMutator,
+  addDatabucketMutator,
+  addFolderMutator,
+  addRouteMutator,
+  addRouteResponseMutator,
+  fullReorderEntitiesMutator,
+  moveItemAtTarget,
+  removeCallbackMutator,
+  removeDatabucketMutator,
+  removeFolderMutator,
+  removeRouteMutator,
+  removeRouteResponseMutator,
+  reorderCallbackMutator,
+  reorderDatabucketMutator,
+  reorderRouteResponseMutator,
+  reorderRoutesMutator,
+  updateCallbackMutator,
+  updateDatabucketMutator,
+  updateEnvironmentMutator,
+  updateFolderMutator,
+  updateRouteMutator,
+  updateRouteResponseMutator
 } from '@mockoon/commons';
-import { DropActionType } from 'src/renderer/app/enums/ui.enum';
 import { ArrayContainsObjectKey } from 'src/renderer/app/libs/utils.lib';
 import {
   EnvironmentsStatuses,
   StoreType
 } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
-import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
+import { ActionTypes, Actions } from 'src/renderer/app/stores/actions';
 import {
   findRouteFolderHierarchy,
   getBodyEditorMode,
   getFirstRouteAndResponseUUIDs,
-  insertItemAtTarget,
   markEnvStatusRestart,
-  moveItemAtTarget,
+  responseTabForcedNavigation,
   updateDuplicatedRoutes,
   updateEditorAutocomplete
 } from 'src/renderer/app/stores/reducer-utils';
@@ -35,6 +53,26 @@ export const environmentReducer = (
   let newState: StoreType;
 
   switch (action.type) {
+    case ActionTypes.CONVERT_ENVIRONMENT_TO_LOCAL: {
+      newState = {
+        ...state,
+        settings: {
+          ...state.settings,
+          environments: state.settings.environments.map((environment) => {
+            if (environment.uuid === action.environmentUuid) {
+              return {
+                ...environment,
+                cloud: false
+              };
+            }
+
+            return environment;
+          })
+        }
+      };
+      break;
+    }
+
     case ActionTypes.UPDATE_USER: {
       newState = {
         ...state,
@@ -46,10 +84,38 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.UPDATE_SYNC: {
+      newState = {
+        ...state,
+        sync: { ...state.sync, ...action.properties }
+      };
+      break;
+    }
+
+    case ActionTypes.UPDATE_DEPLOY_INSTANCES: {
+      newState = {
+        ...state,
+        deployInstances: [...action.instances]
+      };
+      break;
+    }
+
     case ActionTypes.SET_ACTIVE_TAB: {
       newState = {
         ...state,
         activeTab: action.activeTab
+      };
+      break;
+    }
+
+    case ActionTypes.SET_ACTIVE_TAB_IN_CALLBACK: {
+      newState = {
+        ...state,
+        callbackSettings: {
+          ...state.callbackSettings,
+          activeTab: action.activeTab,
+          activeSpecTab: action.activeSpecTab
+        }
       };
       break;
     }
@@ -103,11 +169,20 @@ export const environmentReducer = (
           activeDatabucketUUID: activeEnvironment.data.length
             ? activeEnvironment.data[0].uuid
             : null,
+          activeCallbackUUID: activeEnvironment.callbacks.length
+            ? activeEnvironment.callbacks[0].uuid
+            : null,
           environments: state.environments,
           filters: {
             ...state.filters,
             routes: '',
-            databuckets: ''
+            databuckets: '',
+            callbacks: '',
+            logs: ''
+          },
+          settings: {
+            ...state.settings,
+            activeEnvironmentUuid: action.environmentUUID
           }
         };
         break;
@@ -154,130 +229,47 @@ export const environmentReducer = (
         activeDatabucketUUID: newEnvironment.data.length
           ? newEnvironment.data[0].uuid
           : null,
+        activeCallbackUUID: newEnvironment.callbacks.length
+          ? newEnvironment.callbacks[0].uuid
+          : null,
         environments: state.environments,
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: '',
+          logs: ''
         }
       };
       break;
     }
 
-    case ActionTypes.REORGANIZE_ENVIRONMENTS: {
+    case ActionTypes.REORDER_ENVIRONMENTS: {
       newState = {
         ...state,
         environments: moveItemAtTarget<Environment>(
           state.environments,
-          action.dropAction.dropActionType,
-          action.dropAction.sourceId,
-          action.dropAction.targetId
+          action.reorderAction.reorderActionType,
+          action.reorderAction.sourceId,
+          action.reorderAction.targetId
         ),
         settings: {
           ...state.settings,
           environments: moveItemAtTarget<EnvironmentDescriptor>(
             state.settings.environments,
-            action.dropAction.dropActionType,
-            action.dropAction.sourceId,
-            action.dropAction.targetId
+            action.reorderAction.reorderActionType,
+            action.reorderAction.sourceId,
+            action.reorderAction.targetId
           )
         }
       };
       break;
     }
 
-    case ActionTypes.REORGANIZE_ROUTES: {
+    case ActionTypes.REORDER_ROUTES: {
       const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === state.activeEnvironmentUUID) {
-          let newRootChildren = environment.rootChildren;
-          let newFolders = environment.folders;
-
-          // remove source item UUID from it's parent container chidlren
-          if (action.dropAction.sourceParentId === 'root') {
-            newRootChildren = newRootChildren.filter(
-              (rootChild) => rootChild.uuid !== action.dropAction.sourceId
-            );
-          } else {
-            newFolders = newFolders.map((folder) => {
-              if (folder.uuid === action.dropAction.sourceParentId) {
-                return {
-                  ...folder,
-                  children: folder.children.filter(
-                    (folderChild) =>
-                      folderChild.uuid !== action.dropAction.sourceId
-                  )
-                };
-              }
-
-              return folder;
-            });
-          }
-
-          // move in correct target (inside or before/after)
-          if (
-            action.dropAction.dropActionType === DropActionType.INSIDE &&
-            action.dropAction.isTargetContainer
-          ) {
-            newFolders = newFolders.map((folder) => {
-              if (folder.uuid === action.dropAction.targetId) {
-                return {
-                  ...folder,
-                  children: [
-                    ...folder.children,
-                    {
-                      type: action.dropAction.isSourceContainer
-                        ? 'folder'
-                        : 'route',
-                      uuid: action.dropAction.sourceId
-                    }
-                  ]
-                };
-              }
-
-              return folder;
-            });
-          } else {
-            if (action.dropAction.targetParentId === 'root') {
-              newRootChildren = insertItemAtTarget<FolderChild>(
-                newRootChildren,
-                action.dropAction.dropActionType,
-                {
-                  type: action.dropAction.isSourceContainer
-                    ? 'folder'
-                    : 'route',
-                  uuid: action.dropAction.sourceId
-                },
-                action.dropAction.targetId
-              );
-            } else {
-              newFolders = newFolders.map((folder) => {
-                if (folder.uuid === action.dropAction.targetParentId) {
-                  return {
-                    ...folder,
-                    children: insertItemAtTarget<FolderChild>(
-                      folder.children,
-                      action.dropAction.dropActionType,
-                      {
-                        type: action.dropAction.isSourceContainer
-                          ? 'folder'
-                          : 'route',
-                        uuid: action.dropAction.sourceId
-                      },
-                      action.dropAction.targetId
-                    )
-                  };
-                }
-
-                return folder;
-              });
-            }
-          }
-
-          return {
-            ...environment,
-            folders: newFolders,
-            rootChildren: newRootChildren
-          };
+        if (environment.uuid === action.environmentUuid) {
+          return reorderRoutesMutator(environment, action.reorderAction);
         }
 
         return environment;
@@ -286,23 +278,15 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: newEnvironments,
-        environmentsStatus: markEnvStatusRestart(state)
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
       };
       break;
     }
 
-    case ActionTypes.REORGANIZE_DATABUCKETS: {
+    case ActionTypes.REORDER_DATABUCKETS: {
       const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === state.activeEnvironmentUUID) {
-          return {
-            ...environment,
-            data: moveItemAtTarget<DataBucket>(
-              environment.data,
-              action.dropAction.dropActionType,
-              action.dropAction.sourceId,
-              action.dropAction.targetId
-            )
-          };
+        if (environment.uuid === action.environmentUuid) {
+          return reorderDatabucketMutator(environment, action.reorderAction);
         }
 
         return environment;
@@ -315,29 +299,51 @@ export const environmentReducer = (
       break;
     }
 
-    case ActionTypes.REORGANIZE_ROUTE_RESPONSES: {
+    case ActionTypes.FULL_REORDER_ENTITIES: {
       const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === state.activeEnvironmentUUID) {
-          const newRoutes = environment.routes.map((route) => {
-            if (route.uuid === state.activeRouteUUID) {
-              return {
-                ...route,
-                responses: moveItemAtTarget<RouteResponse>(
-                  route.responses,
-                  action.dropAction.dropActionType,
-                  action.dropAction.sourceId,
-                  action.dropAction.targetId
-                )
-              };
-            }
+        if (environment.uuid === action.environmentUuid) {
+          return fullReorderEntitiesMutator(
+            environment,
+            action.entity,
+            action.order,
+            action.parentId
+          );
+        }
 
-            return route;
-          });
+        return environment;
+      });
 
-          return {
-            ...environment,
-            routes: newRoutes
-          };
+      newState = {
+        ...state,
+        environments: newEnvironments
+      };
+      break;
+    }
+
+    case ActionTypes.REORDER_CALLBACKS: {
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.environmentUuid) {
+          return reorderCallbackMutator(environment, action.reorderAction);
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments
+      };
+      break;
+    }
+
+    case ActionTypes.REORDER_ROUTE_RESPONSES: {
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.environmentUuid) {
+          return reorderRouteResponseMutator(
+            environment,
+            action.routeUuid,
+            action.reorderAction
+          );
         }
 
         return environment;
@@ -358,35 +364,24 @@ export const environmentReducer = (
         const activeRoute = activeEnvironment.routes.find(
           (route) => route.uuid === action.routeUUID
         );
-        const foldersUUIDHierarchy = findRouteFolderHierarchy(
+        const foldersUuidHierarchy = findRouteFolderHierarchy(
           action.routeUUID,
           activeEnvironment
         );
-        let newEnvironments = state.environments;
+        let newCollapsedFolders = state.settings.collapsedFolders;
 
         // uncollapse folders in hierarchy if some are collapsed (selecting a route in a collapsed folder is only possible after a search)
-        if (foldersUUIDHierarchy.length > 0) {
-          newEnvironments = state.environments.map((environment) => {
-            if (environment.uuid === state.activeEnvironmentUUID) {
-              const newFolders = environment.folders.map((folder) => {
-                if (foldersUUIDHierarchy.includes(folder.uuid)) {
-                  return {
-                    ...folder,
-                    collapsed: false
-                  };
-                }
+        if (
+          foldersUuidHierarchy.length > 0 &&
+          newCollapsedFolders &&
+          newCollapsedFolders[activeEnvironment.uuid] &&
+          newCollapsedFolders[activeEnvironment.uuid].length > 0
+        ) {
+          newCollapsedFolders = { ...state.settings.collapsedFolders };
 
-                return folder;
-              });
-
-              return {
-                ...environment,
-                folders: newFolders
-              };
-            }
-
-            return environment;
-          });
+          newCollapsedFolders[activeEnvironment.uuid] = newCollapsedFolders[
+            activeEnvironment.uuid
+          ].filter((folderUuid) => !foldersUuidHierarchy.includes(folderUuid));
         }
 
         newState = {
@@ -397,7 +392,10 @@ export const environmentReducer = (
             : null,
           activeTab: 'RESPONSE',
           activeView: 'ENV_ROUTES',
-          environments: newEnvironments
+          settings: {
+            ...state.settings,
+            collapsedFolders: newCollapsedFolders
+          }
         };
         break;
       }
@@ -419,11 +417,21 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.SET_ACTIVE_CALLBACK: {
+      if (action.callbackUUID !== state.activeCallbackUUID) {
+        newState = {
+          ...state,
+          activeCallbackUUID: action.callbackUUID
+        };
+        break;
+      }
+
+      newState = state;
+      break;
+    }
+
     case ActionTypes.ADD_ENVIRONMENT: {
       const newEnvironment: Environment = action.environment;
-      const activeEnvironment: Environment = action.activeEnvironment
-        ? action.activeEnvironment
-        : newEnvironment;
       const environments = [...state.environments];
 
       if (action.insertAfterIndex != null) {
@@ -440,35 +448,49 @@ export const environmentReducer = (
           environments: [...state.settings.environments]
         };
 
+        const newEnvironmentDescriptor: EnvironmentDescriptor = {
+          uuid: newEnvironment.uuid,
+          path: action.filePath,
+          cloud: action.cloud,
+          lastServerHash: action.hash
+        };
+
         // we may be reloading or duplicating so we want to keep the descriptors order
         if (action.insertAfterIndex != null) {
-          newSettings.environments.splice(action.insertAfterIndex + 1, 0, {
-            uuid: newEnvironment.uuid,
-            path: action.filePath
-          });
+          newSettings.environments.splice(
+            action.insertAfterIndex + 1,
+            0,
+            newEnvironmentDescriptor
+          );
         } else {
-          newSettings.environments.push({
-            uuid: newEnvironment.uuid,
-            path: action.filePath
-          });
+          newSettings.environments.push(newEnvironmentDescriptor);
         }
       }
 
-      const {
-        routeUUID: activeRouteUUID,
-        routeResponseUUID: activeRouteResponseUUID
-      } = getFirstRouteAndResponseUUIDs(activeEnvironment);
+      const activeUuids: Partial<StoreType> = {};
+
+      if (action.setActive) {
+        const { routeUUID, routeResponseUUID } =
+          getFirstRouteAndResponseUUIDs(newEnvironment);
+
+        activeUuids.activeEnvironmentUUID = newEnvironment.uuid;
+        activeUuids.activeRouteUUID = routeUUID;
+        activeUuids.activeRouteResponseUUID = routeResponseUUID;
+        activeUuids.activeDatabucketUUID = newEnvironment.data.length
+          ? newEnvironment.data[0].uuid
+          : null;
+        activeUuids.activeCallbackUUID = newEnvironment.callbacks.length
+          ? newEnvironment.callbacks[0].uuid
+          : null;
+
+        newSettings.activeEnvironmentUuid = newEnvironment.uuid;
+      }
 
       newState = {
         ...state,
-        activeEnvironmentUUID: activeEnvironment.uuid,
-        activeRouteUUID,
-        activeRouteResponseUUID,
+        ...activeUuids,
         activeTab: 'RESPONSE',
         activeView: 'ENV_ROUTES',
-        activeDatabucketUUID: activeEnvironment.data.length
-          ? activeEnvironment.data[0].uuid
-          : null,
         environments,
         environmentsStatus: {
           ...state.environmentsStatus,
@@ -488,7 +510,9 @@ export const environmentReducer = (
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: '',
+          logs: ''
         },
         settings: newSettings
       };
@@ -517,7 +541,9 @@ export const environmentReducer = (
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: '',
+          logs: ''
         },
         settings: {
           ...state.settings,
@@ -541,6 +567,9 @@ export const environmentReducer = (
             activeRouteResponseUUID,
             activeDatabucketUUID: newEnvironments[0].data.length
               ? newEnvironments[0].data[0].uuid
+              : null,
+            activeCallbackUUID: newEnvironments[0].callbacks.length
+              ? newEnvironments[0].callbacks[0].uuid
               : null
           };
         } else {
@@ -549,7 +578,8 @@ export const environmentReducer = (
             activeEnvironmentUUID: null,
             activeRouteUUID: null,
             activeRouteResponseUUID: null,
-            activeDatabucketUUID: null
+            activeDatabucketUUID: null,
+            activeCallbackUUID: null
           };
         }
       }
@@ -571,17 +601,15 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            return {
-              ...environment,
-              ...action.properties
-            };
+          if (environment.uuid === action.environmentUuid) {
+            return updateEnvironmentMutator(environment, action.properties);
           }
 
           return environment;
         }),
         environmentsStatus: markEnvStatusRestart(
           state,
+          action.environmentUuid,
           ArrayContainsObjectKey(action.properties, propertiesNeedingRestart)
         )
       };
@@ -594,6 +622,7 @@ export const environmentReducer = (
       let activeRouteUUID = state.activeRouteUUID;
       let activeRouteResponseUUID = state.activeRouteResponseUUID;
       let activeDatabucketUUID = state.activeDatabucketUUID;
+      let activeCallbackUUID = state.activeCallbackUUID;
       let environmentsLogs = state.environmentsLogs;
       let activeEnvironmentLogsUUID = state.activeEnvironmentLogsUUID;
       let duplicatedRoutes = state.duplicatedRoutes;
@@ -608,38 +637,24 @@ export const environmentReducer = (
         return environment;
       });
 
-      // always reset the active route, active route response and active databucket if environment was active, as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
-      if (state.activeEnvironmentUUID === action.previousUUID) {
-        const {
-          routeUUID: newActiveRouteUUID,
-          routeResponseUUID: newActiveRouteResponseUUID
-        } = getFirstRouteAndResponseUUIDs(action.newEnvironment);
-
-        activeRouteUUID = newActiveRouteUUID;
-        activeRouteResponseUUID = newActiveRouteResponseUUID;
-        activeDatabucketUUID = action.newEnvironment.data.length
-          ? action.newEnvironment.data[0].uuid
-          : null;
-      }
-
-      // always reset env logs and the active log entry as UUIDs may have changed and we have no other way to match previous and current route/routeResponse items
-      environmentsLogs = {
-        ...environmentsLogs,
-        [action.newEnvironment.uuid]: []
-      };
-      activeEnvironmentLogsUUID = {
-        ...activeEnvironmentLogsUUID,
-        [action.newEnvironment.uuid]: null
-      };
-
       // if environment's UUID changed
       if (action.newEnvironment.uuid !== action.previousUUID) {
+        // if it was active env, keep it active
         if (state.activeEnvironmentUUID === action.previousUUID) {
           activeEnvironmentUUID = action.newEnvironment.uuid;
         }
 
-        // eventually delete logs info stored under previous UUID
+        // move logs info stored under previous UUID
+        environmentsLogs = {
+          ...environmentsLogs,
+          [action.newEnvironment.uuid]: environmentsLogs[action.previousUUID]
+        };
         delete environmentsLogs[action.previousUUID];
+        activeEnvironmentLogsUUID = {
+          ...activeEnvironmentLogsUUID,
+          [action.newEnvironment.uuid]:
+            activeEnvironmentLogsUUID[action.previousUUID]
+        };
         delete activeEnvironmentLogsUUID[action.previousUUID];
 
         // move status to new UUID
@@ -665,6 +680,56 @@ export const environmentReducer = (
         };
       }
 
+      // if this is the currently active environment
+      if (activeEnvironmentUUID === action.newEnvironment.uuid) {
+        // eventually update active route and response UUIDs
+        const selectedRoute = action.newEnvironment.routes.find(
+          (route) => route.uuid === activeRouteUUID
+        );
+
+        if (!selectedRoute) {
+          const {
+            routeUUID: newActiveRouteUUID,
+            routeResponseUUID: newActiveRouteResponseUUID
+          } = getFirstRouteAndResponseUUIDs(action.newEnvironment);
+
+          activeRouteUUID = newActiveRouteUUID;
+          activeRouteResponseUUID = newActiveRouteResponseUUID;
+        } else {
+          if (
+            !selectedRoute.responses.find(
+              (response) => response.uuid === activeRouteResponseUUID
+            )
+          ) {
+            activeRouteResponseUUID = selectedRoute.responses.length
+              ? selectedRoute.responses[0].uuid
+              : null;
+          }
+        }
+
+        // eventually update active databucket UUID
+        const existingDatabucket = action.newEnvironment.data.find(
+          (databucket) => databucket.uuid === activeDatabucketUUID
+        );
+
+        if (!existingDatabucket) {
+          activeDatabucketUUID = action.newEnvironment.data.length
+            ? action.newEnvironment.data[0].uuid
+            : null;
+        }
+
+        // eventually update active callback UUID
+        const existingCallback = action.newEnvironment.callbacks.find(
+          (callback) => callback.uuid === activeCallbackUUID
+        );
+
+        if (!existingCallback) {
+          activeCallbackUUID = action.newEnvironment.callbacks.length
+            ? action.newEnvironment.callbacks[0].uuid
+            : null;
+        }
+      }
+
       // remove needRestart from status as env will always be restarted if it was running
       environmentsStatus[action.newEnvironment.uuid] = {
         ...environmentsStatus[action.newEnvironment.uuid],
@@ -683,6 +748,7 @@ export const environmentReducer = (
         activeRouteUUID,
         activeRouteResponseUUID,
         activeDatabucketUUID,
+        activeCallbackUUID,
         environmentsLogs,
         activeEnvironmentLogsUUID,
         duplicatedRoutes,
@@ -733,57 +799,13 @@ export const environmentReducer = (
     }
 
     case ActionTypes.REMOVE_ROUTE: {
-      let newActiveEnvironment: Environment;
-      const activeEnvironment = state.environments.find(
-        (environment) => environment.uuid === state.activeEnvironmentUUID
-      );
-
-      let newRootChildren = activeEnvironment.rootChildren;
-      let newFolders: Folder[] = activeEnvironment.folders;
-
-      const newRoutes = activeEnvironment.routes.filter(
-        (route) => route.uuid !== action.routeUUID
-      );
-
-      // parent is root level
-      if (
-        activeEnvironment.rootChildren.some(
-          (rootChild) => rootChild.uuid === action.routeUUID
-        )
-      ) {
-        // remove route from root level
-        newRootChildren = [
-          ...activeEnvironment.rootChildren.filter(
-            (rootChild) => rootChild.uuid !== action.routeUUID
-          )
-        ];
-      } else {
-        newFolders = activeEnvironment.folders.map((folder) => {
-          if (
-            folder.children.some((child) => child.uuid === action.routeUUID)
-          ) {
-            return {
-              ...folder,
-              children: folder.children.filter(
-                (child) => child.uuid !== action.routeUUID
-              )
-            };
-          }
-
-          return folder;
-        });
-      }
+      let newEnvironment: Environment;
 
       const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === state.activeEnvironmentUUID) {
-          newActiveEnvironment = {
-            ...environment,
-            routes: newRoutes,
-            folders: newFolders,
-            rootChildren: newRootChildren
-          };
+        if (environment.uuid === action.environmentUuid) {
+          newEnvironment = removeRouteMutator(environment, action.routeUuid);
 
-          return newActiveEnvironment;
+          return newEnvironment;
         }
 
         return environment;
@@ -792,11 +814,11 @@ export const environmentReducer = (
       let newActiveRouteUUID = state.activeRouteUUID;
       let newActiveRouteResponseUUID = state.activeRouteResponseUUID;
 
-      if (state.activeRouteUUID === action.routeUUID) {
+      if (state.activeRouteUUID === action.routeUuid) {
         ({
           routeUUID: newActiveRouteUUID,
           routeResponseUUID: newActiveRouteResponseUUID
-        } = getFirstRouteAndResponseUUIDs(newActiveEnvironment));
+        } = getFirstRouteAndResponseUUIDs(newEnvironment));
       }
 
       newState = {
@@ -804,182 +826,88 @@ export const environmentReducer = (
         environments: newEnvironments,
         activeRouteUUID: newActiveRouteUUID,
         activeRouteResponseUUID: newActiveRouteResponseUUID,
-        environmentsStatus: markEnvStatusRestart(state)
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
       };
 
       break;
     }
 
     case ActionTypes.REMOVE_ROUTE_RESPONSE: {
-      const activeEnvironment = state.environments.find(
-        (environment) => environment.uuid === state.activeEnvironmentUUID
-      );
-      const activeRoute = activeEnvironment.routes.find(
-        (route) => route.uuid === state.activeRouteUUID
-      );
-      const newRouteResponses = activeRoute.responses.filter(
-        (routeResponse) => routeResponse.uuid !== state.activeRouteResponseUUID
-      );
-
-      if (newRouteResponses.length > 0) {
-        // mark first route response as default if needed
-        const defaultRouteResponseIndex = newRouteResponses.findIndex(
-          (routeResponse) => routeResponse.default
-        );
-
-        if (defaultRouteResponseIndex === -1) {
-          newRouteResponses[0] = { ...newRouteResponses[0], default: true };
-        }
-      }
+      let newEnvironment: Environment;
 
       const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === state.activeEnvironmentUUID) {
-          return {
-            ...environment,
-            routes: environment.routes.map((route) => {
-              if (route.uuid === state.activeRouteUUID) {
-                return {
-                  ...activeRoute,
-                  responses: newRouteResponses
-                };
-              }
+        if (environment.uuid === action.environmentUuid) {
+          newEnvironment = removeRouteResponseMutator(
+            environment,
+            action.routeUuid,
+            action.routeResponseUuid
+          );
 
-              return route;
-            })
-          };
+          return newEnvironment;
         }
 
         return environment;
       });
 
+      // always focus the first route response if the active one is removed (even with cloud sync)
+      const newRouteResponses = newEnvironment.routes.find(
+        (route) => route.uuid === action.routeUuid
+      ).responses;
+
       newState = {
         ...state,
         activeRouteResponseUUID:
           newRouteResponses.length > 0 ? newRouteResponses[0].uuid : null,
-        environments: newEnvironments
+        environments: newEnvironments,
+        activeTab:
+          newRouteResponses.length > 0
+            ? responseTabForcedNavigation(state, newRouteResponses[0].uuid)
+            : 'RESPONSE'
       };
       break;
     }
 
     case ActionTypes.ADD_FOLDER: {
+      let uiUpdate: Partial<StoreType> = {};
+
+      if (action.uiReset) {
+        uiUpdate = {
+          filters: {
+            ...state.filters,
+            routes: ''
+          }
+        };
+      }
+
       newState = {
         ...state,
+        ...uiUpdate,
         environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            let rootChildren = environment.rootChildren;
-            let folders = [...environment.folders];
-            folders.push(action.folder);
-
-            // add to folder or root level
-            if (action.parentId === 'root') {
-              rootChildren = [
-                ...environment.rootChildren,
-                { type: 'folder', uuid: action.folder.uuid }
-              ];
-            } else {
-              folders = folders.map((folder) => {
-                if (folder.uuid === action.parentId) {
-                  return {
-                    ...folder,
-                    children: [
-                      ...folder.children,
-                      { type: 'folder', uuid: action.folder.uuid }
-                    ]
-                  };
-                }
-
-                return folder;
-              });
-            }
-
-            return {
-              ...environment,
-              folders,
-              rootChildren
-            };
+          if (environment.uuid === action.environmentUuid) {
+            return addFolderMutator(
+              environment,
+              action.folder,
+              action.parentId
+            );
           }
 
           return environment;
-        }),
-        filters: {
-          ...state.filters,
-          routes: ''
-        }
+        })
       };
 
       break;
     }
 
     case ActionTypes.REMOVE_FOLDER: {
-      const activeEnvironment = state.environments.find(
-        (environment) => environment.uuid === state.activeEnvironmentUUID
-      );
-
-      const folderToDeleteIndex = activeEnvironment.folders.findIndex(
-        (folder) => folder.uuid === action.folderUUID
-      );
-      const { children: folderChildren } =
-        activeEnvironment.folders[folderToDeleteIndex];
-
-      let newFolders: Folder[] = activeEnvironment.folders;
-      let newRootChildren = activeEnvironment.rootChildren;
-
-      // parent is root level
-      if (
-        activeEnvironment.rootChildren.some(
-          (rootchild) => rootchild.uuid === action.folderUUID
-        )
-      ) {
-        // remove folder from root level and add back children to root level
-        newRootChildren = [
-          ...activeEnvironment.rootChildren.filter(
-            (rootChild) => rootChild.uuid !== action.folderUUID
-          ),
-          ...folderChildren
-        ];
-      } else {
-        // find and remove from parent folder
-        newFolders = activeEnvironment.folders.map((folder) => {
-          if (
-            folder.children.some((child) => child.uuid === action.folderUUID)
-          ) {
-            return {
-              ...folder,
-              children: [
-                ...folder.children.filter(
-                  (child) => child.uuid !== action.folderUUID
-                ),
-                ...folderChildren
-              ]
-            };
-          }
-
-          return folder;
-        });
-      }
-
-      // remove folder from the list
-      newFolders = newFolders.filter(
-        (newFolder) => newFolder.uuid !== action.folderUUID
-      );
-
       newState = {
         ...state,
         environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            return {
-              ...environment,
-              folders: newFolders,
-              rootChildren: newRootChildren
-            };
+          if (environment.uuid === action.environmentUuid) {
+            return removeFolderMutator(environment, action.folderUuid);
           }
 
           return environment;
-        }),
-        filters: {
-          ...state.filters,
-          routes: ''
-        }
+        })
       };
 
       break;
@@ -989,17 +917,12 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            return {
-              ...environment,
-              folders: environment.folders.map((folder) => {
-                if (folder.uuid === action.folderUUID) {
-                  return { ...folder, ...action.properties };
-                }
-
-                return folder;
-              })
-            };
+          if (environment.uuid === action.environmentUuid) {
+            return updateFolderMutator(
+              environment,
+              action.folderUuid,
+              action.properties
+            );
           }
 
           return environment;
@@ -1009,81 +932,39 @@ export const environmentReducer = (
     }
 
     case ActionTypes.ADD_ROUTE: {
-      // only add a route if there is at least one environment
-      if (state.environments.length > 0) {
-        const newRoute = action.route;
-        const targetEnvironmentUUID =
-          action.environmentUUID || state.activeEnvironmentUUID;
+      const newRoute = action.route;
+      let uiUpdate: Partial<StoreType> = {};
 
-        let focusUpdate: Partial<StoreType> = {};
-
-        if (action.focus) {
-          focusUpdate = {
-            activeRouteUUID: newRoute.uuid,
-            activeRouteResponseUUID:
-              newRoute.responses.length > 0 ? newRoute.responses[0].uuid : null,
-            activeTab: 'RESPONSE',
-            activeView: 'ENV_ROUTES',
-            filters: {
-              ...state.filters,
-              routes: ''
-            }
-          };
-        }
-
-        newState = {
-          ...state,
-          ...focusUpdate,
-          environments: state.environments.map((environment) => {
-            if (environment.uuid === targetEnvironmentUUID) {
-              let rootChildren = environment.rootChildren;
-              const routes = [...environment.routes];
-              let folders = environment.folders;
-
-              routes.push(newRoute);
-
-              // insert route in root or folder
-              if (action.parentId === 'root') {
-                rootChildren = [
-                  ...environment.rootChildren,
-                  { type: 'route', uuid: newRoute.uuid }
-                ];
-              } else {
-                folders = environment.folders.map((folder) => {
-                  if (folder.uuid === action.parentId) {
-                    return {
-                      ...folder,
-                      children: [
-                        ...folder.children,
-                        { type: 'route', uuid: newRoute.uuid }
-                      ]
-                    };
-                  }
-
-                  return folder;
-                });
-              }
-
-              return {
-                ...environment,
-                routes,
-                folders,
-                rootChildren
-              };
-            }
-
-            return environment;
-          }),
-          environmentsStatus: markEnvStatusRestart(
-            state,
-            true,
-            targetEnvironmentUUID
-          )
+      if (action.uiReset) {
+        uiUpdate = {
+          activeRouteUUID: newRoute.uuid,
+          activeRouteResponseUUID:
+            newRoute.responses.length > 0 ? newRoute.responses[0].uuid : null,
+          activeTab: 'RESPONSE',
+          activeView: 'ENV_ROUTES',
+          filters: {
+            ...state.filters,
+            routes: ''
+          }
         };
-        break;
       }
 
-      newState = state;
+      newState = {
+        ...state,
+        ...uiUpdate,
+        environments: state.environments.map((environment) => {
+          if (environment.uuid === action.environmentUuid) {
+            return addRouteMutator(environment, newRoute, action.parentId);
+          }
+
+          return environment;
+        }),
+        environmentsStatus: markEnvStatusRestart(
+          state,
+          action.environmentUuid,
+          true
+        )
+      };
       break;
     }
 
@@ -1091,129 +972,76 @@ export const environmentReducer = (
       const propertiesNeedingRestart: (keyof Route)[] = [
         'endpoint',
         'method',
-        'enabled'
+        'streamingMode',
+        'streamingInterval'
       ];
-      const specifiedUUID = action.properties.uuid;
 
       newState = {
         ...state,
         environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            return {
-              ...environment,
-              routes: environment.routes.map((route) => {
-                if (specifiedUUID) {
-                  if (route.uuid === specifiedUUID) {
-                    return {
-                      ...route,
-                      ...action.properties
-                    };
-                  }
-                } else if (route.uuid === state.activeRouteUUID) {
-                  return {
-                    ...route,
-                    ...action.properties
-                  };
-                }
-
-                return route;
-              })
-            };
+          if (environment.uuid === action.environmentUuid) {
+            return updateRouteMutator(
+              environment,
+              action.routeUuid,
+              action.properties
+            );
           }
 
           return environment;
         }),
         environmentsStatus: markEnvStatusRestart(
           state,
+          action.environmentUuid,
           ArrayContainsObjectKey(action.properties, propertiesNeedingRestart)
         )
       };
       break;
     }
 
-    case ActionTypes.ADD_DATABUCKET: {
-      // only add a databucket if there is at least one environment
-      if (state.environments.length > 0) {
-        const newDatabucket = action.databucket;
-        const afterUUID = action.afterUUID;
+    case ActionTypes.ADD_CALLBACK: {
+      let uiUpdate: Partial<StoreType> = {};
 
-        newState = {
-          ...state,
-          activeDatabucketUUID: newDatabucket.uuid,
-          activeView: 'ENV_DATABUCKETS',
-          environments: state.environments.map((environment) => {
-            if (environment.uuid === state.activeEnvironmentUUID) {
-              const data = [...environment.data];
-
-              let afterIndex = data.length;
-              if (afterUUID) {
-                afterIndex = environment.data.findIndex(
-                  (databucket) => databucket.uuid === afterUUID
-                );
-                if (afterIndex === -1) {
-                  afterIndex = data.length;
-                }
-              }
-              data.splice(afterIndex + 1, 0, newDatabucket);
-
-              return {
-                ...environment,
-                data
-              };
-            }
-
-            return environment;
-          }),
-          environmentsStatus: markEnvStatusRestart(state),
+      if (action.uiReset) {
+        uiUpdate = {
+          activeCallbackUUID: action.callback.uuid,
+          activeView: 'ENV_CALLBACKS',
+          callbackSettings: { activeTab: 'SPEC', activeSpecTab: 'BODY' },
           filters: {
             ...state.filters,
-            databuckets: ''
+            callbacks: ''
           }
         };
-        break;
       }
 
-      newState = state;
+      newState = {
+        ...state,
+        ...uiUpdate,
+        environments: state.environments.map((environment) => {
+          if (environment.uuid === action.environmentUuid) {
+            return addCallbackMutator(
+              environment,
+              action.callback,
+              action.insertAfterUuid
+            );
+          }
+
+          return environment;
+        }),
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+      };
       break;
     }
 
-    case ActionTypes.REMOVE_DATABUCKET: {
-      const activeEnvironment = state.environments.find(
-        (environment) => environment.uuid === state.activeEnvironmentUUID
-      );
-      const deletedBucket = activeEnvironment.data.find(
-        (databucket) => databucket.uuid === action.databucketUUID
-      );
-
-      const newDatabuckets = activeEnvironment.data.filter(
-        (databucket) => databucket.uuid !== action.databucketUUID
-      );
-
-      const newRoutes = activeEnvironment.routes.map((route) => {
-        let hasChanged = false;
-        const newReponses = route.responses.map((response) => {
-          if (response.databucketID === deletedBucket.id) {
-            hasChanged = true;
-
-            return { ...response, databucketID: '' };
-          }
-
-          return response;
-        });
-        if (hasChanged) {
-          return { ...route, responses: newReponses };
-        }
-
-        return route;
-      });
-
+    case ActionTypes.REMOVE_CALLBACK: {
+      let newEnvironment: Environment;
       const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === state.activeEnvironmentUUID) {
-          return {
-            ...environment,
-            data: newDatabuckets,
-            routes: newRoutes
-          };
+        if (environment.uuid === action.environmentUuid) {
+          newEnvironment = removeCallbackMutator(
+            environment,
+            action.callbackUuid
+          );
+
+          return newEnvironment;
         }
 
         return environment;
@@ -1222,53 +1050,127 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: newEnvironments,
-        environmentsStatus: markEnvStatusRestart(state)
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
       };
 
-      if (state.activeDatabucketUUID === action.databucketUUID) {
-        if (newDatabuckets.length) {
-          newState.activeDatabucketUUID = newDatabuckets[0].uuid;
+      if (state.activeCallbackUUID === action.callbackUuid) {
+        if (newEnvironment.callbacks.length > 0) {
+          newState.activeCallbackUUID = newEnvironment.callbacks[0].uuid;
         } else {
-          newState.activeDatabucketUUID = null;
+          newState.activeCallbackUUID = null;
         }
       }
+
       break;
     }
 
-    case ActionTypes.UPDATE_DATABUCKET: {
-      const propertiesNeedingRestart: (keyof DataBucket)[] = ['name', 'value'];
-      const specifiedUUID = action.properties.uuid;
-
+    case ActionTypes.UPDATE_CALLBACK: {
       newState = {
         ...state,
         environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            return {
-              ...environment,
-              data: environment.data.map((data) => {
-                if (specifiedUUID) {
-                  if (data.uuid === specifiedUUID) {
-                    return {
-                      ...data,
-                      ...action.properties
-                    };
-                  }
-                } else if (data.uuid === state.activeDatabucketUUID) {
-                  return {
-                    ...data,
-                    ...action.properties
-                  };
-                }
+          if (environment.uuid === action.environmentUuid) {
+            return updateCallbackMutator(
+              environment,
+              action.callbackUuid,
+              action.properties
+            );
+          }
 
-                return data;
-              })
-            };
+          return environment;
+        })
+      };
+      break;
+    }
+
+    case ActionTypes.ADD_DATABUCKET: {
+      const newDatabucket = action.databucket;
+      let uiUpdate: Partial<StoreType> = {};
+
+      if (action.uiReset) {
+        uiUpdate = {
+          activeDatabucketUUID: newDatabucket.uuid,
+          activeView: 'ENV_DATABUCKETS',
+          filters: {
+            ...state.filters,
+            databuckets: ''
+          }
+        };
+      }
+
+      newState = {
+        ...state,
+        ...uiUpdate,
+        environments: state.environments.map((environment) => {
+          if (environment.uuid === action.environmentUuid) {
+            return addDatabucketMutator(
+              environment,
+              newDatabucket,
+              action.insertAfterUuid
+            );
           }
 
           return environment;
         }),
         environmentsStatus: markEnvStatusRestart(
           state,
+          action.environmentUuid,
+          true
+        )
+      };
+      break;
+    }
+
+    case ActionTypes.REMOVE_DATABUCKET: {
+      let newEnvironment: Environment;
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.environmentUuid) {
+          newEnvironment = removeDatabucketMutator(
+            environment,
+            action.databucketUuid
+          );
+
+          return newEnvironment;
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments,
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+      };
+
+      if (state.activeDatabucketUUID === action.databucketUuid) {
+        if (newEnvironment.data.length > 0) {
+          newState.activeDatabucketUUID = newEnvironment.data[0].uuid;
+        } else {
+          newState.activeDatabucketUUID = null;
+        }
+      }
+
+      break;
+    }
+
+    case ActionTypes.UPDATE_DATABUCKET: {
+      const propertiesNeedingRestart: (keyof DataBucket)[] = ['name', 'value'];
+
+      newState = {
+        ...state,
+        environments: state.environments.map((environment) => {
+          if (environment.uuid === action.environmentUuid) {
+            return updateDatabucketMutator(
+              environment,
+              action.databucketUuid,
+              action.properties
+            );
+          }
+
+          return environment;
+        }),
+        environmentsStatus: markEnvStatusRestart(
+          state,
+          action.environmentUuid,
           ArrayContainsObjectKey(action.properties, propertiesNeedingRestart)
         )
       };
@@ -1279,7 +1181,11 @@ export const environmentReducer = (
       if (action.routeResponseUUID !== state.activeRouteResponseUUID) {
         newState = {
           ...state,
-          activeRouteResponseUUID: action.routeResponseUUID
+          activeRouteResponseUUID: action.routeResponseUUID,
+          activeTab: responseTabForcedNavigation(
+            state,
+            action.routeResponseUUID
+          )
         };
         break;
       }
@@ -1289,38 +1195,26 @@ export const environmentReducer = (
     }
 
     case ActionTypes.ADD_ROUTE_RESPONSE: {
-      const newRouteResponse: RouteResponse = action.routeResponse;
+      let uiUpdate: Partial<StoreType> = {};
+
+      if (action.uiReset) {
+        uiUpdate = {
+          activeRouteResponseUUID: action.routeResponse.uuid,
+          activeTab: 'RESPONSE'
+        };
+      }
+
       newState = {
         ...state,
-        activeRouteResponseUUID: newRouteResponse.uuid,
-        activeTab: 'RESPONSE',
+        ...uiUpdate,
         environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            return {
-              ...environment,
-              routes: environment.routes.map((route) => {
-                if (route.uuid === state.activeRouteUUID) {
-                  const responses = [...route.responses];
-                  if (action.isDuplication) {
-                    const activeRouteResponseIndex = route.responses.findIndex(
-                      (routeResponse: RouteResponse) =>
-                        routeResponse.uuid === state.activeRouteResponseUUID
-                    );
-                    responses.splice(
-                      activeRouteResponseIndex + 1,
-                      0,
-                      newRouteResponse
-                    );
-                  } else {
-                    responses.push(newRouteResponse);
-                  }
-
-                  return { ...route, responses };
-                }
-
-                return route;
-              })
-            };
+          if (environment.uuid === action.environmentUuid) {
+            return addRouteResponseMutator(
+              environment,
+              action.routeUuid,
+              action.routeResponse,
+              action.insertAfterUuid
+            );
           }
 
           return environment;
@@ -1333,65 +1227,13 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            return {
-              ...environment,
-              routes: environment.routes.map((route) => {
-                if (route.uuid === state.activeRouteUUID) {
-                  return {
-                    ...route,
-                    responses: route.responses.map((response) => {
-                      if (response.uuid === state.activeRouteResponseUUID) {
-                        return {
-                          ...response,
-                          ...action.properties
-                        };
-                      }
-
-                      return response;
-                    })
-                  };
-                }
-
-                return route;
-              })
-            };
-          }
-
-          return environment;
-        })
-      };
-      break;
-    }
-
-    case ActionTypes.SET_DEFAULT_ROUTE_RESPONSE: {
-      newState = {
-        ...state,
-        environments: state.environments.map((environment) => {
-          if (environment.uuid === state.activeEnvironmentUUID) {
-            return {
-              ...environment,
-              routes: environment.routes.map((route) => {
-                if (route.uuid === state.activeRouteUUID) {
-                  return {
-                    ...route,
-                    responses: route.responses.map(
-                      (response, responseIndex) => {
-                        if (responseIndex === action.routeResponseIndex) {
-                          return { ...response, default: true };
-                        } else if (response.default) {
-                          return { ...response, default: false };
-                        } else {
-                          return response;
-                        }
-                      }
-                    )
-                  };
-                }
-
-                return route;
-              })
-            };
+          if (environment.uuid === action.environmentUuid) {
+            return updateRouteResponseMutator(
+              environment,
+              action.routeUuid,
+              action.routeResponseUuid,
+              action.properties
+            );
           }
 
           return environment;
@@ -1445,6 +1287,10 @@ export const environmentReducer = (
         activeEnvironmentLogsUUID: {
           ...state.activeEnvironmentLogsUUID,
           [action.environmentUUID]: null
+        },
+        filters: {
+          ...state.filters,
+          logs: ''
         }
       };
       break;
@@ -1483,6 +1329,28 @@ export const environmentReducer = (
       newState = {
         ...state,
         settings: { ...state.settings, ...action.properties }
+      };
+      break;
+    }
+
+    case ActionTypes.UPDATE_SETTINGS_ENVIRONMENT_DESCRIPTOR: {
+      newState = {
+        ...state,
+        settings: {
+          ...state.settings,
+          environments: state.settings.environments.map(
+            (environmentDescriptor) => {
+              if (environmentDescriptor.uuid === action.descriptor.uuid) {
+                return {
+                  ...environmentDescriptor,
+                  ...action.descriptor
+                };
+              }
+
+              return environmentDescriptor;
+            }
+          )
+        }
       };
       break;
     }
@@ -1526,13 +1394,15 @@ export const environmentReducer = (
         activeView: 'ENV_ROUTES',
         environmentsStatus: markEnvStatusRestart(
           state,
-          true,
-          action.targetEnvironmentUUID
+          action.targetEnvironmentUUID,
+          true
         ),
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: '',
+          logs: ''
         }
       };
       break;
@@ -1581,13 +1451,47 @@ export const environmentReducer = (
 
         environmentsStatus: markEnvStatusRestart(
           state,
-          true,
-          action.targetEnvironmentUUID
+          action.targetEnvironmentUUID,
+          true
         ),
         filters: {
           ...state.filters,
           routes: '',
-          databuckets: ''
+          databuckets: '',
+          callbacks: '',
+          logs: ''
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT: {
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.targetEnvironmentUUID) {
+          return {
+            ...environment,
+            callbacks: [...environment.callbacks, action.callback]
+          };
+        }
+
+        return environment;
+      });
+
+      newState = {
+        ...state,
+        environments: newEnvironments,
+        activeCallbackUUID: action.callback.uuid,
+        activeEnvironmentUUID: action.targetEnvironmentUUID,
+        activeView: 'ENV_CALLBACKS',
+
+        environmentsStatus: markEnvStatusRestart(
+          state,
+          action.targetEnvironmentUUID,
+          true
+        ),
+        filters: {
+          ...state.filters,
+          callbacks: ''
         }
       };
       break;
@@ -1619,7 +1523,7 @@ export const environmentReducer = (
       action.type === ActionTypes.RELOAD_ENVIRONMENT ||
       action.type === ActionTypes.ADD_ROUTE ||
       action.type === ActionTypes.REMOVE_ROUTE ||
-      action.type === ActionTypes.REORGANIZE_ROUTES ||
+      action.type === ActionTypes.REORDER_ROUTES ||
       action.type === ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT ||
       (action.type === ActionTypes.UPDATE_ROUTE &&
         action.properties &&

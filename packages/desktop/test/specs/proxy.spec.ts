@@ -61,6 +61,11 @@ const get404Call: HttpCall = {
   }
 };
 
+const get404CallWithParentheses: HttpCall = {
+  ...get404Call,
+  path: '/test(data)'
+};
+
 const getDisabledProxyCall: HttpCall = {
   description: 'Call GET disabled proxy',
   protocol: 'https',
@@ -245,5 +250,19 @@ describe('Proxy (with TLS and proxy headers)', () => {
     await environments.restart();
 
     await http.assertCallWithPort(getDoublePrefixedAnswerCall, 3003);
+  });
+
+  it('should test the escaping of parantheses in the route path', async () => {
+    await environments.select(2);
+    await navigation.switchView('ENV_LOGS');
+    await http.assertCallWithPort(get404CallWithParentheses, 3001);
+    await environmentsLogs.clickMockButton(1);
+    await routes.assertPath('test\\(data\\)');
+
+    // make sure that the call is not proxied anymore
+    await environments.restart();
+    await navigation.switchView('ENV_LOGS');
+    await http.assertCallWithPort(get404CallWithParentheses, 3001);
+    await environmentsLogs.assertLogMenuIcon(1, 'PROXY', true);
   });
 });

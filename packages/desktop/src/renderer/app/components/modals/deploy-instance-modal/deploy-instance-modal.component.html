@@ -1,0 +1,100 @@
+<ng-container
+  *ngIf="{
+    user: user$ | async,
+    taskInProgress: taskInProgress$ | async,
+    environment: environment$ | async,
+    instanceExists: instanceExists$ | async
+  } as data"
+>
+  <div class="modal-header">
+    <h3 class="modal-title">
+      {{ data.instanceExists ? 'Re-deploy' : 'Deploy' }} "{{
+        data.environment?.name
+      }}"
+      <br />
+      <small class="text-muted h6">Configure your cloud instance:</small>
+    </h3>
+  </div>
+
+  <div class="modal-body">
+    <div [formGroup]="optionsForm">
+      <div class="d-flex align-items-center">
+        <div class="me-2">Instance visibility:</div>
+        <app-toggle
+          prefix="instance-visibility"
+          formControlName="visibility"
+          [items]="visibilityToggle"
+          [uncheckable]="false"
+        ></app-toggle>
+        <div class="ms-2">
+          <app-svg
+            icon="info"
+            ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible by you and your team members using a token."
+          ></app-svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer justify-content-space-between">
+    <div
+      *ngIf="data.user && data.user.plan !== 'FREE'"
+      class="col-6 d-flex align-items-center"
+    >
+      <p
+        class="mb-0"
+        [ngClass]="{
+          'text-warning':
+            data.user?.deployInstancesQuotaUsed >=
+            data.user?.deployInstancesQuota
+        }"
+      >
+        Quota used ({{ data.user?.deployInstancesQuotaUsed }}/{{
+          data.user?.deployInstancesQuota
+        }})
+      </p>
+      <button
+        type="button"
+        class="btn btn-link btn-icon text-primary ps-2 svg-text-align"
+        (click)="account()"
+      >
+        My account
+        <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
+      </button>
+    </div>
+    <div class="ms-auto">
+      @if (data.taskInProgress) {
+        <div class="d-inline-block me-2">
+          <app-svg icon="spinner"></app-svg>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="btn btn-primary me-2"
+        (click)="deploy(data.user, data.environment.uuid)"
+        [disabled]="data.taskInProgress"
+      >
+        {{ data.instanceExists ? 'Re-deploy' : 'Deploy' }}
+      </button>
+
+      @if (data.instanceExists) {
+        <button
+          type="button"
+          class="btn btn-danger me-2"
+          (click)="deleteInstance(data.environment.uuid)"
+          [disabled]="data.taskInProgress"
+        >
+          Delete
+        </button>
+      }
+
+      <button
+        type="button"
+        class="btn btn-secondary modal-close"
+        (click)="close()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</ng-container>

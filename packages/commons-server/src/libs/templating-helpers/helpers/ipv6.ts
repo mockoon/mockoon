@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker } from '../../faker';
 
 const ipv6 = function () {
   return faker.internet.ipv6();

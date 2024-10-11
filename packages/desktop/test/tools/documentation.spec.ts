@@ -1,10 +1,7 @@
 import { BodyTypes } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { ChainablePromiseElement } from 'webdriverio';
-import contextMenu, {
-  ContextMenuFolderActions,
-  ContextMenuRouteActions
-} from '../libs/context-menu';
+import callbacks from '../libs/callbacks';
 import databuckets from '../libs/databuckets';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
@@ -17,7 +14,12 @@ import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes, { RoutesMenuActions } from '../libs/routes';
 import settings from '../libs/settings';
-import utils from '../libs/utils';
+import utils, {
+  DropdownMenuEnvironmentActions,
+  DropdownMenuFolderActions,
+  DropdownMenuLogsActions,
+  DropdownMenuRouteActions
+} from '../libs/utils';
 
 /**
  * Spec file used to generate documentation screenshots
@@ -149,7 +151,9 @@ const documentationTopics: {
   folder: string;
   screenshots: {
     // tasks to be performed before taking the screenshot
-    tasks?: () => void;
+    tasks?: () => Promise<void>;
+    // tasks to be performed after taking the screenshot
+    postTasks?: () => Promise<void>;
     // provide screenshot target if different from highlighted element (has priority over highlighted element when taking the screenshot)
     screenshotTarget?: ChainablePromiseElement<WebdriverIO.Element>;
     highlightedTarget: ChainablePromiseElement<WebdriverIO.Element>;
@@ -166,10 +170,75 @@ const documentationTopics: {
 }[] = [
   {
     enabled: true,
-    folder: 'api-endpoints/routing',
+    folder: 'server-configuration/port-prefix',
     screenshots: [
       {
         tasks: null,
+        get highlightedTarget() {
+          return navigation.settingsTab;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 50, bottom: 125 },
+        fileName: 'open-environment-settings.png'
+      },
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_SETTINGS');
+        },
+        get highlightedTarget() {
+          return environmentsSettings.port;
+        },
+        highlight: true,
+        highlightGaps: { top: 10, right: 10, bottom: 10, left: 10 },
+        screenshotPosition: { top: 0, left: 0 },
+        screeenshotGaps: { right: 250, bottom: 125 },
+        fileName: 'environment-custom-port.png'
+      },
+      {
+        tasks: null,
+        get highlightedTarget() {
+          return environmentsSettings.prefix;
+        },
+        highlight: true,
+        highlightGaps: { top: 10, right: 10, bottom: 10, left: 10 },
+        screenshotPosition: { top: 0, left: 0 },
+        screeenshotGaps: { right: 250, bottom: 125 },
+        fileName: 'environment-custom-prefix.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'api-endpoints/routing',
+    screenshots: [
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_ROUTES');
+          await utils.dropdownMenuOpen(
+            '.routes-menu .nav-item:nth-child(1) .nav-link'
+          );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
+        },
+        get screenshotTarget() {
+          return utils.dropdownMenuGetItemRef(DropdownMenuRouteActions.TOGGLE);
+        },
+        get highlightedTarget() {
+          return utils.dropdownMenuGetItemRef(DropdownMenuRouteActions.TOGGLE);
+        },
+        highlight: true,
+        highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
+        screenshotPosition: { top: 0, left: 0 },
+        screeenshotGaps: { right: 50, bottom: 50 },
+        fileName: 'route-menu-disable-route.png'
+      },
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_ROUTES');
+        },
         get highlightedTarget() {
           return navigation.settingsTab;
         },
@@ -202,7 +271,7 @@ const documentationTopics: {
         },
         highlight: false,
         screenshotPosition: {},
-        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 200 },
+        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 330 },
         fileName: 'route-patterns.png'
       },
       {
@@ -215,14 +284,14 @@ const documentationTopics: {
         },
         highlight: false,
         screenshotPosition: {},
-        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 200 },
+        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 330 },
         fileName: 'route-params.png'
       }
     ]
   },
   {
     enabled: true,
-    folder: 'response-headers',
+    folder: 'response-configuration/response-headers',
     screenshots: [
       {
         tasks: async () => {
@@ -284,7 +353,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'proxy-mode',
+    folder: 'server-configuration/proxy-mode',
     screenshots: [
       {
         tasks: async () => {
@@ -403,37 +472,6 @@ const documentationTopics: {
       },
       {
         tasks: async () => {
-          await environmentsLogs.switchTab('REQUEST');
-        },
-        get screenshotTarget() {
-          return environmentsLogs.container;
-        },
-        get highlightedTarget() {
-          return environmentsLogs.viewBodyEditor;
-        },
-        highlight: true,
-        highlightGaps: { top: 0, right: 5, bottom: 0, left: 5 },
-        screenshotPosition: { top: 0, right: 0 },
-        screeenshotGaps: { left: 50, bottom: -300 },
-        fileName: 'logs-view-body.png'
-      },
-      {
-        tasks: async () => {
-          await environmentsLogs.clickOpenBodyInEditorButton('request');
-          await browser.pause(500);
-        },
-        get highlightedTarget() {
-          return modals.content;
-        },
-        highlight: false,
-        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: {},
-        screeenshotGaps: { top: 30, right: 30, bottom: 30, left: 30 },
-        fileName: 'logs-view-body-modal.png'
-      },
-      {
-        tasks: async () => {
-          await modals.close();
           await http.assertCall({
             method: 'GET',
             path: '/newroute'
@@ -446,7 +484,7 @@ const documentationTopics: {
           return environmentsLogs.getMetadataIcon(1);
         },
         highlight: true,
-        highlightGaps: { left: 5, right: 5, bottom: 60, top: 5 },
+        highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
         screenshotPosition: { top: 0, right: 0 },
         screeenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-metadata.png'
@@ -458,12 +496,19 @@ const documentationTopics: {
     folder: 'logging-and-recording/auto-mocking-and-recording',
     screenshots: [
       {
-        tasks: async () => {},
+        tasks: async () => {
+          await utils.dropdownMenuOpen(
+            '.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(2) .nav-link'
+          );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
+        },
         get screenshotTarget() {
           return environmentsLogs.container;
         },
         get highlightedTarget() {
-          return environmentsLogs.getMockBtn(2);
+          return utils.dropdownMenuGetItemRef(DropdownMenuLogsActions.MOCK);
         },
         highlight: true,
         highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
@@ -506,7 +551,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'serving-over-tls',
+    folder: 'server-configuration/serving-over-tls',
     screenshots: [
       {
         tasks: async () => {
@@ -554,7 +599,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'cors',
+    folder: 'server-configuration/cors',
     screenshots: [
       {
         tasks: async () => {
@@ -625,7 +670,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'listening-hostname',
+    folder: 'server-configuration/listening-hostname',
     screenshots: [
       {
         tasks: async () => {
@@ -658,7 +703,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'response-body/overview',
+    folder: 'response-configuration/response-body',
     screenshots: [
       {
         tasks: async () => {
@@ -685,7 +730,7 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 450 },
+        screeenshotGaps: { top: 200, left: 600 },
         fileName: 'inline-body-editor.png'
       },
       {
@@ -699,7 +744,7 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 450 },
+        screeenshotGaps: { top: 200, left: 600 },
         fileName: 'body-file-serving.png'
       },
       {
@@ -713,14 +758,14 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 450 },
+        screeenshotGaps: { top: 200, left: 600 },
         fileName: 'body-data-bucket.png'
       }
     ]
   },
   {
     enabled: true,
-    folder: 'response-body/file-serving',
+    folder: 'response-configuration/file-serving',
     screenshots: [
       {
         tasks: async () => {
@@ -732,17 +777,24 @@ const documentationTopics: {
         },
         highlight: true,
         screenshotPosition: { right: 0 },
-        highlightGaps: { top: 10, right: 70, bottom: 60, left: 10 },
+        highlightGaps: { top: 10, right: 80, bottom: 60, left: 10 },
         screeenshotGaps: { top: 200, bottom: 50, left: 20 },
         fileName: 'file-path.png'
       },
       {
         tasks: async () => {
           await navigation.switchView('ENV_ROUTES');
-          await contextMenu.open('environments', 1);
+          await utils.dropdownMenuOpen(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`
+          );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(3);
+          return utils.dropdownMenuGetItemRef(
+            DropdownMenuEnvironmentActions.SHOW_FOLDER
+          );
         },
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
@@ -810,7 +862,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 60, bottom: 100, left: 900 },
+        screeenshotGaps: { top: 60, bottom: 100, left: 1100 },
         fileName: 'duplicate-route-response.png'
       },
       {
@@ -834,7 +886,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 5, right: 10, bottom: 40, left: 10 },
-        screeenshotGaps: { top: 50, bottom: 100, left: 850 },
+        screeenshotGaps: { top: 50, bottom: 100, left: 1000 },
         fileName: 'change-route-responses-default.png'
       },
       {
@@ -847,7 +899,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 900 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 1100 },
         fileName: 'random-route-responses.png'
       },
       {
@@ -860,7 +912,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 920 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 1120 },
         fileName: 'sequential-route-responses.png'
       },
       {
@@ -873,7 +925,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 960 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 1160 },
         fileName: 'fallback-mode-responses.png'
       }
     ]
@@ -913,7 +965,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 5, right: 5, bottom: 50, left: 5 },
-        screeenshotGaps: { top: 200, bottom: 50, left: 940 },
+        screeenshotGaps: { top: 200, bottom: 50, left: 1150 },
         fileName: 'route-response-rule-reorder.png'
       },
       {
@@ -926,7 +978,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 10, bottom: 200, left: 940 },
+        screeenshotGaps: { top: 10, bottom: 200, left: 1150 },
         fileName: 'disable-rules.png'
       },
       {
@@ -1036,6 +1088,7 @@ const documentationTopics: {
       {
         tasks: async () => {
           await navigation.switchView('ENV_DATABUCKETS');
+          await databuckets.add();
         },
         get highlightedTarget() {
           return databuckets.addBtn;
@@ -1167,7 +1220,7 @@ const documentationTopics: {
             target: 'header',
             value: "{{data 'token'}}",
             invert: false,
-            modifier: 'Authorization',
+            modifier: "{{data 'headerName'}}",
             operator: 'equals'
           });
         },
@@ -1180,7 +1233,7 @@ const documentationTopics: {
         highlight: false,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 50, left: 40, bottom: 80 },
+        screeenshotGaps: { top: 60, left: 40, bottom: 60 },
         fileName: 'template-helper-response-rule-value.png'
       }
     ]
@@ -1209,62 +1262,69 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'mockoon-data-files/sharing-mock-api-files',
+    folder: 'mockoon-data-files/data-storage-location',
     screenshots: [
       {
         tasks: async () => {
           await modals.close();
           await navigation.switchView('ENV_ROUTES');
-          await routes.select(1);
+          await utils.dropdownMenuOpen(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`
+          );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
         },
         get highlightedTarget() {
-          return environments.openBtn;
-        },
-        highlight: true,
-        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { bottom: 200, right: 350 },
-        fileName: 'open-environment.png'
-      }
-    ]
-  },
-  {
-    enabled: true,
-    folder: 'mockoon-data-files/data-storage-location',
-    screenshots: [
-      {
-        tasks: async () => {
-          await navigation.switchView('ENV_ROUTES');
-          await contextMenu.open('environments', 1);
-        },
-        get highlightedTarget() {
-          return contextMenu.getItem(3);
+          return utils.dropdownMenuGetItemRef(
+            DropdownMenuEnvironmentActions.SHOW_FOLDER
+          );
         },
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-show-in-folder.png'
-      }
-    ]
-  },
-  {
-    enabled: true,
-    folder: 'mockoon-data-files/data-storage-location',
-    screenshots: [
+      },
       {
         tasks: async () => {
-          await contextMenu.close();
-          await contextMenu.open('environments', 1);
+          await utils.dropdownMenuOpen(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`
+          );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(4);
+          return utils.dropdownMenuGetItemRef(
+            DropdownMenuEnvironmentActions.MOVE_FOLDER
+          );
         },
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screeenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-move-to-folder.png'
+      },
+      {
+        tasks: async () => {
+          await settings.open();
+          await browser.pause(500);
+        },
+        postTasks: async () => {
+          await modals.close();
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        get highlightedTarget() {
+          return settings.fileWatchingInputGroup;
+        },
+        highlight: true,
+        highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'enable-file-watching.png'
       }
     ]
   },
@@ -1276,9 +1336,10 @@ const documentationTopics: {
         tasks: async () => {
           await navigation.switchView('ENV_ROUTES');
           await routes.select(1);
+          await environments.openAddMenu();
         },
         get highlightedTarget() {
-          return environments.openBtn;
+          return environments.getAddMenuEntry(2);
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
@@ -1290,6 +1351,9 @@ const documentationTopics: {
         tasks: async () => {
           await settings.open();
           await browser.pause(500);
+        },
+        postTasks: async () => {
+          await modals.close();
         },
         get screenshotTarget() {
           return modals.content;
@@ -1311,13 +1375,19 @@ const documentationTopics: {
     screenshots: [
       {
         tasks: async () => {
-          await modals.close();
           await navigation.switchView('ENV_ROUTES');
           await routes.select(1);
-          await contextMenu.open('environments', 1);
+          await utils.dropdownMenuOpen(
+            `.environments-menu div:first-of-type .nav-item:nth-child(${1}) .nav-link`
+          );
+        },
+        postTasks: async () => {
+          await utils.dropdownMenuClose();
         },
         get highlightedTarget() {
-          return contextMenu.getItem(2);
+          return utils.dropdownMenuGetItemRef(
+            DropdownMenuEnvironmentActions.COPY_JSON
+          );
         },
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
@@ -1329,36 +1399,10 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'mockoon-data-files/import-export-mockoon-format',
-    screenshots: [
-      {
-        tasks: async () => {
-          await contextMenu.close();
-          await fs.copyFile(
-            './test/data/res/legacy-export/environment-legacy-export.json',
-            './tmp/storage/environment-legacy-export.json'
-          );
-          await environments.open('environment-legacy-export', false);
-        },
-        get highlightedTarget() {
-          return modals.content;
-        },
-        highlight: false,
-        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
-        fileName: 'legacy-export-file-open-prompt.png'
-      }
-    ]
-  },
-  {
-    enabled: true,
     folder: 'api-endpoints/folders',
     screenshots: [
       {
         tasks: async () => {
-          await modals.close();
-          await environments.close(1);
           await environments.close(1);
           await environments.open('empty');
           await navigation.switchView('ENV_SETTINGS');
@@ -1367,37 +1411,37 @@ const documentationTopics: {
           await routes.addFolder();
           await (await routes.getMenuItemEditable(1)).click();
           await routes.setMenuItemEditableText(1, 'Users');
-          await contextMenu.open('routes', 1);
-          await contextMenu.click(
-            'routes',
-            1,
-            ContextMenuFolderActions.ADD_HTTP
+          await utils.dropdownMenuClick(
+            `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+            DropdownMenuFolderActions.ADD_HTTP
           );
           await routes.pathInput.setValue('/users');
-          await contextMenu.open('routes', 1);
-          await contextMenu.click(
-            'routes',
-            1,
-            ContextMenuFolderActions.ADD_HTTP
+          await utils.dropdownMenuClick(
+            `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
+            DropdownMenuFolderActions.ADD_HTTP
           );
           await routes.pathInput.setValue('/users/:id');
           await routes.addFolder();
           await (await routes.getMenuItemEditable(4)).click();
           await routes.setMenuItemEditableText(4, 'Invoices');
-          await contextMenu.open('routes', 4);
-          await contextMenu.click(
-            'routes',
-            4,
-            ContextMenuFolderActions.ADD_HTTP
+          await utils.dropdownMenuClick(
+            `.routes-menu .nav-item:nth-child(${4}) .nav-link`,
+            DropdownMenuFolderActions.ADD_HTTP
           );
           await routes.pathInput.setValue('/invoices');
-          await contextMenu.open('routes', 4);
-          await contextMenu.click(
-            'routes',
-            4,
-            ContextMenuFolderActions.ADD_HTTP
+          await utils.dropdownMenuClick(
+            `.routes-menu .nav-item:nth-child(${4}) .nav-link`,
+            DropdownMenuFolderActions.ADD_HTTP
           );
           await routes.pathInput.setValue('/invoices/:id');
+        },
+        postTasks: async () => {
+          await routes.remove(2);
+          await routes.remove(2);
+          await routes.removeFolder(1);
+          await routes.remove(2);
+          await routes.remove(2);
+          await routes.removeFolder(1);
         },
         get screenshotTarget() {
           return routes.getMenuItem(1);
@@ -1413,52 +1457,59 @@ const documentationTopics: {
   },
   {
     enabled: true,
+    folder: 'api-endpoints/http-routes',
+    screenshots: [
+      {
+        tasks: async () => {
+          await routes.openAddMenu();
+        },
+        postTasks: async () => {
+          await utils.clickOutside();
+        },
+        get screenshotTarget() {
+          return routes.addMenu;
+        },
+        get highlightedTarget() {
+          return routes.getAddMenuEntry(RoutesMenuActions.ADD_HTTP_ROUTE);
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 150, bottom: 100 },
+        fileName: 'add-http-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.addHTTPRoute();
+          await routes.setPath('endpoint');
+        },
+        postTasks: async () => {
+          await routes.remove(1);
+        },
+        get screenshotTarget() {
+          return routes.pathInput;
+        },
+        get highlightedTarget() {
+          return routes.pathInput;
+        },
+        highlight: false,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 100, bottom: 400 },
+        fileName: 'new-http-route.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
     folder: 'api-endpoints/crud-routes',
     screenshots: [
       {
         tasks: async () => {
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuFolderActions.DELETE
-          );
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuFolderActions.DELETE
-          );
-
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuRouteActions.DELETE
-          );
-
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuRouteActions.DELETE
-          );
-
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuRouteActions.DELETE
-          );
-
-          await contextMenu.open('routes', 1);
-          await contextMenu.clickAndConfirm(
-            'routes',
-            1,
-            ContextMenuRouteActions.DELETE
-          );
-
           await routes.openAddMenu();
+        },
+        postTasks: async () => {
+          await utils.clickOutside();
         },
         get screenshotTarget() {
           return routes.addMenu;
@@ -1474,7 +1525,6 @@ const documentationTopics: {
       },
       {
         tasks: async () => {
-          await contextMenu.close();
           await routes.addCRUDRoute();
           await routes.setPath('users');
         },
@@ -1522,7 +1572,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'api-endpoints/templates-and-ai-assistant',
+    folder: 'mockoon-cloud/templates-and-ai-assistant',
     screenshots: [
       {
         tasks: async () => {
@@ -1588,7 +1638,7 @@ const documentationTopics: {
         highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: {},
         screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
-        fileName: 'ai-assistant-template-generate-options.png'
+        fileName: 'ai-assistant-template-generate-option.png'
       },
       {
         tasks: async () => {
@@ -1613,7 +1663,7 @@ const documentationTopics: {
           await browser.pause(20000);
         },
         get highlightedTarget() {
-          return $('.modal-footer .ml-auto button:last-of-type');
+          return $('.modal-footer .ms-auto button:last-of-type');
         },
         get screenshotTarget() {
           return modals.content;
@@ -1623,6 +1673,227 @@ const documentationTopics: {
         screenshotPosition: {},
         screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'templates-generate-get-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.selectTemplateTab(3);
+        },
+        get highlightedTarget() {
+          return routes.getTemplateTab(3);
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'ai-assistant-generate-endpoint-tab.png'
+      },
+      {
+        tasks: async () => {
+          await routes.setTemplatePrompt('Get a list of users');
+        },
+        get highlightedTarget() {
+          return routes.endpointGenerateBtn;
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'ai-assistant-generate-endpoint-button.png'
+      },
+      {
+        tasks: async () => {
+          await routes.clickEndpointGenerate();
+          // account for openai api call
+          await browser.pause(20000);
+        },
+        postTasks: async () => {
+          await modals.close();
+        },
+        get highlightedTarget() {
+          return $('.modal-footer .ms-auto button:last-of-type');
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: {},
+        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        fileName: 'ai-assistant-generate-endpoint-create-button.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'route-responses/global-routes-with-rules',
+    screenshots: [
+      {
+        tasks: async () => {
+          await routes.addHTTPRoute();
+          await routes.setPath('*');
+          await routes.setMethod(1);
+
+          await routes.addHTTPRoute();
+          await routes.setPath('users');
+
+          await routes.select(1);
+        },
+        get highlightedTarget() {
+          return routes.getMenuItem(1);
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 300, bottom: 200 },
+        fileName: 'create-wildcard-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.toggleRouteResponseFallback();
+        },
+        get highlightedTarget() {
+          return routes.fallbackResponseBtn;
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { top: 20, bottom: 120, left: 1250 },
+        fileName: 'activate-fallback-mode.png'
+      },
+      {
+        tasks: async () => {
+          // 401
+          await routes.setRouteResponseStatusCode(30);
+        },
+        get highlightedTarget() {
+          return routes.routeResponseStatusDropdown;
+        },
+        get screenshotTarget() {
+          return routes.routeResponseDropdownlabel;
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { top: 40, bottom: 200, left: 100 },
+        fileName: 'response-status-code-401.png'
+      },
+      {
+        tasks: async () => {
+          await routes.switchTab('RULES');
+          await routes.addResponseRule({
+            target: 'header',
+            invert: false,
+            modifier: 'Authorization',
+            operator: 'null',
+            value: ''
+          });
+        },
+        get highlightedTarget() {
+          return routes.getResponseRule(1);
+        },
+        highlight: true,
+        screenshotPosition: { right: 0 },
+        highlightGaps: { top: 10, right: 5, bottom: 40, left: 10 },
+        screeenshotGaps: { top: 200, bottom: 20, left: 20 },
+        fileName: 'response-rule-header-null.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'callbacks/overview',
+    screenshots: [
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_ROUTES');
+        },
+        get highlightedTarget() {
+          return navigation.callbacksTab;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { top: 0, left: 0 },
+        screeenshotGaps: { right: 400, bottom: 125 },
+        fileName: 'open-callbacks-view.png'
+      },
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_CALLBACKS');
+          await callbacks.add();
+        },
+        get highlightedTarget() {
+          return callbacks.addBtn;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0, right: 0 },
+        screeenshotGaps: { bottom: 500 },
+        fileName: 'add-callback.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'callbacks/using-callbacks',
+    screenshots: [
+      {
+        tasks: async () => {
+          await navigation.switchView('ENV_ROUTES');
+          await routes.switchTab('RESPONSE');
+        },
+        get screenshotTarget() {
+          return routes.routeResponseMenu;
+        },
+        get highlightedTarget() {
+          return routes.callbacksTab;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0 },
+        screeenshotGaps: { top: 20, left: 40, bottom: 50 },
+        fileName: 'open-route-response-callbacks.png'
+      },
+      {
+        tasks: async () => {
+          await routes.switchTab('CALLBACKS');
+          await callbacks.attachCallback();
+        },
+        get highlightedTarget() {
+          return callbacks.attachCallbackBtn;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { right: 0 },
+        screeenshotGaps: { top: 150, bottom: 50, left: 20 },
+        fileName: 'link-callback-response.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'variables/environment-variables',
+    screenshots: [
+      {
+        tasks: async () => {
+          await settings.open();
+        },
+        get highlightedTarget() {
+          return $('app-title-separator[heading="Environment variables"]');
+        },
+        get screenshotTarget() {
+          return modals.content;
+        },
+        highlight: true,
+        highlightGaps: { top: 5, right: 5, bottom: 70, left: 5 },
+        screenshotPosition: {},
+        screeenshotGaps: { top: 30, left: 30, bottom: 30, right: 30 },
+        fileName: 'settings-environment-variables-prefix.png'
       }
     ]
   }
@@ -1630,19 +1901,6 @@ const documentationTopics: {
 
 describe('Documentation screenshots', () => {
   it('should open and start the environment', async () => {
-    await fs.mkdir('./tmp/docs');
-    await fs.writeFile(
-      './tmp/window-state.json',
-      JSON.stringify({
-        width: 1280,
-        height: 1024,
-        x: 150,
-        y: 150,
-        isMaximized: false,
-        isFullScreen: false
-      })
-    );
-    await browser.reloadSession();
     await environments.open('documentation');
   });
 
@@ -1660,8 +1918,6 @@ describe('Documentation screenshots', () => {
 
       for (const screenshot of documentationTopic.screenshots) {
         it(screenshot.fileName, async () => {
-          await clearElements();
-
           if (screenshot.tasks) {
             await screenshot.tasks();
           }
@@ -1682,12 +1938,18 @@ describe('Documentation screenshots', () => {
             documentationTopic.folder,
             screenshot.fileName
           );
+
+          await clearElements();
+
+          if (screenshot.postTasks) {
+            await screenshot.postTasks();
+          }
         });
       }
     });
   }
 
-  describe('Cheat sheet', () => {
+  xdescribe('Cheat sheet', () => {
     it('should take screenshots for cheat sheet', async () => {
       await fs.mkdir('./tmp/docs-cheat-sheet', {
         recursive: true

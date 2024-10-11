@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker, safeFakerReturn } from '../../faker';
 
 const email = function () {
-  return faker.internet.email();
+  return safeFakerReturn(faker.internet.email);
 };
 
 export default email;

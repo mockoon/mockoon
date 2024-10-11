@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  Callback,
   DataBucket,
   Environment,
   Route,
@@ -11,55 +12,81 @@ import {
   Observable,
   pipe
 } from 'rxjs';
-import { distinctUntilChanged, map, withLatestFrom } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  withLatestFrom
+} from 'rxjs/operators';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
+import {
+  CallbackSpecTabNameType,
+  CallbackTabsNameType
+} from 'src/renderer/app/models/callback.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
   StoreType
 } from 'src/renderer/app/models/store.model';
-import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
+import { ActionTypes, Actions } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
+
+export const storeDefaultState: StoreType = {
+  activeView: 'ENV_ROUTES',
+  activeTab: 'RESPONSE',
+  activeEnvironmentLogsTab: 'REQUEST',
+  activeTemplatesTab: 'LIST',
+  activeEnvironmentLogsUUID: {},
+  activeEnvironmentUUID: null,
+  activeRouteUUID: null,
+  activeDatabucketUUID: null,
+  activeCallbackUUID: null,
+  activeRouteResponseUUID: null,
+  environments: [],
+  environmentsStatus: {},
+  bodyEditorConfig: defaultEditorOptions,
+  duplicatedRoutes: {},
+  environmentsLogs: {},
+  toasts: [],
+  uiState: {
+    closing: false,
+    saving: false
+  },
+  settings: null,
+  duplicateEntityToAnotherEnvironment: { moving: false },
+  filters: {
+    routes: '',
+    databuckets: '',
+    templates: '',
+    callbacks: '',
+    logs: ''
+  },
+  user: null,
+  callbackSettings: {
+    activeTab: 'SPEC',
+    activeSpecTab: 'BODY'
+  },
+  sync: {
+    status: false,
+    presence: null,
+    offlineReason: null,
+    alert: null
+  },
+  deployInstances: []
+};
 
 @Injectable({ providedIn: 'root' })
 export class Store {
-  private store$ = new BehaviorSubject<StoreType>({
-    activeView: 'ENV_ROUTES',
-    activeTab: 'RESPONSE',
-    activeEnvironmentLogsTab: 'REQUEST',
-    activeTemplatesTab: 'LIST',
-    activeEnvironmentLogsUUID: {},
-    activeEnvironmentUUID: null,
-    activeRouteUUID: null,
-    activeDatabucketUUID: null,
-    activeRouteResponseUUID: null,
-    environments: [],
-    environmentsStatus: {},
-    bodyEditorConfig: defaultEditorOptions,
-    duplicatedRoutes: {},
-    environmentsLogs: {},
-    toasts: [],
-    uiState: {
-      closing: false,
-      saving: false
-    },
-    settings: null,
-    duplicateEntityToAnotherEnvironment: { moving: false },
-    filters: {
-      routes: '',
-      databuckets: '',
-      templates: ''
-    },
-    user: null
-  });
+  private store$ = new BehaviorSubject<StoreType>(storeDefaultState);
   /**
    * Emits latest store action
    * Most views are updating the store by themselves and only listen for UUID changes to update their view. Sometimes, a view update is needed when the store is updated by another view, or when the store is updated by an external source (liek file monitoring).
    * Some actions are forcing a UI refresh, and it's also possible to force a UI refresh manually by emitting a new action with the force property set to true (e.g. environments menu name edit need to update the settings view when it's opened)
    */
   private storeAction$ = new BehaviorSubject<{
-    type: ActionTypes;
+    payload: Actions;
     force: boolean;
+    emit: boolean;
   }>(null);
 
   constructor() {}
@@ -85,10 +112,10 @@ export class Store {
    * Select a filter
    */
   public selectFilter<T extends keyof StoreType['filters']>(
-    filter: T
+    filterText: T
   ): Observable<string> {
     return this.store$.asObservable().pipe(
-      map((store) => store?.filters[filter]),
+      map((store) => store?.filters[filterText]),
       distinctUntilChanged()
     );
   }
@@ -134,28 +161,33 @@ export class Store {
   }
 
   /**
-   * Select active environment logs
+   * Select active environment log
    */
-  public selectActiveEnvironmentLogs(): Observable<EnvironmentLog[]> {
+  public selectActiveEnvironmentLog(): Observable<EnvironmentLog> {
     return this.store$
       .asObservable()
       .pipe(
-        map((store) => store.environmentsLogs[store.activeEnvironmentUUID])
+        map((store) =>
+          store.environmentsLogs[store.activeEnvironmentUUID] &&
+          store.environmentsLogs[store.activeEnvironmentUUID].length > 0
+            ? store.environmentsLogs[store.activeEnvironmentUUID].find(
+                (environmentLog) =>
+                  environmentLog.UUID ===
+                  store.activeEnvironmentLogsUUID[store.activeEnvironmentUUID]
+              )
+            : null
+        )
       );
   }
 
   /**
-   * Select active environment log UUID for selected environment
+   * Select active environment logs
    */
-  public selectActiveEnvironmentLogUUID(): Observable<string> {
-    return this.store$
-      .asObservable()
-      .pipe(
-        map(
-          (store) =>
-            store.activeEnvironmentLogsUUID[store.activeEnvironmentUUID]
-        )
-      );
+  public selectActiveEnvironmentLogs(): Observable<EnvironmentLog[]> {
+    return this.store$.asObservable().pipe(
+      map((store) => store.environmentsLogs[store.activeEnvironmentUUID]),
+      distinctUntilChanged()
+    );
   }
 
   /**
@@ -241,6 +273,35 @@ export class Store {
   }
 
   /**
+   * Select active callback observable
+   */
+  public selectActiveCallback(): Observable<Callback> {
+    return this.selectActiveEnvironment().pipe(
+      map((environment) =>
+        environment
+          ? environment.callbacks.find(
+              (cb) => cb.uuid === this.store$.value.activeCallbackUUID
+            )
+          : null
+      )
+    );
+  }
+
+  /**
+   * Get the active selected tab of callback view.
+   */
+  public getSelectedCallbackTab(): CallbackTabsNameType {
+    return this.store$.value.callbackSettings.activeTab;
+  }
+
+  /**
+   * Get the active selected spec tab of callback view.
+   */
+  public getSelectedSpecTabInCallbackView(): CallbackSpecTabNameType {
+    return this.store$.value.callbackSettings.activeSpecTab;
+  }
+
+  /**
    * Get environment by uuid
    */
   public getEnvironmentByUUID(UUID: string): Environment {
@@ -319,6 +380,24 @@ export class Store {
   }
 
   /**
+   * Get active callback value
+   */
+  public getActiveCallback(): Callback {
+    const activeEnvironment = this.store$.value.environments.find(
+      (environment) =>
+        environment.uuid === this.store$.value.activeEnvironmentUUID
+    );
+
+    if (!activeEnvironment) {
+      return null;
+    }
+
+    return activeEnvironment.callbacks.find(
+      (callback) => callback.uuid === this.store$.value.activeCallbackUUID
+    );
+  }
+
+  /**
    * Get route with the supplied UUID from any environment
    */
   public getRouteByUUID(routeUUID: string): Route | undefined {
@@ -351,11 +430,37 @@ export class Store {
   }
 
   /**
-   * Update the store using the reducer
+   * Get callback with the supplied UUID from any environment
    */
-  public update(action: Actions, force = false) {
-    this.storeAction$.next({ type: action.type, force });
+  public getCallbackByUUID(callbackUUID: string): Callback | undefined {
+    let foundCallback: Callback;
+    this.store$.value.environments.some((environment: Environment) => {
+      foundCallback = environment.callbacks.find(
+        (cb: Callback) => cb.uuid === callbackUUID
+      );
+
+      return !!foundCallback;
+    });
+
+    return foundCallback;
+  }
+
+  /**
+   * Update the store using the reducer
+   *
+   * @param action
+   * @param force
+   * @param emit - emit the action to the storeAction$ observable
+   */
+  public update(action: Actions, force = false, emit = true) {
+    this.storeAction$.next({ payload: action, force, emit });
     this.store$.next(environmentReducer(this.store$.value, action));
+  }
+
+  public getStoreActions() {
+    return this.storeAction$
+      .asObservable()
+      .pipe(filter((action) => action.emit));
   }
 
   /**
@@ -387,7 +492,7 @@ export class Store {
       distinctUntilChanged(
         ([previousObject], [nextObject, nextAction]) =>
           previousObject.uuid === nextObject.uuid &&
-          nextAction.type !== ActionTypes.RELOAD_ENVIRONMENT &&
+          nextAction.payload.type !== ActionTypes.RELOAD_ENVIRONMENT &&
           !nextAction.force
       ),
       map(([object]) => object)

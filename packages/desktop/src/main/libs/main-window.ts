@@ -4,7 +4,9 @@ import { join as pathJoin } from 'path';
 import { argv } from 'process';
 import { parseProtocolArgs } from 'src/main/libs/custom-protocol';
 import { createMenu } from 'src/main/libs/menu';
+import { getRuntimeArg } from 'src/main/libs/runtime-args';
 import { createSplashScreen } from 'src/main/libs/splashscreen';
+import { checkForUpdate } from 'src/main/libs/update';
 
 declare const IS_TESTING: boolean;
 declare const IS_DEV: boolean;
@@ -27,11 +29,12 @@ export const saveOpenUrlArgs = (url: string[]) => {
 
 export const getMainWindow = () => mainWindow;
 
-export const initMainWindow = () => {
+export const initMainWindow = (showSplash = true) => {
+  const enableDevTools = IS_DEV || !!getRuntimeArg('enable-dev-tools');
   let splashScreen: BrowserWindow;
 
   // only show the splashscreen when not running the tests
-  if (!IS_TESTING) {
+  if (!IS_TESTING && showSplash) {
     splashScreen = createSplashScreen();
   }
 
@@ -52,18 +55,32 @@ export const initMainWindow = () => {
     height: mainWindowState.height,
     title: 'Mockoon',
     backgroundColor: '#252830',
-    icon: pathJoin(__dirname, '../build-res/icon_512x512x32.png'),
+    icon: pathJoin(
+      __dirname,
+      process.platform === 'win32'
+        ? '../build-res/icon.ico'
+        : '../build-res/icon_512x512x32.png'
+    ),
     // directly show the main window when running the tests
     show: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: true,
-      devTools: IS_DEV ? true : false,
+      devTools: enableDevTools,
       spellcheck: false,
       preload: pathJoin(__dirname, '/preload.js')
     }
   });
+
+  // maximize before showing the window to avoid a resize event on start (this may break the menu size setting restore)
+  if (mainWindowState.isMaximized) {
+    mainWindow.maximize();
+  }
+
+  if (enableDevTools) {
+    mainWindow.webContents.openDevTools();
+  }
 
   // when main app finished loading, hide splashscreen and show the mainWindow
   mainWindow.webContents.on('dom-ready', () => {
@@ -76,9 +93,7 @@ export const initMainWindow = () => {
       setTimeout(() => {
         showMainWindow(mainWindowState);
 
-        if (IS_DEV) {
-          mainWindow.webContents.openDevTools();
-        }
+        checkForUpdate(mainWindow);
       }, 100);
     }, 500);
   });

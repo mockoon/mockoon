@@ -1,7 +1,7 @@
 import {
   Environment,
   Environments,
-  FakerAvailableLocales,
+  InFlightRequest,
   ServerErrorCodes,
   ServerEvents,
   Transaction
@@ -10,27 +10,25 @@ import {
   OpenDialogOptions,
   OpenDialogReturnValue,
   SaveDialogOptions,
-  SaveDialogReturnValue
+  SaveDialogReturnValue,
+  app
 } from 'electron';
-import { PreMigrationSettings } from 'src/renderer/app/models/settings.model';
+import { MenuStateUpdatePayload } from 'src/shared/models/ipc.model';
 import {
   EnvironmentDescriptor,
   Settings
 } from 'src/shared/models/settings.model';
 
 export interface MainAPIModel {
-  invoke<T>(
-    channel: 'APP_NEW_STORAGE_MIGRATION'
-  ): Promise<EnvironmentDescriptor[]>;
   invoke(
     channel: 'APP_READ_ENVIRONMENT_DATA',
     path: string
   ): Promise<Environment>;
-  invoke(channel: 'APP_READ_SETTINGS_DATA'): Promise<PreMigrationSettings>;
+  invoke(channel: 'APP_READ_SETTINGS_DATA'): Promise<Settings>;
   invoke(
     channel: 'APP_WRITE_ENVIRONMENT_DATA',
     data: Environment,
-    path: string,
+    descriptor: EnvironmentDescriptor,
     storagePrettyPrint?: boolean
   ): Promise<void>;
   invoke(
@@ -51,12 +49,13 @@ export interface MainAPIModel {
   invoke(
     channel:
       | 'APP_GET_MIME_TYPE'
+      | 'APP_GET_HASH'
       | 'APP_GET_FILENAME'
       | 'APP_READ_FILE'
       | 'APP_BUILD_STORAGE_FILEPATH'
       | 'APP_GET_BASE_PATH'
       | 'APP_REPLACE_FILEPATH_EXTENSION',
-    pathOrName: string
+    pathOrNameOrString: string
   ): Promise<string>;
   invoke(channel: 'APP_WRITE_FILE', path: string, data: string): Promise<void>;
   invoke(
@@ -78,30 +77,27 @@ export interface MainAPIModel {
   invoke(channel: 'APP_UNWATCH_FILE', UUID: string): Promise<void>;
   invoke(channel: 'APP_UNWATCH_ALL_FILE'): Promise<void>;
 
+  send(channel: 'APP_UPDATE_MENU_STATE', state: MenuStateUpdatePayload): void;
   send(channel: 'APP_WRITE_CLIPBOARD', data: any): void;
+  send(channel: 'APP_QUIT' | 'APP_HIDE_WINDOW' | 'APP_APPLY_UPDATE'): void;
+  send(channel: 'APP_AUTH', page: 'login' | 'signup'): void;
+  send(channel: 'APP_AUTH_STOP_SERVER'): void;
+  send(channel: 'APP_OPEN_EXTERNAL_LINK', url: string): void;
   send(
-    channel:
-      | 'APP_DISABLE_ENVIRONMENT_MENU_ENTRIES'
-      | 'APP_ENABLE_ENVIRONMENT_MENU_ENTRIES'
-      | 'APP_DISABLE_ROUTE_MENU_ENTRIES'
-      | 'APP_ENABLE_ROUTE_MENU_ENTRIES'
-      | 'APP_QUIT'
-      | 'APP_HIDE_WINDOW'
-      | 'APP_APPLY_UPDATE'
+    channel: 'APP_SHOW_FILE' | 'APP_OPEN_FILE',
+    path: string,
+    relativeToFile?: string
   ): void;
   send(
-    channel: 'APP_OPEN_EXTERNAL_LINK' | 'APP_SHOW_FILE',
-    urlOrPath: string
+    channel: 'APP_SHOW_FOLDER',
+    path: Parameters<typeof app.getPath>[0]
   ): void;
   send(
     channel: 'APP_LOGS',
     data: { type: 'error' | 'info'; message: string; payload?: any }
   ): void;
-  send(
-    channel: 'APP_SET_FAKER_OPTIONS',
-    data: { locale: FakerAvailableLocales; seed: number }
-  ): void;
   send(channel: 'APP_UPDATE_ENVIRONMENT', environments: Environments): void;
+  send(channel: 'APP_ZOOM', action: 'IN' | 'OUT' | 'RESET'): void;
 
   receive(
     channel: 'APP_SERVER_EVENT',
@@ -112,18 +108,23 @@ export interface MainAPIModel {
         errorCode?: ServerErrorCodes;
         originalError?: Error;
         transaction?: Transaction;
+        inflightRequest?: InFlightRequest;
       }
     ) => void
   ): void;
   receive(channel: 'APP_MENU', listener: (action: string) => void): void;
-  receive(channel: 'APP_UPDATE_AVAILABLE', listener: () => void): void;
+  receive(
+    channel: 'APP_UPDATE_AVAILABLE',
+    listener: (version: string) => void
+  ): void;
+  receive(
+    channel: 'APP_AUTH_CALLBACK',
+    listener: (token: string) => void
+  ): void;
   receive(
     channel: 'APP_CUSTOM_PROTOCOL',
     listener:
-      | ((
-          action: 'load-environment' | 'load-export-data',
-          parameters: { url: string }
-        ) => void)
+      | ((action: 'load-environment', parameters: { url: string }) => void)
       | ((action: 'auth', parameters: { token: string }) => void)
   ): void;
 

@@ -1,10 +1,10 @@
+import { Texts } from '../../src/renderer/app/constants/texts.constant';
 import environments from '../libs/environments';
 import file from '../libs/file';
 import http from '../libs/http';
 import { HttpCall } from '../libs/models';
 import routes from '../libs/routes';
 import utils from '../libs/utils';
-import { Texts } from '../../src/renderer/app/constants/texts.constant';
 
 describe('Responses rules', () => {
   describe('Create, update, delete and test basic rules', async () => {
@@ -601,6 +601,50 @@ describe('Responses rules', () => {
       });
     });
   });
+
+  describe('Request number rules', async () => {
+    it('should restart the environment', async () => {
+      await environments.stop();
+      await environments.start();
+    });
+
+    it('should call the request number endpoint twice and get different responses', async () => {
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res1' }
+      });
+
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res2' }
+      });
+    });
+
+    it('should reset the state with the admin endpoint and get the first response again', async () => {
+      await http.assertCall({
+        path: '/mockoon-admin/state/purge',
+        method: 'POST'
+      });
+
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res1' }
+      });
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res2' }
+      });
+      await http.assertCall({
+        path: '/requestnumber',
+        method: 'GET',
+        testedResponse: { body: 'res3' }
+      });
+    });
+  });
 });
 
 describe('Rules tabs', () => {
@@ -618,7 +662,7 @@ describe('Rules tabs', () => {
 
     // this is needed for the tab re-render to complete
     await browser.pause(100);
-    await utils.assertElementText(routes.rulesTab, 'Rules 1');
+    await utils.assertElementText(routes.rulesTab, 'Rules\n1');
 
     await routes.addResponseRule({
       modifier: 'test',
@@ -630,7 +674,7 @@ describe('Rules tabs', () => {
 
     // this is needed for the tab re-render to complete
     await browser.pause(100);
-    await utils.assertElementText(routes.rulesTab, 'Rules 2');
+    await utils.assertElementText(routes.rulesTab, 'Rules\n2');
 
     await routes.addRouteResponse();
     await routes.assertCountRouteResponses(4);
@@ -650,7 +694,7 @@ describe('Rules tabs', () => {
 
     // this is needed for the tab re-render to complete
     await browser.pause(100);
-    await utils.assertElementText(routes.rulesTab, 'Rules 1');
+    await utils.assertElementText(routes.rulesTab, 'Rules\n1');
   });
 });
 

@@ -7,25 +7,33 @@ import { clearIPCChannels, initIPCListeners } from 'src/main/libs/ipc';
 import { createMainLogger, logInfo } from 'src/main/libs/logs';
 import { initMainWindow, saveOpenUrlArgs } from 'src/main/libs/main-window';
 import { setPaths } from 'src/main/libs/paths';
+import { getRuntimeArg, parseRuntimeArgs } from 'src/main/libs/runtime-args';
 import { ServerInstance } from 'src/main/libs/server-management';
-import { checkForUpdate } from 'src/main/libs/update';
 
 declare const IS_TESTING: boolean;
 declare const IS_DEV: boolean;
+
+parseRuntimeArgs();
 
 setPaths();
 createMainLogger();
 
 let mainWindow: BrowserWindow;
+let isQuitting = false;
 
 // try getting a lock to ensure only one instance of the application is launched
-const appLock = app.requestSingleInstanceLock();
+let appLock = app.requestSingleInstanceLock();
 
-const initApp = () => {
-  mainWindow = initMainWindow();
+if (IS_DEV) {
+  // when serving (dev mode) disable the lock to enable launching multiple instances
+  appLock = true;
+}
+
+const initApp = (showSplash = true) => {
+  mainWindow = initMainWindow(showSplash);
   initIPCListeners(mainWindow);
 
-  if (IS_DEV) {
+  if (IS_DEV && !getRuntimeArg('disable-hot-reload')) {
     // when serving (dev mode) enable hot reloading
     import('src/main/libs/hot-reload').then((hotReloadModule) => {
       hotReloadModule.hotReload();
@@ -60,15 +68,17 @@ if (!appLock) {
     registerProtocol();
     initApp();
 
-    checkForUpdate(mainWindow);
-
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (BrowserWindow.getAllWindows().length === 0) {
-        initApp();
+        initApp(false);
       }
     });
+  });
+
+  app.on('before-quit', () => {
+    isQuitting = true;
   });
 
   // Quit when all windows are closed.
@@ -79,7 +89,7 @@ if (!appLock) {
 
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q (except when running tests)
-    if (process.platform !== 'darwin' || IS_TESTING) {
+    if (isQuitting || process.platform !== 'darwin' || IS_TESTING) {
       app.quit();
     }
   });

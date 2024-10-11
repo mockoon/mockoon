@@ -2,80 +2,14 @@ import {
   Environment,
   EnvironmentSchema,
   HighestMigrationId,
-  IsLegacyExportData,
   Migrations,
-  repairRefs,
-  UnwrapLegacyExport
+  repairRefs
 } from '@mockoon/commons';
 import { OpenAPIConverter } from '@mockoon/commons-server';
 import { confirm } from '@oclif/core/lib/cli-ux';
-import axios from 'axios';
+import { error } from '@oclif/core/lib/errors';
 import { promises as fs } from 'fs';
 import { CLIMessages } from '../constants/cli-messages.constants';
-
-/**
- * Load and parse one or more JSON data file(s).
- * Supports both legacy export files (with one or multiple envs) or new environment files.
- * If a legacy export is encountered, unwrap it.
- *
- * @param filePaths
- */
-export const parseDataFiles = async (
-  filePaths: string[]
-): Promise<{ originalPath: string; environment: Environment }[]> => {
-  const openAPIConverter = new OpenAPIConverter();
-  let environments: { originalPath: string; environment: Environment }[] = [];
-  let filePathIndex = 0;
-
-  for (const filePath of filePaths) {
-    try {
-      const environment = await openAPIConverter.convertFromOpenAPI(filePath);
-
-      if (environment) {
-        environments.push({ environment, originalPath: filePath });
-      }
-    } catch (openAPIError: any) {
-      try {
-        let data: any;
-
-        if (filePath.startsWith('http')) {
-          data = (await axios.get(filePath, { timeout: 30000 })).data;
-        } else {
-          data = await fs.readFile(filePath, { encoding: 'utf-8' });
-        }
-
-        if (typeof data === 'string') {
-          data = JSON.parse(data);
-        }
-
-        if (IsLegacyExportData(data)) {
-          const unwrappedExport = UnwrapLegacyExport(data);
-
-          // Extract all environments, eventually filter items of type 'route'
-          environments = [
-            ...environments,
-            ...unwrappedExport.map((environment) => ({
-              environment,
-              originalPath: filePath
-            }))
-          ];
-        } else if (typeof data === 'object') {
-          environments.push({ environment: data, originalPath: filePath });
-        }
-      } catch (JSONError: any) {
-        throw new Error(`${CLIMessages.DATA_INVALID}: ${JSONError.message}`);
-      }
-    }
-
-    filePathIndex++;
-  }
-
-  if (environments.length === 0) {
-    throw new Error(CLIMessages.ENVIRONMENT_NOT_AVAILABLE_ERROR);
-  }
-
-  return environments;
-};
 
 /**
  * Check if an environment can be run by the CLI and
@@ -86,7 +20,7 @@ export const parseDataFiles = async (
  */
 const migrateAndValidateEnvironment = async (
   environment: Environment,
-  forceRepair?: boolean
+  forceRepair: boolean
 ) => {
   // environment data are too old: lastMigration is not present
   if (environment.lastMigration === undefined && !forceRepair) {
@@ -113,7 +47,7 @@ const migrateAndValidateEnvironment = async (
         migration.migrationFunction(environment);
       }
     });
-  } catch (error) {
+  } catch (_error) {
     environment.lastMigration = HighestMigrationId;
   }
 
@@ -129,31 +63,76 @@ const migrateAndValidateEnvironment = async (
 };
 
 /**
- * Migrate the environment and override user defined options
+ * Load and parse one or more JSON data file(s).
  *
- * @param environments - path to the data file or export data
- * @param options
+ * @param filePaths
  */
-export const prepareEnvironment = async (params: {
-  environment: Environment;
+export const parseDataFiles = async (
+  filePaths: string[],
   userOptions: {
-    port?: number;
-    hostname?: string;
-  };
-  repair?: boolean;
-}): Promise<Environment> => {
-  params.environment = await migrateAndValidateEnvironment(
-    params.environment,
-    params.repair
-  );
+    ports: number[];
+    hostnames: string[];
+  } = { ports: [], hostnames: [] },
+  repair = false
+): Promise<{ originalPath: string; environment: Environment }[]> => {
+  const openAPIConverter = new OpenAPIConverter();
+  const environments: { originalPath: string; environment: Environment }[] = [];
+  let filePathIndex = 0;
+  let errorMessage = `${CLIMessages.DATA_INVALID}:`;
 
-  if (params.userOptions.port !== undefined) {
-    params.environment.port = params.userOptions.port;
+  for (const [index, filePath] of filePaths.entries()) {
+    let environment: Environment | null = null;
+
+    try {
+      environment = await openAPIConverter.convertFromOpenAPI(filePath);
+    } catch (openAPIError: any) {
+      errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;
+
+      // immediately throw if the file is not a JSON file
+      if (filePath.includes('.yml') || filePath.includes('.yaml')) {
+        throw new Error(errorMessage);
+      }
+
+      try {
+        let data: any;
+
+        if (filePath.startsWith('http')) {
+          data = await (await fetch(filePath)).text();
+        } else {
+          data = await fs.readFile(filePath, { encoding: 'utf-8' });
+        }
+
+        if (typeof data === 'string') {
+          data = JSON.parse(data);
+        }
+
+        if (typeof data === 'object') {
+          environment = await migrateAndValidateEnvironment(data, repair);
+        }
+      } catch (JSONError: any) {
+        errorMessage += `\nMockoon parser: ${JSONError.message}`;
+        throw new Error(errorMessage);
+      }
+    }
+
+    if (environment) {
+      if (userOptions.ports[index] !== undefined) {
+        environment.port = userOptions.ports[index];
+      }
+
+      if (userOptions.hostnames[index] !== undefined) {
+        environment.hostname = userOptions.hostnames[index];
+      }
+
+      environments.push({ environment, originalPath: filePath });
+    }
+
+    filePathIndex++;
   }
 
-  if (params.userOptions.hostname !== undefined) {
-    params.environment.hostname = params.userOptions.hostname;
+  if (environments.length === 0) {
+    throw new Error(CLIMessages.ENVIRONMENT_NOT_AVAILABLE_ERROR);
   }
 
-  return params.environment;
+  return environments;
 };

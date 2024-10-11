@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   forwardRef,
+  HostBinding,
   HostListener,
   Input,
   OnInit,
@@ -12,8 +13,8 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormControl,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl
 } from '@angular/forms';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
@@ -55,8 +56,6 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   @Input()
   public validation: Validation = null;
   @Input()
-  public fixedWidth: string;
-  @Input()
   public dropdownId: string;
   @Input()
   public placeholder = '';
@@ -64,6 +63,8 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public unknownValueMessage = '';
   @Input()
   public clearable = false;
+  @Input()
+  public hasCategory = false;
   // List of disabled entries values if any
   @Input()
   public disabledList: (number | string)[] = null;
@@ -80,15 +81,24 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public customValueInput: ElementRef;
 
   public items$ = new BehaviorSubject<DropdownItems>(null);
-  public selectedItem$ = new BehaviorSubject<DropdownItem>(null);
+  public selectedItem$: Observable<DropdownItem>;
   public filteredItems$: Observable<DropdownItems>;
-  public customValue = new FormControl('');
+  public customValue = new UntypedFormControl('');
   public focusedItemIndex$ = new BehaviorSubject<number>(-1);
 
   public onChange: (_: any) => void;
   public onTouched: (_: any) => void;
 
+  public window = window;
+
+  private value$ = new BehaviorSubject<number | string>(null);
+
   constructor() {}
+
+  @HostBinding('class')
+  public get hostClasses() {
+    return 'overflow-hidden';
+  }
 
   @Input()
   public set items(items: DropdownItems) {
@@ -155,6 +165,16 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
         );
       })
     );
+
+    /**
+     * Set the selected item from the value.
+     * Also react to items update which can happen after the value has been set.
+     */
+    this.selectedItem$ = combineLatest([this.value$, this.items$]).pipe(
+      map(([value]) => {
+        return this.findItem(value);
+      })
+    );
   }
 
   /**
@@ -163,7 +183,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
    * @param value
    */
   public writeValue(value: number | string): void {
-    this.selectedItem$.next(this.findItem(value));
+    this.value$.next(value);
   }
 
   public registerOnChange(fn: any): void {
@@ -204,7 +224,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
    * @param value
    */
   public setValue(item: DropdownItem) {
-    this.selectedItem$.next(item);
+    this.value$.next(item.value);
     this.onChange(item.value);
     this.customValue.reset();
     this.focusedItemIndex$.next(-1);
@@ -212,10 +232,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   public clearValue() {
-    this.selectedItem$.next({
-      value: this.defaultClearValue,
-      label: ''
-    });
+    this.value$.next(this.defaultClearValue);
     this.onChange(this.defaultClearValue);
     this.focusedItemIndex$.next(-1);
   }

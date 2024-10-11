@@ -26,7 +26,9 @@
             "tsConfig": "src/renderer/tsconfig.app.json",
             "polyfills": "src/renderer/polyfills.ts",
             "allowedCommonJsDependencies": [
+              "joi",
               "semver",
+              "brace/index",
               "brace/mode/css",
               "brace/mode/html.js",
               "brace/mode/json.js",
@@ -46,7 +48,10 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "stylePreprocessorOptions": {
+              "includePaths": ["./node_modules"]
+            }
           },
           "configurations": {
             "production": {
@@ -93,21 +98,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mockoon:build"
+            "buildTarget": "mockoon:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mockoon:build:production"
+              "buildTarget": "mockoon:build:production"
             },
             "development": {
-              "browserTarget": "mockoon:build:development"
+              "buildTarget": "mockoon:build:development"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mockoon:build"
+            "buildTarget": "mockoon:build"
           }
         },
         "lint": {
@@ -119,7 +124,6 @@
       }
     }
   },
-  "defaultProject": "mockoon",
   "cli": {
     "analytics": "28dfb48b-e968-4216-936b-81e6e40b150a"
   }

@@ -39,7 +39,6 @@ import floor from './floor';
 import getVar from './getVar';
 import gt from './gt';
 import gte from './gte';
-import guid from './guid';
 import helperMissing from './helperMissing';
 import hexColor from './hexColor';
 import includes from './includes';
@@ -47,7 +46,10 @@ import indexOf from './indexOf';
 import int from './int';
 import ipv4 from './ipv4';
 import ipv6 from './ipv6';
+import isValidDate from './isValidDate';
 import join from './join';
+import jsonParse from './json-parse';
+import { jwtHeader, jwtPayload } from './jwt';
 import lastName from './lastName';
 import lat from './lat';
 import len from './len';
@@ -69,10 +71,13 @@ import parseInt from './parseInt';
 import phone from './phone';
 import postcode from './postcode';
 import repeat from './repeat';
+import reverse from './reverse';
 import round from './round';
 import setVar from './setVar';
 import slice from './slice';
 import someOf from './someOf';
+import sort from './sort';
+import sortBy from './sortBy';
 import split from './split';
 import street from './street';
 import stringify from './stringify';
@@ -84,6 +89,7 @@ import title from './title';
 import tld from './tld';
 import toFixed from './toFixed';
 import uppercase from './uppercase';
+import { guid, uuid } from './uuid';
 import zipcode from './zipcode';
 
 export const Helpers = {
@@ -102,6 +108,7 @@ export const Helpers = {
   countryCode,
   date,
   dateFormat,
+  isValidDate,
   dateTimeShift,
   default: defaultFunc,
   divide,
@@ -116,6 +123,7 @@ export const Helpers = {
   gt,
   gte,
   guid,
+  uuid,
   helperMissing,
   hexColor,
   includes,
@@ -124,6 +132,9 @@ export const Helpers = {
   ipv4,
   ipv6,
   join,
+  jsonParse,
+  jwtHeader,
+  jwtPayload,
   lastName,
   lat,
   len,
@@ -145,10 +156,13 @@ export const Helpers = {
   phone,
   postcode,
   repeat,
+  reverse,
   round,
   setVar,
   slice,
   someOf,
+  sort,
+  sortBy,
   split,
   street,
   stringify,

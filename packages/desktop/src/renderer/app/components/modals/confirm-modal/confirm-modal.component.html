@@ -1,35 +1,33 @@
-<ng-template #modal let-close="close" let-dismiss="dismiss">
-  <ng-container *ngIf="confirmModalEvent$ | async as confirmModalEvent">
-    <div class="modal-header">
-      <h4 class="modal-title">{{ confirmModalEvent?.title }}</h4>
-    </div>
-    <div class="modal-body p-0">
-      <p class="px-3 pt-2">{{ confirmModalEvent?.text }}</p>
-      <ng-container *ngIf="confirmModalEvent?.list$ | async as itemList">
-        <ul *ngIf="itemList.length > 0" class="list-group pb-3">
-          <li class="list-group-item" *ngFor="let item of itemList">
-            <div class="ellipsis">{{ item }}</div>
-          </li>
-        </ul>
-      </ng-container>
-      <div *ngIf="confirmModalEvent.sub" class="px-3 pb-2">
-        <small>
-          <app-svg
-            [icon]="confirmModalEvent.subIcon"
-            class="{{ confirmModalEvent.subIconClass }}"
-          ></app-svg>
+<ng-container *ngIf="confirmModalPayload$ | async as confirmModalPayload">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ confirmModalPayload?.title }}</h4>
+  </div>
+  <div class="modal-body p-0">
+    <p class="px-3 pt-2">{{ confirmModalPayload?.text }}</p>
+    <ng-container *ngIf="confirmModalPayload?.list$ | async as itemList">
+      <ul *ngIf="itemList.length > 0" class="list-group pb-3">
+        <li class="list-group-item" *ngFor="let item of itemList">
+          <div class="text-truncate">{{ item }}</div>
+        </li>
+      </ul>
+    </ng-container>
+    <div *ngIf="confirmModalPayload.sub" class="px-3 pb-2">
+      <small>
+        <app-svg
+          [icon]="confirmModalPayload.subIcon"
+          class="{{ confirmModalPayload.subIconClass }} me-2"
+        ></app-svg>
 
-          {{ confirmModalEvent.sub }}</small
-        >
-      </div>
+        <span [innerHTML]="confirmModalPayload.sub"></span>
+      </small>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="close()">
-        {{ confirmModalEvent.confirmButtonText || 'Confirm' }}
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="dismiss()">
-        {{ confirmModalEvent.cancelButtonText || 'Cancel' }}
-      </button>
-    </div>
-  </ng-container>
-</ng-template>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="close()">
+      {{ confirmModalPayload.confirmButtonText || 'Confirm' }}
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="dismiss()">
+      {{ confirmModalPayload.cancelButtonText || 'Cancel' }}
+    </button>
+  </div>
+</ng-container>

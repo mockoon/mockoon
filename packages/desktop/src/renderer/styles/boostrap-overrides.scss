@@ -1,6 +1,6 @@
 /* Bootstrap imports */
 @import './bootstrap-variables.scss';
-@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap';
 
 /* Bootstrap customizations */
 .nav {
@@ -27,11 +27,20 @@
   }
 }
 .nav.flex-column {
+  .nav-link .nav-link-subtitle {
+    color: $gray-500;
+    font-size: $sub-sup-font-size;
+  }
+
   .nav-link.active,
   .nav-item.show .nav-link {
     color: $gray-100;
     box-shadow: inset 2px 0 0 0 $blue;
     background-color: $component-active-bg;
+
+    .nav-link-subtitle {
+      color: $gray-100;
+    }
   }
   .nav-link.route-disabled,
   .nav-item.show .nav-link {
@@ -59,18 +68,9 @@
       inset 2px 0 0 0 $blue,
       inset -3px 0 0 0 $orange;
   }
-  // adjust nav badge position
-  .nav-link .badge {
-    margin-left: 0.5rem;
-    margin-top: 2px;
-  }
 }
 
-.custom-control-label::after {
-  cursor: pointer;
-}
-
-.clickable {
+.form-label::after {
   cursor: pointer;
 }
 
@@ -80,26 +80,17 @@
   max-height: 65vh;
 }
 .form-control {
-  letter-spacing: 0.02rem;
-  background-clip: border-box;
-
   &:disabled,
   &[readonly] {
     color: $text-muted;
   }
 }
+
 .input-group-text {
   color: $gray-400;
 }
 label {
   color: $gray-400;
-}
-.input-group-prepend,
-.input-group-append {
-  .btn {
-    // remove input group btn big padding 8/16px (do not know where it comes from)
-    padding: 1px 6px;
-  }
 }
 
 .badge {
@@ -108,6 +99,16 @@ label {
   &-hollow {
     border: 1px solid $gray-300;
   }
+  &-custom {
+    color: $gray-100;
+    background-color: $component-active-bg;
+  }
+}
+
+// remove bootstrap fix for badges in buttons (it's not working when using flex)
+.btn .badge {
+  position: initial;
+  top: 0;
 }
 
 .btn.btn-icon {
@@ -116,46 +117,61 @@ label {
   &:visited {
     text-decoration: none;
   }
-  color: $gray-500;
+  color: $gray-300;
 
   &:hover,
   &:active {
-    color: $body-color;
+    color: $gray-100;
     text-decoration: none;
   }
 
   &.active {
-    color: $gray-200;
+    color: $gray-100;
     box-shadow: inset 0 -2px 0 0 $blue;
     border-radius: 0;
+  }
+  &:disabled,
+  &.disabled {
+    color: $gray-600;
+    pointer-events: none;
+  }
+}
+
+.btn.btn-link,
+.btn.btn-icon {
+  &:focus-visible {
+    outline: 0;
+    box-shadow: none;
   }
 }
 
 .btn-custom {
   @include button-variant(
+    // bg color
     $custom-gray,
-    transparent,
+    // border color
     $custom-gray,
+    // color
+    $gray-200,
+    // hover-background
+    $custom-gray,
+    // hover border
     $gray-800,
+    // hover-color
+    $gray-100,
+    // active-background
     $custom-gray,
-    $gray-800
+    // active-border
+    $gray-800,
+    // active-color
+    $gray-100,
+    // disabled-background
+    $custom-gray,
+    // disabled-border
+    $custom-gray,
+    // disabled-color
+    $gray-500
   );
-  color: $gray-500;
-  border-width: $btn-border-width;
-
-  &:hover,
-  &.dropdown-toggle {
-    color: $gray-100;
-  }
-
-  &:focus,
-  &.focus,
-  &:not(:disabled):not(.disabled):active:focus,
-  &:not(:disabled):not(.disabled).active:focus,
-  .show > &.dropdown-toggle:focus {
-    color: $gray-500;
-    box-shadow: none;
-  }
 }
 
 .btn-xs {
@@ -164,41 +180,12 @@ label {
     $input-btn-padding-y-xs,
     $input-btn-padding-x-xs,
     $font-size-xs,
-    $input-btn-line-height-xs,
     $btn-border-radius-xs
-  );
-}
-
-.btn-xxs {
-  // line-height: ensure proper height of button next to small input
-  @include button-size(
-    $input-btn-padding-y-xxs,
-    $input-btn-padding-x-xxs,
-    $font-size-xxs,
-    $input-btn-line-height-xxs,
-    $btn-border-radius-xxs
   );
 }
 
 .p-btn {
   padding: $input-btn-padding-y $input-btn-padding-x;
-}
-
-.custom-select {
-  &:focus {
-    color: $gray-200;
-  }
-
-  -webkit-appearance: none;
-}
-
-.disabled-color {
-  color: $gray-500;
-}
-
-// fix bootstrap flexfill which is incompatible with ace editor
-.flex-fill {
-  flex: 1 !important;
 }
 
 .mh0 {
@@ -256,22 +243,11 @@ a:focus {
   outline: none;
 }
 
-small,
-.small {
-  padding: 0.2rem 0.4rem;
-  font-size: 0.8rem;
-}
-
-.text-break {
-  word-break: break-all !important;
-  word-wrap: break-word !important;
-}
-
 // inline code
 code {
-  padding: 0.25rem;
+  padding: 0.1rem 0.25rem;
   background-color: lighten($gray-900, 10%);
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
 }
 
 // code blocks (for release note)
@@ -284,5 +260,20 @@ pre {
     background-color: transparent;
     padding: 0;
     border-radius: none;
+  }
+}
+
+fieldset {
+  border: 1px solid $gray-700;
+  padding: 0.5rem;
+  margin: 0;
+
+  legend {
+    color: $gray-800;
+    float: none;
+    width: auto;
+    font-style: italic;
+    padding: 0 0.5rem;
+    margin: 0;
   }
 }

@@ -1,0 +1,136 @@
+{
+  "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
+  "lastMigration": 33,
+  "name": "Global route and rules",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "routes": [
+    {
+      "uuid": "9745a08e-94c2-451e-bccc-b31dc608bb6d",
+      "method": "all",
+      "endpoint": "*",
+      "documentation": "",
+      "responses": [
+        {
+          "uuid": "057ec98a-dd5d-4dd8-9af9-a99dd7a5c3f5",
+          "body": "unauthorized",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "",
+              "invert": false,
+              "operator": "null"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": "FALLBACK",
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "a80d01ac-a3ac-4551-9332-5d3aa1099569",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "test",
+      "responses": [
+        {
+          "uuid": "9a24ce9f-a5da-465d-9f58-1f624adf3e11",
+          "body": "okget",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "9e531525-6937-4e35-b6b7-0018c33a73bc",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "test",
+      "responses": [
+        {
+          "uuid": "8fa6166f-e25d-4e8b-b2d8-ee246bc689d8",
+          "body": "okpost",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "cors": true,
+  "headers": [{ "key": "Content-Type", "value": "text/plain" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyRemovePrefix": false,
+  "hostname": "",
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "data": [],
+  "folders": [],
+  "rootChildren": [
+    { "type": "route", "uuid": "9745a08e-94c2-451e-bccc-b31dc608bb6d" },
+    { "type": "route", "uuid": "a80d01ac-a3ac-4551-9332-5d3aa1099569" },
+    { "type": "route", "uuid": "9e531525-6937-4e35-b6b7-0018c33a73bc" }
+  ],
+  "callbacks": []
+}

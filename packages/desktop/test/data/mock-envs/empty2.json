@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 28,
+  "lastMigration": 33,
   "name": "Empty 2",
   "endpointPrefix": "",
   "latency": 0,
@@ -25,5 +25,6 @@
   },
   "data": [],
   "folders": [],
-  "rootChildren": []
+  "rootChildren": [],
+  "callbacks": []
 }

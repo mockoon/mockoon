@@ -3,7 +3,8 @@ export const ServerMessages = {
   PORT_INVALID: 'Port %d is invalid or access is denied',
   HOSTNAME_UNKNOWN: 'Unknown hostname/address provided: %s',
   HOSTNAME_UNAVAILABLE: 'Provided hostname/address is not available: %s',
-  REQUEST_BODY_PARSE: 'Error while parsing entering body: %s',
+  REQUEST_BODY_PARSE:
+    'Error while trying to parse request body with compatible Content-Type (JSON, XML, form-data): %s',
   ROUTE_CREATION_ERROR: 'Error while creating route: %s',
   ROUTE_CREATION_ERROR_REGEX:
     'Error while creating route, regex path is invalid: %s',
@@ -18,5 +19,11 @@ export const ServerMessages = {
     '-- Header parsing error, see logs for more details --',
   SERVER_STARTED: 'Server started on port %d',
   SERVER_STOPPED: 'Server stopped',
-  SERVER_CREATING_PROXY: 'Creating proxy to %s'
+  SERVER_CREATING_PROXY: 'Creating proxy to %s',
+  CALLBACK_FILE_ERROR: 'Error while attaching file to callback request: %s',
+  CALLBACK_ERROR: 'Error while executing callback: %s',
+
+  WS_UNKNOWN_ROUTE: 'No matching route found for websocket: %s',
+  WS_UNSUPPORTED_CONTENT: 'Unsupported content recieved from websocket: %s',
+  WS_SERVING_ERROR: 'Web socket serving error: %s'
 };

@@ -1,18 +1,18 @@
 import {
   Environment,
+  ParsedBodyMimeTypes,
   ProcessedDatabucket,
   ResponseMode,
   ResponseRule,
   ResponseRuleTargets,
   Route,
-  RouteResponse
+  RouteResponse,
+  stringIncludesArrayItems
 } from '@mockoon/commons';
-import { Request } from 'express';
-import { get as objectPathGet } from 'object-path';
 import { ParsedQs } from 'qs';
-import { ParsedBodyMimeTypes } from '../constants/common.constants';
-import { convertPathToArray, stringIncludesArrayItems } from './utils';
+import { ServerRequest, fromServerRequest } from './requests';
 import { TemplateParser } from './template-parser';
+import { getValueFromPath, parseRequestMessage } from './utils';
 
 /**
  * Interpretor for the route response rules.
@@ -27,16 +27,21 @@ import { TemplateParser } from './template-parser';
 export class ResponseRulesInterpreter {
   private targets: {
     [key in
-      | Exclude<ResponseRuleTargets, 'header' | 'request_number' | 'cookie'>
+      | Exclude<
+          ResponseRuleTargets,
+          'header' | 'request_number' | 'cookie' | 'templating'
+        >
       | 'bodyRaw']: any;
   };
 
   constructor(
     private routeResponses: RouteResponse[],
-    private request: Request,
+    private request: ServerRequest,
     private responseMode: Route['responseMode'],
     private environment: Environment,
-    private processedDatabuckets: ProcessedDatabucket[]
+    private processedDatabuckets: ProcessedDatabucket[],
+    private globalVariables: Record<string, any>,
+    private envVarsPrefix: string
   ) {
     this.extractTargets();
   }
@@ -45,7 +50,10 @@ export class ResponseRulesInterpreter {
    * Choose the route response depending on the first fulfilled rule.
    * If no rule has been fulfilled get the first route response.
    */
-  public chooseResponse(requestNumber: number): RouteResponse | null {
+  public chooseResponse(
+    requestNumber: number,
+    requestMessage?: string
+  ): RouteResponse | null {
     // if no rules were fulfilled find the default one, or first one if no default
     const defaultResponse =
       this.routeResponses.find((routeResponse) => routeResponse.default) ||
@@ -71,10 +79,10 @@ export class ResponseRulesInterpreter {
 
         return routeResponse.rulesOperator === 'AND'
           ? routeResponse.rules.every((rule) =>
-              this.isValid(rule, requestNumber)
+              this.isValid(rule, requestNumber, requestMessage)
             )
           : routeResponse.rules.some((rule) =>
-              this.isValid(rule, requestNumber)
+              this.isValid(rule, requestNumber, requestMessage)
             );
       });
 
@@ -100,8 +108,12 @@ export class ResponseRulesInterpreter {
    * @param requestNumber
    * @returns
    */
-  private isValid(rule: ResponseRule, requestNumber: number) {
-    let isValid = this.isValidRule(rule, requestNumber);
+  private isValid(
+    rule: ResponseRule,
+    requestNumber: number,
+    requestMessage?: string
+  ) {
+    let isValid = this.isValidRule(rule, requestNumber, requestMessage);
 
     if (rule.invert) {
       isValid = !isValid;
@@ -115,7 +127,8 @@ export class ResponseRulesInterpreter {
    */
   private isValidRule = (
     rule: ResponseRule,
-    requestNumber: number
+    requestNumber: number,
+    requestMessage?: string
   ): boolean => {
     if (!rule.target) {
       return false;
@@ -123,38 +136,54 @@ export class ResponseRulesInterpreter {
 
     let value: any;
 
+    const parsedRuleModifier = this.templateParse(rule.modifier ?? '');
+
     if (rule.target === 'request_number') {
       value = requestNumber;
-    }
-
-    if (rule.target === 'cookie') {
-      if (!rule.modifier) {
+    } else if (rule.target === 'cookie') {
+      if (!parsedRuleModifier) {
         return false;
       }
-      value = this.request.cookies && this.request.cookies[rule.modifier];
+      value = this.request.cookies?.[parsedRuleModifier];
+    } else if (rule.target === 'path') {
+      value = this.targets.path;
+    } else if (rule.target === 'method') {
+      value = this.targets.method;
     } else if (rule.target === 'header') {
-      value = this.request.header(rule.modifier);
+      value = this.request.header(parsedRuleModifier);
+    } else if (rule.target === 'templating') {
+      value = parsedRuleModifier;
     } else {
-      if (rule.modifier) {
-        let path: string | string[] = rule.modifier;
+      if (parsedRuleModifier) {
+        value = this.targets.bodyRaw;
 
-        if (typeof path === 'string') {
-          path = convertPathToArray(path);
+        let target = this.targets[rule.target];
+
+        // if a requestMessage is provided, we parse it based on the information
+        // in the original request.
+        if (requestMessage) {
+          target =
+            rule.target === 'body'
+              ? parseRequestMessage(requestMessage || '', this.request)
+              : target;
         }
 
-        value = objectPathGet(this.targets[rule.target], path);
-      } else if (!rule.modifier && rule.target === 'body') {
-        value = this.targets.bodyRaw;
+        value = getValueFromPath(target, parsedRuleModifier, undefined);
+      } else if (rule.target === 'body') {
+        value = requestMessage || this.targets.bodyRaw;
       }
     }
 
-    if (rule.operator === 'null' && rule.modifier) {
+    // ⬇ "null" and "empty_array" operators need no value
+    if (rule.operator === 'null' && parsedRuleModifier) {
       return value === null || value === undefined;
     }
 
-    if (rule.operator === 'empty_array' && rule.modifier) {
+    if (rule.operator === 'empty_array' && parsedRuleModifier) {
       return Array.isArray(value) && value.length < 1;
     }
+
+    // ⬇ all other operators need a value
 
     if (value === undefined) {
       return false;
@@ -170,7 +199,14 @@ export class ResponseRulesInterpreter {
       rule.value = '';
     }
 
-    const parsedRuleValue = this.parseValue(rule.value);
+    const parsedRuleValue = this.templateParse(rule.value, requestMessage);
+
+    if (rule.operator === 'array_includes' && rule.modifier) {
+      return (
+        Array.isArray(value) &&
+        value.some((val) => String(val) === parsedRuleValue)
+      );
+    }
 
     let regex: RegExp;
 
@@ -185,8 +221,9 @@ export class ResponseRulesInterpreter {
         : regex.test(value);
     }
 
+    // value extracted by JSONPath can be an array, cast its values to string (in line with the equals operator below)
     if (Array.isArray(value)) {
-      return value.includes(parsedRuleValue);
+      return value.map((v) => String(v)).includes(parsedRuleValue);
     }
 
     return String(value) === String(parsedRuleValue);
@@ -205,11 +242,21 @@ export class ResponseRulesInterpreter {
       }
     }
 
+    const dataBucketTargets = {};
+    this.processedDatabuckets.forEach((bucket) => {
+      dataBucketTargets[bucket.id] = bucket.value;
+      dataBucketTargets[bucket.name] = bucket.value;
+    });
+
     this.targets = {
       body,
       query: this.request.query,
       params: this.request.params,
-      bodyRaw: this.request.stringBody
+      bodyRaw: this.request.stringBody,
+      global_var: this.globalVariables,
+      data_bucket: dataBucketTargets,
+      method: this.request.method?.toLowerCase(),
+      path: this.request.originalRequest.url
     };
   }
 
@@ -217,18 +264,24 @@ export class ResponseRulesInterpreter {
    * Parse the value using the template parser allowing data helpers.
    *
    * @param value the value to parse
+   * @param requestMessage the message sent by client. Only defined for websockets. For http requests, this is undefined.
    * @returns the parsed value or the unparsed input value if parsing fails
    */
-  private parseValue(value: string): string {
+  private templateParse(value: string, requestMessage?: string): string {
     let parsedValue: string;
+
     try {
-      parsedValue = TemplateParser(
-        false,
-        value,
-        this.environment,
-        this.processedDatabuckets,
-        this.request
-      );
+      parsedValue = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: value,
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request: requestMessage
+          ? fromServerRequest(this.request, requestMessage)
+          : this.request,
+        envVarsPrefix: this.envVarsPrefix
+      });
     } catch (error) {
       return value;
     }

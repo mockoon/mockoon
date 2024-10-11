@@ -1,0 +1,27 @@
+<ng-container
+  *ngIf="{
+    os: os$ | async
+  } as data"
+>
+  <div class="input-group" [ngClass]="classes">
+    <input
+      type="text"
+      class="form-control"
+      id="{{ filterName }}-filter"
+      [placeholder]="
+        'Filter (' + (data.os === 'darwin' ? 'Cmd' : 'Ctrl') + '+Shift+F)'
+      "
+      [formControl]="filter"
+      [appFocusOnEvent]="focusableInput"
+    />
+    <button
+      *ngIf="filter.value.length > 0"
+      type="button"
+      (click)="clearFilter()"
+      class="btn btn-custom"
+      ngbTooltip="Clear filter"
+    >
+      <app-svg icon="clear"></app-svg>
+    </button>
+  </div>
+</ng-container>

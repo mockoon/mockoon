@@ -1,17 +1,24 @@
-import { Environment, ServerErrorCodes } from '@mockoon/commons';
 import {
-  createLoggerInstance,
-  listenServerEvents,
+  Environment,
+  FakerAvailableLocales,
+  FakerAvailableLocalesList,
+  ServerErrorCodes,
+  ServerOptions,
+  defaultEnvironmentVariablesPrefix,
+  defaultMaxTransactionLogs
+} from '@mockoon/commons';
+import {
   MockoonServer,
-  ServerMessages
+  ServerMessages,
+  createLoggerInstance,
+  listenServerEvents
 } from '@mockoon/commons-server';
 import { Command, Flags } from '@oclif/core';
-import { red as chalkRed } from 'chalk';
 import { join } from 'path';
 import { format } from 'util';
 import { Config } from '../config';
-import { commonFlags, deprecatedFlags } from '../constants/command.constants';
-import { parseDataFiles, prepareEnvironment } from '../libs/data';
+import { commonFlags } from '../constants/command.constants';
+import { parseDataFiles } from '../libs/data';
 import { getDirname, transformEnvironmentName } from '../libs/utils';
 
 export default class Start extends Command {
@@ -21,7 +28,9 @@ export default class Start extends Command {
     '$ mockoon-cli start --data ~/data.json',
     '$ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1',
     '$ mockoon-cli start --data https://file-server/data.json',
-    '$ mockoon-cli start --data ~/data.json --log-transaction'
+    '$ mockoon-cli start --data ~/data.json --log-transaction',
+    '$ mockoon-cli start --data ~/data.json --disable-routes route1 route2',
+    '$ mockoon-cli start --data ~/data.json --enable-random-latency'
   ];
 
   public static flags = {
@@ -49,34 +58,79 @@ export default class Start extends Command {
       description: 'Only log to stdout and stderr',
       default: false
     }),
-    ...deprecatedFlags
+    'disable-routes': Flags.string({
+      char: 'e',
+      description:
+        "Disable route(s) by UUID or keyword present in the route's path or keyword present in a folder name (do not include a leading slash)",
+      multiple: true,
+      default: []
+    }),
+    'faker-locale': Flags.string({
+      char: 'c',
+      description:
+        "Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see documentation: https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md#fakerjs-options)",
+      default: 'en'
+    }),
+    'faker-seed': Flags.integer({
+      char: 's',
+      description: 'Number for the Faker.js seed (e.g. 1234)',
+      default: undefined
+    }),
+    'env-vars-prefix': Flags.string({
+      char: 'x',
+      description: `Prefix of environment variables available at runtime (default: "${defaultEnvironmentVariablesPrefix}")`,
+      multiple: false,
+      default: defaultEnvironmentVariablesPrefix
+    }),
+    'disable-admin-api': Flags.boolean({
+      description:
+        'Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)',
+      default: false
+    }),
+    'disable-tls': Flags.boolean({
+      description:
+        'Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).',
+      default: false
+    }),
+    'max-transaction-logs': Flags.integer({
+      description: `Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: ${defaultMaxTransactionLogs}).`,
+      default: defaultMaxTransactionLogs
+    }),
+    'enable-random-latency': Flags.boolean({
+      description:
+        'Enable random latency from 0 to value specified in the route settings',
+      default: false
+    })
   };
 
   public async run(): Promise<void> {
     const { flags: userFlags } = await this.parse(Start);
 
-    try {
-      const parsedEnvironments = await parseDataFiles(userFlags.data);
+    // validate flags
+    if (
+      !FakerAvailableLocalesList.includes(
+        userFlags['faker-locale'] as FakerAvailableLocales
+      )
+    ) {
+      this.error(
+        'Invalid Faker.js locale. See documentation for supported locales (https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md#fakerjs-options).'
+      );
+    }
 
-      for (let envIndex = 0; envIndex < parsedEnvironments.length; envIndex++) {
-        try {
-          parsedEnvironments[envIndex].environment = await prepareEnvironment({
-            environment: parsedEnvironments[envIndex].environment,
-            userOptions: {
-              hostname: userFlags.hostname[envIndex],
-              port: userFlags.port[envIndex]
-            },
-            repair: userFlags.repair
-          });
-        } catch (error: any) {
-          this.error(error.message);
-        }
-      }
+    try {
+      const parsedEnvironments = await parseDataFiles(
+        userFlags.data,
+        {
+          ports: userFlags.port,
+          hostnames: userFlags.hostname
+        },
+        userFlags.repair
+      );
 
       for (const environmentInfo of parsedEnvironments) {
         this.createServer({
           environment: environmentInfo.environment,
-          environmentDir: getDirname(environmentInfo.originalPath) || '',
+          environmentDirectory: getDirname(environmentInfo.originalPath) || '',
           logTransaction: userFlags['log-transaction'],
           fileTransportOptions: userFlags['disable-log-to-file']
             ? null
@@ -87,7 +141,17 @@ export default class Start extends Command {
                     environmentInfo.environment.name
                   )}.log`
                 )
-              }
+              },
+          disabledRoutes: userFlags['disable-routes'],
+          fakerOptions: {
+            locale: userFlags['faker-locale'] as FakerAvailableLocales,
+            seed: userFlags['faker-seed']
+          },
+          envVarsPrefix: userFlags['env-vars-prefix'],
+          enableAdminApi: !userFlags['disable-admin-api'],
+          disableTls: userFlags['disable-tls'],
+          maxTransactionLogs: userFlags['max-transaction-logs'],
+          enableRandomLatency: userFlags['enable-random-latency']
         });
       }
     } catch (error: any) {
@@ -95,15 +159,23 @@ export default class Start extends Command {
     }
   }
 
-  private createServer = (parameters: {
-    environment: Environment;
-    environmentDir: string;
-    logTransaction?: boolean;
-    fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
-  }) => {
+  private createServer = (
+    parameters: ServerOptions & {
+      environment: Environment;
+      logTransaction?: boolean;
+      fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
+    }
+  ) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
     const server = new MockoonServer(parameters.environment, {
-      environmentDirectory: parameters.environmentDir
+      environmentDirectory: parameters.environmentDirectory,
+      disabledRoutes: parameters.disabledRoutes,
+      fakerOptions: parameters.fakerOptions,
+      envVarsPrefix: parameters.envVarsPrefix,
+      enableAdminApi: parameters.enableAdminApi,
+      disableTls: parameters.disableTls,
+      maxTransactionLogs: parameters.maxTransactionLogs,
+      enableRandomLatency: parameters.enableRandomLatency
     });
 
     listenServerEvents(
@@ -153,7 +225,8 @@ export default class Start extends Command {
 
       // Cannot use this.error() as Oclif does not catch it (it seems to be lost due to the async nature of Node.js http server.listen errors).
       if (exitErrors.includes(errorCode)) {
-        this.log(`${chalkRed(' »')}   Error: ${errorMessage}`);
+        // red "»" character
+        this.log(`\x1b[31m»\x1b[0m   Error: ${errorMessage}`);
         process.exit(2);
       }
     });

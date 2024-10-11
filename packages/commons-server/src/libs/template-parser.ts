@@ -1,11 +1,20 @@
 import { Environment, ProcessedDatabucket } from '@mockoon/commons';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { compile as hbsCompile } from 'handlebars';
+import { IncomingMessage } from 'http';
+import { ServerRequest } from './requests';
 import { DataHelpers } from './templating-helpers/data-helpers';
 import { FakerWrapper } from './templating-helpers/faker-wrapper';
+import { GlobalHelpers } from './templating-helpers/global-helpers';
 import { Helpers } from './templating-helpers/helpers';
 import { RequestHelpers } from './templating-helpers/request-helpers';
 import { ResponseHelpers } from './templating-helpers/response-helpers';
+import { SystemHelpers } from './templating-helpers/system-helpers';
+
+export type WebSocketRequest = {
+  message?: string;
+  request?: IncomingMessage;
+};
 
 /**
  * Parse a content with Handlebars
@@ -15,17 +24,30 @@ import { ResponseHelpers } from './templating-helpers/response-helpers';
  * @param processedDatabuckets
  * @param request
  */
-export const TemplateParser = function (
-  shouldOmitDataHelper: boolean,
-  content: string,
-  environment: Environment,
-  processedDatabuckets: ProcessedDatabucket[],
-  request?: Request,
-  response?: Response
-): string {
+export const TemplateParser = function ({
+  shouldOmitDataHelper,
+  content,
+  environment,
+  processedDatabuckets,
+  globalVariables,
+  request,
+  response,
+  envVarsPrefix
+}: {
+  shouldOmitDataHelper: boolean;
+  content: string;
+  environment: Environment;
+  processedDatabuckets: ProcessedDatabucket[];
+  globalVariables: Record<string, any>;
+  request?: ServerRequest;
+  response?: Response;
+  envVarsPrefix: string;
+}): string {
   let helpers = {
     ...FakerWrapper,
-    ...Helpers
+    ...Helpers,
+    ...GlobalHelpers(globalVariables),
+    ...SystemHelpers({ prefix: envVarsPrefix })
   };
 
   if (!shouldOmitDataHelper) {

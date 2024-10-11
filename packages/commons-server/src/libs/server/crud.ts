@@ -4,7 +4,9 @@ import {
   RouteResponse
 } from '@mockoon/commons';
 import { Request, Response } from 'express';
-import { dedupSlashes } from '../utils';
+import { get as getPath, set as setPath } from 'object-path';
+import { applyFilter, parseFilters } from '../filters';
+import { convertPathToArray, dedupSlashes, fullTextSearch } from '../utils';
 
 export type CrudRouteIds =
   | 'get'
@@ -39,11 +41,11 @@ const findItemIndex = (
 ) =>
   databucketValue.findIndex((value: any, index: number) => {
     if (typeof value === 'object' && value !== null) {
-      if (value[routeCrudKey] == null) {
+      if (getPath(value, routeCrudKey) == null) {
         return false;
       }
 
-      return value[routeCrudKey].toString() === request.params.id;
+      return getPath(value, routeCrudKey).toString() === request.params.id;
     } else {
       let indexParam = parseInt(request.params.id, 10);
       indexParam = isNaN(indexParam) ? 0 : indexParam;
@@ -121,7 +123,7 @@ export const databucketActions = (
     response.set('Content-Type', 'application/json');
   }
 
-  let requestBody =
+  const requestBody =
     request.body !== undefined ? request.body : request.stringBody || {};
 
   let responseBody: any = {};
@@ -130,6 +132,10 @@ export const databucketActions = (
     case 'get': {
       responseBody = databucket.value;
 
+      const search =
+        typeof request.query.search === 'string' && request.query.search
+          ? request.query.search
+          : null;
       const limit =
         typeof request.query.limit === 'string'
           ? parseInt(request.query.limit, 10) || 10
@@ -146,8 +152,20 @@ export const databucketActions = (
             ? request.query.order
             : 'asc'
           : 'asc';
+      const filters = parseFilters(request.query);
 
       if (Array.isArray(responseBody)) {
+        response.set('X-Total-Count', responseBody.length.toString());
+
+        if (search != null) {
+          responseBody = responseBody.filter((r) => fullTextSearch(r, search));
+        }
+
+        responseBody = responseBody.filter((r) =>
+          filters.every((f) => applyFilter(r, f))
+        );
+        response.set('X-Filtered-Count', responseBody.length.toString());
+
         if (sort != null) {
           responseBody = responseBody.slice().sort((a, b) => {
             let aProp = typeof a === 'object' && a !== null ? a[sort] : a;
@@ -172,7 +190,6 @@ export const databucketActions = (
           request.query.limit !== undefined ||
           request.query.page !== undefined
         ) {
-          response.set('X-Total-Count', responseBody.length.toString());
           responseBody = responseBody.slice((page - 1) * limit, page * limit);
         }
       }
@@ -182,6 +199,7 @@ export const databucketActions = (
 
     case 'getbyId': {
       if (Array.isArray(databucket.value)) {
+        console.log(routeCrudKey);
         const foundIndex = findItemIndex(
           databucket.value,
           request,
@@ -201,11 +219,28 @@ export const databucketActions = (
 
     case 'create': {
       if (Array.isArray(databucket.value)) {
-        if (typeof requestBody === 'object' && requestBody != null) {
-          requestBody = {
-            [routeCrudKey]: generateUUID(),
-            ...requestBody
-          };
+        // add missing id if not present, support nested objects (e.g. 'data.id')
+        if (
+          typeof requestBody === 'object' &&
+          requestBody != null &&
+          getPath(requestBody, convertPathToArray(routeCrudKey)) === undefined
+        ) {
+          // get highest id in the array
+          const highestId = databucket.value.reduce((maxId, item) => {
+            const itemId = getPath(item, convertPathToArray(routeCrudKey));
+
+            if (typeof itemId === 'number' && itemId > maxId) {
+              return itemId;
+            }
+
+            return maxId;
+          }, null);
+
+          setPath(
+            requestBody,
+            convertPathToArray(routeCrudKey),
+            highestId !== null ? highestId + 1 : generateUUID()
+          );
         }
 
         databucket.value.push(requestBody);
@@ -239,12 +274,29 @@ export const databucketActions = (
             typeof databucket.value[indexToModify] === 'object' &&
             databucket.value[indexToModify] != null
           ) {
+            const currentItemId = getPath(
+              databucket.value[indexToModify],
+              convertPathToArray(routeCrudKey)
+            );
+
             databucket.value[indexToModify] = {
-              id: databucket.value[indexToModify].id,
               ...(typeof requestBody === 'object' && requestBody != null
                 ? requestBody
                 : {})
             };
+
+            // restore the id if it was not provided in the request body
+            if (
+              getPath(requestBody, convertPathToArray(routeCrudKey)) ===
+              undefined
+            ) {
+              setPath(
+                databucket.value[indexToModify],
+                convertPathToArray(routeCrudKey),
+                currentItemId
+              );
+            }
+
             responseBody = databucket.value[indexToModify];
           } else {
             databucket.value[indexToModify] = requestBody;

@@ -1,5 +1,12 @@
-import { app, BrowserWindow, Menu, shell } from 'electron';
+import { BrowserWindow, Menu, shell } from 'electron';
 import { Config } from 'src/main/config';
+import { showFolderInExplorer } from 'src/main/libs/paths';
+import {
+  handleZoomIn,
+  handleZoomOut,
+  handleZoomReset
+} from 'src/main/libs/zoom';
+import { MenuStateUpdatePayload } from 'src/shared/models/ipc.model';
 
 export const createMenu = (mainWindow: BrowserWindow): Menu => {
   const menu: any = [
@@ -22,7 +29,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       submenu: [
         {
           id: 'MENU_NEW_ENVIRONMENT',
-          label: 'New environment',
+          label: 'New local environment',
           accelerator: 'CmdOrCtrl+N',
           click: () => {
             mainWindow.webContents.send('APP_MENU', 'NEW_ENVIRONMENT');
@@ -30,7 +37,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         },
         {
           id: 'MENU_NEW_ENVIRONMENT_CLIPBOARD',
-          label: 'New environment from clipboard',
+          label: 'New local environment from clipboard',
           click: () => {
             mainWindow.webContents.send(
               'APP_MENU',
@@ -40,7 +47,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         },
         {
           id: 'MENU_OPEN_ENVIRONMENT',
-          label: 'Open environment',
+          label: 'Open local environment',
           accelerator: 'CmdOrCtrl+O',
           click: () => {
             mainWindow.webContents.send('APP_MENU', 'OPEN_ENVIRONMENT');
@@ -48,10 +55,36 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         },
         {
           id: 'MENU_DUPLICATE_ENVIRONMENT',
-          label: 'Duplicate current environment',
+          label: 'Duplicate current environment to local',
           accelerator: 'CmdOrCtrl+D',
           click: () => {
             mainWindow.webContents.send('APP_MENU', 'DUPLICATE_ENVIRONMENT');
+          }
+        },
+        { type: 'separator' },
+        {
+          id: 'MENU_NEW_CLOUD_ENVIRONMENT',
+          label: 'New cloud environment',
+          accelerator: 'CmdOrCtrl+Shift+N',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'NEW_CLOUD_ENVIRONMENT');
+          }
+        },
+        { type: 'separator' },
+        {
+          id: 'MENU_PREVIOUS_ENVIRONMENT',
+          label: 'Select previous environment',
+          accelerator: 'CmdOrCtrl+Up',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'PREVIOUS_ENVIRONMENT');
+          }
+        },
+        {
+          id: 'MENU_NEXT_ENVIRONMENT',
+          label: 'Select next environment',
+          accelerator: 'CmdOrCtrl+Down',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'NEXT_ENVIRONMENT');
           }
         },
         { type: 'separator' },
@@ -68,49 +101,12 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
     }
   ];
 
-  const handleZoomIn = () => {
-    const menuInstance = Menu.getApplicationMenu();
-    menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = true;
-
-    if (mainWindow.webContents.zoomFactor >= 1.3) {
-      return;
-    }
-
-    mainWindow.webContents.zoomFactor += 0.1;
-
-    if (mainWindow.webContents.zoomFactor >= 1.3) {
-      menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = false;
-    }
-  };
-
-  const handleZoomOut = () => {
-    const menuInstance = Menu.getApplicationMenu();
-    menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = true;
-
-    if (mainWindow.webContents.zoomFactor <= 0.8) {
-      return;
-    }
-
-    mainWindow.webContents.zoomFactor -= 0.1;
-
-    if (mainWindow.webContents.zoomFactor <= 0.8) {
-      menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = false;
-    }
-  };
-
-  const handleZoomReset = () => {
-    const menuInstance = Menu.getApplicationMenu();
-    menuInstance.getMenuItemById('MENU_ZOOM_IN').enabled = true;
-    menuInstance.getMenuItemById('MENU_ZOOM_OUT').enabled = true;
-
-    mainWindow.webContents.zoomFactor = 1;
-  };
-
   if (process.platform === 'darwin') {
     menu[0].submenu.push(
       { label: 'Hide', role: 'hide' },
       { role: 'hideOthers' },
-      { type: 'separator' }
+      { type: 'separator' },
+      { label: 'Close window', accelerator: 'CmdOrCtrl+W', role: 'close' }
     );
   }
 
@@ -197,28 +193,6 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
   });
 
   menu.push({
-    label: 'Navigate',
-    submenu: [
-      {
-        id: 'MENU_PREVIOUS_ENVIRONMENT',
-        label: 'Select previous environment',
-        accelerator: 'CmdOrCtrl+Up',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'PREVIOUS_ENVIRONMENT');
-        }
-      },
-      {
-        id: 'MENU_NEXT_ENVIRONMENT',
-        label: 'Select next environment',
-        accelerator: 'CmdOrCtrl+Down',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'NEXT_ENVIRONMENT');
-        }
-      }
-    ]
-  });
-
-  menu.push({
     label: 'Import/export',
     submenu: [
       {
@@ -245,44 +219,58 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         id: 'MENU_ZOOM_OUT',
         label: 'Zoom out',
         accelerator: 'CmdOrCtrl+NumSub',
-        click: handleZoomOut
+        click: () => {
+          handleZoomOut(mainWindow);
+        }
       },
       // zoom out aliases
       {
         label: 'Zoom out',
         accelerator: 'CmdOrCtrl+-',
-        click: handleZoomOut,
+        click: () => {
+          handleZoomOut(mainWindow);
+        },
         visible: false
       },
       {
         label: 'Reset zoom',
         accelerator: 'CmdOrCtrl+Num0',
-        click: handleZoomReset
+        click: () => {
+          handleZoomReset(mainWindow);
+        }
       },
       // reset zoom aliases
       {
         label: 'Reset zoom',
         accelerator: 'CmdOrCtrl+0',
-        click: handleZoomReset,
+        click: () => {
+          handleZoomReset(mainWindow);
+        },
         visible: false
       },
       {
         id: 'MENU_ZOOM_IN',
         label: 'Zoom in',
         accelerator: 'CmdOrCtrl+Plus',
-        click: handleZoomIn
+        click: () => {
+          handleZoomIn(mainWindow);
+        }
       },
       // zoom in aliases
       {
         label: 'Zoom in',
         accelerator: 'CmdOrCtrl+NumAdd',
-        click: handleZoomIn,
+        click: () => {
+          handleZoomIn(mainWindow);
+        },
         visible: false
       },
       {
         label: 'Zoom in',
         accelerator: 'CmdOrCtrl+=',
-        click: handleZoomIn,
+        click: () => {
+          handleZoomIn(mainWindow);
+        },
         visible: false
       }
     ]
@@ -313,13 +301,13 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       {
         label: 'Show app data folder',
         click: () => {
-          shell.showItemInFolder(app.getPath('userData'));
+          showFolderInExplorer('userData');
         }
       },
       {
         label: 'Show logs folder',
         click: () => {
-          shell.showItemInFolder(app.getPath('logs'));
+          showFolderInExplorer('logs');
         }
       }
     ]
@@ -354,6 +342,12 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
       },
       { type: 'separator' },
       {
+        label: 'Take the tour',
+        click: () => {
+          mainWindow.webContents.send('APP_MENU', 'TOUR_START');
+        }
+      },
+      {
         label: `Release notes v${Config.appVersion}`,
         click: () => {
           mainWindow.webContents.send('APP_MENU', 'OPEN_CHANGELOG');
@@ -365,42 +359,55 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
   return Menu.buildFromTemplate(menu);
 };
 
-export const toggleEnvironmentMenuItems = (state: boolean) => {
+// menu items requiring at least one environment
+const requireEnvironmentsMenuItems = [
+  'MENU_DUPLICATE_ENVIRONMENT',
+  'MENU_CLOSE_ENVIRONMENT',
+  'MENU_NEW_ROUTE',
+  'MENU_DUPLICATE_ROUTE',
+  'MENU_DELETE_ROUTE',
+  'MENU_START_ENVIRONMENT',
+  'MENU_START_ALL_ENVIRONMENTS',
+  'MENU_PREVIOUS_ENVIRONMENT',
+  'MENU_NEXT_ENVIRONMENT',
+  'MENU_PREVIOUS_ROUTE',
+  'MENU_NEXT_ROUTE',
+  'MENU_EXPORT_OPENAPI_FILE'
+];
+
+// menu items requiring cloud to be active
+const requireCloudMenuItems = ['MENU_NEW_CLOUD_ENVIRONMENT'];
+// menu items requiring an active cloud environment
+const requireCloudActiveEnvironmentMenuItems = ['MENU_CLOSE_ENVIRONMENT'];
+// route specific menu items based on active environment routes count
+const requireRoutesMenuItems = [
+  'MENU_DUPLICATE_ROUTE',
+  'MENU_DELETE_ROUTE',
+  'MENU_PREVIOUS_ROUTE',
+  'MENU_NEXT_ROUTE'
+];
+
+const toggleMenuItems = (items: string[], enabled: boolean) => {
   const menu = Menu.getApplicationMenu();
-  [
-    'MENU_DUPLICATE_ENVIRONMENT',
-    'MENU_CLOSE_ENVIRONMENT',
-    'MENU_NEW_ROUTE',
-    'MENU_DUPLICATE_ROUTE',
-    'MENU_DELETE_ROUTE',
-    'MENU_START_ENVIRONMENT',
-    'MENU_START_ALL_ENVIRONMENTS',
-    'MENU_PREVIOUS_ENVIRONMENT',
-    'MENU_NEXT_ENVIRONMENT',
-    'MENU_PREVIOUS_ROUTE',
-    'MENU_NEXT_ROUTE',
-    'MENU_EXPORT_OPENAPI_FILE'
-  ].forEach((id) => {
+
+  items.forEach((id) => {
     const menuItem = menu?.getMenuItemById(id);
 
     if (menuItem) {
-      menuItem.enabled = state;
+      menuItem.enabled = enabled;
     }
   });
 };
 
-export const toggleRouteMenuItems = (state: boolean) => {
-  const menu = Menu.getApplicationMenu();
-  [
-    'MENU_DUPLICATE_ROUTE',
-    'MENU_DELETE_ROUTE',
-    'MENU_PREVIOUS_ROUTE',
-    'MENU_NEXT_ROUTE'
-  ].forEach((id) => {
-    const menuItem = menu?.getMenuItemById(id);
-
-    if (menuItem) {
-      menuItem.enabled = state;
-    }
-  });
+export const updateMenuState = (state: MenuStateUpdatePayload) => {
+  toggleMenuItems(requireEnvironmentsMenuItems, state.environmentsCount > 0);
+  toggleMenuItems(requireCloudMenuItems, state.cloudEnabled);
+  toggleMenuItems(
+    requireCloudActiveEnvironmentMenuItems,
+    !state.isActiveEnvironmentCloud
+  );
+  toggleMenuItems(
+    requireRoutesMenuItems,
+    state.activeEnvironmentRoutesCount > 0
+  );
 };

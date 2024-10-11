@@ -7,7 +7,7 @@
   <a href="https://mockoon.com/"><img src="https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6"/></a>
   <a href="https://mockoon.com/newsletter/"><img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/></a>
   <a href="https://twitter.com/GetMockoon"><img src="https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2"/></a>
-  <a href="https://discord.gg/MutRpsY5gE"><img src="https://img.shields.io/badge/Discord-go-blue.svg?style=flat-square&colorA=6c84d9&colorB=1da1f2"/></a>
+  <a href="https://discord.gg/FtJjkejKGp"><img src="https://img.shields.io/badge/Discord-go-blue.svg?style=flat-square&colorA=6c84d9&colorB=1da1f2"/></a>
   <br>
   <a href="https://www.npmjs.com/package/@mockoon/cli"><img src="https://img.shields.io/npm/v/@mockoon/cli.svg?style=flat-square&colorB=cb3837"/></a>
   <br>
@@ -18,7 +18,7 @@
 Welcome to Mockoon's official CLI, a lightweight and fast NPM package to deploy your mock APIs anywhere.
 Feed it with a Mockoon's [data file](https://mockoon.com/docs/latest/mockoon-data-files/data-storage-location/), or OpenAPI specification file (JSON or YAML), and you are good to go.
 
-The CLI supports the same features as the main application: [templating system](https://mockoon.com/docs/latest/templating/overview/), [proxy mode](https://mockoon.com/docs/latest/proxy-mode/), [route response rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/), etc.
+The CLI supports the same features as the main application: [templating system](https://mockoon.com/docs/latest/templating/overview/), [proxy mode](https://mockoon.com/docs/latest/server-configuration/proxy-mode/), [route response rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/), etc.
 
 ![Mockoon CLI screenshot](https://mockoon.com/images/cli-hero-repo.png)
 
@@ -30,6 +30,8 @@ The CLI supports the same features as the main application: [templating system](
 - [Commands](#commands)
   - [Start command](#start-command)
   - [Dockerize command](#dockerize-command)
+  - [Import command](#import-command)
+  - [Export command](#export-command)
   - [Help command](#help-command)
 - [Use the GitHub Action](#use-the-github-action)
 - [Docker image](#docker-image)
@@ -79,10 +81,6 @@ You can also directly load Mockoon's environment file from a URL. To do so, prov
 $ mockoon-cli start --data https://domain.com/your-environment-file.json
 ```
 
-> **Use a legacy export file**
->
-> While we recommend using the method above to launch your mocks with the CLI, you can still use Mockoon's [legacy export files](https://mockoon.com/docs/latest/mockoon-data-files/import-export-mockoon-format/).
-
 ### Use an OpenAPI specification file
 
 Another option is to directly pass an OpenAPI specification file as the `data` parameter. Mockoon supports both JSON and YAML formats in versions 2.0.0 and 3.0.0.
@@ -103,12 +101,14 @@ $ mockoon-cli start --data https://domain.com/your-opeanapi-file.yaml
 
 ## Compatibility
 
-Mockoon's CLI has been tested on Node.js versions 16, 18 and 20.
+Mockoon's CLI has been tested on Node.js versions 18 and 20.
 
 ## Commands
 
 - [Start command](#start-command)
 - [Dockerize command](#dockerize-command)
+- [Import command](#import-command)
+- [Export command](#export-command)
 - [Help command](#help-command)
 
 ### Start command
@@ -120,27 +120,59 @@ The mocks will run by default on the ports and hostnames specified in the files.
 
 > 💡 To run the CLI as a background process, add an `&` at the end of the command: `mockoon-cli start -d ./data-file.json &`.
 
-> This command is compatible with [legacy export files](https://mockoon.com/docs/latest/mockoon-data-files/import-export-mockoon-format/).
-
 ```
 USAGE
   $ mockoon-cli start
 
 OPTIONS
-  -d, --data                 [required] Path(s) or URL(s) to your Mockoon file(s)
-  -p, --port                 Override environment(s) port(s)
-  -l, --hostname             Override default listening hostname(s)
-  -t, --log-transaction      Log the full HTTP transaction (request and response)
-  -X, --disable-log-to-file  Disable logging to file
-  -r, --repair               If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
-  -h, --help                 Show CLI help
+  -d, --data                   [required] Path(s) or URL(s) to your Mockoon file(s)
+  -p, --port                   Override environment(s) port(s)
+  -l, --hostname               Override default listening hostname(s)
+  -c, --faker-locale           Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)
+  -s, --faker-seed             Number for the Faker.js seed (e.g. 1234)
+  -t, --log-transaction        Log the full HTTP transaction (request and response)
+  -X, --disable-log-to-file    Disable logging to file
+  -e, --disable-routes         Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name
+  -r, --repair                 If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
+  -x, --env-vars-prefix        Prefix for environment variables (default: 'MOCKOON_')
+      --disable-admin-api      Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
+      --disable-tls            Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)
+      --max-transaction-logs   Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)
+      --enable-random-latency  Randomize global and responses latencies between 0 and the specified value (default: false)
+  -h, --help                   Show CLI help
 
 EXAMPLES
   $ mockoon-cli start --data ~/data.json
   $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1
   $ mockoon-cli start --data https://file-server/data.json
   $ mockoon-cli start --data ~/data.json --log-transaction
+  $ mockoon-cli start --data ~/data.json --disable-routes route1 route2 folder1
 ```
+
+#### Admin API
+
+Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable the admin API with the `--disable-admin-api` flag.
+
+> 💡 To learn more about the admin API, check the [documentation](https://mockoon.com/docs/latest/admin-api/overview/).
+
+#### Faker.js options
+
+- **Locale**: You can set up Faker.js locale with the `--faker-locale` flag. If not provided, Faker.js will use the default locale: `en`. For a list of currently supported locales, you can check the [supported locales list](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/faker.model.ts#L1) in Mockoon's commons library. You can also check [Faker.js locales list](https://fakerjs.dev/guide/localization.html#available-locales) for more information (⚠️ Some locales may not yet be implemented in Mockoon).
+- **Seed**: You can set up Faker.js seed with the `--faker-seed` flag. If not provided, Faker.js will not use a seed. By providing a seed value, you can generate repeatable sequences of fake data. Using seeding will not always generate the same value but rather a predictable sequence.
+
+#### Customize the environment variables prefix
+
+You can access environment variables in your routes' responses by using the [`{{getEnvVar 'VARIABLE_NAME'}}` templating helper](https://mockoon.com/docs/latest/variables/environment-variables/). By default, only the environment variables prefixed with `MOCKOON_` are available, for example, `MOCKOON_MY_VARIABLE`.
+
+You can customize the prefix with the `--env-vars-prefix` flag. For example, if you set `--env-vars-prefix CUSTOM_PREFIX_`, you will be able to access the environment variable `CUSTOM_PREFIX_MY_VARIABLE` in your routes' responses. To disable the prefix, set it to an empty string: `--env-vars-prefix ''` or `--env-vars-prefix=`.
+
+#### Disabling routes
+
+You can disable routes at runtime by providing their UUIDs or a keyword present in the route's path (do not include a leading slash). You can also disable all the routes present in a folder (including subfolders) by adding a keyword present in a folder name.
+
+This is the counterpart of the "Toggle route" feature in the desktop application (right-click on a route -> "Toggle route").
+
+For example, to disable all routes in a folder named `folder1`, and all routes having "users" in their paths, you can use `--disable-routes folder1 users`.
 
 ### Dockerize command
 
@@ -167,6 +199,51 @@ EXAMPLES
   $ mockoon-cli dockerize --data ~/data.json --output ./Dockerfile
   $ mockoon-cli dockerize --data ~/data1.json ~/data2.json --output ./Dockerfile
   $ mockoon-cli dockerize --data https://file-server/data.json --output ./Dockerfile
+```
+
+### Import command
+
+Import a Swagger v2/OpenAPI v3 specification file (YAML or JSON).
+
+The output file will not be prettified by default. You can prettify it using the `--prettify` flag described below.
+
+Note: This command is similar to the app's import feature, but it will not import directly to your desktop app. If you need to import and open in your desktop app, use the app's import feature instead.
+
+```
+USAGE
+  $ mockoon-cli import
+
+OPTIONS
+  -i, --input                 [required] Path or URL to your Swagger v2/OpenAPI v3 file
+  -o, --output                [required] Generated Mockoon path and name (e.g. `./environment.json`)
+  -p, --prettify              Prettify output
+  -h, --help                  Show CLI help
+
+EXAMPLES
+  $ mockoon-cli import --input ~/input.json --output ./output.json
+  $ mockoon-cli import --input ~/input.yaml --output ./output.json
+  $ mockoon-cli import --input ~/input.json --output ./output.json --prettify
+```
+
+### Export command
+
+Export a mock API to an OpenAPI v3 specification file (JSON).
+
+The output file will not be prettified by default. You can prettify it using the `--prettify` flag described below.
+
+```
+USAGE
+  $ mockoon-cli export
+
+OPTIONS
+  -i, --input                 [required] Path or URL to your Mockoon data file
+  -o, --output                [required] Generated OpenApi v3 path and name (e.g. `./output.json`)
+  -p, --prettify              Prettify output
+  -h, --help                  Show CLI help
+
+EXAMPLES
+  $ mockoon-cli export --input ~/input.json --output ./output.json
+  $ mockoon-cli export --input ~/input.json --output ./output.json --prettify
 ```
 
 ### Help command
@@ -204,9 +281,9 @@ jobs:
   mockoon-cli-demo:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run Mockoon CLI
-        uses: mockoon/cli-action@v1
+        uses: mockoon/cli-action@v2
         with:
           # Mockoon CLI version, default to 'latest'
           version: 'latest'
@@ -332,7 +409,7 @@ Example:
 }
 ```
 
-The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L33-L53).
+The `transaction` model can be found [here](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/server.model.ts#L27-L47).
 
 ### Disable logging
 
@@ -383,7 +460,7 @@ You can also disable file logging by using th `--disable-log-to-file` flag. This
 
 ## Mockoon's documentation
 
-You will find Mockoon's [documentation](https://mockoon.com/docs/latest) on the official website. It covers the most complex features.
+You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) on the official website.
 
 ## Sponsors
 
@@ -393,23 +470,25 @@ Mockoon is an open-source project built by volunteer maintainers. If you like ou
 <a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
-## Subscribe to Mockoon Pro
+## Subscribe to Mockoon Cloud
 
-With advanced features for solo developers and teams, Mockoon Pro supercharges your API development:
+With advanced features for solo developers and teams, Mockoon Cloud supercharges your API development:
 
+- ☁️ [cloud deployments](https://mockoon.com/docs/latest/mockoon-cloud/api-mock-cloud-deployments/)
+- 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/docs/latest/mockoon-cloud/data-synchronization-team-collaboration/)
 - 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
-- 📃 Access to dozens of [ready to use JSON templates](https://mockoon.com/templates/).
+- 📃 Access to dozens of [ready-to-use JSON templates](https://mockoon.com/templates/).
 - 💬 Priority support and training.
 
 Upgrade today and take your API development to the next level.
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png?" width="250" alt="pro button" /></a>
+<a href="https://mockoon.com/cloud/"><img src="https://mockoon.com/images/cloud-btn.png?" width="250" alt="cloud button" /></a>
 </div>
 
 ## Support/feedback
 
-You can discuss all things related to Mockoon's CLI, and ask for help, on the [official community](https://github.com/mockoon/mockoon/discussions). It's also a good place to discuss bugs and feature requests before opening an issue on this repository. For more chat-like discussions, you can also join our [Discord server](https://discord.gg/MutRpsY5gE).
+You can discuss all things related to Mockoon's CLI, and ask for help, on the [official community](https://github.com/mockoon/mockoon/discussions). It's also a good place to discuss bugs and feature requests before opening an issue on this repository. For more chat-like discussions, you can also join our [Discord server](https://discord.gg/FtJjkejKGp).
 
 ## Contributing
 

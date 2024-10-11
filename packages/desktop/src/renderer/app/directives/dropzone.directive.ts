@@ -8,9 +8,8 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import { ReorderAction, ReorderActionType } from '@mockoon/commons';
 import { Subscription } from 'rxjs';
-import { DropActionType } from 'src/renderer/app/enums/ui.enum';
-import { DropAction } from 'src/renderer/app/models/ui.model';
 import { DragService } from 'src/renderer/app/services/drag.service';
 
 /**
@@ -27,7 +26,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
   // chain of dragged element's parent ids
   @Input()
   public dragParentChainId: string | 'root';
-  // UUID or index of the dragged element
+  // UUID or index of the target element (dropzone)
   @Input()
   public dragId: number | string;
   // is the dropzone a container (drop action type can be INSIDE)
@@ -35,7 +34,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
   public dragIsContainer: boolean;
   // emit when the drop action is performed
   @Output()
-  public dropped = new EventEmitter<DropAction<string | number>>();
+  public dropped = new EventEmitter<ReorderAction<string | number>>();
   private boundaries: {
     start: number;
     upperMiddle: number;
@@ -45,13 +44,15 @@ export class DropzoneDirective implements OnInit, OnDestroy {
   };
   private dragStoppedSub: Subscription;
   private currentDropzoneSub: Subscription;
-  private currentDropAction: DropActionType = null;
+  private currentReorderAction: ReorderActionType = null;
   private _dragEnabled: boolean;
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private dragService: DragService
-  ) {}
+  ) {
+    this.elementRef.nativeElement.classList.add('drag-item');
+  }
 
   @Input()
   public set dragEnabled(enabled: boolean) {
@@ -97,14 +98,14 @@ export class DropzoneDirective implements OnInit, OnDestroy {
       ) {
         this.elementRef.nativeElement.classList.add('drag-highlight-top');
         this.elementRef.nativeElement.classList.remove('drag-highlight-bottom');
-        this.currentDropAction = DropActionType.BEFORE;
+        this.currentReorderAction = ReorderActionType.BEFORE;
       } else if (
         event.clientY >= this.boundaries.middle &&
         event.clientY <= this.boundaries.end
       ) {
         this.elementRef.nativeElement.classList.add('drag-highlight-bottom');
         this.elementRef.nativeElement.classList.remove('drag-highlight-top');
-        this.currentDropAction = DropActionType.AFTER;
+        this.currentReorderAction = ReorderActionType.AFTER;
       }
     } else if (this.canReorder() && this.canDropInside()) {
       if (
@@ -114,7 +115,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
         this.elementRef.nativeElement.classList.remove('drag-highlight');
         this.elementRef.nativeElement.classList.remove('drag-highlight-bottom');
         this.elementRef.nativeElement.classList.add('drag-highlight-top');
-        this.currentDropAction = DropActionType.BEFORE;
+        this.currentReorderAction = ReorderActionType.BEFORE;
       } else if (
         event.clientY >= this.boundaries.upperMiddle &&
         event.clientY < this.boundaries.lowerMiddle
@@ -122,7 +123,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
         this.elementRef.nativeElement.classList.remove('drag-highlight-top');
         this.elementRef.nativeElement.classList.remove('drag-highlight-bottom');
         this.elementRef.nativeElement.classList.add('drag-highlight');
-        this.currentDropAction = DropActionType.INSIDE;
+        this.currentReorderAction = ReorderActionType.INSIDE;
       } else if (
         event.clientY >= this.boundaries.lowerMiddle &&
         event.clientY <= this.boundaries.end
@@ -130,7 +131,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
         this.elementRef.nativeElement.classList.remove('drag-highlight-top');
         this.elementRef.nativeElement.classList.remove('drag-highlight');
         this.elementRef.nativeElement.classList.add('drag-highlight-bottom');
-        this.currentDropAction = DropActionType.AFTER;
+        this.currentReorderAction = ReorderActionType.AFTER;
       }
     } else if (!this.canReorder() && this.canDropInside()) {
       if (
@@ -138,7 +139,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
         event.clientY <= this.boundaries.end
       ) {
         this.elementRef.nativeElement.classList.add('drag-highlight');
-        this.currentDropAction = DropActionType.INSIDE;
+        this.currentReorderAction = ReorderActionType.INSIDE;
       }
     }
   }
@@ -166,7 +167,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
       sourceParentId: this.dragService.draggedElement().parentId,
       targetId: this.dragId,
       targetParentId: this.dragParentId,
-      dropActionType: this.currentDropAction,
+      reorderActionType: this.currentReorderAction,
       isSourceContainer: this.dragService.draggedElement().isContainer,
       isTargetContainer: this.dragIsContainer
     });

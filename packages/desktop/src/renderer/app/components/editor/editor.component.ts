@@ -56,8 +56,7 @@ export class EditorComponent
   private _options = {};
   private _readOnly = false;
   private _hideInterface = false;
-  private _theme = 'editor-theme';
-  private _mode = 'html';
+  private _mode = 'text';
   private _autoUpdateContent = true;
   private _editor: Editor;
   private _durationBeforeCallback = 0;
@@ -73,6 +72,29 @@ export class EditorComponent
       this._editor = ace['edit'](element);
     });
     this._editor.$blockScrolling = Infinity;
+
+    // Remove ctrl-p key binding to avoid conflict with command palette
+    (this._editor.commands as any).removeCommand({
+      name: 'jumptomatching',
+      bindKey: {
+        win: 'Ctrl-P',
+        mac: 'Command-P'
+      },
+      exec: () => {
+        // Do nothing to effectively disable the key binding
+      }
+    });
+    // Remove ctrl-, key binding to avoid conflict with settings modal
+    (this._editor.commands as any).removeCommand({
+      name: 'showSettingsMenu',
+      bindKey: {
+        win: 'Ctrl-,',
+        mac: 'Command-,'
+      },
+      exec: () => {
+        // Do nothing to effectively disable the key binding
+      }
+    });
   }
 
   public get text() {
@@ -104,11 +126,6 @@ export class EditorComponent
   @Input()
   public set options(options: any) {
     this.setOptions(options);
-  }
-
-  @Input()
-  public set theme(theme: any) {
-    this.setTheme(theme);
   }
 
   @Input()
@@ -163,7 +180,7 @@ export class EditorComponent
 
   private init() {
     this.setOptions(this._options || {});
-    this.setTheme(this._theme);
+    this._editor.setTheme('ace/theme/editor-theme');
     this.setMode(this._mode);
     this.setReadOnly(this._readOnly);
   }
@@ -223,11 +240,6 @@ export class EditorComponent
 
     this._editor.renderer.setShowGutter(!hideInterface);
     (this._editor.renderer as any).$cursorLayer.element.style.display = 'none';
-  }
-
-  private setTheme(theme: any) {
-    this._theme = theme;
-    this._editor.setTheme(`ace/theme/${theme}`);
   }
 
   private setMode(mode: any) {

@@ -1,7 +1,6 @@
 {
   "welcomeShown": true,
   "bannerDismissed": [],
-  "logSizeLimit": 10000,
   "maxLogsPerEnvironment": 50,
   "truncateRouteName": true,
   "mainMenuSize": 100,
@@ -13,5 +12,16 @@
   "enableTelemetry": true,
   "storagePrettyPrint": true,
   "startEnvironmentsOnLoad": false,
-  "logTransactions": false
+  "logTransactions": false,
+  "disabledRoutes": {},
+  "collapsedFolders": {},
+  "fileWatcherEnabled": "disabled",
+  "dialogWorkingDir": "",
+  "environmentsCategoriesOrder": ["local", "cloud"],
+  "environmentsCategoriesCollapsed": {
+    "local": false,
+    "cloud": false
+  },
+  "envVarsPrefix": "MOCKOON_",
+  "activeEnvironmentUuid": null
 }

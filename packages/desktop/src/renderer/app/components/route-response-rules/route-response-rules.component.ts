@@ -7,9 +7,14 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   BuildResponseRule,
+  ReorderAction,
   ResponseRule,
   ResponseRuleOperators,
   ResponseRuleTargets,
@@ -18,25 +23,21 @@ import {
   RulesDisablingResponseModes
 } from '@mockoon/commons';
 import { Observable, Subject } from 'rxjs';
-import {
-  distinctUntilKeyChanged,
-  filter,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
+import { filter, takeUntil, tap } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import {
   DropdownItems,
   ToggleItems
 } from 'src/renderer/app/models/common.model';
-import { DropAction } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { moveItemToTargetIndex } from 'src/renderer/app/stores/reducer-utils';
+import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
   selector: 'app-route-response-rules',
   templateUrl: 'route-response-rules.component.html',
+  styleUrls: ['./route-response-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {
@@ -47,41 +48,60 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Output()
   public ruleAdded: EventEmitter<any> = new EventEmitter();
   public routeResponse$: Observable<RouteResponse>;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;
   public responseRuleTargets: DropdownItems<ResponseRuleTargets> = [
+    { label: 'Request', category: true },
     { value: 'body', label: 'Body' },
-    { value: 'query', label: 'Query string' },
+    { value: 'query', label: 'Query parameter' },
     { value: 'header', label: 'Header' },
     { value: 'cookie', label: 'Cookie' },
-    { value: 'params', label: 'Route params' },
-    { value: 'request_number', label: 'Request number (starting at 1)' }
+    { value: 'params', label: 'Route parameter' },
+    { value: 'path', label: 'Path (starts with /)' },
+    { value: 'method', label: 'Method (lower case: get, post, ...)' },
+    { value: 'request_number', label: 'Number (starting at 1)' },
+    { label: 'Stateful sources', category: true },
+    { value: 'global_var', label: 'Global variable' },
+    { value: 'data_bucket', label: 'Data bucket' },
+    { label: 'Misc', category: true },
+    { value: 'templating', label: 'Custom templating' }
   ];
   public responseRuleOperators: DropdownItems<ResponseRuleOperators> = [
     { value: 'equals', label: 'equals' },
     { value: 'regex', label: 'regex' },
     { value: 'regex_i', label: 'regex (i)' },
     { value: 'null', label: 'null' },
-    { value: 'empty_array', label: 'empty array' }
+    { value: 'empty_array', label: 'empty array' },
+    { value: 'array_includes', label: 'array includes' }
   ];
-  public modifierPlaceholders = {
-    body: 'Object path or empty for full body',
-    query: 'Property name or object path',
+  public modifierPlaceholders: Record<ResponseRuleTargets, string> = {
+    body: 'JSONPath or object path (empty for full body)',
+    query: 'Parameter name, JSONPath or object path',
     header: 'Header name',
     cookie: 'Cookie name',
     params: 'Route parameter name',
-    request_number: ''
+    global_var: 'JSONPath or object path (start with var name)',
+    data_bucket: 'JSONPath or object path (start with bucket name or ID)',
+    request_number: '',
+    path: '',
+    method: '',
+    templating: 'Any templating expression (e.g. {{ helper }})'
   };
-  public valuePlaceholders = {
+  public valuePlaceholders: { [key in ResponseRuleOperators]: string } = {
     equals: 'Value',
     regex: 'Regex (without /../)',
     regex_i: 'Regex (without /../i)',
     null: '',
-    empty_array: ''
+    empty_array: '',
+    array_includes: 'Value'
   };
   public operatorDisablingForTargets = {
-    request_number: ['null', 'empty_array'],
-    cookie: ['empty_array']
+    request_number: ['null', 'empty_array', 'array_includes'],
+    cookie: ['empty_array'],
+    params: ['empty_array', 'array_includes'],
+    path: ['null', 'empty_array', 'array_includes'],
+    method: ['null', 'empty_array', 'array_includes'],
+    templating: ['empty_array', 'array_includes']
   };
   public rulesOperators: ToggleItems = [
     {
@@ -103,11 +123,12 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder,
+    private store: Store
   ) {}
 
   public get rules() {
-    return this.form.get('rules') as FormArray;
+    return this.form.get('rules') as UntypedFormArray;
   }
 
   ngOnInit() {
@@ -119,10 +140,12 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     // subscribe to active route response to reset the form
     this.routeResponse$ = this.activeRouteResponse$.pipe(
       filter((activeRouteResponse) => !!activeRouteResponse),
-      distinctUntilKeyChanged('uuid'),
+      this.store.distinctUUIDOrForce(),
       tap((routeResponse) => {
         this.replaceRules(routeResponse.rules, false);
-        this.form.get('rulesOperator').setValue(routeResponse.rulesOperator);
+        this.form.get('rulesOperator').setValue(routeResponse.rulesOperator, {
+          emitEvent: false
+        });
       })
     );
 
@@ -152,14 +175,18 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     this.ruleAdded.emit();
   }
 
-  public reorganizeRules(dropAction: DropAction) {
-    this.replaceRules(
-      moveItemToTargetIndex(
-        this.rules.value,
-        dropAction.dropActionType,
-        dropAction.sourceId as number,
-        dropAction.targetId as number
-      ),
+  public reorderRules(reorderAction: ReorderAction) {
+    // store is driving the reordering
+    this.environmentsService.updateActiveRouteResponse(
+      {
+        rules: moveItemToTargetIndex(
+          this.rules.value,
+          reorderAction.reorderActionType,
+          reorderAction.sourceId as number,
+          reorderAction.targetId as number
+        )
+      },
+      // it's a store forced event, triggering a form update here
       true
     );
   }

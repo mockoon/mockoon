@@ -1,23 +1,28 @@
+import { CORSHeaders } from '../constants/common.constants';
 import {
+  CallbackDefault,
   DataBucketDefault,
   EnvironmentDefault,
   FolderDefault,
+  ResponseCallbackDefault,
   ResponseRuleDefault,
   RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
-import { CloneObject, generateUUID } from '../libs/utils';
-import { DataBucket, Environment } from '../models/environment.model';
+import { Callback, DataBucket, Environment } from '../models/environment.model';
 import { Folder } from '../models/folder.model';
 import {
   BodyTypes,
+  CallbackInvocation,
   Header,
   Methods,
+  ResponseMode,
   ResponseRule,
   Route,
   RouteResponse,
   RouteType
 } from '../models/route.model';
+import { CloneObject, GenerateUniqueID, generateUUID } from '../utils/utils';
 
 /**
  * Build a new environment or route response header
@@ -39,7 +44,18 @@ export const BuildResponseRule = (): ResponseRule => ({
 });
 
 /**
- * Clone a new route response with a fresh UUID
+ * Build a new callback request.
+ */
+export const BuildResponseCallback = (
+  defaultCallbackUuid?: string
+): CallbackInvocation => ({
+  ...ResponseCallbackDefault,
+  uuid: defaultCallbackUuid || ''
+});
+
+/**
+ * Clone a new route response with a fresh UUID.
+ * Make sure to reset default to false, as we can never have two default responses (also for CRUD the default is the one doing the CRUD operations).
  */
 export const CloneRouteResponse = (
   routeResponse: RouteResponse
@@ -48,6 +64,32 @@ export const CloneRouteResponse = (
   uuid: generateUUID(),
   label: `${routeResponse.label} (copy)`,
   default: false
+});
+
+/**
+ * Clone a databucket with a renewd ids
+ *
+ * @param dataBucket
+ * @returns
+ */
+export const CloneDataBucket = (dataBucket: DataBucket): DataBucket => ({
+  ...CloneObject(dataBucket),
+  uuid: generateUUID(),
+  id: GenerateUniqueID(),
+  name: `${dataBucket.name} (copy)`
+});
+
+/**
+ * Clones a callback. We use the same strategy for id generation similar to data buckets.
+ *
+ * @param callback callback to clone
+ * @returns cloned callback.
+ */
+export const CloneCallback = (callback: Callback) => ({
+  ...CloneObject(callback),
+  uuid: generateUUID(),
+  id: GenerateUniqueID(),
+  name: `${callback.name} (copy)`
 });
 
 /**
@@ -86,6 +128,36 @@ export const BuildHTTPRoute = (
 };
 
 /**
+ * Build a new Web Socket route
+ */
+export const BuildWebSocketRoute = (
+  hasDefaultRouteResponse = true,
+  options: {
+    endpoint: typeof RouteDefault.endpoint;
+    body: typeof RouteResponseDefault.body;
+  } = {
+    endpoint: RouteDefault.endpoint,
+    body: RouteResponseDefault.body
+  }
+): Route => {
+  const defaultResponse = {
+    ...BuildRouteResponse(),
+    default: true,
+    body: options.body,
+    sendFileAsBody: true
+  } as RouteResponse;
+
+  return {
+    ...RouteDefault,
+    streamingInterval: 100,
+    type: RouteType.WS,
+    method: Methods.get,
+    endpoint: options.endpoint,
+    responses: hasDefaultRouteResponse ? [defaultResponse] : []
+  };
+};
+
+/**
  * Build a new CRUD route
  */
 export const BuildCRUDRoute = (
@@ -98,6 +170,7 @@ export const BuildCRUDRoute = (
     databucketID: RouteResponseDefault.databucketID
   }
 ): Route => {
+  // first CRUD route response is always the default one and cannot be deleted
   let defaultResponse = { ...BuildRouteResponse(), default: true };
 
   defaultResponse = {
@@ -129,6 +202,11 @@ export const BuildDatabucket = (
 });
 
 /**
+ * Build a new callback.
+ */
+export const BuildCallback = (): Callback => ({ ...CallbackDefault });
+
+/**
  * Build a new environment
  */
 export const BuildEnvironment = (
@@ -148,7 +226,7 @@ export const BuildEnvironment = (
     port: params.port !== undefined ? params.port : EnvironmentDefault.port,
     routes: params.hasDefaultRoute ? [newRoute] : [],
     headers: params.hasDefaultHeader
-      ? [BuildHeader('Content-Type', 'application/json')]
+      ? [BuildHeader('Content-Type', 'application/json'), ...CORSHeaders]
       : [],
     proxyReqHeaders: [BuildHeader()],
     proxyResHeaders: [BuildHeader()],
@@ -165,10 +243,10 @@ export const BuildDemoEnvironment = (): Environment => {
   const databucket = BuildDatabucket();
   const newRoutes = [
     { ...BuildCRUDRoute() },
-    BuildHTTPRoute(),
-    BuildHTTPRoute(),
-    BuildHTTPRoute(),
-    BuildHTTPRoute(),
+    BuildHTTPRoute(), // templating
+    BuildHTTPRoute(), // rules
+    BuildHTTPRoute(), // route patterns
+    BuildHTTPRoute(), // guard
     BuildHTTPRoute()
   ];
 
@@ -180,16 +258,22 @@ export const BuildDemoEnvironment = (): Environment => {
         ...databucket,
         name: 'Users',
         value:
-          '[\n  {{#repeat 50}}\n  {\n    "id": "{{faker \'datatype.uuid\'}}",\n    "username": "{{faker \'internet.userName\'}}"\n  }\n  {{/repeat}}\n]'
+          '[\n  {{#repeat 50}}\n  {\n    "id": "{{faker \'string.uuid\'}}",\n    "username": "{{faker \'internet.userName\'}}"\n  }\n  {{/repeat}}\n]'
       }
     ],
     routes: [
       {
         ...newRoutes[0],
         endpoint: 'users',
-        documentation: 'Endpoint performing CRUD operations on a data bucket',
+        documentation:
+          'Endpoint performing CRUD operations on a data bucket (automatically creates GET, POST, PUT, DELETE routes)',
         responses: [
-          { ...newRoutes[0].responses[0], databucketID: databucket.id }
+          {
+            ...newRoutes[0].responses[0],
+            databucketID: databucket.id,
+            label:
+              'Perform CRUD operations on the "Users" databucket ("Data" tab at the top)'
+          }
         ]
       },
       {
@@ -203,7 +287,7 @@ export const BuildDemoEnvironment = (): Environment => {
             ...BuildRouteResponse(),
             label:
               "Creates 10 random users, or the amount specified in the 'total' query param",
-            body: '{\n  "Templating example": "For more information about templating, click the blue \'i\' above this editor",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'datatype.number\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'name.firstName\' }}",\n        "lastname": "{{ faker \'name.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'datatype.number\' 5) }}\n            {\n              "id": "{{ faker \'datatype.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
+            body: '{\n  "Templating example": "For more information about templating, click the blue \'i\' above this editor",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'number.int\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'person.firstName\' }}",\n        "lastname": "{{ faker \'person.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'number.int\' 5) }}\n            {\n              "id": "{{ faker \'string.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
           }
         ]
       },
@@ -216,7 +300,8 @@ export const BuildDemoEnvironment = (): Environment => {
           {
             ...BuildRouteResponse(),
             label: 'Default response',
-            body: '{\n  "Rules example": "Default response. Served if route param \'param1\' is not present."\n}'
+            body: '{\n  "Rules example": "Default response. Served if route param \'param1\' is not present."\n}',
+            default: true
           },
           {
             ...BuildRouteResponse(),
@@ -251,22 +336,6 @@ export const BuildDemoEnvironment = (): Environment => {
       },
       {
         ...newRoutes[3],
-        method: Methods.get,
-        endpoint: 'file/:pageName',
-        documentation:
-          "Serve a file dynamically depending on the path param 'pageName'.",
-        responses: [
-          {
-            ...BuildRouteResponse(),
-            label: 'Templating is also supported in file path',
-            headers: [{ key: 'Content-Type', value: 'text/html' }],
-            body: '',
-            filePath: "./page{{urlParam 'pageName'}}.html"
-          }
-        ]
-      },
-      {
-        ...newRoutes[4],
         method: Methods.put,
         endpoint: 'path/with/pattern(s)?/*',
         documentation: 'Path supports various patterns',
@@ -274,12 +343,50 @@ export const BuildDemoEnvironment = (): Environment => {
           {
             ...BuildRouteResponse(),
             headers: [{ key: 'Content-Type', value: 'text/plain' }],
-            body: "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/routing"
+            body: "The current path will match the following routes: \nhttp://localhost:3000/path/with/pattern/\nhttp://localhost:3000/path/with/patterns/\nhttp://localhost:3000/path/with/patterns/anything-else\n\nLearn more about Mockoon's routing: https://mockoon.com/docs/latest/api-endpoints/routing/"
+          }
+        ]
+      },
+      {
+        ...newRoutes[4],
+        method: Methods.all,
+        endpoint: 'protected/*',
+        documentation:
+          '"Guard" route protecting all routes starting with /protected/',
+        responseMode: ResponseMode.FALLBACK,
+        responses: [
+          {
+            ...BuildRouteResponse(),
+            label: "Requires the presence of an 'Authorization' header",
+            body: '{\n  "error": "Unauthorized"\n}',
+            statusCode: 401,
+            rules: [
+              {
+                target: 'header',
+                modifier: 'Authorization',
+                operator: 'null',
+                invert: false,
+                value: ''
+              }
+            ]
           }
         ]
       },
       {
         ...newRoutes[5],
+        method: Methods.get,
+        endpoint: 'protected/path',
+        documentation: 'Protected route',
+        responses: [
+          {
+            ...BuildRouteResponse(),
+            headers: [{ key: 'Content-Type', value: 'text/plain' }],
+            body: 'You can serve the same responses based on the same rules for all or part of your endpoints by creating global routes using the fallback mode and a wildcard path. \nThis is useful if you want to protect all your endpoints by checking if an Authorization header is present or if you want to verify that all your requests contain a specific property in their body.\nTo learn more: https://mockoon.com/docs/latest/route-responses/global-routes-with-rules/'
+          }
+        ]
+      },
+      {
+        ...newRoutes[6],
         method: Methods.get,
         endpoint: 'forward-and-record',
         documentation: 'Can Mockoon forward or record entering requests?',
@@ -287,7 +394,7 @@ export const BuildDemoEnvironment = (): Environment => {
           {
             ...BuildRouteResponse(),
             headers: [{ key: 'Content-Type', value: 'text/plain' }],
-            body: "Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings ('cog' icon in the upper right corner). \nTo learn more: https://mockoon.com/docs/latest/proxy-mode\n\nAs always, all entering requests, and responses from the proxied server will be recorded ('clock' icon in the upper right corner).\nTo learn more: https://mockoon.com/docs/latest/requests-logging"
+            body: 'Mockoon can also act as a proxy and forward all entering requests that are not caught by declared routes. \nYou can activate this option in the environment settings ("Settings" tab at the top). \nTo learn more: https://mockoon.com/docs/latest/server-configuration/proxy-mode/\n\nAll entering requests, and responses from the proxied server will be recorded and can be automatically mocked ("Logs" tab at the top).\nTo learn more: https://mockoon.com/docs/latest/logging-and-recording/requests-logging/'
           }
         ]
       }

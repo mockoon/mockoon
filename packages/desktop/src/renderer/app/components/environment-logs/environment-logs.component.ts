@@ -1,17 +1,27 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { GetEditorModeFromContentType } from 'src/renderer/app/libs/utils.lib';
+import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
+import { formatDistanceToNow } from 'date-fns';
+import { Observable, timer } from 'rxjs';
 import {
-  EnvironmentLog,
-  EnvironmentLogRequest,
-  EnvironmentLogResponse
-} from 'src/renderer/app/models/environment-logs.model';
+  combineLatestWith,
+  distinctUntilChanged,
+  filter,
+  map
+} from 'rxjs/operators';
+import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
+import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import {
+  GetEditorModeFromContentType,
+  textFilter
+} from 'src/renderer/app/libs/utils.lib';
+import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model';
-import { DataService } from 'src/renderer/app/services/data.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   clearLogsAction,
   setActiveEnvironmentLogUUIDAction
@@ -31,6 +41,8 @@ type CollapseStates = {
   'response.body': boolean;
 };
 
+type logsDropdownMenuPayload = { logUuid: string };
+
 @Component({
   selector: 'app-environment-logs',
   templateUrl: 'environment-logs.component.html',
@@ -38,11 +50,13 @@ type CollapseStates = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnvironmentLogsComponent implements OnInit {
-  public environmentLogs$: Observable<EnvironmentLog[]>;
+  public environmentLogs$: Observable<
+    (EnvironmentLog & { timeHuman$: Observable<string> })[]
+  >;
   public activeEnvironmentLogsTab$: Observable<EnvironmentLogsTabsNameType>;
   public activeEnvironmentUUID$: Observable<string>;
-  public activeEnvironmentLogUUID$: Observable<string>;
   public activeEnvironmentLog$: Observable<EnvironmentLog>;
+  public environmentLogsCount$: Observable<number>;
   public settings$: Observable<Settings>;
   public collapseStates: CollapseStates = {
     'request.general': false,
@@ -57,41 +71,70 @@ export class EnvironmentLogsComponent implements OnInit {
   public menuSize = Config.defaultSecondaryMenuSize;
   public clearEnvironmentLogsRequested$ = new TimedBoolean();
   public logsRecording$ = this.eventsService.logsRecording$;
+  public editorConfigs$: Observable<{
+    request: typeof defaultEditorOptions;
+    response: typeof defaultEditorOptions;
+  }>;
+  public logsFilter$: Observable<string>;
+  public dateFormat = 'yyyy-MM-dd HH:mm:ss:SSS';
+  public focusableInputs = FocusableInputs;
+  public dropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Create mock endpoint',
+      icon: 'control_point_duplicate',
+      twoSteps: false,
+      action: ({ logUuid }: logsDropdownMenuPayload) => {
+        this.environmentsService.createRouteFromLog(
+          this.store.get('activeEnvironmentUUID'),
+          logUuid,
+          true
+        );
+      }
+    }
+  ];
 
   constructor(
     private store: Store,
     private environmentsService: EnvironmentsService,
-    private dataService: DataService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private uiService: UIService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit() {
+    this.logsFilter$ = this.store.selectFilter('logs');
     this.settings$ = this.store.select('settings');
     this.activeEnvironmentUUID$ = this.store.select('activeEnvironmentUUID');
-    this.environmentLogs$ = this.store.selectActiveEnvironmentLogs();
-
-    this.activeEnvironmentLogUUID$ = this.environmentLogs$.pipe(
-      mergeMap(() => this.store.selectActiveEnvironmentLogUUID())
+    this.environmentLogsCount$ = this.store
+      .selectActiveEnvironmentLogs()
+      .pipe(map((logs) => logs.length));
+    this.environmentLogs$ = this.store.selectActiveEnvironmentLogs().pipe(
+      combineLatestWith(this.logsFilter$),
+      map(([environmentLogs, search]) =>
+        !search
+          ? environmentLogs
+          : environmentLogs.filter((log) =>
+              textFilter(
+                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+                search
+              )
+            )
+      ),
+      map((logs) =>
+        logs.map((log) => ({
+          ...log,
+          timeHuman$: timer(0, 60_000).pipe(
+            map(() => formatDistanceToNow(log.timestampMs, { addSuffix: true }))
+          )
+        }))
+      )
     );
 
-    this.activeEnvironmentLog$ = this.activeEnvironmentLogUUID$.pipe(
-      withLatestFrom(this.environmentLogs$),
-      map(([activeEnvironmentLogUUID, environmentLogs]) =>
-        environmentLogs.find(
-          (environmentLog) => environmentLog.UUID === activeEnvironmentLogUUID
-        )
-      ),
+    this.activeEnvironmentLog$ = this.store.selectActiveEnvironmentLog().pipe(
+      distinctUntilChanged(),
       map((environmentLog) => {
         if (environmentLog) {
-          if (environmentLog.request.body) {
-            environmentLog.request.truncatedBody =
-              this.dataService.truncateBody(environmentLog.request.body);
-          }
-
-          if (environmentLog.response.body) {
-            environmentLog.response.truncatedBody =
-              this.dataService.truncateBody(environmentLog.response.body);
-
+          if (environmentLog.response?.body) {
             const contentEncoding = environmentLog.response.headers.find(
               (header) => header.key.toLowerCase() === 'content-encoding'
             )?.value;
@@ -101,14 +144,62 @@ export class EnvironmentLogsComponent implements OnInit {
               contentEncoding === 'br' ||
               contentEncoding === 'deflate'
             ) {
-              environmentLog.response.bodyState = 'unzipped';
-            } else {
-              environmentLog.response.bodyState = 'raw';
+              environmentLog.response.unzipped = true;
             }
           }
         }
 
         return environmentLog;
+      })
+    );
+
+    this.editorConfigs$ = this.activeEnvironmentLog$.pipe(
+      filter((activeEnvironmentLog) => !!activeEnvironmentLog),
+      map((activeEnvironmentLog) => {
+        const responseContentTypeHeader = GetContentType(
+          activeEnvironmentLog.response.headers
+        );
+        const requestContentTypeHeader = GetContentType(
+          activeEnvironmentLog.request.headers
+        );
+        const baseEditorConfig = this.store.get('bodyEditorConfig');
+
+        const responseEditorMode = responseContentTypeHeader
+          ? GetEditorModeFromContentType(responseContentTypeHeader)
+          : 'text';
+
+        const requestEditorMode = requestContentTypeHeader
+          ? GetEditorModeFromContentType(requestContentTypeHeader)
+          : 'text';
+
+        return {
+          request: {
+            ...baseEditorConfig,
+            options: {
+              ...baseEditorConfig.options,
+              // enable JSON validation
+              useWorker: isContentTypeApplicationJson(
+                activeEnvironmentLog.request.headers
+              )
+                ? true
+                : false
+            },
+            mode: requestEditorMode
+          },
+          response: {
+            ...baseEditorConfig,
+            options: {
+              ...baseEditorConfig.options,
+              // enable JSON validation
+              useWorker: isContentTypeApplicationJson(
+                activeEnvironmentLog.response.headers
+              )
+                ? true
+                : false
+            },
+            mode: responseEditorMode
+          }
+        };
       })
     );
 
@@ -139,37 +230,6 @@ export class EnvironmentLogsComponent implements OnInit {
   }
 
   /**
-   * Call the environment service to create a route from the logs
-   *
-   * @param logUUID
-   */
-  public createRouteFromLog(environmentUUID: string, logUUID: string) {
-    this.environmentsService.createRouteFromLog(environmentUUID, logUUID, true);
-  }
-
-  /**
-   * Open editor modal to view the body
-   */
-  public viewBodyInEditor(
-    logResponseOrRequest: EnvironmentLogResponse | EnvironmentLogRequest,
-    location: 'request' | 'response'
-  ) {
-    const contentTypeHeader = logResponseOrRequest.headers.find(
-      (header) => header.key.toLowerCase() === 'content-type'
-    );
-    const editorMode =
-      contentTypeHeader && contentTypeHeader.value
-        ? GetEditorModeFromContentType(contentTypeHeader.value)
-        : 'text';
-
-    this.eventsService.editorModalEvents.emit({
-      content: logResponseOrRequest.body,
-      mode: editorMode,
-      title: `${location} body`
-    });
-  }
-
-  /**
    * Clear logs for active environment
    */
   public clearEnvironmentLogs() {
@@ -183,27 +243,18 @@ export class EnvironmentLogsComponent implements OnInit {
   /**
    * Start recording entering requests/responses
    */
-  public startRecording(environmentUUID: string) {
-    this.eventsService.logsRecording$.next({
-      ...this.eventsService.logsRecording$.value,
-      [environmentUUID]: true
-    });
-
-    const environmentsStatus = this.store.get('environmentsStatus');
-    const activeEnvironmentStatus = environmentsStatus[environmentUUID];
-
-    if (!activeEnvironmentStatus.running) {
-      this.environmentsService.toggleEnvironment(environmentUUID);
-    }
+  public startRecording(environmentUuid: string) {
+    this.environmentsService.startRecording(environmentUuid);
   }
 
   /**
    * Stop recording entering requests/responses
    */
-  public stopRecording(environmentUUID: string) {
-    this.eventsService.logsRecording$.next({
-      ...this.eventsService.logsRecording$.value,
-      [environmentUUID]: false
-    });
+  public stopRecording(environmentUuid: string) {
+    this.environmentsService.stopRecording(environmentUuid);
+  }
+
+  public openSettings() {
+    this.uiService.openModal('settings');
   }
 }

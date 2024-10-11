@@ -1,0 +1,68 @@
+@if (user && presence?.users?.length > 0) {
+  <div class="team-presence">
+    @for (presenceUser of presence?.users; track $index) {
+      <!-- Display at least maxDisplayUsers including self (self is always first in list, see store) -->
+      @if (
+        (filterBy && presenceUser[filterBy] === filterContext) ||
+        (!filterBy && $index + (displaySelf ? 1 : 0) <= maxDisplayedUsers)
+      ) {
+        @if (displaySelf || (!displaySelf && presenceUser.uid !== user.uid)) {
+          <div
+            [ngbTooltip]="
+              (presenceUser.displayName ?? presenceUser.email) +
+              (presenceUser.uid === user.uid ? ' (you)' : '')
+            "
+            class="team-presence-user d-flex"
+            [ngStyle]="{ color: presenceUser.cssColor }"
+          >
+            <app-svg icon="account" [size]="size"></app-svg>
+          </div>
+        }
+      }
+    }
+    @if (
+      presence?.users?.length - (displaySelf ? 0 : 1) > maxDisplayedUsers &&
+      showTooltipList
+    ) {
+      <div
+        class="team-presence-more"
+        [ngbTooltip]="presenceTooltip"
+        placement="bottom"
+      >
+        <small>
+          +{{
+            presence?.users?.length - maxDisplayedUsers - (displaySelf ? 0 : 1)
+          }}
+        </small>
+      </div>
+
+      <ng-template #presenceTooltip>
+        <div class="text-start">
+          @for (presenceUser of presence?.users; track $index) {
+            @if (
+              displaySelf || (!displaySelf && presenceUser.uid !== user.uid)
+            ) {
+              <div
+                class="team-presence-user d-flex align-items-center text-truncate"
+              >
+                <app-svg
+                  icon="account"
+                  class="me-2"
+                  [ngStyle]="{ color: presenceUser.cssColor }"
+                ></app-svg>
+                <span
+                  class="text-truncate"
+                  [ngClass]="{
+                    'fw-bold': presenceUser.uid === user.uid
+                  }"
+                  >{{ presenceUser.uid === user.uid ? '(you)&nbsp;' : ''
+                  }}{{ presenceUser.displayName ?? presenceUser.email }}</span
+                >
+              </div>
+            }
+          }
+        </div>
+      </ng-template>
+    }
+  </div>
+}

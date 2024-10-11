@@ -1,22 +1,23 @@
 import { test } from '@oclif/test';
-import axios from 'axios';
-import { expect } from 'chai';
+import { ok, strictEqual } from 'assert';
 
 describe('Run single mock', () => {
   test
     .stdout()
     .command(['start', '--data', './test/data/envs/mock1.json'])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/api/test');
+      const result = await (
+        await fetch('http://localhost:3000/api/test')
+      ).text();
 
-      expect(result.data).to.contain('mock-content-1');
+      ok(result.includes('mock-content-1'));
     })
     .finally(() => {
       process.emit('SIGINT');
     })
     .it('should start mock on port 3000 and call GET /api/test', (context) => {
-      expect(context.stdout).to.contain('Server started');
-      expect(context.stdout).to.contain('"environmentName":"mock1"');
+      ok(context.stdout.includes('Server started'));
+      ok(context.stdout.includes('"environmentName":"mock1"'));
     });
 });
 
@@ -31,8 +32,9 @@ describe('Run single mock from URL', () => {
       '3000'
     ])
     .do(async () => {
-      const result = await axios.get('http://localhost:3000/posts');
-      expect(result.status).to.equal(200);
+      const result = await fetch('http://localhost:3000/posts');
+
+      strictEqual(result.status, 200);
     })
     .finally(() => {
       process.emit('SIGINT');
@@ -40,9 +42,11 @@ describe('Run single mock from URL', () => {
     .it(
       'should start mock on port 3000 and call GET /posts endpoint',
       (context) => {
-        expect(context.stdout).to.contain('Server started');
-        expect(context.stdout).to.contain(
-          '"environmentName":"Tutorial - Generate mock data"'
+        ok(context.stdout.includes('Server started'));
+        ok(
+          context.stdout.includes(
+            '"environmentName":"Tutorial - Generate mock data"'
+          )
         );
       }
     );

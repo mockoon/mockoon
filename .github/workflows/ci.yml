@@ -9,15 +9,15 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: "20.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -42,15 +42,15 @@ jobs:
     needs: lint
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: "20.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -75,15 +75,15 @@ jobs:
     needs: [lint, test-libs]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: "20.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -110,18 +110,18 @@ jobs:
 
     strategy:
       matrix:
-        node: [16, 18, 20]
+        node: [18, 20]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -139,47 +139,6 @@ jobs:
           npm run build:cli
           npm run test:cli
 
-  # run all tests (unpackaged desktop app, CI build)
-  test-desktop:
-    name: Desktop - Build and test
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    needs: [lint, test-libs]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.x"
-      - name: Update NPM
-        run: |
-          npm install -g npm@latest
-      - uses: actions/cache@v3
-        id: cache-modules
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        run: |
-          npm run bootstrap
-      - name: Link packages
-        run: |
-          npm run link
-      - name: Build
-        run: |
-          npm run build:libs
-          npm run build:desktop:ci
-      - name: Run tests
-        run: |
-          export DISPLAY=':99.0'
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          npm run test:desktop
-
-  # run desktop packaged tests when on the main branch (commits on main are always release candidates)
-
   test-desktop-packaged-win:
     name: Desktop packaged Windows - Build and test
     runs-on: windows-latest
@@ -187,22 +146,16 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main'
-
-    env:
-      CSC_LINK: ${{secrets.WIN_CSC_LINK}}
-      CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: "20.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -221,57 +174,49 @@ jobs:
           npm run package:desktop:test:win
       - name: Run tests
         run: |
-          npm run test:desktop:packaged:win
+          npm run test:desktop:win
 
-  test-desktop-packaged-mac:
-    name: Desktop packaged MacOS - Build and test
-    runs-on: macos-latest
-    timeout-minutes: 120
+  # test-desktop-packaged-mac:
+  #   name: Desktop packaged MacOS - Build and test
+  #   runs-on: macos-latest
+  #   timeout-minutes: 120
 
-    needs: [lint, test-libs]
+  #   needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main'
+  #   env:
+  #     USE_HARD_LINKS: false
 
-    env:
-      APPLEID: ${{secrets.APPLEID}}
-      TEAMID: ${{secrets.TEAMID}}
-      APPLEIDPASS: ${{secrets.APPLEIDPASS}}
-      ASCPROVIDER: ${{secrets.ASCPROVIDER}}
-      CSC_LINK: ${{secrets.MACOS_CSC_LINK}}
-      CSC_KEY_PASSWORD: ${{secrets.MACOS_CSC_KEY_PASSWORD}}
-      USE_HARD_LINKS: false
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18.x"
-      - name: Update NPM
-        run: |
-          npm install -g npm@latest
-      - uses: actions/cache@v3
-        id: cache-modules
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.cache-modules.outputs.cache-hit != 'true'
-        run: |
-          npm run bootstrap
-      - name: Link packages
-        run: |
-          npm run link
-      - name: Build
-        run: |
-          npm run build:libs
-          npm run build:desktop:ci
-          npm run package:desktop:test:mac
-      - name: Run tests
-        run: |
-          export DISPLAY=':99.0'
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          npm run test:desktop:packaged:mac
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Install Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "20.x"
+  #     - name: Update NPM
+  #       run: |
+  #         npm install -g npm@latest
+  #     - uses: actions/cache@v4
+  #       id: cache-modules
+  #       with:
+  #         path: "**/node_modules"
+  #         key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: Install dependencies
+  #       if: steps.cache-modules.outputs.cache-hit != 'true'
+  #       run: |
+  #         npm run bootstrap
+  #     - name: Link packages
+  #       run: |
+  #         npm run link
+  #     - name: Build
+  #       run: |
+  #         npm run build:libs
+  #         npm run build:desktop:ci
+  #         npm run package:desktop:test:mac
+  #     - name: Run tests
+  #       run: |
+  #         export DISPLAY=':99.0'
+  #         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+  #         npm run test:desktop:mac
 
   test-desktop-packaged-linux:
     name: Desktop packaged Linux - Build and test
@@ -280,21 +225,19 @@ jobs:
 
     needs: [lint, test-libs]
 
-    if: github.ref == 'refs/heads/main'
-
     env:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.x"
+          node-version: "20.x"
       - name: Update NPM
         run: |
           npm install -g npm@latest
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -315,4 +258,4 @@ jobs:
         run: |
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          npm run test:desktop:packaged:linux
+          npm run test:desktop:linux

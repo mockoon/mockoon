@@ -1,6 +1,6 @@
 {
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
-  "lastMigration": 28,
+  "lastMigration": 33,
   "name": "FT env",
   "endpointPrefix": "",
   "latency": 0,
@@ -11,7 +11,6 @@
       "method": "post",
       "endpoint": "dolphins",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "6d3abb6f-6705-4588-8b09-337ddc4ae33c",
@@ -29,18 +28,20 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "e929ed63-9c47-4ef0-9192-894de0a104ea",
       "method": "get",
       "endpoint": "very/long/endpoint/path/that/will/be/truncated/in/the/menu",
       "documentation": "",
-      "enabled": true,
       "responses": [
         {
           "uuid": "34eb3510-2886-434a-acb8-4542d67739da",
@@ -58,11 +59,14 @@
           "default": true,
           "databucketID": "",
           "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
@@ -87,5 +91,6 @@
   "rootChildren": [
     { "type": "route", "uuid": "9eec44ab-48b1-454f-8cda-ddbc9aeaac0e" },
     { "type": "route", "uuid": "e929ed63-9c47-4ef0-9192-894de0a104ea" }
-  ]
+  ],
+  "callbacks": []
 }

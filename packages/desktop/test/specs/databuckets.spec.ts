@@ -1,8 +1,5 @@
 import { resolve } from 'path';
 import clipboard from '../libs/clipboard';
-import contextMenu, {
-  ContextMenuDatabucketActions
-} from '../libs/context-menu';
 import databuckets from '../libs/databuckets';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
@@ -12,7 +9,7 @@ import modals from '../libs/modals';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import settings from '../libs/settings';
-import utils from '../libs/utils';
+import utils, { DropdownMenuDatabucketActions } from '../libs/utils';
 
 describe('Databuckets navigation and deletion', () => {
   it('should open and start the environment', async () => {
@@ -24,21 +21,21 @@ describe('Databuckets navigation and deletion', () => {
 
   it('should navigate to the databuckets tab and verify the header count', async () => {
     await navigation.switchView('ENV_DATABUCKETS');
-    await databuckets.assertCount(4);
-    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 4');
+    await databuckets.assertCount(5);
+    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 5');
   });
 
   it('should delete the single databucket and verify the header count and message', async () => {
-    await databuckets.remove(4);
-    await databuckets.assertCount(3);
-    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 3');
+    await databuckets.remove(5);
+    await databuckets.assertCount(4);
+    await navigation.assertHeaderValue('ENV_DATABUCKETS', 'Data 4');
   });
 });
 
 describe('Databuckets addition', () => {
   it('should add a databucket', async () => {
     await databuckets.add();
-    await databuckets.assertCount(4);
+    await databuckets.assertCount(5);
     await databuckets.assertName('New data');
   });
 
@@ -46,13 +43,13 @@ describe('Databuckets addition', () => {
     await utils.waitForAutosave();
     const id = await file.getObjectPropertyInFile(
       './tmp/storage/databuckets.json',
-      'data.3.id'
+      'data.4.id'
     );
     expect(await databuckets.idElement.getText()).toContain(`Unique ID: ${id}`);
   });
 
   it('should copy the ID to the clipboard via the context menu', async () => {
-    await databuckets.copyID(4);
+    await databuckets.copyID(5);
     expect(await databuckets.idElement.getText()).toContain(
       await clipboard.read()
     );
@@ -68,7 +65,7 @@ describe('Databuckets edition', () => {
     await databuckets.assertName('My Databucket');
     await file.verifyObjectPropertyInFile(
       './tmp/storage/databuckets.json',
-      ['data.3.name'],
+      ['data.4.name'],
       ['My Databucket']
     );
   });
@@ -81,7 +78,7 @@ describe('Databuckets edition', () => {
     await databuckets.assertDocumentation('Documentation of the databucket');
     await file.verifyObjectPropertyInFile(
       './tmp/storage/databuckets.json',
-      ['data.3.documentation'],
+      ['data.4.documentation'],
       ['Documentation of the databucket']
     );
   });
@@ -89,22 +86,25 @@ describe('Databuckets edition', () => {
 
 describe('Databucket duplication', () => {
   it('should duplicate a databucket', async () => {
-    await databuckets.duplicate(4);
-    await databuckets.assertCount(5);
+    await databuckets.duplicate(5);
+    await databuckets.assertCount(6);
     await databuckets.assertName('My Databucket (copy)');
   });
 });
 
 describe('Databucket duplication to another envionment', () => {
   it('assert the context menu entry is disabled when there is only one env', async () => {
-    await contextMenu.assertEntryDisabled('databuckets', 1, 2);
+    await utils.dropdownMenuAssertDisabled(
+      '.databuckets-menu .nav-item:nth-child(1) .nav-link',
+      DropdownMenuDatabucketActions.DUPLICATE_TO_ENV
+    );
   });
 
   it("should open duplication modal and verify selected databucket's information on modal", async () => {
     await environments.open('basic-data.json');
     await environments.select(1);
     await navigation.switchView('ENV_DATABUCKETS');
-    await databuckets.duplicateToEnv(4);
+    await databuckets.duplicateToEnv(5);
 
     await modals.assertExists();
 
@@ -148,7 +148,7 @@ describe('Databucket filter', () => {
     await databuckets.select(2);
     await databuckets.setName('Still a nice databucket');
 
-    await databuckets.assertCount(5);
+    await databuckets.assertCount(6);
 
     await databuckets.setFilter('Best');
     await browser.pause(100);
@@ -157,12 +157,13 @@ describe('Databucket filter', () => {
   });
 
   it('should filter databuckets by name', async () => {
+    await utils.closeTooltip();
     await databuckets.select(1);
     await databuckets.setName('First databucket');
     await databuckets.select(2);
     await databuckets.setName('Second databucket');
 
-    await databuckets.assertCount(5);
+    await databuckets.assertCount(6);
 
     await databuckets.setFilter('Second');
     await browser.pause(100);
@@ -172,14 +173,14 @@ describe('Databucket filter', () => {
   it('should reset databuckets filter when clicking on the button Clear filter', async () => {
     await databuckets.clearFilter();
     await browser.pause(100);
-    await databuckets.assertCount(5);
+    await databuckets.assertCount(6);
   });
 
   it('should reset databuckets filter when adding a new databucket', async () => {
     await databuckets.setFilter('Second');
     await databuckets.add();
     await databuckets.assertFilter('');
-    await databuckets.remove(5);
+    await databuckets.remove(6);
   });
 
   it('should reset databuckets filter when switching env', async () => {
@@ -197,12 +198,11 @@ describe('Databucket filter', () => {
     await browser.pause(100);
     await databuckets.assertCount(1);
 
-    // menu element is still no. 2 because filtering only add a d-none class
-    await contextMenu.click(
-      'databuckets',
-      2,
-      ContextMenuDatabucketActions.DUPLICATE_TO_ENV
+    await utils.dropdownMenuClick(
+      `.databuckets-menu .nav-item:nth-child(${1}) .nav-link`,
+      DropdownMenuDatabucketActions.DUPLICATE_TO_ENV
     );
+
     await $(
       '.modal-content .modal-body .list-group .list-group-item:first-child'
     ).click();
@@ -216,8 +216,7 @@ describe('Databucket filter', () => {
     await navigation.switchView('ENV_DATABUCKETS');
 
     await databuckets.setFilter('Second');
-    await dialogs.save(resolve('./tmp/storage/dup2-databuckets.json'));
-    await environments.add();
+    await environments.add('dup2-databuckets');
     await navigation.switchView('ENV_DATABUCKETS');
 
     await databuckets.assertFilter('');
@@ -298,21 +297,6 @@ describe('Databuckets selection in responses', () => {
     });
   });
 
-  it('should generate databucket with req helper at first call (number) and always serve the same content', async () => {
-    await environments.stop();
-    await environments.start();
-    await http.assertCall({
-      method: 'GET',
-      path: '/databucketWithReqHelper?param=560',
-      testedResponse: { body: '560' }
-    });
-    await http.assertCall({
-      method: 'GET',
-      path: '/databucketWithReqHelper?param=testvalue2',
-      testedResponse: { body: '560' }
-    });
-  });
-
   it('should generate databucket with req helper at first call (boolean) and always serve the same content', async () => {
     await environments.stop();
     await environments.start();
@@ -355,6 +339,71 @@ describe('Databuckets selection in responses', () => {
       method: 'GET',
       path: '/databucketWithImbricatedReqHelper',
       testedResponse: { body: 'testtesttesttesttesttesttest' }
+    });
+  });
+
+  it('should generate databucket when referenced with either data or dataRaw helper and when imbricated in other helpers', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/multipleDatabucketsFromBody?param=paramvalue1&limit=4',
+      testedResponse: { body: 'paramvalue1testtesttesttesthello' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/multipleDatabucketsFromBody',
+      testedResponse: { body: 'paramvalue1testtesttesttesthello' }
+    });
+  });
+
+  it('should generate nested databucket (not referenced anywhere else) containing request helpers', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/nestedDatabuckets?param=1234',
+      testedResponse: { body: '{"id":"1234","otherBucketId":"1234"}' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/nestedDatabuckets',
+      testedResponse: { body: '{"id":"1234","otherBucketId":"1234"}' }
+    });
+  });
+
+  it('should be able to purge databuckets state with admin endpoint', async () => {
+    await environments.stop();
+    await environments.start();
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue1',
+      testedResponse: { body: 'testvalue1' }
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue2',
+      testedResponse: { body: 'testvalue1' }
+    });
+
+    await http.assertCall({
+      method: 'PURGE',
+      path: '/mockoon-admin/state'
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue3',
+      testedResponse: { body: 'testvalue3' }
+    });
+
+    await http.assertCall({
+      method: 'POST',
+      path: '/mockoon-admin/state/purge'
+    });
+    await http.assertCall({
+      method: 'GET',
+      path: '/databucketWithReqHelper?param=testvalue4',
+      testedResponse: { body: 'testvalue4' }
     });
   });
 });

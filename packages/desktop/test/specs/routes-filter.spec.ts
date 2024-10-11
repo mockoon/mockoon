@@ -1,8 +1,8 @@
 import { resolve } from 'path';
-import contextMenu, { ContextMenuRouteActions } from '../libs/context-menu';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import routes from '../libs/routes';
+import utils, { DropdownMenuRouteActions } from '../libs/utils';
 
 describe('Routes filter', () => {
   it('should open and start the environment', async () => {
@@ -23,37 +23,38 @@ describe('Routes filter', () => {
     await routes.setFilter('dolphins');
     await routes.filter.click();
     await browser.keys(['Escape']);
+    await browser.pause(500);
     await routes.assertFilter('');
   });
 
   it('should filter route by name dolphins', async () => {
     await routes.assertCount(3);
     await routes.setFilter('/dolphins');
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(1);
   });
 
-  it('should filter route by mulitple words (dolphin + post)', async () => {
+  it('should filter route by multiple words (dolphin + post)', async () => {
     await routes.clearFilter();
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(3);
     await routes.setFilter('dolphins post');
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(1);
   });
 
   it('should filter route by method', async () => {
     await routes.clearFilter();
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(3);
     await routes.setFilter('post');
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(1);
   });
 
   it('should reset routes filter when clicking on the button Clear filter', async () => {
     await routes.clearFilter();
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(3);
   });
 
@@ -73,13 +74,12 @@ describe('Routes filter', () => {
   it('should reset routes filter when duplicating route to selected environment', async () => {
     await environments.select(1);
     await routes.setFilter('/dolphins');
-    await browser.pause(100);
+    await browser.pause(500);
     await routes.assertCount(1);
     // menu item id is still 3, as filtering is using d-none class
-    await contextMenu.click(
-      'routes',
-      3,
-      ContextMenuRouteActions.DUPLICATE_TO_ENV
+    await utils.dropdownMenuClick(
+      `.routes-menu .nav-item:nth-child(${3}) .nav-link`,
+      DropdownMenuRouteActions.DUPLICATE_TO_ENV
     );
     await $(
       '.modal-content .modal-body .list-group .list-group-item:first-child'
@@ -89,8 +89,7 @@ describe('Routes filter', () => {
 
   it('should reset routes filter when adding a new environment', async () => {
     await routes.setFilter('/dolphins');
-    await dialogs.save(resolve('./tmp/storage/new-env1-test.json'));
-    await environments.add();
+    await environments.add('new-env1-test');
     await routes.assertFilter('');
   });
 

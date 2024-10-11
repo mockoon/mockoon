@@ -4,18 +4,16 @@
       <div class="headers-list">
         <div
           class="header-item"
-          *ngFor="
-            let header of headers.controls;
-            index as headerIndex;
-            first as headerFirst
-          "
-          [ngClass]="{ 'mt-1': !headerFirst }"
+          *ngFor="let header of headers.controls; index as headerIndex"
           [formGroupName]="headerIndex"
+          [ngClass]="{
+            'mb-2': headerIndex !== headers.controls.length - 1
+          }"
         >
           <div class="input-group" style="position: relative">
             <input
               type="text"
-              class="form-control mr-1"
+              class="form-control me-2"
               placeholder="name"
               formControlName="key"
               [ngbTypeahead]="headerNamesSearch"
@@ -27,29 +25,26 @@
               formControlName="value"
               [ngbTypeahead]="headerValuesSearch"
             />
-            <div
-              class="input-group-prepend"
+
+            <button
               *ngIf="deleteHeaderRequested$ | async as deleteHeaderRequested"
-            >
-              <button
-                type="button"
-                class="btn btn-link btn-icon"
-                [ngClass]="{
-                  'text-danger':
-                    deleteHeaderRequested.enabled === true &&
-                    deleteHeaderRequested.payload === headerIndex
-                }"
-                [ngbTooltip]="
+              type="button"
+              class="btn btn-link btn-icon"
+              [ngClass]="{
+                'text-danger':
                   deleteHeaderRequested.enabled === true &&
                   deleteHeaderRequested.payload === headerIndex
-                    ? 'Confirm'
-                    : 'Delete'
-                "
-                (click)="removeHeader(headerIndex)"
-              >
-                <app-svg icon="delete"></app-svg>
-              </button>
-            </div>
+              }"
+              [ngbTooltip]="
+                deleteHeaderRequested.enabled === true &&
+                deleteHeaderRequested.payload === headerIndex
+                  ? 'Confirm'
+                  : 'Delete'
+              "
+              (click)="removeHeader(headerIndex)"
+            >
+              <app-svg icon="delete"></app-svg>
+            </button>
           </div>
         </div>
       </div>
@@ -60,7 +55,7 @@
           class="btn btn-link btn-icon mt-2 add-header"
           (click)="addHeader()"
         >
-          <app-svg icon="add_box" class="text-success pr-2"></app-svg>
+          <app-svg icon="add_box" class="text-success pe-2"></app-svg>
           Add header
         </button>
         <button

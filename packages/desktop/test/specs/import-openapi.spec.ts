@@ -9,7 +9,8 @@ import utils from '../libs/utils';
 const dataSamplesPath = './test/data/res/import-openapi/samples/';
 const dataReferencesPath = './test/data/res/import-openapi/references/';
 
-const removeUUIDs = (environment: Environment) => {
+const cleanEnv = (environment: Environment) => {
+  environment.port = 3000;
   environment.uuid = '';
 
   environment.routes.forEach((route) => {
@@ -38,96 +39,96 @@ const testSuites = [
     name: 'Swagger v2 format',
     tests: [
       {
-        desc: 'Petstore',
+        desc: 'should import Petstore',
         filePath: dataSamplesPath + 'petstore-v2.yaml',
         referenceFilePath: dataReferencesPath + 'petstore-v2.json',
         environmentTitle: 'Swagger Petstore v2'
-      } /* ,
+      },
       {
-        desc: 'GitHub',
+        desc: 'should import GitHub',
         filePath: dataSamplesPath + 'github-v2.yaml',
         referenceFilePath: dataReferencesPath + 'github-v2.json',
         environmentTitle: 'GitHub'
       },
       {
-        desc: 'Giphy',
+        desc: 'should import Giphy',
         filePath: dataSamplesPath + 'giphy-v2.yaml',
         referenceFilePath: dataReferencesPath + 'giphy-v2.json',
         environmentTitle: 'Giphy'
       },
       {
-        desc: 'Slack',
+        desc: 'should import Slack',
         filePath: dataSamplesPath + 'slack-v2.yaml',
         referenceFilePath: dataReferencesPath + 'slack-v2.json',
         environmentTitle: 'Slack'
       },
       {
-        desc: 'Data.gov',
+        desc: 'should import Data.gov',
         filePath: dataSamplesPath + 'datagov-v2.yaml',
         referenceFilePath: dataReferencesPath + 'datagov-v2.json',
         environmentTitle: 'Regulations.gov'
       },
       {
-        desc: 'Custom schema',
+        desc: 'should import Custom schema',
         filePath: dataSamplesPath + 'custom-schema-v2.yaml',
         referenceFilePath: dataReferencesPath + 'custom-schema-v2.json',
         environmentTitle: 'Sample v2 schema'
       },
       {
-        desc: 'Custom schema with no API prefix',
+        desc: 'should import Custom schema with no API prefix',
         filePath: dataSamplesPath + 'custom-schema-no-prefix-v2.yaml',
         referenceFilePath:
           dataReferencesPath + 'custom-schema-no-prefix-v2.json',
         environmentTitle: 'Sample v2 schema'
-      } */
+      }
     ]
   },
   {
     name: 'OpenAPI v3 format',
     tests: [
-      /*  {
-        desc: 'Petstore',
+      {
+        desc: 'should import Petstore',
         filePath: dataSamplesPath + 'petstore-v3.yaml',
         referenceFilePath: dataReferencesPath + 'petstore-v3.json',
         environmentTitle: 'Swagger Petstore v3'
       },
       {
-        desc: 'Youtube Analytics',
+        desc: 'should import Youtube Analytics',
         filePath: dataSamplesPath + 'youtube-v3.yaml',
         referenceFilePath: dataReferencesPath + 'youtube-v3.json',
         environmentTitle: 'YouTube Analytics'
       },
       {
-        desc: 'Shutterstock',
+        desc: 'should import Shutterstock',
         filePath: dataSamplesPath + 'shutterstock-v3.yaml',
         referenceFilePath: dataReferencesPath + 'shutterstock-v3.json',
         environmentTitle: 'Shutterstock API Explorer'
       },
       {
-        desc: 'AWS Server migration',
+        desc: 'should import AWS Server migration',
         filePath: dataSamplesPath + 'aws-server-v3.yaml',
         referenceFilePath: dataReferencesPath + 'aws-server-v3.json',
         environmentTitle: 'AWS Server Migration Service'
       },
       {
-        desc: 'AWS Cloudfront',
+        desc: 'should import AWS Cloudfront',
         filePath: dataSamplesPath + 'aws-cloudfront-v3.yaml',
         referenceFilePath: dataReferencesPath + 'aws-cloudfront-v3.json',
         environmentTitle: 'Amazon CloudFront'
       },
       {
-        desc: 'Custom schema',
+        desc: 'should import Custom schema',
         filePath: dataSamplesPath + 'custom-schema-v3.yaml',
         referenceFilePath: dataReferencesPath + 'custom-schema-v3.json',
         environmentTitle: 'Sample v3 schema'
       },
       {
-        desc: 'Custom schema with no API prefix',
+        desc: 'should import Custom schema with no API prefix',
         filePath: dataSamplesPath + 'custom-schema-no-prefix-v3.yaml',
         referenceFilePath:
           dataReferencesPath + 'custom-schema-no-prefix-v3.json',
         environmentTitle: 'Sample v3 schema'
-      } */
+      }
     ]
   }
 ];
@@ -136,49 +137,46 @@ describe('Swagger/OpenAPI import', () => {
   testSuites.forEach((testSuite, suiteIndex) => {
     describe(testSuite.name, () => {
       testSuite.tests.forEach((testCase) => {
-        describe(testCase.desc, () => {
-          const filename = pathParse(testCase.filePath).name;
+        const filename = pathParse(testCase.filePath).name;
 
-          it('should import the file', async () => {
-            if (suiteIndex === 0) {
-              await browser.pause(1000);
-            }
+        it(testCase.desc, async () => {
+          if (suiteIndex === 0) {
+            await browser.pause(1000);
+          }
 
-            await dialogs.open(testCase.filePath);
-            await dialogs.save(resolve(`./tmp/storage/${filename}.json`));
+          await dialogs.open(testCase.filePath);
+          await dialogs.save(
+            resolve(`./tmp/storage/import-result/${filename}.json`)
+          );
 
-            await menu.click('MENU_IMPORT_OPENAPI_FILE');
+          await menu.click('MENU_IMPORT_OPENAPI_FILE');
 
-            await browser.pause(500);
+          await browser.pause(500);
 
-            await environments.assertActiveMenuEntryText(
-              testCase.environmentTitle
-            );
-          });
+          await environments.assertActiveMenuEntryText(
+            testCase.environmentTitle
+          );
+          await utils.waitForAutosave();
 
-          it('should match the reference file', async () => {
-            await utils.waitForAutosave();
+          const environmentFile = await fs.readFile(
+            `./tmp/storage/import-result/${filename}.json`
+          );
+          const referenceEnvironmentFile = await fs.readFile(
+            testCase.referenceFilePath
+          );
 
-            const environmentFile = await fs.readFile(
-              `./tmp/storage/${filename}.json`
-            );
-            const referenceEnvironmentFile = await fs.readFile(
-              testCase.referenceFilePath
-            );
+          const environment: Environment = JSON.parse(
+            environmentFile.toString()
+          );
+          const referenceEnvironment: Environment = JSON.parse(
+            referenceEnvironmentFile.toString()
+          );
+          cleanEnv(environment);
+          cleanEnv(referenceEnvironment);
 
-            const environment: Environment = JSON.parse(
-              environmentFile.toString()
-            );
-            const referenceEnvironment: Environment = JSON.parse(
-              referenceEnvironmentFile.toString()
-            );
-            removeUUIDs(environment);
-            removeUUIDs(referenceEnvironment);
+          expect(environment).toEqual(referenceEnvironment);
 
-            expect(environment).toEqual(referenceEnvironment);
-
-            await environments.close(1);
-          });
+          await environments.close(1);
         });
       });
     });

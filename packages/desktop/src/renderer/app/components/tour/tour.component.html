@@ -1,0 +1,60 @@
+<ng-template #popover let-data="data" let-total="total" let-current="current">
+  <div class="">
+    <div class="d-flex mb-2">
+      <h5 class="m-0">{{ data.title }}</h5>
+      <button
+        type="button"
+        aria-label="Close"
+        class="btn-close ms-auto"
+        (click)="close()"
+      ></button>
+    </div>
+
+    <div [innerHTML]="data.content"></div>
+    <div *ngFor="let link of data.links" class="mt-2">
+      <a href="{{ link.url }}" target="_blank">{{
+        link.text ? link.text : 'Learn more'
+      }}</a>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mt-4">
+      <button
+        class="btn btn-sm btn-secondary"
+        [disabled]="current === 1"
+        (click)="previous()"
+      >
+        <app-svg icon="chevron_left"></app-svg>
+        Prev
+      </button>
+      <div class="">{{ current }} / {{ total }}</div>
+      <button
+        *ngIf="current < total"
+        class="btn btn-sm btn-primary"
+        (click)="next()"
+      >
+        Next
+        <app-svg icon="chevron_right"></app-svg>
+      </button>
+      <button
+        *ngIf="current === total"
+        class="btn btn-sm btn-primary"
+        (click)="close()"
+      >
+        End
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="{ backdropSizes: backdropSizes$ | async } as data">
+  <div
+    *ngFor="let backdropSize of data.backdropSizes"
+    class="tour-backdrop"
+    [ngStyle]="{
+      width: backdropSize.width + 'px',
+      height: backdropSize.height + 'px',
+      top: backdropSize.top + 'px',
+      left: backdropSize.left + 'px'
+    }"
+  ></div>
+</ng-container>

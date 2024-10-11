@@ -7,9 +7,9 @@ import {
   Renderer2
 } from '@angular/core';
 import { filter, first } from 'rxjs/operators';
-import { SettingsProperties } from 'src/renderer/app/models/settings.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { Settings } from 'src/shared/models/settings.model';
 
 export type ColumnType = 'main' | 'secondary';
 
@@ -34,15 +34,15 @@ export class ResizeColumnDirective implements AfterViewInit {
   // Event removers for mousemove / mouseup events to body
   private mouseMoveRemover: () => any;
   private mouseUpRemover: () => any;
-
-  private pressed: boolean;
+  private dragging: boolean;
   // The x point where the mousedown event occurred
   private startX: number;
-  private startWidth: number;
   private settingProperties: { [key in ColumnType]: string } = {
     main: 'mainMenuSize',
     secondary: 'secondaryMenuSize'
   };
+  private currentWidth: number;
+  private canSaveSettings = false;
 
   constructor(
     private elementRef: ElementRef,
@@ -53,17 +53,18 @@ export class ResizeColumnDirective implements AfterViewInit {
 
   @HostListener('mousedown', ['$event'])
   public onMouseDown(event) {
-    this.pressed = true;
+    this.dragging = true;
+    this.elementRef.nativeElement.classList.add('dragging');
     this.startX = event.x;
-    this.startWidth = this.elementRef.nativeElement.parentElement.offsetWidth;
 
-    this.initResizableColumns();
+    this.registerListeners();
   }
 
   // Listen on widow size changes and apply max width
   @HostListener('window:resize', ['$event'])
-  public onWindowResize(event) {
-    this.applyLimits(this.elementRef.nativeElement.parentElement.offsetWidth);
+  public onWindowResize() {
+    this.resize();
+    this.saveSettings();
   }
 
   ngAfterViewInit() {
@@ -75,12 +76,10 @@ export class ResizeColumnDirective implements AfterViewInit {
         first()
       )
       .subscribe((settings) => {
-        const width = settings[this.settingProperties[this.type]];
+        this.currentWidth = settings[this.settingProperties[this.type]];
 
-        if (typeof width !== 'undefined') {
-          // finally update width if needed
-          this.applyLimits(width);
-        }
+        this.resize();
+        this.canSaveSettings = true;
       });
   }
 
@@ -89,7 +88,7 @@ export class ResizeColumnDirective implements AfterViewInit {
    * - mousemove: mark as pressed, calc and apply the new width
    * - mouseup: mark as non-pressed
    */
-  private initResizableColumns() {
+  private registerListeners() {
     this.mouseMoveRemover = this.renderer.listen(
       'body',
       'mousemove',
@@ -103,28 +102,32 @@ export class ResizeColumnDirective implements AfterViewInit {
   }
 
   private handleMouseUp() {
-    if (this.pressed) {
-      this.pressed = false;
+    if (this.dragging) {
+      this.dragging = false;
+      this.elementRef.nativeElement.classList.remove('dragging');
     }
-    // Remove event listeners
+
     this.mouseMoveRemover();
     this.mouseUpRemover();
+
+    this.saveSettings();
   }
 
   private handleMouseMoveEvent(event) {
-    if (this.pressed) {
-      // Calc now width
-      const width = this.startWidth + (event.x - this.startX);
-      this.applyLimits(width);
+    if (this.dragging) {
+      this.currentWidth = this.currentWidth + (event.x - this.startX);
+      this.resize();
+
+      this.startX = event.x;
     }
   }
 
   /**
-   * Apply limits width to parent element.
+   * Resizes the parent element to the given width, applying limits if needed
    *
    * @param width
    */
-  private applyLimits(width: number) {
+  private resize() {
     // Calc max limit and apply them, if needed
     let maxWidth = document.body.offsetWidth * this.maxWidthFactor;
 
@@ -133,34 +136,32 @@ export class ResizeColumnDirective implements AfterViewInit {
       maxWidth = this.minWidth;
     }
 
-    // Apply limits if needed
-    if (width < this.minWidth) {
-      width = this.minWidth;
-    } else if (width > maxWidth) {
-      width = maxWidth;
+    if (this.currentWidth < this.minWidth) {
+      this.currentWidth = this.minWidth;
+    } else if (this.currentWidth > maxWidth) {
+      this.currentWidth = maxWidth;
     }
 
-    // Apply the new width
-    this.applyWidthCss(width);
-    this.saveSettings(width);
+    this.currentWidth = Math.floor(this.currentWidth);
+
+    const element = this.elementRef.nativeElement.parentElement;
+    element.style.width = this.currentWidth + 'px';
+    element.style.maxWidth = this.currentWidth + 'px';
+    element.style.minWidth = this.currentWidth + 'px';
   }
 
-  private saveSettings(width: number) {
-    const newSettings: SettingsProperties = {};
-    newSettings[this.settingProperties[this.type]] = width;
+  private saveSettings() {
+    if (
+      !this.canSaveSettings ||
+      this.store.get('settings')?.[this.settingProperties[this.type]] ===
+        this.currentWidth
+    ) {
+      return;
+    }
+
+    const newSettings: Partial<Settings> = {};
+    newSettings[this.settingProperties[this.type]] = this.currentWidth;
 
     this.settingsService.updateSettings(newSettings);
-  }
-
-  /**
-   * Apply the new width to the element parameter.
-   *
-   * @param width
-   */
-  private applyWidthCss(width: number) {
-    const element = this.elementRef.nativeElement.parentElement;
-    element.style.width = width + 'px';
-    element.style.maxWidth = width + 'px';
-    element.style.minWidth = width + 'px';
   }
 }

@@ -3,15 +3,15 @@ import {
   Folder,
   FolderChild,
   GetRouteResponseContentType,
+  ReorderActionType,
   Route
 } from '@mockoon/commons';
 import { helpersAutocompletions } from 'src/renderer/app/constants/autocomplete.constant';
-import { DropActionType } from 'src/renderer/app/enums/ui.enum';
 import {
   GetEditorModeFromContentType,
   InsertAtIndex,
-  isRouteDuplicates,
-  RemoveAtIndex
+  RemoveAtIndex,
+  isRouteDuplicates
 } from 'src/renderer/app/libs/utils.lib';
 import {
   DuplicatedRoutesTypes,
@@ -46,26 +46,24 @@ const listDuplicatedRouteUUIDs = (environment: Environment): Set<string> => {
  *
  * @param state
  * @param condition
- * @param targetEnvironmentUUID
+ * @param targetEnvironmentUuid
  * @returns
  */
 export const markEnvStatusRestart = (
   state: StoreType,
-  condition = true,
-  targetEnvironmentUUID?: string
+  targetEnvironmentUuid: string,
+  condition = true
 ) => {
-  targetEnvironmentUUID = targetEnvironmentUUID
-    ? targetEnvironmentUUID
-    : state.activeEnvironmentUUID;
-
   const activeEnvironmentStatus =
-    state.environmentsStatus[targetEnvironmentUUID];
+    state.environmentsStatus[targetEnvironmentUuid];
 
-  const needRestart = activeEnvironmentStatus.running && condition;
+  const needRestart =
+    activeEnvironmentStatus.needRestart ||
+    (activeEnvironmentStatus.running && condition);
 
   return {
     ...state.environmentsStatus,
-    [targetEnvironmentUUID]: {
+    [targetEnvironmentUuid]: {
       ...activeEnvironmentStatus,
       needRestart
     }
@@ -179,70 +177,7 @@ export const updateEditorAutocomplete = (state: StoreType) => {
 };
 
 /**
- * Reorganize a list of items (string or objects with UUID) by moving an item before or after a target
- * Create a copy of the array.
- *
- * @param items
- * @param actionType
- * @param sourceUUID
- * @param targetUUID
- * @returns
- */
-export const moveItemAtTarget = <T extends { uuid: string } | string>(
-  items: T[],
-  actionType: DropActionType,
-  sourceUUID: string,
-  targetUUID: string
-): T[] => {
-  const newItems = [...items];
-  const sourceIndex = newItems.findIndex(
-    (arrayItem) =>
-      (typeof arrayItem === 'string' ? arrayItem : arrayItem.uuid) ===
-      sourceUUID
-  );
-  const itemToMove = RemoveAtIndex(newItems, sourceIndex);
-  let targetIndex = newItems.findIndex(
-    (arrayitem) =>
-      (typeof arrayitem === 'string' ? arrayitem : arrayitem.uuid) ===
-      targetUUID
-  );
-  targetIndex =
-    actionType === DropActionType.AFTER ? targetIndex + 1 : targetIndex;
-  InsertAtIndex(newItems, targetIndex, itemToMove);
-
-  return newItems;
-};
-
-/**
- * Insert an item in an array before or after the target's index
- * Create a copy of the array.
- *
- * @param items
- * @param itemToInsert
- * @param actionType
- * @param targetUUID
- * @returns
- */
-export const insertItemAtTarget = <T extends { uuid: string }>(
-  items: T[],
-  actionType: DropActionType,
-  itemToInsert: T,
-  targetUUID: string
-) => {
-  const newItems = [...items];
-  const targetIndex = newItems.findIndex((item) => item.uuid === targetUUID);
-
-  newItems.splice(
-    actionType === DropActionType.BEFORE ? targetIndex : targetIndex + 1,
-    0,
-    itemToInsert
-  );
-
-  return newItems;
-};
-
-/**
- * Reorganize a list of items by moving an item before or after a target
+ * Reorder a list of items by moving an item before or after a target
  * Create a copy of the array.
  *
  * @param items
@@ -252,7 +187,7 @@ export const insertItemAtTarget = <T extends { uuid: string }>(
  */
 export const moveItemToTargetIndex = <T>(
   items: T[],
-  actionType: DropActionType,
+  actionType: ReorderActionType,
   sourceIndex: number,
   targetIndex: number
 ): T[] => {
@@ -262,7 +197,9 @@ export const moveItemToTargetIndex = <T>(
   const newTargetIndex = newItems.findIndex((item) => item === targetItem);
   InsertAtIndex(
     newItems,
-    actionType === DropActionType.BEFORE ? newTargetIndex : newTargetIndex + 1,
+    actionType === ReorderActionType.BEFORE
+      ? newTargetIndex
+      : newTargetIndex + 1,
     itemToMove
   );
 
@@ -386,4 +323,40 @@ export const findRouteFolderHierarchy = (
   }
 
   return [];
+};
+
+/**
+ * Check that we are not switching from a regular response to a CRUD
+ * operation response where some tabs are not available.
+ * If so, switch to the RESPONSE tab.
+ *
+ * @param state
+ * @param routeResponseUuid
+ * @returns
+ */
+export const responseTabForcedNavigation = (
+  state: StoreType,
+  routeResponseUuid: string
+) => {
+  let newActiveTab = state.activeTab;
+
+  const activeEnvironment = state.environments.find(
+    (environment) => environment.uuid === state.activeEnvironmentUUID
+  );
+  const activeRoute = activeEnvironment.routes.find(
+    (route) => route.uuid === state.activeRouteUUID
+  );
+  const activatedRouteResponse = activeRoute.responses.find(
+    (response) => response.uuid === routeResponseUuid
+  );
+
+  if (
+    activeRoute.type === 'crud' &&
+    activatedRouteResponse.default &&
+    !['RESPONSE', 'HEADERS'].includes(state.activeTab)
+  ) {
+    newActiveTab = 'RESPONSE';
+  }
+
+  return newActiveTab;
 };

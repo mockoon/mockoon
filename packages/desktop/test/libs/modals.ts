@@ -1,4 +1,3 @@
-import { ChainablePromiseElement } from 'webdriverio';
 import utils from '../libs/utils';
 
 class Modals {
@@ -7,22 +6,22 @@ class Modals {
   private envHostnameSelector =
     '.modal-content .modal-body .list-group .list-group-item:first-child div:last-of-type';
 
-  public get content(): ChainablePromiseElement<WebdriverIO.Element> {
+  public get content() {
     return $('.modal-content');
   }
 
-  private get confirmBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get confirmBtn() {
     return $('.modal-dialog .modal-footer button:first-of-type');
   }
-  private get cancelBtn(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get cancelBtn() {
     return $('.modal-dialog .modal-footer button:last-of-type');
   }
 
-  private get closeBtn(): ChainablePromiseElement<WebdriverIO.Element> {
-    return $('.modal-dialog .modal-footer button');
+  private get closeBtn() {
+    return $('.modal-dialog .modal-footer button.modal-close');
   }
 
-  private get title(): ChainablePromiseElement<WebdriverIO.Element> {
+  private get title() {
     return $('.modal-title');
   }
 

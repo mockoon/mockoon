@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
 import { HelperOptions } from 'handlebars';
-import { fromSafeString, IsEmpty } from '../utils';
+import { localFaker as faker, safeFakerReturn } from '../../libs/faker';
+import { IsEmpty, fromSafeString, objectFromSafeString } from '../utils';
 
 export const FakerWrapper = {
   faker: function (...args: any[]) {
@@ -16,7 +16,7 @@ export const FakerWrapper = {
 
     if (typeof fakerName !== 'string') {
       throw new Error(
-        `Faker method name must be a string (valid: "address.zipCode", "date.past", etc) line ${
+        `Faker method name must be a string (valid: "location.zipCode", "date.past", etc) line ${
           hbsOptions.loc && hbsOptions.loc.start && hbsOptions.loc.start.line
         }`
       );
@@ -38,7 +38,7 @@ export const FakerWrapper = {
       }
 
       throw new Error(
-        `${errorMessage} (valid: "address.zipCode", "date.past", etc) line ${
+        `${errorMessage} (valid: "location.zipCode", "date.past", etc) line ${
           hbsOptions.loc &&
           hbsOptions.loc &&
           hbsOptions.loc.start &&
@@ -48,13 +48,26 @@ export const FakerWrapper = {
     }
 
     const fakerFunction = faker[fakerPrimaryMethod][fakerSecondaryMethod];
-    const fakerArgs = args.slice(1, args.length - 1);
+    const fakerArgsRaw = args.slice(1, args.length - 1);
+    const fakerArgs: any[] = [];
+    fakerArgsRaw.forEach((arg) => {
+      if (typeof arg === 'string' && arg.startsWith('{') && arg.endsWith('}')) {
+        const objectArg = objectFromSafeString(arg);
+        if (objectArg === null) {
+          throw new Error(`Error in parsing object argument ${arg}`);
+        } else {
+          fakerArgs.push(objectArg);
+        }
+      } else {
+        fakerArgs.push(arg);
+      }
+    });
 
     // push hbs named parameters (https://handlebarsjs.com/guide/block-helpers.html#hash-arguments) to Faker
     if (!IsEmpty(hbsOptions.hash)) {
       fakerArgs.push(hbsOptions.hash);
     }
 
-    return fakerFunction(...fakerArgs);
+    return safeFakerReturn(() => fakerFunction(...fakerArgs));
   }
 };

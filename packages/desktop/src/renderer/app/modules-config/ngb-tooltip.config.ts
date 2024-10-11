@@ -1,11 +1,10 @@
-import { NgbConfig, NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 
-export const NgbTooltipConfigFactory = (
-  ngbConfig: NgbConfig
-): NgbTooltipConfig => {
-  const ngbTooltipConfig = new NgbTooltipConfig(ngbConfig);
+export const NgbTooltipConfigFactory = (): NgbTooltipConfig => {
+  const ngbTooltipConfig = new NgbTooltipConfig();
 
   ngbTooltipConfig.container = 'body';
+  ngbTooltipConfig.triggers = 'hover';
 
   return ngbTooltipConfig;
 };

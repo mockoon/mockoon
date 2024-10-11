@@ -7,6 +7,7 @@ import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import settings from '../libs/settings';
+import utils from '../libs/utils';
 
 const endpointCall: HttpCall = {
   description: 'Call GET /prefix/endpoint/1',
@@ -79,7 +80,7 @@ describe('Environment logs', () => {
           2,
           1
         );
-        await environmentsLogs.assertLogItem('Method: GET', 'request', 2, 2);
+        await environmentsLogs.assertLogItem('Method:  GET', 'request', 2, 2);
         await environmentsLogs.assertLogItem(
           'Caught by route: /prefix/endpoint/:param1',
           'request',
@@ -88,7 +89,7 @@ describe('Environment logs', () => {
         );
 
         await environmentsLogs.assertLogItem(
-          'Connection: close',
+          'Connection: keep-alive',
           'request',
           4,
           1
@@ -138,13 +139,13 @@ describe('Environment logs', () => {
           8,
           6
         );
-        await environmentsLogs.assertLogItem(' requestbody ', 'request', 10, 1);
+        await environmentsLogs.assertLogBody('requestbody', 'request');
       });
 
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
         await environmentsLogs.assertLogItem(
-          'Status: 200 - OK',
+          'Status: 200  OK',
           'response',
           2,
           1
@@ -173,12 +174,7 @@ describe('Environment logs', () => {
           4,
           4
         );
-        await environmentsLogs.assertLogItem(
-          ' responsebody ',
-          'response',
-          6,
-          1
-        );
+        await environmentsLogs.assertLogBody('responsebody', 'response');
       });
     });
 
@@ -200,7 +196,7 @@ describe('Environment logs', () => {
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
         await environmentsLogs.assertLogItem(
-          'Status: 404 - Not Found',
+          'Status: 404  Not Found',
           'response',
           2,
           1
@@ -242,14 +238,13 @@ describe('Environment logs', () => {
         await routes.assertCount(2);
         await navigation.switchView('ENV_LOGS');
         await environmentsLogs.clickMockButton(1);
-        // close tooltips
-        await $('body').click({ x: 0, y: 0 });
+        await utils.closeTooltip();
         await navigation.switchView('ENV_ROUTES');
         await routes.assertCount(3);
       });
 
       it('should removed the prefix after mocking', async () => {
-        await routes.assertActiveMenuEntryText('GET\n/test');
+        await routes.assertActiveMenuEntryText('/test\nGET');
       });
     });
 
@@ -273,7 +268,7 @@ describe('Environment logs', () => {
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
         await environmentsLogs.assertLogItem(
-          'Status: 200 - OK',
+          'Status: 200  OK',
           'response',
           2,
           1
@@ -339,13 +334,8 @@ describe('Environment logs', () => {
     it('should assert presence on log page and verify selected entry', async () => {
       await navigation.switchView('ENV_LOGS');
       await environmentsLogs.assertActiveLogEntry(2);
-      await environmentsLogs.assertLogItem(
-        'Status: 200 - OK',
-        'response',
-        2,
-        1
-      );
-      await environmentsLogs.assertLogItem(' responsebody ', 'response', 6, 1);
+      await environmentsLogs.assertLogItem('Status: 200  OK', 'response', 2, 1);
+      await environmentsLogs.assertLogBody('responsebody', 'response');
     });
   });
 
@@ -377,22 +367,6 @@ describe('Environment logs', () => {
           2,
           1
         );
-      });
-
-      it('should open request body in editor', async () => {
-        await environmentsLogs.clickOpenBodyInEditorButton('request');
-        await browser.pause(100);
-        await modals.assertExists();
-        await modals.close();
-      });
-
-      it('should open response body in editor', async () => {
-        await environmentsLogs.switchTab('RESPONSE');
-
-        await environmentsLogs.clickOpenBodyInEditorButton('response');
-        await browser.pause(100);
-        await modals.assertExists();
-        await modals.close();
       });
 
       it('should clear logs, verify message presence and counter absence', async () => {

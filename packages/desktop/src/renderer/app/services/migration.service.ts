@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Environment, HighestMigrationId, Migrations } from '@mockoon/commons';
+import {
+  Environment,
+  HighestMigrationId,
+  Migrations,
+  PostMigrationAction,
+  PostMigrationActions
+} from '@mockoon/commons';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 
@@ -25,8 +31,12 @@ export class MigrationService extends Logger {
 
       Migrations.forEach((migration) => {
         if (migration.id > migrationStartId) {
-          migration.migrationFunction(environment);
+          const postMigrationAction = migration.migrationFunction(environment);
           environment.lastMigration = migration.id;
+
+          if (postMigrationAction) {
+            this.postMigrationAction(environment, postMigrationAction);
+          }
         }
       });
     }
@@ -35,8 +45,41 @@ export class MigrationService extends Logger {
   }
 
   /**
-   * Check if an environment needs to be migrated depending on its own lastMigration,
-   * and settings' old lastMigration param.
+   * Execute a post migration action
+   *
+   * @param environment
+   * @param postMigrationAction
+   */
+  private postMigrationAction(
+    environment: Environment,
+    postMigrationAction: PostMigrationAction
+  ) {
+    switch (postMigrationAction.type) {
+      case PostMigrationActions.DISABLED_ROUTES_MIGRATION:
+        if (postMigrationAction.disabledRoutesUuids.length > 0) {
+          this.settingsService.updateSettings({
+            disabledRoutes: {
+              ...this.settingsService.getSettings().disabledRoutes,
+              [environment.uuid]: postMigrationAction.disabledRoutesUuids
+            }
+          });
+        }
+        break;
+      case PostMigrationActions.COLLAPSED_FOLDERS_MIGRATION:
+        if (postMigrationAction.collapsedFoldersUuids.length > 0) {
+          this.settingsService.updateSettings({
+            collapsedFolders: {
+              ...this.settingsService.getSettings().collapsedFolders,
+              [environment.uuid]: postMigrationAction.collapsedFoldersUuids
+            }
+          });
+        }
+        break;
+    }
+  }
+
+  /**
+   * Check if an environment needs to be migrated depending on its own lastMigration property
    * Returns at which migration id to start, or -1 if no migration is needed
    */
   private getMigrationStartId(environment: Environment): number {
@@ -45,11 +88,6 @@ export class MigrationService extends Logger {
       environment.lastMigration < HighestMigrationId
     ) {
       return environment.lastMigration;
-    } else if (
-      environment.lastMigration === undefined &&
-      HighestMigrationId > this.settingsService.oldLastMigration
-    ) {
-      return this.settingsService.oldLastMigration;
     }
 
     return -1;

@@ -1,16 +1,3 @@
-<app-context-menu
-  (itemClicked)="contextMenuItemClicked($event)"
-></app-context-menu>
-
-<app-welcome-modal></app-welcome-modal>
-<app-auth-modal></app-auth-modal>
-<app-templates-modal #templatesModal></app-templates-modal>
-<app-settings-modal #settingsModal></app-settings-modal>
-<app-changelog-modal #changelogModal></app-changelog-modal>
-<app-editor-modal></app-editor-modal>
-<app-confirm-modal></app-confirm-modal>
-<app-duplicate-modal></app-duplicate-modal>
-
 <div class="toasts-container">
   <ngb-toast
     *ngFor="let toast of toasts$ | async"
@@ -31,7 +18,7 @@
     <app-environments-menu class="h-100"></app-environments-menu>
 
     <!-- Right "column" = header + routes menu + main-content -->
-    <div class="d-flex flex-column flex-fill h-100">
+    <div class="d-flex flex-column flex-fill h-100 position-relative">
       <!-- Header: env name +start / env port + prefix -->
       <app-header></app-header>
 
@@ -52,6 +39,12 @@
             *ngSwitchCase="'ENV_DATABUCKETS'"
             class="h-100"
           ></app-environment-databuckets>
+
+          <app-environment-callbacks
+            *ngSwitchCase="'ENV_CALLBACKS'"
+            class="h-100"
+          >
+          </app-environment-callbacks>
 
           <app-environment-headers
             *ngSwitchCase="'ENV_HEADERS'"
@@ -74,6 +67,8 @@
           ></app-environment-settings>
         </ng-container>
       </div>
+
+      <!-- <app-cloud-warning></app-cloud-warning> -->
     </div>
   </div>
 
@@ -85,3 +80,5 @@
     <p class="message mt-4">No environment opened</p>
   </div>
 </ng-template>
+
+<app-tour></app-tour>

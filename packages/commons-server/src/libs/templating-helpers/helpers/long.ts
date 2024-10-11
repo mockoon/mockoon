@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
+import { localFaker as faker } from '../../faker';
 
 const long = function () {
-  return faker.address.longitude();
+  return faker.location.longitude();
 };
 export default long;

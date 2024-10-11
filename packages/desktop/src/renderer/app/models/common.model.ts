@@ -13,7 +13,7 @@ export type DropdownItem<T = string | number> = {
 export type DropdownItems<T = string | number> = DropdownItem<T>[];
 
 export type ToggleItem = {
-  value?: number | string;
+  value?: number | string | boolean;
   label?: string;
   icon?: string;
   tooltip?: string;

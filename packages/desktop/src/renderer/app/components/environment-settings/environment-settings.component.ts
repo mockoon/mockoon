@@ -4,9 +4,9 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Environment, EnvironmentDefault } from '@mockoon/commons';
-import { merge, Observable, Subject } from 'rxjs';
+import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
@@ -20,8 +20,8 @@ import { Store } from 'src/renderer/app/stores/store';
 })
 export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
-  public activeEnvironmentForm: FormGroup;
-  public tlsOptionsFormGroup: FormGroup;
+  public activeEnvironmentForm: UntypedFormGroup;
+  public tlsOptionsFormGroup: UntypedFormGroup;
   public Infinity = Infinity;
   public certTypes: ToggleItems = [
     {
@@ -36,7 +36,7 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private environmentsService: EnvironmentsService,
     private store: Store,
     private dialogsService: DialogsService
@@ -61,11 +61,11 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
     this.dialogsService
       .showOpenDialog('Choose a file', null, false)
       .pipe(
-        tap((filePath) => {
-          if (filePath) {
+        tap((filePaths) => {
+          if (filePaths[0]) {
             this.activeEnvironmentForm
               .get(['tlsOptions', target])
-              .setValue(filePath);
+              .setValue(filePaths[0]);
           }
         })
       )

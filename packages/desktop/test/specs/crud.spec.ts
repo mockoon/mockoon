@@ -12,20 +12,24 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd","name":"john"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - getById',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'GET',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john"}',
+        body: '{"id":"abcd","name":"john"}',
         headers: { 'content-type': 'application/json' }
       }
     }
@@ -33,7 +37,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - getById: wrong id',
-      path: '/users/123',
+      path: '/users/abcde',
       method: 'GET',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -62,8 +66,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9\-]{36}"\}\]/,
-        headers: { 'content-type': 'application/json' }
+        body: /\[\{"id":"abcd","name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -87,8 +95,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9\-]{36}"\}\]/,
-        headers: { 'content-type': 'application/json' }
+        body: /\[\{"id":"abcd","name":"john"\},\{"id":"[a-z0-9-]{36}"\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -101,7 +113,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 201,
-        body: /\{"id":"[a-z0-9-]{36}","test":"hello"\}/,
+        body: /\{"test":"hello","id":"[a-z0-9-]{36}"\}/,
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -112,8 +124,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: /\[\{"id":1,"name":"john"\},\{"id":"[a-z0-9\-]{36}","test":"hello"\}\]/,
-        headers: { 'content-type': 'application/json' }
+        body: /\[\{"id":"abcd","name":"john"\},\{"test":"hello","id":"[a-z0-9-]{36}"\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -137,8 +153,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},{"id":"idtest","test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd","name":"john"},{"id":"idtest","test":"hello"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -162,8 +182,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},"teststring"]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd","name":"john"},"teststring"]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
@@ -187,15 +211,19 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},"test,string"]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd","name":"john"},"test,string"]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update: incorrect id',
-      path: '/users/123',
+      path: '/users/abcde',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -208,12 +236,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update: no body',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '{"id":1}',
+        body: '{"id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -224,21 +252,25 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update: empty object',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: {},
       testedResponse: {
         status: 200,
-        body: '{"id":1}',
+        body: '{"id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -249,21 +281,25 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update: object, new prop, no id',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: { test: 'hello' },
       testedResponse: {
         status: 200,
-        body: '{"id":1,"test":"hello"}',
+        body: '{"test":"hello","id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -274,21 +310,25 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"test":"hello","id":"abcd"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update: object, new prop, id',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
-      body: { id: '123', test: 'hello' },
+      body: { id: 'efgh', test: 'hello' },
       testedResponse: {
         status: 200,
-        body: '{"id":"123","test":"hello"}',
+        body: '{"id":"efgh","test":"hello"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -299,21 +339,25 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":"123","test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"efgh","test":"hello"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update: object, string',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: 'teststring',
       testedResponse: {
         status: 200,
-        body: '{"id":1}',
+        body: '{"id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -324,21 +368,25 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update: object, broken json',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
       body: 'test,string',
       testedResponse: {
         status: 200,
-        body: '{"id":1}',
+        body: '{"id":"abcd"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -349,8 +397,12 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
@@ -360,10 +412,10 @@ const jsonArrayTestGroups: HttpCall[][] = [
       path: '/users',
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
-      body: [{ id: '123', test: 'hello' }],
+      body: [{ id: 'efgh', test: 'hello' }],
       testedResponse: {
         status: 200,
-        body: '[{"id":"123","test":"hello"}]',
+        body: '[{"id":"efgh","test":"hello"}]',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -374,15 +426,19 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":"123","test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"efgh","test":"hello"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update (merge): incorrect id',
-      path: '/users/123',
+      path: '/users/abcde',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -395,13 +451,13 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - update (merge): empty object body',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: {},
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john"}',
+        body: '{"id":"abcd","name":"john"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -412,21 +468,25 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd","name":"john"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update (merge): object body',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: { test: 'hello' },
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john","test":"hello"}',
+        body: '{"id":"abcd","name":"john","test":"hello"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -437,21 +497,25 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john","test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd","name":"john","test":"hello"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update (merge): string',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: 'teststring',
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john"}',
+        body: '{"id":"abcd","name":"john"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -462,21 +526,25 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd","name":"john"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - update (merge): broken json',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: 'test,string',
       testedResponse: {
         status: 200,
-        body: '{"id":1,"name":"john"}',
+        body: '{"id":"abcd","name":"john"}',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -487,8 +555,164 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"}]',
+        body: '[{"id":"abcd","name":"john"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '1',
+          'x-filtered-count': '1'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Users bucket - numeric ids - create: object without id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { test: 'hello' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"test":"hello","id":6\}/,
         headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - get: after create',
+      path: '/users-numeric',
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200,
+        body: /\[\{"id":5,"name":"peter"\},\{"test":"hello","id":6\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - create: object with string id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { id: 'newid', test: 'hello2' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"id":\"newid\","test":"hello2"\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - get: after create',
+      path: '/users-numeric',
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200,
+        body: /\[\{"id":5,"name":"peter"\},\{"test":"hello","id":6\},\{"id":"newid","test":"hello2"\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '3',
+          'x-filtered-count': '3'
+        }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - create: object without id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { test: 'hello3' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"test":"hello3","id":7\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - delete item 1',
+      path: '/users-numeric/5',
+      method: 'DELETE',
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - delete item 2',
+      path: '/users-numeric/6',
+      method: 'DELETE',
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - delete item 3',
+      path: '/users-numeric/7',
+      method: 'DELETE',
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - delete item 4',
+      path: '/users-numeric/newid',
+      method: 'DELETE',
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - create: object without id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { test: 'hello1' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"test":"hello1","id":"[a-z0-9-]{36}"\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description:
+        'Users bucket - numeric ids - create: object with numeric id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { id: 3, test: 'hello2' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"id":3,"test":"hello2"\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - create: object without id',
+      path: '/users-numeric',
+      method: 'POST',
+      body: { test: 'hello3' },
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: /\{"test":"hello3","id":4\}/,
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Users bucket - numeric ids - get: after create',
+      path: '/users-numeric',
+      method: 'GET',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200,
+        body: /\[\{"test":"hello1","id":"[a-z0-9-]{36}"\},\{"id":3,"test":"hello2"\},\{"test":"hello3","id":4\}\]/,
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '3',
+          'x-filtered-count': '3'
+        }
       }
     }
   ],
@@ -498,10 +722,10 @@ const jsonArrayTestGroups: HttpCall[][] = [
       path: '/users',
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
-      body: [{ id: 2, test: 'hello' }],
+      body: [{ id: 'efgh', test: 'hello' }],
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},{"id":2,"test":"hello"}]',
+        body: '[{"id":"abcd","name":"john"},{"id":"efgh","test":"hello"}]',
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -512,15 +736,19 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 200,
-        body: '[{"id":1,"name":"john"},{"id":2,"test":"hello"}]',
-        headers: { 'content-type': 'application/json' }
+        body: '[{"id":"abcd","name":"john"},{"id":"efgh","test":"hello"}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '2',
+          'x-filtered-count': '2'
+        }
       }
     }
   ],
   [
     {
       description: 'Users bucket - delete: incorrect id',
-      path: '/users/123',
+      path: '/users/abcde',
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -533,7 +761,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
   [
     {
       description: 'Users bucket - delete',
-      path: '/users/1',
+      path: '/users/abcd',
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
       testedResponse: {
@@ -550,7 +778,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '0',
+          'x-filtered-count': '0'
+        }
       }
     }
   ],
@@ -586,7 +818,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter"},{"id":2,"username":"alberto"},{"id":3,"username":"marta"},{"id":4,"username":"mary"},{"id":5,"username":"john"},{"id":6,"username":"douglas"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":9,"username":"theresa"},{"id":10,"username":"cinderella"},{"id":11,"username":"laura"}]',
-        headers: { 'content-type': 'application/json' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -596,7 +832,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter"},{"id":2,"username":"alberto"},{"id":3,"username":"marta"},{"id":4,"username":"mary"},{"id":5,"username":"john"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -606,7 +846,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":1,"username":"peter"},{"id":2,"username":"alberto"},{"id":3,"username":"marta"},{"id":4,"username":"mary"},{"id":5,"username":"john"},{"id":6,"username":"douglas"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":9,"username":"theresa"},{"id":10,"username":"cinderella"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -616,7 +860,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":6,"username":"douglas"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":9,"username":"theresa"},{"id":10,"username":"cinderella"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -627,7 +875,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":3,"username":"marta"},{"id":4,"username":"mary"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":1,"username":"peter"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -638,7 +890,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":3,"username":"marta"},{"id":11,"username":"laura"},{"id":5,"username":"john"},{"id":6,"username":"douglas"},{"id":10,"username":"cinderella"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -649,7 +905,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":6,"username":"douglas"},{"id":7,"username":"paul"},{"id":8,"username":"paula"},{"id":9,"username":"theresa"},{"id":10,"username":"cinderella"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     },
     {
@@ -659,7 +919,11 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 200,
         body: '[{"id":6,"username":"douglas"},{"id":5,"username":"john"},{"id":4,"username":"mary"},{"id":3,"username":"marta"},{"id":2,"username":"alberto"}]',
-        headers: { 'content-type': 'application/json', 'x-total-count': '11' }
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
       }
     }
   ],
@@ -1101,6 +1365,541 @@ const jsonArrayTestGroups: HttpCall[][] = [
         body: ''
       }
     }
+  ],
+  [
+    {
+      description: 'Search - get all with search query "peter"',
+      path: '/search?search=peter',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description:
+        'Search - get all with search query "paul" and order by "username" descending',
+      path: '/search?search=paul&sort=username&order=desc',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '2'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description:
+        'Search - get all with search query "New York" in nested object',
+      path: '/search?search=New%20York',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":9,"username":"theresa","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - get all with search query "swimming" in array',
+      path: '/search?search=swimming',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":9,"username":"theresa","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '5'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description:
+        'Search - get all with search query "dancing" in array and paginate',
+      path: '/search?search=dancing&page=1&limit=2',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":3,"username":"marta","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '6'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - no match',
+      path: '/search?search=nonexistent',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '0'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - partial match',
+      path: '/search?search=pet',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - matches multiple records for different reasons',
+      path: '/search?search=ra',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - matches multiple records with pagination',
+      path: '/search?search=ra&page=1&limit=1',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - case insensitive',
+      path: '/search?search=PETER',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - empty string',
+      path: '/search?search=&limit=1',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '11'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - filter on numbers',
+      path: '/search?search=8',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - filter on partial numbers',
+      path: '/search?search=2',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":3,"username":"marta","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '4'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Search - filter on primitive array',
+      path: '/primitivearray?search=a',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '["aaa"]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '3',
+          'x-filtered-count': '1'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - equal operator',
+      path: '/search?username_eq=peter',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '1'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - not equal operator',
+      path: '/search?age_ne=25&limit=2',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '8'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - greater than operator',
+      path: '/search?age_gt=35',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '2'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - greater than or equal operator',
+      path: '/search?age_gte=35',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":2,"username":"alberto","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":6,"username":"douglas","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":10,"username":"cinderella","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '5'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - less than operator',
+      path: '/search?age_lt=5',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '0'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - less than or equal operator',
+      path: '/search?age_lte=25',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":3,"username":"marta","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - like operator',
+      path: '/search?username_like=la',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":6,"username":"douglas","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":10,"username":"cinderella","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]},{"id":11,"username":"laura","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '4'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - start operator',
+      path: '/search?username_start=p',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]},{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - start operator',
+      path: '/search?username_end=la',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":8,"username":"paula","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":10,"username":"cinderella","age":35,"address":{"city":"Los Angeles"},"hobbies":["dancing","coding"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '2'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - like operator (regex)',
+      path: '/search?id_like=^(1|4|7)$',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":4,"username":"mary","age":40,"address":{"city":"San Francisco"},"hobbies":["swimming","coding"]},{"id":7,"username":"paul","age":25,"address":{"city":"Chicago"},"hobbies":["reading","dancing"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - nested properties access',
+      path: '/search?address.city_eq=New%20York',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":1,"username":"peter","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]},{"id":9,"username":"theresa","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter - filter on primitive array',
+      path: '/primitivearray?_gte=b',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '["bbb","ccc"]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '3',
+          'x-filtered-count': '2'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Filter + Search + Sort + Pagination',
+      path: '/search?search=york&age_gt=25&sort=username&limit=1',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"id":5,"username":"john","age":30,"address":{"city":"New York"},"hobbies":["reading","swimming"]}]',
+        headers: {
+          'content-type': 'application/json',
+          'x-total-count': '11',
+          'x-filtered-count': '3'
+        }
+      }
+    }
+  ],
+  [
+    {
+      description: 'Nested key bucket - get',
+      path: '/nestedkey',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"sub":{"myid":"1"},"prop":"test1"},{"sub":{"myid":"2"},"prop":"test2"}]',
+        headers: {
+          'content-type': 'application/json'
+        }
+      }
+    },
+    {
+      description: 'Nested key bucket - getById',
+      path: '/nestedkey/1',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '{"sub":{"myid":"1"},"prop":"test1"}',
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Nested key bucket - deleteById',
+      path: '/nestedkey/1',
+      method: 'DELETE',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Nested key bucket - get all after delete',
+      path: '/nestedkey',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '[{"sub":{"myid":"2"},"prop":"test2"}]',
+        headers: {
+          'content-type': 'application/json'
+        }
+      }
+    },
+    {
+      description: 'Nested key bucket - updateMergeById',
+      path: '/nestedkey/2',
+      method: 'PATCH',
+      body: '{"newprop":"test3"}',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Nested key bucket - get after update',
+      path: '/nestedkey/2',
+      method: 'PATCH',
+      body: '{"sub":{"myid":"1"},"prop":"test1","newprop":"test3"}',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 200
+      }
+    },
+    {
+      description: 'Nested key bucket - post',
+      path: '/nestedkey',
+      method: 'POST',
+      body: '{"sub":{"myid":"5"},"prop":"test5"}',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201
+      }
+    },
+    {
+      description: 'Nested key bucket - get after post',
+      path: '/nestedkey/5',
+      method: 'GET',
+      testedResponse: {
+        status: 200,
+        body: '{"sub":{"myid":"5"},"prop":"test5"}',
+        headers: { 'content-type': 'application/json' }
+      }
+    },
+    {
+      description: 'Nested key bucket - post (missing key)',
+      path: '/nestedkey',
+      method: 'POST',
+      // wrong key name
+      body: '{"sub":{"id":"6"},"prop":"test6"}',
+      headers: { 'content-type': 'application/json' },
+      testedResponse: {
+        status: 201,
+        body: new RegExp(
+          /\{"sub"\:\{"id"\:"6"\,"myid"\:"[a-f0-9\-]{36}"\}\,"prop"\:"test6"\}/i
+        ),
+        headers: { 'content-type': 'application/json' }
+      }
+    }
   ]
 ];
 
@@ -1112,7 +1911,7 @@ describe('CRUD endpoints', () => {
   it('should create a new CRUD endpoint and verify UI', async () => {
     await routes.addCRUDRoute();
     await routes.setPath('users');
-    await routes.assertMenuEntryText(4, 'CRUD\n/users');
+    await routes.assertMenuEntryText(4, '/users\nCRUD');
     await routes.assertSelectedRouteResponseLabel('CRUD operations');
   });
 
@@ -1127,7 +1926,9 @@ describe('CRUD endpoints', () => {
   it('should add a second response with rule', async () => {
     await routes.addRouteResponse();
     await (await routes.bodyEditor).click();
-    await (await routes.bodyEditor).keys(['Backspace', 'Backspace', 'a']);
+
+    await browser.keys(['Backspace', 'Backspace', 'a']);
+
     await routes.switchTab('RULES');
     await routes.addResponseRule({
       target: 'header',
@@ -1140,19 +1941,35 @@ describe('CRUD endpoints', () => {
 
   it('should add more endpoints', async () => {
     await routes.addCRUDRoute();
-    await routes.setPath('pagination');
+    await routes.setPath('users-numeric');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(2);
 
     await routes.addCRUDRoute();
-    await routes.setPath('misc');
+    await routes.setPath('pagination');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(3);
 
     await routes.addCRUDRoute();
-    await routes.setPath('primitivearray');
+    await routes.setPath('misc');
     await routes.openDataBucketMenu();
     await routes.selectDataBucket(4);
+
+    await routes.addCRUDRoute();
+    await routes.setPath('primitivearray');
+    await routes.openDataBucketMenu();
+    await routes.selectDataBucket(5);
+
+    await routes.addCRUDRoute();
+    await routes.setPath('search');
+    await routes.openDataBucketMenu();
+    await routes.selectDataBucket(6);
+
+    await routes.addCRUDRoute();
+    await routes.setPath('nestedkey');
+    await routes.openDataBucketMenu();
+    await routes.selectDataBucket(7);
+    await routes.setCrudKey('sub.myid');
   });
 
   it('should start the environment', async () => {

@@ -631,10 +631,10 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         headers: {
           'Content-Type': 'multipart/form-data; boundary=X-BOUNDARY'
         },
-        body: '--X-BOUNDARY\r\nContent-Disposition: form-data; name="var1"\r\n\r\nval1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv2\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="object[property]"\r\n\r\nobjv1\r\n--X-BOUNDARY--\r\n',
+        body: '--X-BOUNDARY\r\nContent-Disposition: form-data; name="file"; filename="filename.csv"\r\nContent-Type: text/csv\r\n\r\nfilecontent\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="var1"\r\n\r\nval1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv1\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="select"\r\n\r\nsv2\r\n--X-BOUNDARY\r\nContent-Disposition: form-data; name="object[property]"\r\n\r\nobjv1\r\n--X-BOUNDARY--\r\n',
         testedResponse: {
           status: 200,
-          body: 'val1sv1,sv2objv1'
+          body: 'filename.csvtext/csv11-val1-sv1,sv2-objv1'
         }
       },
       {
@@ -1022,7 +1022,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Hayley_Zieme0'
+          body: 'Hayley.Reichel-Watsica30'
         }
       },
       {
@@ -1032,12 +1032,52 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Hayley_Zieme0'
+          body: 'Hayley.Reichel-Watsica30'
         }
       }
     ]
   }
 ];
+
+const fakerSeedingTest: HttpCall = {
+  path: '/fakerseed',
+  method: 'GET',
+  headers: { 'Content-Type': 'text/plain' },
+  testedResponse: {
+    status: 200,
+    body: 'IR3 9OW'
+  }
+};
+
+const globalVarTests: Record<string, HttpCall> = {
+  beforeSet: {
+    description: '',
+    path: '/getglobalvar',
+    method: 'GET',
+    testedResponse: {
+      status: 200,
+      body: ''
+    }
+  },
+  setVar: {
+    description: '',
+    path: '/setglobalvar',
+    method: 'GET',
+    testedResponse: {
+      status: 200,
+      body: ''
+    }
+  },
+  afterSet: {
+    description: '',
+    path: '/getglobalvar',
+    method: 'GET',
+    testedResponse: {
+      status: 200,
+      body: 'value1'
+    }
+  }
+};
 
 describe('Templating', () => {
   describe('Helpers', () => {
@@ -1058,6 +1098,7 @@ describe('Templating', () => {
       await settings.open();
       await settings.setSettingValue('settings-faker-seed', '1');
       await modals.close();
+      await utils.waitForAutosave();
       await environments.start();
     });
 
@@ -1104,6 +1145,52 @@ describe('Templating', () => {
           body: "start{{body 'test'}}end"
         }
       });
+    });
+  });
+
+  describe('Server restart should reset the Faker seeding', () => {
+    it('should open and start the environment', async () => {
+      await environments.close(1);
+      await environments.open('templating');
+      await settings.open();
+      await settings.setSettingValue('settings-faker-seed', '1');
+      await settings.setDropdownSettingValue('settings-faker-locale', 17);
+      await modals.close();
+      await utils.waitForAutosave();
+      await environments.start();
+    });
+
+    it('should receive seeded and localized content', async () => {
+      await http.assertCall(fakerSeedingTest);
+    });
+
+    it('should receive same seeded and localized content after a restart', async () => {
+      await environments.stop();
+      await environments.start();
+      await http.assertCall(fakerSeedingTest);
+    });
+  });
+
+  describe('Global vars are reset when the serve restart', () => {
+    it('should open and start the environment', async () => {
+      await environments.close(1);
+      await environments.open('templating');
+      await environments.start();
+    });
+
+    it('should receive empty content when no var is set', async () => {
+      await http.assertCall(globalVarTests.beforeSet);
+    });
+
+    it('should set the var and receive its content', async () => {
+      await http.assertCall(globalVarTests.setVar);
+      await http.assertCall(globalVarTests.afterSet);
+    });
+
+    it('should receive empty content after restarting the server', async () => {
+      await environments.stop();
+      await environments.start();
+      await http.assertCall(globalVarTests.beforeSet);
     });
   });
 });

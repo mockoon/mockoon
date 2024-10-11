@@ -1,7 +1,7 @@
 {
   "uuid": "6cca9fb6-3585-4c0f-8cac-1150ce24452b",
   "name": "Environment file",
-  "lastMigration": 27,
+  "lastMigration": 33,
   "port": 3000,
   "endpointPrefix": "",
   "latency": 0,
@@ -28,24 +28,22 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "FILE"
+          "bodyType": "FILE",
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
   "proxyHost": "",
   "proxyRemovePrefix": false,
   "cors": true,
-  "headers": [
-    {
-      "key": "Content-Type",
-      "value": "application/json"
-    }
-  ],
+  "headers": [{ "key": "Content-Type", "value": "application/json" }],
   "proxyReqHeaders": [],
   "proxyResHeaders": [],
   "tlsOptions": {
@@ -60,9 +58,7 @@
   "data": [],
   "folders": [],
   "rootChildren": [
-    {
-      "type": "route",
-      "uuid": "e15f2c20-92aa-4390-8f83-2da2473b47ee"
-    }
-  ]
+    { "type": "route", "uuid": "e15f2c20-92aa-4390-8f83-2da2473b47ee" }
+  ],
+  "callbacks": []
 }

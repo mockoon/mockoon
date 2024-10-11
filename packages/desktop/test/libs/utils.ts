@@ -1,12 +1,52 @@
-import {
-  ChainablePromiseArray,
-  ChainablePromiseElement,
-  ElementArray
-} from 'webdriverio';
+import { ChainablePromiseArray, ChainablePromiseElement } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { SharedConfig } from '../../src/shared/shared-config';
 
 const Config = SharedConfig({ apiURL: '', websiteURL: '' });
+
+export enum DropdownMenuEnvironmentActions {
+  DUPLICATE_TO_CLOUD = 1,
+  DUPLICATE = 2,
+  DEPLOY = 3,
+  COPY_JSON = 4,
+  SHOW_FOLDER = 5,
+  MOVE_FOLDER = 6,
+  CLOSE = 7
+}
+
+export enum DropdownMenuDatabucketActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  COPY_ID = 3,
+  DELETE = 4
+}
+
+export enum DropdownMenuCallbackActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  DELETE = 3
+}
+
+export enum DropdownMenuRouteActions {
+  DUPLICATE = 1,
+  DUPLICATE_TO_ENV = 2,
+  COPY_JSON = 3,
+  COPY_PATH = 4,
+  TOGGLE = 5,
+  DELETE = 6
+}
+
+export enum DropdownMenuFolderActions {
+  ADD_CRUD = 1,
+  ADD_HTTP = 2,
+  ADD_FOLDER = 3,
+  TOGGLE_FOLDER = 4,
+  DELETE = 5
+}
+
+export enum DropdownMenuLogsActions {
+  MOCK = 1
+}
 
 class Utils {
   public async clearElementValue(
@@ -34,6 +74,15 @@ class Utils {
     expect(await element.getValue()).toEqual(value);
   }
 
+  public async assertDisabled(
+    element: ChainablePromiseElement<WebdriverIO.Element>,
+    reverse = false
+  ): Promise<void> {
+    const disabledAttr = await element.getAttribute('disabled');
+
+    expect(disabledAttr).toEqual(reverse ? null : 'true');
+  }
+
   public async assertHasClass(
     element: ChainablePromiseElement<WebdriverIO.Element>,
     className: string,
@@ -51,7 +100,7 @@ class Utils {
   public async setDropdownValue(dropdownId: string, index: number) {
     await $(`#${dropdownId}-dropdown .dropdown-toggle`).click();
     await $(
-      `#${dropdownId}-dropdown-menu .dropdown-item:nth-child(${index})`
+      `#${dropdownId}-dropdown-menu .dropdown-item:nth-of-type(${index})`
     ).click();
   }
 
@@ -92,6 +141,13 @@ class Utils {
     );
   }
 
+  public async assertElementTextContains(
+    element: ChainablePromiseElement<WebdriverIO.Element>,
+    text: string
+  ): Promise<void> {
+    expect(await element.getText()).toContain(text);
+  }
+
   public async assertElementTextContain(
     element: ChainablePromiseElement<WebdriverIO.Element>,
     text: string
@@ -100,10 +156,72 @@ class Utils {
   }
 
   public async countElements(
-    elements: ChainablePromiseArray<ElementArray>,
+    elements: ChainablePromiseArray<WebdriverIO.ElementArray>,
     expected: number
   ) {
     expect((await elements).length).toEqual(expected);
+  }
+
+  public async dropdownMenuOpen(parentSelector: string): Promise<void> {
+    await $(`${parentSelector} .dropdown-toggle`).click();
+  }
+
+  public async dropdownMenuClose(): Promise<void> {
+    await this.clickOutside();
+  }
+
+  public dropdownMenuGetItemRef(
+    itemIndex:
+      | DropdownMenuEnvironmentActions
+      | DropdownMenuDatabucketActions
+      | DropdownMenuCallbackActions
+      | DropdownMenuRouteActions
+      | DropdownMenuFolderActions
+      | DropdownMenuLogsActions
+  ) {
+    return $(
+      `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`
+    );
+  }
+
+  public async dropdownMenuClick(
+    parentSelector: string,
+    itemIndex:
+      | DropdownMenuEnvironmentActions
+      | DropdownMenuDatabucketActions
+      | DropdownMenuCallbackActions
+      | DropdownMenuRouteActions
+      | DropdownMenuFolderActions
+      | DropdownMenuLogsActions,
+    confirm = false
+  ): Promise<void> {
+    await $(`${parentSelector} .dropdown-toggle`).click();
+
+    const itemSelector = `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`;
+    await $(itemSelector).click();
+
+    if (confirm) {
+      await $(itemSelector).click();
+    }
+  }
+
+  public async dropdownMenuAssertDisabled(
+    parentSelector: string,
+    itemIndex:
+      | DropdownMenuEnvironmentActions
+      | DropdownMenuDatabucketActions
+      | DropdownMenuCallbackActions
+      | DropdownMenuRouteActions
+      | DropdownMenuFolderActions
+      | DropdownMenuLogsActions,
+    reverse = false
+  ): Promise<void> {
+    await $(`${parentSelector} .dropdown-toggle`).click();
+
+    const itemSelector = `body > .dropdown .dropdown-menu.show .dropdown-item:nth-child(${itemIndex})`;
+    await this.assertDisabled($(itemSelector), reverse);
+
+    await this.clickOutside();
   }
 
   public async openDropdown(dropdownId: string): Promise<void> {
@@ -157,11 +275,11 @@ class Utils {
   }
 
   public async waitForAutosave(): Promise<void> {
-    await browser.pause(Config.storageSaveDelay + 500);
+    await browser.pause(Config.storageSaveDelay + 1000);
   }
 
   public async waitForFileWatcher(): Promise<void> {
-    await browser.pause(Config.fileReWatchDelay + 500);
+    await browser.pause(Config.fileReWatchDelay + 1000);
   }
 
   public async checkToastDisplayed(toastType: ToastTypes, text: string) {
@@ -191,6 +309,14 @@ class Utils {
     }
 
     return result;
+  }
+
+  public async closeTooltip() {
+    await this.clickOutside();
+  }
+
+  public async clickOutside() {
+    await $('body').click({ x: 0, y: 0 });
   }
 }
 

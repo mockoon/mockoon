@@ -4,7 +4,13 @@ import {
   RouteDefault,
   RouteResponseDefault
 } from '../constants/environment-schema.constants';
-import { Environment } from '../models/environment.model';
+import { DataBucket, Environment } from '../models/environment.model';
+import { Folder } from '../models/folder.model';
+import {
+  PostMigrationAction,
+  PostMigrationActionCollapsedFolders,
+  PostMigrationActionDisabledRoutes
+} from '../models/migrations.model';
 import {
   BodyTypes,
   Header,
@@ -13,7 +19,8 @@ import {
   Route,
   RouteResponse
 } from '../models/route.model';
-import { generateUUID } from './utils';
+import { generateUUID } from '../utils/utils';
+import { fakerV8Migration } from './fakerv8-migration';
 
 /**
  * Old types use for compatibility purposes
@@ -21,6 +28,8 @@ import { generateUUID } from './utils';
 
 // old routes with file
 type RouteWithFile = Route & { file: any };
+type RouteWithEnabled = Route & { enabled?: boolean };
+type FolderWithCollapsed = Folder & { collapsed?: boolean };
 
 // old route when route responses didn't exists
 type RouteAsResponse = Route & {
@@ -53,7 +62,7 @@ type RouteWithResponseModes = Route & {
  */
 export const Migrations: {
   id: number;
-  migrationFunction: (environment: Environment) => void;
+  migrationFunction: (environment: Environment) => PostMigrationAction | void;
 }[] = [
   // v0.4.0beta
   {
@@ -221,7 +230,7 @@ export const Migrations: {
     id: 8,
     migrationFunction: (environment: Environment) => {
       environment.routes.forEach((route: Route) => {
-        route.enabled = true;
+        (route as any).enabled = true;
       });
     }
   },
@@ -439,8 +448,8 @@ export const Migrations: {
             .sequentialResponse
             ? ResponseMode.SEQUENTIAL
             : (route as RouteWithResponseModes).randomResponse
-            ? ResponseMode.RANDOM
-            : null;
+              ? ResponseMode.RANDOM
+              : null;
         }
 
         delete route['sequentialResponse'];
@@ -554,6 +563,101 @@ export const Migrations: {
           }
         });
       });
+    }
+  },
+  /**
+   * Migrate faker methods to v8
+   */
+  {
+    id: 29,
+    migrationFunction: (environment: Environment) => {
+      if (environment.data) {
+        environment.data.forEach((data: DataBucket) => {
+          data.value = fakerV8Migration(data.value);
+        });
+      }
+      environment.routes.forEach((route: Route) => {
+        route.responses.forEach((routeResponse) => {
+          routeResponse.body = fakerV8Migration(routeResponse.body);
+        });
+      });
+    }
+  },
+  /**
+   * Callbacks.
+   */
+  {
+    id: 30,
+    migrationFunction: (environment: Environment) => {
+      if (!environment.callbacks) {
+        environment.callbacks = EnvironmentDefault.callbacks;
+      }
+
+      if (environment.routes) {
+        environment.routes.forEach((route: Route) => {
+          if (route.responses) {
+            route.responses.forEach((res: RouteResponse) => {
+              res.callbacks = RouteResponseDefault.callbacks;
+            });
+          }
+        });
+      }
+    }
+  },
+  /**
+   * Move route toggling to application settings
+   */
+  {
+    id: 31,
+    migrationFunction: (environment: Environment) => {
+      const disabledRoutesUuids = (
+        environment.routes as RouteWithEnabled[]
+      ).reduce<string[]>((disabledRoutes, route) => {
+        if (!route.enabled) {
+          disabledRoutes.push(route.uuid);
+        }
+
+        delete route.enabled;
+
+        return disabledRoutes;
+      }, []);
+
+      return PostMigrationActionDisabledRoutes(disabledRoutesUuids);
+    }
+  },
+  /**
+   * Move folder collapsing to application settings
+   */
+  {
+    id: 32,
+    migrationFunction: (environment: Environment) => {
+      const collapsedFoldersUuids = (
+        environment.folders as FolderWithCollapsed[]
+      ).reduce<string[]>((disabledFolders, folder) => {
+        if (folder.collapsed) {
+          disabledFolders.push(folder.uuid);
+        }
+
+        delete folder.collapsed;
+
+        return disabledFolders;
+      }, []);
+
+      return PostMigrationActionCollapsedFolders(collapsedFoldersUuids);
+    }
+  },
+  /**
+   * WebSockets
+   */
+  {
+    id: 33,
+    migrationFunction: (environment: Environment) => {
+      if (environment.routes) {
+        environment.routes.forEach((route) => {
+          route.streamingMode = RouteDefault.streamingMode;
+          route.streamingInterval = RouteDefault.streamingInterval;
+        });
+      }
     }
   }
 ];

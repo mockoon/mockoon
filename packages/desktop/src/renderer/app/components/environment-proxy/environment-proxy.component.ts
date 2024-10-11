@@ -4,14 +4,14 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import {
   Environment,
   EnvironmentDefault,
   Header,
   IsValidURL
 } from '@mockoon/commons';
-import { merge, Observable, Subject } from 'rxjs';
+import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { HeadersProperties } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -27,14 +27,14 @@ export class EnvironmentProxyComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public isValidURL = IsValidURL;
   public scrollToBottom = this.uiService.scrollToBottom;
-  public environmentProxyForm: FormGroup;
+  public environmentProxyForm: UntypedFormGroup;
   private destroy$ = new Subject<void>();
 
   constructor(
     private environmentsService: EnvironmentsService,
     private uiService: UIService,
     private store: Store,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {}
 
   ngOnInit() {

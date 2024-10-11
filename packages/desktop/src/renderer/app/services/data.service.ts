@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
 import {
   BINARY_BODY,
+  Callback,
   DataBucket,
   Environment,
   EnvironmentSchema,
-  GenerateDatabucketID,
-  generateUUID,
+  GenerateUniqueID,
   HighestMigrationId,
-  repairRefs,
+  INDENT_SIZE,
+  InFlightRequest,
   Route,
-  Transaction
+  Transaction,
+  generateUUID,
+  isContentTypeApplicationJson,
+  repairRefs
 } from '@mockoon/commons';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { MigrationService } from 'src/renderer/app/services/migration.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -22,7 +27,8 @@ export class DataService extends Logger {
   constructor(
     protected toastsService: ToastsService,
     private store: Store,
-    private migrationService: MigrationService
+    private migrationService: MigrationService,
+    private settingsService: SettingsService
   ) {
     super('[RENDERER][SERVICE][DATA] ', toastsService);
   }
@@ -56,7 +62,47 @@ export class DataService extends Logger {
     validatedEnvironment = this.deduplicateUUIDs(validatedEnvironment);
     validatedEnvironment = repairRefs(validatedEnvironment);
 
+    this.settingsService.cleanDisabledRoutes(validatedEnvironment);
+    this.settingsService.cleanCollapsedFolders(validatedEnvironment);
+
     return validatedEnvironment;
+  }
+
+  /**
+   * Creates a new environment log record from given inflight request.
+   *
+   * @param request
+   */
+  public formatLogFromInFlightRequest(
+    request: InFlightRequest
+  ): EnvironmentLog {
+    return {
+      UUID: request.requestId,
+      routeUUID: request.routeUUID,
+      timestampMs: Date.now(),
+      method: request.request.method as EnvironmentLog['method'],
+      url: request.request.urlPath,
+      route: request.request.route,
+      protocol: 'ws',
+      request: {
+        isInvalidJson: false, // TODO Isuru
+        query: request.request.query,
+        body: request.request.body,
+        headers: request.request.headers,
+        params: request.request.params || [],
+        queryParams: request.request.queryParams || []
+      },
+      response: {
+        // we will set a default response of 101 until we figure it out how to capture responses and show them.
+        status: 101,
+        statusMessage: 'Switching Protocols',
+        headers: [],
+        body: '{}',
+        binaryBody: false,
+        isInvalidJson: false
+      },
+      proxied: false
+    };
   }
 
   /**
@@ -65,28 +111,60 @@ export class DataService extends Logger {
    * @param response
    */
   public formatLog(transaction: Transaction): EnvironmentLog {
+    let isResJsonInvalid = false;
+    let isReqJsonInvalid = false;
+    let responseBody = transaction.response.body;
+    let requestBody = transaction.request.body;
+
+    if (isContentTypeApplicationJson(transaction.response.headers)) {
+      try {
+        responseBody = JSON.stringify(
+          JSON.parse(transaction.response.body),
+          null,
+          INDENT_SIZE
+        );
+      } catch (error) {
+        isResJsonInvalid = true;
+      }
+    }
+
+    if (isContentTypeApplicationJson(transaction.request.headers)) {
+      try {
+        requestBody = JSON.stringify(
+          JSON.parse(transaction.request.body),
+          null,
+          INDENT_SIZE
+        );
+      } catch (error) {
+        isReqJsonInvalid = true;
+      }
+    }
+
     return {
       UUID: generateUUID(),
       routeUUID: transaction.routeUUID,
       routeResponseUUID: transaction.routeResponseUUID,
-      timestamp: new Date(),
+      timestampMs: transaction.timestampMs,
       method: transaction.request.method as EnvironmentLog['method'],
       route: transaction.request.route,
       url: transaction.request.urlPath,
+      protocol: 'http',
       request: {
         params: transaction.request.params,
         query: transaction.request.query,
         queryParams: this.formatQueryParams(transaction.request.queryParams),
-        body: transaction.request.body,
-        headers: transaction.request.headers
+        body: requestBody,
+        headers: transaction.request.headers,
+        isInvalidJson: isReqJsonInvalid
       },
       proxied: transaction.proxied,
       response: {
         status: transaction.response.statusCode,
         statusMessage: transaction.response.statusMessage,
         headers: transaction.response.headers,
-        body: transaction.response.body,
-        binaryBody: transaction.response.body === BINARY_BODY
+        body: responseBody,
+        binaryBody: transaction.response.body === BINARY_BODY,
+        isInvalidJson: isResJsonInvalid
       }
     };
   }
@@ -129,7 +207,7 @@ export class DataService extends Logger {
    * @param databucket
    */
   public renewDatabucketID(databucket: DataBucket) {
-    databucket.id = GenerateDatabucketID();
+    databucket.id = GenerateUniqueID();
 
     return databucket;
   }
@@ -155,20 +233,35 @@ export class DataService extends Logger {
   }
 
   /**
-   * Truncate the body to the maximum length defined in the settings
+   * Sets a new id to the given callback.
    *
-   * @param body
+   * @param callback callback reference
+   * @returns modified callback reference
    */
-  public truncateBody(body: string) {
-    const logSizeLimit = this.store.get('settings').logSizeLimit;
+  public renewCallbackID(callback: Callback) {
+    callback.id = GenerateUniqueID();
 
-    if (body.length > logSizeLimit) {
-      body =
-        body.substring(0, logSizeLimit) +
-        '\n\n-------- BODY HAS BEEN TRUNCATED --------';
-    }
+    return callback;
+  }
 
-    return body;
+  /**
+   * Assigns a unique id for the callback.
+   *
+   * @param callback callback reference
+   * @returns callback which has a unique id
+   */
+  public deduplicateCallbackID(callback: Callback) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+    let foundID: Callback;
+
+    do {
+      callback = this.renewCallbackID(callback);
+      foundID = activeEnvironment.callbacks.find(
+        (cb) => callback.id === cb.id && callback.uuid !== cb.uuid
+      );
+    } while (foundID);
+
+    return callback;
   }
 
   /**

@@ -1,5 +1,10 @@
-import { Environment, Environments, Transaction } from '@mockoon/commons';
-import { listenServerEvents, MockoonServer } from '@mockoon/commons-server';
+import {
+  Environment,
+  Environments,
+  InFlightRequest,
+  Transaction
+} from '@mockoon/commons';
+import { MockoonServer, listenServerEvents } from '@mockoon/commons-server';
 import { dirname } from 'path';
 import { mainLogger } from 'src/main/libs/logs';
 import { getMainWindow } from 'src/main/libs/main-window';
@@ -41,7 +46,16 @@ export class ServerInstance {
     const environmentDirectory = dirname(this.environmentPath);
     const server = new MockoonServer(this.environment, {
       environmentDirectory,
-      refreshEnvironmentFunction: () => this.environment
+      disabledRoutes:
+        getSettings().disabledRoutes?.[this.environment.uuid] || [],
+      refreshEnvironmentFunction: () => this.environment,
+      fakerOptions: {
+        seed: getSettings().fakerSeed,
+        locale: getSettings().fakerLocale
+      },
+      envVarsPrefix: getSettings().envVarsPrefix,
+      maxTransactionLogs: getSettings().maxLogsPerEnvironment,
+      enableRandomLatency: getSettings().enableRandomLatency
     });
 
     listenServerEvents(
@@ -83,6 +97,17 @@ export class ServerInstance {
           'APP_SERVER_EVENT',
           this.environment.uuid,
           'entering-request'
+        );
+      }
+    });
+
+    server.on('ws-new-connection', (request: InFlightRequest) => {
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          this.environment.uuid,
+          'ws-new-connection',
+          { inflightRequest: request }
         );
       }
     });

@@ -6,14 +6,13 @@ import {
   forwardRef,
   HostListener,
   Input,
-  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormControl,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl
 } from '@angular/forms';
 
 /**
@@ -33,14 +32,12 @@ import {
     }
   ]
 })
-export class EditableElementComponent implements OnInit, ControlValueAccessor {
+export class EditableElementComponent implements ControlValueAccessor {
   /**
    * Provide a complementary condition used to allow edition
    */
   @Input()
   public editCondition = true;
-  @Input()
-  public text = '';
   @Output()
   public editChange = new EventEmitter<boolean>();
 
@@ -50,9 +47,14 @@ export class EditableElementComponent implements OnInit, ControlValueAccessor {
   public onChange: (_: any) => void;
   public onTouched: () => void;
   public edit = false;
-  public data = new FormControl('');
+  public data = new UntypedFormControl('');
+  public _text: string;
 
-  constructor() {}
+  @Input()
+  public set text(value: string) {
+    this._text = value;
+    this.data.setValue(value);
+  }
 
   @HostListener('click', ['$event'])
   public elementClick(event: MouseEvent) {
@@ -61,8 +63,6 @@ export class EditableElementComponent implements OnInit, ControlValueAccessor {
       this.toggleEdit(event);
     }
   }
-
-  ngOnInit() {}
 
   /**
    * Handle reactive form writing a value to the model
@@ -109,9 +109,17 @@ export class EditableElementComponent implements OnInit, ControlValueAccessor {
   }
 
   public save() {
+    // always set editing state to false and propagate to the parent
+    this.editChange.emit(false);
+    this.edit = false;
+
+    // Do not save if the text is the same
+    if (this._text === this.data.value) {
+      return;
+    }
+
+    // save the new value and propagate to the parent
     this.text = this.data.value;
     this.onChange(this.data.value);
-    this.edit = false;
-    this.editChange.emit(false);
   }
 }

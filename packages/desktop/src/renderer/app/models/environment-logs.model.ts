@@ -8,7 +8,7 @@ export type EnvironmentLogRequest = {
   query: string;
   queryParams: { name: string; value: string }[];
   body: string;
-  truncatedBody?: string;
+  isInvalidJson: boolean;
 };
 
 export type EnvironmentLogResponse = {
@@ -16,16 +16,17 @@ export type EnvironmentLogResponse = {
   statusMessage: string;
   headers: Header[];
   body: string;
-  truncatedBody?: string;
   binaryBody: boolean;
-  bodyState?: 'unzipped' | 'raw';
+  unzipped?: boolean;
+  isInvalidJson: boolean;
 };
 
 export type EnvironmentLog = {
   UUID: string;
   routeUUID: string;
-  routeResponseUUID: string;
-  timestamp: Date;
+  routeResponseUUID?: string;
+  timestampMs: number;
+  protocol: 'http' | 'ws';
   // full URL called
   url: string;
   // internal route matched

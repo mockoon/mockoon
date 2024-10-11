@@ -2,43 +2,41 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostListener,
   OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Environment, Folder, FolderChild, Route } from '@mockoon/commons';
-import { from, merge, Observable, Subject } from 'rxjs';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  Environment,
+  Environments,
+  Folder,
+  FolderChild,
+  ReorderAction,
+  ReorderableContainers,
+  ResponseMode,
+  Route
+} from '@mockoon/commons';
+import { Observable, Subject, merge, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
   map,
   takeUntil,
-  tap
+  tap,
+  withLatestFrom
 } from 'rxjs/operators';
-import {
-  FoldersContextMenu,
-  RoutesContextMenu
-} from 'src/renderer/app/components/context-menu/context-menus';
+import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { ContextMenuEvent } from 'src/renderer/app/models/context-menu.model';
-import { DataSubject } from 'src/renderer/app/models/data.model';
-import { FolderProperties } from 'src/renderer/app/models/folder.model';
+import { BuildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
 import {
   DuplicatedRoutesTypes,
   EnvironmentsStatuses
 } from 'src/renderer/app/models/store.model';
-import {
-  DraggableContainers,
-  DropAction
-} from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { updateFilterAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
@@ -46,12 +44,15 @@ import { Settings } from 'src/shared/models/settings.model';
 type FullFolder = {
   uuid: string;
   name: string;
-  collapsed: boolean;
   children: (
     | { type: 'folder'; data: Folder }
-    | { type: 'route'; data: Route }
+    // routes has an extra property isHidden$ that is an observable of the route visibility based on the search filter (thus we avoid using a function in the template)
+    | { type: 'route'; isHidden$: Observable<boolean>; data: Route }
   )[];
 };
+
+type routeDropdownMenuPayload = { parentId: string; routeUuid: string };
+type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
 
 @Component({
   selector: 'app-routes-menu',
@@ -60,50 +61,168 @@ type FullFolder = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoutesMenuComponent implements OnInit, OnDestroy {
-  @ViewChild('routesMenu') private routesMenu: ElementRef<HTMLUListElement>;
+  @ViewChild('routesMenu')
+  private routesMenu: ElementRef<HTMLUListElement>;
+
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
+  public environments$: Observable<Environments> =
+    this.store.select('environments');
   public rootFolder$: Observable<FullFolder>;
   public activeRoute$: Observable<Route>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public duplicatedRoutes$: Observable<DuplicatedRoutesTypes>;
+  public disabledRoutes$: Observable<string[]>;
+  public collapsedFolders$: Observable<string[]>;
   public routesFilter$: Observable<string>;
-  public routesFilter: FormControl;
   public dragEnabled = true;
   public focusableInputs = FocusableInputs;
-  public folderForm: FormGroup;
-  public os$: Observable<string>;
+  public folderForm: UntypedFormGroup;
   public menuSize = Config.defaultSecondaryMenuSize;
   public draggedFolderCollapsed: boolean;
+  public ResponseMode = ResponseMode;
+  public routeDropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Duplicate',
+      icon: 'content_copy',
+      twoSteps: false,
+      action: ({ parentId, routeUuid }: routeDropdownMenuPayload) => {
+        this.environmentsService.duplicateRoute(parentId, routeUuid);
+      }
+    },
+    {
+      label: 'Duplicate to environment',
+      icon: 'input',
+      twoSteps: false,
+      disabled$: () =>
+        this.environments$.pipe(map((environments) => environments.length < 2)),
+      action: ({ routeUuid }: routeDropdownMenuPayload) => {
+        this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+          routeUuid,
+          'route'
+        );
+      }
+    },
+    {
+      label: 'Copy configuration to clipboard (JSON)',
+      icon: 'assignment',
+      twoSteps: false,
+      action: ({ routeUuid }: routeDropdownMenuPayload) => {
+        this.environmentsService.copyRouteToClipboard(routeUuid);
+      }
+    },
+    {
+      label: 'Copy full path to clipboard',
+      icon: 'assignment',
+      twoSteps: false,
+      action: ({ routeUuid }: routeDropdownMenuPayload) => {
+        const activeEnvironment = this.store.getActiveEnvironment();
+        const route = this.store.getRouteByUUID(routeUuid);
+
+        MainAPI.send(
+          'APP_WRITE_CLIPBOARD',
+          BuildFullPath(activeEnvironment, route)
+        );
+      }
+    },
+    {
+      label: 'Toggle',
+      icon: 'power_settings_new',
+      twoSteps: false,
+      action: ({ routeUuid }: routeDropdownMenuPayload) => {
+        this.environmentsService.toggleRoute(routeUuid);
+      }
+    },
+    {
+      label: 'Delete',
+      icon: 'delete',
+      confirmIcon: 'error',
+      confirmLabel: 'Confirm deletion',
+      twoSteps: true,
+      action: ({ routeUuid }: routeDropdownMenuPayload) => {
+        this.environmentsService.removeRoute(routeUuid);
+      }
+    }
+  ];
+  public folderDropdownMenuItems: DropdownMenuComponent['items'] = [
+    {
+      label: 'Add CRUD route',
+      icon: 'endpoints',
+      twoSteps: false,
+      action: ({ folderUuid }: folderDropdownMenuPayload) => {
+        this.environmentsService.addCRUDRoute(folderUuid);
+      }
+    },
+    {
+      label: 'Add HTTP route',
+      icon: 'endpoint',
+      twoSteps: false,
+      action: ({ folderUuid }: folderDropdownMenuPayload) => {
+        this.environmentsService.addHTTPRoute(folderUuid);
+      }
+    },
+    {
+      label: 'Add folder',
+      icon: 'folder',
+      twoSteps: false,
+      action: ({ folderUuid }: folderDropdownMenuPayload) => {
+        this.environmentsService.addFolder(folderUuid);
+      }
+    },
+    {
+      label: 'Toggle direct child routes',
+      icon: 'power_settings_new',
+      twoSteps: false,
+      action: ({ folderUuid }: folderDropdownMenuPayload) => {
+        this.environmentsService.toggleFolder(folderUuid);
+      }
+    },
+    {
+      label: 'Delete folder',
+      icon: 'delete',
+      twoSteps: true,
+      confirmIcon: 'error',
+      confirmLabel: 'Confirm deletion',
+      disabled$: ({ folder }: folderDropdownMenuPayload) =>
+        of(folder.children.length > 0),
+      disabledLabel: 'Delete folder (not empty)',
+      action: ({ folderUuid }: folderDropdownMenuPayload) => {
+        this.environmentsService.removeFolder(folderUuid);
+      }
+    }
+  ];
   private destroy$ = new Subject<void>();
 
   constructor(
     private environmentsService: EnvironmentsService,
     private store: Store,
-    private eventsService: EventsService,
     private uiService: UIService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {}
 
-  @HostListener('keydown', ['$event'])
-  public escapeFilterInput(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.clearFilter();
-    }
-  }
-
   ngOnInit() {
-    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
-    this.routesFilter = this.formBuilder.control('');
-
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeRoute$ = this.store.selectActiveRoute();
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.settings$ = this.store.select('settings');
-    this.routesFilter$ = this.store.selectFilter('routes').pipe(
-      tap((search) => {
-        this.routesFilter.patchValue(search, { emitEvent: false });
+    this.routesFilter$ = this.store.selectFilter('routes');
+    this.disabledRoutes$ = this.store.selectActiveEnvironment().pipe(
+      withLatestFrom(this.store.select('settings')),
+      filter(
+        ([activeEnvironment, settings]) => !!activeEnvironment && !!settings
+      ),
+      map(([activeEnvironment, settings]) => {
+        return settings.disabledRoutes?.[activeEnvironment.uuid] || [];
+      })
+    );
+    this.collapsedFolders$ = this.store.selectActiveEnvironment().pipe(
+      withLatestFrom(this.store.select('settings')),
+      filter(
+        ([activeEnvironment, settings]) => !!activeEnvironment && !!settings
+      ),
+      map(([activeEnvironment, settings]) => {
+        return settings.collapsedFolders?.[activeEnvironment.uuid] || [];
       })
     );
 
@@ -119,27 +238,10 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         return {
           uuid: 'root',
           name: 'root',
-          collapsed: false,
           children: rootFolder.children
         };
       })
     );
-
-    this.uiService.scrollRoutesMenu
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((scrollDirection) => {
-        this.uiService.scroll(this.routesMenu.nativeElement, scrollDirection);
-      });
-
-    this.routesFilter.valueChanges
-      .pipe(
-        debounceTime(10),
-        tap((search) =>
-          this.store.update(updateFilterAction('routes', search))
-        ),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
 
     this.initForms();
   }
@@ -150,14 +252,27 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * check if the route is hidden by the search filter
+   *
+   * @param search
+   * @param route
+   * @returns
+   */
+  public isRouteHidden(search: string, route: Route) {
+    return !`${route.method} ${route.endpoint} ${route.documentation}`
+      .toLowerCase()
+      .includes(search.toLowerCase());
+  }
+
+  /**
    * Callback called when reordering routes and folders
    *
-   * @param dropAction
+   * @param reorderAction
    */
-  public reorganizeRoutes(dropAction: DropAction) {
-    this.environmentsService.reorganizeItems(
-      dropAction,
-      DraggableContainers.ROUTES
+  public reorderRoutes(reorderAction: ReorderAction) {
+    this.environmentsService.reorderItems(
+      reorderAction as ReorderAction<string>,
+      ReorderableContainers.ROUTES
     );
   }
 
@@ -165,28 +280,42 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
    * Create a new route in the current environment. Append at the end of the list
    */
   public addCRUDRoute() {
-    this.environmentsService.addCRUDRoute('root', true);
+    this.environmentsService.addCRUDRoute('root');
   }
 
   /**
    * Generate a new template
    */
   public addCRUDRouteTemplate() {
-    this.eventsService.templatesModalEvents.next();
+    this.uiService.openModal('templates');
   }
 
   /**
    * Create a new route in the current environment. Append at the end of the list
    */
   public addHTTPRoute() {
-    this.environmentsService.addHTTPRoute('root', true);
+    this.environmentsService.addHTTPRoute('root');
+  }
+
+  /**
+   * Create a new route in the current environment. Append at the end of the list
+   */
+  public addWebSocketRoute() {
+    this.environmentsService.addWebSocketRoute('root');
   }
 
   /**
    * Create a new folder in the current environment
    */
   public addFolder() {
-    this.environmentsService.addFolder('root', true);
+    this.environmentsService.addFolder('root');
+
+    // manually scroll to the bottom when adding a new folder as they cannot use the scrollWhenActive directive
+    this.uiService.scrollToBottom(this.routesMenu.nativeElement);
+  }
+
+  public trackByUuid(index: number, child: { data: { uuid: string } }) {
+    return child.data.uuid;
   }
 
   /**
@@ -196,45 +325,8 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     this.environmentsService.setActiveRoute(routeUUID);
   }
 
-  /**
-   * Show and position the context menu
-   *
-   * @param event - click event
-   */
-  public openContextMenu(
-    subject: Exclude<DataSubject, 'databucket' | 'environment'>,
-    subjectUUID: string,
-    event: MouseEvent,
-    parentId?: string
-  ) {
-    if (event?.button !== 2) {
-      return;
-    }
-
-    let menu: ContextMenuEvent;
-
-    if (subject === 'folder') {
-      menu = {
-        event,
-        items: FoldersContextMenu(subjectUUID)
-      };
-    } else if (subject === 'route') {
-      menu = {
-        event,
-        items: RoutesContextMenu(
-          subjectUUID,
-          parentId,
-          this.store.get('environments')
-        )
-      };
-    }
-    this.eventsService.contextMenuEvents.next(menu);
-  }
-
   public toggleCollapse(folder: Folder) {
-    this.environmentsService.updateFolder(folder.uuid, {
-      collapsed: !folder.collapsed
-    });
+    this.environmentsService.toggleFolderCollapse(folder.uuid);
   }
 
   public editFolder(folder: Folder, editing: boolean) {
@@ -254,10 +346,23 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Clear the filter route
+   * Create an observable that will emit true if the route should be hidden by the search filter
+   *
+   * @param search
+   * @param route
+   * @returns
    */
-  public clearFilter() {
-    this.store.update(updateFilterAction('routes', ''));
+  private createRouteHiddenObservable(route: Route) {
+    return this.routesFilter$.pipe(
+      debounceTime(100),
+      map(
+        (search) =>
+          !textFilter(
+            `${route.type} ${route.method} /${route.endpoint} ${route.documentation}`,
+            search
+          )
+      )
+    );
   }
 
   /**
@@ -273,7 +378,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   ): {
     children: (
       | { type: 'folder'; data: Folder }
-      | { type: 'route'; data: Route }
+      | { type: 'route'; isHidden$: Observable<boolean>; data: Route }
     )[];
   } {
     return {
@@ -294,7 +399,11 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
             }
           };
         } else {
-          return { type: 'route', data: foundChild as Route };
+          return {
+            type: 'route',
+            isHidden$: this.createRouteHiddenObservable(foundChild as Route),
+            data: foundChild as Route
+          };
         }
       })
     };
@@ -318,7 +427,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       )
     )
       .pipe(
-        tap((newFolderProperties: FolderProperties) => {
+        tap((newFolderProperties: Partial<Folder>) => {
           this.environmentsService.updateFolder(
             this.folderForm.get('uuid').value,
             newFolderProperties

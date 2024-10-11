@@ -1,16 +1,17 @@
 import {
   BodyTypes,
   EnvironmentDefault,
+  GenerateUniqueID,
   ResponseMode,
   ResponseRuleTargets,
   RouteResponse
 } from '@mockoon/commons';
-import { expect } from 'chai';
+import { strictEqual } from 'assert';
 import { Request } from 'express';
 import QueryString from 'qs';
 import { xml2js } from 'xml-js';
+import { fromExpressRequest } from '../../../src/libs/requests';
 import { ResponseRulesInterpreter } from '../../../src/libs/response-rules-interpreter';
-import { GenerateDatabucketID } from '@mockoon/commons/src';
 
 const routeResponse403: RouteResponse = {
   uuid: '',
@@ -33,7 +34,8 @@ const routeResponse403: RouteResponse = {
   default: false,
   bodyType: BodyTypes.INLINE,
   databucketID: '',
-  crudKey: ''
+  crudKey: '',
+  callbacks: []
 };
 
 const routeResponseTemplate: RouteResponse = {
@@ -57,7 +59,8 @@ const routeResponseTemplate: RouteResponse = {
   default: false,
   bodyType: BodyTypes.INLINE,
   databucketID: '',
-  crudKey: ''
+  crudKey: '',
+  callbacks: []
 };
 
 describe('Response rules interpreter', () => {
@@ -73,13 +76,15 @@ describe('Response rules interpreter', () => {
 
     const routeResponse = new ResponseRulesInterpreter(
       [routeResponse403, routeResponseTemplate],
-      request,
+      fromExpressRequest(request),
       null,
       EnvironmentDefault,
-      []
+      [],
+      {},
+      ''
     ).chooseResponse(1);
 
-    expect(routeResponse.body).to.be.equal('unauthorized');
+    strictEqual(routeResponse?.body, 'unauthorized');
   });
 
   it('should return default response if rule is invalid (missing target)', () => {
@@ -111,13 +116,15 @@ describe('Response rules interpreter', () => {
           body: 'invalid'
         }
       ],
-      request,
+      fromExpressRequest(request),
       null,
       EnvironmentDefault,
-      []
+      [],
+      {},
+      ''
     ).chooseResponse(1);
 
-    expect(routeResponse.body).to.be.equal('unauthorized');
+    strictEqual(routeResponse?.body, 'unauthorized');
   });
 
   describe('Query string rules', () => {
@@ -149,13 +156,15 @@ describe('Response rules interpreter', () => {
             body: 'query1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query1');
+      strictEqual(routeResponse?.body, 'query1');
     });
 
     it('should return response if query param do no matches (inverted)', () => {
@@ -186,13 +195,15 @@ describe('Response rules interpreter', () => {
             body: 'query1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query1');
+      strictEqual(routeResponse?.body, 'query1');
     });
 
     it('should return default response if query param does not match', () => {
@@ -223,13 +234,15 @@ describe('Response rules interpreter', () => {
             body: 'query2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if query param matches (no regex)', () => {
@@ -260,13 +273,15 @@ describe('Response rules interpreter', () => {
             body: 'query3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query3');
+      strictEqual(routeResponse?.body, 'query3');
     });
 
     it('should return response if query param value contained in array (regex)', () => {
@@ -297,13 +312,15 @@ describe('Response rules interpreter', () => {
             body: 'query4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query4');
+      strictEqual(routeResponse?.body, 'query4');
     });
 
     it('should return response if query param value contained in array (no regex)', () => {
@@ -334,13 +351,15 @@ describe('Response rules interpreter', () => {
             body: 'query5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query5');
+      strictEqual(routeResponse?.body, 'query5');
     });
 
     it('should return default response if query param modifier not present', () => {
@@ -371,13 +390,15 @@ describe('Response rules interpreter', () => {
             body: 'query6'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return default response if query param is empty', () => {
@@ -408,13 +429,15 @@ describe('Response rules interpreter', () => {
             body: 'query7'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if operator is "null" and no value query param was given', () => {
@@ -445,13 +468,15 @@ describe('Response rules interpreter', () => {
             body: 'query7'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query7');
+      strictEqual(routeResponse?.body, 'query7');
     });
 
     it('should return response if operator is "empty_array" and empty array was given', () => {
@@ -482,13 +507,15 @@ describe('Response rules interpreter', () => {
             body: 'query7'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query7');
+      strictEqual(routeResponse?.body, 'query7');
     });
 
     it('should return default response if query param does not match (regex, bad case)', () => {
@@ -519,13 +546,15 @@ describe('Response rules interpreter', () => {
             body: 'query8'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if query param matches (regex_i)', () => {
@@ -556,13 +585,15 @@ describe('Response rules interpreter', () => {
             body: 'query9'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query9');
+      strictEqual(routeResponse?.body, 'query9');
     });
 
     it('should return default response if query param does not match data bucket param', () => {
@@ -593,20 +624,22 @@ describe('Response rules interpreter', () => {
             body: 'query10'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [
           {
-            id: GenerateDatabucketID(),
+            id: GenerateUniqueID(),
             name: 'RuleBucket',
             value: { prop: 'value' },
             parsed: true
           }
-        ]
+        ],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if query param matches data bucket param', () => {
@@ -637,20 +670,61 @@ describe('Response rules interpreter', () => {
             body: 'query11'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
         [
           {
-            id: GenerateDatabucketID(),
+            id: GenerateUniqueID(),
             name: 'RuleBucket',
             value: { prop: 'value' },
             parsed: false
           }
-        ]
+        ],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('query11');
+      strictEqual(routeResponse?.body, 'query11');
+    });
+
+    it('should return response if query param extracted using jsonpath matches', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: '',
+        query: { obj: { 'prop.with.dot': 'value' } } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'query',
+                modifier: '$.obj.[prop.with.dot]',
+                value: 'value',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'value'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+
+      strictEqual(routeResponse?.body, 'value');
     });
   });
 
@@ -683,12 +757,14 @@ describe('Response rules interpreter', () => {
             body: 'params1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('params1');
+      strictEqual(routeResponse?.body, 'params1');
     });
 
     it('should return response if route param value does not match (inverted)', () => {
@@ -719,12 +795,14 @@ describe('Response rules interpreter', () => {
             body: 'params1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('params1');
+      strictEqual(routeResponse?.body, 'params1');
     });
 
     it('should return response if route param value matches (no regex)', () => {
@@ -755,12 +833,14 @@ describe('Response rules interpreter', () => {
             body: 'params2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('params2');
+      strictEqual(routeResponse?.body, 'params2');
     });
 
     it('should return default response if route param modifier not present', () => {
@@ -791,12 +871,14 @@ describe('Response rules interpreter', () => {
             body: 'params3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return default response if route param value does not match', () => {
@@ -827,12 +909,14 @@ describe('Response rules interpreter', () => {
             body: 'params4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return default response if route param value is empty', () => {
@@ -863,12 +947,14 @@ describe('Response rules interpreter', () => {
             body: 'params5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if route param matches body param', () => {
@@ -900,12 +986,285 @@ describe('Response rules interpreter', () => {
             body: 'params6'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('params6');
+      strictEqual(routeResponse?.body, 'params6');
+    });
+  });
+
+  describe('Global var rules', () => {
+    const request: Request = {
+      header: function (headerName: string) {
+        return '';
+      },
+      body: '',
+      params: {} as QueryString.ParsedQs
+    } as Request;
+
+    it('should return default response when global var is not present', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: 'testvar',
+                value: 'testvalue',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          // empty
+        },
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'unauthorized');
+    });
+
+    it('should return the correct response when global var is present (string), using object path', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: 'testvar',
+                value: 'testvalue',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar2'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          testvar: 'testvalue'
+        },
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'globalvar2');
+    });
+
+    it('should return the correct response when global var is present number (number), using object path', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: 'testvar',
+                value: '2',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar3'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          testvar: 2
+        },
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'globalvar3');
+    });
+
+    it('should return the correct response when global var is present number (deep bool prop), using object path', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: 'testvar.prop1',
+                value: 'false',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar4'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          testvar: { prop1: false }
+        },
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'globalvar4');
+    });
+
+    it('should return the correct response when global var is present number (deep string prop), using JSONPath', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'global_var',
+                modifier: '$.testvar.prop1',
+                value: 'testvalue',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'globalvar5'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          testvar: { prop1: 'testvalue' }
+        },
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'globalvar5');
+    });
+  });
+
+  describe('Data bucket rules', () => {
+    const request: Request = {
+      header: function (headerName: string) {
+        return '';
+      },
+      body: '',
+      params: {} as QueryString.ParsedQs
+    } as Request;
+
+    it('should return default response when data bucket prop is not present', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            statusCode: 204,
+            rules: [
+              {
+                target: 'data_bucket',
+                modifier: 'test.path',
+                value: 'testValue',
+                operator: 'equals',
+                invert: false
+              }
+            ]
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          // empty
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.statusCode, 403);
+    });
+
+    it('should return the correct response when data bucket prop is present, using bucket name and object path', () => {
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            statusCode: 204,
+            rules: [
+              {
+                target: 'data_bucket',
+                modifier: 'Best Bucket.onRequest.returnStatusCode',
+                value: '204',
+                operator: 'equals',
+                invert: false
+              }
+            ]
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            id: GenerateUniqueID(),
+            name: 'Best Bucket',
+            value: { onRequest: { returnStatusCode: 204 } },
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.statusCode, 204);
+    });
+
+    it('should return the correct response when data bucket prop is present, using bucket id and JSONPath', () => {
+      const bucketId = GenerateUniqueID();
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            statusCode: 204,
+            rules: [
+              {
+                target: 'data_bucket',
+                modifier: `$.${bucketId}[0].key`,
+                value: 'value',
+                operator: 'equals',
+                invert: false
+              }
+            ]
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            id: bucketId,
+            name: 'bucket',
+            value: [{ key: 'value' }],
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.statusCode, 204);
     });
   });
 
@@ -940,12 +1299,14 @@ describe('Response rules interpreter', () => {
             body: 'request_number_1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('request_number_1');
+      strictEqual(routeResponse?.body, 'request_number_1');
     });
 
     it('should return response if request number does not match (inverted)', () => {
@@ -978,12 +1339,14 @@ describe('Response rules interpreter', () => {
             body: 'request_number_not_1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(2);
-      expect(routeResponse.body).to.be.equal('request_number_not_1');
+      strictEqual(routeResponse?.body, 'request_number_not_1');
     });
 
     it("should return default response if request number don't matches", () => {
@@ -1016,12 +1379,14 @@ describe('Response rules interpreter', () => {
             body: 'request_number_1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(2);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if request number matches regex', () => {
@@ -1054,12 +1419,14 @@ describe('Response rules interpreter', () => {
             body: 'request_number_regex'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(99);
-      expect(routeResponse.body).to.be.equal('request_number_regex');
+      strictEqual(routeResponse?.body, 'request_number_regex');
     });
 
     it("should not return response if request don't matches regex", () => {
@@ -1092,12 +1459,14 @@ describe('Response rules interpreter', () => {
             body: 'request_number_regex'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(101);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if both rules match with request number', () => {
@@ -1138,19 +1507,24 @@ describe('Response rules interpreter', () => {
             body: 'request_number_complex1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       );
 
-      expect(responseRulesinterpreter.chooseResponse(1).body).to.be.equal(
+      strictEqual(
+        responseRulesinterpreter.chooseResponse(1)?.body,
         'request_number_complex1'
       );
-      expect(responseRulesinterpreter.chooseResponse(2).body).to.be.equal(
+      strictEqual(
+        responseRulesinterpreter.chooseResponse(2)?.body,
         'request_number_complex1'
       );
-      expect(responseRulesinterpreter.chooseResponse(3).body).to.be.equal(
+      strictEqual(
+        responseRulesinterpreter.chooseResponse(3)?.body,
         'unauthorized'
       );
     });
@@ -1189,24 +1563,31 @@ describe('Response rules interpreter', () => {
             body: 'request_number_4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         ResponseMode.SEQUENTIAL,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       );
-      expect(responseRulesInterpreter.chooseResponse(1).body).to.be.equal(
+      strictEqual(
+        responseRulesInterpreter.chooseResponse(1)?.body,
         'request_number_1'
       );
-      expect(responseRulesInterpreter.chooseResponse(1).body).to.be.equal(
+      strictEqual(
+        responseRulesInterpreter.chooseResponse(1)?.body,
         'request_number_1'
       );
-      expect(responseRulesInterpreter.chooseResponse(3).body).to.be.equal(
+      strictEqual(
+        responseRulesInterpreter.chooseResponse(3)?.body,
         'request_number_3'
       );
-      expect(responseRulesInterpreter.chooseResponse(4).body).to.be.equal(
+      strictEqual(
+        responseRulesInterpreter.chooseResponse(4)?.body,
         'request_number_4'
       );
-      expect(responseRulesInterpreter.chooseResponse(5).body).to.be.equal(
+      strictEqual(
+        responseRulesInterpreter.chooseResponse(5)?.body,
         'request_number_1'
       );
     });
@@ -1238,12 +1619,15 @@ describe('Response rules interpreter', () => {
             default: true
           }
         ],
-        request,
+        fromExpressRequest(request),
         ResponseMode.DISABLE_RULES,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       );
-      expect(responseRulesInterpreter.chooseResponse(1).body).to.be.equal(
+      strictEqual(
+        responseRulesInterpreter.chooseResponse(1)?.body,
         'request_number_2'
       );
     });
@@ -1280,12 +1664,14 @@ describe('Response rules interpreter', () => {
             body: 'header1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('header1');
+      strictEqual(routeResponse?.body, 'header1');
     });
 
     it('should return response if header value does not match (inverted)', () => {
@@ -1318,12 +1704,14 @@ describe('Response rules interpreter', () => {
             body: 'header1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('header1');
+      strictEqual(routeResponse?.body, 'header1');
     });
 
     it('should return response if header value matches (no regex)', () => {
@@ -1356,12 +1744,14 @@ describe('Response rules interpreter', () => {
             body: 'header2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('header2');
+      strictEqual(routeResponse?.body, 'header2');
     });
 
     it('should return default response if header value does not match', () => {
@@ -1394,12 +1784,14 @@ describe('Response rules interpreter', () => {
             body: 'header3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return default response if header value is empty', () => {
@@ -1432,12 +1824,14 @@ describe('Response rules interpreter', () => {
             body: 'header4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return default response if header modifier not present', () => {
@@ -1470,12 +1864,158 @@ describe('Response rules interpreter', () => {
             body: 'header5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
+    });
+  });
+
+  describe('Path rules', () => {
+    it('should return response if path equals value', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        url: '/test/1'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'path',
+                modifier: '',
+                value: '/test/1',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'path1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'path1');
+    });
+
+    it('should return response if path contains value (regex)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        url: '/test/2'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'path',
+                modifier: '',
+                value: '1|2',
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'path2'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'path2');
+    });
+  });
+
+  describe('Method rules', () => {
+    it('should return response if method equals value', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        method: 'GET'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'method',
+                modifier: '',
+                value: 'get',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'method1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'method1');
+    });
+
+    it('should return response if method contains value (regex)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        method: 'POST'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'method',
+                modifier: '',
+                value: '^p.*t$',
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'method2'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'method2');
     });
   });
 
@@ -1493,7 +2033,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'tommy',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1514,12 +2054,14 @@ describe('Response rules interpreter', () => {
             body: 'cookie1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('cookie1');
+      strictEqual(routeResponse?.body, 'cookie1');
     });
 
     it('should return response if cookie value does not match (inverted)', () => {
@@ -1533,7 +2075,7 @@ describe('Response rules interpreter', () => {
         },
         cookies: {
           login: 'notvalue'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1554,12 +2096,14 @@ describe('Response rules interpreter', () => {
             body: 'cookie1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('cookie1');
+      strictEqual(routeResponse?.body, 'cookie1');
     });
 
     it('should return response if cookie value matches (no regex)', () => {
@@ -1575,7 +2119,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'tommy',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1596,12 +2140,14 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('cookie2');
+      strictEqual(routeResponse?.body, 'cookie2');
     });
 
     it('should return default response if cookie value does not match', () => {
@@ -1617,7 +2163,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'cola',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1638,12 +2184,14 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if cookie value (empty) matches', () => {
@@ -1658,7 +2206,7 @@ describe('Response rules interpreter', () => {
         },
         cookies: {
           login: ''
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1679,12 +2227,14 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('cookie2');
+      strictEqual(routeResponse?.body, 'cookie2');
     });
 
     it('should return default response if cookie is not set but compared with "equals"', () => {
@@ -1718,12 +2268,14 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return default response if cookie is not set (null)', () => {
@@ -1757,12 +2309,14 @@ describe('Response rules interpreter', () => {
             body: 'cookie2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('cookie2');
+      strictEqual(routeResponse?.body, 'cookie2');
     });
 
     it('should return default response if cookie modifier is not present', () => {
@@ -1778,7 +2332,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'cola',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1799,12 +2353,14 @@ describe('Response rules interpreter', () => {
             body: 'cookie3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return default response if cookie modifier and value are not present', () => {
@@ -1820,7 +2376,7 @@ describe('Response rules interpreter', () => {
         cookies: {
           login: 'cola',
           othercookie: 'testme'
-        },
+        } as Record<string, string>,
         body: ''
       } as Request;
 
@@ -1841,12 +2397,88 @@ describe('Response rules interpreter', () => {
             body: 'cookie3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
+    });
+  });
+
+  describe('Custom templating rules', () => {
+    it('should return response if templating equals value (global var)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return '';
+        },
+        url: '/test'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'templating',
+                modifier: '{{getGlobalVar "myVar"}}',
+                value: 'globalvar',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'templating1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {
+          myVar: 'globalvar'
+        },
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'templating1');
+    });
+
+    it('should return response if templating equals value (jwt sub)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0IiwibmFtZSI6Ik1vY2sgT29uIiwiaWF0IjoxNzI0NTcwMzkxfQ.VB0POLK_cNMijO0tDinXN3Z9C2Zy3l0MPtBqs-af_48';
+        },
+        url: '/test'
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'templating',
+                modifier: '{{jwtPayload (header "Authorization") "sub"}}',
+                value: '1234',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'templating2'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'templating2');
     });
   });
 
@@ -1884,12 +2516,14 @@ describe('Response rules interpreter', () => {
             body: 'body1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body1');
+      strictEqual(routeResponse?.body, 'body1');
     });
 
     it('should return response if full body value does not match (no modifier + inverted)', () => {
@@ -1922,12 +2556,14 @@ describe('Response rules interpreter', () => {
             body: 'body1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body1');
+      strictEqual(routeResponse?.body, 'body1');
     });
 
     it('should return response if full body value matches (no modifier + no regex)', () => {
@@ -1960,12 +2596,14 @@ describe('Response rules interpreter', () => {
             body: 'body2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body2');
+      strictEqual(routeResponse?.body, 'body2');
     });
 
     it('should return default response if full body value does not match (no modifier)', () => {
@@ -1998,12 +2636,14 @@ describe('Response rules interpreter', () => {
             body: 'body3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if JSON body property value matches (no regex)', () => {
@@ -2036,12 +2676,14 @@ describe('Response rules interpreter', () => {
             body: 'body4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body4');
+      strictEqual(routeResponse?.body, 'body4');
     });
 
     it('should return response if JSON body path value matches (no regex)', () => {
@@ -2074,12 +2716,14 @@ describe('Response rules interpreter', () => {
             body: 'body5'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body5');
+      strictEqual(routeResponse?.body, 'body5');
     });
 
     it('should return response if JSON body path value matches (regex)', () => {
@@ -2112,12 +2756,14 @@ describe('Response rules interpreter', () => {
             body: 'body6'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body6');
+      strictEqual(routeResponse?.body, 'body6');
     });
 
     it('should return response if JSON body path array values contains (no regex)', () => {
@@ -2150,12 +2796,14 @@ describe('Response rules interpreter', () => {
             body: 'body7'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body7');
+      strictEqual(routeResponse?.body, 'body7');
     });
 
     it('should return response if JSON body path array values contains (regex)', () => {
@@ -2188,12 +2836,14 @@ describe('Response rules interpreter', () => {
             body: 'body8'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body8');
+      strictEqual(routeResponse?.body, 'body8');
     });
 
     it('should return response if JSON body path value matches (no regex + charset in content-type)', () => {
@@ -2226,12 +2876,14 @@ describe('Response rules interpreter', () => {
             body: 'body9'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body9');
+      strictEqual(routeResponse?.body, 'body9');
     });
 
     it('should return response if JSON body path number value matches (no regex)', () => {
@@ -2264,12 +2916,14 @@ describe('Response rules interpreter', () => {
             body: 'body10'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body10');
+      strictEqual(routeResponse?.body, 'body10');
     });
 
     it('should return response if JSON body path boolean value matches (no regex)', () => {
@@ -2302,12 +2956,14 @@ describe('Response rules interpreter', () => {
             body: 'body11'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body11');
+      strictEqual(routeResponse?.body, 'body11');
     });
 
     it('should return response if x-www-form body path value matches (no regex)', () => {
@@ -2340,12 +2996,14 @@ describe('Response rules interpreter', () => {
             body: 'body12'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body12');
+      strictEqual(routeResponse?.body, 'body12');
     });
 
     it('should return response if x-www-form body path value matches (regex)', () => {
@@ -2378,12 +3036,14 @@ describe('Response rules interpreter', () => {
             body: 'body13'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body13');
+      strictEqual(routeResponse?.body, 'body13');
     });
 
     it('should return response if x-www-form body path array value matches (no regex)', () => {
@@ -2416,12 +3076,14 @@ describe('Response rules interpreter', () => {
             body: 'body14'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body14');
+      strictEqual(routeResponse?.body, 'body14');
     });
 
     it('should return response if x-www-form body path value matches (no regex)', () => {
@@ -2454,12 +3116,14 @@ describe('Response rules interpreter', () => {
             body: 'body15'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body15');
+      strictEqual(routeResponse?.body, 'body15');
     });
 
     it('should return response if x-www-form full body value matches (no modifier + no regex)', () => {
@@ -2492,12 +3156,14 @@ describe('Response rules interpreter', () => {
             body: 'body16'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body16');
+      strictEqual(routeResponse?.body, 'body16');
     });
 
     it('should return response if x-www-form full body value matches (no modifier + regex)', () => {
@@ -2530,12 +3196,14 @@ describe('Response rules interpreter', () => {
             body: 'body17'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body17');
+      strictEqual(routeResponse?.body, 'body17');
     });
 
     it('should return response if JSON body property value is null', () => {
@@ -2568,12 +3236,14 @@ describe('Response rules interpreter', () => {
             body: 'body19'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body19');
+      strictEqual(routeResponse?.body, 'body19');
     });
 
     it('should return response if JSON body property value is null nad rule value is null too', () => {
@@ -2606,12 +3276,14 @@ describe('Response rules interpreter', () => {
             body: 'body19'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body19');
+      strictEqual(routeResponse?.body, 'body19');
     });
 
     it('should return response if XML body property value matches', () => {
@@ -2645,12 +3317,14 @@ describe('Response rules interpreter', () => {
             body: 'body20'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body20');
+      strictEqual(routeResponse?.body, 'body20');
     });
 
     it('should return response if XML body attribute value matches', () => {
@@ -2684,12 +3358,14 @@ describe('Response rules interpreter', () => {
             body: 'body21'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body21');
+      strictEqual(routeResponse?.body, 'body21');
     });
 
     it('should return response if XML initial tag attribute value matches', () => {
@@ -2723,12 +3399,14 @@ describe('Response rules interpreter', () => {
             body: 'body21'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body21');
+      strictEqual(routeResponse?.body, 'body21');
     });
 
     it('should return response if JSON body path to property with dots value matches', () => {
@@ -2776,12 +3454,93 @@ describe('Response rules interpreter', () => {
             body: 'body6'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('body6');
+      strictEqual(routeResponse?.body, 'body6');
+    });
+    it('should return response if JSON body path extracted using jsonpath matches', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        stringBody: '{"obj": {"prop.with.dot": "value"}}',
+        body: { obj: { 'prop.with.dot': 'value' } }
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '$.obj.[prop.with.dot]',
+                value: 'value',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'value'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+
+      strictEqual(routeResponse?.body, 'value');
+    });
+
+    it('should return response if operator is "array_includes" and array contains value', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          property: ['value1', 'value2']
+        },
+        query: { prop: undefined, examples: [] } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: 'property',
+                value: 'value1',
+                operator: 'array_includes',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+
+      strictEqual(routeResponse?.body, 'response1');
     });
   });
 
@@ -2825,12 +3584,14 @@ describe('Response rules interpreter', () => {
             body: 'complex1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('complex1');
+      strictEqual(routeResponse?.body, 'complex1');
     });
 
     it('should return response if both rules match (with invert)', () => {
@@ -2872,12 +3633,14 @@ describe('Response rules interpreter', () => {
             body: 'complex1'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('complex1');
+      strictEqual(routeResponse?.body, 'complex1');
     });
 
     it('should return default response if both rules do not match', () => {
@@ -2918,12 +3681,14 @@ describe('Response rules interpreter', () => {
             body: 'complex2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return response if one rule matches', () => {
@@ -2965,12 +3730,14 @@ describe('Response rules interpreter', () => {
             body: 'complex3'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('complex3');
+      strictEqual(routeResponse?.body, 'complex3');
     });
 
     it('should return default response if none rule matches', () => {
@@ -3011,12 +3778,14 @@ describe('Response rules interpreter', () => {
             body: 'complex4'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('unauthorized');
+      strictEqual(routeResponse?.body, 'unauthorized');
     });
 
     it('should return second response if first one has no rule with AND', () => {
@@ -3061,12 +3830,14 @@ describe('Response rules interpreter', () => {
             body: 'response2'
           }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
-      expect(routeResponse.body).to.be.equal('response2');
+      strictEqual(routeResponse?.body, 'response2');
     });
 
     it('should return response marked as default if no rule fulfilled', () => {
@@ -3084,13 +3855,15 @@ describe('Response rules interpreter', () => {
           routeResponse403,
           { ...routeResponseTemplate, body: 'content', default: true }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('content');
+      strictEqual(routeResponse?.body, 'content');
     });
 
     it('should return response if rules fulfilled and ignore the response marked as default', () => {
@@ -3125,13 +3898,15 @@ describe('Response rules interpreter', () => {
           },
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
-        request,
+        fromExpressRequest(request),
         null,
         EnvironmentDefault,
-        []
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('content1');
+      strictEqual(routeResponse?.body, 'content1');
     });
   });
 
@@ -3168,11 +3943,15 @@ describe('Response rules interpreter', () => {
           },
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
-        request,
-        ResponseMode.FALLBACK
+        fromExpressRequest(request),
+        ResponseMode.FALLBACK,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse.body).to.be.equal('content1');
+      strictEqual(routeResponse?.body, 'content1');
     });
 
     it('should not return response if rules not fulfilled', () => {
@@ -3207,11 +3986,57 @@ describe('Response rules interpreter', () => {
           },
           { ...routeResponseTemplate, body: 'content2', default: true }
         ],
-        request,
-        ResponseMode.FALLBACK
+        fromExpressRequest(request),
+        ResponseMode.FALLBACK,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
       ).chooseResponse(1);
 
-      expect(routeResponse).to.be.null;
+      strictEqual(routeResponse, null);
     });
+  });
+
+  it('should return response if rules fulfilled using modifier templating support', () => {
+    const request: Request = {
+      header: function (headerName: string) {
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+
+        return headers[headerName];
+      },
+      body: { testprop: 'testvalue' }
+    } as Request;
+
+    const routeResponse = new ResponseRulesInterpreter(
+      [
+        { ...routeResponseTemplate, body: 'default', default: true },
+        {
+          ...routeResponseTemplate,
+          body: 'response1',
+          rules: [
+            {
+              target: 'body',
+              modifier: '{{data "bodypropname"}}',
+              value: 'testvalue',
+              operator: 'equals',
+              invert: false
+            }
+          ],
+          rulesOperator: 'OR',
+          default: false
+        }
+      ],
+      fromExpressRequest(request),
+      null,
+      EnvironmentDefault,
+      [{ id: 'abcd', name: 'bodypropname', value: 'testprop', parsed: true }],
+      {},
+      ''
+    ).chooseResponse(1);
+
+    strictEqual(routeResponse?.body, 'response1');
   });
 });

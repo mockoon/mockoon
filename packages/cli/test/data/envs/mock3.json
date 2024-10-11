@@ -1,6 +1,6 @@
 {
   "uuid": "f4c8cd6e-dbf4-4865-9558-08195ef8b36b",
-  "lastMigration": 27,
+  "lastMigration": 33,
   "name": "mock1",
   "endpointPrefix": "api",
   "latency": 0,
@@ -18,12 +18,7 @@
           "latency": 0,
           "statusCode": 200,
           "label": "",
-          "headers": [
-            {
-              "key": "",
-              "value": ""
-            }
-          ],
+          "headers": [{ "key": "", "value": "" }],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
@@ -32,35 +27,23 @@
           "fallbackTo404": false,
           "default": true,
           "databucketID": "",
-          "bodyType": "INLINE"
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
   "proxyHost": "",
   "cors": true,
-  "headers": [
-    {
-      "key": "Content-Type",
-      "value": "application/json"
-    }
-  ],
-  "proxyReqHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
-  "proxyResHeaders": [
-    {
-      "key": "",
-      "value": ""
-    }
-  ],
+  "headers": [{ "key": "Content-Type", "value": "application/json" }],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
   "hostname": "",
   "tlsOptions": {
@@ -75,9 +58,7 @@
   "data": [],
   "folders": [],
   "rootChildren": [
-    {
-      "type": "route",
-      "uuid": "6176195e-590f-4695-8dde-40377cc7dda0"
-    }
-  ]
+    { "type": "route", "uuid": "6176195e-590f-4695-8dde-40377cc7dda0" }
+  ],
+  "callbacks": []
 }

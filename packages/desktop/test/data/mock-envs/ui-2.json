@@ -1,6 +1,6 @@
 {
   "uuid": "9ca3284a-d5e8-42a4-b3dc-cd74a304c764",
-  "lastMigration": 28,
+  "lastMigration": 33,
   "name": "UI env name edit",
   "endpointPrefix": "",
   "latency": 0,
@@ -25,5 +25,6 @@
   },
   "data": [],
   "folders": [],
-  "rootChildren": []
+  "rootChildren": [],
+  "callbacks": []
 }

@@ -7,11 +7,19 @@ git pull
 echo "Setting pkgver to $1"
 sed -i "/pkgver=/c\pkgver=$1" PKGBUILD
 
-echo "Downloading debian package (https://github.com/mockoon/mockoon/releases/download/v$1/mockoon-$1.deb) for md5sum"
-md5sum=`curl -sL "https://github.com/mockoon/mockoon/releases/download/v$1/mockoon-$1.deb" | md5sum | cut -d ' ' -f 1`
+echo "Setting pkgrel to $2"
+sed -i "/pkgrel=/c\pkgrel=$2" PKGBUILD
+
+source="https://github.com/mockoon/mockoon/releases/download/v$1/mockoon-$1.amd64.deb"
+
+echo "Downloading debian package ($source) for md5sum"
+md5sum=`curl -sL "$source" | md5sum | cut -d ' ' -f 1`
 
 echo "Setting md5sums to $md5sum"
 sed -i "/md5sums=/c\md5sums=('$md5sum')" PKGBUILD
+
+echo "Setting source to $source"
+sed -i "/source=/c\source=('$source')" PKGBUILD
 
 echo "Generating .SRCINFO"
 sudo -u build-user makepkg --printsrcinfo > .SRCINFO

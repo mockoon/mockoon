@@ -1,29 +1,20 @@
 import { Environment, ServerErrorCodes } from '@mockoon/commons';
-import { expect } from 'chai';
-import { promises as fs } from 'fs';
+import { strictEqual } from 'assert';
 import { MockoonServer } from '../../../src';
-
-async function getEnvironment(): Promise<Environment> {
-  const environmentJson = await fs.readFile(
-    './test/data/environments/test-env.json',
-    'utf-8'
-  );
-
-  return JSON.parse(environmentJson) as Environment;
-}
+import { getEnvironment } from '../../libs/environment';
 
 describe('Server should handle bad hostnames', () => {
   let environment: Environment;
 
   before(async () => {
-    environment = await getEnvironment();
+    environment = await getEnvironment('test');
   });
 
   it('Malformed IP address', (done) => {
     environment.hostname = '1922.0.0.1';
     const server = new MockoonServer(environment);
     server.on('error', (errorCode) => {
-      expect(errorCode).to.equal(ServerErrorCodes.HOSTNAME_UNKNOWN);
+      strictEqual(errorCode, ServerErrorCodes.HOSTNAME_UNKNOWN);
       server.stop();
       done();
     });
@@ -36,7 +27,7 @@ describe('Server should handle bad hostnames', () => {
 
     const server = new MockoonServer(environment);
     server.on('error', (errorCode) => {
-      expect(errorCode).to.equal(ServerErrorCodes.HOSTNAME_UNAVAILABLE);
+      strictEqual(errorCode, ServerErrorCodes.HOSTNAME_UNAVAILABLE);
       server.stop();
       done();
     });
@@ -49,7 +40,7 @@ describe('Server should handle port errors', () => {
   let environment: Environment;
 
   before(async () => {
-    environment = await getEnvironment();
+    environment = await getEnvironment('test');
   });
 
   it('Port in use', (done) => {
@@ -59,7 +50,7 @@ describe('Server should handle port errors', () => {
     const server1 = new MockoonServer(environment);
     server1.start();
     server.on('error', (errorCode) => {
-      expect(errorCode).to.equal(ServerErrorCodes.PORT_ALREADY_USED);
+      strictEqual(errorCode, ServerErrorCodes.PORT_ALREADY_USED);
       server1.stop();
       server.stop();
       done();

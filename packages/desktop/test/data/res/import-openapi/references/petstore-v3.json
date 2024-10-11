@@ -1,212 +1,283 @@
 {
-  "uuid": "530c5c03-82c7-461d-a794-43a67bc5af0b",
-  "lastMigration": 28,
+  "uuid": "8f6a86f2-e23b-4491-98d8-899b94ddec3d",
+  "lastMigration": 33,
   "name": "Swagger Petstore v3",
   "endpointPrefix": "v2",
   "latency": 0,
   "port": 3000,
+  "hostname": "",
+  "folders": [],
   "routes": [
     {
-      "uuid": "cbad3514-1cda-4839-8b08-6a35d9b1537e",
+      "uuid": "6c65d4f3-ca43-4571-94d1-a4f56d02ac7c",
+      "type": "http",
       "documentation": "Returns all pets from the system that the user has access to\n",
       "method": "get",
       "endpoint": "pets",
       "responses": [
         {
-          "uuid": "3055a9cc-4fe2-4a9b-bbfe-4d057e66eb74",
+          "uuid": "7c89264c-b977-487c-801c-baab1f03d3fc",
           "body": "[\n  {\n    \"name\": \"\",\n    \"tag\": \"\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "pet response",
           "headers": [
-            { "key": "Content-Type", "value": "application/json" },
-            { "key": "X-Rate-Limit", "value": "" },
-            { "key": "X-Expires-After", "value": "" }
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "X-Rate-Limit",
+              "value": "{{faker 'number.int' max=99999}}"
+            },
+            {
+              "key": "X-Expires-After",
+              "value": "{{faker 'date.recent' 365}}"
+            }
           ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "f04edb71-ef4d-48b9-819c-2b2c7012013b",
-          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
+          "uuid": "05f63665-4ed5-440c-b0c0-3f0a390dd271",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "af56eacf-945b-4897-91aa-5b308954fe4e",
+      "uuid": "3a075a09-38cb-430d-9534-6d439274ef60",
+      "type": "http",
       "documentation": "Creates a new pet in the store.  Duplicates are allowed",
       "method": "post",
       "endpoint": "pets",
       "responses": [
         {
-          "uuid": "2f568b35-4322-490a-bc29-f43c28c32f2f",
+          "uuid": "0b1f454a-5f88-4c4e-921f-825808833cc3",
           "body": "{\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "pet response",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "5e8b6981-cf59-49e6-91af-4bdae8a7c3c1",
-          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
+          "uuid": "d25bc483-143c-4974-a70c-fad990e0d8b6",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "caf4ce47-1de2-4ff5-a677-cfea6a10d80f",
+      "uuid": "7f19cab0-d254-48b0-ac4d-b640e40a15d4",
+      "type": "http",
       "documentation": "Returns a user based on a single ID, if the user does not have access to the pet",
       "method": "get",
       "endpoint": "pets/:id",
       "responses": [
         {
-          "uuid": "ada4a61d-792d-4736-b255-9a6d0411e486",
+          "uuid": "c49c1c11-ce5f-47b2-954f-d22e7571e885",
           "body": "{\n  \"name\": \"\",\n  \"tag\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "pet response",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "212dc002-1793-4402-ac43-1d177ac2da16",
-          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
+          "uuid": "9be3c766-537a-4136-bdde-b1531454794d",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
-      "uuid": "0af86bac-4c6e-4591-b52e-ef9dd11248a2",
+      "uuid": "835ea6a6-becb-4dc9-9db7-17aae0af7b40",
+      "type": "http",
       "documentation": "deletes a single pet based on the ID supplied",
       "method": "delete",
       "endpoint": "pets/:id",
       "responses": [
         {
-          "uuid": "f6c0b41e-366f-491e-87a5-ee9f65a31fe5",
+          "uuid": "b98c13d5-26ae-4fe1-8ba1-e05378042c6b",
           "body": "",
           "latency": 0,
           "statusCode": 204,
           "label": "pet deleted",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         },
         {
-          "uuid": "d51a51a3-41b7-478b-8063-99973b33f4f5",
-          "body": "{\n  \"code\": {{faker 'datatype.number'}},\n  \"message\": \"\"\n}",
+          "uuid": "cb2f28d7-1002-4153-9240-91674a68b454",
+          "body": "{\n  \"code\": {{faker 'number.int' max=99999}},\n  \"message\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "unexpected error",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
           "filePath": "",
+          "databucketID": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false,
-          "databucketID": "",
-          "bodyType": "INLINE",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "6c65d4f3-ca43-4571-94d1-a4f56d02ac7c"
+    },
+    {
+      "type": "route",
+      "uuid": "3a075a09-38cb-430d-9534-6d439274ef60"
+    },
+    {
+      "type": "route",
+      "uuid": "7f19cab0-d254-48b0-ac4d-b640e40a15d4"
+    },
+    {
+      "type": "route",
+      "uuid": "835ea6a6-becb-4dc9-9db7-17aae0af7b40"
     }
   ],
   "proxyMode": false,
   "proxyHost": "",
-  "cors": true,
-  "headers": [],
-  "proxyReqHeaders": [{ "key": "", "value": "" }],
-  "proxyResHeaders": [{ "key": "", "value": "" }],
   "proxyRemovePrefix": false,
-  "hostname": "",
   "tlsOptions": {
     "enabled": false,
     "type": "CERT",
@@ -216,12 +287,10 @@
     "caPath": "",
     "passphrase": ""
   },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [{ "key": "", "value": "" }],
+  "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
-  "folders": [],
-  "rootChildren": [
-    { "type": "route", "uuid": "cbad3514-1cda-4839-8b08-6a35d9b1537e" },
-    { "type": "route", "uuid": "af56eacf-945b-4897-91aa-5b308954fe4e" },
-    { "type": "route", "uuid": "caf4ce47-1de2-4ff5-a677-cfea6a10d80f" },
-    { "type": "route", "uuid": "0af86bac-4c6e-4591-b52e-ef9dd11248a2" }
-  ]
+  "callbacks": []
 }

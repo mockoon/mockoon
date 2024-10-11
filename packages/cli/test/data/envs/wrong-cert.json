@@ -1,6 +1,6 @@
 {
   "uuid": "06d4e2f2-b7a1-4717-a61d-94666816c30f",
-  "lastMigration": 27,
+  "lastMigration": 33,
   "name": "test",
   "endpointPrefix": "",
   "latency": 0,
@@ -24,5 +24,6 @@
   "folders": [],
   "headers": [],
   "proxyReqHeaders": [],
-  "proxyResHeaders": []
+  "proxyResHeaders": [],
+  "callbacks": []
 }

@@ -12,15 +12,7 @@ const getCallMockoonCert: HttpCall = {
   method: 'GET',
   testedResponse: {
     body: '42',
-    status: 200,
-    cert: {
-      issuer: {
-        C: 'AU',
-        CN: 'localhost',
-        O: 'Internet Widgits Pty Ltd',
-        ST: 'Some-State'
-      }
-    }
+    status: 200
   }
 };
 
@@ -31,13 +23,7 @@ const getCallCustomCert: HttpCall = {
   method: 'GET',
   testedResponse: {
     body: '42',
-    status: 200,
-    cert: {
-      issuer: {
-        CN: 'localhost',
-        O: 'mockoon'
-      }
-    }
+    status: 200
   }
 };
 
@@ -56,12 +42,20 @@ describe('TLS', () => {
     await http.assertCallWithPort(getCallMockoonCert, 3000);
   });
 
-  it('should add a custom certificate', async () => {
+  it('should add a custom certificate and use templating', async () => {
     await navigation.switchView('ENV_SETTINGS');
-
-    await environmentsSettings.setSettingValue('certPath', './domain.crt');
-    await environmentsSettings.setSettingValue('keyPath', './domain.key');
-    await environmentsSettings.setSettingValue('passphrase', '123456');
+    await environmentsSettings.setSettingValue(
+      'certPath',
+      '{{getEnvVar "TLS_TEST_CERT_PATH"}}'
+    );
+    await environmentsSettings.setSettingValue(
+      'keyPath',
+      '{{getEnvVar "TLS_TEST_KEY_PATH"}}'
+    );
+    await environmentsSettings.setSettingValue(
+      'passphrase',
+      '{{getEnvVar "TLS_TEST_PASSPHRASE"}}'
+    );
     await environments.restart();
   });
 

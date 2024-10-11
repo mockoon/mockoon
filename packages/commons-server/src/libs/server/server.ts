@@ -2,6 +2,8 @@ import {
   BINARY_BODY,
   BodyTypes,
   CORSHeaders,
+  Callback,
+  CallbackInvocation,
   Environment,
   FileExtensionsWithTemplating,
   GetContentType,
@@ -9,12 +11,22 @@ import {
   Header,
   IsValidURL,
   MimeTypesWithTemplating,
+  ParsedJSONBodyMimeTypes,
+  ParsedXMLBodyMimeTypes,
   ProcessedDatabucket,
   Route,
   RouteResponse,
   RouteType,
   ServerErrorCodes,
-  ServerEvents
+  ServerEvents,
+  ServerOptions,
+  StreamingMode,
+  Transaction,
+  defaultEnvironmentVariablesPrefix,
+  defaultMaxTransactionLogs,
+  generateUUID,
+  getLatency,
+  stringIncludesArrayItems
 } from '@mockoon/commons';
 import appendField from 'append-field';
 import busboy from 'busboy';
@@ -23,7 +35,11 @@ import { EventEmitter } from 'events';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import { createReadStream, readFile, readFileSync, statSync } from 'fs';
 import type { RequestListener } from 'http';
-import { createServer as httpCreateServer, Server as httpServer } from 'http';
+import {
+  IncomingMessage,
+  createServer as httpCreateServer,
+  Server as httpServer
+} from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import {
   createServer as httpsCreateServer,
@@ -32,25 +48,43 @@ import {
 import killable from 'killable';
 import { lookup as mimeTypeLookup } from 'mime-types';
 import { basename, extname } from 'path';
+import { match } from 'path-to-regexp';
 import { parse as qsParse } from 'qs';
+import rangeParser from 'range-parser';
+import { Readable } from 'stream';
 import { SecureContextOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
+import { parse as parseUrl } from 'url';
 import { format } from 'util';
+import { WebSocket, WebSocketServer } from 'ws';
 import { xml2js } from 'xml-js';
-import { ParsedXMLBodyMimeTypes } from '../../constants/common.constants';
 import { ServerMessages } from '../../constants/server-messages.constants';
 import { DefaultTLSOptions } from '../../constants/ssl.constants';
+import { SetFakerLocale, SetFakerSeed } from '../faker';
+import { ServerRequest, fromExpressRequest, fromWsRequest } from '../requests';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
 import { requestHelperNames } from '../templating-helpers/request-helpers';
 import {
+  CreateCallbackInvocation,
+  CreateInFlightRequest,
   CreateTransaction,
   dedupSlashes,
+  isBodySupportingMethod,
+  preparePath,
   resolvePathFromEnvironment,
-  routesFromFolder,
-  stringIncludesArrayItems
+  routesFromFolder
 } from '../utils';
+import { createAdminEndpoint } from './admin-api';
 import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
+import {
+  BroadcastContext,
+  DelegatedBroadcastHandler,
+  getSafeStreamingInterval,
+  isWebSocketOpen,
+  messageToString,
+  serveFileContentInWs
+} from './ws';
 
 /**
  * Create a server instance from an Environment object.
@@ -59,27 +93,36 @@ import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
  */
 export class MockoonServer extends (EventEmitter as new () => TypedEmitter<ServerEvents>) {
   private serverInstance: httpServer | httpsServer;
+  private webSocketServers: WebSocketServer[] = [];
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
+  // store the request number for each route
+  private requestNumbers: Record<string, number> = {};
+  // templating global variables
+  private globalVariables: Record<string, any> = {};
+  private options: ServerOptions = {
+    disabledRoutes: [],
+    envVarsPrefix: defaultEnvironmentVariablesPrefix,
+    enableAdminApi: true,
+    disableTls: false,
+    maxTransactionLogs: defaultMaxTransactionLogs,
+    enableRandomLatency: false,
+    maxFileUploads: 10,
+    maxFileSize: 10 * 1024 * 1024 // 10MB
+  };
+  private transactionLogs: Transaction[] = [];
 
   constructor(
     private environment: Environment,
-    private options: {
-      /**
-       *    Directory where to find the environment file.
-       *
-       */
-      environmentDirectory?: string;
-
-      /**
-       * Method used by the library to refresh the environment information
-       */
-      refreshEnvironmentFunction?: (
-        environmentUUID: string
-      ) => Environment | null;
-    } = {}
+    options: Partial<ServerOptions> = {}
   ) {
     super();
+
+    this.options = {
+      ...this.options,
+      ...options,
+      envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix
+    };
   }
 
   /**
@@ -88,15 +131,28 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   public start() {
     const requestListener = this.createRequestListener();
 
+    const routes = this.getRoutesOfEnvironment();
+    const webSocketRoutes = routes.filter((route) => {
+      const routePath = preparePath(
+        this.environment.endpointPrefix,
+        route.endpoint
+      );
+
+      return (
+        route.type === RouteType.WS &&
+        !this.options.disabledRoutes?.some(
+          (disabledRoute) =>
+            route.uuid === disabledRoute || routePath.includes(disabledRoute)
+        )
+      );
+    });
+
     // create https or http server instance
-    if (this.environment.tlsOptions.enabled) {
+    if (this.environment.tlsOptions.enabled && !this.options.disableTls) {
       try {
         this.tlsOptions = this.buildTLSOptions(this.environment);
 
-        this.serverInstance = httpsCreateServer(
-          this.tlsOptions,
-          requestListener
-        );
+        this.serverInstance = httpsCreateServer(this.tlsOptions);
       } catch (error: any) {
         if (error.code === 'ENOENT') {
           this.emit('error', ServerErrorCodes.CERT_FILE_NOT_FOUND, error);
@@ -105,7 +161,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
       }
     } else {
-      this.serverInstance = httpCreateServer(requestListener);
+      this.serverInstance = httpCreateServer();
     }
 
     // make serverInstance killable
@@ -137,6 +193,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.emit('error', errorCode, error);
     });
 
+    this.serverInstance.on('request', requestListener);
+
+    if (webSocketRoutes.length > 0) {
+      this.createWSRoutes(webSocketRoutes);
+    }
+
     try {
       this.serverInstance.listen(
         { port: this.environment.port, host: this.environment.hostname },
@@ -155,6 +217,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * Kill the server
    */
   public stop() {
+    if (this.webSocketServers.length > 0) {
+      this.webSocketServers.forEach((wss) => wss.close());
+    }
+    BroadcastContext.getInstance().closeAll();
     if (this.serverInstance) {
       this.serverInstance.kill(() => {
         this.emit('stopped');
@@ -166,17 +232,53 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * Create a request listener
    */
   public createRequestListener(): RequestListener {
+    /**
+     * Apply faker.js settings at each server start.
+     * Locale must be set before seed.
+     * We do this in the request listener to allow changing the locale and seed from the serverless package too, which is not using the start/stop methods.
+     */
+    SetFakerLocale(this.options.fakerOptions?.locale ?? 'en');
+    SetFakerSeed(this.options.fakerOptions?.seed ?? undefined);
+
     const app = express();
     app.disable('x-powered-by');
     app.disable('etag');
 
     this.generateDatabuckets(this.environment);
 
+    // This middleware is required to parse the body for createAdminEndpoint requests
+    app.use(this.parseBody);
+
+    if (this.options.enableAdminApi) {
+      // admin endpoint must be created before all other routes to avoid conflicts
+      createAdminEndpoint(app, {
+        statePurgeCallback: () => {
+          // reset request numbers
+          Object.keys(this.requestNumbers).forEach((routeUUID) => {
+            this.requestNumbers[routeUUID] = 1;
+          });
+        },
+        setGlobalVariables: (key: string, value: any) => {
+          this.globalVariables[key] = value;
+        },
+        purgeGlobalVariables: () => {
+          this.globalVariables = {};
+        },
+        purgeDataBuckets: () => {
+          this.processedDatabuckets = [];
+          this.generateDatabuckets(this.environment);
+        },
+        getLogs: () => this.transactionLogs,
+        purgeLogs: () => {
+          this.transactionLogs = [];
+        }
+      });
+    }
+
     app.use(this.emitEvent);
     app.use(this.delayResponse);
     app.use(this.deduplicateRequestSlashes);
     app.use(cookieParser());
-    app.use(this.parseBody);
     app.use(this.logRequest);
     app.use(this.setResponseHeaders);
 
@@ -220,7 +322,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) => {
     this.refreshEnvironment();
 
-    setTimeout(next, this.environment.latency);
+    setTimeout(
+      next,
+      getLatency(this.environment.latency, this.options.enableRandomLatency)
+    );
   };
 
   /**
@@ -242,6 +347,109 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
+   * Process the raw body and parse it if needed
+   *
+   * @param request
+   * @param next
+   * @param rawBody
+   * @param requestContentType
+   */
+  private processRawBody(request, next, rawBody, requestContentType) {
+    request.rawBody = Buffer.concat(rawBody);
+    request.stringBody = request.rawBody.toString('utf8');
+
+    try {
+      if (requestContentType) {
+        if (
+          stringIncludesArrayItems(ParsedJSONBodyMimeTypes, requestContentType)
+        ) {
+          request.body = JSON.parse(request.stringBody);
+          next();
+        } else if (
+          requestContentType.includes('application/x-www-form-urlencoded')
+        ) {
+          request.body = qsParse(request.stringBody, {
+            depth: 10
+          });
+          next();
+        } else if (requestContentType.includes('multipart/form-data')) {
+          const busboyParse = busboy({
+            headers: request.headers,
+            limits: {
+              fieldNameSize: 1000,
+              files: this.options.maxFileUploads,
+              fileSize: this.options.maxFileSize
+            }
+          });
+
+          busboyParse.on('field', (name, value, info) => {
+            if (request.body === undefined) {
+              request.body = {};
+            }
+
+            if (name != null && !info.nameTruncated && !info.valueTruncated) {
+              appendField(request.body, name, value);
+            }
+          });
+
+          busboyParse.on(
+            'file',
+            (
+              name: string,
+              stream: Readable,
+              info: { filename: string; encoding: string; mimeType: string }
+            ) => {
+              if (request.body === undefined) {
+                request.body = {};
+              }
+
+              const file = {
+                filename: info.filename,
+                mimetype: info.mimeType,
+                size: 0
+              };
+
+              stream.on('data', (data) => {
+                file.size += data.length;
+              });
+
+              stream.on('close', () => {
+                appendField(request.body, name, file);
+              });
+            }
+          );
+
+          busboyParse.on('error', (error: any) => {
+            this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
+            // we want to continue answering the call despite the parsing errors
+            next();
+          });
+
+          busboyParse.on('finish', () => {
+            next();
+          });
+
+          busboyParse.end(request.rawBody);
+        } else if (
+          stringIncludesArrayItems(ParsedXMLBodyMimeTypes, requestContentType)
+        ) {
+          request.body = xml2js(request.stringBody, {
+            compact: true
+          });
+          next();
+        } else {
+          next();
+        }
+      } else {
+        next();
+      }
+    } catch (error: any) {
+      this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
+      next();
+    }
+  }
+
+  /**
    * ### Middleware ###
    * Parse entering request body
    *
@@ -249,6 +457,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param response
    * @param next
    */
+
   private parseBody = (
     request: Request,
     response: Response,
@@ -258,73 +467,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const requestContentType: string | undefined =
       request.header('Content-Type');
 
-    const rawBody: Buffer[] = [];
+    // body was already parsed (e.g. by firebase), 'data' event will not be emitted (⚠️ request.body will always be an empty object in Firebase Functions, we have to check rawBody too)
+    if (!!request.body && request.rawBody) {
+      this.processRawBody(request, next, [request.rawBody], requestContentType);
+    } else {
+      const rawBody: Buffer[] = [];
 
-    request.on('data', (chunk) => {
-      rawBody.push(Buffer.from(chunk, 'binary'));
-    });
+      request.on('data', (chunk) => {
+        rawBody.push(Buffer.from(chunk, 'binary'));
+      });
 
-    request.on('end', () => {
-      request.rawBody = Buffer.concat(rawBody);
-      request.stringBody = request.rawBody.toString('utf8');
-
-      try {
-        if (requestContentType) {
-          if (requestContentType.includes('application/json')) {
-            request.body = JSON.parse(request.stringBody);
-            next();
-          } else if (
-            requestContentType.includes('application/x-www-form-urlencoded')
-          ) {
-            request.body = qsParse(request.stringBody, {
-              depth: 10
-            });
-            next();
-          } else if (requestContentType.includes('multipart/form-data')) {
-            const busboyParse = busboy({
-              headers: request.headers,
-              limits: { fieldNameSize: 1000, files: 0 }
-            });
-
-            busboyParse.on('field', (name, value, info) => {
-              if (request.body === undefined) {
-                request.body = {};
-              }
-
-              if (name != null && !info.nameTruncated && !info.valueTruncated) {
-                appendField(request.body, name, value);
-              }
-            });
-
-            busboyParse.on('error', (error: any) => {
-              this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
-              // we want to continue answering the call despite the parsing errors
-              next();
-            });
-
-            busboyParse.on('finish', () => {
-              next();
-            });
-
-            busboyParse.end(request.rawBody);
-          } else if (
-            stringIncludesArrayItems(ParsedXMLBodyMimeTypes, requestContentType)
-          ) {
-            request.body = xml2js(request.stringBody, {
-              compact: true
-            });
-            next();
-          } else {
-            next();
-          }
-        } else {
-          next();
-        }
-      } catch (error: any) {
-        this.emit('error', ServerErrorCodes.REQUEST_BODY_PARSE, error);
-        next();
-      }
-    });
+      request.on('end', () => {
+        this.processRawBody(request, next, rawBody, requestContentType);
+      });
+    }
   };
 
   /**
@@ -342,6 +498,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) => {
     response.on('close', () => {
       this.emit('transaction-complete', CreateTransaction(request, response));
+
+      // store the transaction logs at beginning of the array
+      this.transactionLogs.unshift(CreateTransaction(request, response));
+
+      // keep only the last n transactions
+      if (this.transactionLogs.length > this.options.maxTransactionLogs) {
+        this.transactionLogs.pop();
+      }
+      if (this.transactionLogs.length > this.options.maxTransactionLogs) {
+        this.transactionLogs = this.transactionLogs.slice(
+          0,
+          this.options.maxTransactionLogs
+        );
+      }
     });
 
     next();
@@ -366,6 +536,24 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   };
 
   /**
+   * Returns all defined routes in the setup environment.
+   */
+  private getRoutesOfEnvironment(): Route[] {
+    if (
+      !this.environment.rootChildren ||
+      this.environment.rootChildren.length < 1
+    ) {
+      return [];
+    }
+
+    return routesFromFolder(
+      this.environment.rootChildren,
+      this.environment.folders,
+      this.environment.routes
+    );
+  }
+
+  /**
    * Generate an environment routes and attach to running server
    *
    * @param server - server on which attach routes
@@ -381,37 +569,481 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const routes = routesFromFolder(
       this.environment.rootChildren,
       this.environment.folders,
-      this.environment.routes
+      this.environment.routes,
+      this.options.disabledRoutes
     );
 
     routes.forEach((declaredRoute: Route) => {
-      // only launch non duplicated routes, or ignore if none.
-      if (declaredRoute.enabled) {
-        try {
-          let routePath = `/${
-            this.environment.endpointPrefix
-          }/${declaredRoute.endpoint.replace(/ /g, '%20')}`;
+      const routePath = preparePath(
+        this.environment.endpointPrefix,
+        declaredRoute.endpoint
+      );
 
-          routePath = dedupSlashes(routePath);
+      try {
+        this.requestNumbers[declaredRoute.uuid] = 1;
 
-          if (declaredRoute.type === RouteType.CRUD) {
-            this.createCRUDRoute(server, declaredRoute, routePath);
-          } else {
-            this.createRESTRoute(server, declaredRoute, routePath);
-          }
-        } catch (error: any) {
-          let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
+        if (declaredRoute.type === RouteType.CRUD) {
+          this.createCRUDRoute(server, declaredRoute, routePath);
+        } else {
+          this.createRESTRoute(server, declaredRoute, routePath);
+        }
+      } catch (error: any) {
+        let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
 
-          // if invalid regex defined
-          if (error.message.indexOf('Invalid regular expression') > -1) {
-            errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR_REGEX;
-          }
+        // if invalid regex defined
+        if (error.message.indexOf('Invalid regular expression') > -1) {
+          errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR_REGEX;
+        }
 
-          this.emit('error', errorCode, error, {
-            routePath: declaredRoute.endpoint,
-            routeUUID: declaredRoute.uuid
+        this.emit('error', errorCode, error, {
+          routePath: declaredRoute.endpoint,
+          routeUUID: declaredRoute.uuid
+        });
+      }
+    });
+  }
+
+  /**
+   * Creates websocket routes from the given set of routes.
+   *
+   * @param wsRoutes
+   */
+  private createWSRoutes(wsRoutes: Route[]) {
+    const envPath = this.environment.endpointPrefix
+      ? `/${this.environment.endpointPrefix}`
+      : '';
+
+    wsRoutes.forEach((wsRoute) => {
+      const webSocketServer = new WebSocket.Server({
+        noServer: true,
+        path: `${envPath}`
+      });
+
+      this.webSocketServers.push(webSocketServer);
+
+      webSocketServer.on(
+        'connection',
+        this.createWebSocketConnectionHandler(webSocketServer, wsRoute)
+      );
+
+      const pathMatcherFn = match(
+        wsRoute.endpoint.startsWith('/')
+          ? wsRoute.endpoint
+          : '/' + wsRoute.endpoint
+      );
+
+      this.serverInstance.on('upgrade', (req, socket, head) => {
+        const urlParsed = parseUrl(req.url || '', true);
+        if (pathMatcherFn(urlParsed.pathname || '')) {
+          webSocketServer.handleUpgrade(req, socket, head, (client) => {
+            webSocketServer.emit('connection', client, req);
           });
         }
+      });
+    });
+  }
+
+  /**
+   * Creates a handler for a web socket connection recieved, if only any
+   * of route is matched.
+   *
+   * @param webSocketServer
+   * @param routeFor
+   * @returns
+   */
+  private createWebSocketConnectionHandler(
+    webSocketServer: WebSocketServer,
+    routeFor: Route
+  ) {
+    return (socket: WebSocket, request: IncomingMessage) => {
+      // Refresh the environment when a new client is connected.
+      this.refreshEnvironment();
+      const route = this.getRefreshedRoute(routeFor);
+
+      if (!route) {
+        this.emit('error', ServerErrorCodes.ROUTE_NO_LONGER_EXISTS, null, {
+          routePath: routeFor.endpoint,
+          routeUUID: routeFor.uuid
+        });
+
+        return;
+      }
+
+      const websocketId = generateUUID();
+      const baseErrorMeta = {
+        websocketId,
+        routeUUID: route.uuid,
+        routePath: route.endpoint
+      };
+
+      const inflightRequest = CreateInFlightRequest(
+        websocketId,
+        request,
+        route
+      );
+      this.emit('ws-new-connection', inflightRequest);
+
+      let responseNumber = 1;
+
+      // handle error event
+      socket.on('error', (err) => {
+        this.emit(
+          'error',
+          ServerErrorCodes.WS_SERVING_ERROR,
+          err,
+          baseErrorMeta
+        );
+      });
+
+      // handle common close method.
+      // There would be more close methods registered, if the route is in streaming mode.
+      socket.on('close', (code, reason) => {
+        this.emit(
+          'ws-closed',
+          inflightRequest,
+          code,
+          reason ? reason.toString('utf8') : null
+        );
+      });
+
+      const serverRequest = fromWsRequest(request, route);
+
+      // This is not waiting until a messge from client. But will push messages as a stream.
+      if (route.streamingMode === StreamingMode.BROADCAST) {
+        this.handleBroadcastResponse(
+          webSocketServer,
+          socket,
+          route,
+          serverRequest,
+          baseErrorMeta
+        );
+
+        return;
+      } else if (route.streamingMode === StreamingMode.UNICAST) {
+        this.handleOneToOneStreamingResponses(
+          socket,
+          route,
+          request,
+          baseErrorMeta
+        );
+
+        return;
+      }
+
+      socket.on('message', (data, isBinary) => {
+        if (isBinary) {
+          this.emit(
+            'error',
+            ServerErrorCodes.WS_UNSUPPORTED_CONTENT,
+            null,
+            baseErrorMeta
+          );
+
+          return;
+        }
+
+        // Refresh the environment when a new message is recieved.
+        this.refreshEnvironment();
+        const routeInMessage = this.getRefreshedRoute(route);
+
+        // the route is not found. Skip reacting.
+        if (!routeInMessage) {
+          this.emit(
+            'error',
+            ServerErrorCodes.WS_UNKNOWN_ROUTE,
+            null,
+            baseErrorMeta
+          );
+
+          return;
+        }
+
+        // get the incoming message as string...
+        const messageData = messageToString(data);
+        this.emit('ws-message-received', inflightRequest, messageData);
+
+        const enabledRouteResponse = new ResponseRulesInterpreter(
+          routeInMessage.responses,
+          serverRequest,
+          routeInMessage.responseMode,
+          this.environment,
+          this.processedDatabuckets,
+          this.globalVariables,
+          this.options.envVarsPrefix
+        ).chooseResponse(responseNumber, messageData);
+
+        if (!enabledRouteResponse) {
+          // Do nothing?
+          return;
+        }
+
+        responseNumber += 1;
+
+        setTimeout(() => {
+          const content = this.deriveFinalResponseContentForWebSockets(
+            socket,
+            routeInMessage,
+            enabledRouteResponse,
+            request,
+            messageData
+          );
+
+          if (content) {
+            socket.send(content || '', (err) => {
+              if (err) {
+                this.emit('error', ServerErrorCodes.WS_SERVING_ERROR, err, {
+                  ...baseErrorMeta,
+                  selectedResponseUUID: enabledRouteResponse.uuid,
+                  selectedResponseLabel: enabledRouteResponse.label
+                });
+              }
+            });
+          }
+        }, enabledRouteResponse.latency);
+      });
+    };
+  }
+
+  /**
+   * Derive final delivery content for websocket response.
+   *
+   * If no content is returned, that means the relevant content has been served,
+   * or a failure has occurred. These scenarios can happen with file body type
+   * and should be handled properly by the callers.
+   *
+   * @param socket
+   * @param route
+   * @param enabledRouteResponse
+   * @param request
+   * @param data
+   */
+  private deriveFinalResponseContentForWebSockets(
+    socket: WebSocket,
+    route: Route,
+    enabledRouteResponse: RouteResponse,
+    request?: IncomingMessage,
+    data?: string,
+    connectedRequest?: ServerRequest
+  ): string | undefined {
+    let content: any = enabledRouteResponse.body;
+    let finalRequest = connectedRequest;
+    if (!finalRequest) {
+      finalRequest = request ? fromWsRequest(request, route, data) : undefined;
+    }
+
+    if (
+      enabledRouteResponse.bodyType === BodyTypes.DATABUCKET &&
+      enabledRouteResponse.databucketID
+    ) {
+      const servedDatabucket = this.processedDatabuckets.find(
+        (processedDatabucket) =>
+          processedDatabucket.id === enabledRouteResponse.databucketID
+      );
+
+      if (servedDatabucket) {
+        content = servedDatabucket.value;
+
+        if (
+          Array.isArray(content) ||
+          typeof content === 'object' ||
+          typeof content === 'boolean' ||
+          typeof content === 'number'
+        ) {
+          content = JSON.stringify(content);
+        } else {
+          content = content;
+        }
+      }
+    } else if (
+      enabledRouteResponse.bodyType === BodyTypes.FILE &&
+      enabledRouteResponse.filePath
+    ) {
+      const templateParser = (contentData: string) =>
+        TemplateParser({
+          shouldOmitDataHelper: false,
+          content: contentData,
+          environment: this.environment,
+          processedDatabuckets: this.processedDatabuckets,
+          globalVariables: this.globalVariables,
+          request: finalRequest,
+          envVarsPrefix: this.options.envVarsPrefix
+        });
+
+      // resolve file location
+      let filePath = templateParser(
+        enabledRouteResponse.filePath.replace(/\\/g, '/')
+      );
+      filePath = resolvePathFromEnvironment(
+        filePath,
+        this.options.environmentDirectory
+      );
+
+      serveFileContentInWs(
+        socket,
+        route,
+        enabledRouteResponse,
+        this,
+        filePath,
+        templateParser
+      );
+
+      return;
+    }
+
+    if (!enabledRouteResponse.disableTemplating) {
+      content = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: content || '',
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request: finalRequest,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
+    }
+
+    return content;
+  }
+
+  private handleBroadcastResponse(
+    webSocketServer: WebSocketServer,
+    socket: WebSocket,
+    route: Route,
+    request: ServerRequest,
+    baseErrorMeta: any
+  ) {
+    const broadcastContext = BroadcastContext.getInstance();
+    const handler: DelegatedBroadcastHandler = (
+      _: number,
+      enabledRouteResponse: RouteResponse
+    ) => {
+      // todo: do we need to take params from initial connection at all?
+      const content =
+        this.deriveFinalResponseContentForWebSockets(
+          socket,
+          route,
+          enabledRouteResponse,
+          undefined,
+          undefined,
+          request
+        ) || '';
+
+      if (!content) {
+        return;
+      }
+
+      const errorMetaData = {
+        ...baseErrorMeta,
+        selectedResponseUUID: enabledRouteResponse.uuid,
+        selectedResponseLabel: enabledRouteResponse.label
+      };
+
+      webSocketServer.clients.forEach((client) => {
+        if (isWebSocketOpen(client)) {
+          this.serveWsResponse(client, content, errorMetaData);
+        }
+      });
+    };
+
+    broadcastContext.registerRoute(
+      route,
+      {
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        envVarPrefix: this.options.envVarsPrefix
+      },
+      request,
+      handler
+    );
+  }
+
+  /**
+   * Handle streaming websocket responses.
+   *
+   * @param socket
+   * @param route
+   * @param request
+   * @param baseErrorMeta
+   */
+  private handleOneToOneStreamingResponses(
+    socket: WebSocket,
+    route: Route,
+    request: IncomingMessage,
+    baseErrorMeta: any
+  ) {
+    let responseNumber = 1;
+
+    const intervalRef = setInterval(() => {
+      const enabledRouteResponse = new ResponseRulesInterpreter(
+        route.responses,
+        fromWsRequest(request, route),
+        route.responseMode,
+        this.environment,
+        this.processedDatabuckets,
+        this.globalVariables,
+        this.options.envVarsPrefix
+      ).chooseResponse(responseNumber);
+
+      if (!enabledRouteResponse) {
+        return;
+      }
+
+      const content =
+        this.deriveFinalResponseContentForWebSockets(
+          socket,
+          route,
+          enabledRouteResponse,
+          request
+        ) || '';
+
+      responseNumber += 1;
+
+      if (!content) {
+        return;
+      }
+
+      const errorMetaData = {
+        ...baseErrorMeta,
+        selectedResponseUUID: enabledRouteResponse.uuid,
+        selectedResponseLabel: enabledRouteResponse.label
+      };
+
+      if (route.streamingMode === StreamingMode.UNICAST) {
+        if (isWebSocketOpen(socket)) {
+          this.serveWsResponse(socket, content, errorMetaData);
+        }
+      }
+    }, getSafeStreamingInterval(route.streamingInterval));
+
+    socket.on('close', () => {
+      // close any interval data pushes
+      if (intervalRef) {
+        clearInterval(intervalRef);
+      }
+    });
+  }
+
+  /**
+   * Sends given response data to the socket client.
+   *
+   * @param client
+   * @param content
+   * @param errorMetaData
+   */
+  private serveWsResponse(
+    client: WebSocket,
+    content: string,
+    errorMetaData: any
+  ) {
+    client.send(content, (err) => {
+      if (err) {
+        this.emit(
+          'error',
+          ServerErrorCodes.WS_SERVING_ERROR,
+          err,
+          errorMetaData
+        );
       }
     });
   }
@@ -428,7 +1060,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     route: Route,
     routePath: string
   ) {
-    server[route.method](routePath, this.createRouteHandler(route, 1));
+    server[route.method](routePath, this.createRouteHandler(route));
   }
 
   /**
@@ -448,16 +1080,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     for (const crudRoute of crudRoutes) {
       server[crudRoute.method](
         crudRoute.path,
-        this.createRouteHandler(route, 1, crudRoute.id)
+        this.createRouteHandler(route, crudRoute.id)
       );
     }
   }
 
-  private createRouteHandler(
-    route: Route,
-    requestNumber: number,
-    crudId?: CrudRouteIds
-  ) {
+  private createRouteHandler(route: Route, crudId?: CrudRouteIds) {
     return (request: Request, response: Response, next: NextFunction) => {
       this.generateRequestDatabuckets(route, this.environment, request);
 
@@ -478,23 +1106,30 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       const enabledRouteResponse = new ResponseRulesInterpreter(
         currentRoute.responses,
-        request,
+        fromExpressRequest(request),
         currentRoute.responseMode,
         this.environment,
-        this.processedDatabuckets
-      ).chooseResponse(requestNumber);
+        this.processedDatabuckets,
+        this.globalVariables,
+        this.options.envVarsPrefix
+      ).chooseResponse(this.requestNumbers[route.uuid]);
 
       if (!enabledRouteResponse) {
         return next();
       }
 
-      requestNumber += 1;
+      this.requestNumbers[route.uuid] += 1;
 
       // save route and response UUIDs for logs (only in desktop app)
       if (route.uuid && enabledRouteResponse.uuid) {
         response.routeUUID = route.uuid;
         response.routeResponseUUID = enabledRouteResponse.uuid;
       }
+
+      const latency = getLatency(
+        enabledRouteResponse.latency,
+        this.options.enableRandomLatency
+      );
 
       // add route latency if any
       setTimeout(() => {
@@ -521,6 +1156,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             request,
             response
           );
+
           // serve inline body or databucket
         } else {
           let templateParse = true;
@@ -580,8 +1216,124 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             templateParse
           );
         }
-      }, enabledRouteResponse.latency);
+      }, latency);
     };
+  }
+
+  private makeCallbacks(
+    routeResponse: RouteResponse,
+    request: Request,
+    response: Response
+  ) {
+    if (routeResponse.callbacks && routeResponse.callbacks.length > 0) {
+      const serverRequest = fromExpressRequest(request);
+      for (const invocation of routeResponse.callbacks) {
+        const cb = this.environment.callbacks.find(
+          (ref) => ref.uuid === invocation.uuid
+        );
+
+        if (!cb) {
+          continue;
+        }
+
+        try {
+          const url = TemplateParser({
+            shouldOmitDataHelper: false,
+            content: cb.uri,
+            environment: this.environment,
+            processedDatabuckets: this.processedDatabuckets,
+            globalVariables: this.globalVariables,
+            request: serverRequest,
+            response,
+            envVarsPrefix: this.options.envVarsPrefix
+          });
+
+          let content = cb.body;
+          let templateParse = true;
+
+          if (cb.bodyType === BodyTypes.DATABUCKET && cb.databucketID) {
+            templateParse = false;
+
+            const servedDatabucket = this.processedDatabuckets.find(
+              (processedDatabucket) =>
+                processedDatabucket.id === cb.databucketID
+            );
+
+            if (servedDatabucket) {
+              content = servedDatabucket.value;
+
+              // if returned content is an array or object we need to stringify it for some values (array, object, booleans and numbers (bool and nb because expressjs cannot serve this as is))
+              if (
+                Array.isArray(content) ||
+                typeof content === 'object' ||
+                typeof content === 'boolean' ||
+                typeof content === 'number'
+              ) {
+                content = JSON.stringify(content);
+              } else {
+                content = content;
+              }
+            }
+          } else if (cb.bodyType === BodyTypes.FILE && cb.filePath) {
+            this.sendFileWithCallback(
+              routeResponse,
+              cb,
+              invocation,
+              request,
+              response
+            );
+
+            continue;
+          }
+
+          const sendingHeaders = {
+            headers: {}
+          };
+          this.setHeaders(cb.headers || [], sendingHeaders, request);
+
+          // apply templating if specified
+          if (!routeResponse.disableTemplating && templateParse) {
+            content = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: content || '',
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              request: serverRequest,
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
+          }
+
+          setTimeout(() => {
+            fetch(url, {
+              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              method: cb.method.toUpperCase(),
+              headers: sendingHeaders.headers,
+              body: isBodySupportingMethod(cb.method) ? content : undefined
+            })
+              .then((res) => {
+                this.emitCallbackInvoked(
+                  res,
+                  cb,
+                  url,
+                  content,
+                  sendingHeaders.headers
+                );
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: cb.name
+                })
+              );
+          }, invocation.latency);
+        } catch (error: any) {
+          this.emit('error', ServerErrorCodes.CALLBACK_ERROR, error, {
+            callbackName: cb.name
+          });
+        }
+      }
+    }
   }
 
   /**
@@ -601,19 +1353,24 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ) {
     try {
       if (!routeResponse.disableTemplating && templateParse) {
-        content = TemplateParser(
-          false,
-          content || '',
-          this.environment,
-          this.processedDatabuckets,
-          request,
-          response
-        );
+        content = TemplateParser({
+          shouldOmitDataHelper: false,
+          content: content || '',
+          environment: this.environment,
+          processedDatabuckets: this.processedDatabuckets,
+          globalVariables: this.globalVariables,
+          request: fromExpressRequest(request),
+          response,
+          envVarsPrefix: this.options.envVarsPrefix
+        });
       }
 
       this.applyResponseLocals(response);
 
       response.body = content;
+
+      // execute callbacks after generating the template, to be able to use the eventual templating variables in the callback
+      this.makeCallbacks(routeResponse, request, response);
 
       response.send(content);
     } catch (error: any) {
@@ -626,6 +1383,147 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         response,
         format(ServerMessages.ROUTE_SERVING_ERROR, error.message)
       );
+    }
+  }
+
+  private sendFileWithCallback(
+    routeResponse: RouteResponse,
+    callback: Callback,
+    invocation: CallbackInvocation,
+    request: Request,
+    response: Response
+  ) {
+    if (!callback.filePath) {
+      return;
+    }
+
+    const fileServingError = (error) => {
+      this.emit('error', ServerErrorCodes.CALLBACK_FILE_ERROR, error, {
+        callbackName: callback.name
+      });
+    };
+
+    const serverRequest = fromExpressRequest(request);
+    try {
+      const url = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: callback.uri,
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request: serverRequest,
+        response,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
+
+      let filePath = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: callback.filePath.replace(/\\/g, '/'),
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request: serverRequest,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
+
+      filePath = resolvePathFromEnvironment(
+        filePath,
+        this.options.environmentDirectory
+      );
+
+      const fileMimeType = mimeTypeLookup(filePath) || '';
+
+      const sendingHeaders = {
+        headers: {}
+      };
+      this.setHeaders(callback.headers || [], sendingHeaders, request);
+
+      const definedContentType = sendingHeaders.headers['Content-Type'];
+
+      // parse templating for a limited list of mime types
+
+      try {
+        if (!callback.sendFileAsBody) {
+          const buffer = readFileSync(filePath);
+          const form = new FormData();
+          form.append('file', new Blob([buffer]));
+
+          setTimeout(() => {
+            fetch(url, {
+              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              method: callback.method.toUpperCase(),
+              body: form,
+              headers: sendingHeaders.headers
+            })
+              .then((res) => {
+                this.emitCallbackInvoked(
+                  res,
+                  callback,
+                  url,
+                  `<buffer of ${filePath}`,
+                  sendingHeaders.headers
+                );
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: callback.name
+                })
+              );
+          }, invocation.latency);
+        } else {
+          const data = readFileSync(filePath);
+          let fileContent;
+          if (
+            MimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
+            !routeResponse.disableTemplating
+          ) {
+            fileContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: data.toString(),
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              request: serverRequest,
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
+          } else {
+            fileContent = data.toString();
+          }
+
+          // set content-type the detected mime type if any
+          if (!definedContentType && fileMimeType) {
+            sendingHeaders.headers['Content-Type'] = fileMimeType;
+          }
+
+          setTimeout(() => {
+            fetch(url, {
+              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              method: callback.method.toUpperCase(),
+              headers: sendingHeaders.headers,
+              body: fileContent
+            })
+              .then((res) => {
+                this.emitCallbackInvoked(
+                  res,
+                  callback,
+                  url,
+                  fileContent,
+                  sendingHeaders.headers
+                );
+              })
+              .catch((e) =>
+                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
+                  callbackName: callback.name
+                })
+              );
+          }, invocation.latency);
+        }
+      } catch (error: any) {
+        fileServingError(error);
+      }
+    } catch (error: any) {
+      fileServingError(error);
     }
   }
 
@@ -666,14 +1564,17 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       }
     };
 
+    const serverRequest = fromExpressRequest(request);
     try {
-      let filePath = TemplateParser(
-        false,
-        routeResponse.filePath.replace(/\\/g, '/'),
-        this.environment,
-        this.processedDatabuckets,
-        request
-      );
+      let filePath = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: routeResponse.filePath.replace(/\\/g, '/'),
+        environment: this.environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        request: serverRequest,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
       filePath = resolvePathFromEnvironment(
         filePath,
@@ -708,18 +1609,24 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           }
 
           try {
-            const fileContent = TemplateParser(
-              false,
-              data.toString(),
-              this.environment,
-              this.processedDatabuckets,
-              request,
-              response
-            );
+            const fileContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: data.toString(),
+              environment: this.environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              request: serverRequest,
+              response,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
 
             this.applyResponseLocals(response);
 
             response.body = fileContent;
+
+            // execute callbacks after generating the file content, to be able to use the eventual templating variables in the callback
+            this.makeCallbacks(routeResponse, request, response);
+
             response.send(fileContent);
           } catch (error: any) {
             fileServingError(error);
@@ -727,8 +1634,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         });
       } else {
         try {
-          response.body = BINARY_BODY;
+          const rangeHeader = request.headers.range;
           const { size } = statSync(filePath);
+          response.body = BINARY_BODY;
+          let stream = createReadStream(filePath);
+
           this.setHeaders(
             [
               {
@@ -739,8 +1649,57 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             response,
             request
           );
-          // use read stream for better performance
-          createReadStream(filePath).pipe(response);
+
+          if (rangeHeader) {
+            const parsedRange = rangeParser(size, rangeHeader);
+
+            // unsatisfiable range
+            if (parsedRange === -1) {
+              this.sendError(response, 'Requested range not satisfiable', 416);
+
+              return;
+            } else if (parsedRange === -2) {
+              // malformed header
+              this.sendError(response, 'Malformed range header', 400);
+
+              return;
+            } else if (parsedRange) {
+              const start = parsedRange[0].start;
+              const end = parsedRange[0].end;
+              const chunksize = end - start + 1;
+              stream = createReadStream(filePath, { start, end });
+
+              this.setHeaders(
+                [
+                  {
+                    key: 'Content-Range',
+                    value: `bytes ${start}-${end}/${size}`
+                  },
+                  {
+                    key: 'Accept-Ranges',
+                    value: 'bytes'
+                  },
+                  {
+                    key: 'Content-Length',
+                    value: chunksize.toString()
+                  },
+                  {
+                    key: 'Content-Type',
+                    value: fileMimeType
+                  }
+                ],
+                response,
+                request
+              );
+
+              response.status(206);
+              stream = createReadStream(filePath, { start, end });
+            }
+          }
+
+          this.makeCallbacks(routeResponse, request, response);
+
+          stream.pipe(response);
         } catch (error: any) {
           errorThrowOrFallback(error);
         }
@@ -964,13 +1923,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     if (header.key && header.value) {
       try {
-        parsedHeaderValue = TemplateParser(
-          false,
-          header.value,
-          this.environment,
-          this.processedDatabuckets,
-          request
-        );
+        parsedHeaderValue = TemplateParser({
+          shouldOmitDataHelper: false,
+          content: header.value,
+          environment: this.environment,
+          processedDatabuckets: this.processedDatabuckets,
+          globalVariables: this.globalVariables,
+          request: fromExpressRequest(request),
+          envVarsPrefix: this.options.envVarsPrefix
+        });
       } catch (error: any) {
         this.emit('error', ServerErrorCodes.HEADER_PARSING_ERROR, error, {
           headerKey: header.key,
@@ -1009,6 +1970,40 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     response.send(errorMessage);
+  }
+
+  /**
+   * Emit callback invoked event.
+   *
+   * @param res
+   * @param callback
+   * @param url
+   * @param requestBody
+   * @param requestHeaders
+   */
+  private emitCallbackInvoked(
+    res: globalThis.Response,
+    callback: Callback,
+    url: string,
+    requestBody: string | null | undefined,
+    requestHeaders: { [key: string]: any }
+  ) {
+    res.text().then((respText) => {
+      const reqHeaders = Object.keys(requestHeaders).map(
+        (k) => ({ key: k, value: requestHeaders[k] }) as Header
+      );
+      this.emit(
+        'callback-invoked',
+        CreateCallbackInvocation(
+          callback,
+          url,
+          requestBody,
+          reqHeaders,
+          res,
+          respText
+        )
+      );
+    });
   }
 
   /**
@@ -1053,6 +2048,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   private buildTLSOptions(environment: Environment): SecureContextOptions {
     let tlsOptions: SecureContextOptions = {};
+    const processTemplating = (content: string) =>
+      TemplateParser({
+        content,
+        shouldOmitDataHelper: false,
+        environment,
+        processedDatabuckets: this.processedDatabuckets,
+        globalVariables: this.globalVariables,
+        envVarsPrefix: this.options.envVarsPrefix
+      });
 
     if (
       environment.tlsOptions?.pfxPath ||
@@ -1064,7 +2068,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       ) {
         tlsOptions.pfx = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.pfxPath,
+            processTemplating(environment.tlsOptions?.pfxPath),
             this.options.environmentDirectory
           )
         );
@@ -1075,13 +2079,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       ) {
         tlsOptions.cert = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.certPath,
+            processTemplating(environment.tlsOptions?.certPath),
             this.options.environmentDirectory
           )
         );
         tlsOptions.key = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.keyPath,
+            processTemplating(environment.tlsOptions?.keyPath),
             this.options.environmentDirectory
           )
         );
@@ -1090,14 +2094,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       if (environment.tlsOptions?.caPath) {
         tlsOptions.ca = readFileSync(
           resolvePathFromEnvironment(
-            environment.tlsOptions?.caPath,
+            processTemplating(environment.tlsOptions?.caPath),
             this.options.environmentDirectory
           )
         );
       }
 
       if (environment.tlsOptions?.passphrase) {
-        tlsOptions.passphrase = environment.tlsOptions?.passphrase;
+        tlsOptions.passphrase = processTemplating(
+          environment.tlsOptions?.passphrase
+        );
       }
     } else {
       tlsOptions = { ...DefaultTLSOptions };
@@ -1131,12 +2137,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           let templateParsedContent;
 
           try {
-            templateParsedContent = TemplateParser(
-              false,
-              databucket.value,
+            templateParsedContent = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: databucket.value,
               environment,
-              this.processedDatabuckets
-            );
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              envVarsPrefix: this.options.envVarsPrefix
+            });
 
             const JSONParsedContent = JSON.parse(templateParsedContent);
             newProcessedDatabucket = {
@@ -1169,7 +2177,101 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
-   * Generate the databuckets called with the data helper on route call
+   * Returns list of matched databucket ids in the given text.
+   *
+   * @param data text to be searched for possible databucket ids
+   */
+  private extractDatabucketIdsFromString(text?: string): string[] {
+    const matches = text?.matchAll(
+      new RegExp('data(?:Raw)? +[\'|"]{1}([^(\'|")]*)', 'g')
+    );
+
+    return [...(matches || [])].map((mtc) => mtc[1]);
+  }
+
+  /**
+   * Find and returns all unique databucket ids specified in callbacks
+   * of the given response.
+   * To achieve null safety, this will always return an empty set if no callbacks
+   * have been defined.
+   *
+   * @param response
+   * @param environment
+   */
+  private findDatabucketIdsInCallbacks(
+    response: RouteResponse,
+    environment: Environment
+  ): string[] {
+    let dataBucketIds: string[] = [];
+
+    if (response.callbacks && response.callbacks.length > 0) {
+      for (const invocation of response.callbacks) {
+        const callback = environment.callbacks.find(
+          (envCallback) => envCallback.uuid === invocation.uuid
+        );
+
+        if (!callback) {
+          continue;
+        }
+
+        dataBucketIds = [
+          ...dataBucketIds,
+          ...this.extractDatabucketIdsFromString(callback.uri),
+          ...this.extractDatabucketIdsFromString(callback.body),
+          ...this.extractDatabucketIdsFromString(callback.filePath),
+          ...this.findDatabucketIdsInHeaders(callback.headers)
+        ];
+
+        if (callback.databucketID) {
+          dataBucketIds.push(callback.databucketID);
+        }
+      }
+    }
+
+    return dataBucketIds;
+  }
+
+  /**
+   * Find data buckets referenced in the provided headers
+   *
+   * @param headers
+   */
+  private findDatabucketIdsInHeaders(headers: Header[]): string[] {
+    return headers.reduce<string[]>(
+      (acc, header) => [
+        ...acc,
+        ...this.extractDatabucketIdsFromString(header.value)
+      ],
+      []
+    );
+  }
+
+  /**
+   * Find databucket ids in the rules target and value of the given response
+   *
+   * @param response
+   */
+  private findDatabucketIdsInRules(response: RouteResponse): string[] {
+    let dataBucketIds: string[] = [];
+
+    response.rules.forEach((rule) => {
+      const splitRules = rule.modifier.split('.');
+      if (rule.target === 'data_bucket') {
+        dataBucketIds = [
+          ...dataBucketIds,
+          // split by dots, take first section, or second if first is a dollar
+          splitRules[0].startsWith('$') ? splitRules[1] : splitRules[0],
+          ...this.extractDatabucketIdsFromString(rule.value)
+        ];
+      }
+    });
+
+    return dataBucketIds;
+  }
+
+  /**
+   * Generate the databuckets that were not parsed at the server start
+   *
    * @param route
    * @param environment
    * @param request
@@ -1188,55 +2290,88 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       return;
     }
 
+    let databucketIdsToParse = new Set<string>();
+
+    // find databucket ids in environment headers
+    this.findDatabucketIdsInHeaders(environment.headers).forEach(
+      (dataBucketId) => databucketIdsToParse.add(dataBucketId)
+    );
+
     route.responses.forEach((response) => {
-      const results = response.body?.matchAll(
-        new RegExp('{{2,3}[#(\\s\\w]*data [\'|"]{1}([^(\'|")]*)', 'g')
-      );
-      const databucketIdsToParse = new Set(
-        [...(results || [])].map((match) => match[1])
-      );
+      // capture databucket ids in body and relevant callback definitions
+      [
+        ...this.findDatabucketIdsInHeaders(response.headers),
+        ...this.extractDatabucketIdsFromString(response.body),
+        ...this.extractDatabucketIdsFromString(response.filePath),
+        ...this.findDatabucketIdsInCallbacks(response, environment),
+        ...this.findDatabucketIdsInRules(response)
+      ].forEach((dataBucketId) => databucketIdsToParse.add(dataBucketId));
 
       if (response.databucketID) {
         databucketIdsToParse.add(response.databucketID);
       }
+    });
 
-      if (databucketIdsToParse.size > 0) {
-        let targetDatabucket: ProcessedDatabucket | undefined;
+    // capture databucket ids in found databuckets to allow for nested databucket parsing
+    let nestedDatabucketIds: string[] = [];
 
-        for (const databucketIdToParse of databucketIdsToParse) {
-          targetDatabucket = this.processedDatabuckets.find(
-            (databucket) =>
-              databucket.id === databucketIdToParse ||
-              databucket.name
-                .toLowerCase()
-                .includes(databucketIdToParse.toLowerCase())
-          );
+    environment.data.forEach((databucket) => {
+      if (
+        databucketIdsToParse.has(databucket.id) ||
+        [...databucketIdsToParse.keys()].some((id) =>
+          databucket.name.toLowerCase().includes(id.toLowerCase())
+        )
+      ) {
+        nestedDatabucketIds = [
+          ...this.extractDatabucketIdsFromString(databucket.value)
+        ];
+      }
+    });
 
-          if (targetDatabucket && !targetDatabucket?.parsed) {
-            let content = targetDatabucket.value;
-            try {
-              content = TemplateParser(
-                false,
-                targetDatabucket.value,
-                environment,
-                this.processedDatabuckets,
-                request
-              );
-              const JSONParsedcontent = JSON.parse(content);
-              targetDatabucket.value = JSONParsedcontent;
-              targetDatabucket.parsed = true;
-            } catch (error: any) {
-              if (error instanceof SyntaxError) {
-                targetDatabucket.value = content;
-              } else {
-                targetDatabucket.value = error.message;
-              }
-              targetDatabucket.parsed = true;
+    // add nested databucket ids at the beginning of the set to ensure they are parsed first
+    databucketIdsToParse = new Set([
+      ...nestedDatabucketIds,
+      ...databucketIdsToParse
+    ]);
+
+    if (databucketIdsToParse.size > 0) {
+      let targetDatabucket: ProcessedDatabucket | undefined;
+
+      for (const databucketIdToParse of databucketIdsToParse) {
+        targetDatabucket = this.processedDatabuckets.find(
+          (databucket) =>
+            databucket.id === databucketIdToParse ||
+            databucket.name
+              .toLowerCase()
+              .includes(databucketIdToParse.toLowerCase())
+        );
+
+        if (targetDatabucket && !targetDatabucket?.parsed) {
+          let content = targetDatabucket.value;
+          try {
+            content = TemplateParser({
+              shouldOmitDataHelper: false,
+              content: targetDatabucket.value,
+              environment,
+              processedDatabuckets: this.processedDatabuckets,
+              globalVariables: this.globalVariables,
+              request: fromExpressRequest(request),
+              envVarsPrefix: this.options.envVarsPrefix
+            });
+            const JSONParsedcontent = JSON.parse(content);
+            targetDatabucket.value = JSONParsedcontent;
+            targetDatabucket.parsed = true;
+          } catch (error: any) {
+            if (error instanceof SyntaxError) {
+              targetDatabucket.value = content;
+            } else {
+              targetDatabucket.value = error.message;
             }
+            targetDatabucket.parsed = true;
           }
         }
       }
-    });
+    }
   }
 
   /**

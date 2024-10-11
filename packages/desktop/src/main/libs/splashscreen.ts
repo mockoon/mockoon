@@ -1,5 +1,4 @@
 import { BrowserWindow } from 'electron';
-import { join as pathJoin } from 'path';
 
 export const createSplashScreen = () => {
   const splashScreen = new BrowserWindow({
@@ -18,8 +17,8 @@ export const createSplashScreen = () => {
     movable: true,
     maximizable: false,
     minimizable: false,
-    backgroundColor: '#3C637C',
-    icon: pathJoin(__dirname, '../build-res/icon_512x512x32.png')
+    skipTaskbar: true,
+    backgroundColor: '#3C637C'
   });
 
   splashScreen.loadURL(`file://${__dirname}/renderer/splashscreen.html`);

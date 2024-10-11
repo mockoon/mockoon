@@ -1,51 +1,26 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
-import { Store } from 'src/renderer/app/stores/store';
-import { Settings } from 'src/shared/models/settings.model';
+import { TourService } from 'src/renderer/app/services/tour.service';
+import { UIService } from 'src/renderer/app/services/ui.service';
 
 @Component({
   selector: 'app-welcome-modal',
   templateUrl: './welcome-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WelcomeModalComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal')
-  public modal: ElementRef;
-  public settings$: Observable<Settings>;
-
+export class WelcomeModalComponent {
   constructor(
-    private modalService: NgbModal,
     private settingsService: SettingsService,
-    private store: Store
+    private uiservice: UIService,
+    private tourService: TourService
   ) {}
 
-  ngOnInit() {}
-
-  ngAfterViewInit() {
-    this.settings$ = this.store.select('settings');
-
-    // wait for settings to be ready and check if display needed
-    this.settings$
-      .pipe(filter<Settings>(Boolean), first())
-      .subscribe((settings) => {
-        if (!settings.welcomeShown) {
-          this.modalService.open(this.modal);
-        }
-      });
-  }
-
-  public closeModal() {
-    this.modalService.dismissAll();
+  public close(takeTour: boolean) {
+    this.uiservice.closeModal('welcome');
     this.settingsService.updateSettings({ welcomeShown: true });
+
+    if (takeTour) {
+      this.tourService.start();
+    }
   }
 }

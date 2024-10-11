@@ -1,42 +1,38 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   Inject,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { RandomInt } from '@mockoon/commons';
+import { FormControl, UntypedFormControl } from '@angular/forms';
+import { Template, TemplateListItem, User } from '@mockoon/cloud';
+import {
+  BuildHTTPRoute,
+  RandomInt,
+  Route,
+  RouteResponse
+} from '@mockoon/commons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
+  EMPTY,
+  Observable,
+  Subject,
   catchError,
+  combineLatestWith,
   concat,
   concatMap,
-  debounceTime,
   delay,
-  EMPTY,
   filter,
-  finalize,
   from,
   map,
   merge,
   mergeMap,
-  Observable,
   of,
   repeat,
-  Subject,
   switchMap,
   takeUntil,
   tap,
@@ -46,19 +42,12 @@ import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { demoTemplates } from 'src/renderer/app/constants/demo-templates';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { textFilter } from 'src/renderer/app/libs/utils.lib';
 import { TemplatesTabsName } from 'src/renderer/app/models/store.model';
-import {
-  Template,
-  TemplateListItem
-} from 'src/renderer/app/models/template.model';
-import { User } from 'src/renderer/app/models/user.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { TemplatesService } from 'src/renderer/app/services/templates.service';
-import {
-  setActiveTemplatesTabAction,
-  updateFilterAction
-} from 'src/renderer/app/stores/actions';
+import { UIService } from 'src/renderer/app/services/ui.service';
+import { setActiveTemplatesTabAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -68,107 +57,59 @@ import { Config } from 'src/renderer/config';
   styleUrls: ['./templates-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('fade-1', [
+    trigger('fade', [
       transition(':enter', [
         style({ opacity: 0 }),
         animate('1s ease-in', style({ opacity: 1 }))
       ])
-    ]),
-    trigger('fade-2', [
-      state('false', style({ opacity: 0 })),
-      state('true', style({ opacity: 1 })),
-      transition('false=>true', [animate('1s ease-in')])
     ])
   ]
 })
-export class TemplatesModalComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
-  @ViewChild('modal')
-  public modal: ElementRef;
-  public loginURL = Config.loginURL;
-  public isLoading$ = new BehaviorSubject<boolean>(false);
+export class TemplatesModalComponent implements OnInit, OnDestroy {
   public isDemoLoading$ = new BehaviorSubject<boolean>(false);
   public activeTemplateListItem$ = new BehaviorSubject<TemplateListItem>(null);
   public activeTemplate$: Observable<Template>;
   public activeTemplatesTab$: Observable<TemplatesTabsName>;
   public templates$: Observable<TemplateListItem[]>;
   public templatesFilter$: Observable<string>;
-  public os$: Observable<string>;
   public demo$: Observable<any>;
   public user$: Observable<User>;
-  public templatesFilter = new FormControl('');
-  public prompt = new FormControl('');
-  public demoPrompt = new FormControl('');
-  public generatedTemplateBody = new FormControl('');
-  public demoGeneratedTemplateBody = new FormControl('');
-  public generateOptions = this.formBuilder.group({
-    json: true,
-    list: true,
-    templating: true
-  });
-  public proPlansURL = Config.proPlansURL;
-  public maxTemplatePromptLength = Config.maxTemplatePromptLength;
-  public toggles = [
-    {
-      name: 'json',
-      items: [
-        {
-          value: 'json',
-          label: 'JSON',
-          tooltip: 'Generate valid JSON'
-        }
-      ]
-    },
-    {
-      name: 'list',
-      items: [
-        {
-          value: 'list',
-          label: 'Array',
-          tooltip: 'Generate an array of items'
-        }
-      ]
-    },
-    {
-      name: 'templating',
-      items: [
-        {
-          value: 'templating',
-          label: 'templating',
-          tooltip:
-            "Generate dynamic content with templating helpers (e.g. {{faker 'name.firstName' }})"
-        }
-      ]
-    }
-  ];
+  public lastGeneratedEndpoint$ = this.templatesService.lastGeneratedEndpoint$;
+  public generatingTemplate$ = this.templatesService.generatingTemplate$;
+  public generatingEndpoint$ = this.templatesService.generatingEndpoint$;
+  public templatesFilter = new UntypedFormControl('');
+  public promptTemplate = new UntypedFormControl('');
+  public promptEndpoint = new UntypedFormControl('');
+  public templatingToggle = new FormControl<boolean>(true);
+  public demoPrompt = new UntypedFormControl('');
+  public generatedTemplateBody = new UntypedFormControl('');
+  public demoEndpoint$ = new BehaviorSubject<(typeof demoTemplates)[0]>(null);
+  public cloudPlansURL = Config.cloudPlansURL;
+  public maxPromptLength = Config.maxPromptLength;
   public defaultEditorOptions = defaultEditorOptions;
   public focusableInputs = FocusableInputs;
   public open = false;
-  public demoRuns = 0;
   private isFirstDemo = true;
   private destroy$ = new Subject<void>();
 
   constructor(
     private modalService: NgbModal,
-    private eventsService: EventsService,
     private templatesService: TemplatesService,
     private environmentsService: EnvironmentsService,
     private store: Store,
-    private formBuilder: FormBuilder,
+    private uiService: UIService,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit() {
-    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
     this.user$ = this.store.select('user');
     this.activeTemplatesTab$ = this.store.select('activeTemplatesTab');
     this.activeTemplatesTab$
       .pipe(
         withLatestFrom(this.user$),
         switchMap(([tab, user]) => {
-          if (tab === 'GENERATE' && (!user || user.plan === 'FREE')) {
-            return this.demo$;
+          if (tab === 'GENERATE_TEMPLATE' && (!user || user.plan === 'FREE')) {
+            return this.buildDemoAnimation();
           } else {
             return of(true).pipe(
               tap(() => {
@@ -181,19 +122,47 @@ export class TemplatesModalComponent
       )
       .subscribe();
 
-    this.templates$ = this.templatesService.getTemplatesList().pipe(
-      withLatestFrom(this.user$),
-      filter(([templates]) => templates && templates.length > 0),
-      tap(([templates, user]) => {
-        const firstFreeTemplate = templates.find(
-          (template) => template.pro === false
-        );
+    const modal = this.uiService.getModalInstance('templates');
 
-        this.setActiveTemplateListItem(
-          user && user.plan !== 'FREE' ? templates[0] : firstFreeTemplate
-        );
+    merge(
+      modal.shown.pipe(
+        tap(() => {
+          if (this.templatesService.generatingTemplate$.value === 'DONE') {
+            this.templatesService.generatingTemplate$.next('NONE');
+          }
+
+          if (this.templatesService.generatingEndpoint$.value === 'DONE') {
+            this.templatesService.generatingEndpoint$.next('NONE');
+          }
+        })
+      ),
+      modal.hidden.pipe(
+        tap(() => {
+          if (this.templatesService.generatingTemplate$.value === 'DONE') {
+            this.templatesService.generatingTemplate$.next('NONE');
+          }
+
+          if (this.templatesService.generatingEndpoint$.value === 'DONE') {
+            this.templatesService.generatingEndpoint$.next('NONE');
+          }
+          this.resetAnimation();
+        })
+      )
+    ).subscribe();
+
+    this.templatesFilter$ = this.store.selectFilter('templates');
+
+    this.templates$ = this.templatesService.getTemplatesList().pipe(
+      filter((templates) => templates && templates.length > 0),
+      combineLatestWith(this.templatesFilter$),
+      tap(([templates]) => {
+        this.setActiveTemplateListItem(templates[0]);
       }),
-      map(([templates]) => templates),
+      map(([templates, search]) =>
+        !search
+          ? templates
+          : templates.filter((template) => textFilter(template.name, search))
+      ),
       catchError(() => EMPTY)
     );
 
@@ -204,54 +173,19 @@ export class TemplatesModalComponent
       )
     );
 
-    // ensure that we load the templates before opening the modal
-    this.templates$.subscribe();
-
-    this.templatesFilter$ = this.store.selectFilter('templates').pipe(
-      tap((search) => {
-        this.templatesFilter.patchValue(search, { emitEvent: false });
-      })
+    // set back the prompt/template if we open/close the modal during a generation
+    this.promptTemplate.setValue(
+      this.templatesService.lastTemplatePrompt$.value
     );
-
-    this.templatesFilter.valueChanges
+    this.promptEndpoint.setValue(
+      this.templatesService.lastEndpointPrompt$.value
+    );
+    this.templatesService.lastGeneratedTemplate$
       .pipe(
-        debounceTime(10),
-        tap((search) =>
-          this.store.update(updateFilterAction('templates', search))
-        ),
+        tap((template) => {
+          this.generatedTemplateBody.setValue(template);
+        }),
         takeUntil(this.destroy$)
-      )
-      .subscribe();
-
-    this.buildDemoAnimation();
-  }
-
-  ngAfterViewInit() {
-    this.eventsService.templatesModalEvents
-      .pipe(
-        tap(() => {
-          const modal = this.modalService.open(this.modal, {
-            size: 'lg'
-          });
-          modal.shown.subscribe(() => {
-            this.open = true;
-
-            if (!this.isLoading$.value) {
-              this.eventsService.generatingTemplate$.next('NONE');
-            }
-          });
-          merge(modal.dismissed, modal.closed).subscribe(() => {
-            this.open = false;
-
-            if (this.isLoading$.value) {
-              this.eventsService.generatingTemplate$.next('INPROGRESS');
-            } else {
-              this.resetAnimation();
-            }
-
-            this.resetAnimation();
-          });
-        })
       )
       .subscribe();
   }
@@ -261,36 +195,34 @@ export class TemplatesModalComponent
     this.destroy$.unsubscribe();
   }
 
-  public generate() {
-    if (!this.prompt.value || this.isLoading$.value === true) {
+  public generateTemplate() {
+    if (
+      !this.promptTemplate.value ||
+      this.templatesService.generatingTemplate$.value === 'INPROGRESS'
+    ) {
       return;
     }
 
-    this.isLoading$.next(true);
-
     this.templatesService
       .generateTemplate(
-        this.prompt.value,
-        this.toggles.reduce((options, toggle) => {
-          if (this.generateOptions.get(toggle.name).value === true) {
-            options.push(toggle.name);
-          }
-
-          return options;
-        }, [])
+        this.promptTemplate.value,
+        this.templatingToggle.value ? ['templating'] : []
       )
-      .pipe(
-        tap((templateContent) => {
-          this.generatedTemplateBody.setValue(templateContent);
-        }),
-        finalize(() => {
-          this.isLoading$.next(false);
-          if (!this.open) {
-            this.eventsService.generatingTemplate$.next('DONE');
-          } else {
-            this.eventsService.generatingTemplate$.next('NONE');
-          }
-        })
+      .subscribe();
+  }
+
+  public generateEndpoint() {
+    if (
+      !this.promptEndpoint.value ||
+      this.templatesService.generatingEndpoint$.value === 'INPROGRESS'
+    ) {
+      return;
+    }
+
+    this.templatesService
+      .generateEndpoint(
+        this.promptEndpoint.value,
+        this.templatingToggle.value ? ['templating'] : []
       )
       .subscribe();
   }
@@ -318,7 +250,7 @@ export class TemplatesModalComponent
     activeTemplateTab: TemplatesTabsName,
     activeTemplate: Template
   ) {
-    let options: Parameters<EnvironmentsService['addCRUDRoute']>[2];
+    let options: Parameters<EnvironmentsService['addCRUDRoute']>[1];
 
     if (activeTemplateTab === 'LIST') {
       options = {
@@ -328,19 +260,21 @@ export class TemplatesModalComponent
           value: activeTemplate.content
         }
       };
-    } else if (activeTemplateTab === 'GENERATE') {
-      const slugPrompt = this.prompt.value.replace(/\s/g, '-').toLowerCase();
+    } else if (activeTemplateTab === 'GENERATE_TEMPLATE') {
+      const slugPrompt = this.promptTemplate.value
+        .replace(/\s/g, '-')
+        .toLowerCase();
 
       options = {
         endpoint: slugPrompt,
         dataBucket: {
-          name: this.prompt.value,
-          value: this.generatedTemplateBody.value
+          name: this.templatesService.lastTemplatePrompt$.value,
+          value: this.templatesService.lastGeneratedTemplate$.value
         }
       };
     }
 
-    this.environmentsService.addCRUDRoute('root', true, options);
+    this.environmentsService.addCRUDRoute('root', options);
     this.modalService.dismissAll();
   }
 
@@ -348,39 +282,54 @@ export class TemplatesModalComponent
     activeTemplateTab: TemplatesTabsName,
     activeTemplate: Template
   ) {
-    let options: Parameters<EnvironmentsService['addHTTPRoute']>[2];
+    let options: Parameters<typeof BuildHTTPRoute>[1];
 
     if (activeTemplateTab === 'LIST') {
       options = {
         endpoint: activeTemplate.slug,
         body: activeTemplate.content
       };
-    } else if (activeTemplateTab === 'GENERATE') {
+    } else if (activeTemplateTab === 'GENERATE_TEMPLATE') {
       options = {
-        endpoint: this.prompt.value.replace(/\s/g, '-').toLowerCase(),
-        body: this.generatedTemplateBody.value
+        endpoint: this.promptTemplate.value.replace(/\s/g, '-').toLowerCase(),
+        body: this.templatesService.lastGeneratedTemplate$.value
       };
     }
-    this.environmentsService.addHTTPRoute('root', true, options);
+    this.environmentsService.addHTTPRoute(
+      'root',
+      BuildHTTPRoute(true, options)
+    );
     this.modalService.dismissAll();
   }
 
-  /**
-   * Clear the databucket filter
-   */
-  public clearFilter() {
-    this.store.update(updateFilterAction('templates', ''));
+  public createEndpoint() {
+    let newRoute: Route = BuildHTTPRoute(true);
+    newRoute = {
+      ...newRoute,
+      ...this.templatesService.lastGeneratedEndpoint$.value,
+      responses: [
+        {
+          ...newRoute.responses[0],
+          ...this.templatesService.lastGeneratedEndpoint$.value.responses[0]
+        } as RouteResponse
+      ]
+    };
+    this.environmentsService.addHTTPRoute('root', newRoute);
+    this.modalService.dismissAll();
+  }
+
+  public close() {
+    this.uiService.closeModal('templates');
   }
 
   private resetAnimationFields() {
     this.demoPrompt.setValue('');
-    this.demoGeneratedTemplateBody.setValue('');
+    this.demoEndpoint$.next(null);
   }
 
   private resetAnimation() {
     this.resetAnimationFields();
     this.isDemoLoading$.next(false);
-    this.demoRuns = 0;
     this.isFirstDemo = true;
   }
 
@@ -422,8 +371,7 @@ export class TemplatesModalComponent
           delay(1000),
           tap(() => {
             this.isDemoLoading$.next(false);
-            this.demoRuns++;
-            this.demoGeneratedTemplateBody.setValue(items[index].value);
+            this.demoEndpoint$.next(items[index]);
             this.isFirstDemo = false;
             index++;
             if (index === demoTemplates.length) {
@@ -434,7 +382,7 @@ export class TemplatesModalComponent
         )
       );
 
-    this.demo$ = of(true).pipe(
+    return of(true).pipe(
       mergeMap(() => createAnimation(demoTemplates)),
       repeat(),
       takeUntil(this.destroy$)

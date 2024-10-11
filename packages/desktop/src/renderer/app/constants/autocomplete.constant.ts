@@ -13,11 +13,18 @@ export const helpersAutocompletions = [
   },
   { caption: 'urlParam', value: "{{urlParam 'paramName'}}", meta: '' },
   { caption: 'cookie', value: "{{cookie 'cookie_name'}}", meta: '' },
-  { caption: 'header', value: "{{header 'cookie_name'}}", meta: '' },
+  { caption: 'header', value: "{{header 'Header-Name'}}", meta: '' },
   { caption: 'hostname', value: '{{hostname}}', meta: '' },
   { caption: 'ip', value: '{{ip}}', meta: '' },
   { caption: 'method', value: '{{method}}', meta: '' },
   { caption: 'baseUrl', value: '{{baseUrl}}', meta: '' },
+  { caption: 'data', value: "{{data 'nameOrId' 'path'}}", meta: '' },
+  { caption: 'dataRaw', value: "{{dataRaw 'nameOrId' 'path'}}", meta: '' },
+  {
+    caption: 'setData',
+    value: "{{setData 'nameOrId' 'path' 'newValue' 'operator'}}",
+    meta: ''
+  },
   { caption: 'faker', value: "{{faker 'namespace.method'}}", meta: '' },
   { caption: 'repeat', value: '{{#repeat min max}}\n{{/repeat}}', meta: '' },
   {
@@ -27,6 +34,8 @@ export const helpersAutocompletions = [
     meta: ''
   },
   { caption: 'array', value: "{{array 'item1' 'item2' 'item3'}}", meta: '' },
+  { caption: 'sort', value: "{{sort (array ...) 'asc'}}", meta: '' },
+  { caption: 'sortBy', value: "{{sort (array ...) 'key' 'asc'}}", meta: '' },
   { caption: 'oneOf', value: '{{oneOf arr}}', meta: '' },
   { caption: 'someOf', value: '{{someOf arr}}', meta: '' },
   { caption: 'join', value: '{{join arr}}', meta: '' },
@@ -50,14 +59,29 @@ export const helpersAutocompletions = [
   { caption: 'base64', value: '{{base64 value}}', meta: '' },
   { caption: 'base64Decode', value: '{{base64Decode string}}', meta: '' },
   { caption: 'objectId', value: '{{objectId}}', meta: '' },
+  { caption: 'getVar', value: "{{getVar 'varname'}}", meta: '' },
   { caption: 'setVar', value: "{{setVar 'varname' 'value'}}", meta: '' },
+  {
+    caption: 'getGlobalVar',
+    value: "{{getGlobalVar 'varname'}}",
+    meta: ''
+  },
+  {
+    caption: 'setGlobalVar',
+    value: "{{setGlobalVar 'varname' 'value'}}",
+    meta: ''
+  },
+  { caption: 'getEnvVar', value: "{{getEnvVar 'varname'}}", meta: '' },
   { caption: 'includes', value: '{{includes string search}}', meta: '' },
   { caption: 'substr', value: '{{substr string startIndex length}}', meta: '' },
   { caption: 'lowercase', value: '{{lowercase string}}', meta: '' },
   { caption: 'uppercase', value: '{{uppercase string}}', meta: '' },
   { caption: 'split', value: '{{split string}}', meta: '' },
   { caption: 'stringify', value: '{{stringify value}}', meta: '' },
+  { caption: 'jsonParse', value: "{{jsonParse 'JSON string'}}", meta: '' },
   { caption: 'concat', value: '{{concat value value}}', meta: '' },
+  { caption: 'jwtPayload', value: "{{jwtPayload token 'key'}}", meta: '' },
+  { caption: 'jwtHeader', value: "{{jwtHeader token 'key'}}", meta: '' },
   {
     caption: 'indexOf',
     value: '{{indexOf value search startIndex}}',
@@ -86,10 +110,15 @@ export const helpersAutocompletions = [
     value: "{{dateFormat 'date' 'format'}}",
     meta: ''
   },
+  {
+    caption: 'isValidDate',
+    value: "{{isValidDate 'date'}}",
+    meta: ''
+  },
   { caption: 'int', value: '{{int min max}}', meta: '' },
   { caption: 'float', value: '{{float min max}}', meta: '' },
   { caption: 'boolean', value: '{{boolean}}', meta: '' },
-  { caption: 'title', value: '{{title}}', meta: '' },
+  { caption: 'title', value: '{{title sex}}', meta: '' },
   { caption: 'firstName', value: '{{firstName}}', meta: '' },
   { caption: 'lastName', value: '{{lastName}}', meta: '' },
   { caption: 'company', value: '{{company}}', meta: '' },

@@ -3,11 +3,7 @@ import { parse as qsParse } from 'querystring';
 import { logInfo } from 'src/main/libs/logs';
 import { ProtocolAction } from 'src/shared/models/protocol.model';
 
-const validActions: ProtocolAction[] = [
-  'auth',
-  'load-environment',
-  'load-export-data'
-];
+const validActions: ProtocolAction[] = ['auth', 'load-environment'];
 
 export const registerProtocol = () => {
   /**
@@ -31,7 +27,7 @@ export const parseProtocolArgs = (
 
   if (target) {
     // split action and query params. A trailing slash may be added between the action and the query params (action/?param=value)
-    const parts = target.match(/^([a-z\-]*)\/?\?(.*)/);
+    const parts = target.match(/^([a-z-]*)\/?\?(.*)/);
 
     if (parts) {
       const action = parts[1] as ProtocolAction;

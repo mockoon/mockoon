@@ -1,6 +1,6 @@
 {
   "uuid": "5dd5c15a-d860-40da-83f4-7606e2c0ee22",
-  "lastMigration": 28,
+  "lastMigration": 33,
   "name": "databuckets",
   "endpointPrefix": "",
   "latency": 0,
@@ -28,12 +28,14 @@
           "default": true,
           "databucketID": "abc1",
           "bodyType": "DATABUCKET",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511",
@@ -57,12 +59,14 @@
           "default": true,
           "databucketID": "abc2",
           "bodyType": "DATABUCKET",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     },
     {
       "uuid": "cf3b141e-ddc7-41e3-89b9-8ef6a0e64400",
@@ -86,12 +90,76 @@
           "default": true,
           "databucketID": "abc3",
           "bodyType": "DATABUCKET",
-          "crudKey": "id"
+          "crudKey": "id",
+          "callbacks": []
         }
       ],
-      "enabled": true,
       "responseMode": null,
-      "type": "http"
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "bbbd523c-b70c-41dd-9817-d8f531313e51",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "multipleDatabucketsFromBody",
+      "responses": [
+        {
+          "uuid": "cddb9499-93b2-44e3-86fa-a05c4c61dd58",
+          "body": "{{data 'abc2'}}{{concat (dataRaw 'abc3') 'hello'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "1080b3c4-5dc2-420d-8bba-6fe8624cf08c",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "nestedDatabuckets",
+      "responses": [
+        {
+          "uuid": "7ac6df9a-c54a-4eff-8279-fafb53f6df83",
+          "body": "{{data 'abc4'}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "databucketID": "",
+          "bodyType": "INLINE",
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "type": "http",
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
@@ -116,7 +184,7 @@
       "uuid": "c8429435-88aa-45c7-a8b9-32f3b1c259be",
       "id": "abc1",
       "name": "Databucket",
-      "value": "{\"response\":\"{{faker 'name.firstName'}}\"}"
+      "value": "{\"response\":\"{{faker 'person.firstName'}}\"}"
     },
     {
       "uuid": "dcec9813-d7a6-4a96-b4a8-2bf598b720a6",
@@ -131,8 +199,14 @@
       "value": "{{#repeat (queryParamRaw 'limit' 2) comma=false}}test{{/repeat}}"
     },
     {
-      "uuid": "625e9eb4-9211-435b-951d-d45c8a67211b",
+      "uuid": "e076812c-f1f2-4b5a-bf60-e29400964ae1",
       "id": "abc4",
+      "name": "Databucket with nested bucket",
+      "value": "{\"id\": \"{{queryParam 'param'}}\",\"otherBucketId\": \"{{data 'abc2' }}\"}"
+    },
+    {
+      "uuid": "625e9eb4-9211-435b-951d-d45c8a67211b",
+      "id": "abc5",
       "name": "Databucket to be removed",
       "value": "Databucket content"
     }
@@ -140,6 +214,10 @@
   "folders": [],
   "rootChildren": [
     { "type": "route", "uuid": "4d31e87e-791e-4a62-b30b-85022f6e4f6c" },
-    { "type": "route", "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511" }
-  ]
+    { "type": "route", "uuid": "38b3f518-ade3-4503-b073-bbdb4d6e1511" },
+    { "type": "route", "uuid": "cf3b141e-ddc7-41e3-89b9-8ef6a0e64400" },
+    { "type": "route", "uuid": "bbbd523c-b70c-41dd-9817-d8f531313e51" },
+    { "type": "route", "uuid": "1080b3c4-5dc2-420d-8bba-6fe8624cf08c" }
+  ],
+  "callbacks": []
 }

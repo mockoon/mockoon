@@ -1,0 +1,94 @@
+<ng-container *ngIf="routeResponse$ | async">
+  <ng-container [formGroup]="form">
+    <div class="callback-list" formArrayName="callbacks">
+      <div
+        *ngFor="
+          let callback of form.get('callbacks')['controls'];
+          index as callbackIndex
+        "
+        class="callback-item"
+        [ngClass]="{
+          'pt-1': callbackIndex !== 0,
+          'pb-1': callbackIndex !== form.get('callbacks')['controls'].length - 1
+        }"
+        [formGroupName]="callbackIndex"
+      >
+        <app-custom-select
+          class="me-1"
+          formControlName="uuid"
+          [enableCustomInput]="false"
+          [items]="callbacks$ | async"
+          placeholder="Select a callback"
+          [dropdownId]="'callback' + callbackIndex + 'target'"
+        ></app-custom-select>
+
+        <span class="input-group-text" ngbTooltip="Callback latency (ms)">
+          <app-svg icon="access_time"></app-svg>
+        </span>
+
+        <input
+          type="number"
+          class="form-control"
+          [appInputNumber]="{
+            min: 0,
+            max: Infinity,
+            canBeEmpty: false
+          }"
+          formControlName="latency"
+        />
+
+        <button
+          [disabled]="
+            form.get(['callbacks', callbackIndex, 'uuid']).value.length === 0
+          "
+          type="button"
+          [attr.data-testid]="'callback' + callbackIndex + 'gotodef'"
+          class="btn btn-link btn-icon goto-definition-callback"
+          [ngbTooltip]="'Go to definition'"
+          (click)="
+            goToCallbackDefinition(
+              form.get(['callbacks', callbackIndex, 'uuid']).value
+            )
+          "
+        >
+          <app-svg icon="goto"></app-svg>
+        </button>
+
+        <button
+          *ngIf="deleteCallbackRequested$ | async as deleteCallbackRequested"
+          [attr.data-testid]="'callback' + callbackIndex + 'delete'"
+          type="button"
+          class="btn btn-link btn-icon delete-callback"
+          [ngClass]="{
+            'text-danger':
+              deleteCallbackRequested.enabled === true &&
+              deleteCallbackRequested.payload === callbackIndex
+          }"
+          [ngbTooltip]="
+            deleteCallbackRequested.enabled === true &&
+            deleteCallbackRequested.payload === callbackIndex
+              ? 'Confirm'
+              : 'Delete'
+          "
+          (click)="removeCallback(callbackIndex)"
+        >
+          <app-svg icon="delete"></app-svg>
+        </button>
+      </div>
+    </div>
+    <div class="mt-2" *ngIf="allCallbacks$ | async as allCallbacks">
+      <button
+        *ngIf="allCallbacks.length > 0"
+        type="button"
+        class="btn btn-link btn-icon add-callback"
+        (click)="addCallback(allCallbacks)"
+      >
+        <app-svg icon="add_box" class="text-success pe-2"></app-svg>
+        Add callback
+      </button>
+      <p *ngIf="allCallbacks.length === 0" class="message w-100 text-center">
+        No callbacks defined
+      </p>
+    </div>
+  </ng-container>
+</ng-container>

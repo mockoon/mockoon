@@ -18,8 +18,8 @@ const dateTimeShift = function (options: HelperOptions) {
     date === undefined
       ? new Date()
       : typeof date === 'string'
-      ? new Date(date)
-      : date;
+        ? new Date(date)
+        : date;
 
   if (typeof options === 'object' && options !== null && options.hash) {
     const days = numberFromSafeString(options.hash['days']);
