@@ -1309,6 +1309,7 @@ const documentationTopics: {
       {
         tasks: async () => {
           await settings.open();
+          (await settings.fileWatchingInputGroup).scrollIntoView();
           await browser.pause(500);
         },
         postTasks: async () => {
@@ -1350,6 +1351,7 @@ const documentationTopics: {
       {
         tasks: async () => {
           await settings.open();
+          (await settings.prettyPrint).scrollIntoView();
           await browser.pause(500);
         },
         postTasks: async () => {
@@ -1883,6 +1885,9 @@ const documentationTopics: {
         tasks: async () => {
           await settings.open();
         },
+        postTasks: async () => {
+          await modals.close();
+        },
         get highlightedTarget() {
           return $('app-title-separator[heading="Environment variables"]');
         },
@@ -1894,6 +1899,78 @@ const documentationTopics: {
         screenshotPosition: {},
         screeenshotGaps: { top: 30, left: 30, bottom: 30, right: 30 },
         fileName: 'settings-environment-variables-prefix.png'
+      }
+    ]
+  },
+  {
+    enabled: true,
+    folder: 'api-endpoints/websockets',
+    screenshots: [
+      {
+        tasks: async () => {
+          // remove old routes
+          await routes.remove(1);
+          await routes.remove(1);
+
+          await routes.openAddMenu();
+        },
+        postTasks: async () => {
+          await utils.clickOutside();
+        },
+        get screenshotTarget() {
+          return routes.addMenu;
+        },
+        get highlightedTarget() {
+          return routes.getAddMenuEntry(RoutesMenuActions.ADD_WS_ROUTE);
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 150, bottom: 100 },
+        fileName: 'add-ws-route.png'
+      },
+      {
+        tasks: async () => {
+          await routes.addWebSocketRoute();
+          await routes.setPath('messages');
+        },
+        get screenshotTarget() {
+          return routes.pathInput;
+        },
+        get highlightedTarget() {
+          return routes.pathInput;
+        },
+        highlight: true,
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screenshotPosition: { left: 0, top: 0 },
+        screeenshotGaps: { right: 100, bottom: 100 },
+        fileName: 'set-ws-route-path.png'
+      },
+      {
+        tasks: async () => {
+          await routes.toggleWSRouteStreamingUnicast();
+        },
+        get highlightedTarget() {
+          return routes.websocketRouteUnicastBtn;
+        },
+        highlight: true,
+        screenshotPosition: { left: 0, top: 0, right: 600 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { bottom: 80 },
+        fileName: 'toggle-ws-unicast-streaming.png'
+      },
+      {
+        tasks: async () => {
+          await routes.toggleWSRouteStreamingBroadcast();
+        },
+        get highlightedTarget() {
+          return routes.websocketRouteBroadcastBtn;
+        },
+        highlight: true,
+        screenshotPosition: { left: 0, top: 0, right: 600 },
+        highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
+        screeenshotGaps: { bottom: 80 },
+        fileName: 'toggle-ws-broadcast-streaming.png'
       }
     ]
   }
