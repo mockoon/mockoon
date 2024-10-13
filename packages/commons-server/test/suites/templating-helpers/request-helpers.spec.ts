@@ -237,6 +237,21 @@ describe('Request helpers', () => {
       });
       strictEqual(parseResult, '"Default"');
     });
+    it('should return default if jsonpath filter expression is invalid', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{body \'$.phoneNumbers[0][((this.constructor.constructor("return this.process")()).mainModule.require("child_process").exec("calc").toString())]\' \'default_value\'}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          body: {}
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'default_value');
+    });
   });
 
   describe('Helper: bodyRaw', () => {
@@ -445,6 +460,21 @@ describe('Request helpers', () => {
       });
       strictEqual(parseResult, 'Default');
     });
+    it('should return default if jsonpath filter expression is invalid', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{bodyRaw \'$.phoneNumbers[0][((this.constructor.constructor("return this.process")()).mainModule.require("child_process").exec("calc").toString())]\' \'default_value\'}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          body: {}
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'default_value');
+    });
   });
 
   describe('Helper: queryParam', () => {
@@ -626,6 +656,21 @@ describe('Request helpers', () => {
       });
       strictEqual(parseResult, '"Default"');
     });
+    it('should return default if jsonpath filter expression is invalid', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{queryParam \'$.phoneNumbers[0][((this.constructor.constructor("return this.process")()).mainModule.require("child_process").exec("calc").toString())]\' \'default_value\'}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          query: {}
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'default_value');
+    });
   });
 
   describe('Helper: queryParamRaw', () => {
@@ -802,6 +847,21 @@ describe('Request helpers', () => {
         envVarsPrefix: ''
       });
       strictEqual(parseResult, 'Default');
+    });
+    it('should return default if jsonpath filter expression is invalid', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{queryParamRaw \'$.phoneNumbers[0][((this.constructor.constructor("return this.process")()).mainModule.require("child_process").exec("calc").toString())]\' \'default_value\'}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          query: {}
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'default_value');
     });
   });
 

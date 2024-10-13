@@ -9,7 +9,8 @@ export enum RoutesMenuActions {
   OPEN_TEMPLATES = 1,
   ADD_CRUD_ROUTE = 2,
   ADD_HTTP_ROUTE = 3,
-  ADD_FOLDER = 4
+  ADD_WS_ROUTE = 4,
+  ADD_FOLDER = 5
 }
 class Routes {
   private rulesTargetIndexes = {
@@ -88,6 +89,14 @@ class Routes {
 
   public get fallbackResponseBtn() {
     return $('#response-modes-FALLBACK');
+  }
+
+  public get websocketRouteUnicastBtn() {
+    return $('#streaming-modes-UNICAST');
+  }
+
+  public get websocketRouteBroadcastBtn() {
+    return $('#streaming-modes-BROADCAST');
   }
 
   public get rulesWarningMessage() {
@@ -283,7 +292,7 @@ class Routes {
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(3)').click();
   }
 
-  public async addWebSocket(): Promise<void> {
+  public async addWebSocketRoute(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
     await $('#routes-add-dropdown-menu .dropdown-item:nth-child(4)').click();
   }
@@ -347,6 +356,14 @@ class Routes {
 
   public async assertPath(expected: string) {
     expect(await this.pathInput.getValue()).toEqual(expected);
+  }
+
+  public async toggleWSRouteStreamingUnicast() {
+    await $('#streaming-modes-UNICAST').click();
+  }
+
+  public async toggleWSRouteStreamingBroadcast() {
+    await $('#streaming-modes-BROADCAST').click();
   }
 
   public async setTemplatePrompt(text: string) {
