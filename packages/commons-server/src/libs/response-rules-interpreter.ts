@@ -12,7 +12,13 @@ import {
 import { ParsedQs } from 'qs';
 import { ServerRequest, fromServerRequest } from './requests';
 import { TemplateParser } from './template-parser';
-import { getValueFromPath, parseRequestMessage } from './utils';
+import {
+  convertPathToArray,
+  getValueFromPath,
+  parseRequestMessage
+} from './utils';
+import { get as objectGet } from 'object-path';
+import Ajv from 'ajv';
 
 /**
  * Interpretor for the route response rules.
@@ -200,6 +206,25 @@ export class ResponseRulesInterpreter {
     }
 
     const parsedRuleValue = this.templateParse(rule.value, requestMessage);
+
+    if (rule.operator === 'valid_json_schema') {
+      const schema = objectGet(
+        this.targets.data_bucket,
+        convertPathToArray(rule.value)
+      );
+
+      if (!schema) {
+        return false;
+      }
+
+      try {
+        const ajv = new Ajv();
+        const valid = ajv.compile(schema)(value);
+        return valid;
+      } catch (err) {
+        return false;
+      }
+    }
 
     if (rule.operator === 'array_includes' && rule.modifier) {
       return (

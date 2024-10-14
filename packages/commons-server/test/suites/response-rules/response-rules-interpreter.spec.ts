@@ -3542,6 +3542,293 @@ describe('Response rules interpreter', () => {
 
       strictEqual(routeResponse?.body, 'response1');
     });
+
+    it('should return response if operator is "valid_json_schema" and schema is valid', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          subproperty: {
+            foo: 1,
+            bar: 'abc'
+          }
+        },
+        query: { prop: undefined, examples: [] } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '$.subproperty',
+                value: 'schema',
+                operator: 'valid_json_schema',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            name: 'schema',
+            id: 'w63q',
+            value: {
+              type: 'object',
+              properties: {
+                foo: { type: 'integer' },
+                bar: { type: 'string' }
+              },
+              required: ['foo'],
+              additionalProperties: false
+            },
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'response1');
+    });
+    // Allow using object path to retrieve specific property of json schema
+    it('should return response if operator is "valid_json_schema" and sub-schema is valid', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          subproperty: {
+            foo: 1,
+            bar: 'abc'
+          }
+        },
+        query: { prop: undefined, examples: [] } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '$.subproperty.bar',
+                value: 'schema.properties.bar',
+                operator: 'valid_json_schema',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            name: 'schema',
+            id: 'w63q',
+            value: {
+              type: 'object',
+              properties: {
+                foo: { type: 'integer' },
+                bar: { type: 'string' }
+              },
+              required: ['foo'],
+              additionalProperties: false
+            },
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'response1');
+    });
+    it('should return error response if operator is "valid_json_schema" and schema validation fails', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          subproperty: {
+            foo: '1', // Expected number but supplying string
+            bar: 'abc'
+          }
+        },
+        query: { prop: undefined, examples: [] } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '$.subproperty',
+                value: 'schema',
+                operator: 'valid_json_schema',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            name: 'schema',
+            id: 'w63q',
+            value: {
+              type: 'object',
+              properties: {
+                foo: { type: 'integer' },
+                bar: { type: 'string' }
+              },
+              required: ['foo'],
+              additionalProperties: false
+            },
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'unauthorized');
+    });
+    it('should return error response if operator is "valid_json_schema" and schema is invalid', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          subproperty: {
+            foo: 1,
+            bar: 'abc'
+          }
+        },
+        query: { prop: undefined, examples: [] } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '$.subproperty',
+                value: 'schema1', // Supply invalid schema name
+                operator: 'valid_json_schema',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            name: 'schema',
+            id: 'w63q',
+            value: {
+              type: 'object',
+              properties: {
+                foo: { type: 'integer' },
+                bar: { type: 'string' }
+              },
+              required: ['foo'],
+              additionalProperties: false
+            },
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'unauthorized');
+    });
+    it('should return error response if operator is "valid_json_schema" and schema property is invalid', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          subproperty: {
+            foo: 1,
+            bar: 'abc'
+          }
+        },
+        query: { prop: undefined, examples: [] } as QueryString.ParsedQs
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '$.subproperty',
+                value: 'schema.properties.baz', // baz property doesn't exist in schema
+                operator: 'valid_json_schema',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            name: 'schema',
+            id: 'w63q',
+            value: {
+              type: 'object',
+              properties: {
+                foo: { type: 'integer' },
+                bar: { type: 'string' }
+              },
+              required: ['foo'],
+              additionalProperties: false
+            },
+            parsed: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'unauthorized');
+    });
   });
 
   describe('Complex rules (AND/OR)', () => {

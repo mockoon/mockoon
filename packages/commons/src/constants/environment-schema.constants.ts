@@ -234,7 +234,8 @@ const RouteResponseRuleSchema = Joi.object<ResponseRule, true>({
       'regex_i',
       'null',
       'empty_array',
-      'array_includes'
+      'array_includes',
+      'valid_json_schema'
     )
     .failover(ResponseRuleDefault.operator)
     .required()
