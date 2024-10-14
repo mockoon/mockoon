@@ -167,6 +167,20 @@ Create a `libs-vx.x.x` tag to automatically release all the libraries on NPM (co
 
 > /!\\ Do not create a **GitHub release** for the libs, as desktop versions <=1.19.0 relies on https://api.github.com/repos/mockoon/mockoon/releases/latest to get the latest release version. As we are using a monorepo, this would mess up the legacy auto update from the desktop application.
 
+### Building the desktop application locally in production mode
+
+To build the desktop application locally in production mode, you can use the following commands:
+
+- `npm run build:libs` to build the libraries.
+- `npm run build:desktop:prod` to build the application processes (Electron main and renderer processes).
+- `npm run package:desktop:win` to package the application for Windows.
+- Or `npm run package:desktop:mac:unsigned` to package the application for macOS.
+- Or `npm run package:desktop:linux` to package the application for Linux.
+
+This will create a packaged version of the desktop application in the `./packages/desktop/packages/` folder.
+
+> 💡 Note: Code signing should be ignored on Windows when building locally. For macOS, the command `npm run package:desktop:mac:unsigned` will create an unsigned package, ignoring code signing and notarization.
+
 ## Desktop application distribution
 
 Some manual steps are required in order to properly distribute the application:

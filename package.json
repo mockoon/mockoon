@@ -55,6 +55,7 @@
     "package:desktop:win": "lerna run --stream --scope @mockoon/desktop package:win",
     "package:desktop:win:appx": "lerna run --stream --scope @mockoon/desktop package:win:appx",
     "package:desktop:mac": "lerna run --stream --scope @mockoon/desktop package:mac",
+    "package:desktop:mac:unsigned": "lerna run --stream --scope @mockoon/desktop package:mac:unsigned",
     "package:desktop:linux": "lerna run --stream --scope @mockoon/desktop package:linux",
     "package:desktop:test:win": "lerna run --stream --scope @mockoon/desktop package:test:win",
     "package:desktop:test:mac": "lerna run --stream --scope @mockoon/desktop package:test:mac",
