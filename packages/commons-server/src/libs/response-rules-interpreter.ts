@@ -220,6 +220,7 @@ export class ResponseRulesInterpreter {
       try {
         const ajv = new Ajv();
         const valid = ajv.compile(schema)(value);
+
         return valid;
       } catch (err) {
         return false;
