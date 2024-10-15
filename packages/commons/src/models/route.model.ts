@@ -63,7 +63,8 @@ export type ResponseRuleOperators =
   | 'regex_i'
   | 'null'
   | 'empty_array'
-  | 'array_includes';
+  | 'array_includes'
+  | 'valid_json_schema';
 
 export type ResponseRule = {
   target: ResponseRuleTargets;
