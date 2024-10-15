@@ -390,6 +390,13 @@
       "name": "test",
       "documentation": "",
       "value": "true"
+    },
+    {
+      "uuid": "e799d2fc-bb25-4a86-b7d0-43c796719717",
+      "id": "abcd",
+      "name": "test2",
+      "documentation": "",
+      "value": "{\"test\": \"value\"}"
     }
   ],
   "folders": [],

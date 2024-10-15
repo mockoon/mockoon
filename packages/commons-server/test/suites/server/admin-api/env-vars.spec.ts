@@ -15,7 +15,7 @@ describe('Admin API: env vars', () => {
     process.env['MOCKOON_TEST_VAR'] = 'env-var-value';
     environment = await getEnvironment('test');
     environment.port = port;
-    server = new MockoonServer(environment);
+    server = new MockoonServer(environment, {});
     await new Promise((resolve, reject) => {
       server.on('started', () => {
         resolve(true);
@@ -31,10 +31,33 @@ describe('Admin API: env vars', () => {
     server.stop();
   });
 
-  it('should get env var from the system', async () => {
+  it('should get env var from the system using helpers', async () => {
     strictEqual(
       await (await fetch(`${url}/get-env-var`)).text(),
       'env-var-value'
+    );
+  });
+
+  it("should get 404 if var doesn't exists", async () => {
+    strictEqual(
+      await (await fetch(`${url}/mockoon-admin/env-vars/UNKNOWN_NAME`)).text(),
+      '{"message":"Environment variable not found"}'
+    );
+  });
+
+  it('should get env var from the system using admin GET route, without prefix', async () => {
+    strictEqual(
+      await (await fetch(`${url}/mockoon-admin/env-vars/TEST_VAR`)).text(),
+      '{"key":"MOCKOON_TEST_VAR","value":"env-var-value"}'
+    );
+  });
+
+  it('should get env var from the system using admin GET route, with prefix', async () => {
+    strictEqual(
+      await (
+        await fetch(`${url}/mockoon-admin/env-vars/MOCKOON_TEST_VAR`)
+      ).text(),
+      '{"key":"MOCKOON_TEST_VAR","value":"env-var-value"}'
     );
   });
 

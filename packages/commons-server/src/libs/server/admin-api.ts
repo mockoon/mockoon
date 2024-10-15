@@ -30,18 +30,24 @@ export const createAdminEndpoint = (
   app: Express,
   {
     statePurgeCallback,
+    getGlobalVariables,
     setGlobalVariables,
     purgeGlobalVariables,
+    getDataBuckets,
     purgeDataBuckets,
     getLogs,
-    purgeLogs
+    purgeLogs,
+    envVarsPrefix
   }: {
     statePurgeCallback: () => void;
+    getGlobalVariables: (key: string) => any;
     setGlobalVariables: (key: string, value: any) => void;
     purgeGlobalVariables: () => void;
+    getDataBuckets: (nameOrId: string) => any;
     purgeDataBuckets: () => void;
     getLogs: () => Transaction[];
     purgeLogs: () => void;
+    envVarsPrefix: string;
   }
 ) => {
   const adminApiPrefix = '/mockoon-admin';
@@ -66,6 +72,41 @@ export const createAdminEndpoint = (
     });
   };
 
+  /**
+   * Get the value of an environment variable
+   *
+   * @param req
+   * @param res
+   */
+  const getEnvVarHandler = (req, res) => {
+    // get var name from path
+    let varName = req.params.key;
+
+    if (!varName.startsWith(envVarsPrefix)) {
+      varName = envVarsPrefix + varName;
+    }
+
+    if (varName) {
+      // send var or 404
+      if (process.env[varName] !== undefined) {
+        res.send({
+          key: varName,
+          value: process.env[varName]
+        });
+      } else {
+        res.status(404).send({ message: 'Environment variable not found' });
+      }
+    } else {
+      res.status(400).send({ message: 'Invalid request' });
+    }
+  };
+
+  /**
+   * Set the value of an environment variable
+   *
+   * @param req
+   * @param res
+   */
   const setEnvVarHandler = (req, res) => {
     try {
       const { key, value } = req.body;
@@ -79,10 +120,41 @@ export const createAdminEndpoint = (
         throw new Error('Key or value missing from request');
       }
     } catch (err) {
-      res.status(400).send({ message: 'Invalid JSON or missing key/value' });
+      res.status(400).send({ message: 'Invalid request' });
     }
   };
 
+  /**
+   * Get the value of a global variable
+   *
+   * @param req
+   * @param res
+   */
+  const getGlobalVarHandler = (req, res) => {
+    // get var name from path
+    const key = req.params.key;
+
+    if (key) {
+      // send var or 404
+      if (getGlobalVariables(key) !== undefined) {
+        res.send({
+          key,
+          value: getGlobalVariables(key)
+        });
+      } else {
+        res.status(404).send({ message: 'Global variable not found' });
+      }
+    } else {
+      res.status(400).send({ message: 'Invalid request' });
+    }
+  };
+
+  /**
+   * Set the value of a global variable
+   *
+   * @param req
+   * @param res
+   */
   const setGlobalVarHandler = (req, res) => {
     try {
       const { key, value } = req.body;
@@ -95,10 +167,16 @@ export const createAdminEndpoint = (
         throw new Error('Key or value missing from request');
       }
     } catch (err) {
-      res.status(400).send({ message: 'Invalid JSON or missing key/value' });
+      res.status(400).send({ message: 'Invalid request' });
     }
   };
 
+  /**
+   * Trigger the purge of global variables, deleting all of them
+   *
+   * @param req
+   * @param res
+   */
   const purgeGlobalVarsHandler = (req, res) => {
     try {
       purgeGlobalVariables();
@@ -110,6 +188,38 @@ export const createAdminEndpoint = (
     }
   };
 
+  /**
+   * Get a data bucket current parsed value
+   *
+   * @param req
+   * @param res
+   */
+  const getDataBucketsHandler = (req, res) => {
+    const nameOrId = req.params.nameOrId;
+
+    if (nameOrId) {
+      const bucket = getDataBuckets(nameOrId);
+
+      if (bucket) {
+        res.send({
+          name: bucket.name,
+          id: bucket.id,
+          value: bucket.value
+        });
+      } else {
+        res.status(404).send({ message: 'Data bucket not found' });
+      }
+    } else {
+      res.status(400).send({ message: 'Invalid request' });
+    }
+  };
+
+  /**
+   * Trigger the purge of data buckets, resetting them to their initial state
+   *
+   * @param req
+   * @param res
+   */
   const purgeDataBucketsHandler = (req, res) => {
     try {
       purgeDataBuckets();
@@ -121,6 +231,13 @@ export const createAdminEndpoint = (
     }
   };
 
+  /**
+   * Return the transaction logs with pagination.
+   * This is similar to the desktop app's Logs tab information.
+   *
+   * @param req
+   * @param res
+   */
   const getLogsHandler = (req: Request, res: Response) => {
     const page =
       typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
@@ -132,6 +249,12 @@ export const createAdminEndpoint = (
     res.send(logs.slice(start, start + limit));
   };
 
+  /**
+   * Trigger the purge of transaction logs, deleting all of them
+   *
+   * @param req
+   * @param res
+   */
   const purgeLogsHandler = (req, res) => {
     try {
       purgeLogs();
@@ -143,23 +266,31 @@ export const createAdminEndpoint = (
     }
   };
 
+  // global state endpoints
   app.purge(stateEndpoint, purgeHandler);
   app.post(`${stateEndpoint}/purge`, purgeHandler);
 
+  // Logs endpoints
   app.get(`${adminApiPrefix}/logs`, getLogsHandler);
   app.post(`${adminApiPrefix}/logs/purge`, purgeLogsHandler);
   app.purge(`${adminApiPrefix}/logs`, purgeLogsHandler);
 
+  // env vars endpoints
+  app.get(`${adminApiPrefix}/env-vars/:key`, getEnvVarHandler);
   app.post(`${adminApiPrefix}/env-vars`, setEnvVarHandler);
   app.put(`${adminApiPrefix}/env-vars`, setEnvVarHandler);
   app.patch(`${adminApiPrefix}/env-vars`, setEnvVarHandler);
 
+  // global vars endpoints
+  app.get(`${adminApiPrefix}/global-vars/:key`, getGlobalVarHandler);
   app.post(`${adminApiPrefix}/global-vars`, setGlobalVarHandler);
   app.put(`${adminApiPrefix}/global-vars`, setGlobalVarHandler);
   app.patch(`${adminApiPrefix}/global-vars`, setGlobalVarHandler);
   app.purge(`${adminApiPrefix}/global-vars`, purgeGlobalVarsHandler);
   app.post(`${adminApiPrefix}/global-vars/purge`, purgeGlobalVarsHandler);
 
+  // data buckets endpoints
+  app.get(`${adminApiPrefix}/data-buckets/:nameOrId`, getDataBucketsHandler);
   app.purge(`${adminApiPrefix}/data-buckets`, purgeDataBucketsHandler);
   app.post(`${adminApiPrefix}/data-buckets/purge`, purgeDataBucketsHandler);
 };

@@ -258,12 +258,19 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             this.requestNumbers[routeUUID] = 1;
           });
         },
+        getGlobalVariables: (key: string) => this.globalVariables[key],
         setGlobalVariables: (key: string, value: any) => {
           this.globalVariables[key] = value;
         },
         purgeGlobalVariables: () => {
           this.globalVariables = {};
         },
+        getDataBuckets: (nameOrId: string) =>
+          this.processedDatabuckets.find(
+            (processedDatabucket) =>
+              processedDatabucket.name === nameOrId ||
+              processedDatabucket.id === nameOrId
+          ),
         purgeDataBuckets: () => {
           this.processedDatabuckets = [];
           this.generateDatabuckets(this.environment);
@@ -271,7 +278,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         getLogs: () => this.transactionLogs,
         purgeLogs: () => {
           this.transactionLogs = [];
-        }
+        },
+        envVarsPrefix: this.options.envVarsPrefix
       });
     }
 

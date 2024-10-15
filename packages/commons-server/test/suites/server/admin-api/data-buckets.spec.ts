@@ -29,8 +29,22 @@ describe('Admin API: data buckets', () => {
     server.stop();
   });
 
-  it('should get data bucket value', async () => {
+  it('should get first data bucket value using mock endpoint', async () => {
     strictEqual(await (await fetch(`${url}/data-bucket`)).text(), 'true');
+  });
+
+  it('should get first data bucket value using admin endpoint', async () => {
+    strictEqual(
+      await (await fetch(`${url}/mockoon-admin/data-buckets/test`)).text(),
+      '{"name":"test","id":"vd0v","value":true}'
+    );
+  });
+
+  it('should get second data bucket value using admin endpoint', async () => {
+    strictEqual(
+      await (await fetch(`${url}/mockoon-admin/data-buckets/test2`)).text(),
+      '{"name":"test2","id":"abcd","value":{"test":"value"}}'
+    );
   });
 
   it('should set data bucket value and check again', async () => {
