@@ -36,6 +36,22 @@ describe('Admin API: global vars', () => {
     strictEqual(await (await fetch(`${url}/get-global-var`)).text(), 'value1');
   });
 
+  it("should get 404 if var doesn't exists", async () => {
+    strictEqual(
+      await (
+        await fetch(`${url}/mockoon-admin/global-vars/UNKNOWN_NAME`)
+      ).text(),
+      '{"message":"Global variable not found"}'
+    );
+  });
+
+  it('should get var from the system using admin GET route', async () => {
+    strictEqual(
+      await (await fetch(`${url}/mockoon-admin/global-vars/test`)).text(),
+      '{"key":"test","value":"value1"}'
+    );
+  });
+
   it('should set global variable on POST to /mockoon-admin/global-vars', async () => {
     const key = 'test';
     const value = 'value2';
