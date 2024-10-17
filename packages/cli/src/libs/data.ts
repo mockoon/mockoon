@@ -76,7 +76,6 @@ export const parseDataFiles = async (
 ): Promise<{ originalPath: string; environment: Environment }[]> => {
   const openAPIConverter = new OpenAPIConverter();
   const environments: { originalPath: string; environment: Environment }[] = [];
-  let filePathIndex = 0;
   let errorMessage = `${CLIMessages.DATA_INVALID}:`;
 
   for (const [index, filePath] of filePaths.entries()) {
@@ -125,8 +124,6 @@ export const parseDataFiles = async (
 
       environments.push({ environment, originalPath: filePath });
     }
-
-    filePathIndex++;
   }
 
   if (environments.length === 0) {

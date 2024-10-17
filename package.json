@@ -63,9 +63,11 @@
     "documentation:desktop": "lerna run --stream --scope @mockoon/desktop documentation"
   },
   "devDependencies": {
+    "@stylistic/eslint-plugin-ts": "2.9.0",
     "concurrently": "9.0.1",
     "dotenv": "16.4.5",
     "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-prettier": "5.2.1",
     "glob": "11.0.0",
     "lerna": "6.6.2",
     "prettier": "3.3.3",
