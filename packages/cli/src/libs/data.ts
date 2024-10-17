@@ -83,8 +83,10 @@ export const parseDataFiles = async (
 
     try {
       environment = await openAPIConverter.convertFromOpenAPI(filePath);
-    } catch (openAPIError: any) {
-      errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;
+    } catch (openAPIError) {
+      if (openAPIError instanceof Error) {
+        errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;
+      }
 
       // immediately throw if the file is not a JSON file
       if (filePath.includes('.yml') || filePath.includes('.yaml')) {
@@ -107,8 +109,11 @@ export const parseDataFiles = async (
         if (typeof data === 'object') {
           environment = await migrateAndValidateEnvironment(data, repair);
         }
-      } catch (JSONError: any) {
-        errorMessage += `\nMockoon parser: ${JSONError.message}`;
+      } catch (JSONError) {
+        if (JSONError instanceof Error) {
+          errorMessage += `\nMockoon parser: ${JSONError.message}`;
+        }
+
         throw new Error(errorMessage);
       }
     }

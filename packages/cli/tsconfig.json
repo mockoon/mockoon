@@ -7,7 +7,9 @@
     "noImplicitAny": false,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    "useUnknownInCatchVariables": true,
+    "resolveJsonModule": true
   },
   "include": ["./src", "./test"]
 }

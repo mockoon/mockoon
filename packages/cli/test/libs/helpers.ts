@@ -16,7 +16,7 @@ export const delay = (t: number): Promise<void> =>
  * @returns
  */
 export const spawnCli = (
-  args: ReadonlyArray<string>
+  args: string[]
 ): Promise<{
   instance: ChildProcess;
   output: Promise<{ stdout: string; stderr: string }>;

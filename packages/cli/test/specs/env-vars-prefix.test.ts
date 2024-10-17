@@ -17,15 +17,11 @@ describe('Env vars prefix custom', () => {
       'PREFIX_'
     ]);
 
-    try {
-      const result = await (
-        await fetch('http://localhost:3000/api/test-envvar-prefix-custom')
-      ).text();
+    const result = await (
+      await fetch('http://localhost:3000/api/test-envvar-prefix-custom')
+    ).text();
 
-      strictEqual(result, 'testenvvar-testenvvar-');
-    } catch (error) {
-      console.error(error);
-    }
+    strictEqual(result, 'testenvvar-testenvvar-');
 
     instance.kill();
 

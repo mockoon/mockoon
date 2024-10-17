@@ -1,28 +1,29 @@
-import js from '@eslint/js';
-import stylisticTs from '@stylistic/eslint-plugin-ts';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import jsdoc from 'eslint-plugin-jsdoc';
-import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
-import globals from 'globals';
+// @ts-check
 
-export default [
-  js.configs.recommended,
+import eslint from '@eslint/js';
+import stylisticJs from '@stylistic/eslint-plugin-js';
+import stylisticTs from '@stylistic/eslint-plugin-ts';
+import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  { ignores: ['build/**', 'dist/**', 'bin/**'] },
   {
-    files: ['**/*.ts', '**/*.js'],
-    ignores: ['eslint.config.mjs', 'build/*', 'dist/*', 'tmp/*', 'bin/*']
-  },
-  {
-    plugins: {
-      jsdoc,
-      '@typescript-eslint': typescriptEslint,
-      '@stylistic/ts': stylisticTs
-    },
+    files: ['**/*.ts'],
+    extends: [
+      eslint.configs.recommended,
+      ...tseslint.configs.recommended,
+      ...tseslint.configs.stylisticTypeChecked
+    ],
     languageOptions: {
-      globals: {
-        ...globals.node
-      },
-      parser: tsParser
+      parserOptions: {
+        projectService: true,
+        tsconfigDirName: import.meta.dirname
+      }
+    },
+    plugins: {
+      '@stylistic/ts': stylisticTs,
+      '@stylistic/js': stylisticJs
     },
     rules: {
       '@stylistic/ts/quotes': ['error', 'single', { avoidEscape: true }],
@@ -33,7 +34,6 @@ export default [
             delimiter: 'semi',
             requireLast: true
           },
-
           singleline: {
             delimiter: 'semi',
             requireLast: false
@@ -42,9 +42,27 @@ export default [
       ],
       '@stylistic/ts/semi': ['error', 'always'],
       '@stylistic/ts/type-annotation-spacing': 'error',
-      '@typescript-eslint/consistent-type-definitions': 'off',
-      '@typescript-eslint/dot-notation': 'off',
-
+      '@stylistic/ts/brace-style': ['error', '1tbs'],
+      '@stylistic/js/eol-last': 'error',
+      '@stylistic/js/no-trailing-spaces': 'error',
+      '@stylistic/js/padding-line-between-statements': [
+        'error',
+        {
+          blankLine: 'always',
+          prev: '*',
+          next: 'return'
+        }
+      ],
+      '@stylistic/js/space-in-parens': ['off', 'never'],
+      '@stylistic/js/spaced-comment': [
+        'error',
+        'always',
+        {
+          markers: ['/']
+        }
+      ],
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/explicit-member-accessibility': [
         'error',
         {
@@ -55,21 +73,9 @@ export default [
           }
         }
       ],
-
       '@typescript-eslint/member-ordering': 'error',
-      '@typescript-eslint/naming-convention': 'off',
-      '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-empty-interface': 'error',
-
-      '@typescript-eslint/no-inferrable-types': [
-        'error',
-        {
-          ignoreParameters: true
-        }
-      ],
-
       '@typescript-eslint/explicit-module-boundary-types': 'warn',
-      '@typescript-eslint/no-misused-new': 'error',
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/no-shadow': ['error'],
       '@typescript-eslint/no-unused-vars': [
@@ -80,85 +86,24 @@ export default [
           caughtErrorsIgnorePattern: '^_'
         }
       ],
-      '@typescript-eslint/no-unused-expressions': 'error',
       '@typescript-eslint/no-use-before-define': 'error',
-      '@typescript-eslint/prefer-function-type': 'error',
       '@typescript-eslint/unified-signatures': 'error',
       'arrow-body-style': 'error',
-      'arrow-parens': ['off', 'always'],
-      'brace-style': ['error', '1tbs'],
       curly: 'error',
-      'eol-last': 'error',
       eqeqeq: ['error', 'smart'],
       'guard-for-in': 'error',
-      'id-blacklist': 'off',
-      'id-match': 'off',
-      'jsdoc/no-types': 'off',
       'no-bitwise': 'error',
       'no-caller': 'error',
-      'no-unused-vars': 'off',
-      'no-console': [
-        'error',
-        {
-          allow: [
-            'log',
-            'warn',
-            'dir',
-            'timeLog',
-            'assert',
-            'clear',
-            'count',
-            'countReset',
-            'group',
-            'groupEnd',
-            'table',
-            'dirxml',
-            'error',
-            'groupCollapsed',
-            'Console',
-            'profile',
-            'profileEnd',
-            'timeStamp',
-            'context'
-          ]
-        }
-      ],
-
-      'no-debugger': 'error',
-      'no-empty': 'off',
+      'no-console': 'error',
       'no-eval': 'error',
-      'no-fallthrough': 'error',
-      'no-irregular-whitespace': 'off',
       'no-new-wrappers': 'error',
-      'no-restricted-imports': ['error', 'rxjs/Rx'],
       'no-throw-literal': 'error',
-      'no-trailing-spaces': 'error',
       'no-undef-init': 'error',
-      'no-underscore-dangle': 'off',
-      'no-unused-labels': 'error',
+      'no-underscore-dangle': 'error',
       'no-var': 'error',
-
-      'padding-line-between-statements': [
-        'error',
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'return'
-        }
-      ],
-
       'prefer-const': 'error',
-      radix: 'error',
-      'space-in-parens': ['off', 'never'],
-
-      'spaced-comment': [
-        'error',
-        'always',
-        {
-          markers: ['/']
-        }
-      ]
+      radix: 'error'
     }
   },
   eslintPluginPrettier
-];
+);
