@@ -4,7 +4,7 @@ export type Banner = {
   text: string;
   link: string;
   classes?: string;
-  styles?: { [key: string]: string };
+  styles?: Record<string, string>;
   iconName?: string;
 };
 
