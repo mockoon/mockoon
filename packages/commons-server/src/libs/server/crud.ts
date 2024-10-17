@@ -199,7 +199,6 @@ export const databucketActions = (
 
     case 'getbyId': {
       if (Array.isArray(databucket.value)) {
-        console.log(routeCrudKey);
         const foundIndex = findItemIndex(
           databucket.value,
           request,

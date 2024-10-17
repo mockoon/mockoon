@@ -13,7 +13,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint -c .eslintrc.js --ext .js,.ts .",
-    "test": "ts-mocha -p ./tsconfig-build.json --timeout 40000 --forbid-only test/**/*.spec.ts",
+    "oldtest": "ts-mocha -p ./tsconfig-build.json --timeout 40000 --forbid-only test/**/*.spec.ts",
+    "test": "glob -c \"node --import tsx --test-concurrency 1 --test\" \"./test/specs/**/*.test.ts\"",
     "build": "rm -rf dist && tsc -b tsconfig-build.json && oclif manifest"
   },
   "main": "./dist/index.js",
@@ -45,31 +46,26 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
+    "@inquirer/confirm": "5.0.0",
     "@mockoon/commons": "8.4.0",
     "@mockoon/commons-server": "8.4.0",
-    "@oclif/core": "3.27.0",
-    "@oclif/plugin-help": "6.2.7",
-    "jsonfile": "6.1.0",
+    "@oclif/core": "4.0.29",
+    "@oclif/plugin-help": "6.2.15",
     "mkdirp": "3.0.1",
     "mustache": "4.2.0",
-    "tslib": "2.6.3"
+    "tslib": "2.8.0"
   },
   "devDependencies": {
-    "@oclif/test": "3.2.15",
-    "@types/jsonfile": "6.1.4",
-    "@types/mocha": "10.0.7",
     "@types/mustache": "4.2.5",
-    "@types/node": "22.0.0",
+    "@types/node": "22.7.5",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "eslint": "8.57.0",
-    "eslint-config-oclif": "5.2.0",
-    "eslint-config-oclif-typescript": "3.1.8",
-    "eslint-plugin-jsdoc": "48.10.2",
-    "mocha": "10.7.0",
-    "oclif": "4.14.12",
-    "ts-mocha": "10.0.0",
-    "typescript": "5.5.4"
+    "eslint-config-oclif": "5.2.1",
+    "eslint-config-oclif-typescript": "3.1.12",
+    "eslint-plugin-jsdoc": "50.4.1",
+    "oclif": "4.15.9",
+    "typescript": "5.6.3"
   },
   "engines": {
     "node": ">=18"
